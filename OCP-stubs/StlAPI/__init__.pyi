@@ -48,9 +48,13 @@ class StlAPI_Writer():
     @property
     def ASCIIMode(self) -> bool:
         """
+        Returns the address to the flag defining the mode for writing the file. This address may be used to either read or change the flag. If the mode returns True (default value) the generated file is an ASCII file. If the mode returns False, the generated file is a binary file.
+
         :type: bool
         """
     @ASCIIMode.setter
     def ASCIIMode(self, arg1: bool) -> None:
-        pass
+        """
+        Returns the address to the flag defining the mode for writing the file. This address may be used to either read or change the flag. If the mode returns True (default value) the generated file is an ASCII file. If the mode returns False, the generated file is a binary file.
+        """
     pass

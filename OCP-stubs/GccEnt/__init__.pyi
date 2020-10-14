@@ -51,7 +51,7 @@ class GccEnt():
     def Outside_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: ...
     @staticmethod
     @overload
-    def PositionFromString_s(thePositionString : str) -> GccEnt_Position: 
+    def PositionFromString_s(thePositionString : str,thePosition : GccEnt_Position) -> bool: 
         """
         Returns the position from the given string identifier (using case-insensitive comparison).
 
@@ -59,7 +59,7 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def PositionFromString_s(thePositionString : str,thePosition : GccEnt_Position) -> bool: ...
+    def PositionFromString_s(thePositionString : str) -> GccEnt_Position: ...
     @staticmethod
     def PositionToString_s(thePosition : GccEnt_Position) -> str: 
         """
@@ -72,7 +72,7 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def Unqualified_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: 
+    def Unqualified_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: 
         """
         Constructs a qualified line, so that the relative position to the circle or line of the solution computed by a construction algorithm using the qualified circle or line is not qualified, i.e. all solutions apply.
 
@@ -80,7 +80,7 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def Unqualified_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: ...
+    def Unqualified_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: ...
     def __init__(self) -> None: ...
     pass
 class GccEnt_Array1OfPosition():
@@ -160,13 +160,13 @@ class GccEnt_Array1OfPosition():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : GccEnt_Array1OfPosition) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : GccEnt_Position,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : GccEnt_Array1OfPosition) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : GccEnt_Position,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class GccEnt_BadQualifier(Exception, BaseException):
@@ -196,6 +196,7 @@ class GccEnt_Position():
 
       GccEnt_noqualifier
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

@@ -5,13 +5,13 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
-import OCP.Standard
+import OCP.TColStd
 import OCP.IGESData
-import OCP.gp
 import OCP.IGESBasic
 import OCP.Message
-import OCP.TColStd
+import OCP.Standard
 import OCP.Interface
+import OCP.gp
 __all__  = [
 "IGESGraph",
 "IGESGraph_Array1OfColor",
@@ -146,13 +146,13 @@ class IGESGraph_Array1OfColor():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : IGESGraph_Array1OfColor) -> None: ...
+    def __init__(self,theBegin : IGESGraph_Color,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : IGESGraph_Color,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : IGESGraph_Array1OfColor) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class IGESGraph_Array1OfTextDisplayTemplate():
@@ -234,9 +234,9 @@ class IGESGraph_Array1OfTextDisplayTemplate():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : IGESGraph_TextDisplayTemplate,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : IGESGraph_Array1OfTextDisplayTemplate) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -322,9 +322,9 @@ class IGESGraph_Array1OfTextFontDef():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : IGESGraph_TextFontDef,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : IGESGraph_TextFontDef,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class IGESGraph_Color(OCP.IGESData.IGESData_ColorEntity, OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Standard_Transient):
@@ -504,14 +504,14 @@ class IGESGraph_Color(OCP.IGESData.IGESData_ColorEntity, OCP.IGESData.IGESData_I
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -834,14 +834,14 @@ class IGESGraph_DefinitionLevel(OCP.IGESData.IGESData_LevelListEntity, OCP.IGESD
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1168,14 +1168,14 @@ class IGESGraph_DrawingSize(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Stand
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1506,14 +1506,14 @@ class IGESGraph_DrawingUnits(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Stan
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1733,14 +1733,14 @@ class IGESGraph_GeneralModule(OCP.IGESData.IGESData_GeneralModule, OCP.Interface
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1888,14 +1888,14 @@ class IGESGraph_HArray1OfColor(IGESGraph_Array1OfColor, OCP.Standard.Standard_Tr
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1946,13 +1946,13 @@ class IGESGraph_HArray1OfColor(IGESGraph_Array1OfColor, OCP.Standard.Standard_Tr
         Constant value access
         """
     @overload
+    def __init__(self,theOther : IGESGraph_Array1OfColor) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : IGESGraph_Color) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : IGESGraph_Array1OfColor) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2031,14 +2031,14 @@ class IGESGraph_HArray1OfTextDisplayTemplate(IGESGraph_Array1OfTextDisplayTempla
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2093,9 +2093,9 @@ class IGESGraph_HArray1OfTextDisplayTemplate(IGESGraph_Array1OfTextDisplayTempla
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : IGESGraph_TextDisplayTemplate) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : IGESGraph_Array1OfTextDisplayTemplate) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2174,14 +2174,14 @@ class IGESGraph_HArray1OfTextFontDef(IGESGraph_Array1OfTextFontDef, OCP.Standard
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2234,11 +2234,11 @@ class IGESGraph_HArray1OfTextFontDef(IGESGraph_Array1OfTextFontDef, OCP.Standard
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : IGESGraph_Array1OfTextFontDef) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : IGESGraph_TextFontDef) -> None: ...
     @overload
-    def __init__(self,theOther : IGESGraph_Array1OfTextFontDef) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2420,14 +2420,14 @@ class IGESGraph_HighLight(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Standar
         returns True if entity is highlighted
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2750,14 +2750,14 @@ class IGESGraph_IntercharacterSpacing(OCP.IGESData.IGESData_IGESEntity, OCP.Stan
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3080,14 +3080,14 @@ class IGESGraph_LineFontDefPattern(OCP.IGESData.IGESData_LineFontEntity, OCP.IGE
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3418,14 +3418,14 @@ class IGESGraph_LineFontDefTemplate(OCP.IGESData.IGESData_LineFontEntity, OCP.IG
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3752,14 +3752,14 @@ class IGESGraph_LineFontPredefined(OCP.IGESData.IGESData_IGESEntity, OCP.Standar
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4086,14 +4086,14 @@ class IGESGraph_NominalSize(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Stand
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4424,14 +4424,14 @@ class IGESGraph_Pick(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Standard_Tra
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4644,14 +4644,14 @@ class IGESGraph_Protocol(OCP.IGESData.IGESData_Protocol, OCP.Interface.Interface
         Returns True if type of <obj> is that defined from CDL This is the default but it may change according implementation
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4751,14 +4751,14 @@ class IGESGraph_ReadWriteModule(OCP.IGESData.IGESData_ReadWriteModule, OCP.Inter
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4825,14 +4825,14 @@ class IGESGraph_SpecificModule(OCP.IGESData.IGESData_SpecificModule, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5051,14 +5051,14 @@ class IGESGraph_TextDisplayTemplate(OCP.IGESData.IGESData_IGESEntity, OCP.Standa
         returns True if entity is Incremental (Form 1). False if entity is Absolute (Form 0).
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5413,14 +5413,14 @@ class IGESGraph_TextFontDef(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Stand
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6291,14 +6291,14 @@ class IGESGraph_UniformRectGrid(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.S
         returns False if <me> is an infinite grid, True if <me> is a finite grid.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

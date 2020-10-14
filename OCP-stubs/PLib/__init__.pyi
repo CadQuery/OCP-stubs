@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Standard
-import OCP.TColgp
 import OCP.TColStd
 import OCP.GeomAbs
+import OCP.TColgp
+import OCP.Standard
 import OCP.math
 __all__  = [
 "PLib",
@@ -27,7 +27,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array2OfPnt,WCoefs : OCP.TColStd.TColStd_Array2OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,WPoles : OCP.TColStd.TColStd_Array2OfReal) -> None: 
+    def CoefficientsPoles_s(Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         None
 
@@ -39,18 +39,18 @@ class PLib():
 
         None
         """
-    @staticmethod
-    @overload
-    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def CoefficientsPoles_s(dim : int,Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def CoefficientsPoles_s(Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array2OfPnt,WCoefs : OCP.TColStd.TColStd_Array2OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,WPoles : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
     @staticmethod
     def ConstraintOrder_s(NivConstr : int) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
@@ -89,7 +89,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Get from FP the coordinates of the poles.
 
@@ -99,15 +99,15 @@ class PLib():
 
         Get from FP the coordinates of the poles.
         """
-    @staticmethod
-    @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @staticmethod
     @overload
     def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    @staticmethod
+    @overload
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @staticmethod
     def HermiteCoefficients_s(FirstParameter : float,LastParameter : float,FirstOrder : int,LastOrder : int,MatrixCoefs : OCP.math.math_Matrix) -> bool: 
         """
@@ -170,10 +170,10 @@ class PLib():
     def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: 
@@ -191,10 +191,10 @@ class PLib():
     def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Trimming_s(U1 : float,U2 : float,dim : int,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def Trimming_s(U1 : float,U2 : float,dim : int,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     def UTrimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array2OfPnt,WCoeffs : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
@@ -248,14 +248,14 @@ class PLib_Base(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -345,9 +345,9 @@ class PLib_DoubleJacobiPolynomial():
         None
         """
     @overload
-    def __init__(self,JacPolU : PLib_JacobiPolynomial,JacPolV : PLib_JacobiPolynomial) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,JacPolU : PLib_JacobiPolynomial,JacPolV : PLib_JacobiPolynomial) -> None: ...
     pass
 class PLib_HermitJacobi(PLib_Base, OCP.Standard.Standard_Transient):
     """
@@ -394,14 +394,14 @@ class PLib_HermitJacobi(PLib_Base, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -496,14 +496,14 @@ class PLib_JacobiPolynomial(PLib_Base, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

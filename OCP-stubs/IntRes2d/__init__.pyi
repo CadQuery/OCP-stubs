@@ -93,14 +93,14 @@ class IntRes2d_Domain():
         Returns the tolerance of the last (right) bound. The exception DomainError is raised if HasLastPoint returns False.
         """
     @overload
-    def SetEquivalentParameters(self,zero : float,period : float) -> None: 
+    def SetEquivalentParameters(self,p_first : float,p_last : float) -> None: 
         """
         Defines a closed domain.
 
         Defines a closed domain.
         """
     @overload
-    def SetEquivalentParameters(self,p_first : float,p_last : float) -> None: ...
+    def SetEquivalentParameters(self,zero : float,period : float) -> None: ...
     @overload
     def SetValues(self) -> None: 
         """
@@ -117,9 +117,9 @@ class IntRes2d_Domain():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,Pnt1 : OCP.gp.gp_Pnt2d,Par1 : float,Tol1 : float,Pnt2 : OCP.gp.gp_Pnt2d,Par2 : float,Tol2 : float) -> None: ...
-    @overload
     def __init__(self,Pnt : OCP.gp.gp_Pnt2d,Par : float,Tol : float,First : bool) -> None: ...
+    @overload
+    def __init__(self,Pnt1 : OCP.gp.gp_Pnt2d,Par1 : float,Tol1 : float,Pnt2 : OCP.gp.gp_Pnt2d,Par2 : float,Tol2 : float) -> None: ...
     pass
 class IntRes2d_Intersection():
     """
@@ -162,14 +162,14 @@ class IntRes2d_Intersection():
         This function returns the intersection segment of range N; The exception NotDone is raised if IsDone returns FALSE. The exception OutOfRange is raised if (N <= 0) or (N > NbPoints).
         """
     @overload
-    def SetReversedParameters(self,Reverseflag : bool) -> None: 
+    def SetReversedParameters(self,flag : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetReversedParameters(self,flag : bool) -> None: ...
+    def SetReversedParameters(self,Reverseflag : bool) -> None: ...
     pass
 class IntRes2d_IntersectionPoint():
     """
@@ -251,13 +251,13 @@ class IntRes2d_IntersectionSegment():
         Returns the last point of the segment as an IntersectionPoint (with a transition). The exception DomainError is raised if HasLastExtremity returns False.
         """
     @overload
-    def __init__(self,P : IntRes2d_IntersectionPoint,First : bool,Oppos : bool,ReverseFlag : bool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,P1 : IntRes2d_IntersectionPoint,P2 : IntRes2d_IntersectionPoint,Oppos : bool,ReverseFlag : bool) -> None: ...
+    def __init__(self,P : IntRes2d_IntersectionPoint,First : bool,Oppos : bool,ReverseFlag : bool) -> None: ...
     @overload
     def __init__(self,Oppos : bool) -> None: ...
+    @overload
+    def __init__(self,P1 : IntRes2d_IntersectionPoint,P2 : IntRes2d_IntersectionPoint,Oppos : bool,ReverseFlag : bool) -> None: ...
     pass
 class IntRes2d_Position():
     """
@@ -271,6 +271,7 @@ class IntRes2d_Position():
 
       IntRes2d_End
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -341,14 +342,14 @@ class IntRes2d_SequenceOfIntersectionPoint(OCP.NCollection.NCollection_BaseSeque
     @overload
     def InsertAfter(self,theIndex : int,theSeq : IntRes2d_SequenceOfIntersectionPoint) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntRes2d_IntersectionPoint) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IntRes2d_SequenceOfIntersectionPoint) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntRes2d_SequenceOfIntersectionPoint) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IntRes2d_IntersectionPoint) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -375,14 +376,14 @@ class IntRes2d_SequenceOfIntersectionPoint(OCP.NCollection.NCollection_BaseSeque
     @overload
     def Prepend(self,theItem : IntRes2d_IntersectionPoint) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -408,11 +409,11 @@ class IntRes2d_SequenceOfIntersectionPoint(OCP.NCollection.NCollection_BaseSeque
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : IntRes2d_SequenceOfIntersectionPoint) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : IntRes2d_SequenceOfIntersectionPoint) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -429,14 +430,14 @@ class IntRes2d_SequenceOfIntersectionSegment(OCP.NCollection.NCollection_BaseSeq
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IntRes2d_SequenceOfIntersectionSegment) -> None: 
+    def Append(self,theItem : IntRes2d_IntersectionSegment) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IntRes2d_IntersectionSegment) -> None: ...
+    def Append(self,theSeq : IntRes2d_SequenceOfIntersectionSegment) -> None: ...
     def Assign(self,theOther : IntRes2d_SequenceOfIntersectionSegment) -> IntRes2d_SequenceOfIntersectionSegment: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -475,14 +476,14 @@ class IntRes2d_SequenceOfIntersectionSegment(OCP.NCollection.NCollection_BaseSeq
     @overload
     def InsertAfter(self,theIndex : int,theItem : IntRes2d_IntersectionSegment) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntRes2d_SequenceOfIntersectionSegment) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : IntRes2d_IntersectionSegment) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntRes2d_IntersectionSegment) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IntRes2d_SequenceOfIntersectionSegment) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -509,14 +510,14 @@ class IntRes2d_SequenceOfIntersectionSegment(OCP.NCollection.NCollection_BaseSeq
     @overload
     def Prepend(self,theSeq : IntRes2d_SequenceOfIntersectionSegment) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -542,11 +543,11 @@ class IntRes2d_SequenceOfIntersectionSegment(OCP.NCollection.NCollection_BaseSeq
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IntRes2d_SequenceOfIntersectionSegment) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -566,6 +567,7 @@ class IntRes2d_Situation():
 
       IntRes2d_Unknown
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -625,9 +627,9 @@ class IntRes2d_Transition():
         Sets the values of an UNDECIDED transition.
         """
     @overload
-    def SetValue(self,Tangent : bool,Pos : IntRes2d_Position,Situ : IntRes2d_Situation,Oppos : bool) -> None: ...
-    @overload
     def SetValue(self,Tangent : bool,Pos : IntRes2d_Position,Type : IntRes2d_TypeTrans) -> None: ...
+    @overload
+    def SetValue(self,Tangent : bool,Pos : IntRes2d_Position,Situ : IntRes2d_Situation,Oppos : bool) -> None: ...
     def Situation(self) -> IntRes2d_Situation: 
         """
         returns a significant value if TransitionType returns TOUCH. In this case, the function returns : INSIDE when the curve remains inside the other one, OUTSIDE when it remains outside the other one, UNKNOWN when the calculus, based on the second derivatives cannot give the result. If TransitionType returns IN or OUT or UNDECIDED, the exception DomainError is raised.
@@ -641,13 +643,13 @@ class IntRes2d_Transition():
         Returns the type of transition at the intersection. It may be IN or OUT or TOUCH, or UNDECIDED if the two first derivatives are not enough to give the tangent to one of the two curves.
         """
     @overload
-    def __init__(self,Tangent : bool,Pos : IntRes2d_Position,Situ : IntRes2d_Situation,Oppos : bool) -> None: ...
-    @overload
-    def __init__(self,Pos : IntRes2d_Position) -> None: ...
-    @overload
     def __init__(self,Tangent : bool,Pos : IntRes2d_Position,Type : IntRes2d_TypeTrans) -> None: ...
     @overload
+    def __init__(self,Tangent : bool,Pos : IntRes2d_Position,Situ : IntRes2d_Situation,Oppos : bool) -> None: ...
+    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Pos : IntRes2d_Position) -> None: ...
     pass
 class IntRes2d_TypeTrans():
     """
@@ -663,6 +665,7 @@ class IntRes2d_TypeTrans():
 
       IntRes2d_Undecided
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

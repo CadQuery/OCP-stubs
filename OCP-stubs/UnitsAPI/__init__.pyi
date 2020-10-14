@@ -33,7 +33,7 @@ class UnitsAPI():
         """
     @staticmethod
     @overload
-    def AnyToLS_s(aData : float,aUnit : str,aDim : OCP.Units.Units_Dimensions) -> float: 
+    def AnyToLS_s(aData : float,aUnit : str) -> float: 
         """
         Converts the local unit value to the local system units value. Example: AnyToLS(1.,"in.") returns 25.4 if the LocalSystem is MDTV.
 
@@ -41,10 +41,10 @@ class UnitsAPI():
         """
     @staticmethod
     @overload
-    def AnyToLS_s(aData : float,aUnit : str) -> float: ...
+    def AnyToLS_s(aData : float,aUnit : str,aDim : OCP.Units.Units_Dimensions) -> float: ...
     @staticmethod
     @overload
-    def AnyToSI_s(aData : float,aUnit : str) -> float: 
+    def AnyToSI_s(aData : float,aUnit : str,aDim : OCP.Units.Units_Dimensions) -> float: 
         """
         Converts the local unit value to the SI system units value. Example: AnyToSI(1.,"in.") returns 0.0254
 
@@ -52,7 +52,7 @@ class UnitsAPI():
         """
     @staticmethod
     @overload
-    def AnyToSI_s(aData : float,aUnit : str,aDim : OCP.Units.Units_Dimensions) -> float: ...
+    def AnyToSI_s(aData : float,aUnit : str) -> float: ...
     @staticmethod
     def Check_s(aQuantity : str,aUnit : str) -> bool: 
         """
@@ -197,6 +197,7 @@ class UnitsAPI_SystemUnits():
 
       UnitsAPI_MDTV
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

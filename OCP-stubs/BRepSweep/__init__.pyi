@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TopAbs
+import OCP.BRep
 import OCP.Sweep
+import OCP.TopoDS
 import OCP.TopLoc
 import OCP.gp
-import OCP.TopoDS
-import OCP.BRep
 __all__  = [
 "BRepSweep_Builder",
 "BRepSweep_Iterator",
@@ -26,14 +26,14 @@ class BRepSweep_Builder():
     implements the abstract Builder with the BRep Builder
     """
     @overload
-    def Add(self,aShape1 : OCP.TopoDS.TopoDS_Shape,aShape2 : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Add(self,aShape1 : OCP.TopoDS.TopoDS_Shape,aShape2 : OCP.TopoDS.TopoDS_Shape,Orient : OCP.TopAbs.TopAbs_Orientation) -> None: 
         """
         Adds the Shape 1 in the Shape 2, set to <Orient> orientation.
 
         Adds the Shape 1 in the Shape 2.
         """
     @overload
-    def Add(self,aShape1 : OCP.TopoDS.TopoDS_Shape,aShape2 : OCP.TopoDS.TopoDS_Shape,Orient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    def Add(self,aShape1 : OCP.TopoDS.TopoDS_Shape,aShape2 : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def Builder(self) -> OCP.BRep.BRep_Builder: 
         """
         None
@@ -140,14 +140,14 @@ class BRepSweep_NumLinearRegularSweep():
         Returns true if the initial shape aGenS is used in result shape
         """
     @overload
-    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the resulting Shape indexed by the last Vertex of myDirWire and myGenShape.
 
         Returns the resulting Shape indexed by the last Vertex of myDirWire and aGenS.
         """
     @overload
-    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def MakeEmptyDirectingEdge(self,aGenV : OCP.TopoDS.TopoDS_Shape,aDirE : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Builds the edge addressed by [aGenV,aDirE], with its geometric part, but without subcomponents.
@@ -197,7 +197,7 @@ class BRepSweep_NumLinearRegularSweep():
         Sets the parameters of the new vertex on the new face. The new face and new vertex where generated from aGenF, aGenV and aDirV .
         """
     @overload
-    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape,aDirS : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the resulting Shape indexed by aDirS and aGenS.
 
@@ -206,9 +206,9 @@ class BRepSweep_NumLinearRegularSweep():
         Returns the resulting Shape indexed by myDirWire and myGenShape.
         """
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape,aDirS : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def SplitShell(self,aNewShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         In some particular cases the topology of a generated Shell must be composed of independant closed Shells, in this case this function returns a Compound of independant Shells.
@@ -236,23 +236,23 @@ class BRepSweep_Prism():
         Returns true if the aGenS is used in resulting shape
         """
     @overload
-    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the TopoDS Shape of the top of the prism.
 
         Returns the TopoDS Shape of the top of the prism. generated with aGenS (subShape of the generating shape).
         """
     @overload
-    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the TopoDS Shape attached to the prism.
 
         Returns the TopoDS Shape generated with aGenS (subShape of the generating shape).
         """
     @overload
-    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def Vec(self) -> OCP.gp.gp_Vec: 
         """
         Returns the Vector of the Prism, if it is an infinite prism the Vec is unitar.
@@ -288,23 +288,23 @@ class BRepSweep_Revol():
         Returns true if the aGenS is used in resulting Shape
         """
     @overload
-    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the TopoDS Shape of the top of the prism.
 
         Returns the TopoDS Shape of the top of the prism. generated with aGenS (subShape of the generating shape).
         """
     @overload
-    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the TopoDS Shape attached to the Revol.
 
         Returns the TopoDS Shape generated with aGenS (subShape of the generating shape).
         """
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape,A : OCP.gp.gp_Ax1,D : float,C : bool=False) -> None: ...
     @overload
@@ -360,14 +360,14 @@ class BRepSweep_Trsf(BRepSweep_NumLinearRegularSweep):
         Returns true if the initial shape aGenS is used in result shape
         """
     @overload
-    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the resulting Shape indexed by the last Vertex of myDirWire and myGenShape.
 
         Returns the resulting Shape indexed by the last Vertex of myDirWire and aGenS.
         """
     @overload
-    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def MakeEmptyDirectingEdge(self,aGenV : OCP.TopoDS.TopoDS_Shape,aDirE : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Builds the edge addressed by [aGenV,aDirE], with its geometric part, but without subcomponents.
@@ -421,7 +421,7 @@ class BRepSweep_Trsf(BRepSweep_NumLinearRegularSweep):
         Sets the parameters of the new vertex on the new face. The new face and new vertex where generated from aGenF, aGenV and aDirV .
         """
     @overload
-    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape,aDirS : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the resulting Shape indexed by aDirS and aGenS.
 
@@ -430,9 +430,9 @@ class BRepSweep_Trsf(BRepSweep_NumLinearRegularSweep):
         Returns the resulting Shape indexed by myDirWire and myGenShape.
         """
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape,aDirS : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def SplitShell(self,aNewShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         In some particular cases the topology of a generated Shell must be composed of independant closed Shells, in this case this function returns a Compound of independant Shells.
@@ -518,14 +518,14 @@ class BRepSweep_Translation(BRepSweep_Trsf, BRepSweep_NumLinearRegularSweep):
         Returns true if the initial shape aGenS is used in result shape
         """
     @overload
-    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the resulting Shape indexed by the last Vertex of myDirWire and myGenShape.
 
         Returns the resulting Shape indexed by the last Vertex of myDirWire and aGenS.
         """
     @overload
-    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def MakeEmptyDirectingEdge(self,aGenV : OCP.TopoDS.TopoDS_Shape,aDirE : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Builds the edge addressed by [aGenV,aDirE], with its geometric part, but without subcomponents.
@@ -579,7 +579,7 @@ class BRepSweep_Translation(BRepSweep_Trsf, BRepSweep_NumLinearRegularSweep):
         Sets the parameters of the new vertex on the new face. The new face and new vertex where generated from aGenF, aGenV and aDirV .
         """
     @overload
-    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape,aDirS : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the resulting Shape indexed by aDirS and aGenS.
 
@@ -588,9 +588,9 @@ class BRepSweep_Translation(BRepSweep_Trsf, BRepSweep_NumLinearRegularSweep):
         Returns the resulting Shape indexed by myDirWire and myGenShape.
         """
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape,aDirS : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def SplitShell(self,aNewShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         In some particular cases the topology of a generated Shell must be composed of independant closed Shells, in this case this function returns a Compound of independant Shells.
@@ -659,14 +659,14 @@ class BRepSweep_Rotation(BRepSweep_Trsf, BRepSweep_NumLinearRegularSweep):
         Returns true if the initial shape aGenS is used in result shape
         """
     @overload
-    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the resulting Shape indexed by the last Vertex of myDirWire and myGenShape.
 
         Returns the resulting Shape indexed by the last Vertex of myDirWire and aGenS.
         """
     @overload
-    def LastShape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def MakeEmptyDirectingEdge(self,aGenV : OCP.TopoDS.TopoDS_Shape,aDirE : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Builds the edge addressed by [aGenV,aDirE], with its geometric part, but without subcomponents.
@@ -720,7 +720,7 @@ class BRepSweep_Rotation(BRepSweep_Trsf, BRepSweep_NumLinearRegularSweep):
         Sets the parameters of the new vertex on the new face. The new face and new vertex where generated from aGenF, aGenV and aDirV .
         """
     @overload
-    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape,aDirS : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the resulting Shape indexed by aDirS and aGenS.
 
@@ -729,9 +729,9 @@ class BRepSweep_Rotation(BRepSweep_Trsf, BRepSweep_NumLinearRegularSweep):
         Returns the resulting Shape indexed by myDirWire and myGenShape.
         """
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def Shape(self,aGenS : OCP.TopoDS.TopoDS_Shape,aDirS : OCP.Sweep.Sweep_NumShape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def SplitShell(self,aNewShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         In some particular cases the topology of a generated Shell must be composed of independant closed Shells, in this case this function returns a Compound of independant Shells.

@@ -4,22 +4,22 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.TopAbs
+import OCP.ShapeExtend
+import OCP.Geom2d
+import OCP.ShapeAnalysis
+import OCP.Message
+import OCP.TopoDS
+import OCP.TColGeom2d
+import OCP.TColStd
+import OCP.GeomAbs
+import OCP.TColGeom
 import OCP.TopTools
 import OCP.TopLoc
-import OCP.Geom
-import OCP.BRepTools
-import OCP.TColStd
-import OCP.TopoDS
-import OCP.GeomAbs
-import OCP.ShapeAnalysis
-import OCP.ShapeBuild
-import OCP.TopAbs
-import OCP.Geom2d
 import OCP.Standard
-import OCP.ShapeExtend
-import OCP.TColGeom2d
-import OCP.Message
-import OCP.TColGeom
+import OCP.Geom
+import OCP.ShapeBuild
+import OCP.BRepTools
 __all__  = [
 "ShapeUpgrade",
 "ShapeUpgrade_Tool",
@@ -103,14 +103,14 @@ class ShapeUpgrade_Tool(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -231,14 +231,14 @@ class ShapeUpgrade_FaceDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
         Initialize by a Face.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -388,14 +388,14 @@ class ShapeUpgrade_SplitCurve(OCP.Standard.Standard_Transient):
         Initializes with curve first and last parameters.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -483,14 +483,14 @@ class ShapeUpgrade_SplitCurve3d(ShapeUpgrade_SplitCurve, OCP.Standard.Standard_T
     @overload
     def Init(self,C : OCP.Geom.Geom_Curve) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -565,23 +565,23 @@ class ShapeUpgrade_SplitSurface(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -691,14 +691,14 @@ class ShapeUpgrade_EdgeDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -849,14 +849,14 @@ class ShapeUpgrade_ClosedFaceDivide(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, 
         Initialize by a Face.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -959,9 +959,9 @@ class ShapeUpgrade_ClosedFaceDivide(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, 
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1016,14 +1016,14 @@ class ShapeUpgrade_FaceDivideArea(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, OC
         Initialize by a Face.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1122,9 +1122,9 @@ class ShapeUpgrade_FaceDivideArea(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, OC
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1138,11 +1138,15 @@ class ShapeUpgrade_FaceDivideArea(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, OC
     @property
     def MaxArea(self) -> float:
         """
+        Set max area allowed for faces
+
         :type: float
         """
     @MaxArea.setter
     def MaxArea(self, arg1: float) -> None:
-        pass
+        """
+        Set max area allowed for faces
+        """
     pass
 class ShapeUpgrade_FixSmallCurves(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient):
     def Approx(self,Curve3d : OCP.Geom.Geom_Curve,Curve2d : OCP.Geom2d.Geom2d_Curve,Curve2dR : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> bool: 
@@ -1180,14 +1184,14 @@ class ShapeUpgrade_FixSmallCurves(ShapeUpgrade_Tool, OCP.Standard.Standard_Trans
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1313,14 +1317,14 @@ class ShapeUpgrade_FixSmallBezierCurves(ShapeUpgrade_FixSmallCurves, ShapeUpgrad
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1451,14 +1455,14 @@ class ShapeUpgrade_RemoveInternalWires(ShapeUpgrade_Tool, OCP.Standard.Standard_
         Initialize by a Shape.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1487,14 +1491,14 @@ class ShapeUpgrade_RemoveInternalWires(ShapeUpgrade_Tool, OCP.Standard.Standard_
         Returns minimal allowed tolerance
         """
     @overload
-    def Perform(self,theSeqShapes : OCP.TopTools.TopTools_SequenceOfShape) -> bool: 
+    def Perform(self) -> bool: 
         """
         Removes all internal wires having area less than area specified as minimal allowed area
 
         If specified sequence of shape contains - 1.wires then these wires will be removed if they have area less than allowed min area. 2.faces than internal wires from these faces will be removed if they have area less than allowed min area.
         """
     @overload
-    def Perform(self) -> bool: ...
+    def Perform(self,theSeqShapes : OCP.TopTools.TopTools_SequenceOfShape) -> bool: ...
     def Precision(self) -> float: 
         """
         Returns basic precision value
@@ -1568,19 +1572,27 @@ class ShapeUpgrade_RemoveInternalWires(ShapeUpgrade_Tool, OCP.Standard.Standard_
     @property
     def MinArea(self) -> float:
         """
+        Set min area allowed for holes( all holes having area less than mi area will be removed)
+
         :type: float
         """
     @MinArea.setter
     def MinArea(self, arg1: float) -> None:
-        pass
+        """
+        Set min area allowed for holes( all holes having area less than mi area will be removed)
+        """
     @property
     def RemoveFaceMode(self) -> bool:
         """
+        Set mode which manage removing faces which have outer wires consisting only from edges belonginig to removed internal wires. By default it is equal to true.
+
         :type: bool
         """
     @RemoveFaceMode.setter
     def RemoveFaceMode(self, arg1: bool) -> None:
-        pass
+        """
+        Set mode which manage removing faces which have outer wires consisting only from edges belonginig to removed internal wires. By default it is equal to true.
+        """
     pass
 class ShapeUpgrade_RemoveLocations(OCP.Standard.Standard_Transient):
     """
@@ -1613,14 +1625,14 @@ class ShapeUpgrade_RemoveLocations(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1733,9 +1745,9 @@ class ShapeUpgrade_ShapeDivide():
         Queries the status of last call to Perform OK : no splitting was done (or no call to Perform) DONE1: some edges were splitted DONE2: surface was splitted FAIL1: some errors occured
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class ShapeUpgrade_ShapeConvertToBezier(ShapeUpgrade_ShapeDivide):
     """
@@ -1922,9 +1934,9 @@ class ShapeUpgrade_ShapeConvertToBezier(ShapeUpgrade_ShapeDivide):
         Queries the status of last call to Perform OK : no splitting was done (or no call to Perform) DONE1: some edges were splitted DONE2: surface was splitted FAIL1: some errors occured
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     pass
 class ShapeUpgrade_ShapeDivideAngle(ShapeUpgrade_ShapeDivide):
     """
@@ -2078,11 +2090,15 @@ class ShapeUpgrade_ShapeDivideArea(ShapeUpgrade_ShapeDivide):
     @property
     def MaxArea(self) -> float:
         """
+        Set max area allowed for faces
+
         :type: float
         """
     @MaxArea.setter
     def MaxArea(self, arg1: float) -> None:
-        pass
+        """
+        Set max area allowed for faces
+        """
     pass
 class ShapeUpgrade_ShapeDivideClosed(ShapeUpgrade_ShapeDivide):
     """
@@ -2309,9 +2325,9 @@ class ShapeUpgrade_ShapeDivideContinuity(ShapeUpgrade_ShapeDivide):
         Queries the status of last call to Perform OK : no splitting was done (or no call to Perform) DONE1: some edges were splitted DONE2: surface was splitted FAIL1: some errors occured
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class ShapeUpgrade_ShellSewing():
     """
@@ -2360,23 +2376,23 @@ class ShapeUpgrade_SplitCurve2d(ShapeUpgrade_SplitCurve, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: 
         """
         Initializes with pcurve with its first and last parameters.
 
         Initializes with pcurve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: ...
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2455,23 +2471,23 @@ class ShapeUpgrade_ConvertCurve2dToBezier(ShapeUpgrade_SplitCurve2d, ShapeUpgrad
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: 
         """
         Initializes with pcurve with its first and last parameters.
 
         Initializes with pcurve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: ...
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2554,23 +2570,23 @@ class ShapeUpgrade_SplitCurve2dContinuity(ShapeUpgrade_SplitCurve2d, ShapeUpgrad
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: 
         """
         Initializes with pcurve with its first and last parameters.
 
         Initializes with pcurve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: ...
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2684,14 +2700,14 @@ class ShapeUpgrade_ConvertCurve3dToBezier(ShapeUpgrade_SplitCurve3d, ShapeUpgrad
     @overload
     def Init(self,C : OCP.Geom.Geom_Curve) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2805,14 +2821,14 @@ class ShapeUpgrade_SplitCurve3dContinuity(ShapeUpgrade_SplitCurve3d, ShapeUpgrad
     @overload
     def Init(self,C : OCP.Geom.Geom_Curve) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2919,23 +2935,23 @@ class ShapeUpgrade_ConvertSurfaceToBezierBasis(ShapeUpgrade_SplitSurface, OCP.St
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3050,23 +3066,23 @@ class ShapeUpgrade_SplitSurfaceAngle(ShapeUpgrade_SplitSurface, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3161,23 +3177,23 @@ class ShapeUpgrade_SplitSurfaceArea(ShapeUpgrade_SplitSurface, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3233,11 +3249,15 @@ class ShapeUpgrade_SplitSurfaceArea(ShapeUpgrade_SplitSurface, OCP.Standard.Stan
     @property
     def NbParts(self) -> int:
         """
+        Set number of split for surfaces
+
         :type: int
         """
     @NbParts.setter
     def NbParts(self, arg1: int) -> None:
-        pass
+        """
+        Set number of split for surfaces
+        """
     pass
 class ShapeUpgrade_SplitSurfaceContinuity(ShapeUpgrade_SplitSurface, OCP.Standard.Standard_Transient):
     """
@@ -3272,23 +3292,23 @@ class ShapeUpgrade_SplitSurfaceContinuity(ShapeUpgrade_SplitSurface, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3406,14 +3426,14 @@ class ShapeUpgrade_ClosedEdgeDivide(ShapeUpgrade_EdgeDivide, ShapeUpgrade_Tool, 
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3560,14 +3580,14 @@ class ShapeUpgrade_UnifySameDomain(OCP.Standard.Standard_Transient):
         Initializes with a shape and necessary flags. It does not perform unification. If you intend to nullify the History place holder do it after initialization.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3663,23 +3683,23 @@ class ShapeUpgrade_WireDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,W : OCP.TopoDS.TopoDS_Wire,S : OCP.Geom.Geom_Surface) -> None: 
+    def Init(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         Initializes by wire and face
 
         Initializes by wire and surface
         """
     @overload
-    def Init(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    def Init(self,W : OCP.TopoDS.TopoDS_Wire,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3696,14 +3716,14 @@ class ShapeUpgrade_WireDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
         Returns tolerance limited by [myMinTol,myMaxTol]
         """
     @overload
-    def Load(self,E : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def Load(self,W : OCP.TopoDS.TopoDS_Wire) -> None: 
         """
         Loads working wire
 
         Creates wire of one edge and calls Load for wire
         """
     @overload
-    def Load(self,W : OCP.TopoDS.TopoDS_Wire) -> None: ...
+    def Load(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def MaxTolerance(self) -> float: 
         """
         Returns maximal allowed tolerance
@@ -3779,14 +3799,14 @@ class ShapeUpgrade_WireDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
         Sets the tool for splitting 3D curves.
         """
     @overload
-    def SetSurface(self,S : OCP.Geom.Geom_Surface) -> None: 
+    def SetSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Sets supporting surface
 
         Sets supporting surface with location
         """
     @overload
-    def SetSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: ...
+    def SetSurface(self,S : OCP.Geom.Geom_Surface) -> None: ...
     def SetTransferParamTool(self,TransferParam : OCP.ShapeAnalysis.ShapeAnalysis_TransferParameters) -> None: 
         """
         Sets the tool for Transfer parameters between curves and pcurves.

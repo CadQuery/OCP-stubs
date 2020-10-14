@@ -91,13 +91,13 @@ class TShort_Array1OfShortReal():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : float,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : TShort_Array1OfShortReal) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TShort_Array2OfShortReal():
@@ -171,13 +171,13 @@ class TShort_Array2OfShortReal():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : TShort_Array2OfShortReal) -> None: ...
-    @overload
     def __init__(self,theBegin : float,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TShort_Array2OfShortReal) -> None: ...
     pass
 class TShort_HArray1OfShortReal(TShort_Array1OfShortReal, OCP.Standard.Standard_Transient):
     def Array1(self) -> TShort_Array1OfShortReal: 
@@ -245,14 +245,14 @@ class TShort_HArray1OfShortReal(TShort_Array1OfShortReal, OCP.Standard.Standard_
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -305,9 +305,9 @@ class TShort_HArray1OfShortReal(TShort_Array1OfShortReal, OCP.Standard.Standard_
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : float) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : TShort_Array1OfShortReal) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -372,14 +372,14 @@ class TShort_HArray2OfShortReal(TShort_Array2OfShortReal, OCP.Standard.Standard_
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -440,11 +440,11 @@ class TShort_HArray2OfShortReal(TShort_Array2OfShortReal, OCP.Standard.Standard_
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : float) -> None: ...
     @overload
     def __init__(self,theOther : TShort_Array2OfShortReal) -> None: ...
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : float) -> None: ...
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -511,14 +511,14 @@ class TShort_SequenceOfShortReal(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : float) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : float) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -545,14 +545,14 @@ class TShort_SequenceOfShortReal(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : TShort_SequenceOfShortReal) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -578,9 +578,9 @@ class TShort_SequenceOfShortReal(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : TShort_SequenceOfShortReal) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -596,14 +596,14 @@ class TShort_HSequenceOfShortReal(TShort_SequenceOfShortReal, OCP.NCollection.NC
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : TShort_SequenceOfShortReal) -> None: 
+    def Append(self,theItem : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : float) -> None: ...
+    def Append(self,theSequence : TShort_SequenceOfShortReal) -> None: ...
     def Assign(self,theOther : TShort_SequenceOfShortReal) -> TShort_SequenceOfShortReal: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -666,27 +666,27 @@ class TShort_HSequenceOfShortReal(TShort_SequenceOfShortReal, OCP.NCollection.NC
     @overload
     def InsertAfter(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : float) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : float) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -718,14 +718,14 @@ class TShort_HSequenceOfShortReal(TShort_SequenceOfShortReal, OCP.NCollection.NC
     @overload
     def Prepend(self,theSeq : TShort_SequenceOfShortReal) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -759,9 +759,9 @@ class TShort_HSequenceOfShortReal(TShort_SequenceOfShortReal, OCP.NCollection.NC
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TShort_SequenceOfShortReal) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TShort_SequenceOfShortReal) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

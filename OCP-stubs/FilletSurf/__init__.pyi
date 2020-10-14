@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopOpeBRepBuild
-import OCP.Adaptor3d
-import OCP.Law
+import OCP.GeomAbs
 import OCP.Geom2d
+import OCP.Law
 import OCP.TopTools
-import OCP.gp
+import OCP.TopOpeBRepBuild
+import OCP.ChFi3d
+import OCP.Adaptor3d
+import OCP.TopoDS
 import OCP.ChFiDS
 import OCP.Geom
-import OCP.ChFi3d
-import OCP.GeomAbs
-import OCP.TopoDS
+import OCP.gp
 __all__  = [
 "FilletSurf_Builder",
 "FilletSurf_ErrorTypeStatus",
@@ -142,6 +142,7 @@ class FilletSurf_ErrorTypeStatus():
 
       FilletSurf_PbFilletCompute
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -197,14 +198,14 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         Returns the IS'th surface calculated on the contour IC.
         """
     @overload
-    def Contains(self,E : OCP.TopoDS.TopoDS_Edge,IndexInSpine : int) -> int: 
+    def Contains(self,E : OCP.TopoDS.TopoDS_Edge) -> int: 
         """
         gives the number of the contour containing E or 0 if E does not belong to any contour.
 
         gives the number of the contour containing E or 0 if E does not belong to any contour. Sets in IndexInSpine the index of E in the contour if it's found
         """
     @overload
-    def Contains(self,E : OCP.TopoDS.TopoDS_Edge) -> int: ...
+    def Contains(self,E : OCP.TopoDS.TopoDS_Edge,IndexInSpine : int) -> int: ...
     def CurveOnFace1(self,Index : int) -> OCP.Geom.Geom_Curve: 
         """
         gives the 3d curve of SurfaceFillet(Index) on SupportFace1(Index)
@@ -335,14 +336,14 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         None
         """
     @overload
-    def Radius(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> float: 
+    def Radius(self,IC : int) -> float: 
         """
         Returns the vector if the contour is flagged as edge constant.
 
         Returns the vector if E is flagged as edge constant.
         """
     @overload
-    def Radius(self,IC : int) -> float: ...
+    def Radius(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> float: ...
     def RelativeAbscissa(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> float: 
         """
         returns the relative abscissa([0.,1.]) of the vertex V on the contour of index IC.
@@ -384,7 +385,7 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         None
         """
     @overload
-    def SetRadius(self,UandR : OCP.gp.gp_XY,IC : int,IinC : int) -> None: 
+    def SetRadius(self,C : OCP.Law.Law_Function,IC : int,IinC : int) -> None: 
         """
         Set the radius of the contour of index IC.
 
@@ -395,11 +396,11 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         Set a vertex on the point of parametre U in the edge IinC of the contour of index IC
         """
     @overload
-    def SetRadius(self,C : OCP.Law.Law_Function,IC : int,IinC : int) -> None: ...
+    def SetRadius(self,Radius : float,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
     def SetRadius(self,Radius : float,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
-    def SetRadius(self,Radius : float,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def SetRadius(self,UandR : OCP.gp.gp_XY,IC : int,IinC : int) -> None: ...
     def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         if (Isdone()) makes the result. if (!Isdone())
@@ -437,14 +438,14 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         gives the 3d tolerance reached during approximation of the surface of index Index
         """
     @overload
-    def UnSet(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: 
+    def UnSet(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Extracts the flag constant and the vector of edge E.
 
         Extracts the vector of the vertex V.
         """
     @overload
-    def UnSet(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def UnSet(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     def Value(self,I : int) -> OCP.ChFiDS.ChFiDS_Spine: 
         """
         gives the n'th set of edges (contour) if I >NbElements()
@@ -463,6 +464,7 @@ class FilletSurf_StatusDone():
 
       FilletSurf_IsPartial
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -490,6 +492,7 @@ class FilletSurf_StatusType():
 
       FilletSurf_NoExtremityOnEdge
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

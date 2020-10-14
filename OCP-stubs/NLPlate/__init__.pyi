@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.Standard
-import OCP.gp
 import OCP.Plate
+import OCP.Standard
 import OCP.Geom
+import OCP.NCollection
+import OCP.gp
 __all__  = [
 "NLPlate_HGPPConstraint",
 "NLPlate_HPG0Constraint",
@@ -91,14 +91,14 @@ class NLPlate_HGPPConstraint(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -240,14 +240,14 @@ class NLPlate_HPG0Constraint(NLPlate_HGPPConstraint, OCP.Standard.Standard_Trans
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -390,14 +390,14 @@ class NLPlate_HPG0G1Constraint(NLPlate_HPG0Constraint, NLPlate_HGPPConstraint, O
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -540,14 +540,14 @@ class NLPlate_HPG0G2Constraint(NLPlate_HPG0G1Constraint, NLPlate_HPG0Constraint,
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -690,14 +690,14 @@ class NLPlate_HPG0G3Constraint(NLPlate_HPG0G2Constraint, NLPlate_HPG0G1Constrain
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -840,14 +840,14 @@ class NLPlate_HPG1Constraint(NLPlate_HGPPConstraint, OCP.Standard.Standard_Trans
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -990,14 +990,14 @@ class NLPlate_HPG2Constraint(NLPlate_HPG1Constraint, NLPlate_HGPPConstraint, OCP
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1140,14 +1140,14 @@ class NLPlate_HPG3Constraint(NLPlate_HPG2Constraint, NLPlate_HPG1Constraint, NLP
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1284,14 +1284,14 @@ class NLPlate_SequenceOfHGPPConstraint(OCP.NCollection.NCollection_BaseSequence)
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : NLPlate_HGPPConstraint) -> None: 
+    def Append(self,theSeq : NLPlate_SequenceOfHGPPConstraint) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : NLPlate_SequenceOfHGPPConstraint) -> None: ...
+    def Append(self,theItem : NLPlate_HGPPConstraint) -> None: ...
     def Assign(self,theOther : NLPlate_SequenceOfHGPPConstraint) -> NLPlate_SequenceOfHGPPConstraint: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1355,14 +1355,14 @@ class NLPlate_SequenceOfHGPPConstraint(OCP.NCollection.NCollection_BaseSequence)
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : NLPlate_SequenceOfHGPPConstraint) -> None: 
+    def Prepend(self,theItem : NLPlate_HGPPConstraint) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : NLPlate_HGPPConstraint) -> None: ...
+    def Prepend(self,theSeq : NLPlate_SequenceOfHGPPConstraint) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1397,11 +1397,11 @@ class NLPlate_SequenceOfHGPPConstraint(OCP.NCollection.NCollection_BaseSequence)
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : NLPlate_SequenceOfHGPPConstraint) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1418,7 +1418,7 @@ class NLPlate_StackOfPlate(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : NLPlate_StackOfPlate) -> None: 
+    def Append(self,theItem : OCP.Plate.Plate_Plate,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -1429,7 +1429,7 @@ class NLPlate_StackOfPlate(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : OCP.Plate.Plate_Plate) -> OCP.Plate.Plate_Plate: ...
     @overload
-    def Append(self,theItem : OCP.Plate.Plate_Plate,theIter : Any) -> None: ...
+    def Append(self,theOther : NLPlate_StackOfPlate) -> None: ...
     def Assign(self,theOther : NLPlate_StackOfPlate) -> NLPlate_StackOfPlate: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1477,14 +1477,14 @@ class NLPlate_StackOfPlate(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : OCP.Plate.Plate_Plate) -> OCP.Plate.Plate_Plate: 
+    def Prepend(self,theOther : NLPlate_StackOfPlate) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : NLPlate_StackOfPlate) -> None: ...
+    def Prepend(self,theItem : OCP.Plate.Plate_Plate) -> OCP.Plate.Plate_Plate: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item

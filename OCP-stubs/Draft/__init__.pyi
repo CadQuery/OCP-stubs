@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
+import OCP.GeomAbs
 import OCP.Poly
 import OCP.Geom2d
-import OCP.Standard
-import OCP.TopLoc
-import OCP.gp
 import OCP.TopTools
-import OCP.Geom
-import OCP.BRepTools
+import OCP.TopLoc
+import OCP.Standard
 import OCP.TopoDS
-import OCP.GeomAbs
+import OCP.Geom
+import OCP.NCollection
+import OCP.BRepTools
+import OCP.gp
 __all__  = [
 "Draft",
 "Draft_EdgeInfo",
@@ -82,14 +82,14 @@ class Draft_EdgeInfo():
         None
         """
     @overload
-    def RootFace(self,F : OCP.TopoDS.TopoDS_Face) -> None: 
+    def RootFace(self) -> OCP.TopoDS.TopoDS_Face: 
         """
         None
 
         None
         """
     @overload
-    def RootFace(self) -> OCP.TopoDS.TopoDS_Face: ...
+    def RootFace(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     def SecondFace(self) -> OCP.TopoDS.TopoDS_Face: 
         """
         None
@@ -107,14 +107,14 @@ class Draft_EdgeInfo():
         None
         """
     @overload
-    def Tolerance(self,tol : float) -> None: 
+    def Tolerance(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def Tolerance(self) -> float: ...
+    def Tolerance(self,tol : float) -> None: ...
     @overload
     def __init__(self,HasNewGeometry : bool) -> None: ...
     @overload
@@ -134,6 +134,7 @@ class Draft_ErrorStatus():
 
       Draft_VertexRecomputation
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -315,11 +316,11 @@ class Draft_IndexedDataMapOfEdgeEdgeInfo(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self,theOther : Draft_IndexedDataMapOfEdgeEdgeInfo) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Draft_IndexedDataMapOfFaceFaceInfo(OCP.NCollection.NCollection_BaseMap):
@@ -351,14 +352,14 @@ class Draft_IndexedDataMapOfFaceFaceInfo(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Face) -> bool: 
         """
         Contains
@@ -376,14 +377,14 @@ class Draft_IndexedDataMapOfFaceFaceInfo(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Face) -> Draft_FaceInfo: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Face,theValue : Draft_FaceInfo) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Face,theValue : Draft_FaceInfo) -> bool: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Face) -> Draft_FaceInfo: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Face) -> int: 
         """
         FindIndex
@@ -437,11 +438,11 @@ class Draft_IndexedDataMapOfFaceFaceInfo(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Draft_IndexedDataMapOfFaceFaceInfo) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : Draft_IndexedDataMapOfFaceFaceInfo) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Draft_IndexedDataMapOfVertexVertexInfo(OCP.NCollection.NCollection_BaseMap):
@@ -498,14 +499,14 @@ class Draft_IndexedDataMapOfVertexVertexInfo(OCP.NCollection.NCollection_BaseMap
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Vertex) -> Draft_VertexInfo: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Vertex,theValue : Draft_VertexInfo) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Vertex,theValue : Draft_VertexInfo) -> bool: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Vertex) -> Draft_VertexInfo: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Vertex) -> int: 
         """
         FindIndex
@@ -616,14 +617,14 @@ class Draft_Modification(OCP.BRepTools.BRepTools_Modification, OCP.Standard.Stan
         Returns True if Perform has been succesfully called. Otherwise more information can be obtained using the methods Error() and ProblematicShape().
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

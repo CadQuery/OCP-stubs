@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Standard
 import OCP.Message
 import OCP.Geom2d
-import OCP.Standard
 import OCP.Geom
 __all__  = [
 "GeomTools",
@@ -21,7 +21,7 @@ class GeomTools():
     """
     @staticmethod
     @overload
-    def Dump_s(S : OCP.Geom.Geom_Surface,OS : Any) -> None: 
+    def Dump_s(C : OCP.Geom.Geom_Curve,OS : Any) -> None: 
         """
         A set of Curves from Geom2d. Dumps the surface on the stream.
 
@@ -31,7 +31,7 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Dump_s(C : OCP.Geom.Geom_Curve,OS : Any) -> None: ...
+    def Dump_s(S : OCP.Geom.Geom_Surface,OS : Any) -> None: ...
     @staticmethod
     @overload
     def Dump_s(C : OCP.Geom2d.Geom2d_Curve,OS : Any) -> None: ...
@@ -68,7 +68,7 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Write_s(S : OCP.Geom.Geom_Surface,OS : Any) -> None: 
+    def Write_s(C : OCP.Geom.Geom_Curve,OS : Any) -> None: 
         """
         Writes the surface on the stream.
 
@@ -78,7 +78,7 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Write_s(C : OCP.Geom.Geom_Curve,OS : Any) -> None: ...
+    def Write_s(S : OCP.Geom.Geom_Surface,OS : Any) -> None: ...
     @staticmethod
     @overload
     def Write_s(C : OCP.Geom2d.Geom2d_Curve,OS : Any) -> None: ...
@@ -262,14 +262,14 @@ class GeomTools_UndefinedTypeHandler(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor3d
-import OCP.AdvApprox
-import OCP.Geom2d
-import OCP.gp
-import OCP.TColgp
-import OCP.Geom
 import OCP.TColStd
 import OCP.math
+import OCP.Geom2d
+import OCP.TColgp
+import OCP.Adaptor3d
+import OCP.Geom
+import OCP.AdvApprox
+import OCP.gp
 __all__  = [
 "GeomLib",
 "GeomLib_Array1OfMat",
@@ -219,13 +219,13 @@ class GeomLib_Array1OfMat():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : GeomLib_Array1OfMat) -> None: ...
+    def __init__(self,theBegin : OCP.gp.gp_Mat,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_Mat,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : GeomLib_Array1OfMat) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class GeomLib_Check2dBSplineCurve():
@@ -322,9 +322,9 @@ class GeomLib_CheckCurveOnSurface():
         Returns mySurface
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theCurve : OCP.Geom.Geom_Curve,theSurface : OCP.Geom.Geom_Surface,theFirst : float,theLast : float,theTolRange : float=9.999999999999999e-10) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class GeomLib_DenominatorMultiplier():
     """
@@ -372,6 +372,7 @@ class GeomLib_InterpolationErrors():
 
       GeomLib_InversionProblem
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

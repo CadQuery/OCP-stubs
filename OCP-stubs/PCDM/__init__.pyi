@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
 import OCP.TCollection
+import OCP.TColStd
+import OCP.Message
 import OCP.Storage
 import OCP.Standard
-import OCP.Message
-import OCP.TColStd
 import OCP.CDM
+import OCP.NCollection
 __all__  = [
 "PCDM",
 "PCDM_Document",
@@ -90,14 +90,14 @@ class PCDM_Document(OCP.Standard.Standard_Persistent, OCP.Standard.Standard_Tran
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -125,11 +125,15 @@ class PCDM_Document(OCP.Standard.Standard_Persistent, OCP.Standard.Standard_Tran
     @property
     def TypeNum(self) -> int:
         """
+        None
+
         :type: int
         """
     @TypeNum.setter
     def TypeNum(self, arg1: int) -> None:
-        pass
+        """
+        None
+        """
     pass
 class PCDM_DriverError(Exception, BaseException):
     class type():
@@ -169,14 +173,14 @@ class PCDM_ReadWriter(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -284,14 +288,14 @@ class PCDM_ReadWriter_1(PCDM_ReadWriter, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -405,14 +409,14 @@ class PCDM_Reader(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -423,14 +427,14 @@ class PCDM_Reader(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: 
+    def Read(self,aFileName : OCP.TCollection.TCollection_ExtendedString,aNewDocument : OCP.CDM.CDM_Document,anApplication : OCP.CDM.CDM_Application) -> None: 
         """
         retrieves the content of the file into a new Document.
 
         None
         """
     @overload
-    def Read(self,aFileName : OCP.TCollection.TCollection_ExtendedString,aNewDocument : OCP.CDM.CDM_Document,anApplication : OCP.CDM.CDM_Application) -> None: ...
+    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -496,6 +500,7 @@ class PCDM_ReaderStatus():
 
       PCDM_RS_NoModel
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -577,14 +582,14 @@ class PCDM_ReferenceIterator(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -655,14 +660,14 @@ class PCDM_RetrievalDriver(PCDM_Reader, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -673,14 +678,14 @@ class PCDM_RetrievalDriver(PCDM_Reader, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: 
+    def Read(self,aFileName : OCP.TCollection.TCollection_ExtendedString,aNewDocument : OCP.CDM.CDM_Document,anApplication : OCP.CDM.CDM_Application) -> None: 
         """
         retrieves the content of the file into a new Document.
 
         None
         """
     @overload
-    def Read(self,aFileName : OCP.TCollection.TCollection_ExtendedString,aNewDocument : OCP.CDM.CDM_Document,anApplication : OCP.CDM.CDM_Application) -> None: ...
+    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: ...
     @staticmethod
     def ReferenceCounter_s(theFileName : OCP.TCollection.TCollection_ExtendedString,theMsgDriver : OCP.Message.Message_Messenger) -> int: 
         """
@@ -714,14 +719,14 @@ class PCDM_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : PCDM_Document) -> None: 
+    def Append(self,theSeq : PCDM_SequenceOfDocument) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : PCDM_SequenceOfDocument) -> None: ...
+    def Append(self,theItem : PCDM_Document) -> None: ...
     def Assign(self,theOther : PCDM_SequenceOfDocument) -> PCDM_SequenceOfDocument: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -760,14 +765,14 @@ class PCDM_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : PCDM_SequenceOfDocument) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : PCDM_Document) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : PCDM_SequenceOfDocument) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : PCDM_SequenceOfDocument) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : PCDM_Document) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -827,11 +832,11 @@ class PCDM_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : PCDM_SequenceOfDocument) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -848,14 +853,14 @@ class PCDM_SequenceOfReference(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : PCDM_SequenceOfReference) -> None: 
+    def Append(self,theItem : PCDM_Reference) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : PCDM_Reference) -> None: ...
+    def Append(self,theSeq : PCDM_SequenceOfReference) -> None: ...
     def Assign(self,theOther : PCDM_SequenceOfReference) -> PCDM_SequenceOfReference: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -885,14 +890,14 @@ class PCDM_SequenceOfReference(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : PCDM_SequenceOfReference) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : PCDM_Reference) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : PCDM_Reference) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : PCDM_SequenceOfReference) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : PCDM_SequenceOfReference) -> None: 
         """
@@ -961,11 +966,11 @@ class PCDM_SequenceOfReference(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : PCDM_SequenceOfReference) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -995,14 +1000,14 @@ class PCDM_Writer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1017,14 +1022,14 @@ class PCDM_Writer(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : Any) -> None: 
+    def Write(self,aDocument : OCP.CDM.CDM_Document,aFileName : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
 
         Write <theDocument> to theOStream
         """
     @overload
-    def Write(self,aDocument : OCP.CDM.CDM_Document,aFileName : OCP.TCollection.TCollection_ExtendedString) -> None: ...
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : Any) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1056,6 +1061,7 @@ class PCDM_StoreStatus():
 
       PCDM_SS_Info_Section_Error
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1089,6 +1095,7 @@ class PCDM_TypeOfFileDriver():
 
       PCDM_TOFD_Unknown
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1142,14 +1149,14 @@ class PCDM_StorageDriver(PCDM_Writer, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1160,14 +1167,14 @@ class PCDM_StorageDriver(PCDM_Writer, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : PCDM_SequenceOfDocument) -> None: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> PCDM_Document: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> PCDM_Document: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : PCDM_SequenceOfDocument) -> None: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None

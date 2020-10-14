@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.StepShape
-import OCP.Transfer
 import OCP.TCollection
+import OCP.StepRepr
 import OCP.Geom2d
 import OCP.StepGeom
-import OCP.gp
-import OCP.StepRepr
-import OCP.Geom
+import OCP.Transfer
+import OCP.StepShape
 import OCP.TopoDS
+import OCP.Geom
+import OCP.NCollection
+import OCP.gp
 __all__  = [
 "StepToTopoDS",
 "StepToTopoDS_Root",
@@ -162,6 +162,7 @@ class StepToTopoDS_BuilderError():
 
       StepToTopoDS_BuilderOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -332,14 +333,14 @@ class StepToTopoDS_DataMapOfRINames(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: 
+    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     def IsBound(self,theKey : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         IsBound
@@ -373,11 +374,11 @@ class StepToTopoDS_DataMapOfRINames(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepToTopoDS_DataMapOfRINames) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : StepToTopoDS_DataMapOfRINames) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepToTopoDS_DataMapOfTRI(OCP.NCollection.NCollection_BaseMap):
@@ -467,9 +468,9 @@ class StepToTopoDS_DataMapOfTRI(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : StepToTopoDS_DataMapOfTRI) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -518,6 +519,7 @@ class StepToTopoDS_GeometricToolError():
 
       StepToTopoDS_GeometricToolOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -598,27 +600,27 @@ class StepToTopoDS_NMTool():
     Provides data to process non-manifold topology when reading from STEP.
     """
     @overload
-    def Bind(self,RI : OCP.StepRepr.StepRepr_RepresentationItem,S : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Bind(self,RIName : OCP.TCollection.TCollection_AsciiString,S : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Bind(self,RIName : OCP.TCollection.TCollection_AsciiString,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Bind(self,RI : OCP.StepRepr.StepRepr_RepresentationItem,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def CleanUp(self) -> None: 
         """
         None
         """
     @overload
-    def Find(self,RIName : OCP.TCollection.TCollection_AsciiString) -> OCP.TopoDS.TopoDS_Shape: 
+    def Find(self,RI : OCP.StepRepr.StepRepr_RepresentationItem) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
         None
         """
     @overload
-    def Find(self,RI : OCP.StepRepr.StepRepr_RepresentationItem) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Find(self,RIName : OCP.TCollection.TCollection_AsciiString) -> OCP.TopoDS.TopoDS_Shape: ...
     def Init(self,MapOfRI : StepToTopoDS_DataMapOfRI,MapOfRINames : StepToTopoDS_DataMapOfRINames) -> None: 
         """
         None
@@ -628,14 +630,14 @@ class StepToTopoDS_NMTool():
         None
         """
     @overload
-    def IsBound(self,RIName : OCP.TCollection.TCollection_AsciiString) -> bool: 
+    def IsBound(self,RI : OCP.StepRepr.StepRepr_RepresentationItem) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def IsBound(self,RI : OCP.StepRepr.StepRepr_RepresentationItem) -> bool: ...
+    def IsBound(self,RIName : OCP.TCollection.TCollection_AsciiString) -> bool: ...
     def IsIDEASCase(self) -> bool: 
         """
         None
@@ -694,14 +696,14 @@ class StepToTopoDS_PointEdgeMap(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : StepToTopoDS_PointEdgeMap) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -752,9 +754,9 @@ class StepToTopoDS_PointEdgeMap(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : StepToTopoDS_PointEdgeMap) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -810,14 +812,14 @@ class StepToTopoDS_PointVertexMap(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : StepToTopoDS_PointVertexMap) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -870,9 +872,9 @@ class StepToTopoDS_PointVertexMap(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theOther : StepToTopoDS_PointVertexMap) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepToTopoDS_Builder(StepToTopoDS_Root):
@@ -884,7 +886,7 @@ class StepToTopoDS_Builder(StepToTopoDS_Root):
         None
         """
     @overload
-    def Init(self,S : OCP.StepShape.StepShape_FaceBasedSurfaceModel,TP : OCP.Transfer.Transfer_TransientProcess) -> None: 
+    def Init(self,S : OCP.StepShape.StepShape_EdgeBasedWireframeModel,TP : OCP.Transfer.Transfer_TransientProcess) -> None: 
         """
         None
 
@@ -902,20 +904,20 @@ class StepToTopoDS_Builder(StepToTopoDS_Root):
 
         None
         """
+    @overload
+    def Init(self,S : OCP.StepShape.StepShape_GeometricSet,TP : OCP.Transfer.Transfer_TransientProcess,RA : OCP.Transfer.Transfer_ActorOfTransientProcess=None,isManifold : bool=False) -> None: ...
+    @overload
+    def Init(self,S : OCP.StepShape.StepShape_ShellBasedSurfaceModel,TP : OCP.Transfer.Transfer_TransientProcess,NMTool : StepToTopoDS_NMTool) -> None: ...
     @overload
     def Init(self,S : OCP.StepShape.StepShape_FacetedBrep,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
-    @overload
-    def Init(self,S : OCP.StepShape.StepShape_ManifoldSolidBrep,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
     @overload
     def Init(self,S : OCP.StepShape.StepShape_BrepWithVoids,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
     @overload
     def Init(self,S : OCP.StepShape.StepShape_FacetedBrepAndBrepWithVoids,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
     @overload
-    def Init(self,S : OCP.StepShape.StepShape_EdgeBasedWireframeModel,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
+    def Init(self,S : OCP.StepShape.StepShape_FaceBasedSurfaceModel,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
     @overload
-    def Init(self,S : OCP.StepShape.StepShape_GeometricSet,TP : OCP.Transfer.Transfer_TransientProcess,RA : OCP.Transfer.Transfer_ActorOfTransientProcess=None,isManifold : bool=False) -> None: ...
-    @overload
-    def Init(self,S : OCP.StepShape.StepShape_ShellBasedSurfaceModel,TP : OCP.Transfer.Transfer_TransientProcess,NMTool : StepToTopoDS_NMTool) -> None: ...
+    def Init(self,S : OCP.StepShape.StepShape_ManifoldSolidBrep,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
     def IsDone(self) -> bool: 
         """
         None
@@ -951,24 +953,24 @@ class StepToTopoDS_Builder(StepToTopoDS_Root):
         None
         """
     @overload
-    def __init__(self,S : OCP.StepShape.StepShape_FacetedBrep,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
-    @overload
     def __init__(self,S : OCP.StepShape.StepShape_FacetedBrepAndBrepWithVoids,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
     @overload
-    def __init__(self,S : OCP.StepShape.StepShape_ManifoldSolidBrep,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
+    def __init__(self,S : OCP.StepShape.StepShape_ShellBasedSurfaceModel,TP : OCP.Transfer.Transfer_TransientProcess,NMTool : StepToTopoDS_NMTool) -> None: ...
     @overload
     def __init__(self,S : OCP.StepShape.StepShape_BrepWithVoids,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
     @overload
+    def __init__(self,S : OCP.StepShape.StepShape_FacetedBrep,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,S : OCP.StepShape.StepShape_ShellBasedSurfaceModel,TP : OCP.Transfer.Transfer_TransientProcess,NMTool : StepToTopoDS_NMTool) -> None: ...
+    def __init__(self,S : OCP.StepShape.StepShape_ManifoldSolidBrep,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
     pass
 class StepToTopoDS_Tool():
     """
     This Tool Class provides Information to build a Cas.Cad BRep from a ProSTEP Shape model.
     """
     @overload
-    def AddContinuity(self,GeomCurve : OCP.Geom.Geom_Curve) -> None: 
+    def AddContinuity(self,GeomCur2d : OCP.Geom2d.Geom2d_Curve) -> None: 
         """
         None
 
@@ -976,10 +978,10 @@ class StepToTopoDS_Tool():
 
         None
         """
-    @overload
-    def AddContinuity(self,GeomCur2d : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def AddContinuity(self,GeomSurf : OCP.Geom.Geom_Surface) -> None: ...
+    @overload
+    def AddContinuity(self,GeomCurve : OCP.Geom.Geom_Curve) -> None: ...
     def Bind(self,TRI : OCP.StepShape.StepShape_TopologicalRepresentationItem,S : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
@@ -1078,9 +1080,9 @@ class StepToTopoDS_Tool():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Map : StepToTopoDS_DataMapOfTRI,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class StepToTopoDS_TranslateCompositeCurve(StepToTopoDS_Root):
     """
@@ -1136,11 +1138,11 @@ class StepToTopoDS_TranslateCompositeCurve(StepToTopoDS_Root):
         Returns result of last translation or null wire if failed.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,CC : OCP.StepGeom.StepGeom_CompositeCurve,TP : OCP.Transfer.Transfer_TransientProcess,S : OCP.StepGeom.StepGeom_Surface,Surf : OCP.Geom.Geom_Surface) -> None: ...
     @overload
     def __init__(self,CC : OCP.StepGeom.StepGeom_CompositeCurve,TP : OCP.Transfer.Transfer_TransientProcess) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class StepToTopoDS_TranslateCurveBoundedSurface(StepToTopoDS_Root):
     """
@@ -1244,9 +1246,9 @@ class StepToTopoDS_TranslateEdge(StepToTopoDS_Root):
         None
         """
     @overload
-    def __init__(self,E : OCP.StepShape.StepShape_Edge,T : StepToTopoDS_Tool,NMTool : StepToTopoDS_NMTool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,E : OCP.StepShape.StepShape_Edge,T : StepToTopoDS_Tool,NMTool : StepToTopoDS_NMTool) -> None: ...
     pass
 class StepToTopoDS_TranslateEdgeError():
     """
@@ -1258,6 +1260,7 @@ class StepToTopoDS_TranslateEdgeError():
 
       StepToTopoDS_TranslateEdgeOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1319,9 +1322,9 @@ class StepToTopoDS_TranslateEdgeLoop(StepToTopoDS_Root):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,FB : OCP.StepShape.StepShape_FaceBound,F : OCP.TopoDS.TopoDS_Face,S : OCP.Geom.Geom_Surface,SS : OCP.StepGeom.StepGeom_Surface,ss : bool,T : StepToTopoDS_Tool,NMTool : StepToTopoDS_NMTool) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class StepToTopoDS_TranslateEdgeLoopError():
     """
@@ -1333,6 +1336,7 @@ class StepToTopoDS_TranslateEdgeLoopError():
 
       StepToTopoDS_TranslateEdgeLoopOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1394,9 +1398,9 @@ class StepToTopoDS_TranslateFace(StepToTopoDS_Root):
         None
         """
     @overload
-    def __init__(self,FS : OCP.StepShape.StepShape_FaceSurface,T : StepToTopoDS_Tool,NMTool : StepToTopoDS_NMTool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,FS : OCP.StepShape.StepShape_FaceSurface,T : StepToTopoDS_Tool,NMTool : StepToTopoDS_NMTool) -> None: ...
     pass
 class StepToTopoDS_TranslateFaceError():
     """
@@ -1408,6 +1412,7 @@ class StepToTopoDS_TranslateFaceError():
 
       StepToTopoDS_TranslateFaceOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1469,9 +1474,9 @@ class StepToTopoDS_TranslatePolyLoop(StepToTopoDS_Root):
         None
         """
     @overload
-    def __init__(self,PL : OCP.StepShape.StepShape_PolyLoop,T : StepToTopoDS_Tool,S : OCP.Geom.Geom_Surface,F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,PL : OCP.StepShape.StepShape_PolyLoop,T : StepToTopoDS_Tool,S : OCP.Geom.Geom_Surface,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     pass
 class StepToTopoDS_TranslatePolyLoopError():
     """
@@ -1483,6 +1488,7 @@ class StepToTopoDS_TranslatePolyLoopError():
 
       StepToTopoDS_TranslatePolyLoopOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1558,6 +1564,7 @@ class StepToTopoDS_TranslateShellError():
 
       StepToTopoDS_TranslateShellOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1619,9 +1626,9 @@ class StepToTopoDS_TranslateVertex(StepToTopoDS_Root):
         None
         """
     @overload
-    def __init__(self,V : OCP.StepShape.StepShape_Vertex,T : StepToTopoDS_Tool,NMTool : StepToTopoDS_NMTool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,V : OCP.StepShape.StepShape_Vertex,T : StepToTopoDS_Tool,NMTool : StepToTopoDS_NMTool) -> None: ...
     pass
 class StepToTopoDS_TranslateVertexError():
     """
@@ -1633,6 +1640,7 @@ class StepToTopoDS_TranslateVertexError():
 
       StepToTopoDS_TranslateVertexOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1694,9 +1702,9 @@ class StepToTopoDS_TranslateVertexLoop(StepToTopoDS_Root):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,VL : OCP.StepShape.StepShape_VertexLoop,T : StepToTopoDS_Tool,NMTool : StepToTopoDS_NMTool) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class StepToTopoDS_TranslateVertexLoopError():
     """
@@ -1708,6 +1716,7 @@ class StepToTopoDS_TranslateVertexLoopError():
 
       StepToTopoDS_TranslateVertexLoopOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

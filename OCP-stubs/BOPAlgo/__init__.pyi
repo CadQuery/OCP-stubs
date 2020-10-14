@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.BOPDS
 import OCP.TopAbs
-import OCP.IntTools
-import OCP.Standard
-import OCP.TopTools
-import OCP.BRepTools
+import OCP.BOPDS
 import OCP.Message
+import OCP.TopTools
+import OCP.Standard
 import OCP.TopoDS
+import OCP.IntTools
+import OCP.NCollection
 import OCP.BOPTools
+import OCP.BRepTools
 __all__  = [
 "BOPAlgo_AlertAcquiredSelfIntersection",
 "BOPAlgo_AlertBOPNotAllowed",
@@ -141,14 +141,14 @@ class BOPAlgo_AlertAcquiredSelfIntersection(OCP.TopoDS.TopoDS_AlertWithShape, OC
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -215,14 +215,14 @@ class BOPAlgo_AlertBOPNotAllowed(OCP.Message.Message_Alert, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -285,14 +285,14 @@ class BOPAlgo_AlertBOPNotSet(OCP.Message.Message_Alert, OCP.Standard.Standard_Tr
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -359,14 +359,14 @@ class BOPAlgo_AlertBadPositioning(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -433,14 +433,14 @@ class BOPAlgo_AlertBuilderFailed(OCP.Message.Message_Alert, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -507,14 +507,14 @@ class BOPAlgo_AlertBuildingPCurveFailed(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -585,14 +585,14 @@ class BOPAlgo_AlertEmptyShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Mess
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -663,14 +663,14 @@ class BOPAlgo_AlertFaceBuilderUnusedEdges(OCP.TopoDS.TopoDS_AlertWithShape, OCP.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -737,14 +737,14 @@ class BOPAlgo_AlertIntersectionFailed(OCP.Message.Message_Alert, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -811,14 +811,14 @@ class BOPAlgo_AlertIntersectionOfPairOfShapesFailed(OCP.TopoDS.TopoDS_AlertWithS
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -885,14 +885,14 @@ class BOPAlgo_AlertMultiDimensionalArguments(OCP.Message.Message_Alert, OCP.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -955,14 +955,14 @@ class BOPAlgo_AlertMultipleArguments(OCP.Message.Message_Alert, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1025,14 +1025,14 @@ class BOPAlgo_AlertNoFacesToRemove(OCP.Message.Message_Alert, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1095,14 +1095,14 @@ class BOPAlgo_AlertNoFiller(OCP.Message.Message_Alert, OCP.Standard.Standard_Tra
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1165,14 +1165,14 @@ class BOPAlgo_AlertNoPeriodicityRequired(OCP.Message.Message_Alert, OCP.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1239,14 +1239,14 @@ class BOPAlgo_AlertNotSplittableEdge(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Messa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1313,14 +1313,14 @@ class BOPAlgo_AlertNullInputShapes(OCP.Message.Message_Alert, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1383,14 +1383,14 @@ class BOPAlgo_AlertPostTreatFF(OCP.Message.Message_Alert, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1457,14 +1457,14 @@ class BOPAlgo_AlertRemovalOfIBForEdgesFailed(OCP.TopoDS.TopoDS_AlertWithShape, O
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1535,14 +1535,14 @@ class BOPAlgo_AlertRemovalOfIBForFacesFailed(OCP.TopoDS.TopoDS_AlertWithShape, O
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1613,14 +1613,14 @@ class BOPAlgo_AlertRemovalOfIBForMDimShapes(OCP.TopoDS.TopoDS_AlertWithShape, OC
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1691,14 +1691,14 @@ class BOPAlgo_AlertRemovalOfIBForSolidsFailed(OCP.TopoDS.TopoDS_AlertWithShape, 
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1765,14 +1765,14 @@ class BOPAlgo_AlertRemoveFeaturesFailed(OCP.Message.Message_Alert, OCP.Standard.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1839,14 +1839,14 @@ class BOPAlgo_AlertSelfInterferingShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1917,14 +1917,14 @@ class BOPAlgo_AlertShapeIsNotPeriodic(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Mess
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1995,14 +1995,14 @@ class BOPAlgo_AlertShellSplitterFailed(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Mes
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2069,14 +2069,14 @@ class BOPAlgo_AlertSolidBuilderFailed(OCP.Message.Message_Alert, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2143,14 +2143,14 @@ class BOPAlgo_AlertSolidBuilderUnusedFaces(OCP.TopoDS.TopoDS_AlertWithShape, OCP
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2217,14 +2217,14 @@ class BOPAlgo_AlertTooFewArguments(OCP.Message.Message_Alert, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2291,14 +2291,14 @@ class BOPAlgo_AlertTooSmallEdge(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2369,14 +2369,14 @@ class BOPAlgo_AlertUnableToGlue(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2447,14 +2447,14 @@ class BOPAlgo_AlertUnableToMakeIdentical(OCP.TopoDS.TopoDS_AlertWithShape, OCP.M
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2525,14 +2525,14 @@ class BOPAlgo_AlertUnableToMakePeriodic(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2603,14 +2603,14 @@ class BOPAlgo_AlertUnableToOrientTheShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2681,14 +2681,14 @@ class BOPAlgo_AlertUnableToRemoveTheFeature(OCP.TopoDS.TopoDS_AlertWithShape, OC
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2759,14 +2759,14 @@ class BOPAlgo_AlertUnableToRepeat(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2837,14 +2837,14 @@ class BOPAlgo_AlertUnableToTrim(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2915,14 +2915,14 @@ class BOPAlgo_AlertUnknownShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2993,14 +2993,14 @@ class BOPAlgo_AlertUnsupportedType(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3129,9 +3129,9 @@ class BOPAlgo_Options():
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
 class BOPAlgo_Algo(BOPAlgo_Options):
     """
@@ -3833,9 +3833,9 @@ class BOPAlgo_BuilderFace(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_ToolsProvider(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options):
     """
@@ -4188,9 +4188,9 @@ class BOPAlgo_BuilderSolid(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_CellsBuilder(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options):
     """
@@ -4428,9 +4428,9 @@ class BOPAlgo_CellsBuilder(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, 
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_CheckResult():
     """
@@ -4540,6 +4540,7 @@ class BOPAlgo_CheckStatus():
 
       BOPAlgo_NotValid
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -4765,6 +4766,7 @@ class BOPAlgo_GlueEnum():
 
       BOPAlgo_GlueFull
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -4809,14 +4811,14 @@ class BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo(OCP.NCollection.NCollection_Ba
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Contains
@@ -4897,9 +4899,9 @@ class BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo(OCP.NCollection.NCollection_Ba
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
@@ -4911,7 +4913,7 @@ class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : BOPAlgo_CheckResult,theIter : Any) -> None: 
+    def Append(self,theOther : BOPAlgo_ListOfCheckResult) -> None: 
         """
         Append one item at the end
 
@@ -4920,9 +4922,9 @@ class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : BOPAlgo_ListOfCheckResult) -> None: ...
-    @overload
     def Append(self,theItem : BOPAlgo_CheckResult) -> BOPAlgo_CheckResult: ...
+    @overload
+    def Append(self,theItem : BOPAlgo_CheckResult,theIter : Any) -> None: ...
     def Assign(self,theOther : BOPAlgo_ListOfCheckResult) -> BOPAlgo_ListOfCheckResult: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -4951,14 +4953,14 @@ class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theOther : BOPAlgo_ListOfCheckResult,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theOther : BOPAlgo_ListOfCheckResult,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : BOPAlgo_CheckResult,theIter : Any) -> BOPAlgo_CheckResult: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : BOPAlgo_CheckResult,theIter : Any) -> BOPAlgo_CheckResult: ...
+    def InsertBefore(self,theOther : BOPAlgo_ListOfCheckResult,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -4970,14 +4972,14 @@ class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : BOPAlgo_CheckResult) -> BOPAlgo_CheckResult: 
+    def Prepend(self,theOther : BOPAlgo_ListOfCheckResult) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : BOPAlgo_ListOfCheckResult) -> None: ...
+    def Prepend(self,theItem : BOPAlgo_CheckResult) -> BOPAlgo_CheckResult: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -4995,11 +4997,11 @@ class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : BOPAlgo_ListOfCheckResult) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
@@ -5011,7 +5013,7 @@ class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : BOPAlgo_ListOfEdgeInfo) -> None: 
+    def Append(self,theItem : BOPAlgo_EdgeInfo,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -5020,9 +5022,9 @@ class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : BOPAlgo_EdgeInfo) -> BOPAlgo_EdgeInfo: ...
+    def Append(self,theOther : BOPAlgo_ListOfEdgeInfo) -> None: ...
     @overload
-    def Append(self,theItem : BOPAlgo_EdgeInfo,theIter : Any) -> None: ...
+    def Append(self,theItem : BOPAlgo_EdgeInfo) -> BOPAlgo_EdgeInfo: ...
     def Assign(self,theOther : BOPAlgo_ListOfEdgeInfo) -> BOPAlgo_ListOfEdgeInfo: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -5095,11 +5097,11 @@ class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : BOPAlgo_ListOfEdgeInfo) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class BOPAlgo_MakeConnected(BOPAlgo_Options):
@@ -5763,6 +5765,7 @@ class BOPAlgo_Operation():
 
       BOPAlgo_UNKNOWN
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -5971,11 +5974,15 @@ class BOPAlgo_ArgumentAnalyzer(BOPAlgo_Algo, BOPAlgo_Options):
     @property
     def StopOnFirstFaulty(self) -> bool:
         """
+        returns ref
+
         :type: bool
         """
     @StopOnFirstFaulty.setter
     def StopOnFirstFaulty(self, arg1: bool) -> None:
-        pass
+        """
+        returns ref
+        """
     @property
     def TangentMode(self) -> bool:
         """
@@ -6510,36 +6517,36 @@ class BOPAlgo_SectionAttribute():
     Class is a container of the flags used by intersection algorithm
     """
     @overload
-    def Approximation(self) -> bool: 
+    def Approximation(self,theApprox : bool) -> None: 
         """
         Sets the Approximation flag
 
         Returns the Approximation flag
         """
     @overload
-    def Approximation(self,theApprox : bool) -> None: ...
+    def Approximation(self) -> bool: ...
     @overload
-    def PCurveOnS1(self) -> bool: 
+    def PCurveOnS1(self,thePCurveOnS1 : bool) -> None: 
         """
         Sets the PCurveOnS1 flag
 
         Returns the PCurveOnS1 flag
         """
     @overload
-    def PCurveOnS1(self,thePCurveOnS1 : bool) -> None: ...
+    def PCurveOnS1(self) -> bool: ...
     @overload
-    def PCurveOnS2(self,thePCurveOnS2 : bool) -> None: 
+    def PCurveOnS2(self) -> bool: 
         """
         Sets the PCurveOnS2 flag
 
         Returns the PCurveOnS2 flag
         """
     @overload
-    def PCurveOnS2(self) -> bool: ...
-    @overload
-    def __init__(self,theAproximation : bool,thePCurveOnS1 : bool,thePCurveOnS2 : bool) -> None: ...
+    def PCurveOnS2(self,thePCurveOnS2 : bool) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAproximation : bool,thePCurveOnS1 : bool,thePCurveOnS2 : bool) -> None: ...
     pass
 class BOPAlgo_ShellSplitter(BOPAlgo_Algo, BOPAlgo_Options):
     """
@@ -7155,9 +7162,9 @@ class BOPAlgo_BOP(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderShape, 
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_WireEdgeSet():
     """
@@ -7173,14 +7180,14 @@ class BOPAlgo_WireEdgeSet():
     @overload
     def AddShape(self,aW : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
-    def AddStartElement(self,aE : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def AddStartElement(self,sS : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def AddStartElement(self,sS : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def AddStartElement(self,aE : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def Clear(self) -> None: 
         """
         None

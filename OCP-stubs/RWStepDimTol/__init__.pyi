@@ -5,8 +5,8 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.StepData
-import OCP.Interface
 import OCP.StepDimTol
+import OCP.Interface
 __all__  = [
 "RWStepDimTol_RWAngularityTolerance",
 "RWStepDimTol_RWCircularRunoutTolerance",

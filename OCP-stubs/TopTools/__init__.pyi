@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
 import OCP.TColStd
-import OCP.TCollection
 import OCP.TopAbs
+import OCP.TCollection
 import OCP.Bnd
-import OCP.Standard
-import OCP.TopLoc
 import OCP.Message
+import OCP.Standard
 import OCP.TopoDS
+import OCP.NCollection
+import OCP.TopLoc
 __all__  = [
 "TopTools",
 "TopTools_Array1OfListOfShape",
@@ -143,13 +143,13 @@ class TopTools_Array1OfListOfShape():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : TopTools_Array1OfListOfShape) -> None: ...
     @overload
     def __init__(self,theBegin : TopTools_ListOfShape,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TopTools_Array1OfListOfShape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_Array1OfShape():
@@ -231,11 +231,11 @@ class TopTools_Array1OfShape():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theBegin : OCP.TopoDS.TopoDS_Shape,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopTools_Array1OfShape) -> None: ...
-    @overload
-    def __init__(self,theBegin : OCP.TopoDS.TopoDS_Shape,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_Array2OfShape():
@@ -311,9 +311,9 @@ class TopTools_Array2OfShape():
     @overload
     def __init__(self,theBegin : OCP.TopoDS.TopoDS_Shape,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TopTools_Array2OfShape) -> None: ...
-    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TopTools_Array2OfShape) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -404,11 +404,11 @@ class TopTools_DataMapOfIntegerListOfShape(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TopTools_DataMapOfIntegerListOfShape) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : TopTools_DataMapOfIntegerListOfShape) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_DataMapOfIntegerShape(OCP.NCollection.NCollection_BaseMap):
@@ -440,14 +440,14 @@ class TopTools_DataMapOfIntegerShape(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TopTools_DataMapOfIntegerShape) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -457,14 +457,14 @@ class TopTools_DataMapOfIntegerShape(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: 
+    def Find(self,theKey : int) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Find(self,theKey : int,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -498,11 +498,11 @@ class TopTools_DataMapOfIntegerShape(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopTools_DataMapOfIntegerShape) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_DataMapOfOrientedShapeInteger(OCP.NCollection.NCollection_BaseMap):
@@ -688,9 +688,9 @@ class TopTools_DataMapOfOrientedShapeShape(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theOther : TopTools_DataMapOfOrientedShapeShape) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_DataMapOfShapeBox(OCP.NCollection.NCollection_BaseMap):
@@ -722,14 +722,14 @@ class TopTools_DataMapOfShapeBox(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TopTools_DataMapOfShapeBox) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -739,14 +739,14 @@ class TopTools_DataMapOfShapeBox(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.Bnd.Bnd_Box: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.Bnd.Bnd_Box) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.Bnd.Bnd_Box) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.Bnd.Bnd_Box: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -780,9 +780,9 @@ class TopTools_DataMapOfShapeBox(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopTools_DataMapOfShapeBox) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -874,9 +874,9 @@ class TopTools_DataMapOfShapeInteger(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : TopTools_DataMapOfShapeInteger) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : TopTools_DataMapOfShapeInteger) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -910,14 +910,14 @@ class TopTools_DataMapOfShapeListOfInteger(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TopTools_DataMapOfShapeListOfInteger) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -927,14 +927,14 @@ class TopTools_DataMapOfShapeListOfInteger(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TColStd.TColStd_ListOfInteger) -> bool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.TColStd.TColStd_ListOfInteger: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.TColStd.TColStd_ListOfInteger: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TColStd.TColStd_ListOfInteger) -> bool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -970,9 +970,9 @@ class TopTools_DataMapOfShapeListOfInteger(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theOther : TopTools_DataMapOfShapeListOfInteger) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_DataMapOfShapeListOfShape(OCP.NCollection.NCollection_BaseMap):
@@ -1021,14 +1021,14 @@ class TopTools_DataMapOfShapeListOfShape(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopTools_ListOfShape: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopTools_ListOfShape) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopTools_ListOfShape) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopTools_ListOfShape: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -1062,11 +1062,11 @@ class TopTools_DataMapOfShapeListOfShape(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopTools_DataMapOfShapeListOfShape) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_DataMapOfShapeReal(OCP.NCollection.NCollection_BaseMap):
@@ -1098,14 +1098,14 @@ class TopTools_DataMapOfShapeReal(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TopTools_DataMapOfShapeReal) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1156,9 +1156,9 @@ class TopTools_DataMapOfShapeReal(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : TopTools_DataMapOfShapeReal) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TopTools_DataMapOfShapeReal) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -1192,14 +1192,14 @@ class TopTools_DataMapOfShapeSequenceOfShape(OCP.NCollection.NCollection_BaseMap
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TopTools_DataMapOfShapeSequenceOfShape) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1250,11 +1250,11 @@ class TopTools_DataMapOfShapeSequenceOfShape(OCP.NCollection.NCollection_BaseMap
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theOther : TopTools_DataMapOfShapeSequenceOfShape) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self,theOther : TopTools_DataMapOfShapeSequenceOfShape) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_DataMapOfShapeShape(OCP.NCollection.NCollection_BaseMap):
@@ -1417,14 +1417,14 @@ class TopTools_HArray1OfListOfShape(TopTools_Array1OfListOfShape, OCP.Standard.S
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1475,13 +1475,13 @@ class TopTools_HArray1OfListOfShape(TopTools_Array1OfListOfShape, OCP.Standard.S
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : TopTools_ListOfShape) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopTools_Array1OfListOfShape) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : TopTools_ListOfShape) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1560,14 +1560,14 @@ class TopTools_HArray1OfShape(TopTools_Array1OfShape, OCP.Standard.Standard_Tran
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1618,13 +1618,13 @@ class TopTools_HArray1OfShape(TopTools_Array1OfShape, OCP.Standard.Standard_Tran
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TopTools_Array1OfShape) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TopTools_Array1OfShape) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1687,14 +1687,14 @@ class TopTools_HArray2OfShape(TopTools_Array2OfShape, OCP.Standard.Standard_Tran
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1755,11 +1755,11 @@ class TopTools_HArray2OfShape(TopTools_Array2OfShape, OCP.Standard.Standard_Tran
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
     def __init__(self,theOther : TopTools_Array2OfShape) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1780,14 +1780,14 @@ class TopTools_SequenceOfShape(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Append(self,theSeq : TopTools_SequenceOfShape) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : TopTools_SequenceOfShape) -> None: ...
+    def Append(self,theItem : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def Assign(self,theOther : TopTools_SequenceOfShape) -> TopTools_SequenceOfShape: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1817,23 +1817,23 @@ class TopTools_SequenceOfShape(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TopTools_SequenceOfShape) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TopTools_SequenceOfShape) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TopTools_SequenceOfShape) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TopTools_SequenceOfShape) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1851,23 +1851,23 @@ class TopTools_SequenceOfShape(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Prepend(self,theSeq : TopTools_SequenceOfShape) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TopTools_SequenceOfShape) -> None: ...
+    def Prepend(self,theItem : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1895,9 +1895,9 @@ class TopTools_SequenceOfShape(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TopTools_SequenceOfShape) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : TopTools_SequenceOfShape) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1934,14 +1934,14 @@ class TopTools_IndexedDataMapOfShapeAddress(OCP.NCollection.NCollection_BaseMap)
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Contains
@@ -2022,9 +2022,9 @@ class TopTools_IndexedDataMapOfShapeAddress(OCP.NCollection.NCollection_BaseMap)
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : TopTools_IndexedDataMapOfShapeAddress) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_IndexedDataMapOfShapeListOfShape(OCP.NCollection.NCollection_BaseMap):
@@ -2142,11 +2142,11 @@ class TopTools_IndexedDataMapOfShapeListOfShape(OCP.NCollection.NCollection_Base
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopTools_IndexedDataMapOfShapeListOfShape) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_IndexedDataMapOfShapeReal(OCP.NCollection.NCollection_BaseMap):
@@ -2325,14 +2325,14 @@ class TopTools_IndexedDataMapOfShapeShape(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         FindIndex
@@ -2386,11 +2386,11 @@ class TopTools_IndexedDataMapOfShapeShape(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TopTools_IndexedDataMapOfShapeShape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_IndexedMapOfOrientedShape(OCP.NCollection.NCollection_BaseMap):
@@ -2481,9 +2481,9 @@ class TopTools_IndexedMapOfOrientedShape(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : TopTools_IndexedMapOfOrientedShape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TopTools_IndexedMapOfOrientedShape) -> None: ...
     pass
 class TopTools_IndexedMapOfShape(OCP.NCollection.NCollection_BaseMap):
     """
@@ -2502,14 +2502,14 @@ class TopTools_IndexedMapOfShape(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Contains
@@ -2571,11 +2571,11 @@ class TopTools_IndexedMapOfShape(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self,theOther : TopTools_IndexedMapOfShape) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class TopTools_ListOfListOfShape(OCP.NCollection.NCollection_BaseList):
     """
@@ -2595,9 +2595,9 @@ class TopTools_ListOfListOfShape(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : TopTools_ListOfListOfShape) -> None: ...
-    @overload
     def Append(self,theItem : TopTools_ListOfShape) -> TopTools_ListOfShape: ...
+    @overload
+    def Append(self,theOther : TopTools_ListOfListOfShape) -> None: ...
     def Assign(self,theOther : TopTools_ListOfListOfShape) -> TopTools_ListOfListOfShape: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -2626,14 +2626,14 @@ class TopTools_ListOfListOfShape(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : TopTools_ListOfShape,theIter : Any) -> TopTools_ListOfShape: ...
     @overload
-    def InsertBefore(self,theItem : TopTools_ListOfShape,theIter : Any) -> TopTools_ListOfShape: 
+    def InsertBefore(self,theOther : TopTools_ListOfListOfShape,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : TopTools_ListOfListOfShape,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : TopTools_ListOfShape,theIter : Any) -> TopTools_ListOfShape: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -2670,11 +2670,11 @@ class TopTools_ListOfListOfShape(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : TopTools_ListOfListOfShape) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TopTools_ListOfShape(OCP.NCollection.NCollection_BaseList):
@@ -2686,7 +2686,7 @@ class TopTools_ListOfShape(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : TopTools_ListOfShape) -> None: 
+    def Append(self,theItem : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Append one item at the end
 
@@ -2695,9 +2695,9 @@ class TopTools_ListOfShape(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.TopoDS.TopoDS_Shape,theIter : Any) -> None: ...
+    def Append(self,theOther : TopTools_ListOfShape) -> None: ...
     @overload
-    def Append(self,theItem : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Append(self,theItem : OCP.TopoDS.TopoDS_Shape,theIter : Any) -> None: ...
     def Assign(self,theOther : TopTools_ListOfShape) -> TopTools_ListOfShape: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -2745,14 +2745,14 @@ class TopTools_ListOfShape(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : TopTools_ListOfShape) -> None: 
+    def Prepend(self,theItem : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Prepend(self,theOther : TopTools_ListOfShape) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -2770,9 +2770,9 @@ class TopTools_ListOfShape(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TopTools_ListOfShape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -2840,14 +2840,14 @@ class TopTools_MapOfOrientedShape(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def Contains(self,K : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
@@ -2930,11 +2930,11 @@ class TopTools_MapOfOrientedShape(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TopTools_MapOfOrientedShape) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class TopTools_MapOfShape(OCP.NCollection.NCollection_BaseMap):
     """
@@ -2957,14 +2957,14 @@ class TopTools_MapOfShape(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     @overload
     def Contains(self,K : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
@@ -3047,9 +3047,9 @@ class TopTools_MapOfShape(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TopTools_MapOfShape) -> None: ...
     pass
@@ -3158,36 +3158,36 @@ class TopTools_HSequenceOfShape(TopTools_SequenceOfShape, OCP.NCollection.NColle
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TopTools_SequenceOfShape) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TopTools_SequenceOfShape) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TopTools_SequenceOfShape) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TopTools_SequenceOfShape) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3210,23 +3210,23 @@ class TopTools_HSequenceOfShape(TopTools_SequenceOfShape, OCP.NCollection.NColle
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Prepend(self,theSeq : TopTools_SequenceOfShape) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TopTools_SequenceOfShape) -> None: ...
+    def Prepend(self,theItem : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -3260,9 +3260,9 @@ class TopTools_HSequenceOfShape(TopTools_SequenceOfShape, OCP.NCollection.NColle
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TopTools_SequenceOfShape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -3343,14 +3343,14 @@ class TopTools_ShapeSet():
     @overload
     def DumpExtent(self,S : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def DumpGeometry(self,OS : Any) -> None: 
+    def DumpGeometry(self,S : OCP.TopoDS.TopoDS_Shape,OS : Any) -> None: 
         """
         Dumps the geometry of me on the stream <OS>.
 
         Dumps the geometry of <S> on the stream <OS>.
         """
     @overload
-    def DumpGeometry(self,S : OCP.TopoDS.TopoDS_Shape,OS : Any) -> None: ...
+    def DumpGeometry(self,OS : Any) -> None: ...
     def FormatNb(self) -> int: 
         """
         two formats available for the moment: First: does not write CurveOnSurface UV Points into the file on reading calls Check() method. Second: stores CurveOnSurface UV Points. On reading format is recognized from Version string.

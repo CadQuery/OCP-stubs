@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Standard
-import OCP.Graphic3d
 import OCP.TCollection
+import OCP.Graphic3d
+import OCP.Standard
 __all__  = [
 "Quantity_Array1OfColor",
 "Quantity_Array2OfColor",
@@ -688,11 +688,11 @@ class Quantity_Array1OfColor():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Quantity_Array1OfColor) -> None: ...
     @overload
     def __init__(self,theBegin : Quantity_Color,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : Quantity_Array1OfColor) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -768,13 +768,13 @@ class Quantity_Array2OfColor():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : Quantity_Array2OfColor) -> None: ...
-    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : Quantity_Color,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Quantity_Array2OfColor) -> None: ...
     pass
 class Quantity_Color():
     """
@@ -809,7 +809,7 @@ class Quantity_Color():
         """
     @staticmethod
     @overload
-    def ColorFromName_s(theName : str,theColor : Quantity_NameOfColor) -> bool: 
+    def ColorFromName_s(theColorNameString : str,theColor : Quantity_Color) -> bool: 
         """
         Finds color from predefined names. For example, the name of the color which corresponds to "BLACK" is Quantity_NOC_BLACK. Returns false if name is unknown.
 
@@ -817,7 +817,7 @@ class Quantity_Color():
         """
     @staticmethod
     @overload
-    def ColorFromName_s(theColorNameString : str,theColor : Quantity_Color) -> bool: ...
+    def ColorFromName_s(theName : str,theColor : Quantity_NameOfColor) -> bool: ...
     @staticmethod
     def ColorToHex_s(theColor : Quantity_Color,theToPrefixHash : bool=True) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -920,11 +920,11 @@ class Quantity_Color():
         Returns in theR1, theR2 and theR3 the components of this color according to the color system definition theType. If theType is Quantity_TOC_RGB: - theR1 the value of Red between 0.0 and 1.0 - theR2 the value of Green between 0.0 and 1.0 - theR3 the value of Blue between 0.0 and 1.0 If theType is Quantity_TOC_HLS: - theR1 is the Hue (H) angle in degrees within range [0.0; 360.0], 0.0 being Red. -1.0 is a special value reserved for grayscale color (S should be 0.0). - theR2 is the Lightness (L) within range [0.0; 1.0] - theR3 is the Saturation (S) within range [0.0; 1.0]
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,AName : Quantity_NameOfColor) -> None: ...
     @overload
     def __init__(self,theRgb : OCP.Graphic3d.Graphic3d_Vec3) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     @overload
     def __init__(self,theR1 : float,theR2 : float,theR3 : float,theType : Quantity_TypeOfColor) -> None: ...
     pass
@@ -1011,13 +1011,13 @@ class Quantity_ColorRGBA():
         Assign new values to the color.
         """
     @overload
-    def __init__(self,theRgba : OCP.Graphic3d.Graphic3d_Vec4) -> None: ...
-    @overload
-    def __init__(self,theRed : float,theGreen : float,theBlue : float,theAlpha : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theRgb : Quantity_Color,theAlpha : float) -> None: ...
+    @overload
+    def __init__(self,theRgba : OCP.Graphic3d.Graphic3d_Vec4) -> None: ...
+    @overload
+    def __init__(self,theRed : float,theGreen : float,theBlue : float,theAlpha : float) -> None: ...
     @overload
     def __init__(self,theRgb : Quantity_Color) -> None: ...
     pass
@@ -1120,9 +1120,9 @@ class Quantity_Date():
         None
         """
     @overload
-    def __init__(self,mm : int,dd : int,yyyy : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,mm : int,dd : int,yyyy : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> None: ...
     def __sub__(self,aPeriod : Quantity_Period) -> Quantity_Date: 
         """
         None
@@ -1205,14 +1205,14 @@ class Quantity_HArray1OfColor(Quantity_Array1OfColor, OCP.Standard.Standard_Tran
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1263,11 +1263,11 @@ class Quantity_HArray1OfColor(Quantity_Array1OfColor, OCP.Standard.Standard_Tran
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : Quantity_Color) -> None: ...
     @overload
     def __init__(self,theOther : Quantity_Array1OfColor) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : Quantity_Color) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -2322,6 +2322,7 @@ class Quantity_NameOfColor():
 
       Quantity_NOC_WHITE
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2873,7 +2874,7 @@ class Quantity_Period():
         """
     @staticmethod
     @overload
-    def IsValid_s(dd : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> bool: 
+    def IsValid_s(ss : int,mics : int=0) -> bool: 
         """
         Checks the validity of a Period in form (dd,hh,mn,ss,mil,mic) With: 0 <= dd 0 <= hh 0 <= mn 0 <= ss 0 <= mis 0 <= mics
 
@@ -2881,29 +2882,29 @@ class Quantity_Period():
         """
     @staticmethod
     @overload
-    def IsValid_s(ss : int,mics : int=0) -> bool: ...
+    def IsValid_s(dd : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> bool: ...
     @overload
-    def SetValues(self,dd : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> None: 
+    def SetValues(self,ss : int,mics : int=0) -> None: 
         """
         Assigns to this period the time interval defined - with dd days, hh hours, mn minutes, ss seconds, mis (defaulted to 0) milliseconds and mics (defaulted to 0) microseconds; or
 
         Assigns to this period the time interval defined - with Ss seconds and Mics (defaulted to 0) microseconds. Exceptions Quantity_PeriodDefinitionError: - if the number of seconds expressed either by: - dd days, hh hours, mn minutes and ss seconds, or - Ss is less than 0. - if the number of microseconds expressed either by: - mis milliseconds and mics microseconds, or - Mics is less than 0.
         """
     @overload
-    def SetValues(self,ss : int,mics : int=0) -> None: ...
+    def SetValues(self,dd : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> None: ...
     def Subtract(self,anOther : Quantity_Period) -> Quantity_Period: 
         """
         Subtracts one Period from another and returns the difference.
         """
     @overload
-    def Values(self) -> Tuple[int, int]: 
+    def Values(self) -> Tuple[int, int, int, int, int, int]: 
         """
         Decomposes this period into a number of days,hours, minutes,seconds,milliseconds and microseconds Example of return values: 2 days, 15 hours, 0 minute , 0 second 0 millisecond and 0 microsecond
 
         Returns the number of seconds in Ss and the number of remainding microseconds in Mics of this period. Example of return values: 3600 seconds and 0 microseconds
         """
     @overload
-    def Values(self) -> Tuple[int, int, int, int, int, int]: ...
+    def Values(self) -> Tuple[int, int]: ...
     def __add__(self,anOther : Quantity_Period) -> Quantity_Period: 
         """
         None
@@ -3070,6 +3071,7 @@ class Quantity_PhysicalQuantity():
 
       Quantity_DOSEEQUIVALENT
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -3160,6 +3162,7 @@ class Quantity_TypeOfColor():
 
       Quantity_TOC_HLS
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

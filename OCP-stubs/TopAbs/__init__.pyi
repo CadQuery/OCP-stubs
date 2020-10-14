@@ -80,7 +80,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def ShapeTypeFromString_s(theTypeString : str) -> TopAbs_ShapeEnum: 
+    def ShapeTypeFromString_s(theTypeString : str,theType : TopAbs_ShapeEnum) -> bool: 
         """
         Returns the shape type from the given string identifier (using case-insensitive comparison).
 
@@ -88,7 +88,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def ShapeTypeFromString_s(theTypeString : str,theType : TopAbs_ShapeEnum) -> bool: ...
+    def ShapeTypeFromString_s(theTypeString : str) -> TopAbs_ShapeEnum: ...
     @staticmethod
     def ShapeTypeToString_s(theType : TopAbs_ShapeEnum) -> str: 
         """
@@ -110,6 +110,7 @@ class TopAbs_Orientation():
 
       TopAbs_EXTERNAL
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -150,6 +151,7 @@ class TopAbs_ShapeEnum():
 
       TopAbs_SHAPE
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -185,6 +187,7 @@ class TopAbs_State():
 
       TopAbs_UNKNOWN
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

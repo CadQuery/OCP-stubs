@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.StepShape
-import OCP.Transfer
-import OCP.StepBasic
 import OCP.TCollection
-import OCP.Standard
-import OCP.StepRepr
 import OCP.XSControl
 import OCP.IFSelect
+import OCP.StepRepr
+import OCP.StepBasic
+import OCP.Transfer
+import OCP.Standard
+import OCP.StepShape
+import OCP.NCollection
 import OCP.Interface
 __all__  = [
 "STEPSelections_AssemblyComponent",
@@ -63,14 +63,14 @@ class STEPSelections_AssemblyComponent(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -97,9 +97,9 @@ class STEPSelections_AssemblyComponent(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,sdr : OCP.StepShape.StepShape_ShapeDefinitionRepresentation,list : STEPSelections_HSequenceOfAssemblyLink) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,sdr : OCP.StepShape.StepShape_ShapeDefinitionRepresentation,list : STEPSelections_HSequenceOfAssemblyLink) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -142,14 +142,14 @@ class STEPSelections_AssemblyExplorer():
         Returns the number of root assemblies;
         """
     @overload
-    def Root(self,rank : int=1) -> STEPSelections_AssemblyComponent: 
+    def Root(self,rank : int) -> STEPSelections_AssemblyComponent: 
         """
         Returns root of assenbly by its rank;
 
         Returns root of assenbly by its rank;
         """
     @overload
-    def Root(self,rank : int) -> STEPSelections_AssemblyComponent: ...
+    def Root(self,rank : int=1) -> STEPSelections_AssemblyComponent: ...
     def __init__(self,G : OCP.Interface.Interface_Graph) -> None: ...
     pass
 class STEPSelections_AssemblyLink(OCP.Standard.Standard_Transient):
@@ -192,14 +192,14 @@ class STEPSelections_AssemblyLink(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -232,9 +232,9 @@ class STEPSelections_AssemblyLink(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,nauo : OCP.StepRepr.StepRepr_NextAssemblyUsageOccurrence,item : OCP.Standard.Standard_Transient,part : STEPSelections_AssemblyComponent) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,nauo : OCP.StepRepr.StepRepr_NextAssemblyUsageOccurrence,item : OCP.Standard.Standard_Transient,part : STEPSelections_AssemblyComponent) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -366,14 +366,14 @@ class STEPSelections_SequenceOfAssemblyLink(OCP.NCollection.NCollection_BaseSequ
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: 
         """
@@ -409,14 +409,14 @@ class STEPSelections_SequenceOfAssemblyLink(OCP.NCollection.NCollection_BaseSequ
     @overload
     def Prepend(self,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -442,11 +442,11 @@ class STEPSelections_SequenceOfAssemblyLink(OCP.NCollection.NCollection_BaseSequ
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : STEPSelections_SequenceOfAssemblyLink) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : STEPSelections_SequenceOfAssemblyLink) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -512,14 +512,14 @@ class STEPSelections_SelectAssembly(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFS
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -647,14 +647,14 @@ class STEPSelections_SelectFaces(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSele
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -762,14 +762,14 @@ class STEPSelections_SelectForTransfer(OCP.XSControl.XSControl_SelectForTransfer
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -899,14 +899,14 @@ class STEPSelections_SelectGSCurves(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFS
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1010,14 +1010,14 @@ class STEPSelections_SelectInstances(OCP.IFSelect.IFSelect_SelectExplore, OCP.IF
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1109,14 +1109,14 @@ class STEPSelections_SequenceOfAssemblyComponent(OCP.NCollection.NCollection_Bas
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyComponent) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : STEPSelections_AssemblyComponent) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : STEPSelections_AssemblyComponent) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyComponent) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyComponent) -> None: 
         """
@@ -1143,23 +1143,23 @@ class STEPSelections_SequenceOfAssemblyComponent(OCP.NCollection.NCollection_Bas
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : STEPSelections_AssemblyComponent) -> None: 
+    def Prepend(self,theSeq : STEPSelections_SequenceOfAssemblyComponent) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : STEPSelections_SequenceOfAssemblyComponent) -> None: ...
+    def Prepend(self,theItem : STEPSelections_AssemblyComponent) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1203,14 +1203,14 @@ class STEPSelections_HSequenceOfAssemblyLink(STEPSelections_SequenceOfAssemblyLi
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : STEPSelections_SequenceOfAssemblyLink) -> None: 
+    def Append(self,theItem : STEPSelections_AssemblyLink) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : STEPSelections_AssemblyLink) -> None: ...
+    def Append(self,theSequence : STEPSelections_SequenceOfAssemblyLink) -> None: ...
     def Assign(self,theOther : STEPSelections_SequenceOfAssemblyLink) -> STEPSelections_SequenceOfAssemblyLink: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1264,14 +1264,14 @@ class STEPSelections_HSequenceOfAssemblyLink(STEPSelections_SequenceOfAssemblyLi
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: 
         """
@@ -1286,14 +1286,14 @@ class STEPSelections_HSequenceOfAssemblyLink(STEPSelections_SequenceOfAssemblyLi
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1325,14 +1325,14 @@ class STEPSelections_HSequenceOfAssemblyLink(STEPSelections_SequenceOfAssemblyLi
     @overload
     def Prepend(self,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence

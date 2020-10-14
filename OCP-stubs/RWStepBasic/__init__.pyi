@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.StepData
-import OCP.Interface
 import OCP.TCollection
 import OCP.StepBasic
+import OCP.Interface
 __all__  = [
 "RWStepBasic_RWAction",
 "RWStepBasic_RWActionAssignment",

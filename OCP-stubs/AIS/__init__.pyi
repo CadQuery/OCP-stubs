@@ -4,31 +4,31 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Aspect
-import OCP.Image
-import OCP.StdSelect
-import OCP.Bnd
-import OCP.TopLoc
-import OCP.gp
-import OCP.SelectMgr
-import OCP.Select3D
-import OCP.Geom
-import OCP.Graphic3d
-import OCP.PrsMgr
-import OCP.TColStd
-import OCP.TopoDS
-import OCP.GeomAbs
-import OCP.Poly
-import OCP.Quantity
-import OCP.NCollection
 import OCP.TCollection
 import OCP.TopAbs
-import OCP.Standard
-import OCP.TColgp
-import OCP.V3d
-import OCP.DsgPrs
-import OCP.Prs3d
 import OCP.Font
+import OCP.TColgp
+import OCP.TopoDS
+import OCP.NCollection
+import OCP.PrsMgr
+import OCP.gp
+import OCP.GeomAbs
+import OCP.TColStd
+import OCP.Poly
+import OCP.Select3D
+import OCP.SelectMgr
+import OCP.StdSelect
+import OCP.Bnd
+import OCP.Aspect
+import OCP.Graphic3d
+import OCP.Quantity
+import OCP.Prs3d
+import OCP.Image
+import OCP.Standard
+import OCP.DsgPrs
+import OCP.Geom
+import OCP.V3d
+import OCP.TopLoc
 __all__  = [
 "AIS",
 "AIS_InteractiveObject",
@@ -325,7 +325,7 @@ class AIS():
         """
     @staticmethod
     @overload
-    def ComputeGeometry_s(theFirstEdge : OCP.TopoDS.TopoDS_Edge,theSecondEdge : OCP.TopoDS.TopoDS_Edge,theExtIndex : int,theFirstCurve : OCP.Geom.Geom_Curve,theSecondCurve : OCP.Geom.Geom_Curve,theFirstPnt1 : OCP.gp.gp_Pnt,theLastPnt1 : OCP.gp.gp_Pnt,theFirstPnt2 : OCP.gp.gp_Pnt,theLastPnt2 : OCP.gp.gp_Pnt,theExtCurve : OCP.Geom.Geom_Curve,theIsinfinite1 : bool,theIsinfinite2 : bool,thePlane : OCP.Geom.Geom_Plane) -> bool: 
+    def ComputeGeometry_s(aVertex : OCP.TopoDS.TopoDS_Vertex,point : OCP.gp.gp_Pnt,aPlane : OCP.Geom.Geom_Plane,isOnPlane : bool) -> bool: 
         """
         Used by 2d Relation only Computes the 3d geometry of <anEdge> in the current WorkingPlane and the extremities if any Return TRUE if ok.
 
@@ -346,19 +346,19 @@ class AIS():
     def ComputeGeometry_s(theEdge : OCP.TopoDS.TopoDS_Edge,theCurve : OCP.Geom.Geom_Curve,theFirstPnt : OCP.gp.gp_Pnt,theLastPnt : OCP.gp.gp_Pnt) -> bool: ...
     @staticmethod
     @overload
-    def ComputeGeometry_s(aVertex : OCP.TopoDS.TopoDS_Vertex,point : OCP.gp.gp_Pnt,aPlane : OCP.Geom.Geom_Plane,isOnPlane : bool) -> bool: ...
+    def ComputeGeometry_s(theEdge : OCP.TopoDS.TopoDS_Edge,theCurve : OCP.Geom.Geom_Curve,theFirstPnt : OCP.gp.gp_Pnt,theLastPnt : OCP.gp.gp_Pnt,theIsInfinite : bool) -> bool: ...
+    @staticmethod
+    @overload
+    def ComputeGeometry_s(theFirstEdge : OCP.TopoDS.TopoDS_Edge,theSecondEdge : OCP.TopoDS.TopoDS_Edge,theFirstCurve : OCP.Geom.Geom_Curve,theSecondCurve : OCP.Geom.Geom_Curve,theFirstPnt1 : OCP.gp.gp_Pnt,theLastPnt1 : OCP.gp.gp_Pnt,theFirstPnt2 : OCP.gp.gp_Pnt,theLastPnt2 : OCP.gp.gp_Pnt,theIsinfinite1 : bool,theIsinfinite2 : bool) -> bool: ...
+    @staticmethod
+    @overload
+    def ComputeGeometry_s(theFirstEdge : OCP.TopoDS.TopoDS_Edge,theSecondEdge : OCP.TopoDS.TopoDS_Edge,theExtIndex : int,theFirstCurve : OCP.Geom.Geom_Curve,theSecondCurve : OCP.Geom.Geom_Curve,theFirstPnt1 : OCP.gp.gp_Pnt,theLastPnt1 : OCP.gp.gp_Pnt,theFirstPnt2 : OCP.gp.gp_Pnt,theLastPnt2 : OCP.gp.gp_Pnt,theExtCurve : OCP.Geom.Geom_Curve,theIsinfinite1 : bool,theIsinfinite2 : bool,thePlane : OCP.Geom.Geom_Plane) -> bool: ...
     @staticmethod
     @overload
     def ComputeGeometry_s(theEdge : OCP.TopoDS.TopoDS_Edge,theCurve : OCP.Geom.Geom_Curve,theFirstPnt : OCP.gp.gp_Pnt,theLastPnt : OCP.gp.gp_Pnt,theExtCurve : OCP.Geom.Geom_Curve,theIsInfinite : bool,theIsOnPlane : bool,thePlane : OCP.Geom.Geom_Plane) -> bool: ...
     @staticmethod
     @overload
     def ComputeGeometry_s(theFirstEdge : OCP.TopoDS.TopoDS_Edge,theSecondEdge : OCP.TopoDS.TopoDS_Edge,theFirstCurve : OCP.Geom.Geom_Curve,theSecondCurve : OCP.Geom.Geom_Curve,theFirstPnt1 : OCP.gp.gp_Pnt,theLastPnt1 : OCP.gp.gp_Pnt,theFirstPnt2 : OCP.gp.gp_Pnt,theLastPnt2 : OCP.gp.gp_Pnt,thePlane : OCP.Geom.Geom_Plane) -> bool: ...
-    @staticmethod
-    @overload
-    def ComputeGeometry_s(theEdge : OCP.TopoDS.TopoDS_Edge,theCurve : OCP.Geom.Geom_Curve,theFirstPnt : OCP.gp.gp_Pnt,theLastPnt : OCP.gp.gp_Pnt,theIsInfinite : bool) -> bool: ...
-    @staticmethod
-    @overload
-    def ComputeGeometry_s(theFirstEdge : OCP.TopoDS.TopoDS_Edge,theSecondEdge : OCP.TopoDS.TopoDS_Edge,theFirstCurve : OCP.Geom.Geom_Curve,theSecondCurve : OCP.Geom.Geom_Curve,theFirstPnt1 : OCP.gp.gp_Pnt,theLastPnt1 : OCP.gp.gp_Pnt,theFirstPnt2 : OCP.gp.gp_Pnt,theLastPnt2 : OCP.gp.gp_Pnt,theIsinfinite1 : bool,theIsinfinite2 : bool) -> bool: ...
     @staticmethod
     def ComputeProjEdgePresentation_s(aPres : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,anEdge : OCP.TopoDS.TopoDS_Edge,ProjCurve : OCP.Geom.Geom_Curve,FirstP : OCP.gp.gp_Pnt,LastP : OCP.gp.gp_Pnt,aColor : OCP.Quantity.Quantity_NameOfColor=Quantity_NameOfColor.Quantity_NOC_PURPLE,aWidth : float=2.0,aProjTOL : OCP.Aspect.Aspect_TypeOfLine=Aspect_TypeOfLine.Aspect_TOL_DASH,aCallTOL : OCP.Aspect.Aspect_TypeOfLine=Aspect_TypeOfLine.Aspect_TOL_DOT) -> None: 
         """
@@ -416,7 +416,7 @@ class AIS():
         """
     @staticmethod
     @overload
-    def Nearest_s(theCurve : OCP.Geom.Geom_Curve,thePoint : OCP.gp.gp_Pnt,theFirstPoint : OCP.gp.gp_Pnt,theLastPoint : OCP.gp.gp_Pnt,theNearestPoint : OCP.gp.gp_Pnt) -> bool: 
+    def Nearest_s(theLine : OCP.gp.gp_Lin,thePoint : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt: 
         """
         Returns the nearest point in a shape. This is used by several classes in calculation of dimensions.
 
@@ -426,7 +426,7 @@ class AIS():
         """
     @staticmethod
     @overload
-    def Nearest_s(theLine : OCP.gp.gp_Lin,thePoint : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt: ...
+    def Nearest_s(theCurve : OCP.Geom.Geom_Curve,thePoint : OCP.gp.gp_Pnt,theFirstPoint : OCP.gp.gp_Pnt,theLastPoint : OCP.gp.gp_Pnt,theNearestPoint : OCP.gp.gp_Pnt) -> bool: ...
     @staticmethod
     @overload
     def Nearest_s(aShape : OCP.TopoDS.TopoDS_Shape,aPoint : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt: ...
@@ -692,14 +692,14 @@ class AIS_InteractiveObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -849,14 +849,14 @@ class AIS_InteractiveObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -878,23 +878,23 @@ class AIS_InteractiveObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -1080,14 +1080,14 @@ class AIS_Animation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1238,14 +1238,14 @@ class AIS_AnimationCamera(AIS_Animation, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1404,14 +1404,14 @@ class AIS_AnimationObject(AIS_Animation, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1568,14 +1568,14 @@ class AIS_AttributeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1596,14 +1596,14 @@ class AIS_AttributeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_
         Sets the color aCol. This must be chosen from the list of colors in Quantity_NameOfColor.
         """
     @overload
-    def SetWidth(self,aWid : float) -> None: 
+    def SetWidth(self,aWidth : float) -> None: 
         """
         Sets the line width aWidth.
 
         Sets the line width aWidth.
         """
     @overload
-    def SetWidth(self,aWidth : float) -> None: ...
+    def SetWidth(self,aWid : float) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1621,11 +1621,11 @@ class AIS_AttributeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_
         Removes the setting for width from the filter.
         """
     @overload
+    def __init__(self,aCol : OCP.Quantity.Quantity_NameOfColor) -> None: ...
+    @overload
     def __init__(self,aWidth : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,aCol : OCP.Quantity.Quantity_NameOfColor) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1894,14 +1894,14 @@ class AIS_Axis(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2067,14 +2067,14 @@ class AIS_Axis(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -2096,23 +2096,23 @@ class AIS_Axis(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -2239,9 +2239,9 @@ class AIS_Axis(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,aComponent : OCP.Geom.Geom_Axis2Placement,anAxisType : AIS_TypeOfAxis) -> None: ...
-    @overload
     def __init__(self,anAxis : OCP.Geom.Geom_Axis1Placement) -> None: ...
+    @overload
+    def __init__(self,aComponent : OCP.Geom.Geom_Axis2Placement,anAxisType : AIS_TypeOfAxis) -> None: ...
     @overload
     def __init__(self,aComponent : OCP.Geom.Geom_Line) -> None: ...
     @staticmethod
@@ -2288,14 +2288,14 @@ class AIS_BadEdgeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_Tr
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2359,14 +2359,14 @@ class AIS_C0RegularityFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2641,14 +2641,14 @@ class AIS_CameraFrustum(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2802,14 +2802,14 @@ class AIS_CameraFrustum(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -2831,23 +2831,23 @@ class AIS_CameraFrustum(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -3238,14 +3238,14 @@ class AIS_Relation(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObje
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3435,14 +3435,14 @@ class AIS_Relation(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObje
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -3484,23 +3484,23 @@ class AIS_Relation(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObje
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -3914,14 +3914,14 @@ class AIS_Chamf3dDimension(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4115,14 +4115,14 @@ class AIS_Chamf3dDimension(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -4164,23 +4164,23 @@ class AIS_Chamf3dDimension(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -4590,14 +4590,14 @@ class AIS_Circle(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4767,14 +4767,14 @@ class AIS_Circle(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject
         Allows you to provide the parameter theU for the end point of an arc.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -4796,23 +4796,23 @@ class AIS_Circle(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -4961,6 +4961,7 @@ class AIS_ClearMode():
 
       AIS_CM_TemporaryShapePrs
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -5134,14 +5135,14 @@ class AIS_ColorScale(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Returns the type of colors, Aspect_TOCSD_AUTO by default. Aspect_TOCSD_AUTO - value between Red and Blue Aspect_TOCSD_USER - user specified color from color map
         """
     @overload
-    def GetColors(self,theColors : OCP.Aspect.Aspect_SequenceOfColor) -> None: 
+    def GetColors(self) -> OCP.Aspect.Aspect_SequenceOfColor: 
         """
         Returns the user specified colors.
 
         Returns the user specified colors.
         """
     @overload
-    def GetColors(self) -> OCP.Aspect.Aspect_SequenceOfColor: ...
+    def GetColors(self,theColors : OCP.Aspect.Aspect_SequenceOfColor) -> None: ...
     def GetContext(self) -> AIS_InteractiveContext: 
         """
         Returns the context pointer to the interactive context.
@@ -5351,14 +5352,14 @@ class AIS_ColorScale(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5580,14 +5581,14 @@ class AIS_ColorScale(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Sets the color scale labels. The length of the sequence should be equal to GetNumberOfIntervals() or to GetNumberOfIntervals() + 1 if IsLabelAtBorder() is true. If length of the sequence does not much the number of intervals, then these labels will be considered as "free" and will be located at the virtual intervals corresponding to the number of labels (with flag IsLabelAtBorder() having the same effect as in normal case).
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetLogarithmic(self,isLogarithmic : bool) -> None: 
         """
         Sets true if the color scale has logarithmic intervals.
@@ -5657,23 +5658,23 @@ class AIS_ColorScale(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Sets the color scale title position.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -6153,14 +6154,14 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6187,14 +6188,14 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         Returns settings for line aspects. These settings can be edited. The default values are: Color: Quantity_NOC_YELLOW Type of line: Aspect_TOL_SOLID Width: 1.0 These attributes are used by the following algorithms: Prs3d_Curve Prs3d_Line Prs3d_HLRShape
         """
     @overload
-    def Link(self) -> OCP.Prs3d.Prs3d_Drawer: 
+    def Link(self,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
         Sets theDrawer as a link to which the current object references.
 
         Returns the drawer to which the current object references.
         """
     @overload
-    def Link(self,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: ...
+    def Link(self) -> OCP.Prs3d.Prs3d_Drawer: ...
     def MaximalChordialDeviation(self) -> float: 
         """
         Returns the maximal chordal deviation. The default value is 0.1. Drawings of curves or patches are made with respect to an absolute maximal chordal deviation.
@@ -6260,14 +6261,14 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         Sets the modality theAspect for the display of datums.
         """
     @overload
-    def SetDeviationAngle(self) -> None: 
+    def SetDeviationAngle(self,theAngle : float) -> None: 
         """
         Sets the deviation angle theAngle. Also sets the hasOwnDeviationAngle flag to Standard_True, and myPreviousDeviationAngle.
 
         Sets the hasOwnDeviationAngle flag to Standard_False
         """
     @overload
-    def SetDeviationAngle(self,theAngle : float) -> None: ...
+    def SetDeviationAngle(self) -> None: ...
     @overload
     def SetDeviationCoefficient(self) -> None: 
         """
@@ -6836,14 +6837,14 @@ class AIS_Shape(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7031,14 +7032,14 @@ class AIS_Shape(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Allows you to provide settings for the material aName in the reconstructed compound shape.
@@ -7057,14 +7058,14 @@ class AIS_Shape(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
     @overload
     def SetOwnDeviationAngle(self,anAngle : float) -> None: ...
     @overload
-    def SetOwnDeviationCoefficient(self) -> bool: 
+    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: 
         """
         Sets a local value for deviation coefficient for this specific shape.
 
         Sets a local value for deviation coefficient for this specific shape.
         """
     @overload
-    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: ...
+    def SetOwnDeviationCoefficient(self) -> bool: ...
     @overload
     def SetOwnHLRDeviationAngle(self) -> bool: 
         """
@@ -7112,23 +7113,23 @@ class AIS_Shape(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Use this method to scale the texture (percent of the face). You can specify a scale factor for both U and V. Example: if you set ScaleU and ScaleV to 0.5 and you enable texture repeat, the texture will appear twice on the face in each direction.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Sets the value aValue for transparency in the reconstructed compound shape.
@@ -7556,14 +7557,14 @@ class AIS_ConcentricRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7753,14 +7754,14 @@ class AIS_ConcentricRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -7802,23 +7803,23 @@ class AIS_ConcentricRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -7982,6 +7983,7 @@ class AIS_ConnectStatus():
 
       AIS_CS_Both
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -8075,7 +8077,7 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         Computes sensitive primitives for the given selection mode - key interface method of Selectable Object.
         """
     @overload
-    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.gp.gp_Trsf) -> None: 
+    def Connect(self,theAnotherObj : AIS_InteractiveObject) -> None: 
         """
         Establishes the connection between the Connected Interactive Object, anotherIobj, and its reference.
 
@@ -8084,7 +8086,7 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         Establishes the connection between the Connected Interactive Object, anotherIobj, and its reference. Locates instance in aLocation.
         """
     @overload
-    def Connect(self,theAnotherObj : AIS_InteractiveObject) -> None: ...
+    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.gp.gp_Trsf) -> None: ...
     @overload
     def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.Geom.Geom_Transformation) -> None: ...
     def ConnectedTo(self) -> AIS_InteractiveObject: 
@@ -8268,14 +8270,14 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8425,14 +8427,14 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -8454,23 +8456,23 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -8629,14 +8631,14 @@ class AIS_DataMapofIntegerListOfinteractive(OCP.NCollection.NCollection_BaseMap)
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : AIS_DataMapofIntegerListOfinteractive) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -8646,14 +8648,14 @@ class AIS_DataMapofIntegerListOfinteractive(OCP.NCollection.NCollection_BaseMap)
         Extent
         """
     @overload
-    def Find(self,theKey : int) -> AIS_ListOfInteractive: 
+    def Find(self,theKey : int,theValue : AIS_ListOfInteractive) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int,theValue : AIS_ListOfInteractive) -> bool: ...
+    def Find(self,theKey : int) -> AIS_ListOfInteractive: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -8687,11 +8689,11 @@ class AIS_DataMapofIntegerListOfinteractive(OCP.NCollection.NCollection_BaseMap)
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : AIS_DataMapofIntegerListOfinteractive) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class AIS_Dimension(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard_Transient):
@@ -8979,14 +8981,14 @@ class AIS_Dimension(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -9185,14 +9187,14 @@ class AIS_Dimension(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -9230,23 +9232,23 @@ class AIS_Dimension(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Fixes the absolute text position and adjusts flyout, plane and text alignment according to it. Updates presentation if the text position is valid. ATTENTION! It does not change vertical text alignment.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -9693,14 +9695,14 @@ class AIS_AngleDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -9911,20 +9913,20 @@ class AIS_AngleDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
         """
     @overload
-    def SetMeasuredGeometry(self,theFirstEdge : OCP.TopoDS.TopoDS_Edge,theSecondEdge : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def SetMeasuredGeometry(self,theFirstFace : OCP.TopoDS.TopoDS_Face,theSecondFace : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         Measures minimum angle dimension between two linear edges. These two edges should be intersected by each other. Otherwise the geometry is not valid.
 
@@ -9939,15 +9941,15 @@ class AIS_AngleDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Measures angle between two planar faces.
         """
     @overload
+    def SetMeasuredGeometry(self,theFirstEdge : OCP.TopoDS.TopoDS_Edge,theSecondEdge : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    @overload
+    def SetMeasuredGeometry(self,theFirstFace : OCP.TopoDS.TopoDS_Face,theSecondFace : OCP.TopoDS.TopoDS_Face,thePoint : OCP.gp.gp_Pnt) -> None: ...
+    @overload
     def SetMeasuredGeometry(self,theCone : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
     def SetMeasuredGeometry(self,theFirstVertex : OCP.TopoDS.TopoDS_Vertex,theSecondVertex : OCP.TopoDS.TopoDS_Vertex,theThirdVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
-    def SetMeasuredGeometry(self,theFirstFace : OCP.TopoDS.TopoDS_Face,theSecondFace : OCP.TopoDS.TopoDS_Face,thePoint : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def SetMeasuredGeometry(self,theFirstPoint : OCP.gp.gp_Pnt,theSecondPoint : OCP.gp.gp_Pnt,theThridPoint : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def SetMeasuredGeometry(self,theFirstFace : OCP.TopoDS.TopoDS_Face,theSecondFace : OCP.TopoDS.TopoDS_Face) -> None: ...
     def SetModelUnits(self,theUnits : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         None
@@ -9981,23 +9983,23 @@ class AIS_AngleDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Principle of horizontal text alignment settings: - divide circle into two halves according to attachment points - if aTextPos is between attach points -> Center + positive flyout - if aTextPos is not between attach points but in this half -> Left or Right + positive flyout - if aTextPos is between reflections of attach points -> Center + negative flyout - if aTextPos is not between reflections of attach points -> Left or Right + negative flyout
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -10136,17 +10138,17 @@ class AIS_AngleDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,theFirstFace : OCP.TopoDS.TopoDS_Face,theSecondFace : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self,theCone : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
-    def __init__(self,theFirstPoint : OCP.gp.gp_Pnt,theSecondPoint : OCP.gp.gp_Pnt,theThirdPoint : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,theFirstVertex : OCP.TopoDS.TopoDS_Vertex,theSecondVertex : OCP.TopoDS.TopoDS_Vertex,theThirdVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
+    def __init__(self,theFirstFace : OCP.TopoDS.TopoDS_Face,theSecondFace : OCP.TopoDS.TopoDS_Face,thePoint : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,theFirstFace : OCP.TopoDS.TopoDS_Face,theSecondFace : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
     def __init__(self,theFirstEdge : OCP.TopoDS.TopoDS_Edge,theSecondEdge : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
-    def __init__(self,theFirstFace : OCP.TopoDS.TopoDS_Face,theSecondFace : OCP.TopoDS.TopoDS_Face,thePoint : OCP.gp.gp_Pnt) -> None: ...
+    def __init__(self,theFirstPoint : OCP.gp.gp_Pnt,theSecondPoint : OCP.gp.gp_Pnt,theThirdPoint : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -10223,14 +10225,14 @@ class AIS_DimensionOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stand
         Returns true if an object with the selection mode aMode is highlighted in the presentation manager aPM.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -10265,14 +10267,14 @@ class AIS_DimensionOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stand
         None
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -10298,14 +10300,14 @@ class AIS_DimensionOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stand
         Set Z layer ID and update all presentations.
         """
     @overload
-    def State(self) -> int: 
+    def State(self,theStatus : int) -> None: 
         """
         Returns selection state.
 
         Set the state of the owner. The method is deprecated. Use SetSelected() instead.
         """
     @overload
-    def State(self,theStatus : int) -> None: ...
+    def State(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -10342,6 +10344,7 @@ class AIS_DimensionSelectionMode():
 
       AIS_DSM_Text
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -10367,6 +10370,7 @@ class AIS_DisplayMode():
 
       AIS_Shaded
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -10393,6 +10397,7 @@ class AIS_DisplaySpecialSymbol():
 
       AIS_DSS_After
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -10420,6 +10425,7 @@ class AIS_DisplayStatus():
 
       AIS_DS_None
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -10449,6 +10455,7 @@ class AIS_DragAction():
 
       AIS_DragAction_Abort
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -10730,14 +10737,14 @@ class AIS_EllipseRadiusDimension(AIS_Relation, AIS_InteractiveObject, OCP.Select
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -10927,14 +10934,14 @@ class AIS_EllipseRadiusDimension(AIS_Relation, AIS_InteractiveObject, OCP.Select
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -10976,23 +10983,23 @@ class AIS_EllipseRadiusDimension(AIS_Relation, AIS_InteractiveObject, OCP.Select
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -11421,14 +11428,14 @@ class AIS_EqualDistanceRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectM
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -11618,14 +11625,14 @@ class AIS_EqualDistanceRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectM
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -11679,23 +11686,23 @@ class AIS_EqualDistanceRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectM
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -12119,14 +12126,14 @@ class AIS_EqualRadiusRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -12316,14 +12323,14 @@ class AIS_EqualRadiusRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -12365,23 +12372,23 @@ class AIS_EqualRadiusRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -12579,14 +12586,14 @@ class AIS_ExclusionFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -12613,14 +12620,14 @@ class AIS_ExclusionFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_
         None
         """
     @overload
-    def Remove(self,TypeToExclude : AIS_KindOfInteractive) -> bool: 
+    def Remove(self,TypeToExclude : AIS_KindOfInteractive,SignatureInType : int) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Remove(self,TypeToExclude : AIS_KindOfInteractive,SignatureInType : int) -> bool: ...
+    def Remove(self,TypeToExclude : AIS_KindOfInteractive) -> bool: ...
     def SetExclusionFlag(self,Status : bool) -> None: 
         """
         None
@@ -12913,14 +12920,14 @@ class AIS_FixRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.SelectM
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -13112,14 +13119,14 @@ class AIS_FixRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.SelectM
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -13161,23 +13168,23 @@ class AIS_FixRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.SelectM
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -13324,13 +13331,13 @@ class AIS_FixRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.SelectM
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aPlane : OCP.Geom.Geom_Plane) -> None: ...
-    @overload
-    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aPlane : OCP.Geom.Geom_Plane,aWire : OCP.TopoDS.TopoDS_Wire,aPosition : OCP.gp.gp_Pnt,anArrowSize : float=0.01) -> None: ...
-    @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aPlane : OCP.Geom.Geom_Plane,aPosition : OCP.gp.gp_Pnt,anArrowSize : float=0.01) -> None: ...
     @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aPlane : OCP.Geom.Geom_Plane,aWire : OCP.TopoDS.TopoDS_Wire) -> None: ...
+    @overload
+    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aPlane : OCP.Geom.Geom_Plane,aWire : OCP.TopoDS.TopoDS_Wire,aPosition : OCP.gp.gp_Pnt,anArrowSize : float=0.01) -> None: ...
+    @overload
+    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aPlane : OCP.Geom.Geom_Plane) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -13395,14 +13402,14 @@ class AIS_GlobalStatus(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -13481,7 +13488,7 @@ class AIS_GraphicTool():
     """
     @staticmethod
     @overload
-    def GetInteriorColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer) -> OCP.Quantity.Quantity_NameOfColor: 
+    def GetInteriorColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer,aColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         None
 
@@ -13489,7 +13496,7 @@ class AIS_GraphicTool():
         """
     @staticmethod
     @overload
-    def GetInteriorColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer,aColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def GetInteriorColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer) -> OCP.Quantity.Quantity_NameOfColor: ...
     @staticmethod
     def GetLineAtt_s(aDrawer : OCP.Prs3d.Prs3d_Drawer,TheTypeOfAttributes : AIS_TypeOfAttribute,aCol : OCP.Quantity.Quantity_NameOfColor,aTyp : OCP.Aspect.Aspect_TypeOfLine) -> Tuple[float]: 
         """
@@ -13497,7 +13504,7 @@ class AIS_GraphicTool():
         """
     @staticmethod
     @overload
-    def GetLineColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer,TheTypeOfAttributes : AIS_TypeOfAttribute,TheLineColor : OCP.Quantity.Quantity_Color) -> None: 
+    def GetLineColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer,TheTypeOfAttributes : AIS_TypeOfAttribute) -> OCP.Quantity.Quantity_NameOfColor: 
         """
         None
 
@@ -13505,7 +13512,7 @@ class AIS_GraphicTool():
         """
     @staticmethod
     @overload
-    def GetLineColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer,TheTypeOfAttributes : AIS_TypeOfAttribute) -> OCP.Quantity.Quantity_NameOfColor: ...
+    def GetLineColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer,TheTypeOfAttributes : AIS_TypeOfAttribute,TheLineColor : OCP.Quantity.Quantity_Color) -> None: ...
     @staticmethod
     def GetLineType_s(aDrawer : OCP.Prs3d.Prs3d_Drawer,TheTypeOfAttributes : AIS_TypeOfAttribute) -> OCP.Aspect.Aspect_TypeOfLine: 
         """
@@ -13800,14 +13807,14 @@ class AIS_IdenticRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -13999,14 +14006,14 @@ class AIS_IdenticRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -14048,23 +14055,23 @@ class AIS_IdenticRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -14379,7 +14386,7 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Disconnects theObjToDisconnect from theAssembly and removes dependent selection structures
         """
     @overload
-    def Display(self,theIObj : AIS_InteractiveObject,theToUpdateViewer : bool) -> None: 
+    def Display(self,theIObj : AIS_InteractiveObject,theDispMode : int,theSelectionMode : int,theToUpdateViewer : bool,theToAllowDecomposition : bool,theDispStatus : AIS_DisplayStatus=AIS_DisplayStatus.AIS_DS_None) -> None: 
         """
         Displays the object in this Context using default Display Mode. This will be the object's default display mode, if there is one. Otherwise, it will be the context mode. The Interactive Object's default selection mode is activated if GetAutoActivateSelection() is TRUE. In general, this is 0.
 
@@ -14388,18 +14395,18 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Display(self,theIObj : AIS_InteractiveObject,theDispMode : int,theSelectionMode : int,theToUpdateViewer : bool,theToAllowDecomposition : bool,theDispStatus : AIS_DisplayStatus=AIS_DisplayStatus.AIS_DS_None) -> None: ...
+    def Display(self,theIObj : AIS_InteractiveObject,theToUpdateViewer : bool) -> None: ...
     @overload
     def Display(self,theIObj : AIS_InteractiveObject,theDispMode : int,theSelectionMode : int,theToUpdateViewer : bool,theDispStatus : AIS_DisplayStatus=AIS_DisplayStatus.AIS_DS_None) -> None: ...
     @overload
-    def DisplayActiveSensitive(self,aView : OCP.V3d.V3d_View) -> None: 
+    def DisplayActiveSensitive(self,anObject : AIS_InteractiveObject,aView : OCP.V3d.V3d_View) -> None: 
         """
         Visualization of sensitives - for debugging purposes!
 
         Visualization of sensitives - for debugging purposes!
         """
     @overload
-    def DisplayActiveSensitive(self,anObject : AIS_InteractiveObject,aView : OCP.V3d.V3d_View) -> None: ...
+    def DisplayActiveSensitive(self,aView : OCP.V3d.V3d_View) -> None: ...
     def DisplayAll(self,theToUpdateViewer : bool) -> None: 
         """
         Displays all hidden objects.
@@ -14484,14 +14491,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Returns the first selected object in the list of current selected.
         """
     @overload
-    def FitSelected(self,theView : OCP.V3d.V3d_View,theMargin : float,theToUpdate : bool) -> None: 
+    def FitSelected(self,theView : OCP.V3d.V3d_View) -> None: 
         """
         Fits the view correspondingly to the bounds of selected objects. Infinite objects are ignored if infinite state of AIS_InteractiveObject is set to true.
 
         Fits the view correspondingly to the bounds of selected objects. Infinite objects are ignored if infinite state of AIS_InteractiveObject is set to true.
         """
     @overload
-    def FitSelected(self,theView : OCP.V3d.V3d_View) -> None: ...
+    def FitSelected(self,theView : OCP.V3d.V3d_View,theMargin : float,theToUpdate : bool) -> None: ...
     def GetAutoActivateSelection(self) -> bool: 
         """
         Manages displaying the new object should also automatically activate default selection mode; TRUE by default.
@@ -14564,9 +14571,9 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Returns current dynamic highlight style settings. By default: - the color of dynamic highlight is Quantity_NOC_CYAN1; - the presentation for dynamic highlight is completely opaque; - the type of highlight is Aspect_TOHM_COLOR.
         """
     @overload
-    def HighlightStyle(self,theStyleType : OCP.Prs3d.Prs3d_TypeOfHighlight) -> OCP.Prs3d.Prs3d_Drawer: ...
-    @overload
     def HighlightStyle(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theStyle : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
+    @overload
+    def HighlightStyle(self,theStyleType : OCP.Prs3d.Prs3d_TypeOfHighlight) -> OCP.Prs3d.Prs3d_Drawer: ...
     @overload
     def HighlightStyle(self,theObj : AIS_InteractiveObject,theStyle : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
     def Hilight(self,theObj : AIS_InteractiveObject,theIsToUpdateViewer : bool) -> None: 
@@ -14618,14 +14625,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Returns true if there is a non-null interactive object in Neutral Point. Objects selected when there is no open local context are called current objects; those selected in open local context, selected objects.
         """
     @overload
-    def IsDisplayed(self,anIobj : AIS_InteractiveObject) -> bool: 
+    def IsDisplayed(self,aniobj : AIS_InteractiveObject,aMode : int) -> bool: 
         """
         Returns true if Object is displayed in the interactive context.
 
         None
         """
     @overload
-    def IsDisplayed(self,aniobj : AIS_InteractiveObject,aMode : int) -> bool: ...
+    def IsDisplayed(self,anIobj : AIS_InteractiveObject) -> bool: ...
     @overload
     def IsHilighted(self,theObj : AIS_InteractiveObject) -> bool: 
         """
@@ -14640,14 +14647,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -14671,14 +14678,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Returns the number of U and V isoparameters displayed.
         """
     @overload
-    def IsoOnPlane(self) -> bool: 
+    def IsoOnPlane(self,SwitchOn : bool) -> None: 
         """
         Returns True if drawing isoparameters on planes is enabled.
 
         Returns True if drawing isoparameters on planes is enabled. if <forUIsos> = False,
         """
     @overload
-    def IsoOnPlane(self,SwitchOn : bool) -> None: ...
+    def IsoOnPlane(self) -> bool: ...
     @overload
     def IsoOnTriangulation(self,theToSwitchOn : bool) -> None: 
         """
@@ -14697,14 +14704,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Returns last active View (argument of MoveTo()/Select() methods).
         """
     @overload
-    def Load(self,theObj : AIS_InteractiveObject,theSelectionMode : int,arg3 : bool) -> None: 
+    def Load(self,theObj : AIS_InteractiveObject,theSelectionMode : int=-1) -> None: 
         """
         Allows you to load the Interactive Object with a given selection mode, and/or with the desired decomposition option, whether the object is visualized or not. The loaded objects will be selectable but displayable in highlighting only when detected by the Selector.
 
         None
         """
     @overload
-    def Load(self,theObj : AIS_InteractiveObject,theSelectionMode : int=-1) -> None: ...
+    def Load(self,theObj : AIS_InteractiveObject,theSelectionMode : int,arg3 : bool) -> None: ...
     def Location(self,theObject : AIS_InteractiveObject) -> OCP.TopLoc.TopLoc_Location: 
         """
         Returns the location of the Object.
@@ -14754,14 +14761,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Continues the scan to the next object in the list of selected objects.
         """
     @overload
-    def ObjectsByDisplayStatus(self,theStatus : AIS_DisplayStatus,theListOfIO : AIS_ListOfInteractive) -> None: 
+    def ObjectsByDisplayStatus(self,WhichKind : AIS_KindOfInteractive,WhichSignature : int,theStatus : AIS_DisplayStatus,theListOfIO : AIS_ListOfInteractive) -> None: 
         """
         Returns the list theListOfIO of objects with indicated display status particular Type WhichKind and Signature WhichSignature. By Default, WhichSignature equals 1. This means that there is a check on type only.
 
         gives the list of objects with indicated display status Type and signature by Default, <WhichSignature> = -1 means control only on <WhichKind>.
         """
     @overload
-    def ObjectsByDisplayStatus(self,WhichKind : AIS_KindOfInteractive,WhichSignature : int,theStatus : AIS_DisplayStatus,theListOfIO : AIS_ListOfInteractive) -> None: ...
+    def ObjectsByDisplayStatus(self,theStatus : AIS_DisplayStatus,theListOfIO : AIS_ListOfInteractive) -> None: ...
     def ObjectsForView(self,theListOfIO : AIS_ListOfInteractive,theView : OCP.V3d.V3d_View,theIsVisibleInView : bool,theStatus : AIS_DisplayStatus=AIS_DisplayStatus.AIS_DS_None) -> None: 
         """
         Query objects visible or hidden in specified view due to affinity mask.
@@ -14803,14 +14810,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Recomputes the active selections, flags the others. Doesn't update presentations.
         """
     @overload
-    def Redisplay(self,theTypeOfObject : AIS_KindOfInteractive,theSignature : int,theToUpdateViewer : bool) -> None: 
+    def Redisplay(self,theIObj : AIS_InteractiveObject,theToUpdateViewer : bool,theAllModes : bool=False) -> None: 
         """
         Recomputes the seen parts presentation of the Object. If theAllModes equals true, all presentations are present in the object even if unseen.
 
         Recomputes the Prs/Selection of displayed objects of a given type and a given signature. if signature = -1 doesn't take signature criterion.
         """
     @overload
-    def Redisplay(self,theIObj : AIS_InteractiveObject,theToUpdateViewer : bool,theAllModes : bool=False) -> None: ...
+    def Redisplay(self,theTypeOfObject : AIS_KindOfInteractive,theSignature : int,theToUpdateViewer : bool) -> None: ...
     def RedrawImmediate(self,theViewer : OCP.V3d.V3d_Viewer) -> None: 
         """
         Redraws immediate structures in all views of the viewer given taking into account its visibility.
@@ -14836,7 +14843,7 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Puts the Object back into its initial position.
         """
     @overload
-    def Select(self,theXPMin : int,theYPMin : int,theXPMax : int,theYPMax : int,theView : OCP.V3d.V3d_View,theToUpdateViewer : bool) -> AIS_StatusOfPick: 
+    def Select(self,thePolyline : OCP.TColgp.TColgp_Array1OfPnt2d,theView : OCP.V3d.V3d_View,theToUpdateViewer : bool) -> AIS_StatusOfPick: 
         """
         Selects everything found in the bounding rectangle defined by the pixel minima and maxima, XPMin, YPMin, XPMax, and YPMax in the view. The objects detected are passed to the main viewer, which is then updated.
 
@@ -14845,9 +14852,9 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Stores and hilights the previous detected; Unhilights the previous picked.
         """
     @overload
-    def Select(self,thePolyline : OCP.TColgp.TColgp_Array1OfPnt2d,theView : OCP.V3d.V3d_View,theToUpdateViewer : bool) -> AIS_StatusOfPick: ...
-    @overload
     def Select(self,theToUpdateViewer : bool) -> AIS_StatusOfPick: ...
+    @overload
+    def Select(self,theXPMin : int,theYPMin : int,theXPMax : int,theYPMax : int,theView : OCP.V3d.V3d_View,theToUpdateViewer : bool) -> AIS_StatusOfPick: ...
     def SelectedInteractive(self) -> AIS_InteractiveObject: 
         """
         Return Handle(AIS_InteractiveObject)::DownCast (SelectedOwner()->Selectable()).
@@ -14897,14 +14904,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Updates the view of the current object in open context. Objects selected when there is no open local context are called current objects; those selected in open local context, selected objects.
         """
     @overload
-    def SetDeviationAngle(self,anAngle : float) -> None: 
+    def SetDeviationAngle(self,theIObj : AIS_InteractiveObject,theAngle : float,theToUpdateViewer : bool) -> None: 
         """
         None
 
         default 12 degrees
         """
     @overload
-    def SetDeviationAngle(self,theIObj : AIS_InteractiveObject,theAngle : float,theToUpdateViewer : bool) -> None: ...
+    def SetDeviationAngle(self,anAngle : float) -> None: ...
     @overload
     def SetDeviationCoefficient(self,theIObj : AIS_InteractiveObject,theCoefficient : float,theToUpdateViewer : bool) -> None: 
         """
@@ -14932,40 +14939,40 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Sets the HLR angle.
         """
     @overload
-    def SetHLRAngleAndDeviation(self,theIObj : AIS_InteractiveObject,theAngle : float,theToUpdateViewer : bool) -> None: 
+    def SetHLRAngleAndDeviation(self,theAngle : float) -> None: 
         """
         Computes a HLRAngle and a HLRDeviationCoefficient by means of the angle anAngle and sets the corresponding methods in the default drawing tool with these values.
 
         compute with theAngle a HLRAngle and a HLRDeviationCoefficient and set them in myHLRAngle and in myHLRDeviationCoefficient of myDefaultDrawer; theAngle is in radian; ( 1 deg < angle in deg < 20 deg)
         """
     @overload
-    def SetHLRAngleAndDeviation(self,theAngle : float) -> None: ...
+    def SetHLRAngleAndDeviation(self,theIObj : AIS_InteractiveObject,theAngle : float,theToUpdateViewer : bool) -> None: ...
     def SetHLRDeviationAngle(self,theIObj : AIS_InteractiveObject,theAngle : float,theToUpdateViewer : bool) -> None: 
         """
         None
         """
     @overload
-    def SetHLRDeviationCoefficient(self,theIObj : AIS_InteractiveObject,theCoefficient : float,theToUpdateViewer : bool) -> None: 
+    def SetHLRDeviationCoefficient(self,aCoefficient : float) -> None: 
         """
         Sets the deviation coefficient aCoefficient for removal of hidden lines created by different viewpoints in different presentations. The Default value is 0.02.
 
         Sets the deviation coefficient aCoefficient for removal of hidden lines created by different viewpoints in different presentations. The Default value is 0.02.
         """
     @overload
-    def SetHLRDeviationCoefficient(self,aCoefficient : float) -> None: ...
+    def SetHLRDeviationCoefficient(self,theIObj : AIS_InteractiveObject,theCoefficient : float,theToUpdateViewer : bool) -> None: ...
     def SetHiddenLineAspect(self,anAspect : OCP.Prs3d.Prs3d_LineAspect) -> None: 
         """
         Sets the hidden line aspect anAspect. Aspect defines display attributes for hidden lines in HLR projections.
         """
     @overload
-    def SetHighlightStyle(self,theStyleType : OCP.Prs3d.Prs3d_TypeOfHighlight,theStyle : OCP.Prs3d.Prs3d_Drawer) -> None: 
+    def SetHighlightStyle(self,theStyle : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
         Setup highlight style settings. It is preferred modifying existing style returned by method HighlightStyle() instead of creating a new drawer.
 
         Setup the style of dynamic highlighting. It is preferred modifying existing style returned by method HighlightStyle() instead of creating a new drawer.
         """
     @overload
-    def SetHighlightStyle(self,theStyle : OCP.Prs3d.Prs3d_Drawer) -> None: ...
+    def SetHighlightStyle(self,theStyleType : OCP.Prs3d.Prs3d_TypeOfHighlight,theStyle : OCP.Prs3d.Prs3d_Drawer) -> None: ...
     def SetIsoNumber(self,NbIsos : int,WhichIsos : AIS_TypeOfIso=AIS_TypeOfIso.AIS_TOI_Both) -> None: 
         """
         Sets the number of U and V isoparameters displayed.
@@ -15045,14 +15052,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Specify whether selected object must be hilighted when mouse cursor is moved above it (in MoveTo method). By default this value is false and selected object is not hilighted in this case.
         """
     @overload
-    def SetTransformPersistence(self,theObject : AIS_InteractiveObject,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theObj : AIS_InteractiveObject,theFlag : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets transform persistence.
 
         None
         """
     @overload
-    def SetTransformPersistence(self,theObj : AIS_InteractiveObject,theFlag : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theObject : AIS_InteractiveObject,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,theIObj : AIS_InteractiveObject,theValue : float,theToUpdateViewer : bool) -> None: 
         """
         Provides the transparency settings for viewing the Object. The transparency value aValue may be between 0.0, opaque, and 1.0, fully transparent.
@@ -15074,7 +15081,7 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Set Z layer id for interactive object. The Z layers can be used to display temporarily presentations of some object in front of the other objects in the scene. The ids for Z layers are generated by V3d_Viewer.
         """
     @overload
-    def ShiftSelect(self,thePolyline : OCP.TColgp.TColgp_Array1OfPnt2d,theView : OCP.V3d.V3d_View,theToUpdateViewer : bool) -> AIS_StatusOfPick: 
+    def ShiftSelect(self,theXPMin : int,theYPMin : int,theXPMax : int,theYPMax : int,theView : OCP.V3d.V3d_View,theToUpdateViewer : bool) -> AIS_StatusOfPick: 
         """
         Adds the last detected to the list of previous picked. If the last detected was already declared as picked, removes it from the Picked List.
 
@@ -15083,9 +15090,9 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Rectangle of selection; adds new detected entities into the picked list, removes the detected entities that were already stored.
         """
     @overload
-    def ShiftSelect(self,theXPMin : int,theYPMin : int,theXPMax : int,theYPMax : int,theView : OCP.V3d.V3d_View,theToUpdateViewer : bool) -> AIS_StatusOfPick: ...
-    @overload
     def ShiftSelect(self,theToUpdateViewer : bool) -> AIS_StatusOfPick: ...
+    @overload
+    def ShiftSelect(self,thePolyline : OCP.TColgp.TColgp_Array1OfPnt2d,theView : OCP.V3d.V3d_View,theToUpdateViewer : bool) -> AIS_StatusOfPick: ...
     def Status(self,anObj : AIS_InteractiveObject,astatus : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         Returns the status of the Interactive Context for the view of the Interactive Object.
@@ -15475,14 +15482,14 @@ class AIS_DiameterDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -15681,14 +15688,14 @@ class AIS_DiameterDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -15735,23 +15742,23 @@ class AIS_DiameterDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.
         None
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -15886,9 +15893,9 @@ class AIS_DiameterDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
     def __init__(self,theCircle : OCP.gp.gp_Circ,thePlane : OCP.gp.gp_Pln) -> None: ...
+    @overload
+    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
     def __init__(self,theCircle : OCP.gp.gp_Circ) -> None: ...
     @overload
@@ -15938,6 +15945,7 @@ class AIS_KindOfDimension():
 
       AIS_KOD_ELLIPSERADIUS
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -15982,6 +15990,7 @@ class AIS_KindOfInteractive():
 
       AIS_KOI_Dimension
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -16028,6 +16037,7 @@ class AIS_KindOfRelation():
 
       AIS_KOR_SYMMETRIC
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -16073,6 +16083,7 @@ class AIS_KindOfSurface():
 
       AIS_KOS_OtherSurface
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -16115,6 +16126,7 @@ class AIS_KindOfUnit():
 
       AIS_TOU_TIME
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -16428,14 +16440,14 @@ class AIS_LengthDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Se
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -16646,20 +16658,20 @@ class AIS_LengthDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Se
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
         """
     @overload
-    def SetMeasuredGeometry(self,theEdge : OCP.TopoDS.TopoDS_Edge,thePlane : OCP.gp.gp_Pln) -> None: 
+    def SetMeasuredGeometry(self,theFace : OCP.TopoDS.TopoDS_Face,theEdge : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Measure distance between two points. The dimension will become invalid if the new distance between attachement points is less than Precision::Confusion().
 
@@ -16670,11 +16682,11 @@ class AIS_LengthDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Se
         Measure distance between face and edge. The dimension will become invalid if the distance can not be measured or it is less than Precision::Confusion().
         """
     @overload
+    def SetMeasuredGeometry(self,theEdge : OCP.TopoDS.TopoDS_Edge,thePlane : OCP.gp.gp_Pln) -> None: ...
+    @overload
     def SetMeasuredGeometry(self,theFirstPoint : OCP.gp.gp_Pnt,theSecondPoint : OCP.gp.gp_Pnt,thePlane : OCP.gp.gp_Pln) -> None: ...
     @overload
     def SetMeasuredGeometry(self,theFirstFace : OCP.TopoDS.TopoDS_Face,theSecondFace : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
-    def SetMeasuredGeometry(self,theFace : OCP.TopoDS.TopoDS_Face,theEdge : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def SetMeasuredShapes(self,theFirstShape : OCP.TopoDS.TopoDS_Shape,theSecondShape : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Measure distance between generic pair of shapes (edges, vertices, length), where measuring is applicable.
@@ -16712,23 +16724,23 @@ class AIS_LengthDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Se
         None
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -16859,15 +16871,15 @@ class AIS_LengthDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Se
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,theFirstFace : OCP.TopoDS.TopoDS_Face,theSecondFace : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self,theFirstShape : OCP.TopoDS.TopoDS_Shape,theSecondShape : OCP.TopoDS.TopoDS_Shape,thePlane : OCP.gp.gp_Pln) -> None: ...
-    @overload
-    def __init__(self,theFirstPoint : OCP.gp.gp_Pnt,theSecondPoint : OCP.gp.gp_Pnt,thePlane : OCP.gp.gp_Pln) -> None: ...
     @overload
     def __init__(self,theFace : OCP.TopoDS.TopoDS_Face,theEdge : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
     def __init__(self,theEdge : OCP.TopoDS.TopoDS_Edge,thePlane : OCP.gp.gp_Pln) -> None: ...
+    @overload
+    def __init__(self,theFirstPoint : OCP.gp.gp_Pnt,theSecondPoint : OCP.gp.gp_Pnt,thePlane : OCP.gp.gp_Pln) -> None: ...
+    @overload
+    def __init__(self,theFirstFace : OCP.TopoDS.TopoDS_Face,theSecondFace : OCP.TopoDS.TopoDS_Face) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -17128,14 +17140,14 @@ class AIS_Line(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -17297,14 +17309,14 @@ class AIS_Line(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         instantiates an infinite line.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -17330,23 +17342,23 @@ class AIS_Line(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -17488,7 +17500,7 @@ class AIS_ListOfInteractive(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : AIS_ListOfInteractive) -> None: 
+    def Append(self,theItem : AIS_InteractiveObject,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -17497,7 +17509,7 @@ class AIS_ListOfInteractive(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : AIS_InteractiveObject,theIter : Any) -> None: ...
+    def Append(self,theOther : AIS_ListOfInteractive) -> None: ...
     @overload
     def Append(self,theItem : AIS_InteractiveObject) -> AIS_InteractiveObject: ...
     def Assign(self,theOther : AIS_ListOfInteractive) -> AIS_ListOfInteractive: 
@@ -17519,14 +17531,14 @@ class AIS_ListOfInteractive(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : AIS_ListOfInteractive,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : AIS_InteractiveObject,theIter : Any) -> AIS_InteractiveObject: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : AIS_InteractiveObject,theIter : Any) -> AIS_InteractiveObject: ...
+    def InsertAfter(self,theOther : AIS_ListOfInteractive,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theItem : AIS_InteractiveObject,theIter : Any) -> AIS_InteractiveObject: 
         """
@@ -17572,11 +17584,11 @@ class AIS_ListOfInteractive(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : AIS_ListOfInteractive) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard_Transient):
@@ -17609,14 +17621,14 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Adds the selection aSelection with the selection mode index aMode to this framework.
         """
     @overload
-    def Attach(self,theObject : AIS_InteractiveObject,theOptions : AIS_Manipulator_OptionsForAttach=AIS_Manipulator_OptionsForAttach) -> None: 
+    def Attach(self,theObject : AIS_ManipulatorObjectSequence,theOptions : AIS_Manipulator_OptionsForAttach=AIS_Manipulator_OptionsForAttach) -> None: 
         """
         Attaches himself to the input interactive object and become displayed in the same context. It is placed in the center of object bounding box, and its size is adjusted to the object bounding box.
 
         Attaches himself to the input interactive object group and become displayed in the same context. It become attached to the first object, baut manage manipulation of the whole group. It is placed in the center of object bounding box, and its size is adjusted to the object bounding box.
         """
     @overload
-    def Attach(self,theObject : AIS_ManipulatorObjectSequence,theOptions : AIS_Manipulator_OptionsForAttach=AIS_Manipulator_OptionsForAttach) -> None: ...
+    def Attach(self,theObject : AIS_InteractiveObject,theOptions : AIS_Manipulator_OptionsForAttach=AIS_Manipulator_OptionsForAttach) -> None: ...
     def Attributes(self) -> OCP.Prs3d.Prs3d_Drawer: 
         """
         Returns the attributes settings.
@@ -17866,14 +17878,14 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -17916,14 +17928,14 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Continues the iteration scanning for sensitive primitives.
         """
     @overload
-    def Object(self) -> AIS_InteractiveObject: 
+    def Object(self,theIndex : int) -> AIS_InteractiveObject: 
         """
         Returns the first (leading) object of the owning objects.
 
         Returns one of the owning objects. raises program error if theIndex is more than owning objects count or less than 1.
         """
     @overload
-    def Object(self,theIndex : int) -> AIS_InteractiveObject: ...
+    def Object(self) -> AIS_InteractiveObject: ...
     def ObjectTransformation(self,theX : int,theY : int,theView : OCP.V3d.V3d_View,theTrsf : OCP.gp.gp_Trsf) -> bool: 
         """
         Computes transformation of parent object according to the active mode and input motion vector. You can use this method to get object transformation according to current mode or use own algorithm to implement any other tranformation for modes.
@@ -18052,14 +18064,14 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -18077,14 +18089,14 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Allows you to attribute the owner theApplicativeEntity to an Interactive Object. This can be a shape for a set of sub-shapes or a sub-shape for sub-shapes which it is composed of. The owner takes the form of a transient.
         """
     @overload
-    def SetPart(self,theMode : AIS_ManipulatorMode,theIsEnabled : bool) -> None: 
+    def SetPart(self,theAxisIndex : int,theMode : AIS_ManipulatorMode,theIsEnabled : bool) -> None: 
         """
         Disable or enable visual parts for translation, rotation or scaling for some axis. By default all parts are enabled (will be displayed).
 
         Disable or enable visual parts for translation, rotation or scaling for ALL axes. By default all parts are enabled (will be displayed).
         """
     @overload
-    def SetPart(self,theAxisIndex : int,theMode : AIS_ManipulatorMode,theIsEnabled : bool) -> None: ...
+    def SetPart(self,theMode : AIS_ManipulatorMode,theIsEnabled : bool) -> None: ...
     def SetPolygonOffsets(self,aMode : int,aFactor : float=1.0,aUnits : float=0.0) -> None: 
         """
         Sets up polygon offsets for this object.
@@ -18102,14 +18114,14 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Sets size (length of side of the manipulator cubic bounding box.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     def SetTransformBehavior(self,theSettings : Any) -> None: 
         """
         Sets behavior settings for transformation action carried on the manipulator, whether it translates, rotates together with the transformed object or not.
@@ -18185,14 +18197,14 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Get value of the flag "propagate visual state" It means that the display/erase/color visual state is propagated automatically to all children; by default, the flag is true
         """
     @overload
-    def Transform(self,aTrsf : OCP.gp.gp_Trsf) -> None: 
+    def Transform(self,theX : int,theY : int,theView : OCP.V3d.V3d_View) -> OCP.gp.gp_Trsf: 
         """
         Apply to the owning objects the input transformation.
 
         Apply transformation made from mouse moving from start position (save on the first Tranform() call and reset on DeactivateCurrentMode() call.) to the in/out mouse position (theX, theY)
         """
     @overload
-    def Transform(self,theX : int,theY : int,theView : OCP.V3d.V3d_View) -> OCP.gp.gp_Trsf: ...
+    def Transform(self,aTrsf : OCP.gp.gp_Trsf) -> None: ...
     def TransformBehavior(self) -> Any: 
         """
         Returns behavior settings for transformation action of the manipulator.
@@ -18308,6 +18320,7 @@ class AIS_ManipulatorMode():
 
       AIS_MM_TranslationPlane
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -18360,14 +18373,14 @@ class AIS_ManipulatorObjectSequence(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -18386,9 +18399,9 @@ class AIS_ManipulatorObjectSequence(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theOther : AIS_SequenceOfInteractive) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : AIS_SequenceOfInteractive) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -18469,14 +18482,14 @@ class AIS_ManipulatorOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Sta
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -18511,14 +18524,14 @@ class AIS_ManipulatorOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Sta
         Returns a selectable object detected in the working context.
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -18544,14 +18557,14 @@ class AIS_ManipulatorOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Sta
         Set Z layer ID and update all presentations.
         """
     @overload
-    def State(self) -> int: 
+    def State(self,theStatus : int) -> None: 
         """
         Returns selection state.
 
         Set the state of the owner. The method is deprecated. Use SetSelected() instead.
         """
     @overload
-    def State(self,theStatus : int) -> None: ...
+    def State(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -18599,23 +18612,23 @@ class AIS_MapOfInteractive(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     @overload
-    def Contains(self,K : AIS_InteractiveObject) -> bool: 
+    def Contains(self,theOther : AIS_MapOfInteractive) -> bool: 
         """
         Contains
 
         Returns true if this map contains ALL keys of another map.
         """
     @overload
-    def Contains(self,theOther : AIS_MapOfInteractive) -> bool: ...
+    def Contains(self,K : AIS_InteractiveObject) -> bool: ...
     def Differ(self,theOther : AIS_MapOfInteractive) -> bool: 
         """
         Apply to this Map the symmetric difference (aka exclusive disjunction, boolean XOR) operation with another (given) Map. The result contains the values that are contained only in this or the operand map, but not in both. This algorithm is similar to method Difference(). Returns True if contents of this map is changed.
@@ -18691,9 +18704,9 @@ class AIS_MapOfInteractive(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theOther : AIS_MapOfInteractive) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class AIS_MaxRadiusDimension(AIS_EllipseRadiusDimension, AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard_Transient):
     """
@@ -18964,14 +18977,14 @@ class AIS_MaxRadiusDimension(AIS_EllipseRadiusDimension, AIS_Relation, AIS_Inter
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -19161,14 +19174,14 @@ class AIS_MaxRadiusDimension(AIS_EllipseRadiusDimension, AIS_Relation, AIS_Inter
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -19210,23 +19223,23 @@ class AIS_MaxRadiusDimension(AIS_EllipseRadiusDimension, AIS_Relation, AIS_Inter
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -19365,9 +19378,9 @@ class AIS_MaxRadiusDimension(AIS_EllipseRadiusDimension, AIS_Relation, AIS_Inter
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aVal : float,aText : OCP.TCollection.TCollection_ExtendedString,aPosition : OCP.gp.gp_Pnt,aSymbolPrs : OCP.DsgPrs.DsgPrs_ArrowSide,anArrowSize : float=0.0) -> None: ...
-    @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aVal : float,aText : OCP.TCollection.TCollection_ExtendedString) -> None: ...
+    @overload
+    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aVal : float,aText : OCP.TCollection.TCollection_ExtendedString,aPosition : OCP.gp.gp_Pnt,aSymbolPrs : OCP.DsgPrs.DsgPrs_ArrowSide,anArrowSize : float=0.0) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -19628,14 +19641,14 @@ class AIS_MediaPlayer(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -19811,14 +19824,14 @@ class AIS_MediaPlayer(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -19840,23 +19853,23 @@ class AIS_MediaPlayer(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -20257,14 +20270,14 @@ class AIS_MidPointRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -20456,14 +20469,14 @@ class AIS_MidPointRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -20505,14 +20518,14 @@ class AIS_MidPointRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     def SetTool(self,aMidPointTool : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
@@ -20520,14 +20533,14 @@ class AIS_MidPointRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         None
         """
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -20946,14 +20959,14 @@ class AIS_MinRadiusDimension(AIS_EllipseRadiusDimension, AIS_Relation, AIS_Inter
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -21143,14 +21156,14 @@ class AIS_MinRadiusDimension(AIS_EllipseRadiusDimension, AIS_Relation, AIS_Inter
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -21192,23 +21205,23 @@ class AIS_MinRadiusDimension(AIS_EllipseRadiusDimension, AIS_Relation, AIS_Inter
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -21347,9 +21360,9 @@ class AIS_MinRadiusDimension(AIS_EllipseRadiusDimension, AIS_Relation, AIS_Inter
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aVal : float,aText : OCP.TCollection.TCollection_ExtendedString,aPosition : OCP.gp.gp_Pnt,aSymbolPrs : OCP.DsgPrs.DsgPrs_ArrowSide,anArrowSize : float=0.0) -> None: ...
-    @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aVal : float,aText : OCP.TCollection.TCollection_ExtendedString) -> None: ...
+    @overload
+    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aVal : float,aText : OCP.TCollection.TCollection_ExtendedString,aPosition : OCP.gp.gp_Pnt,aSymbolPrs : OCP.DsgPrs.DsgPrs_ArrowSide,anArrowSize : float=0.0) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -21381,6 +21394,7 @@ class AIS_MouseGesture():
 
       AIS_MouseGesture_RotateView
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -21429,14 +21443,14 @@ class AIS_MouseGestureMap(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : AIS_MouseGestureMap) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -21487,11 +21501,11 @@ class AIS_MouseGestureMap(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theOther : AIS_MouseGestureMap) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : AIS_MouseGestureMap) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard_Transient):
@@ -21567,20 +21581,20 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         Return combined parent transformation.
         """
     @overload
-    def Compute(self,aProjector : OCP.Prs3d.Prs3d_Projector,aTrsf : OCP.Geom.Geom_Transformation,aPresentation : OCP.Graphic3d.Graphic3d_Structure) -> None: 
+    def Compute(self,aProjector : OCP.Prs3d.Prs3d_Projector,aPresentation : OCP.Graphic3d.Graphic3d_Structure) -> None: 
         """
         computes the presentation according to a point of view given by <aProjector>. To be Used when the associated degenerated Presentations have been transformed by <aTrsf> which is not a Pure Translation. The HLR Prs can't be deducted automatically WARNING :<aTrsf> must be applied to the object to display before computation !!!
 
         None
         """
     @overload
-    def Compute(self,aProjector : OCP.Prs3d.Prs3d_Projector,aPresentation : OCP.Graphic3d.Graphic3d_Structure) -> None: ...
+    def Compute(self,aProjector : OCP.Prs3d.Prs3d_Projector,aTrsf : OCP.Geom.Geom_Transformation,aPresentation : OCP.Graphic3d.Graphic3d_Structure) -> None: ...
     def ComputeSelection(self,theSelection : OCP.SelectMgr.SelectMgr_Selection,theMode : int) -> None: 
         """
         Computes sensitive primitives for the given selection mode - key interface method of Selectable Object.
         """
     @overload
-    def Connect(self,theAnotherObj : AIS_InteractiveObject) -> AIS_InteractiveObject: 
+    def Connect(self,theInteractive : AIS_InteractiveObject,theLocation : OCP.gp.gp_Trsf,theTrsfPersFlag : OCP.Graphic3d.Graphic3d_TransModeFlags,theTrsfPersPoint : OCP.gp.gp_Pnt) -> AIS_InteractiveObject: 
         """
         Establishes the connection between the Connected Interactive Object, theInteractive, and its reference. Locates instance in theLocation and applies specified transformation persistence mode.
 
@@ -21593,13 +21607,13 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         None
         """
     @overload
-    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.gp.gp_Trsf) -> AIS_InteractiveObject: ...
-    @overload
     def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.Geom.Geom_Transformation,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> AIS_InteractiveObject: ...
     @overload
-    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.gp.gp_Trsf,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> AIS_InteractiveObject: ...
+    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.gp.gp_Trsf) -> AIS_InteractiveObject: ...
     @overload
-    def Connect(self,theInteractive : AIS_InteractiveObject,theLocation : OCP.gp.gp_Trsf,theTrsfPersFlag : OCP.Graphic3d.Graphic3d_TransModeFlags,theTrsfPersPoint : OCP.gp.gp_Pnt) -> AIS_InteractiveObject: ...
+    def Connect(self,theAnotherObj : AIS_InteractiveObject) -> AIS_InteractiveObject: ...
+    @overload
+    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.gp.gp_Trsf,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> AIS_InteractiveObject: ...
     def CurrentFacingModel(self) -> OCP.Aspect.Aspect_TypeOfFacingModel: 
         """
         Returns the current facing model which is in effect.
@@ -21781,14 +21795,14 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -21938,14 +21952,14 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -21967,23 +21981,23 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -22162,14 +22176,14 @@ class AIS_NListOfEntityOwner(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theOther : AIS_NListOfEntityOwner,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theOther : AIS_NListOfEntityOwner,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : OCP.SelectMgr.SelectMgr_EntityOwner,theIter : Any) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : OCP.SelectMgr.SelectMgr_EntityOwner,theIter : Any) -> OCP.SelectMgr.SelectMgr_EntityOwner: ...
+    def InsertBefore(self,theOther : AIS_NListOfEntityOwner,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -22181,14 +22195,14 @@ class AIS_NListOfEntityOwner(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : OCP.SelectMgr.SelectMgr_EntityOwner) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
+    def Prepend(self,theOther : AIS_NListOfEntityOwner) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : AIS_NListOfEntityOwner) -> None: ...
+    def Prepend(self,theItem : OCP.SelectMgr.SelectMgr_EntityOwner) -> OCP.SelectMgr.SelectMgr_EntityOwner: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -22208,9 +22222,9 @@ class AIS_NListOfEntityOwner(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : AIS_NListOfEntityOwner) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class AIS_NavigationMode():
@@ -22225,6 +22239,7 @@ class AIS_NavigationMode():
 
       AIS_NavigationMode_FirstPersonWalk
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -22505,14 +22520,14 @@ class AIS_OffsetDimension(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -22706,14 +22721,14 @@ class AIS_OffsetDimension(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -22761,23 +22776,23 @@ class AIS_OffsetDimension(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -23192,14 +23207,14 @@ class AIS_ParallelRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -23391,14 +23406,14 @@ class AIS_ParallelRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -23440,23 +23455,23 @@ class AIS_ParallelRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -23595,9 +23610,9 @@ class AIS_ParallelRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,aFShape : OCP.TopoDS.TopoDS_Shape,aSShape : OCP.TopoDS.TopoDS_Shape,aPlane : OCP.Geom.Geom_Plane,aPosition : OCP.gp.gp_Pnt,aSymbolPrs : OCP.DsgPrs.DsgPrs_ArrowSide,anArrowSize : float=0.01) -> None: ...
-    @overload
     def __init__(self,aFShape : OCP.TopoDS.TopoDS_Shape,aSShape : OCP.TopoDS.TopoDS_Shape,aPlane : OCP.Geom.Geom_Plane) -> None: ...
+    @overload
+    def __init__(self,aFShape : OCP.TopoDS.TopoDS_Shape,aSShape : OCP.TopoDS.TopoDS_Shape,aPlane : OCP.Geom.Geom_Plane,aPosition : OCP.gp.gp_Pnt,aSymbolPrs : OCP.DsgPrs.DsgPrs_ArrowSide,anArrowSize : float=0.01) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -23874,14 +23889,14 @@ class AIS_PerpendicularRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectM
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -24071,14 +24086,14 @@ class AIS_PerpendicularRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectM
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -24120,23 +24135,23 @@ class AIS_PerpendicularRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectM
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -24558,14 +24573,14 @@ class AIS_Plane(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -24739,14 +24754,14 @@ class AIS_Plane(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -24772,32 +24787,32 @@ class AIS_Plane(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetSize(self,Xval : float,YVal : float) -> None: 
+    def SetSize(self,aValue : float) -> None: 
         """
         Same value for x and y directions
 
         Sets the size defined by the length along the X axis XVal and the length along the Y axis YVal.
         """
     @overload
-    def SetSize(self,aValue : float) -> None: ...
+    def SetSize(self,Xval : float,YVal : float) -> None: ...
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -24936,11 +24951,11 @@ class AIS_Plane(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,aComponent : OCP.Geom.Geom_Plane,aCurrentMode : bool=False) -> None: ...
+    def __init__(self,aComponent : OCP.Geom.Geom_Axis2Placement,aPlaneType : AIS_TypeOfPlane,aCurrentMode : bool=False) -> None: ...
     @overload
     def __init__(self,aComponent : OCP.Geom.Geom_Plane,aCenter : OCP.gp.gp_Pnt,aPmin : OCP.gp.gp_Pnt,aPmax : OCP.gp.gp_Pnt,aCurrentMode : bool=False) -> None: ...
     @overload
-    def __init__(self,aComponent : OCP.Geom.Geom_Axis2Placement,aPlaneType : AIS_TypeOfPlane,aCurrentMode : bool=False) -> None: ...
+    def __init__(self,aComponent : OCP.Geom.Geom_Plane,aCurrentMode : bool=False) -> None: ...
     @overload
     def __init__(self,aComponent : OCP.Geom.Geom_Plane,aCenter : OCP.gp.gp_Pnt,aCurrentMode : bool=False) -> None: ...
     @staticmethod
@@ -25211,14 +25226,14 @@ class AIS_PlaneTrihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectab
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -25380,14 +25395,14 @@ class AIS_PlaneTrihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectab
         Sets the length of the X and Y axes.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -25409,23 +25424,23 @@ class AIS_PlaneTrihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectab
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -25828,14 +25843,14 @@ class AIS_Point(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -25989,14 +26004,14 @@ class AIS_Point(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMarker(self,aType : OCP.Aspect.Aspect_TypeOfMarker) -> None: 
         """
         Allows you to provide settings for a marker. These include - type of marker, - marker color, - scale factor.
@@ -26022,23 +26037,23 @@ class AIS_Point(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -26429,14 +26444,14 @@ class AIS_PointCloud(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -26586,14 +26601,14 @@ class AIS_PointCloud(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,theMat : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Setup custom material. Affects presentation only when normals are defined.
@@ -26624,23 +26639,23 @@ class AIS_PointCloud(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -26839,14 +26854,14 @@ class AIS_PointCloudOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Returns true if the presentation manager highlights selections corresponding to the selection mode.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -26881,14 +26896,14 @@ class AIS_PointCloudOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Return selected points. WARNING! Indexation starts with 0 (shifted by -1 comparing to Graphic3d_ArrayOfPoints::Vertice()).
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -26914,14 +26929,14 @@ class AIS_PointCloudOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Set Z layer ID and update all presentations.
         """
     @overload
-    def State(self) -> int: 
+    def State(self,theStatus : int) -> None: 
         """
         Returns selection state.
 
         Set the state of the owner. The method is deprecated. Use SetSelected() instead.
         """
     @overload
-    def State(self,theStatus : int) -> None: ...
+    def State(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -27239,14 +27254,14 @@ class AIS_RadiusDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Se
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -27445,20 +27460,20 @@ class AIS_RadiusDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Se
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
         """
     @overload
-    def SetMeasuredGeometry(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def SetMeasuredGeometry(self,theShape : OCP.TopoDS.TopoDS_Shape,theAnchorPoint : OCP.gp.gp_Pnt,theHasAnchor : bool=True) -> None: 
         """
         Measure radius of the circle. The dimension will become invalid if the radius of the circle is less than Precision::Confusion().
 
@@ -27469,11 +27484,11 @@ class AIS_RadiusDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Se
         Measure radius on the passed shape, if applicable. The dimension will become invalid if the passed shape is not measurable or if measured diameter value is less than Precision::Confusion().
         """
     @overload
-    def SetMeasuredGeometry(self,theShape : OCP.TopoDS.TopoDS_Shape,theAnchorPoint : OCP.gp.gp_Pnt,theHasAnchor : bool=True) -> None: ...
-    @overload
     def SetMeasuredGeometry(self,theCircle : OCP.gp.gp_Circ,theAnchorPoint : OCP.gp.gp_Pnt,theHasAnchor : bool=True) -> None: ...
     @overload
     def SetMeasuredGeometry(self,theCircle : OCP.gp.gp_Circ) -> None: ...
+    @overload
+    def SetMeasuredGeometry(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def SetModelUnits(self,theUnits : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         None
@@ -27507,23 +27522,23 @@ class AIS_RadiusDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Se
         None
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -27658,11 +27673,11 @@ class AIS_RadiusDimension(AIS_Dimension, AIS_InteractiveObject, OCP.SelectMgr.Se
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,theCircle : OCP.gp.gp_Circ) -> None: ...
+    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
     def __init__(self,theCircle : OCP.gp.gp_Circ,theAnchorPoint : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def __init__(self,theCircle : OCP.gp.gp_Circ) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -27939,14 +27954,14 @@ class AIS_Chamf2dDimension(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -28140,14 +28155,14 @@ class AIS_Chamf2dDimension(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -28189,23 +28204,23 @@ class AIS_Chamf2dDimension(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Se
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -28374,6 +28389,7 @@ class AIS_RotationMode():
 
       AIS_RotationMode_BndBoxScene
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -28656,14 +28672,14 @@ class AIS_RubberBand(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -28866,14 +28882,14 @@ class AIS_RubberBand(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Sets width of line for rubber band presentation.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -28903,23 +28919,23 @@ class AIS_RubberBand(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Sets rectangle bounds.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -29038,11 +29054,11 @@ class AIS_RubberBand(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,theLineColor : OCP.Quantity.Quantity_Color,theType : OCP.Aspect.Aspect_TypeOfLine,theFillColor : OCP.Quantity.Quantity_Color,theTransparency : float=1.0,theLineWidth : float=1.0,theIsPolygonClosed : bool=True) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLineColor : OCP.Quantity.Quantity_Color,theType : OCP.Aspect.Aspect_TypeOfLine,theLineWidth : float=1.0,theIsPolygonClosed : bool=True) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLineColor : OCP.Quantity.Quantity_Color,theType : OCP.Aspect.Aspect_TypeOfLine,theFillColor : OCP.Quantity.Quantity_Color,theTransparency : float=1.0,theLineWidth : float=1.0,theIsPolygonClosed : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -29066,6 +29082,7 @@ class AIS_SelectStatus():
 
       AIS_SS_NotDone
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -29130,14 +29147,14 @@ class AIS_Selection(OCP.Standard.Standard_Transient):
         Return true if list of selected objects is empty.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -29199,6 +29216,7 @@ class AIS_SelectionModesConcurrency():
 
       AIS_SelectionModesConcurrency_Multiple
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -29223,14 +29241,14 @@ class AIS_SequenceOfDimension(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : AIS_Relation) -> None: 
+    def Append(self,theSeq : AIS_SequenceOfDimension) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : AIS_SequenceOfDimension) -> None: ...
+    def Append(self,theItem : AIS_Relation) -> None: ...
     def Assign(self,theOther : AIS_SequenceOfDimension) -> AIS_SequenceOfDimension: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -29294,23 +29312,23 @@ class AIS_SequenceOfDimension(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : AIS_Relation) -> None: 
+    def Prepend(self,theSeq : AIS_SequenceOfDimension) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : AIS_SequenceOfDimension) -> None: ...
+    def Prepend(self,theItem : AIS_Relation) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -29336,11 +29354,11 @@ class AIS_SequenceOfDimension(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : AIS_SequenceOfDimension) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : AIS_SequenceOfDimension) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -29357,14 +29375,14 @@ class AIS_SequenceOfInteractive(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : AIS_InteractiveObject) -> None: 
+    def Append(self,theSeq : AIS_SequenceOfInteractive) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : AIS_SequenceOfInteractive) -> None: ...
+    def Append(self,theItem : AIS_InteractiveObject) -> None: ...
     def Assign(self,theOther : AIS_SequenceOfInteractive) -> AIS_SequenceOfInteractive: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -29394,14 +29412,14 @@ class AIS_SequenceOfInteractive(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : AIS_SequenceOfInteractive) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : AIS_InteractiveObject) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : AIS_InteractiveObject) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : AIS_SequenceOfInteractive) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : AIS_InteractiveObject) -> None: 
         """
@@ -29428,23 +29446,23 @@ class AIS_SequenceOfInteractive(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : AIS_InteractiveObject) -> None: 
+    def Prepend(self,theSeq : AIS_SequenceOfInteractive) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : AIS_SequenceOfInteractive) -> None: ...
+    def Prepend(self,theItem : AIS_InteractiveObject) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -29470,9 +29488,9 @@ class AIS_SequenceOfInteractive(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : AIS_SequenceOfInteractive) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : AIS_SequenceOfInteractive) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -29743,14 +29761,14 @@ class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -29950,14 +29968,14 @@ class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,theAspect : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aspect.
@@ -29976,14 +29994,14 @@ class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr
     @overload
     def SetOwnDeviationAngle(self,anAngle : float) -> None: ...
     @overload
-    def SetOwnDeviationCoefficient(self) -> bool: 
+    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: 
         """
         Sets a local value for deviation coefficient for this specific shape.
 
         Sets a local value for deviation coefficient for this specific shape.
         """
     @overload
-    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: ...
+    def SetOwnDeviationCoefficient(self) -> bool: ...
     @overload
     def SetOwnHLRDeviationAngle(self) -> bool: 
         """
@@ -30031,23 +30049,23 @@ class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr
         Use this method to scale the texture (percent of the face). You can specify a scale factor for both U and V. Example: if you set ScaleU and ScaleV to 0.5 and you enable texture repeat, the texture will appear twice on the face in each direction.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,theValue : float) -> None: 
         """
         Sets transparency value.
@@ -30246,14 +30264,14 @@ class AIS_TypeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_Trans
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -30305,6 +30323,7 @@ class AIS_StandardDatum():
 
       AIS_SD_Plane
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -30345,6 +30364,7 @@ class AIS_StatusOfDetection():
 
       AIS_SOD_SeveralGood
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -30380,6 +30400,7 @@ class AIS_StatusOfPick():
 
       AIS_SOP_SeveralSelected
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -30668,14 +30689,14 @@ class AIS_SymmetricRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.S
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -30867,14 +30888,14 @@ class AIS_SymmetricRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.S
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -30916,14 +30937,14 @@ class AIS_SymmetricRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.S
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     def SetTool(self,aSymmetricTool : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Sets the tool aSymmetricTool composed of a first shape, a second shape, and a plane. This tool is initially created at construction time.
@@ -30931,14 +30952,14 @@ class AIS_SymmetricRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.S
         Sets the tool aSymmetricTool composed of a first shape, a second shape, and a plane. This tool is initially created at construction time.
         """
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -31357,14 +31378,14 @@ class AIS_TangentRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -31558,14 +31579,14 @@ class AIS_TangentRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -31607,23 +31628,23 @@ class AIS_TangentRelation(AIS_Relation, AIS_InteractiveObject, OCP.SelectMgr.Sel
         Allows you to provide the settings theText for text aspect.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -32026,14 +32047,14 @@ class AIS_TextLabel(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -32223,14 +32244,14 @@ class AIS_TextLabel(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,arg1 : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Material has no effect for text label.
@@ -32264,23 +32285,23 @@ class AIS_TextLabel(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Setup text.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,theValue : float) -> None: 
         """
         Setup transparency within [0, 1] range.
@@ -32675,14 +32696,14 @@ class AIS_TexturedShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMg
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -32870,14 +32891,14 @@ class AIS_TexturedShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMg
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,theAspect : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aspect.
@@ -32896,14 +32917,14 @@ class AIS_TexturedShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMg
     @overload
     def SetOwnDeviationAngle(self,anAngle : float) -> None: ...
     @overload
-    def SetOwnDeviationCoefficient(self) -> bool: 
+    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: 
         """
         Sets a local value for deviation coefficient for this specific shape.
 
         Sets a local value for deviation coefficient for this specific shape.
         """
     @overload
-    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: ...
+    def SetOwnDeviationCoefficient(self) -> bool: ...
     @overload
     def SetOwnHLRDeviationAngle(self) -> bool: 
         """
@@ -32979,23 +33000,23 @@ class AIS_TexturedShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMg
         Use this method to scale the texture (percent of the face). You can specify a scale factor for both U and V. Example: if you set ScaleU and ScaleV to 0.5 and you enable texture repeat, the texture will appear twice on the face in each direction.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Sets the value aValue for transparency in the reconstructed compound shape.
@@ -33480,14 +33501,14 @@ class AIS_Triangulation(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -33641,14 +33662,14 @@ class AIS_Triangulation(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -33670,23 +33691,23 @@ class AIS_Triangulation(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Sets the value aValue for transparency in the reconstructed compound shape.
@@ -34093,14 +34114,14 @@ class AIS_Trihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -34286,14 +34307,14 @@ class AIS_Trihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Sets text label for trihedron axis. Parameter thePart should be XAxis, YAxis or ZAxis
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -34331,23 +34352,23 @@ class AIS_Trihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Sets color of label of trihedron axes.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -34570,14 +34591,14 @@ class AIS_TrihedronOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stand
         Returns true if the presentation manager thePM highlights selections corresponding to the selection mode aMode.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -34608,14 +34629,14 @@ class AIS_TrihedronOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stand
         Returns a selectable object detected in the working context.
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -34641,14 +34662,14 @@ class AIS_TrihedronOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stand
         Set Z layer ID and update all presentations.
         """
     @overload
-    def State(self) -> int: 
+    def State(self,theStatus : int) -> None: 
         """
         Returns selection state.
 
         Set the state of the owner. The method is deprecated. Use SetSelected() instead.
         """
     @overload
-    def State(self,theStatus : int) -> None: ...
+    def State(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -34687,6 +34708,7 @@ class AIS_TrihedronSelectionMode():
 
       AIS_TrihedronSelectionMode_MainPlanes
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -34732,14 +34754,14 @@ class AIS_SignatureFilter(AIS_TypeFilter, OCP.SelectMgr.SelectMgr_Filter, OCP.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -34779,6 +34801,7 @@ class AIS_TypeOfAngle():
 
       AIS_TOA_Exterior
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -34807,6 +34830,7 @@ class AIS_TypeOfAngleArrowVisibility():
 
       AIS_TOAV_None
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -34861,6 +34885,7 @@ class AIS_TypeOfAttribute():
 
       AIS_TOA_ThirdAxis
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -34903,6 +34928,7 @@ class AIS_TypeOfAxis():
 
       AIS_TOAX_ZAxis
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -34931,6 +34957,7 @@ class AIS_TypeOfDist():
 
       AIS_TOD_Vertical
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -34958,6 +34985,7 @@ class AIS_TypeOfIso():
 
       AIS_TOI_Both
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -34987,6 +35015,7 @@ class AIS_TypeOfPlane():
 
       AIS_TOPL_YZPlane
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -35152,14 +35181,14 @@ class AIS_ViewController():
         Return camera rotation mode, AIS_RotationMode_BndBoxActive by default.
         """
     @overload
-    def SelectInViewer(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2i,theIsXOR : bool=False) -> None: 
+    def SelectInViewer(self,thePnts : Any,theIsXOR : bool=False) -> None: 
         """
         Perform selection in 3D viewer. This method is expected to be called from UI thread.
 
         Perform selection in 3D viewer. This method is expected to be called from UI thread.
         """
     @overload
-    def SelectInViewer(self,thePnts : Any,theIsXOR : bool=False) -> None: ...
+    def SelectInViewer(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2i,theIsXOR : bool=False) -> None: ...
     def SetAllowDragging(self,theToEnable : bool) -> None: 
         """
         Set if dynamic highlight on mouse move is allowed.
@@ -35766,14 +35795,14 @@ class AIS_ViewCube(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObje
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -36011,14 +36040,14 @@ class AIS_ViewCube(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObje
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,theMat : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material for the interactive object.
@@ -36056,23 +36085,23 @@ class AIS_ViewCube(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObje
         Set color of text labels on box sides. Alias for:
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,theValue : float) -> None: 
         """
         Set new value of transparency for the whole object.
@@ -36319,14 +36348,14 @@ class AIS_ViewCubeOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Standa
         Returns true if the presentation manager highlights selections corresponding to the selection mode.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -36361,14 +36390,14 @@ class AIS_ViewCubeOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Standa
         Returns a selectable object detected in the working context.
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -36394,14 +36423,14 @@ class AIS_ViewCubeOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Standa
         Set Z layer ID and update all presentations.
         """
     @overload
-    def State(self) -> int: 
+    def State(self,theStatus : int) -> None: 
         """
         Returns selection state.
 
         Set the state of the owner. The method is deprecated. Use SetSelected() instead.
         """
     @overload
-    def State(self,theStatus : int) -> None: ...
+    def State(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -36446,6 +36475,7 @@ class AIS_ViewInputBufferType():
 
       AIS_ViewInputBufferType_GL
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -36472,6 +36502,7 @@ class AIS_ViewSelectionTool():
 
       AIS_ViewSelectionTool_Polygon
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -36575,6 +36606,7 @@ class AIS_WalkRotation():
 
       AIS_WalkRotation_Roll
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -36602,6 +36634,7 @@ class AIS_WalkTranslation():
 
       AIS_WalkTranslation_Up
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

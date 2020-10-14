@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
-import OCP.TColStd
-import OCP.Storage
 import OCP.TCollection
+import OCP.Storage
+import OCP.TColStd
 __all__  = [
 "FSD_Base64Decoder",
 "FSD_BinaryFile",
@@ -63,14 +63,14 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @overload
-    def BeginWriteCommentSection(self,theOStream : Any) -> OCP.Storage.Storage_Error: 
+    def BeginWriteCommentSection(self) -> OCP.Storage.Storage_Error: 
         """
         None
 
         None
         """
     @overload
-    def BeginWriteCommentSection(self) -> OCP.Storage.Storage_Error: ...
+    def BeginWriteCommentSection(self,theOStream : Any) -> OCP.Storage.Storage_Error: ...
     def BeginWriteDataSection(self) -> OCP.Storage.Storage_Error: 
         """
         None
@@ -140,27 +140,27 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @overload
-    def EndWriteCommentSection(self) -> OCP.Storage.Storage_Error: 
+    def EndWriteCommentSection(self,theOStream : Any) -> OCP.Storage.Storage_Error: 
         """
         None
 
         None
         """
     @overload
-    def EndWriteCommentSection(self,theOStream : Any) -> OCP.Storage.Storage_Error: ...
+    def EndWriteCommentSection(self) -> OCP.Storage.Storage_Error: ...
     def EndWriteDataSection(self) -> OCP.Storage.Storage_Error: 
         """
         None
         """
     @overload
-    def EndWriteInfoSection(self) -> OCP.Storage.Storage_Error: 
+    def EndWriteInfoSection(self,theOStream : Any) -> OCP.Storage.Storage_Error: 
         """
         None
 
         None
         """
     @overload
-    def EndWriteInfoSection(self,theOStream : Any) -> OCP.Storage.Storage_Error: ...
+    def EndWriteInfoSection(self) -> OCP.Storage.Storage_Error: ...
     def EndWriteObjectData(self) -> None: 
         """
         None

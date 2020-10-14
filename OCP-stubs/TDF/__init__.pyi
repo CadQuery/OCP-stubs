@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
-import OCP.TColStd
 import OCP.Standard
 import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "TDF",
 "TDF_Attribute",
@@ -160,14 +160,14 @@ class TDF_Attribute(OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,aDelta : TDF_DeltaOnModification) -> None: 
+    def DeltaOnModification(self,anOldAttribute : TDF_Attribute) -> TDF_DeltaOnModification: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : TDF_Attribute) -> TDF_DeltaOnModification: ...
+    def DeltaOnModification(self,aDelta : TDF_DeltaOnModification) -> None: ...
     def DeltaOnRemoval(self) -> TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -233,14 +233,14 @@ class TDF_Attribute(OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -283,14 +283,14 @@ class TDF_Attribute(OCP.Standard.Standard_Transient):
         Restores the backuped contents from <anAttribute> into this one. It is used when aborting a transaction.
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -393,13 +393,13 @@ class TDF_AttributeArray1():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : TDF_AttributeArray1) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theBegin : TDF_Attribute,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TDF_AttributeArray1) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TDF_AttributeDelta(OCP.Standard.Standard_Transient):
@@ -443,14 +443,14 @@ class TDF_AttributeDelta(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -488,7 +488,7 @@ class TDF_AttributeDeltaList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TDF_AttributeDelta) -> TDF_AttributeDelta: 
+    def Append(self,theItem : TDF_AttributeDelta,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -497,9 +497,9 @@ class TDF_AttributeDeltaList(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : TDF_AttributeDelta,theIter : Any) -> None: ...
-    @overload
     def Append(self,theOther : TDF_AttributeDeltaList) -> None: ...
+    @overload
+    def Append(self,theItem : TDF_AttributeDelta) -> TDF_AttributeDelta: ...
     def Assign(self,theOther : TDF_AttributeDeltaList) -> TDF_AttributeDeltaList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -519,23 +519,23 @@ class TDF_AttributeDeltaList(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : TDF_AttributeDeltaList,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : TDF_AttributeDelta,theIter : Any) -> TDF_AttributeDelta: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : TDF_AttributeDelta,theIter : Any) -> TDF_AttributeDelta: ...
+    def InsertAfter(self,theOther : TDF_AttributeDeltaList,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theItem : TDF_AttributeDelta,theIter : Any) -> TDF_AttributeDelta: 
+    def InsertBefore(self,theOther : TDF_AttributeDeltaList,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : TDF_AttributeDeltaList,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : TDF_AttributeDelta,theIter : Any) -> TDF_AttributeDelta: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -547,14 +547,14 @@ class TDF_AttributeDeltaList(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : TDF_AttributeDelta) -> TDF_AttributeDelta: 
+    def Prepend(self,theOther : TDF_AttributeDeltaList) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : TDF_AttributeDeltaList) -> None: ...
+    def Prepend(self,theItem : TDF_AttributeDelta) -> TDF_AttributeDelta: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -574,9 +574,9 @@ class TDF_AttributeDeltaList(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : TDF_AttributeDeltaList) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TDF_AttributeDeltaList) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TDF_AttributeIndexedMap(OCP.NCollection.NCollection_BaseMap):
@@ -596,14 +596,14 @@ class TDF_AttributeIndexedMap(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : TDF_Attribute) -> bool: 
         """
         Contains
@@ -715,7 +715,7 @@ class TDF_AttributeList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TDF_Attribute,theIter : Any) -> None: 
+    def Append(self,theItem : TDF_Attribute) -> TDF_Attribute: 
         """
         Append one item at the end
 
@@ -726,7 +726,7 @@ class TDF_AttributeList(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theOther : TDF_AttributeList) -> None: ...
     @overload
-    def Append(self,theItem : TDF_Attribute) -> TDF_Attribute: ...
+    def Append(self,theItem : TDF_Attribute,theIter : Any) -> None: ...
     def Assign(self,theOther : TDF_AttributeList) -> TDF_AttributeList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -746,14 +746,14 @@ class TDF_AttributeList(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : TDF_AttributeList,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : TDF_Attribute,theIter : Any) -> TDF_Attribute: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : TDF_Attribute,theIter : Any) -> TDF_Attribute: ...
+    def InsertAfter(self,theOther : TDF_AttributeList,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theItem : TDF_Attribute,theIter : Any) -> TDF_Attribute: 
         """
@@ -774,14 +774,14 @@ class TDF_AttributeList(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : TDF_AttributeList) -> None: 
+    def Prepend(self,theItem : TDF_Attribute) -> TDF_Attribute: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : TDF_Attribute) -> TDF_Attribute: ...
+    def Prepend(self,theOther : TDF_AttributeList) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -801,9 +801,9 @@ class TDF_AttributeList(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : TDF_AttributeList) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TDF_AttributeMap(OCP.NCollection.NCollection_BaseMap):
@@ -827,14 +827,14 @@ class TDF_AttributeMap(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def Contains(self,K : TDF_Attribute) -> bool: 
         """
@@ -917,11 +917,11 @@ class TDF_AttributeMap(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TDF_AttributeMap) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class TDF_AttributeSequence(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -932,14 +932,14 @@ class TDF_AttributeSequence(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : TDF_AttributeSequence) -> None: 
+    def Append(self,theItem : TDF_Attribute) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : TDF_Attribute) -> None: ...
+    def Append(self,theSeq : TDF_AttributeSequence) -> None: ...
     def Assign(self,theOther : TDF_AttributeSequence) -> TDF_AttributeSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1045,11 +1045,11 @@ class TDF_AttributeSequence(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : TDF_AttributeSequence) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1119,16 +1119,16 @@ class TDF_ChildIterator():
         Returns the current label; or, if there is none, a null label.
         """
     @overload
-    def __init__(self,aLabel : TDF_Label,allLevels : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aLabel : TDF_Label,allLevels : bool=False) -> None: ...
     pass
 class TDF_ClosureMode():
     """
     This class provides options closure management.
     """
     @overload
-    def Descendants(self,aStatus : bool) -> None: 
+    def Descendants(self) -> bool: 
         """
         Sets the mode "Descendants" to <aStatus>.
 
@@ -1139,9 +1139,9 @@ class TDF_ClosureMode():
         Returns true if the mode "Descendants" is set.
         """
     @overload
-    def Descendants(self) -> bool: ...
+    def Descendants(self,aStatus : bool) -> None: ...
     @overload
-    def References(self) -> bool: 
+    def References(self,aStatus : bool) -> None: 
         """
         Sets the mode "References" to <aStatus>.
 
@@ -1152,7 +1152,7 @@ class TDF_ClosureMode():
         Returns true if the mode "References" is set.
         """
     @overload
-    def References(self,aStatus : bool) -> None: ...
+    def References(self) -> bool: ...
     def __init__(self,aMode : bool=True) -> None: ...
     pass
 class TDF_ClosureTool():
@@ -1161,7 +1161,7 @@ class TDF_ClosureTool():
     """
     @staticmethod
     @overload
-    def Closure_s(aDataSet : TDF_DataSet,aFilter : TDF_IDFilter,aMode : TDF_ClosureMode) -> None: 
+    def Closure_s(aDataSet : TDF_DataSet) -> None: 
         """
         Builds the transitive closure of label and attribute sets into <aDataSet>.
 
@@ -1171,10 +1171,10 @@ class TDF_ClosureTool():
         """
     @staticmethod
     @overload
-    def Closure_s(aDataSet : TDF_DataSet) -> None: ...
+    def Closure_s(aLabel : TDF_Label,aLabMap : TDF_LabelMap,anAttMap : TDF_AttributeMap,aFilter : TDF_IDFilter,aMode : TDF_ClosureMode) -> None: ...
     @staticmethod
     @overload
-    def Closure_s(aLabel : TDF_Label,aLabMap : TDF_LabelMap,anAttMap : TDF_AttributeMap,aFilter : TDF_IDFilter,aMode : TDF_ClosureMode) -> None: ...
+    def Closure_s(aDataSet : TDF_DataSet,aFilter : TDF_IDFilter,aMode : TDF_ClosureMode) -> None: ...
     def __init__(self) -> None: ...
     pass
 class TDF_ComparisonTool():
@@ -1277,14 +1277,14 @@ class TDF_Data(OCP.Standard.Standard_Transient):
     This class is used to manipulate a complete independant, self sufficient data structure and its services:This class is used to manipulate a complete independant, self sufficient data structure and its services:This class is used to manipulate a complete independant, self sufficient data structure and its services:
     """
     @overload
-    def AllowModification(self,theAllowModification : bool) -> None: 
+    def AllowModification(self,isAllowed : bool) -> None: 
         """
         Sets modification mode.
 
         Sets modification mode.
         """
     @overload
-    def AllowModification(self,isAllowed : bool) -> None: ...
+    def AllowModification(self,theAllowModification : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1318,14 +1318,14 @@ class TDF_Data(OCP.Standard.Standard_Transient):
         Returns true if <aDelta> is applicable HERE and NOW.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1466,14 +1466,14 @@ class TDF_DataSet(OCP.Standard.Standard_Transient):
         Returns true if there is at least one label or one attribute.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1552,14 +1552,14 @@ class TDF_DeltaOnModification(TDF_AttributeDelta, OCP.Standard.Standard_Transien
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1629,14 +1629,14 @@ class TDF_DeltaOnRemoval(TDF_AttributeDelta, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1724,14 +1724,14 @@ class TDF_Delta(OCP.Standard.Standard_Transient):
         Returns true if there is nothing to undo.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1782,7 +1782,7 @@ class TDF_DeltaList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TDF_Delta,theIter : Any) -> None: 
+    def Append(self,theItem : TDF_Delta) -> TDF_Delta: 
         """
         Append one item at the end
 
@@ -1791,9 +1791,9 @@ class TDF_DeltaList(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : TDF_DeltaList) -> None: ...
+    def Append(self,theItem : TDF_Delta,theIter : Any) -> None: ...
     @overload
-    def Append(self,theItem : TDF_Delta) -> TDF_Delta: ...
+    def Append(self,theOther : TDF_DeltaList) -> None: ...
     def Assign(self,theOther : TDF_DeltaList) -> TDF_DeltaList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1841,14 +1841,14 @@ class TDF_DeltaList(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : TDF_DeltaList) -> None: 
+    def Prepend(self,theItem : TDF_Delta) -> TDF_Delta: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : TDF_Delta) -> TDF_Delta: ...
+    def Prepend(self,theOther : TDF_DeltaList) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1866,9 +1866,9 @@ class TDF_DeltaList(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : TDF_DeltaList) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -1914,14 +1914,14 @@ class TDF_DeltaOnAddition(TDF_AttributeDelta, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1992,14 +1992,14 @@ class TDF_DeltaOnForget(TDF_AttributeDelta, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2070,14 +2070,14 @@ class TDF_DefaultDeltaOnModification(TDF_DeltaOnModification, TDF_AttributeDelta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2148,14 +2148,14 @@ class TDF_DefaultDeltaOnRemoval(TDF_DeltaOnRemoval, TDF_AttributeDelta, OCP.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2226,14 +2226,14 @@ class TDF_DeltaOnResume(TDF_AttributeDelta, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2284,14 +2284,14 @@ class TDF_GUIDProgIDMap(OCP.NCollection.NCollection_BaseMap):
         Bind
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TDF_GUIDProgIDMap) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -2310,14 +2310,14 @@ class TDF_GUIDProgIDMap(OCP.NCollection.NCollection_BaseMap):
     @overload
     def Find1(self,theKey1 : OCP.Standard.Standard_GUID,theKey2 : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     @overload
-    def Find2(self,theKey2 : OCP.TCollection.TCollection_ExtendedString,theKey1 : OCP.Standard.Standard_GUID) -> bool: 
+    def Find2(self,theKey2 : OCP.TCollection.TCollection_ExtendedString) -> OCP.Standard.Standard_GUID: 
         """
         Find the Key2 and return Key1 value. Raises an exception if Key2 was not bound.
 
         Find the Key2 and return Key1 value (by copying its value).
         """
     @overload
-    def Find2(self,theKey2 : OCP.TCollection.TCollection_ExtendedString) -> OCP.Standard.Standard_GUID: ...
+    def Find2(self,theKey2 : OCP.TCollection.TCollection_ExtendedString,theKey1 : OCP.Standard.Standard_GUID) -> bool: ...
     def IsBound1(self,theKey1 : OCP.Standard.Standard_GUID) -> bool: 
         """
         IsBound1
@@ -2363,11 +2363,11 @@ class TDF_GUIDProgIDMap(OCP.NCollection.NCollection_BaseMap):
         UnBind2
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self,theOther : TDF_GUIDProgIDMap) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class TDF_HAttributeArray1(TDF_AttributeArray1, OCP.Standard.Standard_Transient):
     def Array1(self) -> TDF_AttributeArray1: 
@@ -2435,14 +2435,14 @@ class TDF_HAttributeArray1(TDF_AttributeArray1, OCP.Standard.Standard_Transient)
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2495,9 +2495,9 @@ class TDF_HAttributeArray1(TDF_AttributeArray1, OCP.Standard.Standard_Transient)
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : TDF_AttributeArray1) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : TDF_Attribute) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -2575,14 +2575,14 @@ class TDF_IDFilter():
     @overload
     def IsKept(self,anAtt : TDF_Attribute) -> bool: ...
     @overload
-    def Keep(self,anID : OCP.Standard.Standard_GUID) -> None: 
+    def Keep(self,anIDList : TDF_IDList) -> None: 
         """
         An attribute with <anID> as ID is to be kept and the filter will answer true to the question IsKept(<anID>).
 
         Attributes with ID owned by <anIDList> are to be kept and the filter will answer true to the question IsKept(<anID>) with ID from <anIDList>.
         """
     @overload
-    def Keep(self,anIDList : TDF_IDList) -> None: ...
+    def Keep(self,anID : OCP.Standard.Standard_GUID) -> None: ...
     def __init__(self,ignoreMode : bool=True) -> None: ...
     pass
 class TDF_IDList(OCP.NCollection.NCollection_BaseList):
@@ -2594,7 +2594,7 @@ class TDF_IDList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : TDF_IDList) -> None: 
+    def Append(self,theItem : OCP.Standard.Standard_GUID) -> OCP.Standard.Standard_GUID: 
         """
         Append one item at the end
 
@@ -2603,9 +2603,9 @@ class TDF_IDList(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.Standard.Standard_GUID) -> OCP.Standard.Standard_GUID: ...
-    @overload
     def Append(self,theItem : OCP.Standard.Standard_GUID,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theOther : TDF_IDList) -> None: ...
     def Assign(self,theOther : TDF_IDList) -> TDF_IDList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -2625,14 +2625,14 @@ class TDF_IDList(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : TDF_IDList,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : OCP.Standard.Standard_GUID,theIter : Any) -> OCP.Standard.Standard_GUID: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : OCP.Standard.Standard_GUID,theIter : Any) -> OCP.Standard.Standard_GUID: ...
+    def InsertAfter(self,theOther : TDF_IDList,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theItem : OCP.Standard.Standard_GUID,theIter : Any) -> OCP.Standard.Standard_GUID: 
         """
@@ -2680,9 +2680,9 @@ class TDF_IDList(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : TDF_IDList) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TDF_IDMap(OCP.NCollection.NCollection_BaseMap):
@@ -2706,14 +2706,14 @@ class TDF_IDMap(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def Contains(self,theOther : TDF_IDMap) -> bool: 
         """
@@ -2845,14 +2845,14 @@ class TDF_Label():
         Returns the label father. This label may be null if the label is root.
         """
     @overload
-    def FindAttribute(self,anID : OCP.Standard.Standard_GUID,anAttribute : TDF_Attribute) -> bool: 
+    def FindAttribute(self,anID : OCP.Standard.Standard_GUID,aTransaction : int,anAttribute : TDF_Attribute) -> bool: 
         """
         Finds an attribute of the current label, according to <anID>. If anAttribute is not a valid one, false is returned.
 
         Finds an attribute of the current label, according to <anID> and <aTransaction>. This attribute has/had to be a valid one for the given transaction index . So, this attribute is not necessary a valid one.
         """
     @overload
-    def FindAttribute(self,anID : OCP.Standard.Standard_GUID,aTransaction : int,anAttribute : TDF_Attribute) -> bool: ...
+    def FindAttribute(self,anID : OCP.Standard.Standard_GUID,anAttribute : TDF_Attribute) -> bool: ...
     def FindChild(self,aTag : int,create : bool=True) -> TDF_Label: 
         """
         Finds a child label having <aTag> as tag. Creates The tag aTag identifies the label which will be the parent. If create is true and no child label is found, a new one is created. Example: //creating a label with tag 10 at Root TDF_Label lab1 = aDF->Root().FindChild(10); //creating labels 7 and 2 on label 10 TDF_Label lab2 = lab1.FindChild(7); TDF_Label lab3 = lab1.FindChild(2);
@@ -2862,14 +2862,14 @@ class TDF_Label():
         Forgets all the attributes. Does it on also on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms.
         """
     @overload
-    def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
+    def ForgetAttribute(self,anAttribute : TDF_Attribute) -> None: 
         """
         Forgets an Attribute from the current label, setting its forgotten status true and its valid status false. Raises if the attribute is not in the structure.
 
         Forgets the Attribute of GUID <aguid> from the current label . If the attribute doesn't exist returns False. Otherwise returns True.
         """
     @overload
-    def ForgetAttribute(self,anAttribute : TDF_Attribute) -> None: ...
+    def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: ...
     def HasAttribute(self) -> bool: 
         """
         Returns true if this label has at least one attribute.
@@ -3022,14 +3022,14 @@ class TDF_LabelDataMap(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : TDF_Label,theValue : TDF_Label) -> bool: 
+    def Find(self,theKey : TDF_Label) -> TDF_Label: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : TDF_Label) -> TDF_Label: ...
+    def Find(self,theKey : TDF_Label,theValue : TDF_Label) -> bool: ...
     def IsBound(self,theKey : TDF_Label) -> bool: 
         """
         IsBound
@@ -3063,11 +3063,11 @@ class TDF_LabelDataMap(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self,theOther : TDF_LabelDataMap) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TDF_LabelDataMap) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TDF_LabelDoubleMap(OCP.NCollection.NCollection_BaseMap):
@@ -3170,9 +3170,9 @@ class TDF_LabelDoubleMap(OCP.NCollection.NCollection_BaseMap):
         UnBind2
         """
     @overload
-    def __init__(self,theOther : TDF_LabelDoubleMap) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TDF_LabelDoubleMap) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
@@ -3193,14 +3193,14 @@ class TDF_LabelIndexedMap(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : TDF_Label) -> bool: 
         """
         Contains
@@ -3314,14 +3314,14 @@ class TDF_LabelIntegerMap(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : TDF_Label,theValue : int) -> bool: 
+    def Find(self,theKey : TDF_Label) -> int: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : TDF_Label) -> int: ...
+    def Find(self,theKey : TDF_Label,theValue : int) -> bool: ...
     def IsBound(self,theKey : TDF_Label) -> bool: 
         """
         IsBound
@@ -3371,7 +3371,7 @@ class TDF_LabelList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : TDF_LabelList) -> None: 
+    def Append(self,theItem : TDF_Label) -> TDF_Label: 
         """
         Append one item at the end
 
@@ -3382,7 +3382,7 @@ class TDF_LabelList(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : TDF_Label,theIter : Any) -> None: ...
     @overload
-    def Append(self,theItem : TDF_Label) -> TDF_Label: ...
+    def Append(self,theOther : TDF_LabelList) -> None: ...
     def Assign(self,theOther : TDF_LabelList) -> TDF_LabelList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -3402,14 +3402,14 @@ class TDF_LabelList(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : TDF_Label,theIter : Any) -> TDF_Label: 
+    def InsertAfter(self,theOther : TDF_LabelList,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : TDF_LabelList,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : TDF_Label,theIter : Any) -> TDF_Label: ...
     @overload
     def InsertBefore(self,theItem : TDF_Label,theIter : Any) -> TDF_Label: 
         """
@@ -3430,14 +3430,14 @@ class TDF_LabelList(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : TDF_LabelList) -> None: 
+    def Prepend(self,theItem : TDF_Label) -> TDF_Label: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : TDF_Label) -> TDF_Label: ...
+    def Prepend(self,theOther : TDF_LabelList) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -3455,11 +3455,11 @@ class TDF_LabelList(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TDF_LabelList) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : TDF_LabelList) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TDF_LabelMap(OCP.NCollection.NCollection_BaseMap):
@@ -3492,14 +3492,14 @@ class TDF_LabelMap(OCP.NCollection.NCollection_BaseMap):
     @overload
     def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def Contains(self,K : TDF_Label) -> bool: 
+    def Contains(self,theOther : TDF_LabelMap) -> bool: 
         """
         Contains
 
         Returns true if this map contains ALL keys of another map.
         """
     @overload
-    def Contains(self,theOther : TDF_LabelMap) -> bool: ...
+    def Contains(self,K : TDF_Label) -> bool: ...
     def Differ(self,theOther : TDF_LabelMap) -> bool: 
         """
         Apply to this Map the symmetric difference (aka exclusive disjunction, boolean XOR) operation with another (given) Map. The result contains the values that are contained only in this or the operand map, but not in both. This algorithm is similar to method Difference(). Returns True if contents of this map is changed.
@@ -3604,14 +3604,14 @@ class TDF_LabelSequence(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TDF_Label) -> None: 
+    def Append(self,theSeq : TDF_LabelSequence) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : TDF_LabelSequence) -> None: ...
+    def Append(self,theItem : TDF_Label) -> None: ...
     def Assign(self,theOther : TDF_LabelSequence) -> TDF_LabelSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -3641,14 +3641,14 @@ class TDF_LabelSequence(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TDF_LabelSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : TDF_Label) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : TDF_Label) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : TDF_LabelSequence) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : TDF_Label) -> None: 
         """
@@ -3717,11 +3717,11 @@ class TDF_LabelSequence(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TDF_LabelSequence) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -3794,14 +3794,14 @@ class TDF_Reference(TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,aDelta : TDF_DeltaOnModification) -> None: 
+    def DeltaOnModification(self,anOldAttribute : TDF_Attribute) -> TDF_DeltaOnModification: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : TDF_Attribute) -> TDF_DeltaOnModification: ...
+    def DeltaOnModification(self,aDelta : TDF_DeltaOnModification) -> None: ...
     def DeltaOnRemoval(self) -> TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3876,14 +3876,14 @@ class TDF_Reference(TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3930,14 +3930,14 @@ class TDF_Reference(TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     def Set_s(I : TDF_Label,Origin : TDF_Label) -> TDF_Reference: 
         """
@@ -3974,14 +3974,14 @@ class TDF_RelocationTable(OCP.Standard.Standard_Transient):
     This is a relocation dictionnary between source and target labels, attributes or any transient(useful for copy or paste actions). Note that one target value may be the relocation value of more than one source object.This is a relocation dictionnary between source and target labels, attributes or any transient(useful for copy or paste actions). Note that one target value may be the relocation value of more than one source object.This is a relocation dictionnary between source and target labels, attributes or any transient(useful for copy or paste actions). Note that one target value may be the relocation value of more than one source object.
     """
     @overload
-    def AfterRelocate(self) -> bool: 
+    def AfterRelocate(self,afterRelocate : bool) -> None: 
         """
         None
 
         Returns <myAfterRelocate>.
         """
     @overload
-    def AfterRelocate(self,afterRelocate : bool) -> None: ...
+    def AfterRelocate(self) -> bool: ...
     def AttributeTable(self) -> Any: 
         """
         Returns <myAttributeTable> to be used or updated.
@@ -4011,14 +4011,14 @@ class TDF_RelocationTable(OCP.Standard.Standard_Transient):
         Get the reference counter of this object
         """
     @overload
-    def HasRelocation(self,aSourceAttribute : TDF_Attribute,aTargetAttribute : TDF_Attribute) -> bool: 
+    def HasRelocation(self,aSourceLabel : TDF_Label,aTargetLabel : TDF_Label) -> bool: 
         """
         Finds the relocation value of <aSourceLabel> and returns it into <aTargetLabel>.
 
         Finds the relocation value of <aSourceAttribute> and returns it into <aTargetAttribute>.
         """
     @overload
-    def HasRelocation(self,aSourceLabel : TDF_Label,aTargetLabel : TDF_Label) -> bool: ...
+    def HasRelocation(self,aSourceAttribute : TDF_Attribute,aTargetAttribute : TDF_Attribute) -> bool: ...
     def HasTransientRelocation(self,aSourceTransient : OCP.Standard.Standard_Transient,aTargetTransient : OCP.Standard.Standard_Transient) -> bool: 
         """
         Finds the relocation value of <aSourceTransient> and returns it into <aTargetTransient>.
@@ -4028,14 +4028,14 @@ class TDF_RelocationTable(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4059,14 +4059,14 @@ class TDF_RelocationTable(OCP.Standard.Standard_Transient):
     @overload
     def SelfRelocate(self,selfRelocate : bool) -> None: ...
     @overload
-    def SetRelocation(self,aSourceAttribute : TDF_Attribute,aTargetAttribute : TDF_Attribute) -> None: 
+    def SetRelocation(self,aSourceLabel : TDF_Label,aTargetLabel : TDF_Label) -> None: 
         """
         Sets the relocation value of <aSourceLabel> to <aTargetLabel>.
 
         Sets the relocation value of <aSourceAttribute> to <aTargetAttribute>.
         """
     @overload
-    def SetRelocation(self,aSourceLabel : TDF_Label,aTargetLabel : TDF_Label) -> None: ...
+    def SetRelocation(self,aSourceAttribute : TDF_Attribute,aTargetAttribute : TDF_Attribute) -> None: ...
     def SetTransientRelocation(self,aSourceTransient : OCP.Standard.Standard_Transient,aTargetTransient : OCP.Standard.Standard_Transient) -> None: 
         """
         Sets the relocation value of <aSourceTransient> to <aTargetTransient>.
@@ -4164,14 +4164,14 @@ class TDF_TagSource(TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,aDelta : TDF_DeltaOnModification) -> None: 
+    def DeltaOnModification(self,anOldAttribute : TDF_Attribute) -> TDF_DeltaOnModification: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : TDF_Attribute) -> TDF_DeltaOnModification: ...
+    def DeltaOnModification(self,aDelta : TDF_DeltaOnModification) -> None: ...
     def DeltaOnRemoval(self) -> TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -4246,14 +4246,14 @@ class TDF_TagSource(TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4310,14 +4310,14 @@ class TDF_TagSource(TDF_Attribute, OCP.Standard.Standard_Transient):
         TDF_Attribute methods =====================
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     def Set_s(label : TDF_Label) -> TDF_TagSource: 
         """
@@ -4403,7 +4403,7 @@ class TDF_Tool():
     def IsSelfContained_s(aLabel : TDF_Label) -> bool: ...
     @staticmethod
     @overload
-    def Label_s(aDF : TDF_Data,anEntry : str,aLabel : TDF_Label,create : bool=False) -> None: 
+    def Label_s(aDF : TDF_Data,anEntry : OCP.TCollection.TCollection_AsciiString,aLabel : TDF_Label,create : bool=False) -> None: 
         """
         Returns the label expressed by <anEntry>; creates the label if it does not exist and if <create> is true.
 
@@ -4413,7 +4413,7 @@ class TDF_Tool():
         """
     @staticmethod
     @overload
-    def Label_s(aDF : TDF_Data,anEntry : OCP.TCollection.TCollection_AsciiString,aLabel : TDF_Label,create : bool=False) -> None: ...
+    def Label_s(aDF : TDF_Data,anEntry : str,aLabel : TDF_Label,create : bool=False) -> None: ...
     @staticmethod
     @overload
     def Label_s(aDF : TDF_Data,aTagList : OCP.TColStd.TColStd_ListOfInteger,aLabel : TDF_Label,create : bool=False) -> None: ...
@@ -4446,7 +4446,7 @@ class TDF_Tool():
     def OutReferences_s(aLabel : TDF_Label,atts : TDF_AttributeMap) -> None: ...
     @staticmethod
     @overload
-    def OutReferers_s(aLabel : TDF_Label,aFilterForReferers : TDF_IDFilter,aFilterForReferences : TDF_IDFilter,atts : TDF_AttributeMap) -> None: 
+    def OutReferers_s(theLabel : TDF_Label,theAtts : TDF_AttributeMap) -> None: 
         """
         Returns in <theAtts> the attributes having out references.
 
@@ -4454,7 +4454,7 @@ class TDF_Tool():
         """
     @staticmethod
     @overload
-    def OutReferers_s(theLabel : TDF_Label,theAtts : TDF_AttributeMap) -> None: ...
+    def OutReferers_s(aLabel : TDF_Label,aFilterForReferers : TDF_IDFilter,aFilterForReferences : TDF_IDFilter,atts : TDF_AttributeMap) -> None: ...
     @staticmethod
     def RelocateLabel_s(aSourceLabel : TDF_Label,fromRoot : TDF_Label,toRoot : TDF_Label,aTargetLabel : TDF_Label,create : bool=False) -> None: 
         """

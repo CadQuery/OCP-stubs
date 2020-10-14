@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.BinTools
-import OCP.Standard
-import OCP.BinMDF
-import OCP.BinObjMgt
-import OCP.Message
-import OCP.TColStd
 import OCP.TDF
+import OCP.TCollection
+import OCP.TColStd
+import OCP.Message
+import OCP.Standard
+import OCP.BinObjMgt
+import OCP.BinMDF
+import OCP.BinTools
 __all__  = [
 "BinMNaming",
 "BinMNaming_NamedShapeDriver",
@@ -69,14 +69,14 @@ class BinMNaming_NamedShapeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -95,27 +95,27 @@ class BinMNaming_NamedShapeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def ReadShapeSection(self,theIS : Any) -> None: 
         """
         Input the shapes from Bin Document file
         """
     @overload
-    def SetFormatNb(self,theFormatNb : int) -> None: 
+    def SetFormatNb(self,theFormat : int) -> None: 
         """
         set the format of topology First : does not write CurveOnSurface UV Points into the file on reading calls Check() method. Second: stores CurveOnSurface UV Points.
 
         set the format of topology First : does not write CurveOnSurface UV Points into the file on reading calls Check() method. Second: stores CurveOnSurface UV Points.
         """
     @overload
-    def SetFormatNb(self,theFormat : int) -> None: ...
+    def SetFormatNb(self,theFormatNb : int) -> None: ...
     def SetWithTriangles(self,isWithTriangles : bool) -> None: 
         """
         set whether to store triangulation
@@ -179,14 +179,14 @@ class BinMNaming_NamingDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

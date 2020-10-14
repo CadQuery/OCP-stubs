@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.StepVisual
 import OCP.StepData
 import OCP.Interface
-import OCP.StepVisual
 __all__  = [
 "RWStepVisual_RWAnnotationCurveOccurrence",
 "RWStepVisual_RWAnnotationCurveOccurrenceAndAnnotationOccurrenceAndGeomReprItemAndReprItemAndStyledItem",

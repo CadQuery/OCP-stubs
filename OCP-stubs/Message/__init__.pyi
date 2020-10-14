@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
+import OCP.TCollection
 import OCP.TColStd
 import OCP.Standard
-import OCP.TCollection
 __all__  = [
 "Message",
 "Message_Alert",
@@ -215,14 +215,14 @@ class Message_Alert(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -261,14 +261,14 @@ class Message_Algorithm(OCP.Standard.Standard_Transient):
     Class Message_Algorithm is intended to be the base class for classes implementing algorithms or any operations that need to provide extended information on its execution to the caller / user.Class Message_Algorithm is intended to be the base class for classes implementing algorithms or any operations that need to provide extended information on its execution to the caller / user.Class Message_Algorithm is intended to be the base class for classes implementing algorithms or any operations that need to provide extended information on its execution to the caller / user.
     """
     @overload
-    def AddStatus(self,theOther : Message_Algorithm) -> None: 
+    def AddStatus(self,theStatus : Message_ExecStatus,theOther : Message_Algorithm) -> None: 
         """
         Add statuses to this algorithm from other algorithm (including messages)
 
         Add statuses to this algorithm from other algorithm, but only those items are moved that correspond to statuses set in theStatus
         """
     @overload
-    def AddStatus(self,theStatus : Message_ExecStatus,theOther : Message_Algorithm) -> None: ...
+    def AddStatus(self,theOther : Message_Algorithm) -> None: ...
     def ChangeStatus(self) -> Message_ExecStatus: 
         """
         Returns exec status of algorithm
@@ -320,14 +320,14 @@ class Message_Algorithm(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -361,7 +361,7 @@ class Message_Algorithm(OCP.Standard.Standard_Transient):
         Sets messenger to algorithm
         """
     @overload
-    def SetStatus(self,theStat : Message_Status,theMsg : Message_Msg) -> None: 
+    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool=True) -> None: 
         """
         Sets status with no parameter
 
@@ -388,27 +388,27 @@ class Message_Algorithm(OCP.Standard.Standard_Transient):
         Sets status with string parameter If noRepetitions is True, the parameter will be added only if it has not been yet recorded for the same status flag
         """
     @overload
-    def SetStatus(self,theStat : Message_Status) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool=True) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool) -> None: ...
-    @overload
     def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool) -> None: ...
     @overload
-    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status,theStr : str,noRepetitions : bool) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status,theStr : str,noRepetitions : bool=True) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool=True) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status,theInt : int) -> None: ...
+    def SetStatus(self,theStat : Message_Status) -> None: ...
     @overload
     def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_HExtendedString,noRepetitions : bool=True) -> None: ...
     @overload
+    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status,theInt : int) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status,theMsg : Message_Msg) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status,theStr : str,noRepetitions : bool=True) -> None: ...
+    @overload
     def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool=True) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status,theStr : str,noRepetitions : bool) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool=True) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -504,11 +504,11 @@ class Message_ArrayOfMsg():
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : Message_ArrayOfMsg) -> None: ...
     @overload
     def __init__(self,theBegin : Any,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Message_ExecStatus():
@@ -629,6 +629,7 @@ class Message_Gravity():
 
       Message_Fail
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -655,7 +656,7 @@ class Message_ListOfAlert(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : Message_ListOfAlert) -> None: 
+    def Append(self,theItem : Message_Alert,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -664,7 +665,7 @@ class Message_ListOfAlert(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : Message_Alert,theIter : Any) -> None: ...
+    def Append(self,theOther : Message_ListOfAlert) -> None: ...
     @overload
     def Append(self,theItem : Message_Alert) -> Message_Alert: ...
     def Assign(self,theOther : Message_ListOfAlert) -> Message_ListOfAlert: 
@@ -695,14 +696,14 @@ class Message_ListOfAlert(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : Message_Alert,theIter : Any) -> Message_Alert: ...
     @overload
-    def InsertBefore(self,theOther : Message_ListOfAlert,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : Message_Alert,theIter : Any) -> Message_Alert: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : Message_Alert,theIter : Any) -> Message_Alert: ...
+    def InsertBefore(self,theOther : Message_ListOfAlert,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -714,14 +715,14 @@ class Message_ListOfAlert(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : Message_Alert) -> Message_Alert: 
+    def Prepend(self,theOther : Message_ListOfAlert) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : Message_ListOfAlert) -> None: ...
+    def Prepend(self,theItem : Message_Alert) -> Message_Alert: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -739,9 +740,9 @@ class Message_ListOfAlert(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : Message_ListOfAlert) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -755,7 +756,7 @@ class Message_ListOfMsg(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : Message_ListOfMsg) -> None: 
+    def Append(self,theItem : Message_Msg,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -766,7 +767,7 @@ class Message_ListOfMsg(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : Message_Msg) -> Message_Msg: ...
     @overload
-    def Append(self,theItem : Message_Msg,theIter : Any) -> None: ...
+    def Append(self,theOther : Message_ListOfMsg) -> None: ...
     def Assign(self,theOther : Message_ListOfMsg) -> Message_ListOfMsg: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -795,14 +796,14 @@ class Message_ListOfMsg(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : Message_Msg,theIter : Any) -> Message_Msg: ...
     @overload
-    def InsertBefore(self,theItem : Message_Msg,theIter : Any) -> Message_Msg: 
+    def InsertBefore(self,theOther : Message_ListOfMsg,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : Message_ListOfMsg,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : Message_Msg,theIter : Any) -> Message_Msg: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -839,11 +840,11 @@ class Message_ListOfMsg(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : Message_ListOfMsg) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Message_ListOfMsg) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Message_Messenger(OCP.Standard.Standard_Transient):
@@ -879,14 +880,14 @@ class Message_Messenger(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -909,7 +910,7 @@ class Message_Messenger(OCP.Standard.Standard_Transient):
         Removes printers of specified type (including derived classes) from the messenger. Returns number of removed printers.
         """
     @overload
-    def Send(self,theString : OCP.TCollection.TCollection_ExtendedString,theGravity : Message_Gravity=Message_Gravity.Message_Warning,putEndl : bool=True) -> None: 
+    def Send(self,theString : str,theGravity : Message_Gravity=Message_Gravity.Message_Warning,putEndl : bool=True) -> None: 
         """
         Dispatch a message to all the printers in the list. Three versions of string representations are accepted for convenience, by default all are converted to ExtendedString. The parameter putEndl specifies whether the new line should be started after this message (default) or not (may have sense in some conditions).
 
@@ -918,7 +919,7 @@ class Message_Messenger(OCP.Standard.Standard_Transient):
         See above
         """
     @overload
-    def Send(self,theString : str,theGravity : Message_Gravity=Message_Gravity.Message_Warning,putEndl : bool=True) -> None: ...
+    def Send(self,theString : OCP.TCollection.TCollection_ExtendedString,theGravity : Message_Gravity=Message_Gravity.Message_Warning,putEndl : bool=True) -> None: ...
     @overload
     def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity=Message_Gravity.Message_Warning,putEndl : bool=True) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
@@ -926,9 +927,9 @@ class Message_Messenger(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,thePrinter : Message_Printer) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -945,7 +946,7 @@ class Message_Msg():
     This class provides a tool for constructing the parametrized message basing on resources loaded by Message_MsgFile tool.
     """
     @overload
-    def Arg(self,theString : str) -> Message_Msg: 
+    def Arg(self,theString : OCP.TCollection.TCollection_AsciiString) -> Message_Msg: 
         """
         Set a value for %..s conversion
 
@@ -968,17 +969,17 @@ class Message_Msg():
         Set a value for %..s conversion
         """
     @overload
-    def Arg(self,theString : OCP.TCollection.TCollection_AsciiString) -> Message_Msg: ...
-    @overload
-    def Arg(self,theReal : float) -> Message_Msg: ...
-    @overload
-    def Arg(self,theString : OCP.TCollection.TCollection_HExtendedString) -> Message_Msg: ...
+    def Arg(self,theString : str) -> Message_Msg: ...
     @overload
     def Arg(self,theInt : int) -> Message_Msg: ...
     @overload
-    def Arg(self,theString : OCP.TCollection.TCollection_ExtendedString) -> Message_Msg: ...
+    def Arg(self,theString : OCP.TCollection.TCollection_HExtendedString) -> Message_Msg: ...
     @overload
     def Arg(self,theString : OCP.TCollection.TCollection_HAsciiString) -> Message_Msg: ...
+    @overload
+    def Arg(self,theString : OCP.TCollection.TCollection_ExtendedString) -> Message_Msg: ...
+    @overload
+    def Arg(self,theReal : float) -> Message_Msg: ...
     def Get(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         Return the resulting message string with all parameters filled. If some parameters were not yet filled by calls to methods Arg (or <<), these parameters are filled by the word UNKNOWN
@@ -996,14 +997,14 @@ class Message_Msg():
         Returns the original message text
         """
     @overload
-    def Set(self,theMsg : OCP.TCollection.TCollection_ExtendedString) -> None: 
+    def Set(self,theMsg : str) -> None: 
         """
         Set a message body text -- can be used as alternative to using messages from resource file
 
         Set a message body text -- can be used as alternative to using messages from resource file
         """
     @overload
-    def Set(self,theMsg : str) -> None: ...
+    def Set(self,theMsg : OCP.TCollection.TCollection_ExtendedString) -> None: ...
     def Value(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         Returns current state of the message text with parameters to the moment
@@ -1013,11 +1014,11 @@ class Message_Msg():
     @overload
     def __init__(self,theKey : str) -> None: ...
     @overload
-    def __init__(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> None: ...
-    @overload
     def __init__(self,theMsg : Message_Msg) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> None: ...
     pass
 class Message_MsgFile():
     """
@@ -1095,14 +1096,14 @@ class Message_Printer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1122,9 +1123,9 @@ class Message_Printer(OCP.Standard.Standard_Transient):
         Send a string message with specified trace level. The parameter theToPutEol specified whether end-of-line should be added to the end of the message. Default implementation calls first method Send().
         """
     @overload
-    def Send(self,theString : str,theGravity : Message_Gravity,theToPutEol : bool) -> None: ...
-    @overload
     def Send(self,theString : OCP.TCollection.TCollection_ExtendedString,theGravity : Message_Gravity,theToPutEol : bool) -> None: ...
+    @overload
+    def Send(self,theString : str,theGravity : Message_Gravity,theToPutEol : bool) -> None: ...
     def SetTraceLevel(self,theTraceLevel : Message_Gravity) -> None: 
         """
         Set trace level used for filtering messages. By default, trace level is Message_Info, so that all messages are output
@@ -1185,14 +1186,14 @@ class Message_PrinterOStream(Message_Printer, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1203,7 +1204,7 @@ class Message_PrinterOStream(Message_Printer, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Send(self,theString : OCP.TCollection.TCollection_ExtendedString,theGravity : Message_Gravity,putEndl : bool=True) -> None: 
+    def Send(self,theString : str,theGravity : Message_Gravity,putEndl : bool=True) -> None: 
         """
         Puts a message to the current stream if its gravity is equal or greater to the trace level set by SetTraceLevel()
 
@@ -1214,7 +1215,7 @@ class Message_PrinterOStream(Message_Printer, OCP.Standard.Standard_Transient):
     @overload
     def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity,putEndl : bool=True) -> None: ...
     @overload
-    def Send(self,theString : str,theGravity : Message_Gravity,putEndl : bool=True) -> None: ...
+    def Send(self,theString : OCP.TCollection.TCollection_ExtendedString,theGravity : Message_Gravity,putEndl : bool=True) -> None: ...
     def SetTraceLevel(self,theTraceLevel : Message_Gravity) -> None: 
         """
         Set trace level used for filtering messages. By default, trace level is Message_Info, so that all messages are output
@@ -1310,14 +1311,14 @@ class Message_ProgressIndicator(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1345,15 +1346,15 @@ class Message_ProgressIndicator(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def NewScope(self,name : str) -> bool: ...
-    @overload
-    def NewScope(self,span : float,name : str=None) -> bool: ...
-    @overload
-    def NewScope(self,name : str=None) -> bool: ...
+    def NewScope(self,span : float,name : str) -> bool: ...
     @overload
     def NewScope(self,span : float,name : OCP.TCollection.TCollection_HAsciiString) -> bool: ...
     @overload
-    def NewScope(self,span : float,name : str) -> bool: ...
+    def NewScope(self,span : float,name : str=None) -> bool: ...
+    @overload
+    def NewScope(self,name : str) -> bool: ...
+    @overload
+    def NewScope(self,name : str=None) -> bool: ...
     @overload
     def NextScope(self,name : str=None) -> bool: 
         """
@@ -1364,9 +1365,9 @@ class Message_ProgressIndicator(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def NextScope(self,span : float,name : str=None) -> bool: ...
-    @overload
     def NextScope(self,name : str) -> bool: ...
+    @overload
+    def NextScope(self,span : float,name : str=None) -> bool: ...
     def Reset(self) -> None: 
         """
         Drops all scopes and sets scale from 0 to 100, step 1 This scale has name "Step"
@@ -1381,14 +1382,14 @@ class Message_ProgressIndicator(OCP.Standard.Standard_Transient):
     @overload
     def SetInfinite(self,isInf : bool=True) -> None: ...
     @overload
-    def SetName(self,name : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def SetName(self,name : str) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetName(self,name : str) -> None: ...
+    def SetName(self,name : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     def SetRange(self,min : float,max : float) -> None: 
         """
         Set range for current scale
@@ -1396,7 +1397,7 @@ class Message_ProgressIndicator(OCP.Standard.Standard_Transient):
         Set range for current scale
         """
     @overload
-    def SetScale(self,name : str,min : float,max : float,step : float,isInf : bool=False) -> None: 
+    def SetScale(self,name : str,min : float,max : float,step : float,isInf : bool) -> None: 
         """
         None
 
@@ -1405,7 +1406,7 @@ class Message_ProgressIndicator(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SetScale(self,name : str,min : float,max : float,step : float,isInf : bool) -> None: ...
+    def SetScale(self,name : str,min : float,max : float,step : float,isInf : bool=False) -> None: ...
     @overload
     def SetScale(self,min : float,max : float,step : float,isInf : bool=False) -> None: ...
     def SetStep(self,step : float) -> None: 
@@ -1530,14 +1531,14 @@ class Message_ProgressScale():
     @overload
     def SetName(self,theName : str) -> None: ...
     @overload
-    def SetRange(self,theMin : float,theMax : float) -> None: 
+    def SetRange(self,min : float,max : float) -> None: 
         """
         Set both min and max
 
         Set both min and max
         """
     @overload
-    def SetRange(self,min : float,max : float) -> None: ...
+    def SetRange(self,theMin : float,theMax : float) -> None: ...
     @overload
     def SetScale(self,min : float,max : float,step : float,theInfinite : bool=True) -> None: 
         """
@@ -1575,7 +1576,7 @@ class Message_ProgressSentry():
         Returns False if ProgressIndicator signals UserBreak
         """
     @overload
-    def Next(self,span : float,name : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def Next(self,name : str=None) -> None: 
         """
         None
 
@@ -1590,13 +1591,13 @@ class Message_ProgressSentry():
         Closes current scope and opens next one with either specified or default span
         """
     @overload
-    def Next(self,name : str=None) -> None: ...
-    @overload
-    def Next(self,name : str) -> None: ...
+    def Next(self,span : float,name : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     @overload
     def Next(self,span : float,name : str=None) -> None: ...
     @overload
     def Next(self,span : float,name : str) -> None: ...
+    @overload
+    def Next(self,name : str) -> None: ...
     def Relieve(self) -> None: 
         """
         Moves progress indicator to the end of the current scale and relieves sentry from its duty. Methods other than Show() will do nothing after this one is called.
@@ -1623,7 +1624,7 @@ class Message_Report(OCP.Standard.Standard_Transient):
         Add alert with specified gravity. This method is thread-safe, i.e. alerts can be added from parallel threads safely.
         """
     @overload
-    def Clear(self,theType : OCP.Standard.Standard_Type) -> None: 
+    def Clear(self,theGravity : Message_Gravity) -> None: 
         """
         Clears all collected alerts
 
@@ -1632,9 +1633,9 @@ class Message_Report(OCP.Standard.Standard_Transient):
         Clears collected alerts with specified type
         """
     @overload
-    def Clear(self) -> None: ...
+    def Clear(self,theType : OCP.Standard.Standard_Type) -> None: ...
     @overload
-    def Clear(self,theGravity : Message_Gravity) -> None: ...
+    def Clear(self) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1678,14 +1679,14 @@ class Message_Report(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1696,23 +1697,23 @@ class Message_Report(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Merge(self,theOther : Message_Report) -> None: 
+    def Merge(self,theOther : Message_Report,theGravity : Message_Gravity) -> None: 
         """
         Merges data from theOther report into this
 
         Merges alerts with specified gravity from theOther report into this
         """
     @overload
-    def Merge(self,theOther : Message_Report,theGravity : Message_Gravity) -> None: ...
+    def Merge(self,theOther : Message_Report) -> None: ...
     @overload
-    def SendMessages(self,theMessenger : Message_Messenger) -> None: 
+    def SendMessages(self,theMessenger : Message_Messenger,theGravity : Message_Gravity) -> None: 
         """
         Sends all collected alerts to messenger
 
         Dumps collected alerts with specified gravity to messenger
         """
     @overload
-    def SendMessages(self,theMessenger : Message_Messenger,theGravity : Message_Gravity) -> None: ...
+    def SendMessages(self,theMessenger : Message_Messenger) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1738,14 +1739,14 @@ class Message_SequenceOfPrinters(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Message_Printer) -> None: 
+    def Append(self,theSeq : Message_SequenceOfPrinters) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Message_SequenceOfPrinters) -> None: ...
+    def Append(self,theItem : Message_Printer) -> None: ...
     def Assign(self,theOther : Message_SequenceOfPrinters) -> Message_SequenceOfPrinters: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1775,23 +1776,23 @@ class Message_SequenceOfPrinters(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Message_SequenceOfPrinters) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Message_Printer) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Message_Printer) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Message_SequenceOfPrinters) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Message_Printer) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Message_SequenceOfPrinters) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Message_SequenceOfPrinters) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Message_Printer) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1818,14 +1819,14 @@ class Message_SequenceOfPrinters(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : Message_Printer) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1851,11 +1852,11 @@ class Message_SequenceOfPrinters(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : Message_SequenceOfPrinters) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1872,14 +1873,14 @@ class Message_SequenceOfProgressScale(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Message_ProgressScale) -> None: 
+    def Append(self,theSeq : Message_SequenceOfProgressScale) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Message_SequenceOfProgressScale) -> None: ...
+    def Append(self,theItem : Message_ProgressScale) -> None: ...
     def Assign(self,theOther : Message_SequenceOfProgressScale) -> Message_SequenceOfProgressScale: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1909,23 +1910,23 @@ class Message_SequenceOfProgressScale(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Message_SequenceOfProgressScale) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Message_ProgressScale) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Message_ProgressScale) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Message_SequenceOfProgressScale) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Message_ProgressScale) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Message_SequenceOfProgressScale) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Message_SequenceOfProgressScale) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Message_ProgressScale) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1952,14 +1953,14 @@ class Message_SequenceOfProgressScale(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : Message_ProgressScale) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1985,11 +1986,11 @@ class Message_SequenceOfProgressScale(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Message_SequenceOfProgressScale) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2261,6 +2262,7 @@ class Message_Status():
 
       Message_Fail32
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2416,6 +2418,7 @@ class Message_StatusType():
 
       Message_FAIL
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

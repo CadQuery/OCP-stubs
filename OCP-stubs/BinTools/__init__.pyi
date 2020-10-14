@@ -6,9 +6,9 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TopAbs
 import OCP.Geom2d
-import OCP.TopLoc
-import OCP.Geom
 import OCP.TopoDS
+import OCP.Geom
+import OCP.TopLoc
 __all__  = [
 "BinTools",
 "BinTools_Curve2dSet",
@@ -63,7 +63,7 @@ class BinTools():
         """
     @staticmethod
     @overload
-    def Read_s(theShape : OCP.TopoDS.TopoDS_Shape,theStream : Any) -> None: 
+    def Read_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str) -> bool: 
         """
         Reads a shape from <theStream> and returns it in <theShape>.
 
@@ -71,10 +71,10 @@ class BinTools():
         """
     @staticmethod
     @overload
-    def Read_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str) -> bool: ...
+    def Read_s(theShape : OCP.TopoDS.TopoDS_Shape,theStream : Any) -> None: ...
     @staticmethod
     @overload
-    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theStream : Any) -> None: 
+    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str) -> bool: 
         """
         Writes <theShape> on <theStream> in binary format.
 
@@ -82,7 +82,7 @@ class BinTools():
         """
     @staticmethod
     @overload
-    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str) -> bool: ...
+    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theStream : Any) -> None: ...
     def __init__(self) -> None: ...
     pass
 class BinTools_Curve2dSet():
@@ -253,14 +253,14 @@ class BinTools_ShapeSet():
     @overload
     def Read(self,S : OCP.TopoDS.TopoDS_Shape,IS : Any,NbShapes : int) -> None: ...
     @overload
-    def ReadGeometry(self,T : OCP.TopAbs.TopAbs_ShapeEnum,IS : Any,S : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def ReadGeometry(self,IS : Any) -> None: 
         """
         Reads the geometry of me from the stream <IS>.
 
         Reads the geometry of a shape of type <T> from the stream <IS> and returns it in <S>.
         """
     @overload
-    def ReadGeometry(self,IS : Any) -> None: ...
+    def ReadGeometry(self,T : OCP.TopAbs.TopAbs_ShapeEnum,IS : Any,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def ReadPolygon3D(self,IS : Any) -> None: 
         """
         Reads the 3d polygons of me from the stream <IS>.
@@ -286,23 +286,23 @@ class BinTools_ShapeSet():
         Returns the sub-shape of index <I>.
         """
     @overload
-    def Write(self,S : OCP.TopoDS.TopoDS_Shape,OS : Any) -> None: 
+    def Write(self,OS : Any) -> None: 
         """
         Writes the content of me on the stream <OS> in binary format that can be read back by Read.
 
         Writes on <OS> the shape <S>. Writes the orientation, the index of the TShape and the index of the Location.
         """
     @overload
-    def Write(self,OS : Any) -> None: ...
+    def Write(self,S : OCP.TopoDS.TopoDS_Shape,OS : Any) -> None: ...
     @overload
-    def WriteGeometry(self,S : OCP.TopoDS.TopoDS_Shape,OS : Any) -> None: 
+    def WriteGeometry(self,OS : Any) -> None: 
         """
         Writes the geometry of me on the stream <OS> in a binary format that can be read back by Read.
 
         Writes the geometry of <S> on the stream <OS> in a binary format that can be read back by Read.
         """
     @overload
-    def WriteGeometry(self,OS : Any) -> None: ...
+    def WriteGeometry(self,S : OCP.TopoDS.TopoDS_Shape,OS : Any) -> None: ...
     def WritePolygon3D(self,OS : Any) -> None: 
         """
         Writes the 3d polygons on the stream <OS> in a format that can be read back by Read.

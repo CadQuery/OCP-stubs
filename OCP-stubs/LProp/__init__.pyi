@@ -55,6 +55,7 @@ class LProp_CIType():
 
       LProp_MaxCur
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -124,14 +125,14 @@ class LProp_SequenceOfCIType(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : LProp_SequenceOfCIType) -> None: 
+    def Append(self,theItem : LProp_CIType) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : LProp_CIType) -> None: ...
+    def Append(self,theSeq : LProp_SequenceOfCIType) -> None: ...
     def Assign(self,theOther : LProp_SequenceOfCIType) -> LProp_SequenceOfCIType: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -195,14 +196,14 @@ class LProp_SequenceOfCIType(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : LProp_SequenceOfCIType) -> None: 
+    def Prepend(self,theItem : LProp_CIType) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : LProp_CIType) -> None: ...
+    def Prepend(self,theSeq : LProp_SequenceOfCIType) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -237,11 +238,11 @@ class LProp_SequenceOfCIType(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : LProp_SequenceOfCIType) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : LProp_SequenceOfCIType) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -263,6 +264,7 @@ class LProp_Status():
 
       LProp_Computed
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

@@ -3,1070 +3,926 @@ from typing import *
 from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
-
 _Shape = Tuple[int, ...]
+import OCP.Resource
 import OCP.TCollection
+import OCP.PCDM
 import OCP.Message
 import OCP.Standard
-import OCP.Resource
-import OCP.PCDM
 import OCP.CDM
-
-__all__ = [
-    "CDF",
-    "CDF_Application",
-    "CDF_Directory",
-    "CDF_DirectoryIterator",
-    "CDF_MetaDataDriver",
-    "CDF_FWOSDriver",
-    "CDF_MetaDataDriverError",
-    "CDF_MetaDataDriverFactory",
-    "CDF_Session",
-    "CDF_Store",
-    "CDF_StoreList",
-    "CDF_StoreSetNameStatus",
-    "CDF_SubComponentStatus",
-    "CDF_TryStoreStatus",
-    "CDF_TypeOfActivation",
-    "CDF_SCS_Consistent",
-    "CDF_SCS_Modified",
-    "CDF_SCS_Stored",
-    "CDF_SCS_Unconsistent",
-    "CDF_SSNS_OK",
-    "CDF_SSNS_OpenDocument",
-    "CDF_SSNS_ReplacingAnExistentDocument",
-    "CDF_TOA_Modified",
-    "CDF_TOA_New",
-    "CDF_TOA_Unchanged",
-    "CDF_TS_NoCurrentDocument",
-    "CDF_TS_NoDriver",
-    "CDF_TS_NoSubComponentDriver",
-    "CDF_TS_OK",
+__all__  = [
+"CDF",
+"CDF_Application",
+"CDF_Directory",
+"CDF_DirectoryIterator",
+"CDF_MetaDataDriver",
+"CDF_FWOSDriver",
+"CDF_MetaDataDriverError",
+"CDF_MetaDataDriverFactory",
+"CDF_Session",
+"CDF_Store",
+"CDF_StoreList",
+"CDF_StoreSetNameStatus",
+"CDF_SubComponentStatus",
+"CDF_TryStoreStatus",
+"CDF_TypeOfActivation",
+"CDF_SCS_Consistent",
+"CDF_SCS_Modified",
+"CDF_SCS_Stored",
+"CDF_SCS_Unconsistent",
+"CDF_SSNS_OK",
+"CDF_SSNS_OpenDocument",
+"CDF_SSNS_ReplacingAnExistentDocument",
+"CDF_TOA_Modified",
+"CDF_TOA_New",
+"CDF_TOA_Unchanged",
+"CDF_TS_NoCurrentDocument",
+"CDF_TS_NoDriver",
+"CDF_TS_NoSubComponentDriver",
+"CDF_TS_OK"
 ]
-
-class CDF:
+class CDF():
     """
     None
     """
-
     @staticmethod
-    def GetLicense_s(anApplicationIdentifier: int) -> None:
+    def GetLicense_s(anApplicationIdentifier : int) -> None: 
         """
         None
         """
     @staticmethod
-    def IsAvailable_s(anApplicationIdentifier: int) -> bool:
+    def IsAvailable_s(anApplicationIdentifier : int) -> bool: 
         """
         None
         """
     def __init__(self) -> None: ...
     pass
-
 class CDF_Application(OCP.CDM.CDM_Application, OCP.Standard.Standard_Transient):
-    def BeginOfUpdate(self, aDocument: OCP.CDM.CDM_Document) -> None:
+    def BeginOfUpdate(self,aDocument : OCP.CDM.CDM_Document) -> None: 
         """
         this method is called before the update of a document. By default, writes in MessageDriver().
         """
-    def CanClose(self, aDocument: OCP.CDM.CDM_Document) -> OCP.CDM.CDM_CanCloseStatus:
+    def CanClose(self,aDocument : OCP.CDM.CDM_Document) -> OCP.CDM.CDM_CanCloseStatus: 
         """
         None
         """
     @overload
-    def CanRetrieve(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-    ) -> OCP.PCDM.PCDM_ReaderStatus:
+    def CanRetrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
         None
 
         None
         """
     @overload
-    def CanRetrieve(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-        aVersion: OCP.TCollection.TCollection_ExtendedString,
-    ) -> OCP.PCDM.PCDM_ReaderStatus: ...
-    def Close(self, aDocument: OCP.CDM.CDM_Document) -> None:
+    def CanRetrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    def Close(self,aDocument : OCP.CDM.CDM_Document) -> None: 
         """
         removes the document of the current session directory and closes the document;
         """
-    def DecrementRefCounter(self) -> int:
+    def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
         """
-    def DefaultFolder(self) -> str:
+    def DefaultFolder(self) -> str: 
         """
         None
         """
-    def Delete(self) -> None:
+    def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
         """
-    def DynamicType(self) -> OCP.Standard.Standard_Type:
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def EndOfUpdate(
-        self,
-        aDocument: OCP.CDM.CDM_Document,
-        theStatus: bool,
-        ErrorString: OCP.TCollection.TCollection_ExtendedString,
-    ) -> None:
+    def EndOfUpdate(self,aDocument : OCP.CDM.CDM_Document,theStatus : bool,ErrorString : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         this method is called affter the update of a document. By default, writes in MessageDriver().
         """
-    def Format(
-        self,
-        aFileName: OCP.TCollection.TCollection_ExtendedString,
-        theFormat: OCP.TCollection.TCollection_ExtendedString,
-    ) -> bool:
+    def Format(self,aFileName : OCP.TCollection.TCollection_ExtendedString,theFormat : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         try to retrieve a Format directly in the file or in application resource by using extension. returns True if found;
         """
-    def GetRefCount(self) -> int:
+    def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
         """
-    def GetRetrieveStatus(self) -> OCP.PCDM.PCDM_ReaderStatus:
+    def GetRetrieveStatus(self) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
         Checks status after Retrieve
         """
-    def IncrementRefCounter(self) -> None:
+    def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self, theTypeName: str) -> bool:
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self, theType: OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self, theType: OCP.Standard.Standard_Type) -> bool:
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self, theTypeName: str) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @staticmethod
-    def Load_s(aGUID: OCP.Standard.Standard_GUID) -> CDF_Application:
+    def Load_s(aGUID : OCP.Standard.Standard_GUID) -> CDF_Application: 
         """
         plugs an application.
         """
-    def MessageDriver(self) -> OCP.Message.Message_Messenger:
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns default messenger;
         """
-    def Name(self) -> OCP.TCollection.TCollection_ExtendedString:
+    def Name(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         Returns the application name.
         """
-    def Open(self, aDocument: OCP.CDM.CDM_Document) -> None:
+    def Open(self,aDocument : OCP.CDM.CDM_Document) -> None: 
         """
         puts the document in the current session directory and calls the virtual method Activate on it.
         """
-    def Read(self, theIStream: Any) -> OCP.CDM.CDM_Document:
+    def Read(self,theIStream : Any) -> OCP.CDM.CDM_Document: 
         """
         Reads aDoc from standard SEEKABLE stream theIStream, the stream should support SEEK fuctionality
         """
-    def ReaderFromFormat(
-        self, aFormat: OCP.TCollection.TCollection_ExtendedString
-    ) -> OCP.PCDM.PCDM_Reader:
+    def ReaderFromFormat(self,aFormat : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_Reader: 
         """
         Returns instance of read driver for specified format.
         """
-    def Resources(self) -> OCP.Resource.Resource_Manager:
+    def Resources(self) -> OCP.Resource.Resource_Manager: 
         """
         The manager returned by this virtual method will be used to search for Format.Retrieval resource items.
         """
     @overload
-    def Retrieve(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-        aVersion: OCP.TCollection.TCollection_ExtendedString,
-        UseStorageConfiguration: bool = True,
-    ) -> OCP.CDM.CDM_Document:
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True) -> OCP.CDM.CDM_Document: 
         """
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. The content of {aFolder}, {aName} and {aVersion} depends on the Database Manager system. If the DBMS is only based on the OS, {aFolder} is a directory and {aName} is the name of a file. In this case the use of the syntax with {aVersion} has no sense. For example:
 
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. -- If the DBMS is only based on the OS, this syntax should not be used.
         """
     @overload
-    def Retrieve(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-        UseStorageConfiguration: bool = True,
-    ) -> OCP.CDM.CDM_Document: ...
-    def SetDefaultFolder(self, aFolder: str) -> bool:
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True) -> OCP.CDM.CDM_Document: ...
+    def SetDefaultFolder(self,aFolder : str) -> bool: 
         """
         None
         """
-    def This(self) -> OCP.Standard.Standard_Transient:
+    def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Version(self) -> OCP.TCollection.TCollection_AsciiString:
+    def Version(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns the application version.
         """
-    def Write(self, aString: str) -> None:
+    def Write(self,aString : str) -> None: 
         """
         writes the string in the application MessagerDriver.
         """
-    def WriterFromFormat(
-        self, aFormat: OCP.TCollection.TCollection_ExtendedString
-    ) -> OCP.PCDM.PCDM_StorageDriver:
+    def WriterFromFormat(self,aFormat : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StorageDriver: 
         """
         Returns instance of storage driver for specified format.
         """
     @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type:
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @staticmethod
-    def get_type_name_s() -> str:
+    def get_type_name_s() -> str: 
         """
         None
         """
     pass
-
 class CDF_Directory(OCP.Standard.Standard_Transient):
     """
     A directory is a collection of documents. There is only one instance of a given document in a directory. put.A directory is a collection of documents. There is only one instance of a given document in a directory. put.A directory is a collection of documents. There is only one instance of a given document in a directory. put.
     """
-
-    def Add(self, aDocument: OCP.CDM.CDM_Document) -> None:
+    def Add(self,aDocument : OCP.CDM.CDM_Document) -> None: 
         """
         adds a document into the directory.
         """
-    def Contains(self, aDocument: OCP.CDM.CDM_Document) -> bool:
+    def Contains(self,aDocument : OCP.CDM.CDM_Document) -> bool: 
         """
         Returns true if the document aDocument is in the directory
         """
-    def DecrementRefCounter(self) -> int:
+    def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
         """
-    def Delete(self) -> None:
+    def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
         """
-    def DynamicType(self) -> OCP.Standard.Standard_Type:
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def GetRefCount(self) -> int:
+    def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
         """
-    def IncrementRefCounter(self) -> None:
+    def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
-    def IsEmpty(self) -> bool:
+    def IsEmpty(self) -> bool: 
         """
         returns true if the directory is empty.
         """
     @overload
-    def IsInstance(self, theTypeName: str) -> bool:
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self, theType: OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self, theType: OCP.Standard.Standard_Type) -> bool:
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self, theTypeName: str) -> bool: ...
-    def Last(self) -> OCP.CDM.CDM_Document:
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Last(self) -> OCP.CDM.CDM_Document: 
         """
         returns the last document (if any) which has been added in the directory.
         """
-    def Length(self) -> int:
+    def Length(self) -> int: 
         """
         returns the number of documents of the directory.
         """
-    def Remove(self, aDocument: OCP.CDM.CDM_Document) -> None:
+    def Remove(self,aDocument : OCP.CDM.CDM_Document) -> None: 
         """
         removes the document.
         """
-    def This(self) -> OCP.Standard.Standard_Transient:
+    def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     def __init__(self) -> None: ...
     @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type:
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @staticmethod
-    def get_type_name_s() -> str:
+    def get_type_name_s() -> str: 
         """
         None
         """
     pass
-
-class CDF_DirectoryIterator:
+class CDF_DirectoryIterator():
     """
     None
     """
-
-    def Document(self) -> OCP.CDM.CDM_Document:
+    def Document(self) -> OCP.CDM.CDM_Document: 
         """
         Returns item value of current entry
         """
-    def MoreDocument(self) -> bool:
+    def MoreDocument(self) -> bool: 
         """
         Returns True if there are more entries to return
         """
-    def NextDocument(self) -> None:
+    def NextDocument(self) -> None: 
         """
         Go to the next entry (if there is not, Value will raise an exception)
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,aDirectory : CDF_Directory) -> None: ...
     @overload
-    def __init__(self, aDirectory: CDF_Directory) -> None: ...
+    def __init__(self) -> None: ...
     pass
-
 class CDF_MetaDataDriver(OCP.Standard.Standard_Transient):
     """
     this class list the method that must be available for a specific DBMSthis class list the method that must be available for a specific DBMSthis class list the method that must be available for a specific DBMS
     """
-
-    def BuildFileName(
-        self, aDocument: OCP.CDM.CDM_Document
-    ) -> OCP.TCollection.TCollection_ExtendedString:
+    def BuildFileName(self,aDocument : OCP.CDM.CDM_Document) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         None
         """
-    def CreateDependsOn(
-        self, aFirstData: OCP.CDM.CDM_MetaData, aSecondData: OCP.CDM.CDM_MetaData
-    ) -> None:
+    def CreateDependsOn(self,aFirstData : OCP.CDM.CDM_MetaData,aSecondData : OCP.CDM.CDM_MetaData) -> None: 
         """
         Creates a "Depends On" relation between two Datas. By default does nothing
         """
-    def CreateMetaData(
-        self,
-        aDocument: OCP.CDM.CDM_Document,
-        aFileName: OCP.TCollection.TCollection_ExtendedString,
-    ) -> OCP.CDM.CDM_MetaData:
+    def CreateMetaData(self,aDocument : OCP.CDM.CDM_Document,aFileName : OCP.TCollection.TCollection_ExtendedString) -> OCP.CDM.CDM_MetaData: 
         """
         should create meta-data corresponding to aData and maintaining a meta-link between these meta-data and aFileName CreateMetaData is called by CreateData If the metadata-driver has version capabilities, version must be set in the returned Data.
         """
-    def CreateReference(
-        self,
-        aFrom: OCP.CDM.CDM_MetaData,
-        aTo: OCP.CDM.CDM_MetaData,
-        aReferenceIdentifier: int,
-        aToDocumentVersion: int,
-    ) -> None:
+    def CreateReference(self,aFrom : OCP.CDM.CDM_MetaData,aTo : OCP.CDM.CDM_MetaData,aReferenceIdentifier : int,aToDocumentVersion : int) -> None: 
         """
         None
         """
-    def DecrementRefCounter(self) -> int:
+    def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
         """
-    def DefaultFolder(self) -> OCP.TCollection.TCollection_ExtendedString:
+    def DefaultFolder(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         None
         """
-    def Delete(self) -> None:
+    def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
         """
-    def DynamicType(self) -> OCP.Standard.Standard_Type:
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @overload
-    def Find(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-        aVersion: OCP.TCollection.TCollection_ExtendedString,
-    ) -> bool:
+    def Find(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         should indicate whether meta-data exist in the DBMS corresponding to the Data. aVersion may be NULL;
 
         calls Find with an empty version
         """
     @overload
-    def Find(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-    ) -> bool: ...
-    def FindFolder(self, aFolder: OCP.TCollection.TCollection_ExtendedString) -> bool:
+    def Find(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def FindFolder(self,aFolder : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         None
         """
-    def GetRefCount(self) -> int:
+    def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
         """
-    def HasReadPermission(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-        aVersion: OCP.TCollection.TCollection_ExtendedString,
-    ) -> bool:
+    def HasReadPermission(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         None
         """
-    def HasVersion(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-    ) -> bool:
+    def HasVersion(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         by default return Standard_True.
         """
-    def HasVersionCapability(self) -> bool:
+    def HasVersionCapability(self) -> bool: 
         """
         returns true if the MetaDataDriver can manage different versions of a Data. By default, returns Standard_False.
         """
-    def IncrementRefCounter(self) -> None:
+    def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self, theTypeName: str) -> bool:
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self, theType: OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self, theType: OCP.Standard.Standard_Type) -> bool:
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self, theTypeName: str) -> bool: ...
-    def LastVersion(self, aMetaData: OCP.CDM.CDM_MetaData) -> OCP.CDM.CDM_MetaData:
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def LastVersion(self,aMetaData : OCP.CDM.CDM_MetaData) -> OCP.CDM.CDM_MetaData: 
         """
         by default returns aMetaDATA should return the MetaData stored in the DBMS with the meta-data corresponding to the path. If the MetaDataDriver has version management capabilities the version has to be set in the returned MetaData. MetaData is called by GetMetaData If the version is not included in the path , MetaData should return the last version of the metadata is deferred;
         """
     @overload
-    def MetaData(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-    ) -> OCP.CDM.CDM_MetaData:
+    def MetaData(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString) -> OCP.CDM.CDM_MetaData: 
         """
         should return the MetaData stored in the DBMS with the meta-data corresponding to the Data. If the MetaDataDriver has version management capabilities the version has to be set in the returned MetaData. aVersion may be NULL MetaData is called by GetMetaData If the version is set to NULL, MetaData should return the last version of the metadata
 
         calls MetaData with an empty version
         """
     @overload
-    def MetaData(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-        aVersion: OCP.TCollection.TCollection_ExtendedString,
-    ) -> OCP.CDM.CDM_MetaData: ...
-    def ReferenceIterator(self) -> OCP.PCDM.PCDM_ReferenceIterator:
+    def MetaData(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString) -> OCP.CDM.CDM_MetaData: ...
+    def ReferenceIterator(self) -> OCP.PCDM.PCDM_ReferenceIterator: 
         """
         None
         """
-    def SetName(
-        self,
-        aDocument: OCP.CDM.CDM_Document,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-    ) -> OCP.TCollection.TCollection_ExtendedString:
+    def SetName(self,aDocument : OCP.CDM.CDM_Document,aName : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         this methods is usefull if the name of an object -- depends on the metadatadriver. For example a Driver -- based on the operating system can choose to add the extension of file to create to the object.
         """
-    def This(self) -> OCP.Standard.Standard_Transient:
+    def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type:
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @staticmethod
-    def get_type_name_s() -> str:
+    def get_type_name_s() -> str: 
         """
         None
         """
     pass
-
 class CDF_FWOSDriver(CDF_MetaDataDriver, OCP.Standard.Standard_Transient):
-    def BuildFileName(
-        self, aDocument: OCP.CDM.CDM_Document
-    ) -> OCP.TCollection.TCollection_ExtendedString:
+    def BuildFileName(self,aDocument : OCP.CDM.CDM_Document) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         None
         """
-    def CreateDependsOn(
-        self, aFirstData: OCP.CDM.CDM_MetaData, aSecondData: OCP.CDM.CDM_MetaData
-    ) -> None:
+    def CreateDependsOn(self,aFirstData : OCP.CDM.CDM_MetaData,aSecondData : OCP.CDM.CDM_MetaData) -> None: 
         """
         Creates a "Depends On" relation between two Datas. By default does nothing
         """
-    def CreateMetaData(
-        self,
-        aDocument: OCP.CDM.CDM_Document,
-        aFileName: OCP.TCollection.TCollection_ExtendedString,
-    ) -> OCP.CDM.CDM_MetaData:
+    def CreateMetaData(self,aDocument : OCP.CDM.CDM_Document,aFileName : OCP.TCollection.TCollection_ExtendedString) -> OCP.CDM.CDM_MetaData: 
         """
         should create meta-data corresponding to aData and maintaining a meta-link between these meta-data and aFileName CreateMetaData is called by CreateData If the metadata-driver has version capabilities, version must be set in the returned Data.
         """
-    def CreateReference(
-        self,
-        aFrom: OCP.CDM.CDM_MetaData,
-        aTo: OCP.CDM.CDM_MetaData,
-        aReferenceIdentifier: int,
-        aToDocumentVersion: int,
-    ) -> None:
+    def CreateReference(self,aFrom : OCP.CDM.CDM_MetaData,aTo : OCP.CDM.CDM_MetaData,aReferenceIdentifier : int,aToDocumentVersion : int) -> None: 
         """
         None
         """
-    def DecrementRefCounter(self) -> int:
+    def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
         """
-    def DefaultFolder(self) -> OCP.TCollection.TCollection_ExtendedString:
+    def DefaultFolder(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         None
         """
-    def Delete(self) -> None:
+    def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
         """
-    def DynamicType(self) -> OCP.Standard.Standard_Type:
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def Find(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-        aVersion: OCP.TCollection.TCollection_ExtendedString,
-    ) -> bool:
+    def Find(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         indicate whether a file exists corresponding to the folder and the name
         """
-    def FindFolder(self, aFolder: OCP.TCollection.TCollection_ExtendedString) -> bool:
+    def FindFolder(self,aFolder : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         None
         """
-    def GetRefCount(self) -> int:
+    def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
         """
-    def HasReadPermission(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-        aVersion: OCP.TCollection.TCollection_ExtendedString,
-    ) -> bool:
+    def HasReadPermission(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         None
         """
-    def HasVersion(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-    ) -> bool:
+    def HasVersion(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         by default return Standard_True.
         """
-    def HasVersionCapability(self) -> bool:
+    def HasVersionCapability(self) -> bool: 
         """
         returns true if the MetaDataDriver can manage different versions of a Data. By default, returns Standard_False.
         """
-    def IncrementRefCounter(self) -> None:
+    def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self, theTypeName: str) -> bool:
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self, theType: OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self, theType: OCP.Standard.Standard_Type) -> bool:
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self, theTypeName: str) -> bool: ...
-    def LastVersion(self, aMetaData: OCP.CDM.CDM_MetaData) -> OCP.CDM.CDM_MetaData:
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def LastVersion(self,aMetaData : OCP.CDM.CDM_MetaData) -> OCP.CDM.CDM_MetaData: 
         """
         by default returns aMetaDATA should return the MetaData stored in the DBMS with the meta-data corresponding to the path. If the MetaDataDriver has version management capabilities the version has to be set in the returned MetaData. MetaData is called by GetMetaData If the version is not included in the path , MetaData should return the last version of the metadata is deferred;
         """
     @overload
-    def MetaData(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-    ) -> OCP.CDM.CDM_MetaData:
+    def MetaData(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString) -> OCP.CDM.CDM_MetaData: 
         """
         should return the MetaData stored in the DBMS with the meta-data corresponding to the Data. If the MetaDataDriver has version management capabilities the version has to be set in the returned MetaData. aVersion may be NULL MetaData is called by GetMetaData If the version is set to NULL, MetaData should return the last version of the metadata
 
         calls MetaData with an empty version
         """
     @overload
-    def MetaData(
-        self,
-        aFolder: OCP.TCollection.TCollection_ExtendedString,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-        aVersion: OCP.TCollection.TCollection_ExtendedString,
-    ) -> OCP.CDM.CDM_MetaData: ...
-    def ReferenceIterator(self) -> OCP.PCDM.PCDM_ReferenceIterator:
+    def MetaData(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString) -> OCP.CDM.CDM_MetaData: ...
+    def ReferenceIterator(self) -> OCP.PCDM.PCDM_ReferenceIterator: 
         """
         None
         """
-    def SetName(
-        self,
-        aDocument: OCP.CDM.CDM_Document,
-        aName: OCP.TCollection.TCollection_ExtendedString,
-    ) -> OCP.TCollection.TCollection_ExtendedString:
+    def SetName(self,aDocument : OCP.CDM.CDM_Document,aName : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         None
         """
-    def This(self) -> OCP.Standard.Standard_Transient:
+    def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     def __init__(self) -> None: ...
     @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type:
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @staticmethod
-    def get_type_name_s() -> str:
+    def get_type_name_s() -> str: 
         """
         None
         """
     pass
-
 class CDF_MetaDataDriverError(Exception, BaseException):
-    class type:
+    class type():
         pass
-    __cause__: getset_descriptor  # value = <attribute '__cause__' of 'BaseException' objects>
-    __context__: getset_descriptor  # value = <attribute '__context__' of 'BaseException' objects>
-    __dict__: mappingproxy  # value = mappingproxy({'__module__': 'OCP.CDF', '__weakref__': <attribute '__weakref__' of 'CDF_MetaDataDriverError' objects>, '__doc__': None})
-    __suppress_context__: member_descriptor  # value = <member '__suppress_context__' of 'BaseException' objects>
-    __traceback__: getset_descriptor  # value = <attribute '__traceback__' of 'BaseException' objects>
-    __weakref__: getset_descriptor  # value = <attribute '__weakref__' of 'CDF_MetaDataDriverError' objects>
-    args: getset_descriptor  # value = <attribute 'args' of 'BaseException' objects>
+    __cause__: getset_descriptor # value = <attribute '__cause__' of 'BaseException' objects>
+    __context__: getset_descriptor # value = <attribute '__context__' of 'BaseException' objects>
+    __dict__: mappingproxy # value = mappingproxy({'__module__': 'OCP.CDF', '__weakref__': <attribute '__weakref__' of 'CDF_MetaDataDriverError' objects>, '__doc__': None})
+    __suppress_context__: member_descriptor # value = <member '__suppress_context__' of 'BaseException' objects>
+    __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
+    __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'CDF_MetaDataDriverError' objects>
+    args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
     pass
-
 class CDF_MetaDataDriverFactory(OCP.Standard.Standard_Transient):
-    def Build(self) -> CDF_MetaDataDriver:
+    def Build(self) -> CDF_MetaDataDriver: 
         """
         None
         """
-    def DecrementRefCounter(self) -> int:
+    def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
         """
-    def Delete(self) -> None:
+    def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
         """
-    def DynamicType(self) -> OCP.Standard.Standard_Type:
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def GetRefCount(self) -> int:
+    def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
         """
-    def IncrementRefCounter(self) -> None:
+    def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self, theTypeName: str) -> bool:
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self, theType: OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self, theType: OCP.Standard.Standard_Type) -> bool:
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self, theTypeName: str) -> bool: ...
-    def This(self) -> OCP.Standard.Standard_Transient:
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type:
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @staticmethod
-    def get_type_name_s() -> str:
+    def get_type_name_s() -> str: 
         """
         None
         """
     pass
-
 class CDF_Session(OCP.Standard.Standard_Transient):
-    def CurrentApplication(self) -> CDF_Application:
+    def CurrentApplication(self) -> CDF_Application: 
         """
         None
         """
     @staticmethod
-    def CurrentSession_s() -> CDF_Session:
+    def CurrentSession_s() -> CDF_Session: 
         """
         returns the only one instance of Session that has been created.
         """
-    def DecrementRefCounter(self) -> int:
+    def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
         """
-    def Delete(self) -> None:
+    def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
         """
-    def Directory(self) -> CDF_Directory:
+    def Directory(self) -> CDF_Directory: 
         """
         returns the directory of the session;
         """
-    def DynamicType(self) -> OCP.Standard.Standard_Type:
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @staticmethod
-    def Exists_s() -> bool:
+    def Exists_s() -> bool: 
         """
         returns true if a session has been created.
         """
-    def GetRefCount(self) -> int:
+    def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
         """
-    def HasCurrentApplication(self) -> bool:
+    def HasCurrentApplication(self) -> bool: 
         """
         None
         """
-    def IncrementRefCounter(self) -> None:
+    def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self, theTypeName: str) -> bool:
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self, theType: OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self, theType: OCP.Standard.Standard_Type) -> bool:
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self, theTypeName: str) -> bool: ...
-    def LoadDriver(self) -> None:
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def LoadDriver(self) -> None: 
         """
         None
         """
-    def MetaDataDriver(self) -> CDF_MetaDataDriver:
+    def MetaDataDriver(self) -> CDF_MetaDataDriver: 
         """
         None
         """
-    def SetCurrentApplication(self, anApplication: CDF_Application) -> None:
+    def SetCurrentApplication(self,anApplication : CDF_Application) -> None: 
         """
         None
         """
-    def This(self) -> OCP.Standard.Standard_Transient:
+    def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def UnsetCurrentApplication(self) -> None:
+    def UnsetCurrentApplication(self) -> None: 
         """
         None
         """
     def __init__(self) -> None: ...
     @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type:
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @staticmethod
-    def get_type_name_s() -> str:
+    def get_type_name_s() -> str: 
         """
         None
         """
     pass
-
-class CDF_Store:
+class CDF_Store():
     """
     None
     """
-
-    def AssociatedStatusText(self) -> str:
+    def AssociatedStatusText(self) -> str: 
         """
         None
         """
-    def Comment(self) -> str:
+    def Comment(self) -> str: 
         """
         None
         """
-    def Component(self) -> str:
+    def Component(self) -> str: 
         """
         Returns item value of current entry
         """
-    def CurrentIsConsistent(self) -> bool:
+    def CurrentIsConsistent(self) -> bool: 
         """
         None
         """
-    def Description(self) -> str:
+    def Description(self) -> str: 
         """
         returns the description of the format of the main object.
         """
-    def Folder(self) -> str:
+    def Folder(self) -> str: 
         """
         returns the folder in which the current document will be stored.
         """
-    def HasAPreviousVersion(self) -> bool:
+    def HasAPreviousVersion(self) -> bool: 
         """
         None
         """
-    def HasSubComponents(self) -> bool:
+    def HasSubComponents(self) -> bool: 
         """
         None
         """
-    def InitComponent(self) -> None:
+    def InitComponent(self) -> None: 
         """
         Allows to Start a new Iteration from beginning
         """
-    def IsConsistent(self) -> bool:
+    def IsConsistent(self) -> bool: 
         """
         None
         """
-    def IsMainDocument(self) -> bool:
+    def IsMainDocument(self) -> bool: 
         """
         returns true if the currentdocument is the main one, ie the document of the current selection.
         """
-    def IsModified(self) -> bool:
+    def IsModified(self) -> bool: 
         """
         None
         """
-    def IsStored(self) -> bool:
+    def IsStored(self) -> bool: 
         """
         returns true if the current document is already stored
         """
-    def MetaDataPath(self) -> str:
+    def MetaDataPath(self) -> str: 
         """
         returns the path of the previous store is the object is already stored, otherwise an empty string;
         """
-    def MoreComponent(self) -> bool:
+    def MoreComponent(self) -> bool: 
         """
         Returns True if there are more entries to return
         """
-    def Name(self) -> str:
+    def Name(self) -> str: 
         """
         returns the name under which the current document will be stored
         """
-    def NextComponent(self) -> None:
+    def NextComponent(self) -> None: 
         """
         Go to the next entry (if there is not, Value will raise an exception)
         """
-    def Path(self) -> str:
+    def Path(self) -> str: 
         """
         returns the complete path of the created meta-data.
         """
-    def PreviousVersion(self) -> str:
+    def PreviousVersion(self) -> str: 
         """
         None
         """
-    def Realize(self) -> None:
+    def Realize(self) -> None: 
         """
         None
         """
-    def RecheckName(self) -> CDF_StoreSetNameStatus:
+    def RecheckName(self) -> CDF_StoreSetNameStatus: 
         """
         defines the name under which the document should be stored. uses for example after modification of the folder.
         """
-    def SetComment(self, aComment: str) -> None:
+    def SetComment(self,aComment : str) -> None: 
         """
         None
         """
     @overload
-    def SetCurrent(self) -> None:
+    def SetCurrent(self,aPresentation : str) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetCurrent(self, aPresentation: str) -> None: ...
+    def SetCurrent(self) -> None: ...
     @overload
-    def SetFolder(self, aFolder: OCP.TCollection.TCollection_ExtendedString) -> bool:
+    def SetFolder(self,aFolder : str) -> bool: 
         """
         defines the folder in which the document should be stored. returns Standard_True if the Folder exists, Standard_False otherwise.
 
         defines the folder in which the document should be stored. returns Standard_True if the Folder exists, Standard_False otherwise.
         """
     @overload
-    def SetFolder(self, aFolder: str) -> bool: ...
-    def SetMain(self) -> None:
+    def SetFolder(self,aFolder : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def SetMain(self) -> None: 
         """
         the two following methods can be used just after Realize or Import -- method to know if thes methods worked correctly, and if not why.
         """
     @overload
-    def SetName(self, aName: str) -> CDF_StoreSetNameStatus:
+    def SetName(self,aName : str) -> CDF_StoreSetNameStatus: 
         """
         defines the name under which the document should be stored.
 
         defines the name under which the document should be stored.
         """
     @overload
-    def SetName(
-        self, aName: OCP.TCollection.TCollection_ExtendedString
-    ) -> CDF_StoreSetNameStatus: ...
-    def SetPreviousVersion(self, aPreviousVersion: str) -> bool:
+    def SetName(self,aName : OCP.TCollection.TCollection_ExtendedString) -> CDF_StoreSetNameStatus: ...
+    def SetPreviousVersion(self,aPreviousVersion : str) -> bool: 
         """
         None
         """
-    def StoreStatus(self) -> OCP.PCDM.PCDM_StoreStatus:
+    def StoreStatus(self) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         None
         """
-    def SubComponentStatus(self, aPresentation: str) -> CDF_SubComponentStatus:
+    def SubComponentStatus(self,aPresentation : str) -> CDF_SubComponentStatus: 
         """
         None
         """
-    def __init__(self, aDocument: OCP.CDM.CDM_Document) -> None: ...
+    def __init__(self,aDocument : OCP.CDM.CDM_Document) -> None: ...
     pass
-
 class CDF_StoreList(OCP.Standard.Standard_Transient):
-    def DecrementRefCounter(self) -> int:
+    def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
         """
-    def Delete(self) -> None:
+    def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
         """
-    def DynamicType(self) -> OCP.Standard.Standard_Type:
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def GetRefCount(self) -> int:
+    def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
         """
-    def IncrementRefCounter(self) -> None:
+    def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
-    def Init(self) -> None:
+    def Init(self) -> None: 
         """
         None
         """
-    def IsConsistent(self) -> bool:
+    def IsConsistent(self) -> bool: 
         """
         None
         """
     @overload
-    def IsInstance(self, theTypeName: str) -> bool:
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self, theType: OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self, theType: OCP.Standard.Standard_Type) -> bool:
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self, theTypeName: str) -> bool: ...
-    def More(self) -> bool:
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def More(self) -> bool: 
         """
         None
         """
-    def Next(self) -> None:
+    def Next(self) -> None: 
         """
         None
         """
-    def Store(
-        self,
-        aMetaData: OCP.CDM.CDM_MetaData,
-        aStatusAssociatedText: OCP.TCollection.TCollection_ExtendedString,
-    ) -> OCP.PCDM.PCDM_StoreStatus:
+    def Store(self,aMetaData : OCP.CDM.CDM_MetaData,aStatusAssociatedText : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         stores each object of the storelist in the reverse order of which they had been added.
         """
-    def This(self) -> OCP.Standard.Standard_Transient:
+    def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Value(self) -> OCP.CDM.CDM_Document:
+    def Value(self) -> OCP.CDM.CDM_Document: 
         """
         None
         """
-    def __init__(self, aDocument: OCP.CDM.CDM_Document) -> None: ...
+    def __init__(self,aDocument : OCP.CDM.CDM_Document) -> None: ...
     @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type:
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @staticmethod
-    def get_type_name_s() -> str:
+    def get_type_name_s() -> str: 
         """
         None
         """
     pass
-
-class CDF_StoreSetNameStatus:
+class CDF_StoreSetNameStatus():
     """
     None
 
@@ -1078,8 +934,8 @@ class CDF_StoreSetNameStatus:
 
       CDF_SSNS_OpenDocument
     """
-
-    def __init__(self, arg0: int) -> None: ...
+    def __index__(self) -> int: ...
+    def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
     def name(self) -> str:
@@ -1088,14 +944,13 @@ class CDF_StoreSetNameStatus:
 
         :type: str
         """
-    CDF_SSNS_OK: OCP.CDF.CDF_StoreSetNameStatus  # value = CDF_StoreSetNameStatus.CDF_SSNS_OK
-    CDF_SSNS_OpenDocument: OCP.CDF.CDF_StoreSetNameStatus  # value = CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument
-    CDF_SSNS_ReplacingAnExistentDocument: OCP.CDF.CDF_StoreSetNameStatus  # value = CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument
-    __entries: dict  # value = {'CDF_SSNS_OK': (CDF_StoreSetNameStatus.CDF_SSNS_OK, None), 'CDF_SSNS_ReplacingAnExistentDocument': (CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument, None), 'CDF_SSNS_OpenDocument': (CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument, None)}
-    __members__: dict  # value = {'CDF_SSNS_OK': CDF_StoreSetNameStatus.CDF_SSNS_OK, 'CDF_SSNS_ReplacingAnExistentDocument': CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument, 'CDF_SSNS_OpenDocument': CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument}
+    CDF_SSNS_OK: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_OK
+    CDF_SSNS_OpenDocument: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument
+    CDF_SSNS_ReplacingAnExistentDocument: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument
+    __entries: dict # value = {'CDF_SSNS_OK': (CDF_StoreSetNameStatus.CDF_SSNS_OK, None), 'CDF_SSNS_ReplacingAnExistentDocument': (CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument, None), 'CDF_SSNS_OpenDocument': (CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument, None)}
+    __members__: dict # value = {'CDF_SSNS_OK': CDF_StoreSetNameStatus.CDF_SSNS_OK, 'CDF_SSNS_ReplacingAnExistentDocument': CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument, 'CDF_SSNS_OpenDocument': CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument}
     pass
-
-class CDF_SubComponentStatus:
+class CDF_SubComponentStatus():
     """
     None
 
@@ -1109,8 +964,8 @@ class CDF_SubComponentStatus:
 
       CDF_SCS_Modified
     """
-
-    def __init__(self, arg0: int) -> None: ...
+    def __index__(self) -> int: ...
+    def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
     def name(self) -> str:
@@ -1119,15 +974,14 @@ class CDF_SubComponentStatus:
 
         :type: str
         """
-    CDF_SCS_Consistent: OCP.CDF.CDF_SubComponentStatus  # value = CDF_SubComponentStatus.CDF_SCS_Consistent
-    CDF_SCS_Modified: OCP.CDF.CDF_SubComponentStatus  # value = CDF_SubComponentStatus.CDF_SCS_Modified
-    CDF_SCS_Stored: OCP.CDF.CDF_SubComponentStatus  # value = CDF_SubComponentStatus.CDF_SCS_Stored
-    CDF_SCS_Unconsistent: OCP.CDF.CDF_SubComponentStatus  # value = CDF_SubComponentStatus.CDF_SCS_Unconsistent
-    __entries: dict  # value = {'CDF_SCS_Consistent': (CDF_SubComponentStatus.CDF_SCS_Consistent, None), 'CDF_SCS_Unconsistent': (CDF_SubComponentStatus.CDF_SCS_Unconsistent, None), 'CDF_SCS_Stored': (CDF_SubComponentStatus.CDF_SCS_Stored, None), 'CDF_SCS_Modified': (CDF_SubComponentStatus.CDF_SCS_Modified, None)}
-    __members__: dict  # value = {'CDF_SCS_Consistent': CDF_SubComponentStatus.CDF_SCS_Consistent, 'CDF_SCS_Unconsistent': CDF_SubComponentStatus.CDF_SCS_Unconsistent, 'CDF_SCS_Stored': CDF_SubComponentStatus.CDF_SCS_Stored, 'CDF_SCS_Modified': CDF_SubComponentStatus.CDF_SCS_Modified}
+    CDF_SCS_Consistent: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Consistent
+    CDF_SCS_Modified: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Modified
+    CDF_SCS_Stored: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Stored
+    CDF_SCS_Unconsistent: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Unconsistent
+    __entries: dict # value = {'CDF_SCS_Consistent': (CDF_SubComponentStatus.CDF_SCS_Consistent, None), 'CDF_SCS_Unconsistent': (CDF_SubComponentStatus.CDF_SCS_Unconsistent, None), 'CDF_SCS_Stored': (CDF_SubComponentStatus.CDF_SCS_Stored, None), 'CDF_SCS_Modified': (CDF_SubComponentStatus.CDF_SCS_Modified, None)}
+    __members__: dict # value = {'CDF_SCS_Consistent': CDF_SubComponentStatus.CDF_SCS_Consistent, 'CDF_SCS_Unconsistent': CDF_SubComponentStatus.CDF_SCS_Unconsistent, 'CDF_SCS_Stored': CDF_SubComponentStatus.CDF_SCS_Stored, 'CDF_SCS_Modified': CDF_SubComponentStatus.CDF_SCS_Modified}
     pass
-
-class CDF_TryStoreStatus:
+class CDF_TryStoreStatus():
     """
     None
 
@@ -1141,8 +995,8 @@ class CDF_TryStoreStatus:
 
       CDF_TS_NoSubComponentDriver
     """
-
-    def __init__(self, arg0: int) -> None: ...
+    def __index__(self) -> int: ...
+    def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
     def name(self) -> str:
@@ -1151,15 +1005,14 @@ class CDF_TryStoreStatus:
 
         :type: str
         """
-    CDF_TS_NoCurrentDocument: OCP.CDF.CDF_TryStoreStatus  # value = CDF_TryStoreStatus.CDF_TS_NoCurrentDocument
-    CDF_TS_NoDriver: OCP.CDF.CDF_TryStoreStatus  # value = CDF_TryStoreStatus.CDF_TS_NoDriver
-    CDF_TS_NoSubComponentDriver: OCP.CDF.CDF_TryStoreStatus  # value = CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver
-    CDF_TS_OK: OCP.CDF.CDF_TryStoreStatus  # value = CDF_TryStoreStatus.CDF_TS_OK
-    __entries: dict  # value = {'CDF_TS_OK': (CDF_TryStoreStatus.CDF_TS_OK, None), 'CDF_TS_NoCurrentDocument': (CDF_TryStoreStatus.CDF_TS_NoCurrentDocument, None), 'CDF_TS_NoDriver': (CDF_TryStoreStatus.CDF_TS_NoDriver, None), 'CDF_TS_NoSubComponentDriver': (CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver, None)}
-    __members__: dict  # value = {'CDF_TS_OK': CDF_TryStoreStatus.CDF_TS_OK, 'CDF_TS_NoCurrentDocument': CDF_TryStoreStatus.CDF_TS_NoCurrentDocument, 'CDF_TS_NoDriver': CDF_TryStoreStatus.CDF_TS_NoDriver, 'CDF_TS_NoSubComponentDriver': CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver}
+    CDF_TS_NoCurrentDocument: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoCurrentDocument
+    CDF_TS_NoDriver: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoDriver
+    CDF_TS_NoSubComponentDriver: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver
+    CDF_TS_OK: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_OK
+    __entries: dict # value = {'CDF_TS_OK': (CDF_TryStoreStatus.CDF_TS_OK, None), 'CDF_TS_NoCurrentDocument': (CDF_TryStoreStatus.CDF_TS_NoCurrentDocument, None), 'CDF_TS_NoDriver': (CDF_TryStoreStatus.CDF_TS_NoDriver, None), 'CDF_TS_NoSubComponentDriver': (CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver, None)}
+    __members__: dict # value = {'CDF_TS_OK': CDF_TryStoreStatus.CDF_TS_OK, 'CDF_TS_NoCurrentDocument': CDF_TryStoreStatus.CDF_TS_NoCurrentDocument, 'CDF_TS_NoDriver': CDF_TryStoreStatus.CDF_TS_NoDriver, 'CDF_TS_NoSubComponentDriver': CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver}
     pass
-
-class CDF_TypeOfActivation:
+class CDF_TypeOfActivation():
     """
     None
 
@@ -1171,8 +1024,8 @@ class CDF_TypeOfActivation:
 
       CDF_TOA_Unchanged
     """
-
-    def __init__(self, arg0: int) -> None: ...
+    def __index__(self) -> int: ...
+    def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
     def name(self) -> str:
@@ -1181,24 +1034,23 @@ class CDF_TypeOfActivation:
 
         :type: str
         """
-    CDF_TOA_Modified: OCP.CDF.CDF_TypeOfActivation  # value = CDF_TypeOfActivation.CDF_TOA_Modified
-    CDF_TOA_New: OCP.CDF.CDF_TypeOfActivation  # value = CDF_TypeOfActivation.CDF_TOA_New
-    CDF_TOA_Unchanged: OCP.CDF.CDF_TypeOfActivation  # value = CDF_TypeOfActivation.CDF_TOA_Unchanged
-    __entries: dict  # value = {'CDF_TOA_New': (CDF_TypeOfActivation.CDF_TOA_New, None), 'CDF_TOA_Modified': (CDF_TypeOfActivation.CDF_TOA_Modified, None), 'CDF_TOA_Unchanged': (CDF_TypeOfActivation.CDF_TOA_Unchanged, None)}
-    __members__: dict  # value = {'CDF_TOA_New': CDF_TypeOfActivation.CDF_TOA_New, 'CDF_TOA_Modified': CDF_TypeOfActivation.CDF_TOA_Modified, 'CDF_TOA_Unchanged': CDF_TypeOfActivation.CDF_TOA_Unchanged}
+    CDF_TOA_Modified: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_Modified
+    CDF_TOA_New: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_New
+    CDF_TOA_Unchanged: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_Unchanged
+    __entries: dict # value = {'CDF_TOA_New': (CDF_TypeOfActivation.CDF_TOA_New, None), 'CDF_TOA_Modified': (CDF_TypeOfActivation.CDF_TOA_Modified, None), 'CDF_TOA_Unchanged': (CDF_TypeOfActivation.CDF_TOA_Unchanged, None)}
+    __members__: dict # value = {'CDF_TOA_New': CDF_TypeOfActivation.CDF_TOA_New, 'CDF_TOA_Modified': CDF_TypeOfActivation.CDF_TOA_Modified, 'CDF_TOA_Unchanged': CDF_TypeOfActivation.CDF_TOA_Unchanged}
     pass
-
-CDF_SCS_Consistent: OCP.CDF.CDF_SubComponentStatus  # value = CDF_SubComponentStatus.CDF_SCS_Consistent
-CDF_SCS_Modified: OCP.CDF.CDF_SubComponentStatus  # value = CDF_SubComponentStatus.CDF_SCS_Modified
-CDF_SCS_Stored: OCP.CDF.CDF_SubComponentStatus  # value = CDF_SubComponentStatus.CDF_SCS_Stored
-CDF_SCS_Unconsistent: OCP.CDF.CDF_SubComponentStatus  # value = CDF_SubComponentStatus.CDF_SCS_Unconsistent
-CDF_SSNS_OK: OCP.CDF.CDF_StoreSetNameStatus  # value = CDF_StoreSetNameStatus.CDF_SSNS_OK
-CDF_SSNS_OpenDocument: OCP.CDF.CDF_StoreSetNameStatus  # value = CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument
-CDF_SSNS_ReplacingAnExistentDocument: OCP.CDF.CDF_StoreSetNameStatus  # value = CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument
-CDF_TOA_Modified: OCP.CDF.CDF_TypeOfActivation  # value = CDF_TypeOfActivation.CDF_TOA_Modified
-CDF_TOA_New: OCP.CDF.CDF_TypeOfActivation  # value = CDF_TypeOfActivation.CDF_TOA_New
-CDF_TOA_Unchanged: OCP.CDF.CDF_TypeOfActivation  # value = CDF_TypeOfActivation.CDF_TOA_Unchanged
-CDF_TS_NoCurrentDocument: OCP.CDF.CDF_TryStoreStatus  # value = CDF_TryStoreStatus.CDF_TS_NoCurrentDocument
-CDF_TS_NoDriver: OCP.CDF.CDF_TryStoreStatus  # value = CDF_TryStoreStatus.CDF_TS_NoDriver
-CDF_TS_NoSubComponentDriver: OCP.CDF.CDF_TryStoreStatus  # value = CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver
-CDF_TS_OK: OCP.CDF.CDF_TryStoreStatus  # value = CDF_TryStoreStatus.CDF_TS_OK
+CDF_SCS_Consistent: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Consistent
+CDF_SCS_Modified: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Modified
+CDF_SCS_Stored: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Stored
+CDF_SCS_Unconsistent: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Unconsistent
+CDF_SSNS_OK: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_OK
+CDF_SSNS_OpenDocument: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument
+CDF_SSNS_ReplacingAnExistentDocument: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument
+CDF_TOA_Modified: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_Modified
+CDF_TOA_New: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_New
+CDF_TOA_Unchanged: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_Unchanged
+CDF_TS_NoCurrentDocument: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoCurrentDocument
+CDF_TS_NoDriver: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoDriver
+CDF_TS_NoSubComponentDriver: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver
+CDF_TS_OK: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_OK

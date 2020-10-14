@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.TCollection
 import OCP.Quantity
 import OCP.Standard
-import OCP.TCollection
 __all__  = [
 "OSD_Chronometer",
 "OSD_FileNode",
@@ -176,7 +176,7 @@ class OSD_Chronometer():
         Restarts the Chronometer.
         """
     @overload
-    def Show(self) -> Tuple[float]: 
+    def Show(self) -> None: 
         """
         Shows the current CPU user and system time on the standard output stream <cout>. The chronometer can be running (laps Time) or stopped.
 
@@ -191,7 +191,7 @@ class OSD_Chronometer():
     @overload
     def Show(self,theOStream : Any) -> None: ...
     @overload
-    def Show(self) -> None: ...
+    def Show(self) -> Tuple[float]: ...
     def Start(self) -> None: ...
     def Stop(self) -> None: 
         """
@@ -309,9 +309,9 @@ class OSD_DirectoryIterator():
         Returns the next item found .
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,where : OSD_Path,Mask : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class OSD_Disk():
     """
@@ -350,11 +350,11 @@ class OSD_Disk():
         Instantiates <me> with <Name>.
         """
     @overload
+    def __init__(self,PathName : str) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Name : OSD_Path) -> None: ...
-    @overload
-    def __init__(self,PathName : str) -> None: ...
     pass
 class OSD_Environment():
     """
@@ -398,9 +398,9 @@ class OSD_Environment():
         Gets the value of an environment variable
         """
     @overload
-    def __init__(self,Name : OCP.TCollection.TCollection_AsciiString,Value : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self,Name : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @overload
+    def __init__(self,Name : OCP.TCollection.TCollection_AsciiString,Value : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -751,27 +751,27 @@ class OSD_File(OSD_FileNode):
         Returns access mode of <me>.
         """
     @overload
-    def Read(self,Buffer : capsule,Nbyte : int) -> Tuple[int]: 
+    def Read(self,Buffer : OCP.TCollection.TCollection_AsciiString,Nbyte : int) -> None: 
         """
         Attempts to read Nbyte bytes from the file associated with the object file. Upon successful completion, Read returns the number of bytes actually read and placed in the Buffer. This number may be less than Nbyte if the number of bytes left in the file is less than Nbyte bytes. In this case only number of read bytes will be placed in the buffer.
 
         Attempts to read Nbyte bytes from the files associated with the object File. Upon successful completion, Read returns the number of bytes actually read and placed in the Buffer. This number may be less than Nbyte if the number of bytes left in the file is less than Nbyte bytes. For this reason the output parameter Readbyte will contain the number of read bytes.
         """
     @overload
-    def Read(self,Buffer : OCP.TCollection.TCollection_AsciiString,Nbyte : int) -> None: ...
+    def Read(self,Buffer : capsule,Nbyte : int) -> Tuple[int]: ...
     def ReadLastLine(self,aLine : OCP.TCollection.TCollection_AsciiString,aDelay : int,aNbTries : int) -> bool: 
         """
         Enables to emulate unix "tail -f" command. If a line is available in the file <me> returns it. Otherwise attemps to read again aNbTries times in the file waiting aDelay seconds between each read. If meanwhile the file increases returns the next line, otherwise returns FALSE.
         """
     @overload
-    def ReadLine(self,Buffer : OCP.TCollection.TCollection_AsciiString,NByte : int) -> int: 
+    def ReadLine(self,Buffer : OCP.TCollection.TCollection_AsciiString,NByte : int) -> Tuple[int]: 
         """
         Reads bytes from the data pointed to by the object file into the buffer <Buffer>. Data is read until <NByte-1> bytes have been read, until a newline character is read and transferred into <Buffer>, or until an EOF (End-of-File) condition is encountered. Upon successful completion, Read returns the number of bytes actually read and placed into the Buffer <Buffer>.
 
         Reads bytes from the data pointed to by the object file into the buffer <Buffer>. Data is read until <NByte-1> bytes have been read, until a newline character is read and transferred into <Buffer>, or until an EOF (End-of-File) condition is encountered. Upon successful completion, Read returns the number of bytes actually read into <NByteRead> and placed into the Buffer <Buffer>.
         """
     @overload
-    def ReadLine(self,Buffer : OCP.TCollection.TCollection_AsciiString,NByte : int) -> Tuple[int]: ...
+    def ReadLine(self,Buffer : OCP.TCollection.TCollection_AsciiString,NByte : int) -> int: ...
     def Remove(self) -> None: 
         """
         Erases the FileNode from directory
@@ -809,14 +809,14 @@ class OSD_File(OSD_FileNode):
         Unlocks current file
         """
     @overload
-    def Write(self,theBuffer : OCP.TCollection.TCollection_AsciiString,theNbBytes : int) -> None: 
+    def Write(self,theBuffer : capsule,theNbBytes : int) -> None: 
         """
         Attempts to write theNbBytes bytes from the AsciiString to the file.
 
         Attempts to write theNbBytes bytes from the buffer pointed to by theBuffer to the file associated to the object File.
         """
     @overload
-    def Write(self,theBuffer : capsule,theNbBytes : int) -> None: ...
+    def Write(self,theBuffer : OCP.TCollection.TCollection_AsciiString,theNbBytes : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
@@ -863,9 +863,9 @@ class OSD_FileIterator():
         Returns the next file found .
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,where : OSD_Path,Mask : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class OSD_Directory(OSD_FileNode):
     """
@@ -950,6 +950,7 @@ class OSD_FromWhere():
 
       OSD_FromEnd
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1027,6 +1028,7 @@ class OSD_KindFile():
 
       OSD_UNKNOWN
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1054,6 +1056,7 @@ class OSD_LoadMode():
 
       OSD_RTLD_NOW
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1082,6 +1085,7 @@ class OSD_LockType():
 
       OSD_ExclusiveLock
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1189,6 +1193,7 @@ class OSD_OEMType():
 
       OSD_AIX
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1236,6 +1241,7 @@ class OSD_OpenMode():
 
       OSD_ReadWrite
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1445,9 +1451,9 @@ class OSD_Path():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,aNode : OCP.TCollection.TCollection_AsciiString,aUsername : OCP.TCollection.TCollection_AsciiString,aPassword : OCP.TCollection.TCollection_AsciiString,aDisk : OCP.TCollection.TCollection_AsciiString,aTrek : OCP.TCollection.TCollection_AsciiString,aName : OCP.TCollection.TCollection_AsciiString,anExtension : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self,aDependentName : OCP.TCollection.TCollection_AsciiString,aSysType : OSD_SysType=OSD_SysType.OSD_Default) -> None: ...
+    @overload
+    def __init__(self,aNode : OCP.TCollection.TCollection_AsciiString,aUsername : OCP.TCollection.TCollection_AsciiString,aPassword : OCP.TCollection.TCollection_AsciiString,aDisk : OCP.TCollection.TCollection_AsciiString,aTrek : OCP.TCollection.TCollection_AsciiString,aName : OCP.TCollection.TCollection_AsciiString,anExtension : OCP.TCollection.TCollection_AsciiString) -> None: ...
     pass
 class OSD_PerfMeter():
     """
@@ -1712,9 +1718,9 @@ class OSD_SharedLibrary():
         Sets a name associated to the shared object.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aFilename : str) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class OSD_Signal(Exception, BaseException):
     class type():
@@ -1741,6 +1747,7 @@ class OSD_SignalMode():
 
       OSD_SignalMode_Unset
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1795,6 +1802,7 @@ class OSD_SingleProtection():
 
       OSD_RWXD
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1853,6 +1861,7 @@ class OSD_SysType():
 
       OSD_Aix
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1954,14 +1963,14 @@ class OSD_ThreadPool(OCP.Standard.Standard_Transient):
         Checks if thread pools has active consumers.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2043,7 +2052,7 @@ class OSD_Timer(OSD_Chronometer):
         Restarts the Timer.
         """
     @overload
-    def Show(self) -> Tuple[float, int, int, float]: 
+    def Show(self,os : Any) -> None: 
         """
         Shows both the elapsed time and CPU time on the standard output stream <cout>.The chronometer can be running (Lap Time) or stopped.
 
@@ -2054,7 +2063,7 @@ class OSD_Timer(OSD_Chronometer):
     @overload
     def Show(self) -> None: ...
     @overload
-    def Show(self,os : Any) -> None: ...
+    def Show(self) -> Tuple[float, int, int, float]: ...
     def Start(self) -> None: ...
     def Stop(self) -> None: 
         """
@@ -2106,6 +2115,7 @@ class OSD_WhoAmI():
 
       OSD_WEnvironmentIterator
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

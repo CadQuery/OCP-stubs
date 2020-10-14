@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor3d
-import OCP.TColgp
-import OCP.Geom
 import OCP.TColStd
 import OCP.GeomAbs
 import OCP.TColGeom
+import OCP.TColgp
+import OCP.Adaptor3d
+import OCP.Geom
 __all__  = [
 "GeomConvert",
 "GeomConvert_ApproxCurve",
@@ -27,7 +27,7 @@ class GeomConvert():
     """
     @staticmethod
     @overload
-    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,tabBS : OCP.TColGeom.TColGeom_HArray1OfBSplineCurve,tolerance : float) -> None: 
+    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,tabBS : OCP.TColGeom.TColGeom_HArray1OfBSplineCurve,AngularTolerance : float,tolerance : float) -> None: 
         """
         This Method reduces as far as it is possible the multiplicities of the knots of the BSpline BS.(keeping the geometry). It returns an array of BSpline C1. tolerance is a geometrical tolerance.
 
@@ -35,7 +35,7 @@ class GeomConvert():
         """
     @staticmethod
     @overload
-    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,tabBS : OCP.TColGeom.TColGeom_HArray1OfBSplineCurve,AngularTolerance : float,tolerance : float) -> None: ...
+    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,tabBS : OCP.TColGeom.TColGeom_HArray1OfBSplineCurve,tolerance : float) -> None: ...
     @staticmethod
     def C0BSplineToC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,tolerance : float,AngularTolerance : float=1e-07) -> None: 
         """
@@ -64,7 +64,7 @@ class GeomConvert():
         """
     @staticmethod
     @overload
-    def SplitBSplineCurve_s(C : OCP.Geom.Geom_BSplineCurve,FromK1 : int,ToK2 : int,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineCurve: 
+    def SplitBSplineCurve_s(C : OCP.Geom.Geom_BSplineCurve,FromU1 : float,ToU2 : float,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineCurve: 
         """
         Convert a curve from Geom by an approximation method
 
@@ -72,7 +72,7 @@ class GeomConvert():
         """
     @staticmethod
     @overload
-    def SplitBSplineCurve_s(C : OCP.Geom.Geom_BSplineCurve,FromU1 : float,ToU2 : float,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineCurve: ...
+    def SplitBSplineCurve_s(C : OCP.Geom.Geom_BSplineCurve,FromK1 : int,ToK2 : int,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineCurve: ...
     @staticmethod
     @overload
     def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromUK1 : int,ToUK2 : int,FromVK1 : int,ToVK2 : int,SameUOrientation : bool=True,SameVOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: 
@@ -257,9 +257,9 @@ class GeomConvert_BSplineSurfaceToBezierSurface():
         This methode returns the bspline's v-knots associated to the converted Patches Raised if the length of Curves is not equal to NbVPatches + 1.
         """
     @overload
-    def __init__(self,BasisSurface : OCP.Geom.Geom_BSplineSurface) -> None: ...
-    @overload
     def __init__(self,BasisSurface : OCP.Geom.Geom_BSplineSurface,U1 : float,U2 : float,V1 : float,V2 : float,ParametricTolerance : float) -> None: ...
+    @overload
+    def __init__(self,BasisSurface : OCP.Geom.Geom_BSplineSurface) -> None: ...
     pass
 class GeomConvert_CompBezierSurfacesToBSplineSurface():
     """
@@ -336,9 +336,9 @@ class GeomConvert_CompBezierSurfacesToBSplineSurface():
         -- Returns the multiplicities table for the v parametric direction of the knots of the BSpline surface whose data is computed in this framework.
         """
     @overload
-    def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface) -> None: ...
-    @overload
     def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface,UKnots : OCP.TColStd.TColStd_Array1OfReal,VKnots : OCP.TColStd.TColStd_Array1OfReal,UContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C0,VContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C0,Tolerance : float=0.0001) -> None: ...
+    @overload
+    def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface) -> None: ...
     @overload
     def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface,Tolerance : float,RemoveKnots : bool=True) -> None: ...
     pass

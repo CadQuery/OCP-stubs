@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Quantity
-import OCP.Standard
 import OCP.NCollection
+import OCP.Standard
 import OCP.TCollection
+import OCP.Quantity
 __all__  = [
 "Image_PixMap",
 "Image_ColorBGR",
@@ -121,14 +121,14 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         Returns true if data is NULL.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -171,14 +171,14 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         Override pixel format specified by InitXXX() methods. Will throw exception if pixel size of new format is not equal to currently initialized format. Intended to switch formats indicating different interpretation of the same data (e.g. ImgGray and ImgAlpha).
         """
     @overload
-    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Sets the pixel color. This function is relatively slow. Beware that this method takes coordinates in opposite order in contrast to ::Value() and ::ChangeValue().
 
         Sets the pixel color. This function is relatively slow. Beware that this method takes coordinates in opposite order in contrast to ::Value() and ::ChangeValue().
         """
     @overload
-    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetTopDown(self,theIsTopDown : bool) -> None: 
         """
         Setup scanlines order in memory - top-down or bottom-up. Drawers should explicitly specify this value if current state IsTopDown() was ignored!
@@ -614,14 +614,14 @@ class Image_Diff(OCP.Standard.Standard_Transient):
         Returns a flag of taking into account (ignoring) a border effect in comparison of images.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -700,6 +700,7 @@ class Image_Format():
 
       Image_Format_BGRAF
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -809,14 +810,14 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         Returns true if data is NULL.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -868,14 +869,14 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         Override pixel format specified by InitXXX() methods. Will throw exception if pixel size of new format is not equal to currently initialized format. Intended to switch formats indicating different interpretation of the same data (e.g. ImgGray and ImgAlpha).
         """
     @overload
-    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Sets the pixel color. This function is relatively slow. Beware that this method takes coordinates in opposite order in contrast to ::Value() and ::ChangeValue().
 
         Sets the pixel color. This function is relatively slow. Beware that this method takes coordinates in opposite order in contrast to ::Value() and ::ChangeValue().
         """
     @overload
-    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetTopDown(self,theIsTopDown : bool) -> None: 
         """
         Setup scanlines order in memory - top-down or bottom-up. Drawers should explicitly specify this value if current state IsTopDown() was ignored!
@@ -1000,14 +1001,14 @@ class Image_PixMapData(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard
         Returns true if buffer is not allocated
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1152,14 +1153,14 @@ class Image_Texture(OCP.Standard.Standard_Transient):
         Matching two instances, for Map interface.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1190,11 +1191,11 @@ class Image_Texture(OCP.Standard.Standard_Transient):
         Write image to specified file without decoding data.
         """
     @overload
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString,theOffset : int,theLength : int) -> None: ...
+    @overload
     def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
     def __init__(self,theBuffer : OCP.NCollection.NCollection_Buffer,theId : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
-    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString,theOffset : int,theLength : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1322,14 +1323,14 @@ class Image_VideoRecorder(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

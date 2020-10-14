@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopoDS
 import OCP.ShapeProcess
+import OCP.TopoDS
 import OCP.TopTools
 __all__  = [
 "ShapeProcessAPI_ApplySequence"

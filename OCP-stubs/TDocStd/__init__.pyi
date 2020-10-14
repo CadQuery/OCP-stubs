@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.CDF
-import OCP.TCollection
-import OCP.PCDM
-import OCP.Standard
 import OCP.Resource
-import OCP.Message
-import OCP.TColStd
-import OCP.CDM
 import OCP.TDF
+import OCP.TCollection
+import OCP.CDF
+import OCP.TColStd
+import OCP.PCDM
+import OCP.Message
+import OCP.Standard
+import OCP.CDM
+import OCP.NCollection
 __all__  = [
 "TDocStd",
 "TDocStd_Application",
@@ -126,14 +126,14 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         Returns an index for the document found in the path path in this applicative session. If the returned value is 0, the document is not present in the applicative session. This method can be used for the interactive part of an application. For instance, on a call to Open, the document to be opened may already be in memory. IsInSession checks to see if this is the case. Open can be made to depend on the value of the index returned: if IsInSession returns 0, the document is opened; if it returns another value, a message is displayed asking the user if he wants to override the version of the document in memory. Example: Standard_Integer insession = A->IsInSession(aDoc); if (insession > 0) { std::cout << "document " << insession << " is already in session" << std::endl; return 0; }
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -177,14 +177,14 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         Notification that is fired at each OpenTransaction event.
         """
     @overload
-    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: 
+    def Open(self,theIStream : Any,theDoc : TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
         Retrieves the document aDoc stored under the name aName in the directory directory. In order not to override a version of aDoc which is already in memory, this method can be made to depend on the value returned by IsInSession.
 
         Retrieves aDoc from standard SEEKABLE stream theIStream. the stream should support SEEK fuctionality
         """
     @overload
-    def Open(self,theIStream : Any,theDoc : TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: ...
     def Read(self,theIStream : Any) -> OCP.CDM.CDM_Document: 
         """
         Reads aDoc from standard SEEKABLE stream theIStream, the stream should support SEEK fuctionality
@@ -235,11 +235,11 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         Save theDoc TO standard SEEKABLE stream theOStream. the stream should support SEEK fuctionality
         """
     @overload
-    def SaveAs(self,theDoc : TDocStd_Document,theOStream : Any,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,theDoc : TDocStd_Document,theOStream : Any) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
     def SaveAs(self,aDoc : TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,theDoc : TDocStd_Document,theOStream : Any) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,theDoc : TDocStd_Document,theOStream : Any,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
     def SetDefaultFolder(self,aFolder : str) -> bool: 
         """
         None
@@ -314,14 +314,14 @@ class TDocStd_ApplicationDelta(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -412,14 +412,14 @@ class TDocStd_CompoundDelta(OCP.TDF.TDF_Delta, OCP.Standard.Standard_Transient):
         Returns true if there is nothing to undo.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -544,7 +544,7 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         Copies a reference to this document. This method avoid retrieval of referenced document. The arguments are the original document and a valid reference identifier Returns the local identifier.
         """
     @overload
-    def CreateReference(self,aMetaData : OCP.CDM.CDM_MetaData,aReferenceIdentifier : int,anApplication : OCP.CDM.CDM_Application,aToDocumentVersion : int,UseStorageConfiguration : bool) -> None: 
+    def CreateReference(self,anOtherDocument : OCP.CDM.CDM_Document) -> int: 
         """
         Creates a reference from this document to {anOtherDocument}. Returns a reference identifier. This reference identifier is unique in the document and will not be used for the next references, even after the storing of the document. If there is already a reference between the two documents, the reference is not created, but its reference identifier is returned.
 
@@ -553,9 +553,9 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def CreateReference(self,aMetaData : OCP.CDM.CDM_MetaData,anApplication : OCP.CDM.CDM_Application,aDocumentVersion : int,UseStorageConfiguration : bool) -> int: ...
+    def CreateReference(self,aMetaData : OCP.CDM.CDM_MetaData,aReferenceIdentifier : int,anApplication : OCP.CDM.CDM_Application,aToDocumentVersion : int,UseStorageConfiguration : bool) -> None: ...
     @overload
-    def CreateReference(self,anOtherDocument : OCP.CDM.CDM_Document) -> int: ...
+    def CreateReference(self,aMetaData : OCP.CDM.CDM_MetaData,anApplication : OCP.CDM.CDM_Application,aDocumentVersion : int,UseStorageConfiguration : bool) -> int: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -710,14 +710,14 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         returns True if the To Document of the reference identified by aReferenceIdentifier is in session, False if it corresponds to a not yet retrieved document.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -920,14 +920,14 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         Notify the label as modified, the Document becomes UnValid. returns True if <L> has been notified as modified.
         """
     @overload
-    def SetNestedTransactionMode(self,isAllowed : bool=True) -> None: 
+    def SetNestedTransactionMode(self,isAllowed : bool) -> None: 
         """
         Sets nested transaction mode if isAllowed == Standard_True
 
         Sets nested transaction mode if isAllowed == Standard_True
         """
     @overload
-    def SetNestedTransactionMode(self,isAllowed : bool) -> None: ...
+    def SetNestedTransactionMode(self,isAllowed : bool=True) -> None: ...
     def SetReferenceCounter(self,aReferenceCounter : int) -> None: 
         """
         None
@@ -1078,14 +1078,14 @@ class TDocStd_LabelIDMapDataMap(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TDF.TDF_Label,theValue : OCP.TDF.TDF_IDMap) -> bool: 
+    def Find(self,theKey : OCP.TDF.TDF_Label) -> OCP.TDF.TDF_IDMap: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TDF.TDF_Label) -> OCP.TDF.TDF_IDMap: ...
+    def Find(self,theKey : OCP.TDF.TDF_Label,theValue : OCP.TDF.TDF_IDMap) -> bool: ...
     def IsBound(self,theKey : OCP.TDF.TDF_Label) -> bool: 
         """
         IsBound
@@ -1310,14 +1310,14 @@ class TDocStd_Modified(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1424,14 +1424,14 @@ class TDocStd_MultiTransactionManager(OCP.Standard.Standard_Transient):
         Clears undos in the manager and in documents.
         """
     @overload
-    def CommitCommand(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: 
+    def CommitCommand(self) -> bool: 
         """
         Commits transaction in all documents and fills the transaction manager with the documents that have been changed during the transaction. Returns True if new data has been added to myUndos. NOTE: All nested transactions in the documents will be commited.
 
         Makes the same steps as the previous function but defines the name for transaction. Returns True if new data has been added to myUndos.
         """
     @overload
-    def CommitCommand(self) -> bool: ...
+    def CommitCommand(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1487,14 +1487,14 @@ class TDocStd_MultiTransactionManager(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1716,14 +1716,14 @@ class TDocStd_Owner(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1848,14 +1848,14 @@ class TDocStd_SequenceOfApplicationDelta(OCP.NCollection.NCollection_BaseSequenc
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TDocStd_ApplicationDelta) -> None: 
+    def Append(self,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: ...
+    def Append(self,theItem : TDocStd_ApplicationDelta) -> None: ...
     def Assign(self,theOther : TDocStd_SequenceOfApplicationDelta) -> TDocStd_SequenceOfApplicationDelta: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1885,14 +1885,14 @@ class TDocStd_SequenceOfApplicationDelta(OCP.NCollection.NCollection_BaseSequenc
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : TDocStd_ApplicationDelta) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : TDocStd_ApplicationDelta) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : TDocStd_ApplicationDelta) -> None: 
         """
@@ -1928,14 +1928,14 @@ class TDocStd_SequenceOfApplicationDelta(OCP.NCollection.NCollection_BaseSequenc
     @overload
     def Prepend(self,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1961,11 +1961,11 @@ class TDocStd_SequenceOfApplicationDelta(OCP.NCollection.NCollection_BaseSequenc
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TDocStd_SequenceOfApplicationDelta) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TDocStd_SequenceOfApplicationDelta) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1982,14 +1982,14 @@ class TDocStd_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : TDocStd_SequenceOfDocument) -> None: 
+    def Append(self,theItem : TDocStd_Document) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : TDocStd_Document) -> None: ...
+    def Append(self,theSeq : TDocStd_SequenceOfDocument) -> None: ...
     def Assign(self,theOther : TDocStd_SequenceOfDocument) -> TDocStd_SequenceOfDocument: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2028,14 +2028,14 @@ class TDocStd_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : TDocStd_Document) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : TDocStd_Document) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TDocStd_SequenceOfDocument) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TDocStd_SequenceOfDocument) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : TDocStd_Document) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2095,11 +2095,11 @@ class TDocStd_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : TDocStd_SequenceOfDocument) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2259,14 +2259,14 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2293,7 +2293,7 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
         """
     @overload
-    def LabelEntry(self,aLabel : OCP.TDF.TDF_Label) -> None: 
+    def LabelEntry(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Sets the label entry for this external link attribute with the label aLabel. aLabel pilots the importation of data from the document entry.
 
@@ -2302,7 +2302,7 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the contents of the field <myLabelEntry>.
         """
     @overload
-    def LabelEntry(self) -> OCP.TCollection.TCollection_AsciiString: ...
+    def LabelEntry(self,aLabel : OCP.TDF.TDF_Label) -> None: ...
     @overload
     def LabelEntry(self,aLabEntry : OCP.TCollection.TCollection_AsciiString) -> None: ...
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
@@ -2537,14 +2537,14 @@ class TDocStd_XLinkRoot(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

@@ -69,14 +69,14 @@ class MAT_Arc(OCP.Standard.Standard_Transient):
         Returns the index of <me> in Graph.theArcs.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -191,14 +191,14 @@ class MAT_BasicElt(OCP.Standard.Standard_Transient):
         Return the <index> of <me> in Graph.TheBasicElts.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -267,14 +267,14 @@ class MAT_Bisector(OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def DistIssuePoint(self) -> float: 
+    def DistIssuePoint(self,areal : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def DistIssuePoint(self,areal : float) -> None: ...
+    def DistIssuePoint(self) -> float: ...
     def Dump(self,ashift : int,alevel : int) -> None: 
         """
         None
@@ -284,27 +284,27 @@ class MAT_Bisector(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def EndPoint(self) -> int: 
+    def EndPoint(self,apoint : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def EndPoint(self,apoint : int) -> None: ...
+    def EndPoint(self) -> int: ...
     def FirstBisector(self) -> MAT_Bisector: 
         """
         None
         """
     @overload
-    def FirstEdge(self) -> MAT_Edge: 
+    def FirstEdge(self,anedge : MAT_Edge) -> None: 
         """
         None
 
         None
         """
     @overload
-    def FirstEdge(self,anedge : MAT_Edge) -> None: ...
+    def FirstEdge(self) -> MAT_Edge: ...
     @overload
     def FirstParameter(self) -> float: 
         """
@@ -315,14 +315,14 @@ class MAT_Bisector(OCP.Standard.Standard_Transient):
     @overload
     def FirstParameter(self,aparameter : float) -> None: ...
     @overload
-    def FirstVector(self) -> int: 
+    def FirstVector(self,avector : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def FirstVector(self,avector : int) -> None: ...
+    def FirstVector(self) -> int: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -341,14 +341,14 @@ class MAT_Bisector(OCP.Standard.Standard_Transient):
     @overload
     def IndexNumber(self) -> int: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -359,14 +359,14 @@ class MAT_Bisector(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def IssuePoint(self) -> int: 
+    def IssuePoint(self,apoint : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def IssuePoint(self,apoint : int) -> None: ...
+    def IssuePoint(self) -> int: ...
     def LastBisector(self) -> MAT_Bisector: 
         """
         None
@@ -394,23 +394,23 @@ class MAT_Bisector(OCP.Standard.Standard_Transient):
     @overload
     def SecondParameter(self) -> float: ...
     @overload
-    def SecondVector(self) -> int: 
+    def SecondVector(self,avector : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SecondVector(self,avector : int) -> None: ...
+    def SecondVector(self) -> int: ...
     @overload
-    def Sense(self) -> float: 
+    def Sense(self,asense : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Sense(self,asense : float) -> None: ...
+    def Sense(self) -> float: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -437,14 +437,14 @@ class MAT_Edge(OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Distance(self,adistance : float) -> None: 
+    def Distance(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def Distance(self) -> float: ...
+    def Distance(self,adistance : float) -> None: ...
     def Dump(self,ashift : int,alevel : int) -> None: 
         """
         None
@@ -454,14 +454,14 @@ class MAT_Edge(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def EdgeNumber(self,anumber : int) -> None: 
+    def EdgeNumber(self) -> int: 
         """
         None
 
         None
         """
     @overload
-    def EdgeNumber(self) -> int: ...
+    def EdgeNumber(self,anumber : int) -> None: ...
     @overload
     def FirstBisector(self,abisector : MAT_Bisector) -> None: 
         """
@@ -480,23 +480,23 @@ class MAT_Edge(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IntersectionPoint(self,apoint : int) -> None: 
+    def IntersectionPoint(self) -> int: 
         """
         None
 
         None
         """
     @overload
-    def IntersectionPoint(self) -> int: ...
+    def IntersectionPoint(self,apoint : int) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -507,14 +507,14 @@ class MAT_Edge(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def SecondBisector(self) -> MAT_Bisector: 
+    def SecondBisector(self,abisector : MAT_Bisector) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SecondBisector(self,abisector : MAT_Bisector) -> None: ...
+    def SecondBisector(self) -> MAT_Bisector: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -584,14 +584,14 @@ class MAT_Graph(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -708,14 +708,14 @@ class MAT_ListOfBisector(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -860,14 +860,14 @@ class MAT_ListOfEdge(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -986,14 +986,14 @@ class MAT_Node(OCP.Standard.Standard_Transient):
         Returns True if the distance of <me> is Infinite
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1098,14 +1098,14 @@ class MAT_SequenceOfArc(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : MAT_SequenceOfArc) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : MAT_Arc) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : MAT_SequenceOfArc) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : MAT_SequenceOfArc) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : MAT_Arc) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1123,14 +1123,14 @@ class MAT_SequenceOfArc(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : MAT_SequenceOfArc) -> None: 
+    def Prepend(self,theItem : MAT_Arc) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : MAT_Arc) -> None: ...
+    def Prepend(self,theSeq : MAT_SequenceOfArc) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1165,11 +1165,11 @@ class MAT_SequenceOfArc(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : MAT_SequenceOfArc) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1186,14 +1186,14 @@ class MAT_SequenceOfBasicElt(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : MAT_SequenceOfBasicElt) -> None: 
+    def Append(self,theItem : MAT_BasicElt) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : MAT_BasicElt) -> None: ...
+    def Append(self,theSeq : MAT_SequenceOfBasicElt) -> None: ...
     def Assign(self,theOther : MAT_SequenceOfBasicElt) -> MAT_SequenceOfBasicElt: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1232,14 +1232,14 @@ class MAT_SequenceOfBasicElt(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : MAT_BasicElt) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : MAT_SequenceOfBasicElt) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : MAT_BasicElt) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : MAT_BasicElt) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : MAT_SequenceOfBasicElt) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1257,23 +1257,23 @@ class MAT_SequenceOfBasicElt(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : MAT_SequenceOfBasicElt) -> None: 
+    def Prepend(self,theItem : MAT_BasicElt) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : MAT_BasicElt) -> None: ...
+    def Prepend(self,theSeq : MAT_SequenceOfBasicElt) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1321,6 +1321,7 @@ class MAT_Side():
 
       MAT_Right
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1365,14 +1366,14 @@ class MAT_TListNodeOfListOfBisector(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1453,14 +1454,14 @@ class MAT_TListNodeOfListOfEdge(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1471,23 +1472,23 @@ class MAT_TListNodeOfListOfEdge(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Next(self,atlistnode : MAT_TListNodeOfListOfEdge) -> None: 
+    def Next(self) -> MAT_TListNodeOfListOfEdge: 
         """
         None
 
         None
         """
     @overload
-    def Next(self) -> MAT_TListNodeOfListOfEdge: ...
+    def Next(self,atlistnode : MAT_TListNodeOfListOfEdge) -> None: ...
     @overload
-    def Previous(self,atlistnode : MAT_TListNodeOfListOfEdge) -> None: 
+    def Previous(self) -> MAT_TListNodeOfListOfEdge: 
         """
         None
 
         None
         """
     @overload
-    def Previous(self) -> MAT_TListNodeOfListOfEdge: ...
+    def Previous(self,atlistnode : MAT_TListNodeOfListOfEdge) -> None: ...
     def SetItem(self,anitem : MAT_Edge) -> None: 
         """
         None
@@ -1497,9 +1498,9 @@ class MAT_TListNodeOfListOfEdge(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,anitem : MAT_Edge) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,anitem : MAT_Edge) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1540,14 +1541,14 @@ class MAT_Zone(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

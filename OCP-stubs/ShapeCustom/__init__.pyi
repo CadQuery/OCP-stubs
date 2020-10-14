@@ -4,19 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.GeomAbs
+import OCP.ShapeExtend
 import OCP.Poly
 import OCP.Geom2d
-import OCP.Standard
+import OCP.Message
 import OCP.TopTools
-import OCP.TopLoc
-import OCP.gp
-import OCP.ShapeExtend
 import OCP.TColgp
+import OCP.TopLoc
+import OCP.Standard
+import OCP.TopoDS
 import OCP.Geom
 import OCP.BRepTools
-import OCP.Message
-import OCP.TopoDS
-import OCP.GeomAbs
+import OCP.gp
 __all__  = [
 "ShapeCustom",
 "ShapeCustom_Modification",
@@ -101,14 +101,14 @@ class ShapeCustom_Modification(OCP.BRepTools.BRepTools_Modification, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -206,14 +206,14 @@ class ShapeCustom_ConvertToBSpline(ShapeCustom_Modification, OCP.BRepTools.BRepT
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -328,14 +328,14 @@ class ShapeCustom_ConvertToRevolution(ShapeCustom_Modification, OCP.BRepTools.BR
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -472,14 +472,14 @@ class ShapeCustom_DirectModification(ShapeCustom_Modification, OCP.BRepTools.BRe
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -608,14 +608,14 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -742,11 +742,11 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool,aModes : ShapeCustom_RestrictionParameters) -> None: ...
     @overload
     def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool) -> None: ...
     @overload
-    def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool,aModes : ShapeCustom_RestrictionParameters) -> None: ...
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -807,14 +807,14 @@ class ShapeCustom_RestrictionParameters(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -842,19 +842,27 @@ class ShapeCustom_RestrictionParameters(OCP.Standard.Standard_Transient):
     @property
     def ConvertBezierSurf(self) -> bool:
         """
+        Sets flag for define if Bezier surface converted to BSpline surface.
+
         :type: bool
         """
     @ConvertBezierSurf.setter
     def ConvertBezierSurf(self, arg1: bool) -> None:
-        pass
+        """
+        Sets flag for define if Bezier surface converted to BSpline surface.
+        """
     @property
     def ConvertConicalSurf(self) -> bool:
         """
+        Sets flag for define if conical surface converted to BSpline surface.
+
         :type: bool
         """
     @ConvertConicalSurf.setter
     def ConvertConicalSurf(self, arg1: bool) -> None:
-        pass
+        """
+        Sets flag for define if conical surface converted to BSpline surface.
+        """
     @property
     def ConvertCurve2d(self) -> bool:
         """
@@ -866,27 +874,39 @@ class ShapeCustom_RestrictionParameters(OCP.Standard.Standard_Transient):
     @property
     def ConvertCurve3d(self) -> bool:
         """
+        Sets flag for define if 3d curve converted to BSpline curve.
+
         :type: bool
         """
     @ConvertCurve3d.setter
     def ConvertCurve3d(self, arg1: bool) -> None:
-        pass
+        """
+        Sets flag for define if 3d curve converted to BSpline curve.
+        """
     @property
     def ConvertCylindricalSurf(self) -> bool:
         """
+        Sets flag for define if cylindrical surface converted to BSpline surface.
+
         :type: bool
         """
     @ConvertCylindricalSurf.setter
     def ConvertCylindricalSurf(self, arg1: bool) -> None:
-        pass
+        """
+        Sets flag for define if cylindrical surface converted to BSpline surface.
+        """
     @property
     def ConvertExtrusionSurf(self) -> bool:
         """
+        Sets flag for define if surface of LinearExtrusion converted to BSpline surface.
+
         :type: bool
         """
     @ConvertExtrusionSurf.setter
     def ConvertExtrusionSurf(self, arg1: bool) -> None:
-        pass
+        """
+        Sets flag for define if surface of LinearExtrusion converted to BSpline surface.
+        """
     @property
     def ConvertOffsetCurv2d(self) -> bool:
         """
@@ -898,51 +918,75 @@ class ShapeCustom_RestrictionParameters(OCP.Standard.Standard_Transient):
     @property
     def ConvertOffsetCurv3d(self) -> bool:
         """
+        Sets flag for define if Offset curve3d converted to BSpline surface.
+
         :type: bool
         """
     @ConvertOffsetCurv3d.setter
     def ConvertOffsetCurv3d(self, arg1: bool) -> None:
-        pass
+        """
+        Sets flag for define if Offset curve3d converted to BSpline surface.
+        """
     @property
     def ConvertOffsetSurf(self) -> bool:
         """
+        Sets flag for define if Offset surface converted to BSpline surface.
+
         :type: bool
         """
     @ConvertOffsetSurf.setter
     def ConvertOffsetSurf(self, arg1: bool) -> None:
-        pass
+        """
+        Sets flag for define if Offset surface converted to BSpline surface.
+        """
     @property
     def ConvertPlane(self) -> bool:
         """
+        Sets flag for define if Plane converted to BSpline surface.
+
         :type: bool
         """
     @ConvertPlane.setter
     def ConvertPlane(self, arg1: bool) -> None:
-        pass
+        """
+        Sets flag for define if Plane converted to BSpline surface.
+        """
     @property
     def ConvertRevolutionSurf(self) -> bool:
         """
+        Sets flag for define if surface of Revolution converted to BSpline surface.
+
         :type: bool
         """
     @ConvertRevolutionSurf.setter
     def ConvertRevolutionSurf(self, arg1: bool) -> None:
-        pass
+        """
+        Sets flag for define if surface of Revolution converted to BSpline surface.
+        """
     @property
     def ConvertSphericalSurf(self) -> bool:
         """
+        Sets flag for define if spherical surface converted to BSpline surface.
+
         :type: bool
         """
     @ConvertSphericalSurf.setter
     def ConvertSphericalSurf(self, arg1: bool) -> None:
-        pass
+        """
+        Sets flag for define if spherical surface converted to BSpline surface.
+        """
     @property
     def ConvertToroidalSurf(self) -> bool:
         """
+        Sets flag for define if toroidal surface converted to BSpline surface.
+
         :type: bool
         """
     @ConvertToroidalSurf.setter
     def ConvertToroidalSurf(self, arg1: bool) -> None:
-        pass
+        """
+        Sets flag for define if toroidal surface converted to BSpline surface.
+        """
     @property
     def GMaxDegree(self) -> int:
         """
@@ -962,11 +1006,15 @@ class ShapeCustom_RestrictionParameters(OCP.Standard.Standard_Transient):
     @property
     def SegmentSurfaceMode(self) -> bool:
         """
+        Sets Segment mode for surface. If Segment is True surface is approximated in the bondaries of face lying on this surface.
+
         :type: bool
         """
     @SegmentSurfaceMode.setter
     def SegmentSurfaceMode(self, arg1: bool) -> None:
-        pass
+        """
+        Sets Segment mode for surface. If Segment is True surface is approximated in the bondaries of face lying on this surface.
+        """
     pass
 class ShapeCustom_Surface():
     """
@@ -991,9 +1039,9 @@ class ShapeCustom_Surface():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.Geom.Geom_Surface) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class ShapeCustom_SweptToElementary(ShapeCustom_Modification, OCP.BRepTools.BRepTools_Modification, OCP.Standard.Standard_Transient):
     """
@@ -1024,14 +1072,14 @@ class ShapeCustom_SweptToElementary(ShapeCustom_Modification, OCP.BRepTools.BRep
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1130,14 +1178,14 @@ class ShapeCustom_TrsfModification(OCP.BRepTools.BRepTools_TrsfModification, OCP
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

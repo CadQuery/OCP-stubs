@@ -4,25 +4,25 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Aspect
-import OCP.Bnd
-import OCP.TopLoc
-import OCP.gp
-import OCP.SelectMgr
-import OCP.Geom
-import OCP.Graphic3d
-import OCP.PrsMgr
-import OCP.TColStd
-import OCP.SelectBasics
-import OCP.NCollection
-import OCP.Quantity
 import OCP.TCollection
-import OCP.Standard
-import OCP.AIS
-import OCP.TColgp
 import OCP.V3d
+import OCP.TColgp
+import OCP.NCollection
+import OCP.PrsMgr
+import OCP.gp
+import OCP.TColStd
 import OCP.Select3D
+import OCP.SelectBasics
+import OCP.SelectMgr
+import OCP.Bnd
+import OCP.Quantity
+import OCP.Graphic3d
+import OCP.Aspect
 import OCP.Prs3d
+import OCP.TopLoc
+import OCP.Standard
+import OCP.Geom
+import OCP.AIS
 __all__  = [
 "MeshVS_Array1OfSequenceOfInteger",
 "MeshVS_Buffer",
@@ -234,9 +234,9 @@ class MeshVS_Array1OfSequenceOfInteger():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : OCP.TColStd.TColStd_SequenceOfInteger,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : MeshVS_Array1OfSequenceOfInteger) -> None: ...
     @overload
@@ -319,14 +319,14 @@ class MeshVS_CommonSensitiveEntity(OCP.Select3D.Select3D_SensitiveSet, OCP.Selec
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -486,9 +486,9 @@ class MeshVS_DataMapOfColorMapOfInteger(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theOther : MeshVS_DataMapOfColorMapOfInteger) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class MeshVS_DataMapOfIntegerAsciiString(OCP.NCollection.NCollection_BaseMap):
@@ -520,14 +520,14 @@ class MeshVS_DataMapOfIntegerAsciiString(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : MeshVS_DataMapOfIntegerAsciiString) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -537,14 +537,14 @@ class MeshVS_DataMapOfIntegerAsciiString(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int) -> OCP.TCollection.TCollection_AsciiString: 
+    def Find(self,theKey : int,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: ...
+    def Find(self,theKey : int) -> OCP.TCollection.TCollection_AsciiString: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -578,11 +578,11 @@ class MeshVS_DataMapOfIntegerAsciiString(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : MeshVS_DataMapOfIntegerAsciiString) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class MeshVS_DataMapOfIntegerBoolean(OCP.NCollection.NCollection_BaseMap):
@@ -614,14 +614,14 @@ class MeshVS_DataMapOfIntegerBoolean(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : MeshVS_DataMapOfIntegerBoolean) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -672,9 +672,9 @@ class MeshVS_DataMapOfIntegerBoolean(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : MeshVS_DataMapOfIntegerBoolean) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -708,14 +708,14 @@ class MeshVS_DataMapOfIntegerColor(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : MeshVS_DataMapOfIntegerColor) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -725,14 +725,14 @@ class MeshVS_DataMapOfIntegerColor(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int) -> OCP.Quantity.Quantity_Color: 
+    def Find(self,theKey : int,theValue : OCP.Quantity.Quantity_Color) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int,theValue : OCP.Quantity.Quantity_Color) -> bool: ...
+    def Find(self,theKey : int) -> OCP.Quantity.Quantity_Color: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -768,9 +768,9 @@ class MeshVS_DataMapOfIntegerColor(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : MeshVS_DataMapOfIntegerColor) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : MeshVS_DataMapOfIntegerColor) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class MeshVS_DataMapOfIntegerMaterial(OCP.NCollection.NCollection_BaseMap):
@@ -802,14 +802,14 @@ class MeshVS_DataMapOfIntegerMaterial(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : MeshVS_DataMapOfIntegerMaterial) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -860,11 +860,11 @@ class MeshVS_DataMapOfIntegerMaterial(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : MeshVS_DataMapOfIntegerMaterial) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : MeshVS_DataMapOfIntegerMaterial) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class MeshVS_DataMapOfIntegerTwoColors(OCP.NCollection.NCollection_BaseMap):
@@ -954,11 +954,11 @@ class MeshVS_DataMapOfIntegerTwoColors(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : MeshVS_DataMapOfIntegerTwoColors) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class MeshVS_DataMapOfIntegerVector(OCP.NCollection.NCollection_BaseMap):
@@ -1084,14 +1084,14 @@ class MeshVS_DataMapOfTwoColorsMapOfInteger(OCP.NCollection.NCollection_BaseMap)
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : MeshVS_DataMapOfTwoColorsMapOfInteger) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1142,11 +1142,11 @@ class MeshVS_DataMapOfTwoColorsMapOfInteger(OCP.NCollection.NCollection_BaseMap)
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : MeshVS_DataMapOfTwoColorsMapOfInteger) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class MeshVS_DataSource(OCP.Standard.Standard_Transient):
@@ -1190,7 +1190,7 @@ class MeshVS_DataSource(OCP.Standard.Standard_Transient):
         Returns the bounding box of the whole mesh. It is used in advanced selection mode to define roughly the sensitive area of the mesh. It can be redefined to get access to a box computed in advance.
         """
     @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Polyline : OCP.TColgp.TColgp_Array1OfPnt2d,aBox : OCP.Bnd.Bnd_Box2d,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: 
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: 
         """
         Returns maps of entities (nodes and elements) detected by mouse click at the point (X,Y) on the current view plane, with the tolerance aTol. DMin - is out argument should return actual detection tolerance. Returns True if something is detected. It should be redefined if the advanced mesh selection is activated. Default implementation returns False.
 
@@ -1201,11 +1201,11 @@ class MeshVS_DataSource(OCP.Standard.Standard_Transient):
         Filter out the maps of mesh entities so as to keep only the entities that are allowed to be selected according to the current context. Returns True if any of the maps has been changed. It should be redefined if the advanced mesh selection is activated. Default implementation returns False.
         """
     @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,X : float,Y : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger,DMin : float) -> bool: ...
-    @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
-    @overload
     def GetDetectedEntities(self,Prs : MeshVS_Mesh,XMin : float,YMin : float,XMax : float,YMax : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
+    @overload
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Polyline : OCP.TColgp.TColgp_Array1OfPnt2d,aBox : OCP.Bnd.Bnd_Box2d,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
+    @overload
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,X : float,Y : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger,DMin : float) -> bool: ...
     def GetGeom(self,ID : int,IsElement : bool,Coords : OCP.TColStd.TColStd_Array1OfReal,NbNodes : int,Type : MeshVS_EntityType) -> bool: 
         """
         Returns geometry information about node or element ID is the numerical identificator of node or element IsElement indicates this ID describe node ( if Standard_False ) or element ( if Standard_True ) Coords is an array of co-ordinates of node(s). For node it is only 3 numbers: X, Y, Z in the strict order For element it is 3*n numbers, where n is number of this element vertices The order is strict also: X1, Y1, Z1, X2,...., where Xi, Yi, Zi are co-ordinates of vertices NbNodes is number of nodes. It is recommended this parameter to be set to 1 for node. Type is type of node or element (from enumeration). It is recommended this parameter to be set to MeshVS_ET_Node for node.
@@ -1251,14 +1251,14 @@ class MeshVS_DataSource(OCP.Standard.Standard_Transient):
         Returns True if advanced mesh selection is enabled. Default implementation returns False. It should be redefined to return True for advanced mesh selection activation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1331,7 +1331,7 @@ class MeshVS_DataSource3D(MeshVS_DataSource, OCP.Standard.Standard_Transient):
         Returns the bounding box of the whole mesh. It is used in advanced selection mode to define roughly the sensitive area of the mesh. It can be redefined to get access to a box computed in advance.
         """
     @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Polyline : OCP.TColgp.TColgp_Array1OfPnt2d,aBox : OCP.Bnd.Bnd_Box2d,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: 
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: 
         """
         Returns maps of entities (nodes and elements) detected by mouse click at the point (X,Y) on the current view plane, with the tolerance aTol. DMin - is out argument should return actual detection tolerance. Returns True if something is detected. It should be redefined if the advanced mesh selection is activated. Default implementation returns False.
 
@@ -1342,11 +1342,11 @@ class MeshVS_DataSource3D(MeshVS_DataSource, OCP.Standard.Standard_Transient):
         Filter out the maps of mesh entities so as to keep only the entities that are allowed to be selected according to the current context. Returns True if any of the maps has been changed. It should be redefined if the advanced mesh selection is activated. Default implementation returns False.
         """
     @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,X : float,Y : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger,DMin : float) -> bool: ...
-    @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
-    @overload
     def GetDetectedEntities(self,Prs : MeshVS_Mesh,XMin : float,YMin : float,XMax : float,YMax : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
+    @overload
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Polyline : OCP.TColgp.TColgp_Array1OfPnt2d,aBox : OCP.Bnd.Bnd_Box2d,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
+    @overload
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,X : float,Y : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger,DMin : float) -> bool: ...
     def GetGeom(self,ID : int,IsElement : bool,Coords : OCP.TColStd.TColStd_Array1OfReal,NbNodes : int,Type : MeshVS_EntityType) -> bool: 
         """
         Returns geometry information about node or element ID is the numerical identificator of node or element IsElement indicates this ID describe node ( if Standard_False ) or element ( if Standard_True ) Coords is an array of co-ordinates of node(s). For node it is only 3 numbers: X, Y, Z in the strict order For element it is 3*n numbers, where n is number of this element vertices The order is strict also: X1, Y1, Z1, X2,...., where Xi, Yi, Zi are co-ordinates of vertices NbNodes is number of nodes. It is recommended this parameter to be set to 1 for node. Type is type of node or element (from enumeration). It is recommended this parameter to be set to MeshVS_ET_Node for node.
@@ -1400,14 +1400,14 @@ class MeshVS_DataSource3D(MeshVS_DataSource, OCP.Standard.Standard_Transient):
         Returns True if advanced mesh selection is enabled. Default implementation returns False. It should be redefined to return True for advanced mesh selection activation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1473,7 +1473,7 @@ class MeshVS_DeformedDataSource(MeshVS_DataSource, OCP.Standard.Standard_Transie
         Returns the bounding box of the whole mesh. It is used in advanced selection mode to define roughly the sensitive area of the mesh. It can be redefined to get access to a box computed in advance.
         """
     @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Polyline : OCP.TColgp.TColgp_Array1OfPnt2d,aBox : OCP.Bnd.Bnd_Box2d,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: 
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: 
         """
         Returns maps of entities (nodes and elements) detected by mouse click at the point (X,Y) on the current view plane, with the tolerance aTol. DMin - is out argument should return actual detection tolerance. Returns True if something is detected. It should be redefined if the advanced mesh selection is activated. Default implementation returns False.
 
@@ -1484,11 +1484,11 @@ class MeshVS_DeformedDataSource(MeshVS_DataSource, OCP.Standard.Standard_Transie
         Filter out the maps of mesh entities so as to keep only the entities that are allowed to be selected according to the current context. Returns True if any of the maps has been changed. It should be redefined if the advanced mesh selection is activated. Default implementation returns False.
         """
     @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,X : float,Y : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger,DMin : float) -> bool: ...
-    @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
-    @overload
     def GetDetectedEntities(self,Prs : MeshVS_Mesh,XMin : float,YMin : float,XMax : float,YMax : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
+    @overload
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,Polyline : OCP.TColgp.TColgp_Array1OfPnt2d,aBox : OCP.Bnd.Bnd_Box2d,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
+    @overload
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,X : float,Y : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger,DMin : float) -> bool: ...
     def GetGeom(self,ID : int,IsElement : bool,Coords : OCP.TColStd.TColStd_Array1OfReal,NbNodes : int,Type : MeshVS_EntityType) -> bool: 
         """
         None
@@ -1550,14 +1550,14 @@ class MeshVS_DeformedDataSource(MeshVS_DataSource, OCP.Standard.Standard_Transie
         Returns True if advanced mesh selection is enabled. Default implementation returns False. It should be redefined to return True for advanced mesh selection activation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1652,14 +1652,14 @@ class MeshVS_Drawer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1819,6 +1819,7 @@ class MeshVS_DrawerAttribute():
 
       MeshVS_DA_User
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1924,14 +1925,14 @@ class MeshVS_DummySensitiveEntity(OCP.Select3D.Select3D_SensitiveEntity, OCP.Sta
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2046,14 +2047,14 @@ class MeshVS_PrsBuilder(OCP.Standard.Standard_Transient):
         Read excluding state
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2120,6 +2121,7 @@ class MeshVS_EntityType():
 
       MeshVS_ET_All
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2206,14 +2208,14 @@ class MeshVS_HArray1OfSequenceOfInteger(MeshVS_Array1OfSequenceOfInteger, OCP.St
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2264,13 +2266,13 @@ class MeshVS_HArray1OfSequenceOfInteger(MeshVS_Array1OfSequenceOfInteger, OCP.St
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : MeshVS_Array1OfSequenceOfInteger) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.TColStd.TColStd_SequenceOfInteger) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : MeshVS_Array1OfSequenceOfInteger) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2313,14 +2315,14 @@ class MeshVS_MapOfTwoNodes(OCP.NCollection.NCollection_BaseMap):
     @overload
     def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def Contains(self,theOther : MeshVS_MapOfTwoNodes) -> bool: 
+    def Contains(self,K : MeshVS_TwoNodes) -> bool: 
         """
         Contains
 
         Returns true if this map contains ALL keys of another map.
         """
     @overload
-    def Contains(self,K : MeshVS_TwoNodes) -> bool: ...
+    def Contains(self,theOther : MeshVS_MapOfTwoNodes) -> bool: ...
     def Differ(self,theOther : MeshVS_MapOfTwoNodes) -> bool: 
         """
         Apply to this Map the symmetric difference (aka exclusive disjunction, boolean XOR) operation with another (given) Map. The result contains the values that are contained only in this or the operand map, but not in both. This algorithm is similar to method Difference(). Returns True if contents of this map is changed.
@@ -2394,9 +2396,9 @@ class MeshVS_MapOfTwoNodes(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : MeshVS_MapOfTwoNodes) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -2713,14 +2715,14 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2898,14 +2900,14 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         Sets highlight display mode. This is obsolete method for backward compatibility - use ::HilightAttributes() and ::DynamicHilightAttributes() instead.
         """
     @overload
-    def SetHilighter(self,Builder : MeshVS_PrsBuilder) -> None: 
+    def SetHilighter(self,Index : int) -> bool: 
         """
         Changes hilighter ( see above )
 
         Sets builder with sequence index "Index" as hilighter
         """
     @overload
-    def SetHilighter(self,Index : int) -> bool: ...
+    def SetHilighter(self,Builder : MeshVS_PrsBuilder) -> None: ...
     def SetHilighterById(self,Id : int) -> bool: 
         """
         Sets builder with identificator "Id" as hilighter
@@ -2919,14 +2921,14 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -2956,23 +2958,23 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         Sets map of selectable nodes.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -3179,14 +3181,14 @@ class MeshVS_MeshEntityOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.S
         Returns true if owner is hilighted
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3221,14 +3223,14 @@ class MeshVS_MeshEntityOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.S
         Returns a selectable object detected in the working context.
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -3254,14 +3256,14 @@ class MeshVS_MeshEntityOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.S
         Set Z layer ID and update all presentations.
         """
     @overload
-    def State(self) -> int: 
+    def State(self,theStatus : int) -> None: 
         """
         Returns selection state.
 
         Set the state of the owner. The method is deprecated. Use SetSelected() instead.
         """
     @overload
-    def State(self,theStatus : int) -> None: ...
+    def State(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3382,14 +3384,14 @@ class MeshVS_MeshOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Standar
         Returns true if the presentation manager highlights selections corresponding to the selection mode.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3420,14 +3422,14 @@ class MeshVS_MeshOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Standar
         Returns a selectable object detected in the working context.
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -3457,14 +3459,14 @@ class MeshVS_MeshOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Standar
         Set Z layer ID and update all presentations.
         """
     @overload
-    def State(self) -> int: 
+    def State(self,theStatus : int) -> None: 
         """
         Returns selection state.
 
         Set the state of the owner. The method is deprecated. Use SetSelected() instead.
         """
     @overload
-    def State(self,theStatus : int) -> None: ...
+    def State(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3575,14 +3577,14 @@ class MeshVS_MeshPrsBuilder(MeshVS_PrsBuilder, OCP.Standard.Standard_Transient):
         Read excluding state
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3640,6 +3642,7 @@ class MeshVS_MeshSelectionMethod():
 
       MeshVS_MSM_BOX
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -3752,14 +3755,14 @@ class MeshVS_NodalColorPrsBuilder(MeshVS_PrsBuilder, OCP.Standard.Standard_Trans
         Read excluding state
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3846,7 +3849,7 @@ class MeshVS_PolyhedronVerts(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt,theIter : Any) -> None: 
+    def Append(self,theOther : MeshVS_PolyhedronVerts) -> None: 
         """
         Append one item at the end
 
@@ -3857,7 +3860,7 @@ class MeshVS_PolyhedronVerts(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> OCP.TColgp.TColgp_HArray1OfPnt: ...
     @overload
-    def Append(self,theOther : MeshVS_PolyhedronVerts) -> None: ...
+    def Append(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt,theIter : Any) -> None: ...
     def Assign(self,theOther : MeshVS_PolyhedronVerts) -> MeshVS_PolyhedronVerts: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -3877,14 +3880,14 @@ class MeshVS_PolyhedronVerts(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : MeshVS_PolyhedronVerts,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt,theIter : Any) -> OCP.TColgp.TColgp_HArray1OfPnt: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt,theIter : Any) -> OCP.TColgp.TColgp_HArray1OfPnt: ...
+    def InsertAfter(self,theOther : MeshVS_PolyhedronVerts,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt,theIter : Any) -> OCP.TColgp.TColgp_HArray1OfPnt: 
         """
@@ -3905,14 +3908,14 @@ class MeshVS_PolyhedronVerts(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : MeshVS_PolyhedronVerts) -> None: 
+    def Prepend(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> OCP.TColgp.TColgp_HArray1OfPnt: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> OCP.TColgp.TColgp_HArray1OfPnt: ...
+    def Prepend(self,theOther : MeshVS_PolyhedronVerts) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -3930,11 +3933,11 @@ class MeshVS_PolyhedronVerts(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : MeshVS_PolyhedronVerts) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : MeshVS_PolyhedronVerts) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class MeshVS_ElementalColorPrsBuilder(MeshVS_PrsBuilder, OCP.Standard.Standard_Transient):
@@ -4031,14 +4034,14 @@ class MeshVS_ElementalColorPrsBuilder(MeshVS_PrsBuilder, OCP.Standard.Standard_T
         Read excluding state
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4053,14 +4056,14 @@ class MeshVS_ElementalColorPrsBuilder(MeshVS_PrsBuilder, OCP.Standard.Standard_T
         Sets color assigned with element number ID
         """
     @overload
-    def SetColor2(self,ID : int,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color) -> None: 
+    def SetColor2(self,ID : int,theTwoColors : MeshVS_TwoColors) -> None: 
         """
         Sets colors assigned with element number ID
 
         Sets color assigned with element number ID theColor1 is the front element color theColor2 is the back element color
         """
     @overload
-    def SetColor2(self,ID : int,theTwoColors : MeshVS_TwoColors) -> None: ...
+    def SetColor2(self,ID : int,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color) -> None: ...
     def SetColors1(self,Map : MeshVS_DataMapOfIntegerColor) -> None: 
         """
         Sets map of colors same for front and back side of face.
@@ -4129,6 +4132,7 @@ class MeshVS_SelectionModeFlags():
 
       MeshVS_SMF_Group
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -4207,14 +4211,14 @@ class MeshVS_SensitiveFace(OCP.Select3D.Select3D_SensitiveFace, OCP.Select3D.Sel
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4321,14 +4325,14 @@ class MeshVS_SensitiveMesh(OCP.Select3D.Select3D_SensitiveEntity, OCP.Standard.S
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4431,14 +4435,14 @@ class MeshVS_SensitivePolyhedron(OCP.Select3D.Select3D_SensitiveEntity, OCP.Stan
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4541,14 +4545,14 @@ class MeshVS_SensitiveQuad(OCP.Select3D.Select3D_SensitiveEntity, OCP.Standard.S
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4663,14 +4667,14 @@ class MeshVS_SensitiveSegment(OCP.Select3D.Select3D_SensitiveSegment, OCP.Select
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4713,14 +4717,14 @@ class MeshVS_SensitiveSegment(OCP.Select3D.Select3D_SensitiveSegment, OCP.Select
         changes the start Point of the Segment;
         """
     @overload
-    def StartPoint(self,thePnt : OCP.gp.gp_Pnt) -> None: 
+    def StartPoint(self) -> OCP.gp.gp_Pnt: 
         """
         changes the start Point of the Segment;
 
         gives the 3D start Point of the Segment
         """
     @overload
-    def StartPoint(self) -> OCP.gp.gp_Pnt: ...
+    def StartPoint(self,thePnt : OCP.gp.gp_Pnt) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -4746,14 +4750,14 @@ class MeshVS_SequenceOfPrsBuilder(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : MeshVS_PrsBuilder) -> None: 
+    def Append(self,theSeq : MeshVS_SequenceOfPrsBuilder) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : MeshVS_SequenceOfPrsBuilder) -> None: ...
+    def Append(self,theItem : MeshVS_PrsBuilder) -> None: ...
     def Assign(self,theOther : MeshVS_SequenceOfPrsBuilder) -> MeshVS_SequenceOfPrsBuilder: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4783,23 +4787,23 @@ class MeshVS_SequenceOfPrsBuilder(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : MeshVS_SequenceOfPrsBuilder) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : MeshVS_PrsBuilder) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : MeshVS_PrsBuilder) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : MeshVS_SequenceOfPrsBuilder) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : MeshVS_PrsBuilder) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : MeshVS_SequenceOfPrsBuilder) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : MeshVS_SequenceOfPrsBuilder) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : MeshVS_PrsBuilder) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4817,23 +4821,23 @@ class MeshVS_SequenceOfPrsBuilder(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : MeshVS_SequenceOfPrsBuilder) -> None: 
+    def Prepend(self,theItem : MeshVS_PrsBuilder) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : MeshVS_PrsBuilder) -> None: ...
+    def Prepend(self,theSeq : MeshVS_SequenceOfPrsBuilder) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4964,14 +4968,14 @@ class MeshVS_TextPrsBuilder(MeshVS_PrsBuilder, OCP.Standard.Standard_Transient):
         Read excluding state
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5210,14 +5214,14 @@ class MeshVS_VectorPrsBuilder(MeshVS_PrsBuilder, OCP.Standard.Standard_Transient
         Read excluding state
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5297,14 +5301,14 @@ def ExtractColors(arg0 : MeshVS_TwoColors,arg1 : OCP.Quantity.Quantity_Color,arg
     None
     """
 @overload
-def HashCode(theKey : MeshVS_TwoColors,theUpperBound : int) -> int:
+def HashCode(theTwoNodes : MeshVS_TwoNodes,theUpperBound : int) -> int:
     """
     Computes a hash code for the key, in the range [1, theUpperBound]
 
     Computes a hash code for two nodes, in the range [1, theUpperBound]
     """
 @overload
-def HashCode(theTwoNodes : MeshVS_TwoNodes,theUpperBound : int) -> int:
+def HashCode(theKey : MeshVS_TwoColors,theUpperBound : int) -> int:
     pass
 def IsEqual(K1 : MeshVS_TwoColors,K2 : MeshVS_TwoColors) -> bool:
     """

@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepAP242
 import OCP.StepData
+import OCP.StepAP242
 import OCP.Interface
 __all__  = [
 "RWStepAP242_RWDraughtingModelItemAssociation",

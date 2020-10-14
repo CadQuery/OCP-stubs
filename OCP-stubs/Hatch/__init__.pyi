@@ -71,14 +71,14 @@ class Hatch_Hatcher():
         Returns the type of the line of index <I>.
         """
     @overload
-    def NbIntervals(self) -> int: 
+    def NbIntervals(self,I : int) -> int: 
         """
         Returns the total number of intervals on all the lines.
 
         Returns the number of intervals on line of index <I>.
         """
     @overload
-    def NbIntervals(self,I : int) -> int: ...
+    def NbIntervals(self) -> int: ...
     def NbLines(self) -> int: 
         """
         Returns the number of lines.
@@ -92,7 +92,7 @@ class Hatch_Hatcher():
         Returns the first Index and Par2 of interval <J> on line <I>.
         """
     @overload
-    def Tolerance(self,Tol : float) -> None: 
+    def Tolerance(self) -> float: 
         """
         None
 
@@ -103,9 +103,9 @@ class Hatch_Hatcher():
         None
         """
     @overload
-    def Tolerance(self) -> float: ...
+    def Tolerance(self,Tol : float) -> None: ...
     @overload
-    def Trim(self,L : OCP.gp.gp_Lin2d,Index : int=0) -> None: 
+    def Trim(self,L : OCP.gp.gp_Lin2d,Start : float,End : float,Index : int=0) -> None: 
         """
         Trims the lines at intersections with <L>.
 
@@ -114,7 +114,7 @@ class Hatch_Hatcher():
         Trims the line at intersection with the oriented segment P1,P2.
         """
     @overload
-    def Trim(self,L : OCP.gp.gp_Lin2d,Start : float,End : float,Index : int=0) -> None: ...
+    def Trim(self,L : OCP.gp.gp_Lin2d,Index : int=0) -> None: ...
     @overload
     def Trim(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d,Index : int=0) -> None: ...
     def __init__(self,Tol : float,Oriented : bool=True) -> None: ...
@@ -128,9 +128,9 @@ class Hatch_Line():
         Insert a new intersection in the sorted list.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,L : OCP.gp.gp_Lin2d,T : Hatch_LineForm) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Hatch_LineForm():
     """
@@ -144,6 +144,7 @@ class Hatch_LineForm():
 
       Hatch_ANYLINE
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -164,9 +165,9 @@ class Hatch_Parameter():
     Stores an intersection on a line represented by :
     """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Par1 : float,Start : bool,Index : int=0,Par2 : float=0.0) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Hatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -223,14 +224,14 @@ class Hatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Hatch_SequenceOfLine) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Hatch_SequenceOfLine) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Hatch_Line) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Hatch_Line) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Hatch_SequenceOfLine) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -290,11 +291,11 @@ class Hatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : Hatch_SequenceOfLine) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Hatch_SequenceOfLine) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -311,14 +312,14 @@ class Hatch_SequenceOfParameter(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Hatch_SequenceOfParameter) -> None: 
+    def Append(self,theItem : Hatch_Parameter) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Hatch_Parameter) -> None: ...
+    def Append(self,theSeq : Hatch_SequenceOfParameter) -> None: ...
     def Assign(self,theOther : Hatch_SequenceOfParameter) -> Hatch_SequenceOfParameter: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -382,14 +383,14 @@ class Hatch_SequenceOfParameter(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Hatch_SequenceOfParameter) -> None: 
+    def Prepend(self,theItem : Hatch_Parameter) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Hatch_Parameter) -> None: ...
+    def Prepend(self,theSeq : Hatch_SequenceOfParameter) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -426,9 +427,9 @@ class Hatch_SequenceOfParameter(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : Hatch_SequenceOfParameter) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

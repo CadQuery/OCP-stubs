@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Quantity
-import OCP.Aspect
-import OCP.NCollection
 import OCP.TCollection
-import OCP.Bnd
-import OCP.Standard
-import OCP.gp
-import OCP.Graphic3d
 import OCP.TColStd
+import OCP.Bnd
+import OCP.Quantity
+import OCP.Graphic3d
+import OCP.Aspect
 import OCP.Image
+import OCP.Standard
+import OCP.NCollection
+import OCP.gp
 __all__  = [
 "V3d",
 "V3d_AmbientLight",
@@ -189,14 +189,14 @@ class V3d_AmbientLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tra
         Memory deallocator for transient classes
         """
     @overload
-    def Direction(self) -> OCP.gp.gp_Dir: 
+    def Direction(self) -> Tuple[float, float, float]: 
         """
         Returns direction of directional/spot light.
 
         Returns the theVx, theVy, theVz direction of the light source.
         """
     @overload
-    def Direction(self) -> Tuple[float, float, float]: ...
+    def Direction(self) -> OCP.gp.gp_Dir: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -230,14 +230,14 @@ class V3d_AmbientLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tra
         Returns true if the light is a headlight; FALSE by default. Headlight flag means that light position/direction are defined not in a World coordinate system, but relative to the camera orientation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -322,14 +322,14 @@ class V3d_AmbientLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tra
         Sets light source name.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
     def SetSmoothAngle(self,theValue : float) -> None: 
         """
         Modifies the smoothing angle (in radians) of directional light source; should be within range [0.0, M_PI/2].
@@ -351,9 +351,9 @@ class V3d_AmbientLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tra
         Returns the Type of the Light, cannot be changed after object construction.
         """
     @overload
-    def __init__(self,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color) -> None: ...
-    @overload
     def __init__(self,theViewer : V3d_Viewer,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color) -> None: ...
+    @overload
+    def __init__(self,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -450,14 +450,14 @@ class V3d_CircularGrid(OCP.Aspect.Aspect_CircularGrid, OCP.Aspect.Aspect_Grid, O
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -575,14 +575,14 @@ class V3d_PositionLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tr
         Memory deallocator for transient classes
         """
     @overload
-    def Direction(self) -> OCP.gp.gp_Dir: 
+    def Direction(self) -> Tuple[float, float, float]: 
         """
         Returns direction of directional/spot light.
 
         Returns the theVx, theVy, theVz direction of the light source.
         """
     @overload
-    def Direction(self) -> Tuple[float, float, float]: ...
+    def Direction(self) -> OCP.gp.gp_Dir: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -616,14 +616,14 @@ class V3d_PositionLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tr
         Returns true if the light is a headlight; FALSE by default. Headlight flag means that light position/direction are defined not in a World coordinate system, but relative to the camera orientation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -708,14 +708,14 @@ class V3d_PositionLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tr
         Sets light source name.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
     def SetSmoothAngle(self,theValue : float) -> None: 
         """
         Modifies the smoothing angle (in radians) of directional light source; should be within range [0.0, M_PI/2].
@@ -819,9 +819,9 @@ class V3d_ListOfLight(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.Graphic3d.Graphic3d_CLight,theIter : Any) -> None: ...
-    @overload
     def Append(self,theItem : OCP.Graphic3d.Graphic3d_CLight) -> OCP.Graphic3d.Graphic3d_CLight: ...
+    @overload
+    def Append(self,theItem : OCP.Graphic3d.Graphic3d_CLight,theIter : Any) -> None: ...
     def Assign(self,theOther : V3d_ListOfLight) -> V3d_ListOfLight: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -841,14 +841,14 @@ class V3d_ListOfLight(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : V3d_ListOfLight,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : OCP.Graphic3d.Graphic3d_CLight,theIter : Any) -> OCP.Graphic3d.Graphic3d_CLight: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : OCP.Graphic3d.Graphic3d_CLight,theIter : Any) -> OCP.Graphic3d.Graphic3d_CLight: ...
+    def InsertAfter(self,theOther : V3d_ListOfLight,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theItem : OCP.Graphic3d.Graphic3d_CLight,theIter : Any) -> OCP.Graphic3d.Graphic3d_CLight: 
         """
@@ -869,14 +869,14 @@ class V3d_ListOfLight(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : V3d_ListOfLight) -> None: 
+    def Prepend(self,theItem : OCP.Graphic3d.Graphic3d_CLight) -> OCP.Graphic3d.Graphic3d_CLight: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : OCP.Graphic3d.Graphic3d_CLight) -> OCP.Graphic3d.Graphic3d_CLight: ...
+    def Prepend(self,theOther : V3d_ListOfLight) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -894,9 +894,9 @@ class V3d_ListOfLight(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : V3d_ListOfLight) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -910,7 +910,7 @@ class V3d_ListOfView(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : V3d_View,theIter : Any) -> None: 
+    def Append(self,theOther : V3d_ListOfView) -> None: 
         """
         Append one item at the end
 
@@ -921,7 +921,7 @@ class V3d_ListOfView(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : V3d_View) -> V3d_View: ...
     @overload
-    def Append(self,theOther : V3d_ListOfView) -> None: ...
+    def Append(self,theItem : V3d_View,theIter : Any) -> None: ...
     def Assign(self,theOther : V3d_ListOfView) -> V3d_ListOfView: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -941,14 +941,14 @@ class V3d_ListOfView(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : V3d_View,theIter : Any) -> V3d_View: 
+    def InsertAfter(self,theOther : V3d_ListOfView,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : V3d_ListOfView,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : V3d_View,theIter : Any) -> V3d_View: ...
     @overload
     def InsertBefore(self,theOther : V3d_ListOfView,theIter : Any) -> None: 
         """
@@ -969,14 +969,14 @@ class V3d_ListOfView(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : V3d_View) -> V3d_View: 
+    def Prepend(self,theOther : V3d_ListOfView) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : V3d_ListOfView) -> None: ...
+    def Prepend(self,theItem : V3d_View) -> V3d_View: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1042,14 +1042,14 @@ class V3d_Plane(OCP.Standard.Standard_Transient):
         Returns TRUE when the plane representation is displayed.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1116,14 +1116,14 @@ class V3d_DirectionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OC
         Memory deallocator for transient classes
         """
     @overload
-    def Direction(self) -> OCP.gp.gp_Dir: 
+    def Direction(self) -> Tuple[float, float, float]: 
         """
         Returns direction of directional/spot light.
 
         Returns the theVx, theVy, theVz direction of the light source.
         """
     @overload
-    def Direction(self) -> Tuple[float, float, float]: ...
+    def Direction(self) -> OCP.gp.gp_Dir: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1157,14 +1157,14 @@ class V3d_DirectionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OC
         Returns true if the light is a headlight; FALSE by default. Headlight flag means that light position/direction are defined not in a World coordinate system, but relative to the camera orientation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1244,14 +1244,14 @@ class V3d_DirectionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OC
         Sets light source name.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
     def SetSmoothAngle(self,theValue : float) -> None: 
         """
         Modifies the smoothing angle (in radians) of directional light source; should be within range [0.0, M_PI/2].
@@ -1273,13 +1273,13 @@ class V3d_DirectionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OC
         Returns the Type of the Light, cannot be changed after object construction.
         """
     @overload
-    def __init__(self,theViewer : V3d_Viewer,theXt : float,theYt : float,theZt : float,theXp : float,theYp : float,theZp : float,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color,theIsHeadlight : bool=False) -> None: ...
-    @overload
     def __init__(self,theViewer : V3d_Viewer,theDirection : V3d_TypeOfOrientation=V3d_TypeOfOrientation.V3d_XposYposZpos,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color,theIsHeadlight : bool=False) -> None: ...
     @overload
-    def __init__(self,theDirection : V3d_TypeOfOrientation=V3d_TypeOfOrientation.V3d_XposYposZpos,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color,theIsHeadlight : bool=False) -> None: ...
+    def __init__(self,theViewer : V3d_Viewer,theXt : float,theYt : float,theZt : float,theXp : float,theYp : float,theZp : float,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color,theIsHeadlight : bool=False) -> None: ...
     @overload
     def __init__(self,theDirection : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color,theIsHeadlight : bool=False) -> None: ...
+    @overload
+    def __init__(self,theDirection : V3d_TypeOfOrientation=V3d_TypeOfOrientation.V3d_XposYposZpos,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color,theIsHeadlight : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1324,14 +1324,14 @@ class V3d_PositionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP
         Memory deallocator for transient classes
         """
     @overload
-    def Direction(self) -> OCP.gp.gp_Dir: 
+    def Direction(self) -> Tuple[float, float, float]: 
         """
         Returns direction of directional/spot light.
 
         Returns the theVx, theVy, theVz direction of the light source.
         """
     @overload
-    def Direction(self) -> Tuple[float, float, float]: ...
+    def Direction(self) -> OCP.gp.gp_Dir: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1365,14 +1365,14 @@ class V3d_PositionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP
         Returns true if the light is a headlight; FALSE by default. Headlight flag means that light position/direction are defined not in a World coordinate system, but relative to the camera orientation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1457,14 +1457,14 @@ class V3d_PositionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP
         Sets light source name.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
     def SetSmoothAngle(self,theValue : float) -> None: 
         """
         Modifies the smoothing angle (in radians) of directional light source; should be within range [0.0, M_PI/2].
@@ -1486,9 +1486,9 @@ class V3d_PositionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP
         Returns the Type of the Light, cannot be changed after object construction.
         """
     @overload
-    def __init__(self,thePos : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color) -> None: ...
-    @overload
     def __init__(self,theViewer : V3d_Viewer,theX : float,theY : float,theZ : float,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color,theConstAttenuation : float=1.0,theLinearAttenuation : float=0.0) -> None: ...
+    @overload
+    def __init__(self,thePos : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1574,14 +1574,14 @@ class V3d_RectangularGrid(OCP.Aspect.Aspect_RectangularGrid, OCP.Aspect.Aspect_G
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1711,14 +1711,14 @@ class V3d_SpotLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP.Stand
         Memory deallocator for transient classes
         """
     @overload
-    def Direction(self) -> OCP.gp.gp_Dir: 
+    def Direction(self) -> Tuple[float, float, float]: 
         """
         Returns direction of directional/spot light.
 
         Returns the theVx, theVy, theVz direction of the light source.
         """
     @overload
-    def Direction(self) -> Tuple[float, float, float]: ...
+    def Direction(self) -> OCP.gp.gp_Dir: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1752,14 +1752,14 @@ class V3d_SpotLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP.Stand
         Returns true if the light is a headlight; FALSE by default. Headlight flag means that light position/direction are defined not in a World coordinate system, but relative to the camera orientation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1839,14 +1839,14 @@ class V3d_SpotLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP.Stand
         Sets light source name.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
     def SetSmoothAngle(self,theValue : float) -> None: 
         """
         Modifies the smoothing angle (in radians) of directional light source; should be within range [0.0, M_PI/2].
@@ -1872,9 +1872,9 @@ class V3d_SpotLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP.Stand
     @overload
     def __init__(self,theViewer : V3d_Viewer,theX : float,theY : float,theZ : float,theDirection : V3d_TypeOfOrientation=V3d_TypeOfOrientation.V3d_XnegYnegZpos,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color,theConstAttenuation : float=1.0,theLinearAttenuation : float=0.0,theConcentration : float=1.0,theAngle : float=0.523599) -> None: ...
     @overload
-    def __init__(self,thePos : OCP.gp.gp_Pnt,theDirection : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color) -> None: ...
-    @overload
     def __init__(self,theViewer : V3d_Viewer,theXt : float,theYt : float,theZt : float,theXp : float,theYp : float,theZp : float,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color,theConstAttenuation : float=1.0,theLinearAttenuation : float=0.0,theConcentration : float=1.0,theAngle : float=0.523599) -> None: ...
+    @overload
+    def __init__(self,thePos : OCP.gp.gp_Pnt,theDirection : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1900,6 +1900,7 @@ class V3d_StereoDumpOptions():
 
       V3d_SDO_BLENDED
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1949,14 +1950,14 @@ class V3d_Trihedron(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2026,6 +2027,7 @@ class V3d_TypeOfAxe():
 
       V3d_Z
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2053,6 +2055,7 @@ class V3d_TypeOfBackfacingModel():
 
       V3d_TOBM_NEVER_DISPLAYED
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2158,6 +2161,7 @@ class V3d_TypeOfOrientation():
 
       V3d_TypeOfOrientation_Yup_Right
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2230,6 +2234,7 @@ class V3d_TypeOfPickCamera():
 
       V3d_NOTHINGCAMERA
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2266,6 +2271,7 @@ class V3d_TypeOfPickLight():
 
       V3d_NOTHING
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2298,6 +2304,7 @@ class V3d_TypeOfRepresentation():
 
       V3d_SAMELAST
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2324,6 +2331,7 @@ class V3d_TypeOfView():
 
       V3d_PERSPECTIVE
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2348,6 +2356,7 @@ class V3d_TypeOfVisualization():
 
       V3d_ZBUFFER
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2406,14 +2415,14 @@ class V3d_View(OCP.Standard.Standard_Transient):
         returns scale factor parameter of automatic z-fit mode.
         """
     @overload
-    def AxialScale(self) -> Tuple[float, float, float]: 
+    def AxialScale(self,Dx : int,Dy : int,Axis : V3d_TypeOfAxe) -> None: 
         """
         Performs anisotropic scaling of <me> view along the given <Axis>. The scale factor is calculated on a basis of the mouse pointer displacement <Dx,Dy>. The calculated scale factor is then passed to SetAxialScale(Sx, Sy, Sz) method.
 
         Returns the current values of the anisotropic (axial) scale factors.
         """
     @overload
-    def AxialScale(self,Dx : int,Dy : int,Axis : V3d_TypeOfAxe) -> None: ...
+    def AxialScale(self) -> Tuple[float, float, float]: ...
     def BackFacingModel(self) -> V3d_TypeOfBackfacingModel: 
         """
         Returns current state of the back faces display
@@ -2444,7 +2453,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Returns the computed HLR mode state.
         """
     @overload
-    def Convert(self,Vp : int) -> float: 
+    def Convert(self,Xp : int,Yp : int) -> Tuple[float, float, float]: 
         """
         Converts the PIXEL value to a value in the projection plane.
 
@@ -2459,24 +2468,24 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Projects the point defined in the reference frame of the view into the projected point in the associated window.
         """
     @overload
-    def Convert(self,Xp : int,Yp : int) -> Tuple[float, float, float]: ...
-    @overload
     def Convert(self,Xv : float,Yv : float) -> Tuple[int, int]: ...
+    @overload
+    def Convert(self,Vp : int) -> float: ...
     @overload
     def Convert(self,Vv : float) -> int: ...
     @overload
-    def Convert(self,X : float,Y : float,Z : float) -> Tuple[int, int]: ...
-    @overload
     def Convert(self,Xp : int,Yp : int) -> Tuple[float, float]: ...
     @overload
-    def ConvertToGrid(self,X : float,Y : float,Z : float) -> Tuple[float, float, float]: 
+    def Convert(self,X : float,Y : float,Z : float) -> Tuple[int, int]: ...
+    @overload
+    def ConvertToGrid(self,Xp : int,Yp : int) -> Tuple[float, float, float]: 
         """
         Converts the projected point into the nearest grid point in the reference frame of the view corresponding to the intersection with the projection plane of the eye/view point vector and display the grid marker. Warning: When the grid is not active the result is identical to the above Convert() method. How to use: 1) Enable the grid echo display myViewer->SetGridEcho(Standard_True); 2) When application receive a move event: 2.1) Check if any object is detected if( myInteractiveContext->MoveTo(x,y) == AIS_SOD_Nothing ) { 2.2) Check if the grid is active if( myViewer->Grid()->IsActive() ) { 2.3) Display the grid echo and gets the grid point myView->ConvertToGrid(x,y,X,Y,Z); myView->Viewer()->ShowGridEcho (myView, Graphic3d_Vertex (X,Y,Z)); myView->RedrawImmediate(); 2.4) Else this is the standard case } else myView->Convert(x,y,X,Y,Z);
 
         Converts the point into the nearest grid point and display the grid marker.
         """
     @overload
-    def ConvertToGrid(self,Xp : int,Yp : int) -> Tuple[float, float, float]: ...
+    def ConvertToGrid(self,X : float,Y : float,Z : float) -> Tuple[float, float, float]: ...
     def ConvertWithProj(self,Xp : int,Yp : int) -> Tuple[float, float, float, float, float, float]: 
         """
         Converts the projected point into a point in the reference frame of the view corresponding to the intersection with the projection plane of the eye/view point vector and returns the projection ray for further computations.
@@ -2522,7 +2531,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Returns the position of the eye.
         """
     @overload
-    def FitAll(self,theMargin : float=0.01,theToUpdate : bool=True) -> None: 
+    def FitAll(self,theMinXv : float,theMinYv : float,theMaxXv : float,theMaxYv : float) -> None: 
         """
         Adjust view parameters to fit the displayed scene, respecting height / width ratio. The Z clipping range (depth range) is fitted if AutoZFit flag is TRUE. Throws program error exception if margin coefficient is < 0 or >= 1. Updates the view.
 
@@ -2531,9 +2540,9 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Centers the defined projection window so that it occupies the maximum space while respecting the initial height/width ratio. NOTE than the original Z size of the view is NOT modified .
         """
     @overload
-    def FitAll(self,theBox : OCP.Bnd.Bnd_Box,theMargin : float=0.01,theToUpdate : bool=True) -> None: ...
+    def FitAll(self,theMargin : float=0.01,theToUpdate : bool=True) -> None: ...
     @overload
-    def FitAll(self,theMinXv : float,theMinYv : float,theMaxXv : float,theMaxYv : float) -> None: ...
+    def FitAll(self,theBox : OCP.Bnd.Bnd_Box,theMargin : float=0.01,theToUpdate : bool=True) -> None: ...
     def FitMinMax(self,theCamera : OCP.Graphic3d.Graphic3d_Camera,theBox : OCP.Bnd.Bnd_Box,theMargin : float,theResolution : float=0.0,theToEnlargeIfLine : bool=True) -> bool: 
         """
         Transform camera eye, center and scale to fit in the passed bounding box specified in WCS.
@@ -2611,14 +2620,14 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Returns the status of the view regarding the displayed structures inside Returns True is The View is empty
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsInvalidated(self) -> bool: 
         """
         Returns true if cached view content has been invalidated.
@@ -2645,7 +2654,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         returns true if there are more active Light(s) to return.
         """
     @overload
-    def Move(self,Dx : float,Dy : float,Dz : float,Start : bool=True) -> None: 
+    def Move(self,Axe : V3d_TypeOfAxe,Length : float,Start : bool=True) -> None: 
         """
         Movement of the eye parallel to the coordinate system of reference of the screen a distance relative to the initial position expressed by Start = Standard_True.
 
@@ -2654,7 +2663,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Movement of the eye parllel to the current axis a distance relative to the initial position expressed by Start = Standard_True
         """
     @overload
-    def Move(self,Axe : V3d_TypeOfAxe,Length : float,Start : bool=True) -> None: ...
+    def Move(self,Dx : float,Dy : float,Dz : float,Start : bool=True) -> None: ...
     @overload
     def Move(self,Length : float,Start : bool=True) -> None: ...
     def MustBeResized(self) -> None: 
@@ -2731,7 +2740,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Resets the orientation of the view. Updates the view
         """
     @overload
-    def Rotate(self,Axe : V3d_TypeOfAxe,Angle : float,Start : bool=True) -> None: 
+    def Rotate(self,Axe : V3d_TypeOfAxe,Angle : float,X : float,Y : float,Z : float,Start : bool=True) -> None: 
         """
         Rotates the eye about the coordinate system of reference of the screen for which the origin is the view point of the projection, with a relative angular value in RADIANS with respect to the initial position expressed by Start = Standard_True Warning! raises BadValue from V3d If the eye, the view point, or the high point are aligned or confused.
 
@@ -2744,13 +2753,13 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Rotates the eye around the current axis a relative angular value in RADIANS with respect to the initial position expressed by Start = Standard_True
         """
     @overload
-    def Rotate(self,Ax : float,Ay : float,Az : float,X : float,Y : float,Z : float,Start : bool=True) -> None: ...
-    @overload
     def Rotate(self,Ax : float,Ay : float,Az : float,Start : bool=True) -> None: ...
     @overload
-    def Rotate(self,Axe : V3d_TypeOfAxe,Angle : float,X : float,Y : float,Z : float,Start : bool=True) -> None: ...
+    def Rotate(self,Ax : float,Ay : float,Az : float,X : float,Y : float,Z : float,Start : bool=True) -> None: ...
     @overload
     def Rotate(self,Angle : float,Start : bool=True) -> None: ...
+    @overload
+    def Rotate(self,Axe : V3d_TypeOfAxe,Angle : float,Start : bool=True) -> None: ...
     def Rotation(self,X : int,Y : int) -> None: 
         """
         Continues the rotation of the view with an angle computed from the last and new mouse position <X,Y>.
@@ -2859,14 +2868,14 @@ class V3d_View(OCP.Standard.Standard_Transient):
         sets the immediate update mode and returns the previous one.
         """
     @overload
-    def SetLightOff(self,theLight : OCP.Graphic3d.Graphic3d_CLight) -> None: 
+    def SetLightOff(self) -> None: 
         """
         Deactivate theLight in this view.
 
         Deactivate all the Lights defined in this view.
         """
     @overload
-    def SetLightOff(self) -> None: ...
+    def SetLightOff(self,theLight : OCP.Graphic3d.Graphic3d_CLight) -> None: ...
     @overload
     def SetLightOn(self,theLight : OCP.Graphic3d.Graphic3d_CLight) -> None: 
         """
@@ -2910,14 +2919,14 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Defines the angular position of the high point of the reference frame of the view with respect to the Y screen axis with an absolute angular value in RADIANS.
         """
     @overload
-    def SetUp(self,Vx : float,Vy : float,Vz : float) -> None: 
+    def SetUp(self,Orientation : V3d_TypeOfOrientation) -> None: 
         """
         Defines the orientation of the high point.
 
         Defines the orientation(SO) of the high point.
         """
     @overload
-    def SetUp(self,Orientation : V3d_TypeOfOrientation) -> None: ...
+    def SetUp(self,Vx : float,Vy : float,Vz : float) -> None: ...
     def SetViewMappingDefault(self) -> None: 
         """
         Saves the current view mapping. This will be the state returned from ResetViewmapping.
@@ -2976,16 +2985,16 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def ToPixMap(self,theImage : OCP.Image.Image_PixMap,theWidth : int,theHeight : int,theBufferType : OCP.Graphic3d.Graphic3d_BufferType=Graphic3d_BufferType.Graphic3d_BT_RGB,theToAdjustAspect : bool=True,theStereoOptions : V3d_StereoDumpOptions=V3d_StereoDumpOptions.V3d_SDO_MONO) -> bool: 
+    def ToPixMap(self,theImage : OCP.Image.Image_PixMap,theParams : V3d_ImageDumpOptions) -> bool: 
         """
         Dumps the full contents of the view to a pixmap with specified parameters. Internally this method calls Redraw() with an offscreen render buffer of requested target size (theWidth x theHeight), so that there is no need resizing a window control for making a dump of different size.
 
         Dumps the full contents of the view to a pixmap. Internally this method calls Redraw() with an offscreen render buffer of requested target size (theWidth x theHeight), so that there is no need resizing a window control for making a dump of different size.
         """
     @overload
-    def ToPixMap(self,theImage : OCP.Image.Image_PixMap,theParams : V3d_ImageDumpOptions) -> bool: ...
+    def ToPixMap(self,theImage : OCP.Image.Image_PixMap,theWidth : int,theHeight : int,theBufferType : OCP.Graphic3d.Graphic3d_BufferType=Graphic3d_BufferType.Graphic3d_BT_RGB,theToAdjustAspect : bool=True,theStereoOptions : V3d_StereoDumpOptions=V3d_StereoDumpOptions.V3d_SDO_MONO) -> bool: ...
     @overload
-    def Translate(self,Axe : V3d_TypeOfAxe,Length : float,Start : bool=True) -> None: 
+    def Translate(self,Dx : float,Dy : float,Dz : float,Start : bool=True) -> None: 
         """
         Movement of the ye and the view point parallel to the frame of reference of the screen a distance relative to the initial position expressed by Start = Standard_True
 
@@ -2994,9 +3003,9 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Movement of the eye and view point parallel to the current axis a distance relative to the initial position expressed by Start = Standard_True
         """
     @overload
-    def Translate(self,Dx : float,Dy : float,Dz : float,Start : bool=True) -> None: ...
-    @overload
     def Translate(self,Length : float,Start : bool=True) -> None: ...
+    @overload
+    def Translate(self,Axe : V3d_TypeOfAxe,Length : float,Start : bool=True) -> None: ...
     def TriedronDisplay(self,thePosition : OCP.Aspect.Aspect_TypeOfTriedronPosition=Aspect_TypeOfTriedronPosition.Aspect_TOTP_CENTER,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color,theScale : float=0.02,theMode : V3d_TypeOfVisualization=V3d_TypeOfVisualization.V3d_WIREFRAME) -> None: 
         """
         Display of the Triedron. Initialize position, color and length of Triedron axes. The scale is a percent of the window width.
@@ -3006,7 +3015,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Erases the Triedron.
         """
     @overload
-    def Turn(self,Axe : V3d_TypeOfAxe,Angle : float,Start : bool=True) -> None: 
+    def Turn(self,Ax : float,Ay : float,Az : float,Start : bool=True) -> None: 
         """
         Rotation of the view point around the frame of reference of the screen for which the origin is the eye of the projection with a relative angular value in RADIANS with respect to the initial position expressed by Start = Standard_True
 
@@ -3015,7 +3024,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Rotation of the view point around the current axis an angular value in RADIANS relative to the initial position expressed by Start = Standard_True
         """
     @overload
-    def Turn(self,Ax : float,Ay : float,Az : float,Start : bool=True) -> None: ...
+    def Turn(self,Axe : V3d_TypeOfAxe,Angle : float,Start : bool=True) -> None: ...
     @overload
     def Turn(self,Angle : float,Start : bool=True) -> None: ...
     def Twist(self) -> float: 
@@ -3083,9 +3092,9 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Zooms the model at a pixel defined by the method StartZoomAtPoint().
         """
     @overload
-    def __init__(self,theViewer : V3d_Viewer,theType : V3d_TypeOfView=V3d_TypeOfView.V3d_ORTHOGRAPHIC) -> None: ...
-    @overload
     def __init__(self,theViewer : V3d_Viewer,theView : V3d_View) -> None: ...
+    @overload
+    def __init__(self,theViewer : V3d_Viewer,theType : V3d_TypeOfView=V3d_TypeOfView.V3d_ORTHOGRAPHIC) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3154,14 +3163,14 @@ class V3d_Viewer(OCP.Standard.Standard_Transient):
         Decrements the reference counter of this object; returns the decremented value
         """
     @overload
-    def DefaultBackgroundColor(self) -> OCP.Quantity.Quantity_Color: 
+    def DefaultBackgroundColor(self,theType : OCP.Quantity.Quantity_TypeOfColor) -> Tuple[float, float, float]: 
         """
         Returns the default background colour object.
 
         None
         """
     @overload
-    def DefaultBackgroundColor(self,theType : OCP.Quantity.Quantity_TypeOfColor) -> Tuple[float, float, float]: ...
+    def DefaultBackgroundColor(self) -> OCP.Quantity.Quantity_Color: ...
     def DefaultBgGradientColors(self,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color) -> None: 
         """
         Returns the gradient background colour objects of the view.
@@ -3311,14 +3320,14 @@ class V3d_Viewer(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3402,14 +3411,14 @@ class V3d_Viewer(OCP.Standard.Standard_Transient):
         Set if the computed mode can be used.
         """
     @overload
-    def SetDefaultBackgroundColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetDefaultBackgroundColor(self,theType : OCP.Quantity.Quantity_TypeOfColor,theV1 : float,theV2 : float,theV3 : float) -> None: 
         """
         Defines the default background colour of views attached to the viewer by supplying the color object
 
         Defines the default base colour of views attached to the Viewer by supplying the type of colour definition and the three component values.
         """
     @overload
-    def SetDefaultBackgroundColor(self,theType : OCP.Quantity.Quantity_TypeOfColor,theV1 : float,theV2 : float,theV3 : float) -> None: ...
+    def SetDefaultBackgroundColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetDefaultBgGradientColors(self,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color,theFillStyle : OCP.Aspect.Aspect_GradientFillMethod=Aspect_GradientFillMethod.Aspect_GFM_HOR) -> None: 
         """
         Defines the default gradient background colours of views attached to the viewer by supplying the colour objects
@@ -3456,14 +3465,14 @@ class V3d_Viewer(OCP.Standard.Standard_Transient):
     @overload
     def SetGridEcho(self,aMarker : OCP.Graphic3d.Graphic3d_AspectMarker3d) -> None: ...
     @overload
-    def SetLightOff(self) -> None: 
+    def SetLightOff(self,theLight : OCP.Graphic3d.Graphic3d_CLight) -> None: 
         """
         Deactivates MyLight in this viewer.
 
         Deactivate all the Lights defined in this viewer.
         """
     @overload
-    def SetLightOff(self,theLight : OCP.Graphic3d.Graphic3d_CLight) -> None: ...
+    def SetLightOff(self) -> None: ...
     @overload
     def SetLightOn(self) -> None: 
         """
@@ -3495,14 +3504,14 @@ class V3d_Viewer(OCP.Standard.Standard_Transient):
     @overload
     def SetViewOff(self,theView : V3d_View) -> None: ...
     @overload
-    def SetViewOn(self,theView : V3d_View) -> None: 
+    def SetViewOn(self) -> None: 
         """
         Activates all of the views of a viewer attached to a window.
 
         Activates a particular view in the Viewer. Must be call if the Window attached to the view has been Deiconified.
         """
     @overload
-    def SetViewOn(self) -> None: ...
+    def SetViewOn(self,theView : V3d_View) -> None: ...
     def SetZLayerSettings(self,theLayerId : int,theSettings : OCP.Graphic3d.Graphic3d_ZLayerSettings) -> None: 
         """
         Sets the settings for a single Z layer.

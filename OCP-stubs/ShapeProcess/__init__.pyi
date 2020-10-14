@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Resource
 import OCP.TCollection
 import OCP.TopAbs
-import OCP.ShapeBuild
-import OCP.Standard
-import OCP.TopTools
 import OCP.ShapeExtend
-import OCP.Resource
-import OCP.BRepTools
-import OCP.Message
-import OCP.TopoDS
 import OCP.GeomAbs
+import OCP.Message
+import OCP.TopTools
+import OCP.Standard
+import OCP.TopoDS
+import OCP.ShapeBuild
+import OCP.BRepTools
 __all__  = [
 "ShapeProcess",
 "ShapeProcess_Context",
@@ -97,14 +97,14 @@ class ShapeProcess_Context(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -226,14 +226,14 @@ class ShapeProcess_Operator(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -331,14 +331,14 @@ class ShapeProcess_ShapeContext(ShapeProcess_Context, OCP.Standard.Standard_Tran
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -387,7 +387,7 @@ class ShapeProcess_ShapeContext(ShapeProcess_Context, OCP.Standard.Standard_Tran
         None
         """
     @overload
-    def RecordModification(self,repl : OCP.TopTools.TopTools_DataMapOfShapeShape,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator=None) -> None: 
+    def RecordModification(self,sh : OCP.TopoDS.TopoDS_Shape,repl : OCP.BRepTools.BRepTools_Modifier,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator=None) -> None: 
         """
         None
 
@@ -400,9 +400,9 @@ class ShapeProcess_ShapeContext(ShapeProcess_Context, OCP.Standard.Standard_Tran
     @overload
     def RecordModification(self,repl : OCP.ShapeBuild.ShapeBuild_ReShape) -> None: ...
     @overload
-    def RecordModification(self,sh : OCP.TopoDS.TopoDS_Shape,repl : OCP.BRepTools.BRepTools_Modifier,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator=None) -> None: ...
-    @overload
     def RecordModification(self,repl : OCP.ShapeBuild.ShapeBuild_ReShape,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator) -> None: ...
+    @overload
+    def RecordModification(self,repl : OCP.TopTools.TopTools_DataMapOfShapeShape,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator=None) -> None: ...
     def ResourceManager(self) -> OCP.Resource.Resource_Manager: 
         """
         Returns internal Resource_Manager object
@@ -499,14 +499,14 @@ class ShapeProcess_UOperator(ShapeProcess_Operator, OCP.Standard.Standard_Transi
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDocStd
-import OCP.TCollection
-import OCP.TDataStd
-import OCP.Standard
-import OCP.StdObjMgt
-import OCP.TFunction
 import OCP.TDF
+import OCP.TCollection
+import OCP.StdObjMgt
+import OCP.Standard
+import OCP.TFunction
+import OCP.TDocStd
+import OCP.TDataStd
 __all__  = [
 "StdLPersistent",
 "StdLPersistent_Collection",
@@ -101,14 +101,14 @@ class StdLPersistent_Data(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -148,14 +148,14 @@ class StdLPersistent_Data(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.Stand
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def TypeNum(self) -> int: 
+    def TypeNum(self,theTypeNum : int) -> None: 
         """
         Returns the assigned persistent type number
 
         Assigns a persistent type number to the object
         """
     @overload
-    def TypeNum(self,theTypeNum : int) -> None: ...
+    def TypeNum(self) -> int: ...
     def Write(self,theWriteData : OCP.StdObjMgt.StdObjMgt_WriteData) -> None: 
         """
         Write persistent data to a file.
@@ -227,14 +227,14 @@ class StdLPersistent_Document(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -274,14 +274,14 @@ class StdLPersistent_Document(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.S
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def TypeNum(self) -> int: 
+    def TypeNum(self,theTypeNum : int) -> None: 
         """
         Returns the assigned persistent type number
 
         Assigns a persistent type number to the object
         """
     @overload
-    def TypeNum(self,theTypeNum : int) -> None: ...
+    def TypeNum(self) -> int: ...
     def Write(self,theWriteData : OCP.StdObjMgt.StdObjMgt_WriteData) -> None: 
         """
         Read persistent data from a file.
@@ -360,14 +360,14 @@ class StdLPersistent_HArray1OfPersistent(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -382,13 +382,13 @@ class StdLPersistent_HArray1OfPersistent(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.StdObjMgt.StdObjMgt_Persistent) -> None: ...
     @overload
     def __init__(self,theOther : Any) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -436,14 +436,14 @@ class StdLPersistent_HArray2OfPersistent(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -460,9 +460,9 @@ class StdLPersistent_HArray2OfPersistent(OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.StdObjMgt.StdObjMgt_Persistent) -> None: ...
     @overload
-    def __init__(self,theOther : Any) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    @overload
+    def __init__(self,theOther : Any) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.XmlMDF
-import OCP.TDocStd
 import OCP.TCollection
+import OCP.PCDM
+import OCP.XmlMDF
+import OCP.Message
 import OCP.Storage
 import OCP.Standard
-import OCP.Message
-import OCP.PCDM
+import OCP.TDocStd
 import OCP.CDM
+import OCP.NCollection
 __all__  = [
 "XmlLDrivers",
 "XmlLDrivers_DocumentRetrievalDriver",
@@ -96,14 +96,14 @@ class XmlLDrivers_DocumentRetrievalDriver(OCP.PCDM.PCDM_RetrievalDriver, OCP.PCD
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -185,14 +185,14 @@ class XmlLDrivers_DocumentStorageDriver(OCP.PCDM.PCDM_StorageDriver, OCP.PCDM.PC
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -203,14 +203,14 @@ class XmlLDrivers_DocumentStorageDriver(OCP.PCDM.PCDM_StorageDriver, OCP.PCDM.PC
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -228,14 +228,14 @@ class XmlLDrivers_DocumentStorageDriver(OCP.PCDM.PCDM_StorageDriver, OCP.PCDM.PC
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString) -> None: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : Any) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : Any) -> None: ...
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString) -> None: ...
     def __init__(self,theCopyright : OCP.TCollection.TCollection_ExtendedString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -261,9 +261,9 @@ class XmlLDrivers_NamespaceDef():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,thePrefix : OCP.TCollection.TCollection_AsciiString,theURI : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class XmlLDrivers_SequenceOfNamespaceDef(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -320,14 +320,14 @@ class XmlLDrivers_SequenceOfNamespaceDef(OCP.NCollection.NCollection_BaseSequenc
     @overload
     def InsertAfter(self,theIndex : int,theItem : XmlLDrivers_NamespaceDef) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : XmlLDrivers_NamespaceDef) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : XmlLDrivers_SequenceOfNamespaceDef) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : XmlLDrivers_SequenceOfNamespaceDef) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : XmlLDrivers_NamespaceDef) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -354,14 +354,14 @@ class XmlLDrivers_SequenceOfNamespaceDef(OCP.NCollection.NCollection_BaseSequenc
     @overload
     def Prepend(self,theItem : XmlLDrivers_NamespaceDef) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -389,9 +389,9 @@ class XmlLDrivers_SequenceOfNamespaceDef(OCP.NCollection.NCollection_BaseSequenc
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : XmlLDrivers_SequenceOfNamespaceDef) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : XmlLDrivers_SequenceOfNamespaceDef) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

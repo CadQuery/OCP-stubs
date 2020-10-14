@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDocStd
 import OCP.TCollection
+import OCP.PCDM
+import OCP.BinLDrivers
+import OCP.Message
 import OCP.Storage
 import OCP.Standard
-import OCP.Message
-import OCP.BinMDF
-import OCP.BinLDrivers
-import OCP.PCDM
+import OCP.TDocStd
 import OCP.CDM
+import OCP.BinMDF
 __all__  = [
 "BinDrivers",
 "BinDrivers_DocumentRetrievalDriver",
@@ -100,14 +100,14 @@ class BinDrivers_DocumentRetrievalDriver(OCP.BinLDrivers.BinLDrivers_DocumentRet
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -200,14 +200,14 @@ class BinDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentStora
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -222,14 +222,14 @@ class BinDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentStora
         Return true if shape should be stored with triangles.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -285,6 +285,7 @@ class BinDrivers_Marker():
 
       BinDrivers_ENDLABEL
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

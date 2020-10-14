@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
+import OCP.TCollection
 import OCP.TColStd
 import OCP.Standard
-import OCP.TCollection
 __all__  = [
 "Expr",
 "Expr_GeneralExpression",
@@ -90,7 +90,7 @@ class Expr():
         """
     @staticmethod
     @overload
-    def NbOfFreeVariables_s(exp : Expr_GeneralRelation) -> int: 
+    def NbOfFreeVariables_s(exp : Expr_GeneralExpression) -> int: 
         """
         None
 
@@ -98,7 +98,7 @@ class Expr():
         """
     @staticmethod
     @overload
-    def NbOfFreeVariables_s(exp : Expr_GeneralExpression) -> int: ...
+    def NbOfFreeVariables_s(exp : Expr_GeneralRelation) -> int: ...
     @staticmethod
     def Sign_s(val : float) -> float: 
         """
@@ -159,14 +159,14 @@ class Expr_GeneralExpression(OCP.Standard.Standard_Transient):
         Tests if <me> and <Other> define the same expression. Warning: This method does not include any simplification before testing. It could also be very slow; to be used carefully.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -277,14 +277,14 @@ class Expr_UnaryExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transie
         Tests if <me> and <Other> define the same expression. Warning: This method does not include any simplification before testing. It could also be very slow; to be used carefully.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -405,14 +405,14 @@ class Expr_ArcSine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -534,14 +534,14 @@ class Expr_ArcTangent(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -663,14 +663,14 @@ class Expr_ArgCosh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -792,14 +792,14 @@ class Expr_ArgSinh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -921,14 +921,14 @@ class Expr_ArgTanh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1077,11 +1077,11 @@ class Expr_Array1OfGeneralExpression():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : Expr_GeneralExpression,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Expr_Array1OfGeneralExpression) -> None: ...
     @overload
-    def __init__(self,theBegin : Expr_GeneralExpression,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -1167,9 +1167,9 @@ class Expr_Array1OfNamedUnknown():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : Expr_Array1OfNamedUnknown) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Expr_Array1OfSingleRelation():
@@ -1249,9 +1249,9 @@ class Expr_Array1OfSingleRelation():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : Expr_SingleRelation,theLower : int,theUpper : int) -> None: ...
     @overload
@@ -1317,14 +1317,14 @@ class Expr_BinaryExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transi
         Tests if <me> and <Other> define the same expression. Warning: This method does not include any simplification before testing. It could also be very slow; to be used carefully.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1462,14 +1462,14 @@ class Expr_BinaryFunction(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Sta
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1595,14 +1595,14 @@ class Expr_Cosh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1724,14 +1724,14 @@ class Expr_Cosine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Sta
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1859,14 +1859,14 @@ class Expr_Difference(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Standar
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1975,14 +1975,14 @@ class Expr_GeneralRelation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2099,14 +2099,14 @@ class Expr_Division(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Standard.
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2216,14 +2216,14 @@ class Expr_SingleRelation(Expr_GeneralRelation, OCP.Standard.Standard_Transient)
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2346,14 +2346,14 @@ class Expr_Exponential(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standar
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2481,14 +2481,14 @@ class Expr_Exponentiate(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2592,14 +2592,14 @@ class Expr_GeneralFunction(OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: 
+    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: 
         """
         Returns Derivative of <me> for variable <var>.
 
         Returns Derivative of <me> for variable <var> with degree <deg>.
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: ...
+    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2625,14 +2625,14 @@ class Expr_GeneralFunction(OCP.Standard.Standard_Transient):
         Tests if <me> and <func> are similar functions (same name and same used expression).
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2719,14 +2719,14 @@ class Expr_Absolute(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.S
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2861,14 +2861,14 @@ class Expr_FunctionDerivative(Expr_GeneralFunction, OCP.Standard.Standard_Transi
         Tests if <me> and <func> are similar functions (same name and same used expression).
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2944,14 +2944,14 @@ class Expr_Different(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3059,14 +3059,14 @@ class Expr_GreaterThan(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3174,14 +3174,14 @@ class Expr_GreaterThanOrEqual(Expr_SingleRelation, Expr_GeneralRelation, OCP.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3322,14 +3322,14 @@ class Expr_LessThan(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3437,14 +3437,14 @@ class Expr_LessThanOrEqual(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3568,14 +3568,14 @@ class Expr_LogOf10(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3697,14 +3697,14 @@ class Expr_LogOfe(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Sta
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3862,11 +3862,11 @@ class Expr_MapOfNamedUnknown(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Expr_MapOfNamedUnknown) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Expr_NamedExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transient):
     """
@@ -3925,14 +3925,14 @@ class Expr_NamedExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transie
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4060,14 +4060,14 @@ class Expr_NamedConstant(Expr_NamedExpression, Expr_GeneralExpression, OCP.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4147,14 +4147,14 @@ class Expr_NamedFunction(Expr_GeneralFunction, OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: 
+    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: 
         """
         Returns Derivative of <me> for variable <var>.
 
         Returns Derivative of <me> for variable <var> with degree <deg>.
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: ...
+    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -4188,14 +4188,14 @@ class Expr_NamedFunction(Expr_GeneralFunction, OCP.Standard.Standard_Transient):
         Tests if <me> and <func> are similar functions (same name and same used expression).
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4318,14 +4318,14 @@ class Expr_NamedUnknown(Expr_NamedExpression, Expr_GeneralExpression, OCP.Standa
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4470,14 +4470,14 @@ class Expr_NumericValue(Expr_GeneralExpression, OCP.Standard.Standard_Transient)
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4593,14 +4593,14 @@ class Expr_PolyExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transien
         Tests if <me> and <Other> define the same expression. Warning: This method does not include any simplification before testing. It could also be very slow; to be used carefully.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4732,14 +4732,14 @@ class Expr_PolyFunction(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standar
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4865,14 +4865,14 @@ class Expr_Product(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standard.Sta
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4996,14 +4996,14 @@ class Expr_SequenceOfGeneralExpression(OCP.NCollection.NCollection_BaseSequence)
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Expr_SequenceOfGeneralExpression) -> None: 
+    def Append(self,theItem : Expr_GeneralExpression) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Expr_GeneralExpression) -> None: ...
+    def Append(self,theSeq : Expr_SequenceOfGeneralExpression) -> None: ...
     def Assign(self,theOther : Expr_SequenceOfGeneralExpression) -> Expr_SequenceOfGeneralExpression: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5067,23 +5067,23 @@ class Expr_SequenceOfGeneralExpression(OCP.NCollection.NCollection_BaseSequence)
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Expr_SequenceOfGeneralExpression) -> None: 
+    def Prepend(self,theItem : Expr_GeneralExpression) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Expr_GeneralExpression) -> None: ...
+    def Prepend(self,theSeq : Expr_SequenceOfGeneralExpression) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5109,9 +5109,9 @@ class Expr_SequenceOfGeneralExpression(OCP.NCollection.NCollection_BaseSequence)
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : Expr_SequenceOfGeneralExpression) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -5130,14 +5130,14 @@ class Expr_SequenceOfGeneralRelation(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Expr_GeneralRelation) -> None: 
+    def Append(self,theSeq : Expr_SequenceOfGeneralRelation) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Expr_SequenceOfGeneralRelation) -> None: ...
+    def Append(self,theItem : Expr_GeneralRelation) -> None: ...
     def Assign(self,theOther : Expr_SequenceOfGeneralRelation) -> Expr_SequenceOfGeneralRelation: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5176,14 +5176,14 @@ class Expr_SequenceOfGeneralRelation(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Expr_SequenceOfGeneralRelation) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Expr_SequenceOfGeneralRelation) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Expr_GeneralRelation) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Expr_GeneralRelation) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Expr_SequenceOfGeneralRelation) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5201,14 +5201,14 @@ class Expr_SequenceOfGeneralRelation(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Expr_GeneralRelation) -> None: 
+    def Prepend(self,theSeq : Expr_SequenceOfGeneralRelation) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Expr_SequenceOfGeneralRelation) -> None: ...
+    def Prepend(self,theItem : Expr_GeneralRelation) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -5243,9 +5243,9 @@ class Expr_SequenceOfGeneralRelation(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Expr_SequenceOfGeneralRelation) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -5305,14 +5305,14 @@ class Expr_Sign(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5434,14 +5434,14 @@ class Expr_Sine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5547,14 +5547,14 @@ class Expr_Equal(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5678,14 +5678,14 @@ class Expr_Sinh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5807,14 +5807,14 @@ class Expr_Square(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Sta
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5936,14 +5936,14 @@ class Expr_SquareRoot(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6065,14 +6065,14 @@ class Expr_Sum(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standard.Standar
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6137,9 +6137,9 @@ class Expr_Sum(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standard.Standar
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,exp1 : Expr_GeneralExpression,exp2 : Expr_GeneralExpression) -> None: ...
-    @overload
     def __init__(self,exps : Expr_SequenceOfGeneralExpression) -> None: ...
+    @overload
+    def __init__(self,exp1 : Expr_GeneralExpression,exp2 : Expr_GeneralExpression) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6185,14 +6185,14 @@ class Expr_SystemRelation(Expr_GeneralRelation, OCP.Standard.Standard_Transient)
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6308,14 +6308,14 @@ class Expr_Tangent(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6437,14 +6437,14 @@ class Expr_Tanh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6566,14 +6566,14 @@ class Expr_ArcCosine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6702,14 +6702,14 @@ class Expr_UnaryFunction(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6831,14 +6831,14 @@ class Expr_UnaryMinus(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6929,7 +6929,7 @@ class Expr_UnknownIterator():
     def __init__(self,exp : Expr_GeneralExpression) -> None: ...
     pass
 @overload
-def __add__(x : Expr_GeneralExpression,y : float) -> Expr_Sum:
+def __add__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Sum:
     """
     None
 
@@ -6941,25 +6941,25 @@ def __add__(x : Expr_GeneralExpression,y : float) -> Expr_Sum:
 def __add__(x : float,y : Expr_GeneralExpression) -> Expr_Sum:
     pass
 @overload
-def __add__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Sum:
+def __add__(x : Expr_GeneralExpression,y : float) -> Expr_Sum:
     pass
 @overload
+def __mul__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Product:
+    """
+    None
+
+    None
+
+    None
+    """
+@overload
 def __mul__(x : Expr_GeneralExpression,y : float) -> Expr_Product:
-    """
-    None
-
-    None
-
-    None
-    """
+    pass
 @overload
 def __mul__(x : float,y : Expr_GeneralExpression) -> Expr_Product:
     pass
 @overload
-def __mul__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Product:
-    pass
-@overload
-def __rmul__(x : Expr_GeneralExpression,y : float) -> Expr_Product:
+def __rmul__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Product:
     """
     None
 
@@ -6971,10 +6971,10 @@ def __rmul__(x : Expr_GeneralExpression,y : float) -> Expr_Product:
 def __rmul__(x : float,y : Expr_GeneralExpression) -> Expr_Product:
     pass
 @overload
-def __rmul__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Product:
+def __rmul__(x : Expr_GeneralExpression,y : float) -> Expr_Product:
     pass
 @overload
-def __sub__(x : Expr_GeneralExpression) -> Expr_UnaryMinus:
+def __sub__(x : float,y : Expr_GeneralExpression) -> Expr_Difference:
     """
     None
 
@@ -6984,14 +6984,14 @@ def __sub__(x : Expr_GeneralExpression) -> Expr_UnaryMinus:
 
     None
     """
-@overload
-def __sub__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Difference:
-    pass
 @overload
 def __sub__(x : Expr_GeneralExpression,y : float) -> Expr_Difference:
     pass
 @overload
-def __sub__(x : float,y : Expr_GeneralExpression) -> Expr_Difference:
+def __sub__(x : Expr_GeneralExpression) -> Expr_UnaryMinus:
+    pass
+@overload
+def __sub__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Difference:
     pass
 @overload
 def __truediv__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Division:

@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.XmlMDF
+import OCP.TDF
 import OCP.TCollection
 import OCP.TopAbs
-import OCP.XmlObjMgt
-import OCP.Standard
+import OCP.XmlMDF
 import OCP.Message
+import OCP.XmlObjMgt
 import OCP.TopTools
-import OCP.LDOM
+import OCP.Standard
 import OCP.TopoDS
-import OCP.TDF
+import OCP.LDOM
 __all__  = [
 "XmlMNaming",
 "XmlMNaming_NamedShapeDriver",
@@ -63,14 +63,14 @@ class XmlMNaming_NamedShapeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -85,14 +85,14 @@ class XmlMNaming_NamedShapeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         None
         """
     @overload
-    def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.XmlObjMgt.XmlObjMgt_Persistent,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
+    def Paste(self,theSource : OCP.XmlObjMgt.XmlObjMgt_Persistent,theTarget : OCP.TDF.TDF_Attribute,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,theSource : OCP.XmlObjMgt.XmlObjMgt_Persistent,theTarget : OCP.TDF.TDF_Attribute,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.XmlObjMgt.XmlObjMgt_Persistent,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
     def ReadShapeSection(self,anElement : OCP.LDOM.LDOM_Element) -> None: 
         """
         Input the shapes from DOM element
@@ -151,14 +151,14 @@ class XmlMNaming_NamingDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -240,7 +240,7 @@ class XmlMNaming_Shape1():
         None
         """
     @overload
-    def __init__(self,E : OCP.LDOM.LDOM_Element) -> None: ...
-    @overload
     def __init__(self,Doc : OCP.LDOM.LDOM_Document) -> None: ...
+    @overload
+    def __init__(self,E : OCP.LDOM.LDOM_Element) -> None: ...
     pass

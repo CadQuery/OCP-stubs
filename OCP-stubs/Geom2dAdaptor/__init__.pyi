@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor2d
+import OCP.GeomAbs
+import OCP.TColStd
 import OCP.Geom2d
 import OCP.Standard
+import OCP.Adaptor2d
 import OCP.gp
-import OCP.TColStd
-import OCP.GeomAbs
 __all__  = [
 "Geom2dAdaptor",
 "Geom2dAdaptor_Curve",
@@ -177,11 +177,11 @@ class Geom2dAdaptor_Curve(OCP.Adaptor2d.Adaptor2d_Curve2d):
         Computes the point of parameter U on the curve
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def __init__(self,C : OCP.Geom2d.Geom2d_Curve,UFirst : float,ULast : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Geom2dAdaptor_GHCurve(OCP.Adaptor2d.Adaptor2d_HCurve2d, OCP.Standard.Standard_Transient):
     def BSpline(self) -> OCP.Geom2d.Geom2d_BSplineCurve: 
@@ -309,14 +309,14 @@ class Geom2dAdaptor_GHCurve(OCP.Adaptor2d.Adaptor2d_HCurve2d, OCP.Standard.Stand
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -550,14 +550,14 @@ class Geom2dAdaptor_HCurve(Geom2dAdaptor_GHCurve, OCP.Adaptor2d.Adaptor2d_HCurve
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -648,13 +648,13 @@ class Geom2dAdaptor_HCurve(Geom2dAdaptor_GHCurve, OCP.Adaptor2d.Adaptor2d_HCurve
         None
         """
     @overload
-    def __init__(self,S : OCP.Geom2d.Geom2d_Curve,UFirst : float,ULast : float) -> None: ...
-    @overload
     def __init__(self,AS : Geom2dAdaptor_Curve) -> None: ...
+    @overload
+    def __init__(self,S : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,S : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    def __init__(self,S : OCP.Geom2d.Geom2d_Curve,UFirst : float,ULast : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

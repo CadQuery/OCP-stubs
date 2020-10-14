@@ -82,13 +82,13 @@ class TopTrans_Array2OfOrientation():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.TopAbs.TopAbs_Orientation,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopTrans_Array2OfOrientation) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : OCP.TopAbs.TopAbs_Orientation,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class TopTrans_CurveTransition():
     """
@@ -141,14 +141,14 @@ class TopTrans_SurfaceTransition():
         None
         """
     @overload
-    def Reset(self,Tgt : OCP.gp.gp_Dir,Norm : OCP.gp.gp_Dir) -> None: 
+    def Reset(self,Tgt : OCP.gp.gp_Dir,Norm : OCP.gp.gp_Dir,MaxD : OCP.gp.gp_Dir,MinD : OCP.gp.gp_Dir,MaxCurv : float,MinCurv : float) -> None: 
         """
         Initialize a Surface Transition with the local description of the intersection curve and of the reference surface. PREQUESITORY : Norm oriented OUTSIDE "geometric matter"
 
         Initialize a Surface Transition with the local description of a straight line.
         """
     @overload
-    def Reset(self,Tgt : OCP.gp.gp_Dir,Norm : OCP.gp.gp_Dir,MaxD : OCP.gp.gp_Dir,MinD : OCP.gp.gp_Dir,MaxCurv : float,MinCurv : float) -> None: ...
+    def Reset(self,Tgt : OCP.gp.gp_Dir,Norm : OCP.gp.gp_Dir) -> None: ...
     def StateAfter(self) -> OCP.TopAbs.TopAbs_State: 
         """
         Returns the state of the reference surface after interference, this is the position relative to the surface of a point very close to the intersection on the positive side of the tangent.

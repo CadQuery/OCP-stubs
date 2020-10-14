@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
 import OCP.TCollection
-import OCP.TopoDS
-import OCP.Standard
-import OCP.Graphic3d
 import OCP.TColStd
+import OCP.Graphic3d
 import OCP.Image
+import OCP.Standard
+import OCP.TopoDS
+import OCP.NCollection
 __all__  = [
 "Font_BRepTextBuilder",
 "Font_FTFont",
@@ -50,7 +50,7 @@ class Font_BRepTextBuilder():
     Represents class for applying text formatting.
     """
     @overload
-    def Perform(self,Fontpath : str,Fontsize : float,Fontstyle : Font_FontAspect,Text : str) -> OCP.TopoDS.TopoDS_Shape: 
+    def Perform(self,theFont : Font_BRepFont,theString : OCP.NCollection.NCollection_Utf8String,thePenLoc : OCP.gp.gp_Ax3=OCP.gp.gp_Ax3,theHAlign : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment=Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT,theVAlign : OCP.Graphic3d.Graphic3d_VerticalTextAlignment=Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Render text as BRep shape.
 
@@ -61,7 +61,7 @@ class Font_BRepTextBuilder():
     @overload
     def Perform(self,theFont : Font_BRepFont,theFormatter : Font_TextFormatter,thePenLoc : OCP.gp.gp_Ax3=OCP.gp.gp_Ax3) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def Perform(self,theFont : Font_BRepFont,theString : OCP.NCollection.NCollection_Utf8String,thePenLoc : OCP.gp.gp_Ax3=OCP.gp.gp_Ax3,theHAlign : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment=Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT,theVAlign : OCP.Graphic3d.Graphic3d_VerticalTextAlignment=Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Perform(self,Fontpath : str,Fontsize : float,Fontstyle : Font_FontAspect,Text : str) -> OCP.TopoDS.TopoDS_Shape: ...
     def __init__(self) -> None: ...
     pass
 class Font_FTFont(OCP.Standard.Standard_Transient):
@@ -154,7 +154,7 @@ class Font_FTFont(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theFontPath : OCP.TCollection.TCollection_AsciiString,theParams : Font_FTFontParams) -> bool: 
+    def Init(self,theFontName : OCP.NCollection.NCollection_Utf8String,theFontAspect : Font_FontAspect,thePointSize : int,theResolution : int) -> bool: 
         """
         Initialize the font from the given file path.
 
@@ -165,11 +165,11 @@ class Font_FTFont(OCP.Standard.Standard_Transient):
         Initialize the font.
         """
     @overload
-    def Init(self,theFontPath : OCP.NCollection.NCollection_Utf8String,thePointSize : int,theResolution : int) -> bool: ...
-    @overload
     def Init(self,theData : OCP.NCollection.NCollection_Buffer,theFileName : OCP.TCollection.TCollection_AsciiString,theParams : Font_FTFontParams) -> bool: ...
     @overload
-    def Init(self,theFontName : OCP.NCollection.NCollection_Utf8String,theFontAspect : Font_FontAspect,thePointSize : int,theResolution : int) -> bool: ...
+    def Init(self,theFontPath : OCP.NCollection.NCollection_Utf8String,thePointSize : int,theResolution : int) -> bool: ...
+    @overload
+    def Init(self,theFontPath : OCP.TCollection.TCollection_AsciiString,theParams : Font_FTFontParams) -> bool: ...
     @staticmethod
     def IsCharFromArabic_s(theUChar : str) -> bool: 
         """
@@ -201,14 +201,14 @@ class Font_FTFont(OCP.Standard.Standard_Transient):
         Return TRUE if specified character should be displayed in Right-to-Left order.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -283,9 +283,9 @@ class Font_FTFontParams():
     Font initialization parameters.
     """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,thePointSize : int,theResolution : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Font_FTLibrary(OCP.Standard.Standard_Transient):
     """
@@ -316,14 +316,14 @@ class Font_FTLibrary(OCP.Standard.Standard_Transient):
         Access FT_Library instance.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -379,6 +379,7 @@ class Font_FontAspect():
 
       Font_FA_BoldItalic
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -474,14 +475,14 @@ class Font_FontMgr(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -616,11 +617,11 @@ class Font_NListOfSystemFont(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theOther : Font_NListOfSystemFont) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : Font_NListOfSystemFont) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Font_Rect():
@@ -670,6 +671,7 @@ class Font_StrictLevel():
 
       Font_StrictLevel_Any
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -744,14 +746,14 @@ class Font_SystemFont(OCP.Standard.Standard_Transient):
         Matching two instances, for Map interface.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -850,6 +852,7 @@ class Font_UnicodeSubset():
 
       Font_UnicodeSubset_Arabic
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

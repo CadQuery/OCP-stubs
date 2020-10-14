@@ -74,14 +74,14 @@ class NCollection_BaseAllocator(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -154,14 +154,14 @@ class NCollection_AlignedAllocator(NCollection_BaseAllocator, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -235,14 +235,14 @@ class NCollection_AccAllocator(NCollection_BaseAllocator, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -403,14 +403,14 @@ class NCollection_Buffer(OCP.Standard.Standard_Transient):
         Returns true if buffer is not allocated
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -454,6 +454,7 @@ class NCollection_CellFilter_Action():
 
       CellFilter_Purge
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -541,14 +542,14 @@ class NCollection_HeapAllocator(NCollection_BaseAllocator, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -625,14 +626,14 @@ class NCollection_IncAllocator(NCollection_BaseAllocator, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -710,9 +711,9 @@ class NCollection_StdAllocator_void():
         Returns an underlying NCollection_BaseAllocator instance. Returns an object specified in the constructor.
         """
     @overload
-    def __init__(self,theAlloc : NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,X : NCollection_StdAllocator_void) -> None: ...
+    @overload
+    def __init__(self,theAlloc : NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -868,9 +869,9 @@ class NCollection_Utf16String():
         Join strings.
         """
     @overload
-    def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
-    @overload
     def __init__(self,theCopy : NCollection_Utf16String) -> None: ...
+    @overload
+    def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
     @overload
@@ -921,14 +922,14 @@ class NCollection_Utf32Iter():
         Fill the UTF-32 buffer within current Unicode symbol. Use method AdvanceUtf32() to allocate buffer with enough size.
         """
     @overload
-    def GetUtf8(self,theBuffer : int) -> int: 
+    def GetUtf8(self,theBuffer : str) -> str: 
         """
         Fill the UTF-8 buffer within current Unicode symbol. Use method AdvanceUtf8() to allocate buffer with enough size.
 
         None
         """
     @overload
-    def GetUtf8(self,theBuffer : str) -> str: ...
+    def GetUtf8(self,theBuffer : int) -> int: ...
     def Index(self) -> int: 
         """
         Returns the index displacement from iterator intialization (first symbol has index 0)
@@ -1032,17 +1033,17 @@ class NCollection_Utf32String():
         Join strings.
         """
     @overload
-    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
-    @overload
-    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
-    @overload
-    def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
-    @overload
     def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self,theCopy : NCollection_Utf32String) -> None: ...
     @overload
+    def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
+    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
     pass
 class NCollection_Utf8Iter():
     """
@@ -1085,14 +1086,14 @@ class NCollection_Utf8Iter():
         Fill the UTF-32 buffer within current Unicode symbol. Use method AdvanceUtf32() to allocate buffer with enough size.
         """
     @overload
-    def GetUtf8(self,theBuffer : int) -> int: 
+    def GetUtf8(self,theBuffer : str) -> str: 
         """
         Fill the UTF-8 buffer within current Unicode symbol. Use method AdvanceUtf8() to allocate buffer with enough size.
 
         None
         """
     @overload
-    def GetUtf8(self,theBuffer : str) -> str: ...
+    def GetUtf8(self,theBuffer : int) -> int: ...
     def Index(self) -> int: 
         """
         Returns the index displacement from iterator intialization (first symbol has index 0)
@@ -1196,17 +1197,17 @@ class NCollection_Utf8String():
         Join strings.
         """
     @overload
-    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
+    def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self,theCopy : NCollection_Utf8String) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
-    @overload
-    def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
+    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
     pass
 class NCollection_UtfStringTool():
     """
@@ -1375,17 +1376,17 @@ class NCollection_UtfWideString():
         Join strings.
         """
     @overload
-    def __init__(self,theCopy : NCollection_UtfWideString) -> None: ...
-    @overload
     def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
+    def __init__(self,theCopy : NCollection_UtfWideString) -> None: ...
     @overload
     def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
     pass
 class NCollection_WinHeapAllocator(NCollection_BaseAllocator, OCP.Standard.Standard_Transient):
     """
@@ -1425,14 +1426,14 @@ class NCollection_WinHeapAllocator(NCollection_BaseAllocator, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

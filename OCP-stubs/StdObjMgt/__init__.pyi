@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDocStd
+import OCP.TDF
 import OCP.TCollection
 import OCP.Storage
 import OCP.Standard
-import OCP.TDF
+import OCP.TDocStd
 __all__  = [
 "StdObjMgt_MapOfInstantiators",
 "StdObjMgt_Persistent",
@@ -71,14 +71,14 @@ class StdObjMgt_Persistent(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -105,14 +105,14 @@ class StdObjMgt_Persistent(OCP.Standard.Standard_Transient):
         Read persistent data from a file.
         """
     @overload
-    def RefNum(self,theRefNum : int) -> None: 
+    def RefNum(self) -> int: 
         """
         Returns the object reference number
 
         Sets an object reference number
         """
     @overload
-    def RefNum(self) -> int: ...
+    def RefNum(self,theRefNum : int) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

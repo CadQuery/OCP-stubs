@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
+import OCP.TCollection
 import OCP.TColStd
 import OCP.Standard
-import OCP.TCollection
 __all__  = [
 "Storage",
 "Storage_ArrayOfCallBack",
@@ -148,13 +148,13 @@ class Storage_ArrayOfCallBack():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : Storage_CallBack,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Storage_ArrayOfCallBack) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Storage_ArrayOfSchema():
@@ -234,13 +234,13 @@ class Storage_ArrayOfSchema():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : Storage_Schema,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Storage_ArrayOfSchema) -> None: ...
     @overload
-    def __init__(self,theBegin : Storage_Schema,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Storage_BaseDriver():
@@ -594,14 +594,14 @@ class Storage_CallBack(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -643,14 +643,14 @@ class Storage_Data(OCP.Standard.Standard_Transient):
     A picture memorizing the data stored in a container (for example, in a file). A Storage_Data object represents either: - persistent data to be written into a container, or - persistent data which are read from a container. A Storage_Data object is used in both the storage and retrieval operations: - Storage mechanism: create an empty Storage_Data object, then add successively persistent objects (roots) to be stored using the function AddRoot. When the set of data is complete, write it to a container using the function Write in your Storage_Schema storage/retrieval algorithm. - Retrieval mechanism: a Storage_Data object is returned by the Read function from your Storage_Schema storage/retrieval algorithm. Use the functions NumberOfRoots and Roots to find the roots which were stored in the read container. The roots of a Storage_Data object may share references on objects. The shared internal references of a Storage_Data object are maintained by the storage/retrieval mechanism. Note: References shared by objects which are contained in two distinct Storage_Data objects are not maintained by the storage/retrieval mechanism: external references are not supported by Storage_Schema algorithmA picture memorizing the data stored in a container (for example, in a file). A Storage_Data object represents either: - persistent data to be written into a container, or - persistent data which are read from a container. A Storage_Data object is used in both the storage and retrieval operations: - Storage mechanism: create an empty Storage_Data object, then add successively persistent objects (roots) to be stored using the function AddRoot. When the set of data is complete, write it to a container using the function Write in your Storage_Schema storage/retrieval algorithm. - Retrieval mechanism: a Storage_Data object is returned by the Read function from your Storage_Schema storage/retrieval algorithm. Use the functions NumberOfRoots and Roots to find the roots which were stored in the read container. The roots of a Storage_Data object may share references on objects. The shared internal references of a Storage_Data object are maintained by the storage/retrieval mechanism. Note: References shared by objects which are contained in two distinct Storage_Data objects are not maintained by the storage/retrieval mechanism: external references are not supported by Storage_Schema algorithmA picture memorizing the data stored in a container (for example, in a file). A Storage_Data object represents either: - persistent data to be written into a container, or - persistent data which are read from a container. A Storage_Data object is used in both the storage and retrieval operations: - Storage mechanism: create an empty Storage_Data object, then add successively persistent objects (roots) to be stored using the function AddRoot. When the set of data is complete, write it to a container using the function Write in your Storage_Schema storage/retrieval algorithm. - Retrieval mechanism: a Storage_Data object is returned by the Read function from your Storage_Schema storage/retrieval algorithm. Use the functions NumberOfRoots and Roots to find the roots which were stored in the read container. The roots of a Storage_Data object may share references on objects. The shared internal references of a Storage_Data object are maintained by the storage/retrieval mechanism. Note: References shared by objects which are contained in two distinct Storage_Data objects are not maintained by the storage/retrieval mechanism: external references are not supported by Storage_Schema algorithm
     """
     @overload
-    def AddRoot(self,anObject : OCP.Standard.Standard_Persistent) -> None: 
+    def AddRoot(self,aName : OCP.TCollection.TCollection_AsciiString,anObject : OCP.Standard.Standard_Persistent) -> None: 
         """
         add a persistent root to write. the name of the root is a driver reference number.
 
         Adds the root anObject to this set of data. The name of the root is aName if given; if not, it will be a reference number assigned by the driver when writing the set of data into the container. When naming the roots, it is easier to retrieve objects by significant references rather than by references without any semantic values.
         """
     @overload
-    def AddRoot(self,aName : OCP.TCollection.TCollection_AsciiString,anObject : OCP.Standard.Standard_Persistent) -> None: ...
+    def AddRoot(self,anObject : OCP.Standard.Standard_Persistent) -> None: ...
     def AddToComments(self,aComment : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         add <theUserInfo> to the user informations
@@ -728,14 +728,14 @@ class Storage_Data(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -855,14 +855,14 @@ class Storage_DefaultCallBack(Storage_CallBack, OCP.Standard.Standard_Transient)
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -934,6 +934,7 @@ class Storage_Error():
 
       Storage_VSWrongFileDriver
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1026,14 +1027,14 @@ class Storage_HArrayOfCallBack(Storage_ArrayOfCallBack, OCP.Standard.Standard_Tr
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1084,13 +1085,13 @@ class Storage_HArrayOfCallBack(Storage_ArrayOfCallBack, OCP.Standard.Standard_Tr
         Constant value access
         """
     @overload
-    def __init__(self,theOther : Storage_ArrayOfCallBack) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : Storage_CallBack) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Storage_ArrayOfCallBack) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1169,14 +1170,14 @@ class Storage_HArrayOfSchema(Storage_ArrayOfSchema, OCP.Standard.Standard_Transi
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1231,9 +1232,9 @@ class Storage_HArrayOfSchema(Storage_ArrayOfSchema, OCP.Standard.Standard_Transi
     @overload
     def __init__(self,theOther : Storage_ArrayOfSchema) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : Storage_Schema) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : Storage_Schema) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1323,13 +1324,13 @@ class Storage_PArray():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : OCP.Standard.Standard_Persistent,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Storage_PArray) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : OCP.Standard.Standard_Persistent,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
@@ -1378,14 +1379,14 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Storage_Root) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : Storage_Root) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: 
         """
@@ -1421,14 +1422,14 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : Storage_SeqOfRoot) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1456,9 +1457,9 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : Storage_SeqOfRoot) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1528,14 +1529,14 @@ class Storage_HeaderData(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1643,14 +1644,14 @@ class Storage_InternalData(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1694,6 +1695,7 @@ class Storage_OpenMode():
 
       Storage_VSReadWrite
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1776,14 +1778,14 @@ class Storage_HPArray(Storage_PArray, OCP.Standard.Standard_Transient):
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1834,13 +1836,13 @@ class Storage_HPArray(Storage_PArray, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Storage_PArray) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.Standard.Standard_Persistent) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : Storage_PArray) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.Standard.Standard_Persistent) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1907,14 +1909,14 @@ class Storage_PType(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString,theValue : int) -> bool: 
+    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString) -> int: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString) -> int: ...
+    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString,theValue : int) -> bool: ...
     def FindIndex(self,theKey1 : OCP.TCollection.TCollection_AsciiString) -> int: 
         """
         FindIndex
@@ -1968,11 +1970,11 @@ class Storage_PType(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : Storage_PType) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Storage_Root(OCP.Standard.Standard_Transient):
@@ -2000,14 +2002,14 @@ class Storage_Root(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2054,11 +2056,11 @@ class Storage_Root(OCP.Standard.Standard_Transient):
         Returns the name of this root type.
         """
     @overload
-    def __init__(self,theName : OCP.TCollection.TCollection_AsciiString,theObject : OCP.Standard.Standard_Persistent) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theName : OCP.TCollection.TCollection_AsciiString,theRef : int,theType : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theName : OCP.TCollection.TCollection_AsciiString,theObject : OCP.Standard.Standard_Persistent) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2112,14 +2114,14 @@ class Storage_RootData(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2228,14 +2230,14 @@ class Storage_Schema(OCP.Standard.Standard_Transient):
         returns a list of type name with installed callback.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2294,23 +2296,23 @@ class Storage_Schema(OCP.Standard.Standard_Transient):
         Writes the data aggregated in aData into the container defined by the driver s. The storage operation is performed according to the data schema with which this algorithm is working. Note: aData may aggregate several root objects to be stored together.
         """
     @overload
-    def WritePersistentObjectHeader(self,sp : OCP.Standard.Standard_Persistent,s : Storage_BaseDriver) -> None: 
+    def WritePersistentObjectHeader(self,sp : OCP.Standard.Standard_Persistent,f : Storage_BaseDriver) -> None: 
         """
         None
 
         None
         """
     @overload
-    def WritePersistentObjectHeader(self,sp : OCP.Standard.Standard_Persistent,f : Storage_BaseDriver) -> None: ...
+    def WritePersistentObjectHeader(self,sp : OCP.Standard.Standard_Persistent,s : Storage_BaseDriver) -> None: ...
     @overload
-    def WritePersistentReference(self,sp : OCP.Standard.Standard_Persistent,f : Storage_BaseDriver) -> None: 
+    def WritePersistentReference(self,sp : OCP.Standard.Standard_Persistent,s : Storage_BaseDriver) -> None: 
         """
         None
 
         None
         """
     @overload
-    def WritePersistentReference(self,sp : OCP.Standard.Standard_Persistent,s : Storage_BaseDriver) -> None: ...
+    def WritePersistentReference(self,sp : OCP.Standard.Standard_Persistent,f : Storage_BaseDriver) -> None: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2329,14 +2331,14 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Storage_Root) -> None: 
+    def Append(self,theSequence : Storage_SeqOfRoot) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : Storage_SeqOfRoot) -> None: ...
+    def Append(self,theItem : Storage_Root) -> None: ...
     def Assign(self,theOther : Storage_SeqOfRoot) -> Storage_SeqOfRoot: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2390,14 +2392,14 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Storage_Root) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : Storage_Root) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: 
         """
@@ -2412,14 +2414,14 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2451,14 +2453,14 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
     @overload
     def Prepend(self,theSeq : Storage_SeqOfRoot) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2492,9 +2494,9 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Storage_SeqOfRoot) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2524,6 +2526,7 @@ class Storage_SolveMode():
 
       Storage_ReadSolve
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2625,14 +2628,14 @@ class Storage_TypeData(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2713,14 +2716,14 @@ class Storage_TypedCallBack(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

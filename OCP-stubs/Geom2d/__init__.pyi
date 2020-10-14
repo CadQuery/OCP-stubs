@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.GeomAbs
+import OCP.TColStd
+import OCP.TColgp
 import OCP.Standard
 import OCP.gp
-import OCP.TColgp
-import OCP.TColStd
-import OCP.GeomAbs
 __all__  = [
 "Geom2d_Geometry",
 "Geom2d_Curve",
@@ -62,14 +62,14 @@ class Geom2d_Geometry(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -219,14 +219,14 @@ class Geom2d_Curve(Geom2d_Geometry, OCP.Standard.Standard_Transient):
         Returns true if the curve is closed. Examples : Some curves such as circle are always closed, others such as line are never closed (by definition). Some Curves such as OffsetCurve can be closed or not. These curves are considered as closed if the distance between the first point and the last point of the curve is lower or equal to the Resolution from package gp wich is a fixed criterion independant of the application.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -416,14 +416,14 @@ class Geom2d_BoundedCurve(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_T
         Returns true if the curve is closed. Examples : Some curves such as circle are always closed, others such as line are never closed (by definition). Some Curves such as OffsetCurve can be closed or not. These curves are considered as closed if the distance between the first point and the last point of the curve is lower or equal to the Resolution from package gp wich is a fixed criterion independant of the application.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -662,14 +662,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Check if curve has at least G1 continuity in interval [theTf, theTl] Returns true if IsCN(1) or angle betweem "left" and "right" first derivatives at knots with C0 continuity is less then theAngTol only knots in interval [theTf, theTl] is checked
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -705,14 +705,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
     @overload
     def KnotSequence(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def Knots(self) -> OCP.TColStd.TColStd_Array1OfReal: 
+    def Knots(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         returns the knot values of the B-spline curve;
 
         returns the knot values of the B-spline curve;
         """
     @overload
-    def Knots(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Knots(self) -> OCP.TColStd.TColStd_Array1OfReal: ...
     def LastParameter(self) -> float: 
         """
         Computes the parametric value of the end point of the curve. It is a knot value.
@@ -781,14 +781,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Move a point with parameter U to P. and makes it tangent at U be Tangent. StartingCondition = -1 means first can move EndingCondition = -1 means last point can move StartingCondition = 0 means the first point cannot move EndingCondition = 0 means the last point cannot move StartingCondition = 1 means the first point and tangent cannot move EndingCondition = 1 means the last point and tangent cannot move and so forth ErrorStatus != 0 means that there are not enought degree of freedom with the constrain to deform the curve accordingly
         """
     @overload
-    def Multiplicities(self) -> OCP.TColStd.TColStd_Array1OfInteger: 
+    def Multiplicities(self,M : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
         Returns the multiplicity of the knots of the curve.
 
         returns the multiplicity of the knots of the curve.
         """
     @overload
-    def Multiplicities(self,M : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
+    def Multiplicities(self) -> OCP.TColStd.TColStd_Array1OfInteger: ...
     def Multiplicity(self,Index : int) -> int: 
         """
         Returns the multiplicity of the knots of range Index. Raised if Index < 1 or Index > NbKnots
@@ -818,14 +818,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Returns the pole of range Index. Raised if Index < 1 or Index > NbPoles.
         """
     @overload
-    def Poles(self) -> OCP.TColgp.TColgp_Array1OfPnt2d: 
+    def Poles(self,P : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
         """
         Returns the poles of the B-spline curve;
 
         Returns the poles of the B-spline curve;
         """
     @overload
-    def Poles(self,P : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    def Poles(self) -> OCP.TColgp.TColgp_Array1OfPnt2d: ...
     def RemoveKnot(self,Index : int,M : int,Tolerance : float) -> bool: 
         """
         Reduces the multiplicity of the knot of index Index to M. If M is equal to 0, the knot is removed. With a modification of this type, the array of poles is also modified. Two different algorithms are systematically used to compute the new poles of the curve. If, for each pole, the distance between the pole calculated using the first algorithm and the same pole calculated using the second algorithm, is less than Tolerance, this ensures that the curve is not modified by more than Tolerance. Under these conditions, true is returned; otherwise, false is returned. A low tolerance is used to prevent modification of the curve. A high tolerance is used to "smooth" the curve. Exceptions Standard_OutOfRange if Index is outside the bounds of the knots table.
@@ -871,14 +871,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Modifies this BSpline curve by segmenting it between U1 and U2. Either of these values can be outside the bounds of the curve, but U2 must be greater than U1. All data structure tables of this BSpline curve are modified, but the knots located between U1 and U2 are retained. The degree of the curve is not modified.
         """
     @overload
-    def SetKnot(self,Index : int,K : float,M : int) -> None: 
+    def SetKnot(self,Index : int,K : float) -> None: 
         """
         Modifies this BSpline curve by assigning the value K to the knot of index Index in the knots table. This is a relatively local modification because K must be such that: Knots(Index - 1) < K < Knots(Index + 1) Exceptions Standard_ConstructionError if: - K is not such that: Knots(Index - 1) < K < Knots(Index + 1) - M is greater than the degree of this BSpline curve or lower than the previous multiplicity of knot of index Index in the knots table. Standard_OutOfRange if Index is outside the bounds of the knots table.
 
         Modifies this BSpline curve by assigning the value K to the knot of index Index in the knots table. This is a relatively local modification because K must be such that: Knots(Index - 1) < K < Knots(Index + 1) The second syntax allows you also to increase the multiplicity of the knot to M (but it is not possible to decrease the multiplicity of the knot with this function). Exceptions Standard_ConstructionError if: - K is not such that: Knots(Index - 1) < K < Knots(Index + 1) - M is greater than the degree of this BSpline curve or lower than the previous multiplicity of knot of index Index in the knots table. Standard_OutOfRange if Index is outside the bounds of the knots table.
         """
     @overload
-    def SetKnot(self,Index : int,K : float) -> None: ...
+    def SetKnot(self,Index : int,K : float,M : int) -> None: ...
     def SetKnots(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Modifies this BSpline curve by assigning the array K to its knots table. The multiplicity of the knots is not modified. Exceptions Standard_ConstructionError if the values in the array K are not in ascending order. Standard_OutOfRange if the bounds of the array K are not respectively 1 and the number of knots of this BSpline curve.
@@ -955,14 +955,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Returns the weight of the pole of range Index . Raised if Index < 1 or Index > NbPoles.
         """
     @overload
-    def Weights(self) -> OCP.TColStd.TColStd_Array1OfReal: 
+    def Weights(self,W : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Returns the weights of the B-spline curve;
 
         Returns the weights of the B-spline curve;
         """
     @overload
-    def Weights(self,W : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Weights(self) -> OCP.TColStd.TColStd_Array1OfReal: ...
     @overload
     def __init__(self,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Multiplicities : OCP.TColStd.TColStd_Array1OfInteger,Degree : int,Periodic : bool=False) -> None: ...
     @overload
@@ -1015,14 +1015,14 @@ class Geom2d_Point(Geom2d_Geometry, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1192,14 +1192,14 @@ class Geom2d_Conic(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_Transien
         Returns true if the curve is closed. Examples : Some curves such as circle are always closed, others such as line are never closed (by definition). Some Curves such as OffsetCurve can be closed or not. These curves are considered as closed if the distance between the first point and the last point of the curve is lower or equal to the Resolution from package gp wich is a fixed criterion independant of the application.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1425,14 +1425,14 @@ class Geom2d_Circle(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.St
         returns True.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1688,14 +1688,14 @@ class Geom2d_BezierCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OCP
         Returns True if the distance between the first point and the last point of the curve is lower or equal to the Resolution from package gp.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1806,14 +1806,14 @@ class Geom2d_BezierCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OCP
         Segments the curve between U1 and U2 which can be out of the bounds of the curve. The curve is oriented from U1 to U2. The control points are modified, the first and the last point are not the same but the parametrization range is [0, 1] else it could not be a Bezier curve. Warnings : Even if <me> is not closed it can become closed after the segmentation for example if U1 or U2 are out of the bounds of the curve <me> or if the curve makes loop. After the segmentation the length of a curve can be null.
         """
     @overload
-    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d,Weight : float) -> None: 
+    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d) -> None: 
         """
         Substitutes the pole of range index with P. If the curve <me> is rational the weight of range Index is not modified. raiseD if Index is not in the range [1, NbPoles]
 
         Substitutes the pole and the weights of range Index. If the curve <me> is not rational it can become rational if all the weights are not identical. If the curve was rational it can become non rational if all the weights are identical. Raised if Index is not in the range [1, NbPoles] Raised if Weight <= Resolution from package gp
         """
     @overload
-    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d) -> None: ...
+    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d,Weight : float) -> None: ...
     def SetWeight(self,Index : int,Weight : float) -> None: 
         """
         Changes the weight of the pole of range Index. If the curve <me> is not rational it can become rational if all the weights are not identical. If the curve was rational it can become non rational if all the weights are identical. Raised if Index is not in the range [1, NbPoles] Raised if Weight <= Resolution from package gp
@@ -1865,18 +1865,18 @@ class Geom2d_BezierCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OCP
         Returns the weight of range Index. Raised if Index is not in the range [1, NbPoles]
         """
     @overload
-    def Weights(self) -> OCP.TColStd.TColStd_Array1OfReal: 
+    def Weights(self,W : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Returns all the weights of the curve.
 
         Returns all the weights of the curve.
         """
     @overload
-    def Weights(self,W : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @overload
-    def __init__(self,CurvePoles : OCP.TColgp.TColgp_Array1OfPnt2d,PoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Weights(self) -> OCP.TColStd.TColStd_Array1OfReal: ...
     @overload
     def __init__(self,CurvePoles : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    @overload
+    def __init__(self,CurvePoles : OCP.TColgp.TColgp_Array1OfPnt2d,PoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1933,14 +1933,14 @@ class Geom2d_Vector(Geom2d_Geometry, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2146,14 +2146,14 @@ class Geom2d_Ellipse(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.S
         return True.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2320,9 +2320,9 @@ class Geom2d_Ellipse(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.S
         Returns the "YAxis" of the conic. The "YAxis" is perpendicular to the "Xaxis".
         """
     @overload
-    def __init__(self,E : OCP.gp.gp_Elips2d) -> None: ...
-    @overload
     def __init__(self,Axis : OCP.gp.gp_Ax22d,MajorRadius : float,MinorRadius : float) -> None: ...
+    @overload
+    def __init__(self,E : OCP.gp.gp_Elips2d) -> None: ...
     @overload
     def __init__(self,MajorAxis : OCP.gp.gp_Ax2d,MajorRadius : float,MinorRadius : float,Sense : bool=True) -> None: ...
     @staticmethod
@@ -2377,14 +2377,14 @@ class Geom2d_AxisPlacement(Geom2d_Geometry, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2483,9 +2483,9 @@ class Geom2d_AxisPlacement(Geom2d_Geometry, OCP.Standard.Standard_Transient):
     @overload
     def Translated(self,V : OCP.gp.gp_Vec2d) -> Geom2d_Geometry: ...
     @overload
-    def __init__(self,A : OCP.gp.gp_Ax2d) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,V : OCP.gp.gp_Dir2d) -> None: ...
+    @overload
+    def __init__(self,A : OCP.gp.gp_Ax2d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2606,14 +2606,14 @@ class Geom2d_Hyperbola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard
         Returns False.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2784,11 +2784,11 @@ class Geom2d_Hyperbola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard
         Returns the "YAxis" of the conic. The "YAxis" is perpendicular to the "Xaxis".
         """
     @overload
+    def __init__(self,Axis : OCP.gp.gp_Ax22d,MajorRadius : float,MinorRadius : float) -> None: ...
+    @overload
     def __init__(self,MajorAxis : OCP.gp.gp_Ax2d,MajorRadius : float,MinorRadius : float,Sense : bool=True) -> None: ...
     @overload
     def __init__(self,H : OCP.gp.gp_Hypr2d) -> None: ...
-    @overload
-    def __init__(self,Axis : OCP.gp.gp_Ax22d,MajorRadius : float,MinorRadius : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2873,14 +2873,14 @@ class Geom2d_Line(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_Transient
         Returns False
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3108,14 +3108,14 @@ class Geom2d_OffsetCurve(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_Tr
         Returns True if the distance between the start point and the end point of the curve is lower or equal to Resolution from package gp.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3330,14 +3330,14 @@ class Geom2d_Parabola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.
         Returns False
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3496,13 +3496,13 @@ class Geom2d_Parabola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.
         Returns the "YAxis" of the conic. The "YAxis" is perpendicular to the "Xaxis".
         """
     @overload
-    def __init__(self,MirrorAxis : OCP.gp.gp_Ax2d,Focal : float,Sense : bool=True) -> None: ...
+    def __init__(self,Prb : OCP.gp.gp_Parab2d) -> None: ...
     @overload
     def __init__(self,D : OCP.gp.gp_Ax2d,F : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def __init__(self,Prb : OCP.gp.gp_Parab2d) -> None: ...
-    @overload
     def __init__(self,Axis : OCP.gp.gp_Ax22d,Focal : float) -> None: ...
+    @overload
+    def __init__(self,MirrorAxis : OCP.gp.gp_Ax2d,Focal : float,Sense : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3551,14 +3551,14 @@ class Geom2d_CartesianPoint(Geom2d_Point, Geom2d_Geometry, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3665,9 +3665,9 @@ class Geom2d_CartesianPoint(Geom2d_Point, Geom2d_Geometry, OCP.Standard.Standard
         Returns the Y coordinate of <me>.
         """
     @overload
-    def __init__(self,X : float,Y : float) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def __init__(self,X : float,Y : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3720,14 +3720,14 @@ class Geom2d_Transformation(OCP.Standard.Standard_Transient):
         Computes the inverse of this transformation and creates a new one. Raises ConstructionError if the the transformation is singular. This means that the ScaleFactor is lower or equal to Resolution from package gp.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3783,23 +3783,23 @@ class Geom2d_Transformation(OCP.Standard.Standard_Transient):
         Makes the transformation into a scale. P is the center of the scale and S is the scaling value.
         """
     @overload
-    def SetTransformation(self,FromSystem1 : OCP.gp.gp_Ax2d,ToSystem2 : OCP.gp.gp_Ax2d) -> None: 
+    def SetTransformation(self,ToSystem : OCP.gp.gp_Ax2d) -> None: 
         """
         Makes a transformation allowing passage from the coordinate system "FromSystem1" to the coordinate system "ToSystem2".
 
         Makes the transformation allowing passage from the basic coordinate system {P(0.,0.,0.), VX (1.,0.,0.), VY (0.,1.,0.)} to the local coordinate system defined with the Ax2d ToSystem.
         """
     @overload
-    def SetTransformation(self,ToSystem : OCP.gp.gp_Ax2d) -> None: ...
+    def SetTransformation(self,FromSystem1 : OCP.gp.gp_Ax2d,ToSystem2 : OCP.gp.gp_Ax2d) -> None: ...
     @overload
-    def SetTranslation(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def SetTranslation(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Makes the transformation into a translation. V is the vector of the translation.
 
         Makes the transformation into a translation from the point P1 to the point P2.
         """
     @overload
-    def SetTranslation(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def SetTranslation(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     def SetTrsf2d(self,T : OCP.gp.gp_Trsf2d) -> None: 
         """
         Makes the transformation into a transformation T from package gp.
@@ -3825,9 +3825,9 @@ class Geom2d_Transformation(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,T : OCP.gp.gp_Trsf2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __mul__(self,Other : Geom2d_Transformation) -> Geom2d_Transformation: 
         """
         None
@@ -3920,14 +3920,14 @@ class Geom2d_TrimmedCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Returns True if the distance between the StartPoint and the EndPoint is lower or equal to Resolution from package gp.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4128,14 +4128,14 @@ class Geom2d_Direction(Geom2d_Vector, Geom2d_Geometry, OCP.Standard.Standard_Tra
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4333,14 +4333,14 @@ class Geom2d_VectorWithMagnitude(Geom2d_Vector, Geom2d_Geometry, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4495,11 +4495,11 @@ class Geom2d_VectorWithMagnitude(Geom2d_Vector, Geom2d_Geometry, OCP.Standard.St
         None
         """
     @overload
+    def __init__(self,X : float,Y : float) -> None: ...
+    @overload
     def __init__(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def __init__(self,V : OCP.gp.gp_Vec2d) -> None: ...
-    @overload
-    def __init__(self,X : float,Y : float) -> None: ...
     def __isub__(self,Other : Geom2d_Vector) -> None: 
         """
         None

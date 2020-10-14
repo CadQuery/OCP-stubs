@@ -5,19 +5,19 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
-import OCP.Transfer
-import OCP.Geom2d
-import OCP.IGESGeom
-import OCP.IGESData
-import OCP.Standard
-import OCP.gp
 import OCP.ShapeExtend
-import OCP.Message
-import OCP.Geom
 import OCP.IGESBasic
-import OCP.TopoDS
-import OCP.Interface
+import OCP.Geom2d
 import OCP.IGESSolid
+import OCP.IGESData
+import OCP.Message
+import OCP.Transfer
+import OCP.Standard
+import OCP.TopoDS
+import OCP.IGESGeom
+import OCP.Geom
+import OCP.Interface
+import OCP.gp
 __all__  = [
 "IGESToBRep",
 "IGESToBRep_Actor",
@@ -122,14 +122,14 @@ class IGESToBRep_Actor(OCP.Transfer.Transfer_ActorOfTransientProcess, OCP.Transf
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -229,14 +229,14 @@ class IGESToBRep_AlgoContainer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -343,14 +343,14 @@ class IGESToBRep_CurveAndSurface():
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -496,11 +496,11 @@ class IGESToBRep_CurveAndSurface():
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
+    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
+    @overload
     def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     pass
 class IGESToBRep_BasicCurve(IGESToBRep_CurveAndSurface):
     """
@@ -571,14 +571,14 @@ class IGESToBRep_BasicCurve(IGESToBRep_CurveAndSurface):
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -784,11 +784,11 @@ class IGESToBRep_BasicCurve(IGESToBRep_CurveAndSurface):
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
-    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
+    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
+    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     pass
 class IGESToBRep_BasicSurface(IGESToBRep_CurveAndSurface):
     """
@@ -859,14 +859,14 @@ class IGESToBRep_BasicSurface(IGESToBRep_CurveAndSurface):
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -1044,11 +1044,11 @@ class IGESToBRep_BasicSurface(IGESToBRep_CurveAndSurface):
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
+    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
+    @overload
     def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     pass
 class IGESToBRep_BRepEntity(IGESToBRep_CurveAndSurface):
     """
@@ -1119,14 +1119,14 @@ class IGESToBRep_BRepEntity(IGESToBRep_CurveAndSurface):
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -1302,9 +1302,9 @@ class IGESToBRep_BRepEntity(IGESToBRep_CurveAndSurface):
     @overload
     def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     @overload
-    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     pass
 class IGESToBRep_IGESBoundary(OCP.Standard.Standard_Transient):
     """
@@ -1339,14 +1339,14 @@ class IGESToBRep_IGESBoundary(OCP.Standard.Standard_Transient):
         Inits the object with parameters common for all types of IGES boundaries. <CS>: object to be used for retrieving translation parameters and sending messages, <entity>: boundary entity to be processed, <face>, <trans>, <uFact>: as for IGESToBRep_TopoCurve <filepreference>: preferred representation (2 or 3) given in the IGES file
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1361,14 +1361,14 @@ class IGESToBRep_IGESBoundary(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.IGESData.IGESData_IGESEntity,toreverse3d : bool,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,number : int) -> bool: 
+    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.ShapeExtend.ShapeExtend_WireData,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,toreverse2d : bool,number : int,lsewd : OCP.ShapeExtend.ShapeExtend_WireData) -> bool: 
         """
         Translates 141 and 142 entities. Returns True if the curve has been successfully translated, otherwise returns False. <okCurve..>: flags that indicate whether corresponding representation has been successfully translated (must be set to True before first call), <curve3d>: model space curve for 142 and current model space curve for 141, <toreverse3d>: False for 142 and current orientation flag for 141, <curves2d>: 1 parameter space curve for 142 or list of them for current model space curves for 141, <number>: 1 for 142 and rank number of model space curve for 141.
 
         Translates 508 entity. Returns True if the curve has been successfully translated, otherwise returns False. Input object IGESBoundary must be created and initialized before. <okCurve..>: flags that indicate whether corresponding representation has been successfully translated (must be set to True before first call), <curve3d>: result of translation of current edge, <curves2d>: list of parameter space curves for edge, <toreverse2d>: orientation flag of current edge in respect to its model space curve, <number>: rank number of edge, <lsewd>: returns the result of translation of current edge.
         """
     @overload
-    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.ShapeExtend.ShapeExtend_WireData,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,toreverse2d : bool,number : int,lsewd : OCP.ShapeExtend.ShapeExtend_WireData) -> bool: ...
+    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.IGESData.IGESData_IGESEntity,toreverse3d : bool,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,number : int) -> bool: ...
     def WireData(self) -> OCP.ShapeExtend.ShapeExtend_WireData: 
         """
         Returns the resulting wire
@@ -1494,14 +1494,14 @@ class IGESToBRep_ToolContainer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1616,14 +1616,14 @@ class IGESToBRep_TopoCurve(IGESToBRep_CurveAndSurface):
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -1837,13 +1837,13 @@ class IGESToBRep_TopoCurve(IGESToBRep_CurveAndSurface):
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,CS : IGESToBRep_TopoCurve) -> None: ...
     @overload
     def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     @overload
-    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,CS : IGESToBRep_TopoCurve) -> None: ...
+    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     pass
 class IGESToBRep_TopoSurface(IGESToBRep_CurveAndSurface):
     """
@@ -1914,14 +1914,14 @@ class IGESToBRep_TopoSurface(IGESToBRep_CurveAndSurface):
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -2111,9 +2111,9 @@ class IGESToBRep_TopoSurface(IGESToBRep_CurveAndSurface):
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     @overload
     def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     @overload
-    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
+    def __init__(self) -> None: ...
     pass

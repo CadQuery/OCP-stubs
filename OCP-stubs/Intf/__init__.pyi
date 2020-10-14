@@ -119,13 +119,13 @@ class Intf_Array1OfLin():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Intf_Array1OfLin) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : Intf_Array1OfLin) -> None: ...
-    @overload
     def __init__(self,theBegin : OCP.gp.gp_Lin,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Intf_Interference():
@@ -269,9 +269,9 @@ class Intf_InterferencePolygon2d(Intf_Interference):
         Gives the zone of tangence at address Index in the interference.
         """
     @overload
-    def __init__(self,Obje : Intf_Polygon2d) -> None: ...
-    @overload
     def __init__(self,Obje1 : Intf_Polygon2d,Obje2 : Intf_Polygon2d) -> None: ...
+    @overload
+    def __init__(self,Obje : Intf_Polygon2d) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -289,6 +289,7 @@ class Intf_PIType():
 
       Intf_VERTEX
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -380,22 +381,22 @@ class Intf_SectionLine():
         Returns number of points in this SectionLine.
         """
     @overload
-    def Prepend(self,LS : Intf_SectionLine) -> None: 
+    def Prepend(self,Pi : Intf_SectionPoint) -> None: 
         """
         Adds a point to the beginning of the SectionLine <me>.
 
         Concatenates a SectionLine <LS> at the beginning of the SectionLine <me>.
         """
     @overload
-    def Prepend(self,Pi : Intf_SectionPoint) -> None: ...
+    def Prepend(self,LS : Intf_SectionLine) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverses the order of the elements of the SectionLine.
         """
     @overload
-    def __init__(self,Other : Intf_SectionLine) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Other : Intf_SectionLine) -> None: ...
     pass
 class Intf_SectionPoint():
     """
@@ -410,14 +411,14 @@ class Intf_SectionPoint():
         Gives the incidence at this section point. The incidence between the two triangles is given by the cosine. The best incidence is 0. (PI/2). The worst is 1. (null angle).
         """
     @overload
-    def InfoFirst(self,Dim : Intf_PIType) -> Tuple[int, int, float]: 
+    def InfoFirst(self,Dim : Intf_PIType) -> Tuple[int, float]: 
         """
         None
 
         Gives the datas about the first argument of the Interference.
         """
     @overload
-    def InfoFirst(self,Dim : Intf_PIType) -> Tuple[int, float]: ...
+    def InfoFirst(self,Dim : Intf_PIType) -> Tuple[int, int, float]: ...
     @overload
     def InfoSecond(self,Dim : Intf_PIType) -> Tuple[int, float]: 
         """
@@ -470,9 +471,9 @@ class Intf_SectionPoint():
         Returns the type of the section point on the second element.
         """
     @overload
-    def __init__(self,Where : OCP.gp.gp_Pnt2d,DimeO : Intf_PIType,AddrO1 : int,ParamO : float,DimeT : Intf_PIType,AddrT1 : int,ParamT : float,Incid : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Where : OCP.gp.gp_Pnt2d,DimeO : Intf_PIType,AddrO1 : int,ParamO : float,DimeT : Intf_PIType,AddrT1 : int,ParamT : float,Incid : float) -> None: ...
     @overload
     def __init__(self,Where : OCP.gp.gp_Pnt,DimeO : Intf_PIType,AddrO1 : int,AddrO2 : int,ParamO : float,DimeT : Intf_PIType,AddrT1 : int,AddrT2 : int,ParamT : float,Incid : float) -> None: ...
     pass
@@ -485,14 +486,14 @@ class Intf_SeqOfSectionLine(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Intf_SectionLine) -> None: 
+    def Append(self,theSeq : Intf_SeqOfSectionLine) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Intf_SeqOfSectionLine) -> None: ...
+    def Append(self,theItem : Intf_SectionLine) -> None: ...
     def Assign(self,theOther : Intf_SeqOfSectionLine) -> Intf_SeqOfSectionLine: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -522,23 +523,23 @@ class Intf_SeqOfSectionLine(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Intf_SeqOfSectionLine) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Intf_SectionLine) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Intf_SectionLine) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Intf_SeqOfSectionLine) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Intf_SectionLine) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Intf_SeqOfSectionLine) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Intf_SeqOfSectionLine) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Intf_SectionLine) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -565,14 +566,14 @@ class Intf_SeqOfSectionLine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : Intf_SeqOfSectionLine) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -598,9 +599,9 @@ class Intf_SeqOfSectionLine(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Intf_SeqOfSectionLine) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -619,14 +620,14 @@ class Intf_SeqOfSectionPoint(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Intf_SectionPoint) -> None: 
+    def Append(self,theSeq : Intf_SeqOfSectionPoint) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Intf_SeqOfSectionPoint) -> None: ...
+    def Append(self,theItem : Intf_SectionPoint) -> None: ...
     def Assign(self,theOther : Intf_SeqOfSectionPoint) -> Intf_SeqOfSectionPoint: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -656,14 +657,14 @@ class Intf_SeqOfSectionPoint(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Intf_SeqOfSectionPoint) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Intf_SectionPoint) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Intf_SectionPoint) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Intf_SeqOfSectionPoint) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Intf_SectionPoint) -> None: 
         """
@@ -690,23 +691,23 @@ class Intf_SeqOfSectionPoint(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Intf_SectionPoint) -> None: 
+    def Prepend(self,theSeq : Intf_SeqOfSectionPoint) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Intf_SeqOfSectionPoint) -> None: ...
+    def Prepend(self,theItem : Intf_SectionPoint) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -732,9 +733,9 @@ class Intf_SeqOfSectionPoint(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : Intf_SeqOfSectionPoint) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -790,14 +791,14 @@ class Intf_SeqOfTangentZone(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Intf_SeqOfTangentZone) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Intf_TangentZone) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Intf_TangentZone) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Intf_SeqOfTangentZone) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : Intf_SeqOfTangentZone) -> None: 
         """
@@ -824,14 +825,14 @@ class Intf_SeqOfTangentZone(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Intf_TangentZone) -> None: 
+    def Prepend(self,theSeq : Intf_SeqOfTangentZone) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Intf_SeqOfTangentZone) -> None: ...
+    def Prepend(self,theItem : Intf_TangentZone) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -866,11 +867,11 @@ class Intf_SeqOfTangentZone(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : Intf_SeqOfTangentZone) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : Intf_SeqOfTangentZone) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.TCollection
-import OCP.Standard
-import OCP.TColStd
 import OCP.TDF
+import OCP.TCollection
+import OCP.TColStd
+import OCP.Standard
+import OCP.NCollection
 __all__  = [
 "TDataStd",
 "TDataStd_AsciiString",
@@ -229,14 +229,14 @@ class TDataStd_AsciiString(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -283,14 +283,14 @@ class TDataStd_AsciiString(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         None
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets the explicit user defined GUID to the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     @overload
     def Set_s(label : OCP.TDF.TDF_Label,string : OCP.TCollection.TCollection_AsciiString) -> TDataStd_AsciiString: 
@@ -479,14 +479,14 @@ class TDataStd_BooleanArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -555,7 +555,7 @@ class TDataStd_BooleanArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,lower : int,upper : int) -> TDataStd_BooleanArray: 
+    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID,lower : int,upper : int) -> TDataStd_BooleanArray: 
         """
         Finds or creates an attribute with internal boolean array.
 
@@ -563,7 +563,7 @@ class TDataStd_BooleanArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID,lower : int,upper : int) -> TDataStd_BooleanArray: ...
+    def Set_s(label : OCP.TDF.TDF_Label,lower : int,upper : int) -> TDataStd_BooleanArray: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -769,14 +769,14 @@ class TDataStd_BooleanList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -845,7 +845,7 @@ class TDataStd_BooleanList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
     def SetID(self) -> None: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_BooleanList: 
+    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_BooleanList: 
         """
         Finds or creates a list of boolean values attribute.
 
@@ -853,7 +853,7 @@ class TDataStd_BooleanList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_BooleanList: ...
+    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_BooleanList: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1034,14 +1034,14 @@ class TDataStd_ByteArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1096,14 +1096,14 @@ class TDataStd_ByteArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         for internal use only!
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets the explicit GUID (user defined) for the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     def SetValue(self,index : int,value : int) -> None: 
         """
         Sets the <Index>th element of the array to <Value> OutOfRange exception is raised if <Index> doesn't respect Lower and Upper bounds of the internal array.
@@ -1178,9 +1178,9 @@ class TDataStd_ChildNodeIterator():
         Returns the current item; a null Step if there is no one.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aTreeNode : TDataStd_TreeNode,allLevels : bool=False) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
@@ -1329,14 +1329,14 @@ class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1393,7 +1393,7 @@ class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_Comment: 
+    def Set_s(label : OCP.TDF.TDF_Label,string : OCP.TCollection.TCollection_ExtendedString) -> TDataStd_Comment: 
         """
         Find, or create a Comment attribute. the Comment attribute is returned.
 
@@ -1401,7 +1401,7 @@ class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,string : OCP.TCollection.TCollection_ExtendedString) -> TDataStd_Comment: ...
+    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_Comment: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1585,14 +1585,14 @@ class TDataStd_Current(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1724,14 +1724,14 @@ class TDataStd_DataMapOfStringByte(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> int: 
+    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString,theValue : int) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString,theValue : int) -> bool: ...
+    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> int: ...
     def IsBound(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         IsBound
@@ -1767,9 +1767,9 @@ class TDataStd_DataMapOfStringByte(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : TDataStd_DataMapOfStringByte) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TDataStd_DataMapOfStringByte) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TDataStd_DataMapOfStringReal(OCP.NCollection.NCollection_BaseMap):
@@ -1859,11 +1859,11 @@ class TDataStd_DataMapOfStringReal(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self,theOther : TDataStd_DataMapOfStringReal) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TDataStd_DataMapOfStringReal) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TDataStd_DataMapOfStringString(OCP.NCollection.NCollection_BaseMap):
@@ -1953,9 +1953,9 @@ class TDataStd_DataMapOfStringString(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : TDataStd_DataMapOfStringString) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : TDataStd_DataMapOfStringString) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -2001,14 +2001,14 @@ class TDataStd_DeltaOnModificationOfByteArray(OCP.TDF.TDF_DeltaOnModification, O
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2079,14 +2079,14 @@ class TDataStd_DeltaOnModificationOfExtStringArray(OCP.TDF.TDF_DeltaOnModificati
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2157,14 +2157,14 @@ class TDataStd_DeltaOnModificationOfIntArray(OCP.TDF.TDF_DeltaOnModification, OC
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2235,14 +2235,14 @@ class TDataStd_DeltaOnModificationOfIntPackedMap(OCP.TDF.TDF_DeltaOnModification
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2313,14 +2313,14 @@ class TDataStd_DeltaOnModificationOfRealArray(OCP.TDF.TDF_DeltaOnModification, O
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2503,14 +2503,14 @@ class TDataStd_Directory(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2748,14 +2748,14 @@ class TDataStd_Expression(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2999,14 +2999,14 @@ class TDataStd_ExtStringArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3061,14 +3061,14 @@ class TDataStd_ExtStringArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         for internal use only!
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets the explicit GUID (user defined) for the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     def SetValue(self,Index : int,Value : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         Sets the <Index>th element of the array to <Value> OutOfRange exception is raised if <Index> doesn't respect Lower and Upper bounds of the internal array.
@@ -3261,23 +3261,23 @@ class TDataStd_ExtStringList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,value : OCP.TCollection.TCollection_ExtendedString,after_value : OCP.TCollection.TCollection_ExtendedString) -> bool: 
+    def InsertAfter(self,index : int,after_value : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         Inserts the <value> after the first meet of <after_value>.
 
         Inserts the <value> after the <index> position. The indices start with 1 .. Extent().
         """
     @overload
-    def InsertAfter(self,index : int,after_value : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def InsertAfter(self,value : OCP.TCollection.TCollection_ExtendedString,after_value : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     @overload
-    def InsertBefore(self,index : int,before_value : OCP.TCollection.TCollection_ExtendedString) -> bool: 
+    def InsertBefore(self,value : OCP.TCollection.TCollection_ExtendedString,before_value : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         Inserts the <value> before the first meet of <before_value>.
 
         Inserts the <value> before the <index> position. The indices start with 1 .. Extent().
         """
     @overload
-    def InsertBefore(self,value : OCP.TCollection.TCollection_ExtendedString,before_value : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def InsertBefore(self,index : int,before_value : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     def IsAttribute(self,anID : OCP.Standard.Standard_GUID) -> bool: 
         """
         Returns true if it exists an associated attribute of <me> with <anID> as ID.
@@ -3299,14 +3299,14 @@ class TDataStd_ExtStringList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3357,14 +3357,14 @@ class TDataStd_ExtStringList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
     @overload
-    def Remove(self,index : int) -> bool: 
+    def Remove(self,value : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         Removes the first meet of the <value>.
 
         Removes a value at <index> position.
         """
     @overload
-    def Remove(self,value : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def Remove(self,index : int) -> bool: ...
     def Restore(self,With : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
@@ -3380,7 +3380,7 @@ class TDataStd_ExtStringList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
     def SetID(self) -> None: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_ExtStringList: 
+    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_ExtStringList: 
         """
         Finds or creates a list of string values attribute with explicit user defined <guid>.
 
@@ -3388,7 +3388,7 @@ class TDataStd_ExtStringList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_ExtStringList: ...
+    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_ExtStringList: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3444,14 +3444,14 @@ class TDataStd_HDataMapOfStringByte(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3513,14 +3513,14 @@ class TDataStd_HDataMapOfStringHArray1OfInteger(OCP.Standard.Standard_Transient)
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3582,14 +3582,14 @@ class TDataStd_HDataMapOfStringHArray1OfReal(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3651,14 +3651,14 @@ class TDataStd_HDataMapOfStringInteger(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3677,9 +3677,9 @@ class TDataStd_HDataMapOfStringInteger(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theOther : OCP.TColStd.TColStd_DataMapOfStringInteger) -> None: ...
-    @overload
     def __init__(self,NbBuckets : int=1) -> None: ...
+    @overload
+    def __init__(self,theOther : OCP.TColStd.TColStd_DataMapOfStringInteger) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3720,14 +3720,14 @@ class TDataStd_HDataMapOfStringReal(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3789,14 +3789,14 @@ class TDataStd_HDataMapOfStringString(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3908,9 +3908,9 @@ class TDataStd_LabelArray1():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : OCP.TDF.TDF_Label,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TDataStd_LabelArray1) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -3968,14 +3968,14 @@ class TDataStd_IntPackedMap(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Something to do before applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
         """
     @overload
-    def ChangeMap(self,theMap : OCP.TColStd.TColStd_PackedMapOfInteger) -> bool: 
+    def ChangeMap(self,theMap : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def ChangeMap(self,theMap : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
+    def ChangeMap(self,theMap : OCP.TColStd.TColStd_PackedMapOfInteger) -> bool: ...
     def Clear(self) -> bool: 
         """
         None
@@ -4094,14 +4094,14 @@ class TDataStd_IntPackedMap(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4342,14 +4342,14 @@ class TDataStd_Integer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4595,14 +4595,14 @@ class TDataStd_IntegerArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4657,21 +4657,21 @@ class TDataStd_IntegerArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         for internal use only!
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets the explicit GUID (user defined) for the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     def SetValue(self,Index : int,Value : int) -> None: 
         """
         Sets the <Index>th element of the array to <Value> OutOfRange exception is raised if <Index> doesn't respect Lower and Upper bounds of the internal array.
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,lower : int,upper : int,isDelta : bool=False) -> TDataStd_IntegerArray: 
+    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID,lower : int,upper : int,isDelta : bool=False) -> TDataStd_IntegerArray: 
         """
         Finds or creates on the <label> an integer array attribute with the specified <lower> and <upper> boundaries. If <isDelta> == False, DefaultDeltaOnModification is used. If <isDelta> == True, DeltaOnModification of the current attribute is used. If attribute is already set, all input parameters are refused and the found attribute is returned.
 
@@ -4679,7 +4679,7 @@ class TDataStd_IntegerArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID,lower : int,upper : int,isDelta : bool=False) -> TDataStd_IntegerArray: ...
+    def Set_s(label : OCP.TDF.TDF_Label,lower : int,upper : int,isDelta : bool=False) -> TDataStd_IntegerArray: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -4893,14 +4893,14 @@ class TDataStd_IntegerList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4973,7 +4973,7 @@ class TDataStd_IntegerList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
     def SetID(self) -> None: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_IntegerList: 
+    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_IntegerList: 
         """
         Finds or creates a list of integer values attribute.
 
@@ -4981,7 +4981,7 @@ class TDataStd_IntegerList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_IntegerList: ...
+    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_IntegerList: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -5074,14 +5074,14 @@ class TDataStd_HLabelArray1(TDataStd_LabelArray1, OCP.Standard.Standard_Transien
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5132,13 +5132,13 @@ class TDataStd_HLabelArray1(TDataStd_LabelArray1, OCP.Standard.Standard_Transien
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : TDataStd_LabelArray1) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.TDF.TDF_Label) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.TDF.TDF_Label) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -5160,7 +5160,7 @@ class TDataStd_ListOfByte(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : int) -> int: 
+    def Append(self,theOther : TDataStd_ListOfByte) -> None: 
         """
         Append one item at the end
 
@@ -5169,9 +5169,9 @@ class TDataStd_ListOfByte(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : TDataStd_ListOfByte) -> None: ...
-    @overload
     def Append(self,theItem : int,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : int) -> int: ...
     def Assign(self,theOther : TDataStd_ListOfByte) -> TDataStd_ListOfByte: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -5244,11 +5244,11 @@ class TDataStd_ListOfByte(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TDataStd_ListOfByte) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TDataStd_ListOfExtendedString(OCP.NCollection.NCollection_BaseList):
@@ -5260,7 +5260,7 @@ class TDataStd_ListOfExtendedString(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : TDataStd_ListOfExtendedString) -> None: 
+    def Append(self,theItem : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         Append one item at the end
 
@@ -5269,9 +5269,9 @@ class TDataStd_ListOfExtendedString(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.TCollection.TCollection_ExtendedString,theIter : Any) -> None: ...
+    def Append(self,theOther : TDataStd_ListOfExtendedString) -> None: ...
     @overload
-    def Append(self,theItem : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: ...
+    def Append(self,theItem : OCP.TCollection.TCollection_ExtendedString,theIter : Any) -> None: ...
     def Assign(self,theOther : TDataStd_ListOfExtendedString) -> TDataStd_ListOfExtendedString: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -5291,14 +5291,14 @@ class TDataStd_ListOfExtendedString(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : OCP.TCollection.TCollection_ExtendedString,theIter : Any) -> OCP.TCollection.TCollection_ExtendedString: 
+    def InsertAfter(self,theOther : TDataStd_ListOfExtendedString,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : TDataStd_ListOfExtendedString,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : OCP.TCollection.TCollection_ExtendedString,theIter : Any) -> OCP.TCollection.TCollection_ExtendedString: ...
     @overload
     def InsertBefore(self,theOther : TDataStd_ListOfExtendedString,theIter : Any) -> None: 
         """
@@ -5319,14 +5319,14 @@ class TDataStd_ListOfExtendedString(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : TDataStd_ListOfExtendedString) -> None: 
+    def Prepend(self,theItem : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: ...
+    def Prepend(self,theOther : TDataStd_ListOfExtendedString) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -5344,9 +5344,9 @@ class TDataStd_ListOfExtendedString(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TDataStd_ListOfExtendedString) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -5498,14 +5498,14 @@ class TDataStd_Name(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5552,14 +5552,14 @@ class TDataStd_Name(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Sets <S> as name. Raises if <S> is not a valid name.
         """
     @overload
-    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets the explicit user defined GUID to the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
     def Set_s(label : OCP.TDF.TDF_Label,guid : OCP.Standard.Standard_GUID,string : OCP.TCollection.TCollection_ExtendedString) -> TDataStd_Name: 
@@ -5870,14 +5870,14 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6140,14 +6140,14 @@ class TDataStd_NoteBook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6384,14 +6384,14 @@ class TDataStd_Real(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6442,17 +6442,17 @@ class TDataStd_Real(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Obsolete method that will be removed in next versions. This field is not supported in the persistence mechanism.
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets the explicit GUID for the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,guid : OCP.Standard.Standard_GUID,value : float) -> TDataStd_Real: 
+    def Set_s(label : OCP.TDF.TDF_Label,value : float) -> TDataStd_Real: 
         """
         Finds, or creates, a Real attribute with default GUID and sets <value>. The Real attribute is returned. The Real dimension is Scalar by default. Use SetDimension to overwrite. Real methods ============
 
@@ -6460,7 +6460,7 @@ class TDataStd_Real(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,value : float) -> TDataStd_Real: ...
+    def Set_s(label : OCP.TDF.TDF_Label,guid : OCP.Standard.Standard_GUID,value : float) -> TDataStd_Real: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6641,14 +6641,14 @@ class TDataStd_RealArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6703,21 +6703,21 @@ class TDataStd_RealArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         for internal use only!
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets the explicit GUID (user defined) for the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     def SetValue(self,Index : int,Value : float) -> None: 
         """
         Sets the <Index>th element of the array to <Value> OutOfRange exception is raised if <Index> doesn't respect Lower and Upper bounds of the internal array.
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,lower : int,upper : int,isDelta : bool=False) -> TDataStd_RealArray: 
+    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID,lower : int,upper : int,isDelta : bool=False) -> TDataStd_RealArray: 
         """
         Finds or creates on the <label> a real array attribute with the specified <lower> and <upper> boundaries. If <isDelta> == False, DefaultDeltaOnModification is used. If <isDelta> == True, DeltaOnModification of the current attribute is used. If attribute is already set, input parameter <isDelta> is refused and the found attribute returned.
 
@@ -6725,7 +6725,7 @@ class TDataStd_RealArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID,lower : int,upper : int,isDelta : bool=False) -> TDataStd_RealArray: ...
+    def Set_s(label : OCP.TDF.TDF_Label,lower : int,upper : int,isDelta : bool=False) -> TDataStd_RealArray: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6772,6 +6772,7 @@ class TDataStd_RealEnum():
 
       TDataStd_ANGULAR
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -6966,14 +6967,14 @@ class TDataStd_RealList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7036,14 +7037,14 @@ class TDataStd_RealList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets the explicit GUID (user defined) for the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
     def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_RealList: 
@@ -7232,14 +7233,14 @@ class TDataStd_ReferenceArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7494,23 +7495,23 @@ class TDataStd_ReferenceList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,index : int,after_value : OCP.TDF.TDF_Label) -> bool: 
+    def InsertAfter(self,value : OCP.TDF.TDF_Label,after_value : OCP.TDF.TDF_Label) -> bool: 
         """
         Inserts the <value> after the first meet of <after_value>.
 
         Inserts the label after the <index> position. The indices start with 1 .. Extent().
         """
     @overload
-    def InsertAfter(self,value : OCP.TDF.TDF_Label,after_value : OCP.TDF.TDF_Label) -> bool: ...
+    def InsertAfter(self,index : int,after_value : OCP.TDF.TDF_Label) -> bool: ...
     @overload
-    def InsertBefore(self,value : OCP.TDF.TDF_Label,before_value : OCP.TDF.TDF_Label) -> bool: 
+    def InsertBefore(self,index : int,before_value : OCP.TDF.TDF_Label) -> bool: 
         """
         Inserts the <value> before the first meet of <before_value>.
 
         Inserts the label before the <index> position. The indices start with 1 .. Extent().
         """
     @overload
-    def InsertBefore(self,index : int,before_value : OCP.TDF.TDF_Label) -> bool: ...
+    def InsertBefore(self,value : OCP.TDF.TDF_Label,before_value : OCP.TDF.TDF_Label) -> bool: ...
     def IsAttribute(self,anID : OCP.Standard.Standard_GUID) -> bool: 
         """
         Returns true if it exists an associated attribute of <me> with <anID> as ID.
@@ -7532,14 +7533,14 @@ class TDataStd_ReferenceList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7603,17 +7604,17 @@ class TDataStd_ReferenceList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         None
         """
     @overload
-    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets the explicit GUID (user defined) for the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_ReferenceList: 
+    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_ReferenceList: 
         """
         Finds or creates a list of reference values (labels) attribute.
 
@@ -7621,7 +7622,7 @@ class TDataStd_ReferenceList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_ReferenceList: ...
+    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_ReferenceList: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -7799,14 +7800,14 @@ class TDataStd_Relation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8039,14 +8040,14 @@ class TDataStd_Tick(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8350,14 +8351,14 @@ class TDataStd_TreeNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8466,7 +8467,7 @@ class TDataStd_TreeNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Set_s(L : OCP.TDF.TDF_Label) -> TDataStd_TreeNode: 
+    def Set_s(L : OCP.TDF.TDF_Label,ExplicitTreeID : OCP.Standard.Standard_GUID) -> TDataStd_TreeNode: 
         """
         Finds or Creates a TreeNode attribute on the label <L> with the default tree ID, returned by the method <GetDefaultTreeID>. Returns the created/found TreeNode attribute.
 
@@ -8474,7 +8475,7 @@ class TDataStd_TreeNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Set_s(L : OCP.TDF.TDF_Label,ExplicitTreeID : OCP.Standard.Standard_GUID) -> TDataStd_TreeNode: ...
+    def Set_s(L : OCP.TDF.TDF_Label) -> TDataStd_TreeNode: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -8636,14 +8637,14 @@ class TDataStd_UAttribute(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8892,14 +8893,14 @@ class TDataStd_Variable(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8930,14 +8931,14 @@ class TDataStd_Variable(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
         """
     @overload
-    def Name(self) -> OCP.TCollection.TCollection_ExtendedString: 
+    def Name(self,string : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         set or change the name of the variable, in myUnknown and my associated Name attribute.
 
         returns string stored in the associated Name attribute.
         """
     @overload
-    def Name(self,string : OCP.TCollection.TCollection_ExtendedString) -> None: ...
+    def Name(self) -> OCP.TCollection.TCollection_ExtendedString: ...
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -8959,14 +8960,14 @@ class TDataStd_Variable(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Set(self,value : float,dimension : TDataStd_RealEnum) -> None: 
+    def Set(self,value : float) -> None: 
         """
         retrieve or create the associated real attribute and set the value <value>.
 
         Obsolete method that will be removed in next versions. The dimension argument is not supported in the persistence mechanism.
         """
     @overload
-    def Set(self,value : float) -> None: ...
+    def Set(self,value : float,dimension : TDataStd_RealEnum) -> None: ...
     @overload
     def SetID(self) -> None: 
         """

@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
-import OCP.Standard
-import OCP.gp
-import OCP.Message
 import OCP.TColStd
+import OCP.Message
+import OCP.Standard
 import OCP.Interface
+import OCP.gp
 __all__  = [
 "IGESData",
 "IGESData_Array1OfDirPart",
@@ -174,11 +174,11 @@ class IGESData_Array1OfDirPart():
     @overload
     def __init__(self,theOther : IGESData_Array1OfDirPart) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : IGESData_DirPart,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : IGESData_DirPart,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class IGESData_Array1OfIGESEntity():
@@ -258,13 +258,13 @@ class IGESData_Array1OfIGESEntity():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : IGESData_IGESEntity,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : IGESData_Array1OfIGESEntity) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : IGESData_Array1OfIGESEntity) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : IGESData_IGESEntity,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class IGESData_BasicEditor():
@@ -308,14 +308,14 @@ class IGESData_BasicEditor():
         From the flag of IGES version, returns name, "" if incorrect
         """
     @overload
-    def Init(self,model : IGESData_IGESModel,protocol : IGESData_Protocol) -> None: 
+    def Init(self,protocol : IGESData_Protocol) -> None: 
         """
         Initialize a Basic Editor, with a new IGESModel, ready to run
 
         Initialize a Basic Editor for IGES Data, ready to run
         """
     @overload
-    def Init(self,protocol : IGESData_Protocol) -> None: ...
+    def Init(self,model : IGESData_IGESModel,protocol : IGESData_Protocol) -> None: ...
     def Model(self) -> IGESData_IGESModel: 
         """
         Returns the designated model
@@ -511,14 +511,14 @@ class IGESData_IGESEntity(OCP.Standard.Standard_Transient):
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -687,6 +687,7 @@ class IGESData_DefList():
 
       IGESData_ErrorSeveral
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -748,6 +749,7 @@ class IGESData_DefType():
 
       IGESData_ErrorRef
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -820,14 +822,14 @@ class IGESData_GeneralModule(OCP.Interface.Interface_GeneralModule, OCP.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -933,14 +935,14 @@ class IGESData_SpecificModule(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1050,13 +1052,13 @@ class IGESData_DirChecker():
         Sets Blank Status to be required at a given value Give -1 to demand UseFlag not zero (but no precise value req.)
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,atype : int,aform : int) -> None: ...
-    @overload
     def __init__(self,atype : int) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,atype : int,aform1 : int,aform2 : int) -> None: ...
+    @overload
+    def __init__(self,atype : int,aform : int) -> None: ...
     pass
 class IGESData_DirPart():
     """
@@ -1123,14 +1125,14 @@ class IGESData_Protocol(OCP.Interface.Interface_Protocol, OCP.Standard.Standard_
         Returns True if type of <obj> is that defined from CDL This is the default but it may change according implementation
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1227,14 +1229,14 @@ class IGESData_FileRecognizer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1428,14 +1430,14 @@ class IGESData_UndefinedEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transi
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1671,14 +1673,14 @@ class IGESData_DefaultGeneral(IGESData_GeneralModule, OCP.Interface.Interface_Ge
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1786,14 +1788,14 @@ class IGESData_GlobalNodeOfSpecificLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1857,14 +1859,14 @@ class IGESData_GlobalNodeOfWriterLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2008,7 +2010,7 @@ class IGESData_GlobalSection():
         """
     @staticmethod
     @overload
-    def NewDateString_s(date : OCP.TCollection.TCollection_HAsciiString,mode : int=1) -> OCP.TCollection.TCollection_HAsciiString: 
+    def NewDateString_s(year : int,month : int,day : int,hour : int,minut : int,second : int,mode : int=-1) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         Returns a string built from year, month, day, hour, minute and second values. The form of the resulting string is defined as follows: - -1: YYMMDD.HHNNSS, - 0: YYYYMMDD.HHNNSS, - 1: YYYY-MM-DD:HH-NN-SS, where: - YYYY or YY is 4 or 2 digit year, - HH is hour (00-23), - MM is month (01-12), - NN is minute (00-59) - DD is day (01-31), - SS is second (00-59).
 
@@ -2016,7 +2018,7 @@ class IGESData_GlobalSection():
         """
     @staticmethod
     @overload
-    def NewDateString_s(year : int,month : int,day : int,hour : int,minut : int,second : int,mode : int=-1) -> OCP.TCollection.TCollection_HAsciiString: ...
+    def NewDateString_s(date : OCP.TCollection.TCollection_HAsciiString,mode : int=1) -> OCP.TCollection.TCollection_HAsciiString: ...
     def Params(self) -> OCP.Interface.Interface_ParamSet: 
         """
         Returns all contained data in the form of a ParamSet Remark : Strings are given under Hollerith form
@@ -2238,14 +2240,14 @@ class IGESData_HArray1OfIGESEntity(IGESData_Array1OfIGESEntity, OCP.Standard.Sta
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2300,9 +2302,9 @@ class IGESData_HArray1OfIGESEntity(IGESData_Array1OfIGESEntity, OCP.Standard.Sta
     @overload
     def __init__(self,theOther : IGESData_Array1OfIGESEntity) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESData_IGESEntity) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESData_IGESEntity) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2494,14 +2496,14 @@ class IGESData_ColorEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transient)
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2672,7 +2674,7 @@ class IGESData_IGESModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         Adds a new string to the existing Start section at the end if atnum is 0 or not given, or before atnumth line.
         """
     @overload
-    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,level : int=0,listall : bool=False) -> None: 
+    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,proto : OCP.Interface.Interface_Protocol,level : int=0,listall : bool=False) -> None: 
         """
         Adds to the Model, an Entity with all its References, as they are defined by General Services FillShared and ListImplied. Process is recursive (any sub-levels) if <level> = 0 (Default) Else, adds sub-entities until the required sub-level. Especially, if <level> = 1, adds immediate subs and that's all
 
@@ -2681,9 +2683,9 @@ class IGESData_IGESModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         Same as above, but works with an already created GeneralLib
         """
     @overload
-    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,lib : OCP.Interface.Interface_GeneralLib,level : int=0,listall : bool=False) -> None: ...
+    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,level : int=0,listall : bool=False) -> None: ...
     @overload
-    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,proto : OCP.Interface.Interface_Protocol,level : int=0,listall : bool=False) -> None: ...
+    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,lib : OCP.Interface.Interface_GeneralLib,level : int=0,listall : bool=False) -> None: ...
     def ApplyStatic(self,param : str='') -> bool: 
         """
         Sets some of the Global section parameters with the values defined by the translation parameters. param may be: - receiver (value read in XSTEP.iges.header.receiver), - author (value read in XSTEP.iges.header.author), - company (value read in XSTEP.iges.header.company). The default value for param is an empty string. Returns True when done and if param is given, False if param is unknown or empty. Note: Set the unit in the IGES file Global section via IGESData_BasicEditor class.
@@ -2819,14 +2821,14 @@ class IGESData_IGESModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         Returns True if <num> identifies an Error Entity : in this case, a ReportEntity brings Fail Messages and possibly an "undefined" Content, see IsRedefinedEntity
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3009,11 +3011,15 @@ class IGESData_IGESModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
     @property
     def DispatchStatus(self) -> bool:
         """
+        Returns the Dispatch Status, either for get or set A Model which is produced from Dispatch may share entities with the original (according to the Protocol), hence these non-copied entities should not be deleted
+
         :type: bool
         """
     @DispatchStatus.setter
     def DispatchStatus(self, arg1: bool) -> None:
-        pass
+        """
+        Returns the Dispatch Status, either for get or set A Model which is produced from Dispatch may share entities with the original (according to the Protocol), hence these non-copied entities should not be deleted
+        """
     pass
 class IGESData_IGESReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standard.Standard_Transient):
     """
@@ -3024,7 +3030,7 @@ class IGESData_IGESReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
         adds a parameter to global section's parameter list
         """
     @overload
-    def AddParam(self,num : int,FP : OCP.Interface.Interface_FileParameter) -> None: 
+    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: 
         """
         Adds a parameter to record no "num" and fills its fields (EntityNumber is optional) Warning : <aval> is assumed to be memory-managed elsewhere : it is NOT copied. This gives a best speed : strings remain stored in pages of characters
 
@@ -3033,9 +3039,9 @@ class IGESData_IGESReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
         Same as above, but gets a complete FileParameter Warning : Content of <FP> is NOT copied : its original address and space in memory are assumed to be managed elsewhere (see ParamSet)
         """
     @overload
-    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
-    @overload
     def AddParam(self,num : int,aval : str,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
+    @overload
+    def AddParam(self,num : int,FP : OCP.Interface.Interface_FileParameter) -> None: ...
     def AddStartLine(self,aval : str) -> None: 
         """
         adds a start line to start section
@@ -3111,14 +3117,14 @@ class IGESData_IGESReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
         Returns True if the status "Error Load" has been set (to True or False)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3355,9 +3361,9 @@ class IGESData_IGESType():
         returns "type" data
         """
     @overload
-    def __init__(self,atype : int,aform : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,atype : int,aform : int) -> None: ...
     pass
 class IGESData_IGESWriter():
     """
@@ -3412,7 +3418,7 @@ class IGESData_IGESWriter():
         prepares sending of list of entities, as Sections D (directory list) and P (Parameters lists, one per entity) Entities will be then processed, one after the other error if SectionG has not be called just before
         """
     @overload
-    def Send(self,val : OCP.gp.gp_XYZ) -> None: 
+    def Send(self,val : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         sends an Integer parameter
 
@@ -3427,15 +3433,15 @@ class IGESData_IGESWriter():
         Sends a XYZ, interpreted as a couple of 2 Reals (X , Y & Z)
         """
     @overload
+    def Send(self,val : float) -> None: ...
+    @overload
+    def Send(self,val : IGESData_IGESEntity,negative : bool=False) -> None: ...
+    @overload
     def Send(self,val : int) -> None: ...
     @overload
     def Send(self,val : OCP.gp.gp_XY) -> None: ...
     @overload
-    def Send(self,val : OCP.TCollection.TCollection_HAsciiString) -> None: ...
-    @overload
-    def Send(self,val : IGESData_IGESEntity,negative : bool=False) -> None: ...
-    @overload
-    def Send(self,val : float) -> None: ...
+    def Send(self,val : OCP.gp.gp_XYZ) -> None: ...
     def SendBoolean(self,val : bool) -> None: 
         """
         sends a Boolean parameter as an Integer value 0(False)/1(True)
@@ -3457,19 +3463,23 @@ class IGESData_IGESWriter():
         sends a void parameter, that is null text
         """
     @overload
-    def __init__(self,other : IGESData_IGESWriter) -> None: ...
-    @overload
     def __init__(self,amodel : IGESData_IGESModel) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,other : IGESData_IGESWriter) -> None: ...
     @property
     def WriteMode(self) -> int:
         """
+        Returns the write mode, in order to be read and/or changed Write Mode controls the way final print works 0 (D) : Normal IGES, 10 : FNES
+
         :type: int
         """
     @WriteMode.setter
     def WriteMode(self, arg1: int) -> None:
-        pass
+        """
+        Returns the write mode, in order to be read and/or changed Write Mode controls the way final print works 0 (D) : Normal IGES, 10 : FNES
+        """
     pass
 class IGESData_LabelDisplayEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transient):
     """
@@ -3628,14 +3638,14 @@ class IGESData_LabelDisplayEntity(IGESData_IGESEntity, OCP.Standard.Standard_Tra
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3950,14 +3960,14 @@ class IGESData_LevelListEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transi
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4275,14 +4285,14 @@ class IGESData_LineFontEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transie
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4593,14 +4603,14 @@ class IGESData_NameEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transient):
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4783,14 +4793,14 @@ class IGESData_NodeOfSpecificLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4854,14 +4864,14 @@ class IGESData_NodeOfWriterLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4965,14 +4975,14 @@ class IGESData_ParamReader():
     access to a list of parameters, with management of read stage (owned parameters, properties, associativities) and current parameter number, read errors (which feed a Check), plus convenient facilities to read parameters, in particular : - first parameter is ignored (it repeats entity type), hence number 1 gives 2nd parameter, etc... - lists are not explicit, list-reading methods are provided which manage a current param. number - interpretation is made as possible (texts, reals, entities ...) (in particular, Reading a Real accepts an Integer)
     """
     @overload
-    def AddFail(self,afail : str,bfail : str='') -> None: 
+    def AddFail(self,af : OCP.TCollection.TCollection_HAsciiString,bf : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         None
 
         feeds the Check with a new fail (as a String or as a CString)
         """
     @overload
-    def AddFail(self,af : OCP.TCollection.TCollection_HAsciiString,bf : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    def AddFail(self,afail : str,bfail : str='') -> None: ...
     @overload
     def AddWarning(self,awarn : str,bwarn : str='') -> None: 
         """
@@ -5072,16 +5082,16 @@ class IGESData_ParamReader():
     @overload
     def ReadBoolean(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : bool,exact : bool=True) -> bool: ...
     @overload
-    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: 
+    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: 
         """
         None
 
         Reads a list of Entities defined by PC Same conditions as for ReadEnts, for PC The list is given as an EntityList (index has no meaning; the EntityList starts from clear) If "ord" is given True (default), entities will be added to the list in their original order Remark : Negative or Null Pointers are ignored Else ("ord" False), order is not garanteed (faster mode) If all params cannot be read as Entities, same as above Warning Give "ord" to False ONLY if order is not significant
         """
     @overload
-    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: ...
+    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: ...
     @overload
-    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: 
+    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,type : OCP.Standard.Standard_Type,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: 
         """
         None
 
@@ -5092,11 +5102,11 @@ class IGESData_ParamReader():
         Works as ReadEntity without Type, but in addition checks the Type of the Entity, which must be "kind of" a given <type> Then, gives the same fail cases as ReadEntity without Type, plus the case "Incorrect Type" (in such a case, returns False and givel <val> = Null)
         """
     @overload
-    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,aStatus : IGESData_Status,type : OCP.Standard.Standard_Type,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
-    @overload
-    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,type : OCP.Standard.Standard_Type,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
+    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
     @overload
     def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,aStatus : IGESData_Status,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
+    @overload
+    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,aStatus : IGESData_Status,type : OCP.Standard.Standard_Type,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
     @overload
     def ReadEnts(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : IGESData_HArray1OfIGESEntity,index : int=1) -> bool: 
         """
@@ -5116,32 +5126,32 @@ class IGESData_ParamReader():
     @overload
     def ReadInteger(self,PC : IGESData_ParamCursor,val : int) -> bool: ...
     @overload
-    def ReadInts(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TColStd.TColStd_HArray1OfInteger,index : int=1) -> bool: 
+    def ReadInts(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TColStd.TColStd_HArray1OfInteger,index : int=1) -> bool: 
         """
         None
 
         Reads a list of Integer values, defined by PC (with a count of parameters). PC can start from Current Number and command it to advance after reading (use method CurrentList to do this) The list is given as a HArray1, numered from "index" If all params are not Integer, Check is filled (using mess) and return value is False
         """
     @overload
-    def ReadInts(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TColStd.TColStd_HArray1OfInteger,index : int=1) -> bool: ...
+    def ReadInts(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TColStd.TColStd_HArray1OfInteger,index : int=1) -> bool: ...
     @overload
-    def ReadReal(self,PC : IGESData_ParamCursor,mess : str,val : float) -> bool: 
+    def ReadReal(self,PC : IGESData_ParamCursor,val : float) -> bool: 
         """
         None
 
         Reads a Real value from parameter "num" An Integer is accepted (Check is filled with a Warning message) and causes return to be True (as normal case) In other cases, Check is filled with a Fail and return is False
         """
     @overload
-    def ReadReal(self,PC : IGESData_ParamCursor,val : float) -> bool: ...
+    def ReadReal(self,PC : IGESData_ParamCursor,mess : str,val : float) -> bool: ...
     @overload
-    def ReadReals(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TColStd.TColStd_HArray1OfReal,index : int=1) -> bool: 
+    def ReadReals(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TColStd.TColStd_HArray1OfReal,index : int=1) -> bool: 
         """
         None
 
         Reads a list of Real values defined by PC Same conditions as for ReadInts, for PC and index An Integer parameter is accepted, if at least one parameter is Integer, Check is filled with a "Warning" message If all params are neither Real nor Integer, Check is filled (using mess) and return value is False
         """
     @overload
-    def ReadReals(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TColStd.TColStd_HArray1OfReal,index : int=1) -> bool: ...
+    def ReadReals(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TColStd.TColStd_HArray1OfReal,index : int=1) -> bool: ...
     @overload
     def ReadText(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TCollection.TCollection_HAsciiString) -> bool: 
         """
@@ -5152,32 +5162,32 @@ class IGESData_ParamReader():
     @overload
     def ReadText(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TCollection.TCollection_HAsciiString) -> bool: ...
     @overload
-    def ReadTexts(self,PC : IGESData_ParamCursor,mess : str,val : OCP.Interface.Interface_HArray1OfHAsciiString,index : int=1) -> bool: 
+    def ReadTexts(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.Interface.Interface_HArray1OfHAsciiString,index : int=1) -> bool: 
         """
         None
 
         Reads a list of Hollerith Texts, defined by PC Texts are read as Hollerith texts without leading "nnnH" Same conditions as for ReadInts, for PC and index If all params are not Text, Check is filled (using mess) and return value is False
         """
     @overload
-    def ReadTexts(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.Interface.Interface_HArray1OfHAsciiString,index : int=1) -> bool: ...
+    def ReadTexts(self,PC : IGESData_ParamCursor,mess : str,val : OCP.Interface.Interface_HArray1OfHAsciiString,index : int=1) -> bool: ...
     @overload
-    def ReadXY(self,PC : IGESData_ParamCursor,mess : str,val : OCP.gp.gp_XY) -> bool: 
+    def ReadXY(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.gp.gp_XY) -> bool: 
         """
         None
 
         Reads a couple of Real values (X,Y) from parameter "num" Integers are accepted (Check is filled with a Warning message) and cause return to be True (as normal case) In other cases, Check is filled with a Fail and return is False
         """
     @overload
-    def ReadXY(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.gp.gp_XY) -> bool: ...
+    def ReadXY(self,PC : IGESData_ParamCursor,mess : str,val : OCP.gp.gp_XY) -> bool: ...
     @overload
-    def ReadXYZ(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.gp.gp_XYZ) -> bool: 
+    def ReadXYZ(self,PC : IGESData_ParamCursor,mess : str,val : OCP.gp.gp_XYZ) -> bool: 
         """
         None
 
         Reads a triplet of Real values (X,Y,Z) from parameter "num" Integers are accepted (Check is filled with a Warning message) and cause return to be True (as normal case) In other cases, Check is filled with a Fail and return is False For Message
         """
     @overload
-    def ReadXYZ(self,PC : IGESData_ParamCursor,mess : str,val : OCP.gp.gp_XYZ) -> bool: ...
+    def ReadXYZ(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.gp.gp_XYZ) -> bool: ...
     @overload
     def ReadingEntityNumber(self,num : int,mess : str,val : int) -> bool: 
         """
@@ -5188,14 +5198,14 @@ class IGESData_ParamReader():
     @overload
     def ReadingEntityNumber(self,num : int,val : int) -> bool: ...
     @overload
-    def ReadingReal(self,num : int,val : float) -> bool: 
+    def ReadingReal(self,num : int,mess : str,val : float) -> bool: 
         """
         None
 
         Routine which reads a Real parameter, given its number Same conditions as ReadReal for mess, val, and return value
         """
     @overload
-    def ReadingReal(self,num : int,mess : str,val : float) -> bool: ...
+    def ReadingReal(self,num : int,val : float) -> bool: ...
     def SendFail(self,amsg : OCP.Message.Message_Msg) -> None: 
         """
         None
@@ -5265,14 +5275,14 @@ class IGESData_FileProtocol(IGESData_Protocol, OCP.Interface.Interface_Protocol,
         Returns True if type of <obj> is that defined from CDL This is the default but it may change according implementation
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5355,6 +5365,7 @@ class IGESData_ReadStage():
 
       IGESData_ReadEnd
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -5405,14 +5416,14 @@ class IGESData_ReadWriteModule(OCP.Interface.Interface_ReaderModule, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5614,14 +5625,14 @@ class IGESData_SingleParentEntity(IGESData_IGESEntity, OCP.Standard.Standard_Tra
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5828,9 +5839,9 @@ class IGESData_SpecificLib():
         Starts Iteration on the Modules (sets it on the first one)
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aprotocol : IGESData_Protocol) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IGESData_DefaultSpecific(IGESData_SpecificModule, OCP.Standard.Standard_Transient):
     """
@@ -5857,14 +5868,14 @@ class IGESData_DefaultSpecific(IGESData_SpecificModule, OCP.Standard.Standard_Tr
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5912,6 +5923,7 @@ class IGESData_Status():
 
       IGESData_TypeError
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -5990,14 +6002,14 @@ class IGESData_ToolLocation(OCP.Standard.Standard_Transient):
         Returns True if <ent> is an Associativity (IGES Type 402). Then, Location does not apply.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6216,14 +6228,14 @@ class IGESData_TransfEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transient
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6393,14 +6405,14 @@ class IGESData_FreeFormatEntity(IGESData_UndefinedEntity, IGESData_IGESEntity, O
         Adds a Parameter which references an Entity. If the Entity is Null, the added parameter will define a "Null Pointer" (0) If <negative> is given True, this will command Sending to File (see IGESWriter) to produce a "Negative Pointer" (Default is False)
         """
     @overload
-    def AddLiteral(self,ptype : OCP.Interface.Interface_ParamType,val : str) -> None: 
+    def AddLiteral(self,ptype : OCP.Interface.Interface_ParamType,val : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Adds a literal Parameter to the list (as such)
 
         Adds a literal Parameter to the list (builds an HAsciiString)
         """
     @overload
-    def AddLiteral(self,ptype : OCP.Interface.Interface_ParamType,val : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    def AddLiteral(self,ptype : OCP.Interface.Interface_ParamType,val : str) -> None: ...
     def AddNegativePointers(self,list : OCP.TColStd.TColStd_HSequenceOfInteger) -> None: 
         """
         Adds a list of Ranks of Parameters to be noted as Negative Pointers (this will be taken into account for Parameters which are Entities)
@@ -6570,14 +6582,14 @@ class IGESData_FreeFormatEntity(IGESData_UndefinedEntity, IGESData_IGESEntity, O
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6956,14 +6968,14 @@ class IGESData_ViewKindEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transie
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

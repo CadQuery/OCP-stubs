@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Aspect
-import OCP.Quantity
 import OCP.Standard
 import OCP.TCollection
+import OCP.Quantity
+import OCP.Aspect
 __all__  = [
 "Xw_Window",
 "__GLXFBConfigRec"
@@ -61,14 +61,14 @@ class Xw_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
         Invalidate entire window content through generation of Expose event. This method does not aggregate multiple calls into single event - dedicated event will be sent on each call. When NULL display connection is specified, the connection specified on window creation will be used. Sending exposure messages from non-window thread would require dedicated display connection opened specifically for this working thread to avoid race conditions, since Xlib display connection is not thread-safe by default.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -111,7 +111,7 @@ class Xw_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
         Returns The Window RATIO equal to the physical WIDTH/HEIGHT dimensions
         """
     @overload
-    def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : OCP.Aspect.Aspect_GradientFillMethod) -> None: 
+    def SetBackground(self,ABack : OCP.Aspect.Aspect_Background) -> None: 
         """
         Modifies the window background.
 
@@ -121,10 +121,10 @@ class Xw_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
 
         Modifies the window gradient background.
         """
+    @overload
+    def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : OCP.Aspect.Aspect_GradientFillMethod) -> None: ...
     @overload
     def SetBackground(self,color : OCP.Quantity.Quantity_Color) -> None: ...
-    @overload
-    def SetBackground(self,ABack : OCP.Aspect.Aspect_Background) -> None: ...
     @overload
     def SetBackground(self,ABackground : OCP.Aspect.Aspect_GradientBackground) -> None: ...
     def SetTitle(self,theTitle : OCP.TCollection.TCollection_AsciiString) -> None: 
@@ -157,9 +157,9 @@ class Xw_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
         Returns native Window handle
         """
     @overload
-    def __init__(self,theXDisplay : OCP.Aspect.Aspect_DisplayConnection,theXWin : int,theFBConfig : __GLXFBConfigRec=None) -> None: ...
-    @overload
     def __init__(self,theXDisplay : OCP.Aspect.Aspect_DisplayConnection,theTitle : str,thePxLeft : int,thePxTop : int,thePxWidth : int,thePxHeight : int,theFBConfig : __GLXFBConfigRec=None) -> None: ...
+    @overload
+    def __init__(self,theXDisplay : OCP.Aspect.Aspect_DisplayConnection,theXWin : int,theFBConfig : __GLXFBConfigRec=None) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

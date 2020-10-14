@@ -184,11 +184,11 @@ class Intrv_Interval():
         None
         """
     @overload
-    def __init__(self,Start : float,TolStart : float,End : float,TolEnd : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Start : float,End : float) -> None: ...
+    @overload
+    def __init__(self,Start : float,TolStart : float,End : float,TolEnd : float) -> None: ...
     pass
 class Intrv_Intervals():
     """
@@ -210,14 +210,14 @@ class Intrv_Intervals():
         None
         """
     @overload
-    def Subtract(self,Tool : Intrv_Intervals) -> None: 
+    def Subtract(self,Tool : Intrv_Interval) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Subtract(self,Tool : Intrv_Interval) -> None: ...
+    def Subtract(self,Tool : Intrv_Intervals) -> None: ...
     @overload
     def Unite(self,Tool : Intrv_Interval) -> None: 
         """
@@ -234,20 +234,20 @@ class Intrv_Intervals():
         None
         """
     @overload
-    def XUnite(self,Tool : Intrv_Interval) -> None: 
+    def XUnite(self,Tool : Intrv_Intervals) -> None: 
         """
         None
 
         None
         """
     @overload
-    def XUnite(self,Tool : Intrv_Intervals) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def XUnite(self,Tool : Intrv_Interval) -> None: ...
     @overload
     def __init__(self,Int : Intrv_Intervals) -> None: ...
     @overload
     def __init__(self,Int : Intrv_Interval) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Intrv_Position():
     """
@@ -281,6 +281,7 @@ class Intrv_Position():
 
       Intrv_After
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -315,14 +316,14 @@ class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Intrv_Interval) -> None: 
+    def Append(self,theSeq : Intrv_SequenceOfInterval) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Intrv_SequenceOfInterval) -> None: ...
+    def Append(self,theItem : Intrv_Interval) -> None: ...
     def Assign(self,theOther : Intrv_SequenceOfInterval) -> Intrv_SequenceOfInterval: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -361,14 +362,14 @@ class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : Intrv_Interval) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Intrv_SequenceOfInterval) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Intrv_Interval) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Intrv_Interval) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Intrv_SequenceOfInterval) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -386,14 +387,14 @@ class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Intrv_Interval) -> None: 
+    def Prepend(self,theSeq : Intrv_SequenceOfInterval) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Intrv_SequenceOfInterval) -> None: ...
+    def Prepend(self,theItem : Intrv_Interval) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -430,9 +431,9 @@ class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : Intrv_SequenceOfInterval) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

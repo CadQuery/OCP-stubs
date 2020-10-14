@@ -90,7 +90,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,UDirection : bool) -> None: 
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,UDirection : bool) -> None: 
         """
         Get from FP the coordinates of the poles.
 
@@ -98,7 +98,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,UDirection : bool) -> None: ...
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,UDirection : bool) -> None: ...
     @staticmethod
     def HomogeneousD0_s(U : float,V : float,UIndex : int,VIndex : int,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,UKnots : OCP.TColStd.TColStd_Array1OfReal,VKnots : OCP.TColStd.TColStd_Array1OfReal,UMults : OCP.TColStd.TColStd_Array1OfInteger,VMults : OCP.TColStd.TColStd_Array1OfInteger,UDegree : int,VDegree : int,URat : bool,VRat : bool,UPer : bool,VPer : bool,P : OCP.gp.gp_Pnt) -> Tuple[float]: 
         """
@@ -152,7 +152,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: 
+    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,CachePoles : OCP.TColgp.TColgp_Array2OfPnt) -> None: 
         """
         Warning! To be used for BezierSurfaces ONLY!!!
 
@@ -160,7 +160,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,CachePoles : OCP.TColgp.TColgp_Array2OfPnt) -> None: ...
+    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
     @staticmethod
     def RationalDerivative_s(UDeg : int,VDeg : int,N : int,M : int,All : bool=True) -> Tuple[float, float]: 
         """
@@ -178,7 +178,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def Reverse_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Last : int,UDirection : bool) -> None: 
+    def Reverse_s(Weights : OCP.TColStd.TColStd_Array2OfReal,Last : int,UDirection : bool) -> None: 
         """
         Reverses the array of poles. Last is the Index of the new first Row( Col) of Poles. On a non periodic surface Last is Poles.Upper(). On a periodic curve last is (number of flat knots - degree - 1) or (sum of multiplicities(but for the last) + degree - 1)
 
@@ -186,10 +186,10 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def Reverse_s(Weights : OCP.TColStd.TColStd_Array2OfReal,Last : int,UDirection : bool) -> None: ...
+    def Reverse_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Last : int,UDirection : bool) -> None: ...
     @staticmethod
     @overload
-    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,FP : OCP.TColStd.TColStd_Array1OfReal,UDirection : bool) -> None: 
+    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,FP : OCP.TColStd.TColStd_Array1OfReal,UDirection : bool) -> None: 
         """
         Copy in FP the coordinates of the poles.
 
@@ -197,7 +197,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,FP : OCP.TColStd.TColStd_Array1OfReal,UDirection : bool) -> None: ...
+    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,FP : OCP.TColStd.TColStd_Array1OfReal,UDirection : bool) -> None: ...
     @staticmethod
     def Unperiodize_s(UDirection : bool,Degree : int,Mults : OCP.TColStd.TColStd_Array1OfInteger,Knots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewPoles : OCP.TColgp.TColgp_Array2OfPnt,NewWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
@@ -250,14 +250,14 @@ class BSplSLib_Cache(OCP.Standard.Standard_Transient):
         Verifies validity of the cache using parameters of the point
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.Adaptor3d
-import OCP.Geom2d
-import OCP.Standard
-import OCP.gp
-import OCP.IntSurf
 import OCP.GeomAbs
 import OCP.TColStd
-import OCP.Adaptor2d
+import OCP.Geom2d
+import OCP.IntSurf
+import OCP.Adaptor3d
+import OCP.Standard
+import OCP.NCollection
 import OCP.math
+import OCP.Adaptor2d
+import OCP.gp
 __all__  = [
 "Contap_ArcFunction",
 "Contap_ContAna",
@@ -74,7 +74,7 @@ class Contap_ArcFunction(OCP.math.math_FunctionWithDerivative, OCP.math.math_Fun
         None
         """
     @overload
-    def Set(self,Eye : OCP.gp.gp_Pnt,Angle : float) -> None: 
+    def Set(self,Direction : OCP.gp.gp_Dir,Angle : float) -> None: 
         """
         None
 
@@ -98,16 +98,16 @@ class Contap_ArcFunction(OCP.math.math_FunctionWithDerivative, OCP.math.math_Fun
 
         None
         """
-    @overload
-    def Set(self,Eye : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def Set(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
     @overload
     def Set(self,Direction : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def Set(self,Direction : OCP.gp.gp_Dir,Angle : float) -> None: ...
-    @overload
     def Set(self,S : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    @overload
+    def Set(self,Eye : OCP.gp.gp_Pnt,Angle : float) -> None: ...
+    @overload
+    def Set(self,Eye : OCP.gp.gp_Pnt) -> None: ...
     def Surface(self) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
         """
         Returns mySurf field
@@ -157,7 +157,7 @@ class Contap_ContAna():
         None
         """
     @overload
-    def Perform(self,C : OCP.gp.gp_Cone,D : OCP.gp.gp_Dir) -> None: 
+    def Perform(self,S : OCP.gp.gp_Sphere,D : OCP.gp.gp_Dir,Ang : float) -> None: 
         """
         None
 
@@ -177,12 +177,6 @@ class Contap_ContAna():
 
         None
         """
-    @overload
-    def Perform(self,C : OCP.gp.gp_Cone,Eye : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def Perform(self,S : OCP.gp.gp_Sphere,Eye : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def Perform(self,S : OCP.gp.gp_Sphere,D : OCP.gp.gp_Dir,Ang : float) -> None: ...
     @overload
     def Perform(self,C : OCP.gp.gp_Cone,D : OCP.gp.gp_Dir,Ang : float) -> None: ...
     @overload
@@ -191,6 +185,12 @@ class Contap_ContAna():
     def Perform(self,C : OCP.gp.gp_Cylinder,D : OCP.gp.gp_Dir) -> None: ...
     @overload
     def Perform(self,C : OCP.gp.gp_Cylinder,Eye : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def Perform(self,C : OCP.gp.gp_Cone,Eye : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def Perform(self,C : OCP.gp.gp_Cone,D : OCP.gp.gp_Dir) -> None: ...
+    @overload
+    def Perform(self,S : OCP.gp.gp_Sphere,Eye : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def Perform(self,S : OCP.gp.gp_Sphere,D : OCP.gp.gp_Dir) -> None: ...
     def TypeContour(self) -> OCP.GeomAbs.GeomAbs_CurveType: 
@@ -243,7 +243,7 @@ class Contap_Contour():
         None
         """
     @overload
-    def Perform(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,Direction : OCP.gp.gp_Vec) -> None: 
+    def Perform(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,Direction : OCP.gp.gp_Vec,Angle : float) -> None: 
         """
         Creates the contour in a given direction.
 
@@ -254,11 +254,11 @@ class Contap_Contour():
         Creates the contour for a perspective view.
         """
     @overload
-    def Perform(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,Eye : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def Perform(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,Direction : OCP.gp.gp_Vec,Angle : float) -> None: ...
-    @overload
     def Perform(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: ...
+    @overload
+    def Perform(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,Direction : OCP.gp.gp_Vec) -> None: ...
+    @overload
+    def Perform(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,Eye : OCP.gp.gp_Pnt) -> None: ...
     def SurfaceFunction(self) -> Contap_SurfFunction: 
         """
         Returns a reference on the internal SurfaceFunction. This is used to compute tangents on the lines.
@@ -266,19 +266,19 @@ class Contap_Contour():
         Returns a reference on the internal SurfaceFunction. This is used to compute tangents on the lines.
         """
     @overload
-    def __init__(self,Direction : OCP.gp.gp_Vec) -> None: ...
-    @overload
-    def __init__(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,Direction : OCP.gp.gp_Vec,Angle : float) -> None: ...
-    @overload
-    def __init__(self,Eye : OCP.gp.gp_Pnt) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,Eye : OCP.gp.gp_Pnt) -> None: ...
     @overload
+    def __init__(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,Direction : OCP.gp.gp_Vec) -> None: ...
+    @overload
+    def __init__(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,Direction : OCP.gp.gp_Vec,Angle : float) -> None: ...
+    @overload
+    def __init__(self,Direction : OCP.gp.gp_Vec) -> None: ...
+    @overload
     def __init__(self,Direction : OCP.gp.gp_Vec,Angle : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,Direction : OCP.gp.gp_Vec) -> None: ...
+    def __init__(self,Eye : OCP.gp.gp_Pnt) -> None: ...
     pass
 class Contap_HContTool():
     """
@@ -516,6 +516,7 @@ class Contap_IType():
 
       Contap_Restriction
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -537,7 +538,7 @@ class Contap_Line():
     None
     """
     @overload
-    def Add(self,P : OCP.IntSurf.IntSurf_PntOn2S) -> None: 
+    def Add(self,P : Contap_Point) -> None: 
         """
         None
 
@@ -545,10 +546,10 @@ class Contap_Line():
 
         None
         """
-    @overload
-    def Add(self,P : Contap_Point) -> None: ...
     @overload
     def Add(self,POn2S : OCP.IntSurf.IntSurf_PntOn2S) -> None: ...
+    @overload
+    def Add(self,P : OCP.IntSurf.IntSurf_PntOn2S) -> None: ...
     def Arc(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
         """
         None
@@ -606,7 +607,7 @@ class Contap_Line():
         Set The Tansition of the line.
         """
     @overload
-    def SetValue(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def SetValue(self,C : OCP.gp.gp_Circ) -> None: 
         """
         None
 
@@ -615,7 +616,7 @@ class Contap_Line():
         None
         """
     @overload
-    def SetValue(self,C : OCP.gp.gp_Circ) -> None: ...
+    def SetValue(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
     @overload
     def SetValue(self,L : OCP.gp.gp_Lin) -> None: ...
     def TransitionOnS(self) -> OCP.IntSurf.IntSurf_TypeTrans: 
@@ -762,14 +763,14 @@ class Contap_SequenceOfIWLineOfTheIWalking(OCP.NCollection.NCollection_BaseSeque
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Contap_TheIWLineOfTheIWalking) -> None: 
+    def Append(self,theSeq : Contap_SequenceOfIWLineOfTheIWalking) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Contap_SequenceOfIWLineOfTheIWalking) -> None: ...
+    def Append(self,theItem : Contap_TheIWLineOfTheIWalking) -> None: ...
     def Assign(self,theOther : Contap_SequenceOfIWLineOfTheIWalking) -> Contap_SequenceOfIWLineOfTheIWalking: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -808,14 +809,14 @@ class Contap_SequenceOfIWLineOfTheIWalking(OCP.NCollection.NCollection_BaseSeque
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Contap_SequenceOfIWLineOfTheIWalking) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Contap_SequenceOfIWLineOfTheIWalking) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Contap_TheIWLineOfTheIWalking) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Contap_TheIWLineOfTheIWalking) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Contap_SequenceOfIWLineOfTheIWalking) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -833,14 +834,14 @@ class Contap_SequenceOfIWLineOfTheIWalking(OCP.NCollection.NCollection_BaseSeque
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Contap_TheIWLineOfTheIWalking) -> None: 
+    def Prepend(self,theSeq : Contap_SequenceOfIWLineOfTheIWalking) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Contap_SequenceOfIWLineOfTheIWalking) -> None: ...
+    def Prepend(self,theItem : Contap_TheIWLineOfTheIWalking) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -875,11 +876,11 @@ class Contap_SequenceOfIWLineOfTheIWalking(OCP.NCollection.NCollection_BaseSeque
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : Contap_SequenceOfIWLineOfTheIWalking) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -967,14 +968,14 @@ class Contap_SequenceOfPathPointOfTheSearch(OCP.NCollection.NCollection_BaseSequ
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Contap_SequenceOfPathPointOfTheSearch) -> None: 
+    def Prepend(self,theItem : Contap_ThePathPointOfTheSearch) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Contap_ThePathPointOfTheSearch) -> None: ...
+    def Prepend(self,theSeq : Contap_SequenceOfPathPointOfTheSearch) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -1009,9 +1010,9 @@ class Contap_SequenceOfPathPointOfTheSearch(OCP.NCollection.NCollection_BaseSequ
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Contap_SequenceOfPathPointOfTheSearch) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -1110,14 +1111,14 @@ class Contap_SequenceOfSegmentOfTheSearch(OCP.NCollection.NCollection_BaseSequen
     @overload
     def Prepend(self,theSeq : Contap_SequenceOfSegmentOfTheSearch) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1232,7 +1233,7 @@ class Contap_SurfFunction(OCP.math.math_FunctionSetWithDerivatives, OCP.math.mat
         Root is the value of the function at the solution. It is a vector of dimension 1, i-e a real.
         """
     @overload
-    def Set(self,Eye : OCP.gp.gp_Pnt) -> None: 
+    def Set(self,Dir : OCP.gp.gp_Dir,Angle : float) -> None: 
         """
         None
 
@@ -1257,19 +1258,19 @@ class Contap_SurfFunction(OCP.math.math_FunctionSetWithDerivatives, OCP.math.mat
         None
         """
     @overload
-    def Set(self,Dir : OCP.gp.gp_Dir,Angle : float) -> None: ...
+    def Set(self,S : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
     @overload
-    def Set(self,Eye : OCP.gp.gp_Pnt,Angle : float) -> None: ...
-    @overload
-    def Set(self,Dir : OCP.gp.gp_Dir) -> None: ...
-    @overload
-    def Set(self,Direction : OCP.gp.gp_Dir,Angle : float) -> None: ...
-    @overload
-    def Set(self,Tolerance : float) -> None: ...
+    def Set(self,Eye : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def Set(self,Direction : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def Set(self,S : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    def Set(self,Direction : OCP.gp.gp_Dir,Angle : float) -> None: ...
+    @overload
+    def Set(self,Dir : OCP.gp.gp_Dir) -> None: ...
+    @overload
+    def Set(self,Tolerance : float) -> None: ...
+    @overload
+    def Set(self,Eye : OCP.gp.gp_Pnt,Angle : float) -> None: ...
     def Surface(self) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
         """
         None
@@ -1327,6 +1328,7 @@ class Contap_TFunction():
 
       Contap_DraftPrs
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1389,23 +1391,23 @@ class Contap_TheSequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Contap_Point) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Contap_TheSequenceOfPoint) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Contap_TheSequenceOfPoint) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : Contap_Point) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Contap_TheSequenceOfPoint) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Contap_Point) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Contap_Point) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Contap_TheSequenceOfPoint) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1423,23 +1425,23 @@ class Contap_TheSequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Contap_Point) -> None: 
+    def Prepend(self,theSeq : Contap_TheSequenceOfPoint) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Contap_TheSequenceOfPoint) -> None: ...
+    def Prepend(self,theItem : Contap_Point) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1487,27 +1489,27 @@ class Contap_TheIWLineOfTheIWalking(OCP.Standard.Standard_Transient):
         Add a point in the line.
         """
     @overload
-    def AddStatusFirst(self,Closed : bool,HasLast : bool,Index : int,P : OCP.IntSurf.IntSurf_PathPoint) -> None: 
+    def AddStatusFirst(self,Closed : bool,HasFirst : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def AddStatusFirst(self,Closed : bool,HasFirst : bool) -> None: ...
+    def AddStatusFirst(self,Closed : bool,HasLast : bool,Index : int,P : OCP.IntSurf.IntSurf_PathPoint) -> None: ...
     def AddStatusFirstLast(self,Closed : bool,HasFirst : bool,HasLast : bool) -> None: 
         """
         None
         """
     @overload
-    def AddStatusLast(self,HasLast : bool) -> None: 
+    def AddStatusLast(self,HasLast : bool,Index : int,P : OCP.IntSurf.IntSurf_PathPoint) -> None: 
         """
         None
 
         None
         """
     @overload
-    def AddStatusLast(self,HasLast : bool,Index : int,P : OCP.IntSurf.IntSurf_PathPoint) -> None: ...
+    def AddStatusLast(self,HasLast : bool) -> None: ...
     def Cut(self,Index : int) -> None: 
         """
         Cut the line at the point of rank Index.
@@ -1553,14 +1555,14 @@ class Contap_TheIWLineOfTheIWalking(OCP.Standard.Standard_Transient):
         Returns True if the line is closed.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1719,11 +1721,11 @@ class Contap_ThePathPointOfTheSearch():
         None
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,Tol : float,V : OCP.Adaptor3d.Adaptor3d_HVertex,A : OCP.Adaptor2d.Adaptor2d_HCurve2d,Parameter : float) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,Tol : float,A : OCP.Adaptor2d.Adaptor2d_HCurve2d,Parameter : float) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class Contap_TheSearch():
     """
@@ -1772,22 +1774,22 @@ class Contap_TheSearchInside():
         Returns the number of points. The exception NotDone if raised if IsDone returns False.
         """
     @overload
-    def Perform(self,F : Contap_SurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,T : OCP.Adaptor3d.Adaptor3d_TopolTool,Epsilon : float) -> None: 
+    def Perform(self,F : Contap_SurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,UStart : float,VStart : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Perform(self,F : Contap_SurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,UStart : float,VStart : float) -> None: ...
+    def Perform(self,F : Contap_SurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,T : OCP.Adaptor3d.Adaptor3d_TopolTool,Epsilon : float) -> None: ...
     def Value(self,Index : int) -> OCP.IntSurf.IntSurf_InteriorPoint: 
         """
         Returns the point of range Index. The exception NotDone if raised if IsDone returns False. The exception OutOfRange if raised if Index <= 0 or Index > NbPoints.
         """
     @overload
-    def __init__(self,F : Contap_SurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,T : OCP.Adaptor3d.Adaptor3d_TopolTool,Epsilon : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,F : Contap_SurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,T : OCP.Adaptor3d.Adaptor3d_TopolTool,Epsilon : float) -> None: ...
     pass
 class Contap_TheSegmentOfTheSearch():
     """
@@ -1832,14 +1834,14 @@ class Contap_TheSequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Contap_Line) -> None: 
+    def Append(self,theSeq : Contap_TheSequenceOfLine) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Contap_TheSequenceOfLine) -> None: ...
+    def Append(self,theItem : Contap_Line) -> None: ...
     def Assign(self,theOther : Contap_TheSequenceOfLine) -> Contap_TheSequenceOfLine: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1869,14 +1871,14 @@ class Contap_TheSequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Contap_Line) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Contap_TheSequenceOfLine) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Contap_TheSequenceOfLine) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : Contap_Line) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : Contap_TheSequenceOfLine) -> None: 
         """
@@ -1903,14 +1905,14 @@ class Contap_TheSequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Contap_Line) -> None: 
+    def Prepend(self,theSeq : Contap_TheSequenceOfLine) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Contap_TheSequenceOfLine) -> None: ...
+    def Prepend(self,theItem : Contap_Line) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1945,9 +1947,9 @@ class Contap_TheSequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Contap_TheSequenceOfLine) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Contap_TheSequenceOfLine) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -2024,36 +2026,36 @@ class Contap_TheHSequenceOfPoint(Contap_TheSequenceOfPoint, OCP.NCollection.NCol
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Contap_Point) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Contap_TheSequenceOfPoint) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Contap_TheSequenceOfPoint) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : Contap_Point) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Contap_TheSequenceOfPoint) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Contap_Point) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Contap_Point) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Contap_TheSequenceOfPoint) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2076,23 +2078,23 @@ class Contap_TheHSequenceOfPoint(Contap_TheSequenceOfPoint, OCP.NCollection.NCol
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Contap_Point) -> None: 
+    def Prepend(self,theSeq : Contap_TheSequenceOfPoint) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Contap_TheSequenceOfPoint) -> None: ...
+    def Prepend(self,theItem : Contap_Point) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence

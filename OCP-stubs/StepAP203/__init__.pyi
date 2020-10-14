@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepData
 import OCP.TCollection
-import OCP.Standard
 import OCP.StepRepr
 import OCP.StepBasic
+import OCP.Standard
+import OCP.StepData
 __all__  = [
 "StepAP203_ApprovedItem",
 "StepAP203_Array1OfApprovedItem",
@@ -275,13 +275,13 @@ class StepAP203_Array1OfApprovedItem():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepAP203_Array1OfApprovedItem) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepAP203_ApprovedItem,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepAP203_Array1OfApprovedItem) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepAP203_Array1OfCertifiedItem():
@@ -361,13 +361,13 @@ class StepAP203_Array1OfCertifiedItem():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepAP203_CertifiedItem,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepAP203_Array1OfCertifiedItem) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepAP203_Array1OfCertifiedItem) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepAP203_CertifiedItem,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepAP203_Array1OfChangeRequestItem():
@@ -449,11 +449,11 @@ class StepAP203_Array1OfChangeRequestItem():
     @overload
     def __init__(self,theOther : StepAP203_Array1OfChangeRequestItem) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theBegin : StepAP203_ChangeRequestItem,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepAP203_Array1OfClassifiedItem():
@@ -533,13 +533,13 @@ class StepAP203_Array1OfClassifiedItem():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepAP203_Array1OfClassifiedItem) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : StepAP203_ClassifiedItem,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepAP203_Array1OfClassifiedItem) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepAP203_ClassifiedItem,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepAP203_Array1OfContractedItem():
@@ -619,13 +619,13 @@ class StepAP203_Array1OfContractedItem():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepAP203_Array1OfContractedItem) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : StepAP203_ContractedItem,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepAP203_Array1OfContractedItem) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepAP203_Array1OfDateTimeItem():
@@ -705,13 +705,13 @@ class StepAP203_Array1OfDateTimeItem():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepAP203_DateTimeItem,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepAP203_Array1OfDateTimeItem) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepAP203_DateTimeItem,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepAP203_Array1OfPersonOrganizationItem():
@@ -791,13 +791,13 @@ class StepAP203_Array1OfPersonOrganizationItem():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : StepAP203_Array1OfPersonOrganizationItem) -> None: ...
-    @overload
     def __init__(self,theBegin : StepAP203_PersonOrganizationItem,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepAP203_Array1OfPersonOrganizationItem) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepAP203_Array1OfSpecifiedItem():
@@ -877,11 +877,11 @@ class StepAP203_Array1OfSpecifiedItem():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : StepAP203_SpecifiedItem,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepAP203_Array1OfSpecifiedItem) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -965,9 +965,9 @@ class StepAP203_Array1OfStartRequestItem():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepAP203_Array1OfStartRequestItem) -> None: ...
-    @overload
     def __init__(self,theBegin : StepAP203_StartRequestItem,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepAP203_Array1OfStartRequestItem) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -1049,13 +1049,13 @@ class StepAP203_Array1OfWorkItem():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepAP203_Array1OfWorkItem) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepAP203_WorkItem,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepAP203_Array1OfWorkItem) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepAP203_CcDesignApproval(OCP.StepBasic.StepBasic_ApprovalAssignment, OCP.Standard.Standard_Transient):
@@ -1091,14 +1091,14 @@ class StepAP203_CcDesignApproval(OCP.StepBasic.StepBasic_ApprovalAssignment, OCP
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1169,14 +1169,14 @@ class StepAP203_CcDesignCertification(OCP.StepBasic.StepBasic_CertificationAssig
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1247,14 +1247,14 @@ class StepAP203_CcDesignContract(OCP.StepBasic.StepBasic_ContractAssignment, OCP
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1325,14 +1325,14 @@ class StepAP203_CcDesignDateAndTimeAssignment(OCP.StepBasic.StepBasic_DateAndTim
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1411,14 +1411,14 @@ class StepAP203_CcDesignPersonAndOrganizationAssignment(OCP.StepBasic.StepBasic_
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1497,14 +1497,14 @@ class StepAP203_CcDesignSecurityClassification(OCP.StepBasic.StepBasic_SecurityC
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1579,14 +1579,14 @@ class StepAP203_CcDesignSpecificationReference(OCP.StepBasic.StepBasic_DocumentR
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1771,14 +1771,14 @@ class StepAP203_Change(OCP.StepBasic.StepBasic_ActionAssignment, OCP.Standard.St
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1849,14 +1849,14 @@ class StepAP203_ChangeRequest(OCP.StepBasic.StepBasic_ActionRequestAssignment, O
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2420,14 +2420,14 @@ class StepAP203_HArray1OfApprovedItem(StepAP203_Array1OfApprovedItem, OCP.Standa
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2480,11 +2480,11 @@ class StepAP203_HArray1OfApprovedItem(StepAP203_Array1OfApprovedItem, OCP.Standa
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_ApprovedItem) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepAP203_Array1OfApprovedItem) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_ApprovedItem) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2563,14 +2563,14 @@ class StepAP203_HArray1OfCertifiedItem(StepAP203_Array1OfCertifiedItem, OCP.Stan
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2621,13 +2621,13 @@ class StepAP203_HArray1OfCertifiedItem(StepAP203_Array1OfCertifiedItem, OCP.Stan
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : StepAP203_Array1OfCertifiedItem) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_CertifiedItem) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepAP203_Array1OfCertifiedItem) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2706,14 +2706,14 @@ class StepAP203_HArray1OfChangeRequestItem(StepAP203_Array1OfChangeRequestItem, 
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2764,11 +2764,11 @@ class StepAP203_HArray1OfChangeRequestItem(StepAP203_Array1OfChangeRequestItem, 
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepAP203_Array1OfChangeRequestItem) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepAP203_Array1OfChangeRequestItem) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_ChangeRequestItem) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -2849,14 +2849,14 @@ class StepAP203_HArray1OfClassifiedItem(StepAP203_Array1OfClassifiedItem, OCP.St
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2907,13 +2907,13 @@ class StepAP203_HArray1OfClassifiedItem(StepAP203_Array1OfClassifiedItem, OCP.St
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : StepAP203_Array1OfClassifiedItem) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_ClassifiedItem) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_ClassifiedItem) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepAP203_Array1OfClassifiedItem) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2992,14 +2992,14 @@ class StepAP203_HArray1OfContractedItem(StepAP203_Array1OfContractedItem, OCP.St
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3050,11 +3050,11 @@ class StepAP203_HArray1OfContractedItem(StepAP203_Array1OfContractedItem, OCP.St
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : StepAP203_Array1OfContractedItem) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_ContractedItem) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -3135,14 +3135,14 @@ class StepAP203_HArray1OfDateTimeItem(StepAP203_Array1OfDateTimeItem, OCP.Standa
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3193,13 +3193,13 @@ class StepAP203_HArray1OfDateTimeItem(StepAP203_Array1OfDateTimeItem, OCP.Standa
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepAP203_Array1OfDateTimeItem) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_DateTimeItem) -> None: ...
+    @overload
+    def __init__(self,theOther : StepAP203_Array1OfDateTimeItem) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3278,14 +3278,14 @@ class StepAP203_HArray1OfPersonOrganizationItem(StepAP203_Array1OfPersonOrganiza
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3336,13 +3336,13 @@ class StepAP203_HArray1OfPersonOrganizationItem(StepAP203_Array1OfPersonOrganiza
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepAP203_Array1OfPersonOrganizationItem) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_PersonOrganizationItem) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepAP203_Array1OfPersonOrganizationItem) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3421,14 +3421,14 @@ class StepAP203_HArray1OfSpecifiedItem(StepAP203_Array1OfSpecifiedItem, OCP.Stan
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3479,11 +3479,11 @@ class StepAP203_HArray1OfSpecifiedItem(StepAP203_Array1OfSpecifiedItem, OCP.Stan
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepAP203_Array1OfSpecifiedItem) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_SpecifiedItem) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_SpecifiedItem) -> None: ...
+    def __init__(self,theOther : StepAP203_Array1OfSpecifiedItem) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -3564,14 +3564,14 @@ class StepAP203_HArray1OfStartRequestItem(StepAP203_Array1OfStartRequestItem, OC
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3622,13 +3622,13 @@ class StepAP203_HArray1OfStartRequestItem(StepAP203_Array1OfStartRequestItem, OC
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_StartRequestItem) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepAP203_Array1OfStartRequestItem) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_StartRequestItem) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3707,14 +3707,14 @@ class StepAP203_HArray1OfWorkItem(StepAP203_Array1OfWorkItem, OCP.Standard.Stand
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3769,9 +3769,9 @@ class StepAP203_HArray1OfWorkItem(StepAP203_Array1OfWorkItem, OCP.Standard.Stand
     @overload
     def __init__(self,theOther : StepAP203_Array1OfWorkItem) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepAP203_WorkItem) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -4069,14 +4069,14 @@ class StepAP203_StartRequest(OCP.StepBasic.StepBasic_ActionRequestAssignment, OC
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4253,14 +4253,14 @@ class StepAP203_StartWork(OCP.StepBasic.StepBasic_ActionAssignment, OCP.Standard
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

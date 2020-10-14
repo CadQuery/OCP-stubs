@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
 import OCP.TopAbs
-import OCP.Standard
-import OCP.gp
-import OCP.TColgp
 import OCP.TColStd
+import OCP.TColgp
+import OCP.Standard
+import OCP.NCollection
+import OCP.gp
 __all__  = [
 "HLRAlgo",
 "HLRAlgo_Array1OfPHDat",
@@ -177,13 +177,13 @@ class HLRAlgo_Array1OfPHDat():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : HLRAlgo_Array1OfPHDat) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : HLRAlgo_PolyHidingData,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : HLRAlgo_Array1OfPHDat) -> None: ...
+    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class HLRAlgo_Array1OfPINod():
@@ -263,9 +263,9 @@ class HLRAlgo_Array1OfPINod():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : HLRAlgo_PolyInternalNode,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : HLRAlgo_Array1OfPINod) -> None: ...
     @overload
@@ -349,13 +349,13 @@ class HLRAlgo_Array1OfPISeg():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : HLRAlgo_Array1OfPISeg) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : HLRAlgo_PolyInternalSegment,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : HLRAlgo_Array1OfPISeg) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class HLRAlgo_Array1OfTData():
@@ -435,13 +435,13 @@ class HLRAlgo_Array1OfTData():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : HLRAlgo_Array1OfTData) -> None: ...
     @overload
     def __init__(self,theBegin : HLRAlgo_TriangleData,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class HLRAlgo_BiPoint():
@@ -449,14 +449,14 @@ class HLRAlgo_BiPoint():
     None
     """
     @overload
-    def Hidden(self) -> bool: 
+    def Hidden(self,B : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Hidden(self,B : bool) -> None: ...
+    def Hidden(self) -> bool: ...
     def Indices(self) -> Any: 
         """
         None
@@ -471,14 +471,14 @@ class HLRAlgo_BiPoint():
     @overload
     def IntLine(self,B : bool) -> None: ...
     @overload
-    def OutLine(self,B : bool) -> None: 
+    def OutLine(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def OutLine(self) -> bool: ...
+    def OutLine(self,B : bool) -> None: ...
     def Points(self) -> Any: 
         """
         None
@@ -502,10 +502,6 @@ class HLRAlgo_BiPoint():
     @overload
     def RgNLine(self) -> bool: ...
     @overload
-    def __init__(self,X1 : float,Y1 : float,Z1 : float,X2 : float,Y2 : float,Z2 : float,XT1 : float,YT1 : float,ZT1 : float,XT2 : float,YT2 : float,ZT2 : float,Index : int,i1 : int,i1p1 : int,i1p2 : int,i2 : int,i2p1 : int,i2p2 : int,flag : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,X1 : float,Y1 : float,Z1 : float,X2 : float,Y2 : float,Z2 : float,XT1 : float,YT1 : float,ZT1 : float,XT2 : float,YT2 : float,ZT2 : float,Index : int,flag : int) -> None: ...
     @overload
     def __init__(self,X1 : float,Y1 : float,Z1 : float,X2 : float,Y2 : float,Z2 : float,XT1 : float,YT1 : float,ZT1 : float,XT2 : float,YT2 : float,ZT2 : float,Index : int,i1 : int,i1p1 : int,i1p2 : int,i2 : int,i2p1 : int,i2p2 : int,reg1 : bool,regn : bool,outl : bool,intl : bool) -> None: ...
@@ -515,6 +511,10 @@ class HLRAlgo_BiPoint():
     def __init__(self,X1 : float,Y1 : float,Z1 : float,X2 : float,Y2 : float,Z2 : float,XT1 : float,YT1 : float,ZT1 : float,XT2 : float,YT2 : float,ZT2 : float,Index : int,i1 : int,i1p1 : int,i1p2 : int,flag : int) -> None: ...
     @overload
     def __init__(self,X1 : float,Y1 : float,Z1 : float,X2 : float,Y2 : float,Z2 : float,XT1 : float,YT1 : float,ZT1 : float,XT2 : float,YT2 : float,ZT2 : float,Index : int,i1 : int,i1p1 : int,i1p2 : int,reg1 : bool,regn : bool,outl : bool,intl : bool) -> None: ...
+    @overload
+    def __init__(self,X1 : float,Y1 : float,Z1 : float,X2 : float,Y2 : float,Z2 : float,XT1 : float,YT1 : float,ZT1 : float,XT2 : float,YT2 : float,ZT2 : float,Index : int,i1 : int,i1p1 : int,i1p2 : int,i2 : int,i2p1 : int,i2p2 : int,flag : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class HLRAlgo_Coincidence():
     """
@@ -593,23 +593,23 @@ class HLRAlgo_EdgeStatus():
     This class describes the Hidden Line status of an Edge. It contains :
     """
     @overload
-    def AllHidden(self) -> bool: 
+    def AllHidden(self,B : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def AllHidden(self,B : bool) -> None: ...
+    def AllHidden(self) -> bool: ...
     @overload
-    def AllVisible(self,B : bool) -> None: 
+    def AllVisible(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def AllVisible(self) -> bool: ...
+    def AllVisible(self,B : bool) -> None: ...
     def Bounds(self,theTolStart : float,theTolEnd : float) -> Tuple[float, float]: 
         """
         None
@@ -639,9 +639,9 @@ class HLRAlgo_EdgeStatus():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Start : float,TolStart : float,End : float,TolEnd : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class HLRAlgo_EdgesBlock(OCP.Standard.Standard_Transient):
     """
@@ -656,27 +656,27 @@ class HLRAlgo_EdgesBlock(OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Double(self,I : int) -> bool: 
+    def Double(self,I : int,B : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Double(self,I : int,B : bool) -> None: ...
+    def Double(self,I : int) -> bool: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @overload
-    def Edge(self,I : int) -> int: 
+    def Edge(self,I : int,EI : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Edge(self,I : int,EI : int) -> None: ...
+    def Edge(self,I : int) -> int: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -695,14 +695,14 @@ class HLRAlgo_EdgesBlock(OCP.Standard.Standard_Transient):
     @overload
     def Internal(self,I : int,B : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -730,23 +730,23 @@ class HLRAlgo_EdgesBlock(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Orientation(self,I : int) -> OCP.TopAbs.TopAbs_Orientation: 
+    def Orientation(self,I : int,Or : OCP.TopAbs.TopAbs_Orientation) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Orientation(self,I : int,Or : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    def Orientation(self,I : int) -> OCP.TopAbs.TopAbs_Orientation: ...
     @overload
-    def OutLine(self,I : int) -> bool: 
+    def OutLine(self,I : int,B : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def OutLine(self,I : int,B : bool) -> None: ...
+    def OutLine(self,I : int) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -833,14 +833,14 @@ class HLRAlgo_HArray1OfPHDat(HLRAlgo_Array1OfPHDat, OCP.Standard.Standard_Transi
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -893,9 +893,9 @@ class HLRAlgo_HArray1OfPHDat(HLRAlgo_Array1OfPHDat, OCP.Standard.Standard_Transi
     @overload
     def __init__(self,theOther : HLRAlgo_Array1OfPHDat) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : HLRAlgo_PolyHidingData) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -976,14 +976,14 @@ class HLRAlgo_HArray1OfPINod(HLRAlgo_Array1OfPINod, OCP.Standard.Standard_Transi
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1034,11 +1034,11 @@ class HLRAlgo_HArray1OfPINod(HLRAlgo_Array1OfPINod, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : HLRAlgo_PolyInternalNode) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : HLRAlgo_Array1OfPINod) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : HLRAlgo_PolyInternalNode) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -1119,14 +1119,14 @@ class HLRAlgo_HArray1OfPISeg(HLRAlgo_Array1OfPISeg, OCP.Standard.Standard_Transi
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1177,11 +1177,11 @@ class HLRAlgo_HArray1OfPISeg(HLRAlgo_Array1OfPISeg, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : HLRAlgo_PolyInternalSegment) -> None: ...
+    @overload
     def __init__(self,theOther : HLRAlgo_Array1OfPISeg) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : HLRAlgo_PolyInternalSegment) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -1262,14 +1262,14 @@ class HLRAlgo_HArray1OfTData(HLRAlgo_Array1OfTData, OCP.Standard.Standard_Transi
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1320,9 +1320,9 @@ class HLRAlgo_HArray1OfTData(HLRAlgo_Array1OfTData, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : HLRAlgo_TriangleData) -> None: ...
     @overload
@@ -1353,14 +1353,14 @@ class HLRAlgo_Interference():
     @overload
     def Boundary(self) -> HLRAlgo_Coincidence: ...
     @overload
-    def BoundaryTransition(self,BTr : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def BoundaryTransition(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         None
 
         None
         """
     @overload
-    def BoundaryTransition(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def BoundaryTransition(self,BTr : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def ChangeBoundary(self) -> HLRAlgo_Coincidence: 
         """
         None
@@ -1379,14 +1379,14 @@ class HLRAlgo_Interference():
     @overload
     def Intersection(self) -> HLRAlgo_Intersection: ...
     @overload
-    def Orientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         None
 
         None
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @overload
     def Transition(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -1410,7 +1410,7 @@ class HLRAlgo_InterferenceList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : HLRAlgo_InterferenceList) -> None: 
+    def Append(self,theItem : HLRAlgo_Interference) -> HLRAlgo_Interference: 
         """
         Append one item at the end
 
@@ -1419,9 +1419,9 @@ class HLRAlgo_InterferenceList(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : HLRAlgo_Interference,theIter : Any) -> None: ...
+    def Append(self,theOther : HLRAlgo_InterferenceList) -> None: ...
     @overload
-    def Append(self,theItem : HLRAlgo_Interference) -> HLRAlgo_Interference: ...
+    def Append(self,theItem : HLRAlgo_Interference,theIter : Any) -> None: ...
     def Assign(self,theOther : HLRAlgo_InterferenceList) -> HLRAlgo_InterferenceList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1450,14 +1450,14 @@ class HLRAlgo_InterferenceList(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : HLRAlgo_Interference,theIter : Any) -> HLRAlgo_Interference: ...
     @overload
-    def InsertBefore(self,theItem : HLRAlgo_Interference,theIter : Any) -> HLRAlgo_Interference: 
+    def InsertBefore(self,theOther : HLRAlgo_InterferenceList,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : HLRAlgo_InterferenceList,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : HLRAlgo_Interference,theIter : Any) -> HLRAlgo_Interference: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1469,14 +1469,14 @@ class HLRAlgo_InterferenceList(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : HLRAlgo_InterferenceList) -> None: 
+    def Prepend(self,theItem : HLRAlgo_Interference) -> HLRAlgo_Interference: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : HLRAlgo_Interference) -> HLRAlgo_Interference: ...
+    def Prepend(self,theOther : HLRAlgo_InterferenceList) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1494,9 +1494,9 @@ class HLRAlgo_InterferenceList(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : HLRAlgo_InterferenceList) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -1506,7 +1506,7 @@ class HLRAlgo_Intersection():
     Describes an intersection on an edge to hide. Contains a parameter and a state (ON = on the face, OUT = above the face, IN = under the Face)
     """
     @overload
-    def Index(self,Ind : int) -> None: 
+    def Index(self) -> int: 
         """
         None
 
@@ -1517,9 +1517,9 @@ class HLRAlgo_Intersection():
         None
         """
     @overload
-    def Index(self) -> int: ...
+    def Index(self,Ind : int) -> None: ...
     @overload
-    def Level(self,Lev : int) -> None: 
+    def Level(self) -> int: 
         """
         None
 
@@ -1530,7 +1530,7 @@ class HLRAlgo_Intersection():
         None
         """
     @overload
-    def Level(self) -> int: ...
+    def Level(self,Lev : int) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -1545,7 +1545,7 @@ class HLRAlgo_Intersection():
     @overload
     def Orientation(self,Ori : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @overload
-    def Parameter(self) -> float: 
+    def Parameter(self,P : float) -> None: 
         """
         None
 
@@ -1556,7 +1556,7 @@ class HLRAlgo_Intersection():
         None
         """
     @overload
-    def Parameter(self,P : float) -> None: ...
+    def Parameter(self) -> float: ...
     @overload
     def SegIndex(self) -> int: 
         """
@@ -1571,7 +1571,7 @@ class HLRAlgo_Intersection():
     @overload
     def SegIndex(self,SegInd : int) -> None: ...
     @overload
-    def State(self,St : OCP.TopAbs.TopAbs_State) -> None: 
+    def State(self,S : OCP.TopAbs.TopAbs_State) -> None: 
         """
         None
 
@@ -1584,9 +1584,9 @@ class HLRAlgo_Intersection():
     @overload
     def State(self) -> OCP.TopAbs.TopAbs_State: ...
     @overload
-    def State(self,S : OCP.TopAbs.TopAbs_State) -> None: ...
+    def State(self,St : OCP.TopAbs.TopAbs_State) -> None: ...
     @overload
-    def Tolerance(self,T : float) -> None: 
+    def Tolerance(self) -> float: 
         """
         None
 
@@ -1597,7 +1597,7 @@ class HLRAlgo_Intersection():
         None
         """
     @overload
-    def Tolerance(self) -> float: ...
+    def Tolerance(self,T : float) -> None: ...
     @overload
     def __init__(self,Ori : OCP.TopAbs.TopAbs_Orientation,Lev : int,SegInd : int,Ind : int,P : float,Tol : float,S : OCP.TopAbs.TopAbs_State) -> None: ...
     @overload
@@ -1621,9 +1621,9 @@ class HLRAlgo_ListOfBPoint(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : HLRAlgo_BiPoint,theIter : Any) -> None: ...
-    @overload
     def Append(self,theOther : HLRAlgo_ListOfBPoint) -> None: ...
+    @overload
+    def Append(self,theItem : HLRAlgo_BiPoint,theIter : Any) -> None: ...
     def Assign(self,theOther : HLRAlgo_ListOfBPoint) -> HLRAlgo_ListOfBPoint: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1652,14 +1652,14 @@ class HLRAlgo_ListOfBPoint(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : HLRAlgo_BiPoint,theIter : Any) -> HLRAlgo_BiPoint: ...
     @overload
-    def InsertBefore(self,theOther : HLRAlgo_ListOfBPoint,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : HLRAlgo_BiPoint,theIter : Any) -> HLRAlgo_BiPoint: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : HLRAlgo_BiPoint,theIter : Any) -> HLRAlgo_BiPoint: ...
+    def InsertBefore(self,theOther : HLRAlgo_ListOfBPoint,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1752,14 +1752,14 @@ class HLRAlgo_PolyAlgo(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1883,14 +1883,14 @@ class HLRAlgo_PolyData(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2003,7 +2003,7 @@ class HLRAlgo_PolyInternalData(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IntOutL(self,B : bool) -> None: 
+    def IntOutL(self) -> bool: 
         """
         None
 
@@ -2014,16 +2014,16 @@ class HLRAlgo_PolyInternalData(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IntOutL(self) -> bool: ...
+    def IntOutL(self,B : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2131,14 +2131,14 @@ class HLRAlgo_PolyInternalNode(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2250,6 +2250,7 @@ class HLRAlgo_PolyMask():
 
       HLRAlgo_PolyMask_FMskFrBack
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2322,14 +2323,14 @@ class HLRAlgo_PolyShellData(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2400,7 +2401,7 @@ class HLRAlgo_Projector():
         Returns True if there is a perspective transformation.
         """
     @overload
-    def Project(self,P : OCP.gp.gp_Pnt,Pout : OCP.gp.gp_Pnt2d) -> None: 
+    def Project(self,P : OCP.gp.gp_Pnt) -> Tuple[float, float, float]: 
         """
         Transform and apply perspective if needed.
 
@@ -2408,10 +2409,10 @@ class HLRAlgo_Projector():
 
         Transform and apply perspective if needed.
         """
-    @overload
-    def Project(self,P : OCP.gp.gp_Pnt) -> Tuple[float, float, float]: ...
     @overload
     def Project(self,P : OCP.gp.gp_Pnt,D1 : OCP.gp.gp_Vec,Pout : OCP.gp.gp_Pnt2d,D1out : OCP.gp.gp_Vec2d) -> None: ...
+    @overload
+    def Project(self,P : OCP.gp.gp_Pnt,Pout : OCP.gp.gp_Pnt2d) -> None: ...
     def Scaled(self,On : bool=False) -> None: 
         """
         to compute with the given scale and translation.
@@ -2425,7 +2426,7 @@ class HLRAlgo_Projector():
         return a line going through the eye towards the 2d point <X,Y>.
         """
     @overload
-    def Transform(self,D : OCP.gp.gp_Vec) -> None: 
+    def Transform(self,Pnt : OCP.gp.gp_Pnt) -> None: 
         """
         None
 
@@ -2436,21 +2437,21 @@ class HLRAlgo_Projector():
         None
         """
     @overload
-    def Transform(self,Pnt : OCP.gp.gp_Pnt) -> None: ...
+    def Transform(self,D : OCP.gp.gp_Vec) -> None: ...
     def Transformation(self) -> OCP.gp.gp_Trsf: 
         """
         Returns the active transformation.
         """
     @overload
-    def __init__(self,CS : OCP.gp.gp_Ax2,Focus : float) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,T : OCP.gp.gp_Trsf,Persp : bool,Focus : float) -> None: ...
     @overload
-    def __init__(self,CS : OCP.gp.gp_Ax2) -> None: ...
+    def __init__(self,CS : OCP.gp.gp_Ax2,Focus : float) -> None: ...
     @overload
     def __init__(self,T : OCP.gp.gp_Trsf,Persp : bool,Focus : float,v1 : OCP.gp.gp_Vec2d,v2 : OCP.gp.gp_Vec2d,v3 : OCP.gp.gp_Vec2d) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,CS : OCP.gp.gp_Ax2) -> None: ...
     pass
 class HLRAlgo_TriangleData():
     """
@@ -2515,14 +2516,14 @@ class HLRAlgo_WiresBlock(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

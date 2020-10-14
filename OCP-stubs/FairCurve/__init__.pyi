@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Geom2d
-import OCP.gp
-import OCP.TColgp
 import OCP.TColStd
+import OCP.Geom2d
+import OCP.TColgp
 import OCP.math
+import OCP.gp
 __all__  = [
 "FairCurve_AnalysisCode",
 "FairCurve_Batten",
@@ -41,6 +41,7 @@ class FairCurve_AnalysisCode():
 
       FairCurve_NullHeight
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -702,7 +703,7 @@ class FairCurve_Newton(OCP.math.math_NewtonMinimum):
         Tests if an error has occured.
         """
     @overload
-    def Location(self) -> OCP.math.math_Vector: 
+    def Location(self,Loc : OCP.math.math_Vector) -> None: 
         """
         outputs the location vector of the minimum in Loc. Exception NotDone is raised if an error has occured. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
 
@@ -713,7 +714,7 @@ class FairCurve_Newton(OCP.math.math_NewtonMinimum):
         returns the location vector of the minimum. Exception NotDone is raised if an error has occured.
         """
     @overload
-    def Location(self,Loc : OCP.math.math_Vector) -> None: ...
+    def Location(self) -> OCP.math.math_Vector: ...
     def Minimum(self) -> float: 
         """
         returns the value of the minimum. Exception NotDone is raised if the minimum was not found.

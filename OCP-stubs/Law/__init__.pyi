@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.Adaptor3d
-import OCP.Standard
-import OCP.TColgp
 import OCP.TColStd
 import OCP.GeomAbs
+import OCP.TColgp
+import OCP.Adaptor3d
+import OCP.Standard
+import OCP.NCollection
 __all__  = [
 "Law",
 "Law_Function",
@@ -30,7 +30,7 @@ class Law():
     """
     @staticmethod
     @overload
-    def MixBnd_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Lin : Law_Linear) -> OCP.TColStd.TColStd_HArray1OfReal: 
+    def MixBnd_s(Lin : Law_Linear) -> Law_BSpFunc: 
         """
         This algorithm searches the knot values corresponding to the splitting of a given B-spline law into several arcs with the same continuity. The continuity order is given at the construction time. Builds a 1d bspline that is near from Lin with null derivatives at the extremities.
 
@@ -38,7 +38,7 @@ class Law():
         """
     @staticmethod
     @overload
-    def MixBnd_s(Lin : Law_Linear) -> Law_BSpFunc: ...
+    def MixBnd_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Lin : Law_Linear) -> OCP.TColStd.TColStd_HArray1OfReal: ...
     @staticmethod
     def MixTgt_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NulOnTheRight : bool,Index : int) -> OCP.TColStd.TColStd_HArray1OfReal: 
         """
@@ -106,14 +106,14 @@ class Law_Function(OCP.Standard.Standard_Transient):
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -219,14 +219,14 @@ class Law_BSpline(OCP.Standard.Standard_Transient):
         Increase the degree to <Degree>. Nothing is done if <Degree> is lower or equal to the current degree.
         """
     @overload
-    def IncreaseMultiplicity(self,Index : int,M : int) -> None: 
+    def IncreaseMultiplicity(self,I1 : int,I2 : int,M : int) -> None: 
         """
         Increases the multiplicity of the knot <Index> to <M>.
 
         Increases the multiplicities of the knots in [I1,I2] to <M>.
         """
     @overload
-    def IncreaseMultiplicity(self,I1 : int,I2 : int,M : int) -> None: ...
+    def IncreaseMultiplicity(self,Index : int,M : int) -> None: ...
     def IncrementMultiplicity(self,I1 : int,I2 : int,M : int) -> None: 
         """
         Increment the multiplicities of the knots in [I1,I2] by <M>.
@@ -252,14 +252,14 @@ class Law_BSpline(OCP.Standard.Standard_Transient):
         Returns true if the distance between the first point and the last point of the curve is lower or equal to Resolution from package gp. Warnings : The first and the last point can be different from the first pole and the last pole of the curve.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -530,14 +530,14 @@ class Law_Composite(Law_Function, OCP.Standard.Standard_Transient):
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -631,14 +631,14 @@ class Law_Constant(Law_Function, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -729,14 +729,14 @@ class Law_BSpFunc(Law_Function, OCP.Standard.Standard_Transient):
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -830,14 +830,14 @@ class Law_Interpol(Law_BSpFunc, Law_Function, OCP.Standard.Standard_Transient):
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -910,14 +910,14 @@ class Law_Interpolate():
         None
         """
     @overload
-    def Load(self,Tangents : OCP.TColStd.TColStd_Array1OfReal,TangentFlags : OCP.TColStd.TColStd_HArray1OfBoolean) -> None: 
+    def Load(self,InitialTangent : float,FinalTangent : float) -> None: 
         """
         loads initial and final tangents if any.
 
         loads the tangents. We should have as many tangents as they are points in the array if TangentFlags.Value(i) is Standard_True use the tangent Tangents.Value(i) otherwise the tangent is not constrained.
         """
     @overload
-    def Load(self,InitialTangent : float,FinalTangent : float) -> None: ...
+    def Load(self,Tangents : OCP.TColStd.TColStd_Array1OfReal,TangentFlags : OCP.TColStd.TColStd_HArray1OfBoolean) -> None: ...
     def Perform(self) -> None: 
         """
         Makes the interpolation
@@ -936,7 +936,7 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : Law_Laws) -> None: 
+    def Append(self,theItem : Law_Function) -> Law_Function: 
         """
         Append one item at the end
 
@@ -947,7 +947,7 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : Law_Function,theIter : Any) -> None: ...
     @overload
-    def Append(self,theItem : Law_Function) -> Law_Function: ...
+    def Append(self,theOther : Law_Laws) -> None: ...
     def Assign(self,theOther : Law_Laws) -> Law_Laws: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -967,23 +967,23 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : Law_Function,theIter : Any) -> Law_Function: 
+    def InsertAfter(self,theOther : Law_Laws,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : Law_Laws,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : Law_Function,theIter : Any) -> Law_Function: ...
     @overload
-    def InsertBefore(self,theItem : Law_Function,theIter : Any) -> Law_Function: 
+    def InsertBefore(self,theOther : Law_Laws,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : Law_Laws,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : Law_Function,theIter : Any) -> Law_Function: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -995,14 +995,14 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : Law_Laws) -> None: 
+    def Prepend(self,theItem : Law_Function) -> Law_Function: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : Law_Function) -> Law_Function: ...
+    def Prepend(self,theOther : Law_Laws) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1022,9 +1022,9 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : Law_Laws) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Law_Laws) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Law_Linear(Law_Function, OCP.Standard.Standard_Transient):
@@ -1072,14 +1072,14 @@ class Law_Linear(Law_Function, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1170,14 +1170,14 @@ class Law_S(Law_BSpFunc, Law_Function, OCP.Standard.Standard_Transient):
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

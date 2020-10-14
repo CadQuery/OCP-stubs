@@ -4,22 +4,22 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Bnd
-import OCP.gp
-import OCP.Geom
-import OCP.TColStd
-import OCP.AppParCurves
-import OCP.NCollection
-import OCP.Adaptor3d
 import OCP.TopAbs
 import OCP.Geom2d
-import OCP.Approx
-import OCP.IntSurf
-import OCP.math
 import OCP.TColgp
+import OCP.Adaptor3d
 import OCP.GeomAdaptor
 import OCP.IntImp
+import OCP.NCollection
+import OCP.AppParCurves
+import OCP.gp
+import OCP.TColStd
+import OCP.Bnd
+import OCP.Approx
 import OCP.IntPatch
+import OCP.IntSurf
+import OCP.Geom
+import OCP.math
 __all__  = [
 "GeomInt",
 "GeomInt_BSpGradient_BFGSOfMyBSplGradientOfTheComputeLineOfWLApprox",
@@ -73,7 +73,7 @@ class GeomInt_BSpGradient_BFGSOfMyBSplGradientOfTheComputeLineOfWLApprox(OCP.mat
         Prints on the stream o information on the current state of the object. Is used to redefine the operator <<.
         """
     @overload
-    def Gradient(self,Grad : OCP.math.math_Vector) -> None: 
+    def Gradient(self) -> OCP.math.math_Vector: 
         """
         Returns the value of the gradient vector at the minimum in Grad. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Grad is not equal to the range of the StartingPoint.
 
@@ -84,7 +84,7 @@ class GeomInt_BSpGradient_BFGSOfMyBSplGradientOfTheComputeLineOfWLApprox(OCP.mat
         Returns the gradient vector at the minimum. Exception NotDone is raised if the minimum was not found.
         """
     @overload
-    def Gradient(self) -> OCP.math.math_Vector: ...
+    def Gradient(self,Grad : OCP.math.math_Vector) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns true if the computations are successful, otherwise returns false.
@@ -253,7 +253,7 @@ class GeomInt_BSpParLeastSquareOfMyBSplGradientOfTheComputeLineOfWLApprox():
         returns the value (PN - PN-1)/ VN if the last point was a tangency point.
         """
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector) -> None: 
+    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: 
         """
         Is used after having initialized the fields. The case "CurvaturePoint" is not treated in this method.
 
@@ -264,11 +264,11 @@ class GeomInt_BSpParLeastSquareOfMyBSplGradientOfTheComputeLineOfWLApprox():
         Is used after having initialized the fields. <V1t> is the tangent vector at the first point. <V2t> is the tangent vector at the last point. <V1c> is the tangent vector at the first point. <V2c> is the tangent vector at the last point.
         """
     @overload
+    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
+    @overload
     def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
-    @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
+    def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
     def Points(self) -> OCP.math.math_Matrix: 
         """
         returns the matrix of points value.
@@ -278,13 +278,13 @@ class GeomInt_BSpParLeastSquareOfMyBSplGradientOfTheComputeLineOfWLApprox():
         returns the matrix of resulting control points value.
         """
     @overload
-    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
     def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
-    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
-    @overload
     def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    @overload
+    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     pass
 class GeomInt_Gradient_BFGSOfMyGradientOfTheComputeLineBezierOfWLApprox(OCP.math.math_BFGS):
     """
@@ -295,7 +295,7 @@ class GeomInt_Gradient_BFGSOfMyGradientOfTheComputeLineBezierOfWLApprox(OCP.math
         Prints on the stream o information on the current state of the object. Is used to redefine the operator <<.
         """
     @overload
-    def Gradient(self,Grad : OCP.math.math_Vector) -> None: 
+    def Gradient(self) -> OCP.math.math_Vector: 
         """
         Returns the value of the gradient vector at the minimum in Grad. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Grad is not equal to the range of the StartingPoint.
 
@@ -306,7 +306,7 @@ class GeomInt_Gradient_BFGSOfMyGradientOfTheComputeLineBezierOfWLApprox(OCP.math
         Returns the gradient vector at the minimum. Exception NotDone is raised if the minimum was not found.
         """
     @overload
-    def Gradient(self) -> OCP.math.math_Vector: ...
+    def Gradient(self,Grad : OCP.math.math_Vector) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns true if the computations are successful, otherwise returns false.
@@ -361,7 +361,7 @@ class GeomInt_Gradient_BFGSOfMyGradientbisOfTheComputeLineOfWLApprox(OCP.math.ma
         Prints on the stream o information on the current state of the object. Is used to redefine the operator <<.
         """
     @overload
-    def Gradient(self,Grad : OCP.math.math_Vector) -> None: 
+    def Gradient(self) -> OCP.math.math_Vector: 
         """
         Returns the value of the gradient vector at the minimum in Grad. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Grad is not equal to the range of the StartingPoint.
 
@@ -372,7 +372,7 @@ class GeomInt_Gradient_BFGSOfMyGradientbisOfTheComputeLineOfWLApprox(OCP.math.ma
         Returns the gradient vector at the minimum. Exception NotDone is raised if the minimum was not found.
         """
     @overload
-    def Gradient(self) -> OCP.math.math_Vector: ...
+    def Gradient(self,Grad : OCP.math.math_Vector) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns true if the computations are successful, otherwise returns false.
@@ -486,7 +486,7 @@ class GeomInt_IntSS():
         None
         """
     @overload
-    def Perform(self,HS1 : OCP.GeomAdaptor.GeomAdaptor_HSurface,HS2 : OCP.GeomAdaptor.GeomAdaptor_HSurface,Tol : float,Approx : bool,ApproxS1 : bool,ApproxS2 : bool) -> None: 
+    def Perform(self,HS1 : OCP.GeomAdaptor.GeomAdaptor_HSurface,HS2 : OCP.GeomAdaptor.GeomAdaptor_HSurface,Tol : float,U1 : float,V1 : float,U2 : float,V2 : float,Approx : bool,ApproxS1 : bool,ApproxS2 : bool) -> None: 
         """
         general intersection of two surfaces
 
@@ -501,13 +501,13 @@ class GeomInt_IntSS():
         intersection of adapted surfaces using a starting point
         """
     @overload
-    def Perform(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,Tol : float,U1 : float,V1 : float,U2 : float,V2 : float,Approx : bool=True,ApproxS1 : bool=False,ApproxS2 : bool=False) -> None: ...
-    @overload
-    def Perform(self,HS1 : OCP.GeomAdaptor.GeomAdaptor_HSurface,HS2 : OCP.GeomAdaptor.GeomAdaptor_HSurface,Tol : float,U1 : float,V1 : float,U2 : float,V2 : float,Approx : bool,ApproxS1 : bool,ApproxS2 : bool) -> None: ...
-    @overload
-    def Perform(self,HS1 : OCP.GeomAdaptor.GeomAdaptor_HSurface,HS2 : OCP.GeomAdaptor.GeomAdaptor_HSurface,Tol : float,U1 : float,V1 : float,U2 : float,V2 : float,Approx : bool=True,ApproxS1 : bool=False,ApproxS2 : bool=False) -> None: ...
+    def Perform(self,HS1 : OCP.GeomAdaptor.GeomAdaptor_HSurface,HS2 : OCP.GeomAdaptor.GeomAdaptor_HSurface,Tol : float,Approx : bool,ApproxS1 : bool,ApproxS2 : bool) -> None: ...
     @overload
     def Perform(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,Tol : float,Approx : bool=True,ApproxS1 : bool=False,ApproxS2 : bool=False) -> None: ...
+    @overload
+    def Perform(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,Tol : float,U1 : float,V1 : float,U2 : float,V2 : float,Approx : bool=True,ApproxS1 : bool=False,ApproxS2 : bool=False) -> None: ...
+    @overload
+    def Perform(self,HS1 : OCP.GeomAdaptor.GeomAdaptor_HSurface,HS2 : OCP.GeomAdaptor.GeomAdaptor_HSurface,Tol : float,U1 : float,V1 : float,U2 : float,V2 : float,Approx : bool=True,ApproxS1 : bool=False,ApproxS2 : bool=False) -> None: ...
     @overload
     def Perform(self,HS1 : OCP.GeomAdaptor.GeomAdaptor_HSurface,HS2 : OCP.GeomAdaptor.GeomAdaptor_HSurface,Tol : float,Approx : bool=True,ApproxS1 : bool=False,ApproxS2 : bool=False) -> None: ...
     def Pnt2d(self,Index : int,OnFirst : bool) -> OCP.gp.gp_Pnt2d: 
@@ -543,9 +543,9 @@ class GeomInt_IntSS():
         puts into theArrayOfParameters the parameters of intersection points of given theC2d1 and theC2d2 curves with the boundaries of the source surface.
         """
     @overload
-    def __init__(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,Tol : float,Approx : bool=True,ApproxS1 : bool=False,ApproxS2 : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,Tol : float,Approx : bool=True,ApproxS1 : bool=False,ApproxS2 : bool=False) -> None: ...
     pass
 class GeomInt_LineConstructor():
     """
@@ -641,9 +641,9 @@ class GeomInt_MyBSplGradientOfTheComputeLineOfWLApprox():
         returns all the BSpline curves approximating the MultiLine SSP after minimization of the parameter.
         """
     @overload
-    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,TheConstraints : OCP.AppParCurves.AppParCurves_HArray1OfConstraintCouple,Parameters : OCP.math.math_Vector,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Deg : int,Tol3d : float,Tol2d : float,NbIterations : int,lambda1 : float,lambda2 : float) -> None: ...
-    @overload
     def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,TheConstraints : OCP.AppParCurves.AppParCurves_HArray1OfConstraintCouple,Parameters : OCP.math.math_Vector,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Deg : int,Tol3d : float,Tol2d : float,NbIterations : int=1) -> None: ...
+    @overload
+    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,TheConstraints : OCP.AppParCurves.AppParCurves_HArray1OfConstraintCouple,Parameters : OCP.math.math_Vector,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Deg : int,Tol3d : float,Tol2d : float,NbIterations : int,lambda1 : float,lambda2 : float) -> None: ...
     pass
 class GeomInt_MyGradientOfTheComputeLineBezierOfWLApprox():
     """
@@ -862,7 +862,7 @@ class GeomInt_ParLeastSquareOfMyGradientOfTheComputeLineBezierOfWLApprox():
         returns the value (PN - PN-1)/ VN if the last point was a tangency point.
         """
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: 
+    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: 
         """
         Is used after having initialized the fields. The case "CurvaturePoint" is not treated in this method.
 
@@ -873,11 +873,11 @@ class GeomInt_ParLeastSquareOfMyGradientOfTheComputeLineBezierOfWLApprox():
         Is used after having initialized the fields. <V1t> is the tangent vector at the first point. <V2t> is the tangent vector at the last point. <V1c> is the tangent vector at the first point. <V2c> is the tangent vector at the last point.
         """
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
-    @overload
-    def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
+    def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     @overload
     def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
+    @overload
+    def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
     def Points(self) -> OCP.math.math_Matrix: 
         """
         returns the matrix of points value.
@@ -887,13 +887,13 @@ class GeomInt_ParLeastSquareOfMyGradientOfTheComputeLineBezierOfWLApprox():
         returns the matrix of resulting control points value.
         """
     @overload
-    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
+    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     @overload
-    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
     def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
-    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     pass
 class GeomInt_ParLeastSquareOfMyGradientbisOfTheComputeLineOfWLApprox():
     """
@@ -955,9 +955,9 @@ class GeomInt_ParLeastSquareOfMyGradientbisOfTheComputeLineOfWLApprox():
         Is used after having initialized the fields. <V1t> is the tangent vector at the first point. <V2t> is the tangent vector at the last point. <V1c> is the tangent vector at the first point. <V2c> is the tangent vector at the last point.
         """
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
-    @overload
     def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
+    @overload
+    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     @overload
     def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     def Points(self) -> OCP.math.math_Matrix: 
@@ -969,13 +969,13 @@ class GeomInt_ParLeastSquareOfMyGradientbisOfTheComputeLineOfWLApprox():
         returns the matrix of resulting control points value.
         """
     @overload
-    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
-    @overload
-    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
-    @overload
     def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     @overload
     def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    @overload
+    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
+    @overload
+    def __init__(self,SSP : GeomInt_TheMultiLineOfWLApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     pass
 class GeomInt_ParameterAndOrientation():
     """
@@ -1067,14 +1067,14 @@ class GeomInt_SequenceOfParameterAndOrientation(OCP.NCollection.NCollection_Base
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : GeomInt_SequenceOfParameterAndOrientation) -> None: 
+    def Append(self,theItem : GeomInt_ParameterAndOrientation) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : GeomInt_ParameterAndOrientation) -> None: ...
+    def Append(self,theSeq : GeomInt_SequenceOfParameterAndOrientation) -> None: ...
     def Assign(self,theOther : GeomInt_SequenceOfParameterAndOrientation) -> GeomInt_SequenceOfParameterAndOrientation: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1113,14 +1113,14 @@ class GeomInt_SequenceOfParameterAndOrientation(OCP.NCollection.NCollection_Base
     @overload
     def InsertAfter(self,theIndex : int,theItem : GeomInt_ParameterAndOrientation) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : GeomInt_SequenceOfParameterAndOrientation) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : GeomInt_ParameterAndOrientation) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : GeomInt_ParameterAndOrientation) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : GeomInt_SequenceOfParameterAndOrientation) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1138,23 +1138,23 @@ class GeomInt_SequenceOfParameterAndOrientation(OCP.NCollection.NCollection_Base
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : GeomInt_SequenceOfParameterAndOrientation) -> None: 
+    def Prepend(self,theItem : GeomInt_ParameterAndOrientation) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : GeomInt_ParameterAndOrientation) -> None: ...
+    def Prepend(self,theSeq : GeomInt_SequenceOfParameterAndOrientation) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1180,11 +1180,11 @@ class GeomInt_SequenceOfParameterAndOrientation(OCP.NCollection.NCollection_Base
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : GeomInt_SequenceOfParameterAndOrientation) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1253,13 +1253,13 @@ class GeomInt_TheComputeLineBezierOfWLApprox():
         returns the result of the approximation.
         """
     @overload
-    def __init__(self,Line : GeomInt_TheMultiLineOfWLApprox,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
-    @overload
     def __init__(self,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
     @overload
-    def __init__(self,Line : GeomInt_TheMultiLineOfWLApprox,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
-    @overload
     def __init__(self,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
+    @overload
+    def __init__(self,Line : GeomInt_TheMultiLineOfWLApprox,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
+    @overload
+    def __init__(self,Line : GeomInt_TheMultiLineOfWLApprox,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
     pass
 class GeomInt_TheComputeLineOfWLApprox():
     """
@@ -1336,11 +1336,11 @@ class GeomInt_TheComputeLineOfWLApprox():
     @overload
     def __init__(self,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
     @overload
-    def __init__(self,Line : GeomInt_TheMultiLineOfWLApprox,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
+    def __init__(self,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
     @overload
     def __init__(self,Line : GeomInt_TheMultiLineOfWLApprox,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
     @overload
-    def __init__(self,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
+    def __init__(self,Line : GeomInt_TheMultiLineOfWLApprox,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
     pass
 class GeomInt_TheFunctionOfTheInt2SOfThePrmPrmSvSurfacesOfWLApprox(OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1482,14 +1482,14 @@ class GeomInt_TheInt2SOfThePrmPrmSvSurfacesOfWLApprox():
         Returns True if the surfaces are tangent at the intersection point.
         """
     @overload
-    def Perform(self,Param : OCP.TColStd.TColStd_Array1OfReal,Rsnld : OCP.math.math_FunctionSetRoot,ChoixIso : OCP.IntImp.IntImp_ConstIsoparametric) -> OCP.IntImp.IntImp_ConstIsoparametric: 
+    def Perform(self,Param : OCP.TColStd.TColStd_Array1OfReal,Rsnld : OCP.math.math_FunctionSetRoot) -> OCP.IntImp.IntImp_ConstIsoparametric: 
         """
         returns the best constant isoparametric to find the next intersection's point +stores the solution point (the solution point is found with the close point to intersect the isoparametric with the other patch; the choice of the isoparametic is calculated)
 
         returns the best constant isoparametric to find the next intersection's point +stores the solution point (the solution point is found with the close point to intersect the isoparametric with the other patch; the choice of the isoparametic is given by ChoixIso)
         """
     @overload
-    def Perform(self,Param : OCP.TColStd.TColStd_Array1OfReal,Rsnld : OCP.math.math_FunctionSetRoot) -> OCP.IntImp.IntImp_ConstIsoparametric: ...
+    def Perform(self,Param : OCP.TColStd.TColStd_Array1OfReal,Rsnld : OCP.math.math_FunctionSetRoot,ChoixIso : OCP.IntImp.IntImp_ConstIsoparametric) -> OCP.IntImp.IntImp_ConstIsoparametric: ...
     def Point(self) -> OCP.IntSurf.IntSurf_PntOn2S: 
         """
         Returns the intersection point.
@@ -1532,7 +1532,7 @@ class GeomInt_TheMultiLineOfWLApprox():
         Returns the number of 3d points of a TheLine.
         """
     @overload
-    def Tangency(self,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
+    def Tangency(self,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
         Returns the 3d tangency points of the multipoint <MPointIndex> only when 3d points exist.
 
@@ -1541,11 +1541,11 @@ class GeomInt_TheMultiLineOfWLApprox():
         Returns the 3d and 2d points of the multipoint <MPointIndex>.
         """
     @overload
-    def Tangency(self,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
-    @overload
     def Tangency(self,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: ...
     @overload
-    def Value(self,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
+    def Tangency(self,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
+    @overload
+    def Value(self,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
         """
         Returns the 3d points of the multipoint <MPointIndex> when only 3d points exist.
 
@@ -1554,7 +1554,7 @@ class GeomInt_TheMultiLineOfWLApprox():
         returns the 3d and 2d points of the multipoint <MPointIndex>.
         """
     @overload
-    def Value(self,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    def Value(self,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
     def Value(self,MPointIndex : int,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     def WhatStatus(self) -> OCP.Approx.Approx_Status: 
@@ -1562,11 +1562,11 @@ class GeomInt_TheMultiLineOfWLApprox():
         None
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,line : OCP.IntPatch.IntPatch_WLine,PtrSvSurfaces : capsule,NbP3d : int,NbP2d : int,ApproxU1V1 : bool,ApproxU2V2 : bool,xo : float,yo : float,zo : float,u1o : float,v1o : float,u2o : float,v2o : float,P2DOnFirst : bool,IndMin : int=0,IndMax : int=0) -> None: ...
     @overload
     def __init__(self,line : OCP.IntPatch.IntPatch_WLine,NbP3d : int,NbP2d : int,ApproxU1V1 : bool,ApproxU2V2 : bool,xo : float,yo : float,zo : float,u1o : float,v1o : float,u2o : float,v2o : float,P2DOnFirst : bool,IndMin : int=0,IndMax : int=0) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class GeomInt_TheMultiLineToolOfWLApprox():
     """
@@ -1574,7 +1574,7 @@ class GeomInt_TheMultiLineToolOfWLApprox():
     """
     @staticmethod
     @overload
-    def Curvature_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: 
+    def Curvature_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
         returns the 3d curvature of the multipoint <MPointIndex> when only 3d points exist.
 
@@ -1587,7 +1587,7 @@ class GeomInt_TheMultiLineToolOfWLApprox():
     def Curvature_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
     @staticmethod
     @overload
-    def Curvature_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
+    def Curvature_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: ...
     @staticmethod
     def Dump_s(ML : GeomInt_TheMultiLineOfWLApprox) -> None: 
         """
@@ -1625,7 +1625,7 @@ class GeomInt_TheMultiLineToolOfWLApprox():
         """
     @staticmethod
     @overload
-    def Tangency_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
+    def Tangency_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: 
         """
         returns the 3d points of the multipoint <MPointIndex> when only 3d points exist.
 
@@ -1635,13 +1635,13 @@ class GeomInt_TheMultiLineToolOfWLApprox():
         """
     @staticmethod
     @overload
+    def Tangency_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
+    @staticmethod
+    @overload
     def Tangency_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
     @staticmethod
     @overload
-    def Tangency_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: ...
-    @staticmethod
-    @overload
-    def Value_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
+    def Value_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
         """
         returns the 3d points of the multipoint <MPointIndex> when only 3d points exist.
 
@@ -1651,10 +1651,10 @@ class GeomInt_TheMultiLineToolOfWLApprox():
         """
     @staticmethod
     @overload
-    def Value_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    def Value_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @staticmethod
     @overload
-    def Value_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def Value_s(ML : GeomInt_TheMultiLineOfWLApprox,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @staticmethod
     def WhatStatus_s(ML : GeomInt_TheMultiLineOfWLApprox,I1 : int,I2 : int) -> OCP.Approx.Approx_Status: 
         """
@@ -1766,9 +1766,9 @@ class GeomInt_TheZerImpFuncOfTheImpPrmSvSurfacesOfWLApprox(OCP.math.math_Functio
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,PS : OCP.Adaptor3d.Adaptor3d_HSurface,IS : OCP.IntSurf.IntSurf_Quadric) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,IS : OCP.IntSurf.IntSurf_Quadric) -> None: ...
     pass
@@ -1864,14 +1864,14 @@ class GeomInt_WLApprox():
         None
         """
     @overload
-    def Perform(self,aLine : OCP.IntPatch.IntPatch_WLine,ApproxXYZ : bool=True,ApproxU1V1 : bool=True,ApproxU2V2 : bool=True,indicemin : int=0,indicemax : int=0) -> None: 
+    def Perform(self,Surf1 : OCP.Adaptor3d.Adaptor3d_HSurface,Surf2 : OCP.Adaptor3d.Adaptor3d_HSurface,aLine : OCP.IntPatch.IntPatch_WLine,ApproxXYZ : bool=True,ApproxU1V1 : bool=True,ApproxU2V2 : bool=True,indicemin : int=0,indicemax : int=0) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Perform(self,Surf1 : OCP.Adaptor3d.Adaptor3d_HSurface,Surf2 : OCP.Adaptor3d.Adaptor3d_HSurface,aLine : OCP.IntPatch.IntPatch_WLine,ApproxXYZ : bool=True,ApproxU1V1 : bool=True,ApproxU2V2 : bool=True,indicemin : int=0,indicemax : int=0) -> None: ...
+    def Perform(self,aLine : OCP.IntPatch.IntPatch_WLine,ApproxXYZ : bool=True,ApproxU1V1 : bool=True,ApproxU2V2 : bool=True,indicemin : int=0,indicemax : int=0) -> None: ...
     def SetParameters(self,Tol3d : float,Tol2d : float,DegMin : int,DegMax : int,NbIterMax : int,NbPntMax : int=30,ApproxWithTangency : bool=True,Parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength) -> None: 
         """
         None

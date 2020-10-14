@@ -15,7 +15,7 @@ class Hermit():
     """
     @staticmethod
     @overload
-    def Solution_s(BS : OCP.Geom2d.Geom2d_BSplineCurve,TolPoles : float=1e-06,TolKnots : float=1e-06) -> OCP.Geom2d.Geom2d_BSplineCurve: 
+    def Solution_s(BS : OCP.Geom.Geom_BSplineCurve,TolPoles : float=1e-06,TolKnots : float=1e-06) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """
         returns the correct spline a(u) which will be multiplicated with BS later.
 
@@ -23,7 +23,7 @@ class Hermit():
         """
     @staticmethod
     @overload
-    def Solution_s(BS : OCP.Geom.Geom_BSplineCurve,TolPoles : float=1e-06,TolKnots : float=1e-06) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
+    def Solution_s(BS : OCP.Geom2d.Geom2d_BSplineCurve,TolPoles : float=1e-06,TolKnots : float=1e-06) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
     @staticmethod
     def Solutionbis_s(BS : OCP.Geom.Geom_BSplineCurve,TolPoles : float=1e-06,TolKnots : float=1e-06) -> Tuple[float, float]: 
         """

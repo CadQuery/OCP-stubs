@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.IntRes2d
-import OCP.Geom2d
-import OCP.Standard
-import OCP.gp
 import OCP.GeomAbs
+import OCP.Geom2d
+import OCP.IntRes2d
+import OCP.Standard
 import OCP.math
+import OCP.gp
 __all__  = [
 "Bisector",
 "Bisector_Bisec",
@@ -43,7 +43,7 @@ class Bisector_Bisec():
         Returns the Curve of <me>.
         """
     @overload
-    def Perform(self,Cu1 : OCP.Geom2d.Geom2d_Curve,Cu2 : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,ajointype : OCP.GeomAbs.GeomAbs_JoinType,Tolerance : float,oncurve : bool=True) -> None: 
+    def Perform(self,Pnt1 : OCP.Geom2d.Geom2d_Point,Pnt2 : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float=0.0,oncurve : bool=True) -> None: 
         """
         Performs the bisecting line between the curves <Cu1> and <Cu2>. <oncurve> is True if the point <P> is common to <Cu1> and <Cu2>.
 
@@ -54,11 +54,11 @@ class Bisector_Bisec():
         Performs the bisecting line between the two points <Pnt1> and <Pnt2>.
         """
     @overload
-    def Perform(self,Cu : OCP.Geom2d.Geom2d_Curve,Pnt : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: ...
-    @overload
-    def Perform(self,Pnt1 : OCP.Geom2d.Geom2d_Point,Pnt2 : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float=0.0,oncurve : bool=True) -> None: ...
+    def Perform(self,Cu1 : OCP.Geom2d.Geom2d_Curve,Cu2 : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,ajointype : OCP.GeomAbs.GeomAbs_JoinType,Tolerance : float,oncurve : bool=True) -> None: ...
     @overload
     def Perform(self,Pnt : OCP.Geom2d.Geom2d_Point,Cu : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: ...
+    @overload
+    def Perform(self,Cu : OCP.Geom2d.Geom2d_Curve,Pnt : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: ...
     def Value(self) -> OCP.Geom2d.Geom2d_TrimmedCurve: 
         """
         Returns the Curve of <me>.
@@ -143,14 +143,14 @@ class Bisector_Curve(OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2d_Geometry, OCP.St
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -178,14 +178,14 @@ class Bisector_Curve(OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2d_Geometry, OCP.St
     @overload
     def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: 
+    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: ...
+    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: ...
     def NbIntervals(self) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <C1>. And returns the number of intervals.
@@ -247,14 +247,14 @@ class Bisector_Curve(OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2d_Geometry, OCP.St
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,V : OCP.gp.gp_Vec2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
@@ -380,14 +380,14 @@ class Bisector_BisecCC(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -423,14 +423,14 @@ class Bisector_BisecCC(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2
     @overload
     def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: 
+    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: ...
+    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: ...
     def NbIntervals(self) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <C1>. And returns the number of intervals.
@@ -500,14 +500,14 @@ class Bisector_BisecCC(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,V : OCP.gp.gp_Vec2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
@@ -641,14 +641,14 @@ class Bisector_BisecPC(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2
         Returns True if the bisector is extended at start.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -684,14 +684,14 @@ class Bisector_BisecPC(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2
     @overload
     def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: 
+    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: ...
+    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: ...
     def NbIntervals(self) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <C1>. And returns the number of intervals.
@@ -757,14 +757,14 @@ class Bisector_BisecPC(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,V : OCP.gp.gp_Vec2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
@@ -888,14 +888,14 @@ class Bisector_BisecAna(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -923,14 +923,14 @@ class Bisector_BisecAna(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom
     @overload
     def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: 
+    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: ...
+    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: ...
     def NbIntervals(self) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <C1>. And returns the number of intervals.
@@ -952,7 +952,7 @@ class Bisector_BisecAna(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom
         Returns the coefficient required to compute the parametric transformation of this curve when transformation T is applied. This coefficient is the ratio between the parameter of a point on this curve and the parameter of the transformed point on the new curve transformed by T. Note: this function generally returns 1. but it can be redefined (for example, on a line).
         """
     @overload
-    def Perform(self,Cu : OCP.Geom2d.Geom2d_Curve,Pnt : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: 
+    def Perform(self,Pnt : OCP.Geom2d.Geom2d_Point,Cu : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: 
         """
         Performs the bisecting line between the curves <Cu1> and <Cu2>. <oncurve> is True if the point <P> is common to <Cu1> and <Cu2>.
 
@@ -965,9 +965,9 @@ class Bisector_BisecAna(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom
     @overload
     def Perform(self,Cu1 : OCP.Geom2d.Geom2d_Curve,Cu2 : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,jointype : OCP.GeomAbs.GeomAbs_JoinType,Tolerance : float,oncurve : bool=True) -> None: ...
     @overload
-    def Perform(self,Pnt : OCP.Geom2d.Geom2d_Point,Cu : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: ...
-    @overload
     def Perform(self,Pnt1 : OCP.Geom2d.Geom2d_Point,Pnt2 : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float=0.0,oncurve : bool=True) -> None: ...
+    @overload
+    def Perform(self,Cu : OCP.Geom2d.Geom2d_Curve,Pnt : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: ...
     def Period(self) -> float: 
         """
         Returns thne period of this curve. raises if the curve is not periodic
@@ -1001,14 +1001,14 @@ class Bisector_BisecAna(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom
         None
         """
     @overload
-    def SetTrim(self,Cu : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def SetTrim(self,uf : float,ul : float) -> None: 
         """
         Trim <me> by a domain defined by the curve <Cu>. This domain is the set of the points which are nearest from <Cu> than the extremitis of <Cu>.
 
         Trim <me> by a domain defined by uf and ul
         """
     @overload
-    def SetTrim(self,uf : float,ul : float) -> None: ...
+    def SetTrim(self,Cu : OCP.Geom2d.Geom2d_Curve) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1026,14 +1026,14 @@ class Bisector_BisecAna(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,V : OCP.gp.gp_Vec2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
@@ -1106,9 +1106,9 @@ class Bisector_FunctionInter(OCP.math.math_FunctionWithDerivative, OCP.math.math
         Returns the values of the functions and the derivatives for the variable <X>.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom2d.Geom2d_Curve,Bis1 : Bisector_Curve,Bis2 : Bisector_Curve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Bisector_Inter(OCP.IntRes2d.IntRes2d_Intersection):
     """
@@ -1173,27 +1173,27 @@ class Bisector_PointOnBis():
     None
     """
     @overload
-    def Distance(self) -> float: 
+    def Distance(self,Distance : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Distance(self,Distance : float) -> None: ...
+    def Distance(self) -> float: ...
     def Dump(self) -> None: 
         """
         None
         """
     @overload
-    def IsInfinite(self,Infinite : bool) -> None: 
+    def IsInfinite(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def IsInfinite(self) -> bool: ...
+    def IsInfinite(self,Infinite : bool) -> None: ...
     @overload
     def ParamOnBis(self,Param : float) -> None: 
         """
@@ -1222,18 +1222,18 @@ class Bisector_PointOnBis():
     @overload
     def ParamOnC2(self,Param : float) -> None: ...
     @overload
-    def Point(self,P : OCP.gp.gp_Pnt2d) -> None: 
+    def Point(self) -> OCP.gp.gp_Pnt2d: 
         """
         None
 
         None
         """
     @overload
-    def Point(self) -> OCP.gp.gp_Pnt2d: ...
-    @overload
-    def __init__(self,Param1 : float,Param2 : float,ParamBis : float,Distance : float,Point : OCP.gp.gp_Pnt2d) -> None: ...
+    def Point(self,P : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Param1 : float,Param2 : float,ParamBis : float,Distance : float,Point : OCP.gp.gp_Pnt2d) -> None: ...
     pass
 class Bisector_PolyBis():
     """

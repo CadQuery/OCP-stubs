@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.XmlObjMgt
-import OCP.LDOM
-import OCP.TCollection
-import OCP.Standard
-import OCP.Message
 import OCP.TDF
+import OCP.TCollection
+import OCP.Message
+import OCP.XmlObjMgt
+import OCP.Standard
+import OCP.LDOM
 __all__  = [
 "XmlMDF",
 "XmlMDF_ADriver",
@@ -64,14 +64,14 @@ class XmlMDF_ADriver(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -86,14 +86,14 @@ class XmlMDF_ADriver(OCP.Standard.Standard_Transient):
         Creates a new attribute from TDF.
         """
     @overload
-    def Paste(self,aSource : OCP.XmlObjMgt.XmlObjMgt_Persistent,aTarget : OCP.TDF.TDF_Attribute,aRelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,aSource : OCP.TDF.TDF_Attribute,aTarget : OCP.XmlObjMgt.XmlObjMgt_Persistent,aRelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
         """
         Translate the contents of <aSource> and put it into <aTarget>, using the relocation table <aRelocTable> to keep the sharings.
 
         Translate the contents of <aSource> and put it into <aTarget>, using the relocation table <aRelocTable> to keep the sharings.
         """
     @overload
-    def Paste(self,aSource : OCP.TDF.TDF_Attribute,aTarget : OCP.XmlObjMgt.XmlObjMgt_Persistent,aRelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
+    def Paste(self,aSource : OCP.XmlObjMgt.XmlObjMgt_Persistent,aTarget : OCP.TDF.TDF_Attribute,aRelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -158,14 +158,14 @@ class XmlMDF_ADriverTable(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -216,14 +216,14 @@ class XmlMDF_ReferenceDriver(XmlMDF_ADriver, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -238,14 +238,14 @@ class XmlMDF_ReferenceDriver(XmlMDF_ADriver, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
+    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -299,14 +299,14 @@ class XmlMDF_TagSourceDriver(XmlMDF_ADriver, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

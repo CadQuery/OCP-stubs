@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Geom2d
-import OCP.math
 import OCP.LProp
+import OCP.math
+import OCP.Geom2d
 import OCP.gp
 __all__  = [
 "Geom2dLProp_CLProps2d",
@@ -219,22 +219,22 @@ class Geom2dLProp_NumericCurInf2d():
         True if the solutions are found.
         """
     @overload
-    def PerformCurExt(self,C : OCP.Geom2d.Geom2d_Curve,Result : OCP.LProp.LProp_CurAndInf) -> None: 
+    def PerformCurExt(self,C : OCP.Geom2d.Geom2d_Curve,UMin : float,UMax : float,Result : OCP.LProp.LProp_CurAndInf) -> None: 
         """
         Computes the locals extremas of curvature.
 
         Computes the locals extremas of curvature. in the interval of parmeters [UMin,UMax].
         """
     @overload
-    def PerformCurExt(self,C : OCP.Geom2d.Geom2d_Curve,UMin : float,UMax : float,Result : OCP.LProp.LProp_CurAndInf) -> None: ...
+    def PerformCurExt(self,C : OCP.Geom2d.Geom2d_Curve,Result : OCP.LProp.LProp_CurAndInf) -> None: ...
     @overload
-    def PerformInf(self,C : OCP.Geom2d.Geom2d_Curve,UMin : float,UMax : float,Result : OCP.LProp.LProp_CurAndInf) -> None: 
+    def PerformInf(self,C : OCP.Geom2d.Geom2d_Curve,Result : OCP.LProp.LProp_CurAndInf) -> None: 
         """
         Computes the inflections.
 
         Computes the inflections in the interval of parmeters [UMin,UMax].
         """
     @overload
-    def PerformInf(self,C : OCP.Geom2d.Geom2d_Curve,Result : OCP.LProp.LProp_CurAndInf) -> None: ...
+    def PerformInf(self,C : OCP.Geom2d.Geom2d_Curve,UMin : float,UMax : float,Result : OCP.LProp.LProp_CurAndInf) -> None: ...
     def __init__(self) -> None: ...
     pass

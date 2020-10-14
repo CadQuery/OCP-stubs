@@ -4,22 +4,22 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDocStd
-import OCP.TopLoc
-import OCP.gp
-import OCP.TopTools
-import OCP.TopoDS
-import OCP.TColStd
-import OCP.TDF
-import OCP.XCAFNoteObjects
-import OCP.Quantity
-import OCP.NCollection
-import OCP.OSD
 import OCP.TCollection
-import OCP.TDataStd
-import OCP.Standard
 import OCP.XCAFDimTolObjects
+import OCP.TopoDS
+import OCP.TDocStd
+import OCP.NCollection
+import OCP.XCAFNoteObjects
+import OCP.gp
+import OCP.TDF
+import OCP.TColStd
+import OCP.OSD
+import OCP.Quantity
+import OCP.TopTools
+import OCP.Standard
 import OCP.XCAFView
+import OCP.TDataStd
+import OCP.TopLoc
 __all__  = [
 "XCAFDoc",
 "XCAFDoc_Area",
@@ -331,14 +331,14 @@ class XCAFDoc_Area(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -466,9 +466,9 @@ class XCAFDoc_AssemblyItemId():
         Returns the full pass as a formatted string.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theString : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,thePath : OCP.TColStd.TColStd_ListOfAsciiString) -> None: ...
     pass
@@ -644,14 +644,14 @@ class XCAFDoc_AssemblyItemRef(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         Checks is the reference points to an item's attribute.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -724,19 +724,19 @@ class XCAFDoc_AssemblyItemRef(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         Sets the assembly item ID from a formatted path that the reference points to. Extra reference data (if any) will be cleared.
         """
     @overload
-    def SetItem(self,theItemId : XCAFDoc_AssemblyItemId) -> None: ...
-    @overload
     def SetItem(self,thePath : OCP.TColStd.TColStd_ListOfAsciiString) -> None: ...
+    @overload
+    def SetItem(self,theItemId : XCAFDoc_AssemblyItemId) -> None: ...
     def SetSubshapeIndex(self,theShapeIndex : int) -> None: 
         """
         Sets the assembly item's subshape that the reference points to. The base assembly item will not change.
         """
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theShapeIndex : int) -> XCAFDoc_AssemblyItemRef: ...
+    def Set_s(theLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId) -> XCAFDoc_AssemblyItemRef: ...
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId) -> XCAFDoc_AssemblyItemRef: ...
+    def Set_s(theLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theShapeIndex : int) -> XCAFDoc_AssemblyItemRef: ...
     @staticmethod
     @overload
     def Set_s(theLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID) -> XCAFDoc_AssemblyItemRef: ...
@@ -918,14 +918,14 @@ class XCAFDoc_Centroid(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1020,7 +1020,7 @@ class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Tra
         Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
         """
     @overload
-    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_ExtendedString,theCapping : bool) -> OCP.TDF.TDF_Label: 
+    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_HAsciiString,theCapping : bool) -> OCP.TDF.TDF_Label: 
         """
         Adds a clipping plane definition to a ClippingPlane table and returns its label (returns existing label if the same clipping plane is already defined)
 
@@ -1030,12 +1030,12 @@ class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Tra
 
         Adds a clipping plane definition to a ClippingPlane table and returns its label (returns existing label if the same clipping plane is already defined)
         """
-    @overload
-    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_ExtendedString) -> OCP.TDF.TDF_Label: ...
-    @overload
-    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_HAsciiString,theCapping : bool) -> OCP.TDF.TDF_Label: ...
     @overload
     def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: ...
+    @overload
+    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_ExtendedString,theCapping : bool) -> OCP.TDF.TDF_Label: ...
+    @overload
+    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_ExtendedString) -> OCP.TDF.TDF_Label: ...
     def AfterAddition(self) -> None: 
         """
         Something to do after adding an Attribute to a label.
@@ -1151,14 +1151,14 @@ class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Tra
     @overload
     def GetCapping(self,theClippingPlaneL : OCP.TDF.TDF_Label,theCapping : bool) -> bool: ...
     @overload
-    def GetClippingPlane(self,theLabel : OCP.TDF.TDF_Label,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_HAsciiString,theCapping : bool) -> bool: 
+    def GetClippingPlane(self,theLabel : OCP.TDF.TDF_Label,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_ExtendedString,theCapping : bool) -> bool: 
         """
         Returns ClippingPlane defined by label lab Returns False if the label is not in ClippingPlane table or does not define a ClippingPlane
 
         Returns ClippingPlane defined by label lab Returns False if the label is not in ClippingPlane table or does not define a ClippingPlane
         """
     @overload
-    def GetClippingPlane(self,theLabel : OCP.TDF.TDF_Label,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_ExtendedString,theCapping : bool) -> bool: ...
+    def GetClippingPlane(self,theLabel : OCP.TDF.TDF_Label,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_HAsciiString,theCapping : bool) -> bool: ...
     def GetClippingPlanes(self,Labels : OCP.TDF.TDF_LabelSequence) -> None: 
         """
         Returns a sequence of clipping planes currently stored in the ClippingPlane table
@@ -1201,14 +1201,14 @@ class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Tra
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1462,14 +1462,14 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1512,7 +1512,7 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Set(self,R : float,G : float,B : float,alpha : float=1.0) -> None: 
+    def Set(self,C : OCP.Quantity.Quantity_Color) -> None: 
         """
         None
 
@@ -1527,7 +1527,7 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def Set(self,C : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     @overload
-    def Set(self,C : OCP.Quantity.Quantity_Color) -> None: ...
+    def Set(self,R : float,G : float,B : float,alpha : float=1.0) -> None: ...
     @overload
     def SetID(self) -> None: 
         """
@@ -1539,7 +1539,7 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,C : OCP.Quantity.Quantity_ColorRGBA) -> XCAFDoc_Color: 
+    def Set_s(label : OCP.TDF.TDF_Label,C : OCP.Quantity.Quantity_Color) -> XCAFDoc_Color: 
         """
         None
 
@@ -1551,13 +1551,13 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
+    def Set_s(label : OCP.TDF.TDF_Label,C : OCP.Quantity.Quantity_ColorRGBA) -> XCAFDoc_Color: ...
+    @staticmethod
+    @overload
     def Set_s(label : OCP.TDF.TDF_Label,R : float,G : float,B : float,alpha : float=1.0) -> XCAFDoc_Color: ...
     @staticmethod
     @overload
     def Set_s(label : OCP.TDF.TDF_Label,C : OCP.Quantity.Quantity_NameOfColor) -> XCAFDoc_Color: ...
-    @staticmethod
-    @overload
-    def Set_s(label : OCP.TDF.TDF_Label,C : OCP.Quantity.Quantity_Color) -> XCAFDoc_Color: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1695,7 +1695,7 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Finds an associated attribute of <me>, according to <anID>. the returned <anAttribute> is a valid one. The method returns True if found, False otherwise. A removed attribute cannot be found using this method.
         """
     @overload
-    def FindColor(self,col : OCP.Quantity.Quantity_ColorRGBA) -> OCP.TDF.TDF_Label: 
+    def FindColor(self,col : OCP.Quantity.Quantity_ColorRGBA,lab : OCP.TDF.TDF_Label) -> bool: 
         """
         Finds a color definition in a colortable and returns its label if found Returns False if color is not found in colortable
 
@@ -1705,10 +1705,10 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
 
         Finds a color definition in a colortable and returns its label if found (or Null label else)
         """
-    @overload
-    def FindColor(self,col : OCP.Quantity.Quantity_ColorRGBA,lab : OCP.TDF.TDF_Label) -> bool: ...
     @overload
     def FindColor(self,col : OCP.Quantity.Quantity_Color) -> OCP.TDF.TDF_Label: ...
+    @overload
+    def FindColor(self,col : OCP.Quantity.Quantity_ColorRGBA) -> OCP.TDF.TDF_Label: ...
     @overload
     def FindColor(self,col : OCP.Quantity.Quantity_Color,lab : OCP.TDF.TDF_Label) -> bool: ...
     def Forget(self,aTransaction : int) -> None: 
@@ -1743,15 +1743,15 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def GetColor(self,S : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,colorL : OCP.TDF.TDF_Label) -> bool: ...
     @overload
+    def GetColor(self,lab : OCP.TDF.TDF_Label,col : OCP.Quantity.Quantity_Color) -> bool: ...
+    @overload
     def GetColor(self,lab : OCP.TDF.TDF_Label,col : OCP.Quantity.Quantity_ColorRGBA) -> bool: ...
     @overload
-    def GetColor(self,L : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color) -> bool: ...
+    def GetColor(self,S : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color) -> bool: ...
     @overload
     def GetColor(self,L : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_ColorRGBA) -> bool: ...
     @overload
-    def GetColor(self,lab : OCP.TDF.TDF_Label,col : OCP.Quantity.Quantity_Color) -> bool: ...
-    @overload
-    def GetColor(self,S : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color) -> bool: ...
+    def GetColor(self,L : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color) -> bool: ...
     @staticmethod
     def GetColor_s(L : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType,colorL : OCP.TDF.TDF_Label) -> bool: 
         """
@@ -1767,14 +1767,14 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def GetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color) -> bool: 
+    def GetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_ColorRGBA) -> bool: 
         """
         Gets the color of component that styled with SHUO structure Returns FALSE if no sush component or color type
 
         Gets the color of component that styled with SHUO structure Returns FALSE if no sush component or color type
         """
     @overload
-    def GetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_ColorRGBA) -> bool: ...
+    def GetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -1812,14 +1812,14 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsInstanceVisible(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Gets the visibility status of component that styled with SHUO structure Returns FALSE if no sush component
@@ -1887,7 +1887,7 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Reverses order in chains of TreeNodes (from Last to First) under each Color Label since we became to use function ::Prepend() instead of ::Append() in method SetColor() for acceleration
         """
     @overload
-    def SetColor(self,S : OCP.TopoDS.TopoDS_Shape,Color : OCP.Quantity.Quantity_ColorRGBA,type : XCAFDoc_ColorType) -> bool: 
+    def SetColor(self,L : OCP.TDF.TDF_Label,Color : OCP.Quantity.Quantity_ColorRGBA,type : XCAFDoc_ColorType) -> None: 
         """
         Sets a link with GUID defined by <type> (see XCAFDoc::ColorRefGUID()) from label <L> to color defined by <colorL>. Color of shape is defined following way in dependance with type of color. If type of color is XCAFDoc_ColorGen - then this color defines default color for surfaces and curves. If for shape color with types XCAFDoc_ColorSurf or XCAFDoc_ColorCurv is specified then such color overrides generic color.
 
@@ -1902,15 +1902,15 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Sets a link with GUID defined by <type> (see XCAFDoc::ColorRefGUID()) from label <L> to color <Color> in the colortable Adds a color as necessary Returns False if cannot find a label for shape S
         """
     @overload
-    def SetColor(self,L : OCP.TDF.TDF_Label,Color : OCP.Quantity.Quantity_ColorRGBA,type : XCAFDoc_ColorType) -> None: ...
+    def SetColor(self,L : OCP.TDF.TDF_Label,Color : OCP.Quantity.Quantity_Color,type : XCAFDoc_ColorType) -> None: ...
     @overload
     def SetColor(self,L : OCP.TDF.TDF_Label,colorL : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType) -> None: ...
     @overload
     def SetColor(self,S : OCP.TopoDS.TopoDS_Shape,Color : OCP.Quantity.Quantity_Color,type : XCAFDoc_ColorType) -> bool: ...
     @overload
-    def SetColor(self,S : OCP.TopoDS.TopoDS_Shape,colorL : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType) -> bool: ...
+    def SetColor(self,S : OCP.TopoDS.TopoDS_Shape,Color : OCP.Quantity.Quantity_ColorRGBA,type : XCAFDoc_ColorType) -> bool: ...
     @overload
-    def SetColor(self,L : OCP.TDF.TDF_Label,Color : OCP.Quantity.Quantity_Color,type : XCAFDoc_ColorType) -> None: ...
+    def SetColor(self,S : OCP.TopoDS.TopoDS_Shape,colorL : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType) -> bool: ...
     def SetColorByLayer(self,shapeLabel : OCP.TDF.TDF_Label,isColorByLayer : bool=False) -> None: 
         """
         Set the Color defined by Layer flag on label. Do nothing if there no any object. Set UAttribute with corresponding GUID.
@@ -1925,14 +1925,14 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @overload
-    def SetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color,isCreateSHUO : bool=True) -> bool: 
+    def SetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_ColorRGBA,isCreateSHUO : bool=True) -> bool: 
         """
         Sets the color of component that styled with SHUO structure Returns FALSE if no sush component found NOTE: create SHUO structeure if it is necessary and if <isCreateSHUO>
 
         Sets the color of component that styled with SHUO structure Returns FALSE if no sush component found NOTE: create SHUO structeure if it is necessary and if <isCreateSHUO>
         """
     @overload
-    def SetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_ColorRGBA,isCreateSHUO : bool=True) -> bool: ...
+    def SetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color,isCreateSHUO : bool=True) -> bool: ...
     def SetVisibility(self,shapeLabel : OCP.TDF.TDF_Label,isvisible : bool=True) -> None: 
         """
         Set the visibility of object on label. Do nothing if there no any object. Set UAttribute with corresponding GUID.
@@ -1990,6 +1990,7 @@ class XCAFDoc_ColorType():
 
       XCAFDoc_ColorCurv
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2092,11 +2093,11 @@ class XCAFDoc_DataMapOfShapeLabel(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : XCAFDoc_DataMapOfShapeLabel) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class XCAFDoc_Datum(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
@@ -2258,14 +2259,14 @@ class XCAFDoc_Datum(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2520,14 +2521,14 @@ class XCAFDoc_DimTol(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2622,14 +2623,14 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
         """
     @overload
-    def AddDatum(self) -> OCP.TDF.TDF_Label: 
+    def AddDatum(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theIdentification : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: 
         """
         Adds a datum definition to the GD&T table and returns its label.
 
         Adds a datum definition to the GD&T table and returns its label.
         """
     @overload
-    def AddDatum(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theIdentification : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: ...
+    def AddDatum(self) -> OCP.TDF.TDF_Label: ...
     def AddDimTol(self,theKind : int,theVal : OCP.TColStd.TColStd_HArray1OfReal,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: 
         """
         Adds a a dimension tolerance definition with the specified kind, value, name and description to the GD&T table and returns its label.
@@ -2866,14 +2867,14 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Returns True if the label belongs to the GD&T table and is a dimension tolerance.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2924,14 +2925,14 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         None
         """
     @overload
-    def SetDatum(self,theShapeLabels : OCP.TDF.TDF_LabelSequence,theDatumL : OCP.TDF.TDF_Label) -> None: 
+    def SetDatum(self,theL : OCP.TDF.TDF_Label,theTolerL : OCP.TDF.TDF_Label,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theIdentification : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Sets a datum to the sequence of shape labels.
 
         Sets a datum to theL label and binds it with theTolerL label. A datum with the specified name, description and identification is created if it isn't found in the GD&T table.
         """
     @overload
-    def SetDatum(self,theL : OCP.TDF.TDF_Label,theTolerL : OCP.TDF.TDF_Label,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theIdentification : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    def SetDatum(self,theShapeLabels : OCP.TDF.TDF_LabelSequence,theDatumL : OCP.TDF.TDF_Label) -> None: ...
     def SetDatumToGeomTol(self,theDatumL : OCP.TDF.TDF_Label,theTolerL : OCP.TDF.TDF_Label) -> None: 
         """
         Sets a datum from theDatumL label to theToletL label.
@@ -2946,7 +2947,7 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
     @overload
     def SetDimTol(self,theL : OCP.TDF.TDF_Label,theKind : int,theVal : OCP.TColStd.TColStd_HArray1OfReal,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: ...
     @overload
-    def SetDimension(self,theL : OCP.TDF.TDF_Label,theDimL : OCP.TDF.TDF_Label) -> None: 
+    def SetDimension(self,theFirstL : OCP.TDF.TDF_Label,theSecondL : OCP.TDF.TDF_Label,theDimL : OCP.TDF.TDF_Label) -> None: 
         """
         Sets a dimension to sequences target labels.
 
@@ -2957,7 +2958,7 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
     @overload
     def SetDimension(self,theFirstLS : OCP.TDF.TDF_LabelSequence,theSecondLS : OCP.TDF.TDF_LabelSequence,theDimL : OCP.TDF.TDF_Label) -> None: ...
     @overload
-    def SetDimension(self,theFirstL : OCP.TDF.TDF_Label,theSecondL : OCP.TDF.TDF_Label,theDimL : OCP.TDF.TDF_Label) -> None: ...
+    def SetDimension(self,theL : OCP.TDF.TDF_Label,theDimL : OCP.TDF.TDF_Label) -> None: ...
     def SetGDTPresentations(self,theGDTLabelToPrs : Any) -> None: 
         """
         Set shape presentation for GDT labels according to given map (theGDTLabelToPrs) theGDTLabelToPrsName map is an additional argument, can be used to set presentation names. If label is not in the theGDTLabelToPrsName map, the presentation name will be empty
@@ -3163,14 +3164,14 @@ class XCAFDoc_Dimension(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3429,14 +3430,14 @@ class XCAFDoc_DocumentTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3719,14 +3720,14 @@ class XCAFDoc_GeomTolerance(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3984,14 +3985,14 @@ class XCAFDoc_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4084,23 +4085,23 @@ class XCAFDoc_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the transaction index in which the attribute has been created or modified.
         """
     @overload
-    def UnSetChild(self,Chindex : int) -> None: 
+    def UnSetChild(self,Ch : XCAFDoc_GraphNode) -> None: 
         """
         Remove <Ch> from GraphNodeSequence. and remove link between father and child.
 
         Remove Child GraphNode by index from Children GraphNodeSequence. and remove link between father and child.
         """
     @overload
-    def UnSetChild(self,Ch : XCAFDoc_GraphNode) -> None: ...
+    def UnSetChild(self,Chindex : int) -> None: ...
     @overload
-    def UnSetFather(self,F : XCAFDoc_GraphNode) -> None: 
+    def UnSetFather(self,Findex : int) -> None: 
         """
         Remove <F> from Fathers GraphNodeSequence. and remove link between father and child.
 
         Remove Father GraphNode by index from Fathers GraphNodeSequence. and remove link between father and child.
         """
     @overload
-    def UnSetFather(self,Findex : int) -> None: ...
+    def UnSetFather(self,F : XCAFDoc_GraphNode) -> None: ...
     def UntilTransaction(self) -> int: 
         """
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
@@ -4126,14 +4127,14 @@ class XCAFDoc_GraphNodeSequence(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : XCAFDoc_GraphNodeSequence) -> None: 
+    def Append(self,theItem : XCAFDoc_GraphNode) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : XCAFDoc_GraphNode) -> None: ...
+    def Append(self,theSeq : XCAFDoc_GraphNodeSequence) -> None: ...
     def Assign(self,theOther : XCAFDoc_GraphNodeSequence) -> XCAFDoc_GraphNodeSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4163,14 +4164,14 @@ class XCAFDoc_GraphNodeSequence(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : XCAFDoc_GraphNodeSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : XCAFDoc_GraphNode) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : XCAFDoc_GraphNode) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : XCAFDoc_GraphNodeSequence) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : XCAFDoc_GraphNode) -> None: 
         """
@@ -4206,14 +4207,14 @@ class XCAFDoc_GraphNodeSequence(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : XCAFDoc_GraphNodeSequence) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4239,9 +4240,9 @@ class XCAFDoc_GraphNodeSequence(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : XCAFDoc_GraphNodeSequence) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : XCAFDoc_GraphNodeSequence) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -4391,7 +4392,7 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns a sequence of Layers currently stored in the Layertable
         """
     @overload
-    def GetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerS : OCP.TColStd.TColStd_HSequenceOfExtendedString) -> bool: 
+    def GetLayers(self,L : OCP.TDF.TDF_Label) -> OCP.TColStd.TColStd_HSequenceOfExtendedString: 
         """
         Return sequence of strings <aLayerS> that assosiated with label <L>.
 
@@ -4406,15 +4407,15 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Return sequence of strings that assosiated with shape <Sh>.
         """
     @overload
-    def GetLayers(self,L : OCP.TDF.TDF_Label) -> OCP.TColStd.TColStd_HSequenceOfExtendedString: ...
-    @overload
-    def GetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape) -> OCP.TColStd.TColStd_HSequenceOfExtendedString: ...
+    def GetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerS : OCP.TColStd.TColStd_HSequenceOfExtendedString) -> bool: ...
     @overload
     def GetLayers(self,L : OCP.TDF.TDF_Label,aLayerS : OCP.TColStd.TColStd_HSequenceOfExtendedString) -> bool: ...
     @overload
     def GetLayers(self,L : OCP.TDF.TDF_Label,aLayerLS : OCP.TDF.TDF_LabelSequence) -> bool: ...
     @overload
     def GetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerLS : OCP.TDF.TDF_LabelSequence) -> bool: ...
+    @overload
+    def GetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape) -> OCP.TColStd.TColStd_HSequenceOfExtendedString: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -4448,14 +4449,14 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4489,9 +4490,9 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def IsSet(self,L : OCP.TDF.TDF_Label,aLayerL : OCP.TDF.TDF_Label) -> bool: ...
     @overload
-    def IsSet(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayer : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
-    @overload
     def IsSet(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerL : OCP.TDF.TDF_Label) -> bool: ...
+    @overload
+    def IsSet(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayer : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns true if the attribute is valid; i.e. not a backuped or removed one.
@@ -4536,7 +4537,7 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @overload
-    def SetLayer(self,L : OCP.TDF.TDF_Label,aLayer : OCP.TCollection.TCollection_ExtendedString,shapeInOneLayer : bool=False) -> None: 
+    def SetLayer(self,Sh : OCP.TopoDS.TopoDS_Shape,LayerL : OCP.TDF.TDF_Label,shapeInOneLayer : bool=False) -> bool: 
         """
         Sets a link from label <L> to Layer defined by <LayerL> optional parametr <shapeInOneLayer> show could shape be in number of layers or only in one.
 
@@ -4547,11 +4548,11 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Sets a link from label that containig shape <Sh> with layer <aLayer>. Add <aLayer> to LayerTable if nessesery. optional parametr <shapeInOneLayer> show could shape be in number of layers or only in one. return FALSE if no such shape <Sh>.
         """
     @overload
-    def SetLayer(self,L : OCP.TDF.TDF_Label,LayerL : OCP.TDF.TDF_Label,shapeInOneLayer : bool=False) -> None: ...
-    @overload
-    def SetLayer(self,Sh : OCP.TopoDS.TopoDS_Shape,LayerL : OCP.TDF.TDF_Label,shapeInOneLayer : bool=False) -> bool: ...
-    @overload
     def SetLayer(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayer : OCP.TCollection.TCollection_ExtendedString,shapeInOneLayer : bool=False) -> bool: ...
+    @overload
+    def SetLayer(self,L : OCP.TDF.TDF_Label,aLayer : OCP.TCollection.TCollection_ExtendedString,shapeInOneLayer : bool=False) -> None: ...
+    @overload
+    def SetLayer(self,L : OCP.TDF.TDF_Label,LayerL : OCP.TDF.TDF_Label,shapeInOneLayer : bool=False) -> None: ...
     def SetVisibility(self,layerL : OCP.TDF.TDF_Label,isvisible : bool=True) -> None: 
         """
         Set the visibility of layer. If layer is invisible when on it's layer will set UAttribute with corresponding GUID.
@@ -4593,11 +4594,11 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Remove link between shape <Sh> and layer <aLayerL>. returns FALSE if no such layer <aLayerL> or shape <Sh>.
         """
     @overload
-    def UnSetOneLayer(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerL : OCP.TDF.TDF_Label) -> bool: ...
-    @overload
     def UnSetOneLayer(self,L : OCP.TDF.TDF_Label,aLayerL : OCP.TDF.TDF_Label) -> bool: ...
     @overload
     def UnSetOneLayer(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayer : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    @overload
+    def UnSetOneLayer(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerL : OCP.TDF.TDF_Label) -> bool: ...
     def UntilTransaction(self) -> int: 
         """
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
@@ -4761,14 +4762,14 @@ class XCAFDoc_Location(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5017,14 +5018,14 @@ class XCAFDoc_Material(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5274,14 +5275,14 @@ class XCAFDoc_MaterialTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5337,14 +5338,14 @@ class XCAFDoc_MaterialTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
     @overload
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @overload
-    def SetMaterial(self,L : OCP.TDF.TDF_Label,MatL : OCP.TDF.TDF_Label) -> None: 
+    def SetMaterial(self,L : OCP.TDF.TDF_Label,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aDensity : float,aDensName : OCP.TCollection.TCollection_HAsciiString,aDensValType : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Sets a link with GUID
 
         Sets a link with GUID Adds a Material as necessary
         """
     @overload
-    def SetMaterial(self,L : OCP.TDF.TDF_Label,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aDensity : float,aDensName : OCP.TCollection.TCollection_HAsciiString,aDensValType : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    def SetMaterial(self,L : OCP.TDF.TDF_Label,MatL : OCP.TDF.TDF_Label) -> None: ...
     @staticmethod
     def Set_s(L : OCP.TDF.TDF_Label) -> XCAFDoc_MaterialTool: ...
     def ShapeTool(self) -> XCAFDoc_ShapeTool: 
@@ -5524,14 +5525,14 @@ class XCAFDoc_Note(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5788,14 +5789,14 @@ class XCAFDoc_NoteComment(XCAFDoc_Note, OCP.TDF.TDF_Attribute, OCP.Standard.Stan
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6052,14 +6053,14 @@ class XCAFDoc_NoteBinData(XCAFDoc_Note, OCP.TDF.TDF_Attribute, OCP.Standard.Stan
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6138,10 +6139,10 @@ class XCAFDoc_NoteBinData(XCAFDoc_Note, OCP.TDF.TDF_Attribute, OCP.Standard.Stan
         """
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theFile : OCP.OSD.OSD_File) -> XCAFDoc_NoteBinData: ...
+    def Set_s(theLabel : OCP.TDF.TDF_Label,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theData : OCP.TColStd.TColStd_HArray1OfByte) -> XCAFDoc_NoteBinData: ...
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theData : OCP.TColStd.TColStd_HArray1OfByte) -> XCAFDoc_NoteBinData: ...
+    def Set_s(theLabel : OCP.TDF.TDF_Label,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theFile : OCP.OSD.OSD_File) -> XCAFDoc_NoteBinData: ...
     def Size(self) -> int: 
         """
         Size of data in bytes.
@@ -6340,14 +6341,14 @@ class XCAFDoc_NoteBalloon(XCAFDoc_NoteComment, XCAFDoc_Note, OCP.TDF.TDF_Attribu
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6478,14 +6479,14 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def AddNoteToAttr(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID) -> XCAFDoc_AssemblyItemRef: ...
     @overload
-    def AddNoteToSubshape(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theSubshapeIndex : int) -> XCAFDoc_AssemblyItemRef: 
+    def AddNoteToSubshape(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theSubshapeIndex : int) -> XCAFDoc_AssemblyItemRef: 
         """
         Adds the given note to the assembly item's subshape.
 
         Adds the given note to the labeled item's subshape.
         """
     @overload
-    def AddNoteToSubshape(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theSubshapeIndex : int) -> XCAFDoc_AssemblyItemRef: ...
+    def AddNoteToSubshape(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theSubshapeIndex : int) -> XCAFDoc_AssemblyItemRef: ...
     def AfterAddition(self) -> None: 
         """
         Something to do after adding an Attribute to a label.
@@ -6531,14 +6532,14 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Create a new 'balloon' note. Creates a new label under the notes hive and attaches attribute (derived ftom
         """
     @overload
-    def CreateBinData(self,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theData : OCP.TColStd.TColStd_HArray1OfByte) -> XCAFDoc_Note: 
+    def CreateBinData(self,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theFile : OCP.OSD.OSD_File) -> XCAFDoc_Note: 
         """
         Create a new note with data loaded from a binary file. Creates a new label under the notes hive and attaches attribute (derived ftom
 
         Create a new note with data loaded from a byte data array. Creates a new label under the notes hive and attaches attribute (derived ftom
         """
     @overload
-    def CreateBinData(self,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theFile : OCP.OSD.OSD_File) -> XCAFDoc_Note: ...
+    def CreateBinData(self,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theData : OCP.TColStd.TColStd_HArray1OfByte) -> XCAFDoc_Note: ...
     def CreateComment(self,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theComment : OCP.TCollection.TCollection_ExtendedString) -> XCAFDoc_Note: 
         """
         Create a new comment note. Creates a new label under the notes hive and attaches attribute (derived ftom
@@ -6623,14 +6624,14 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def FindAnnotatedItemAttr(self,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID) -> OCP.TDF.TDF_Label: ...
     @overload
-    def FindAnnotatedItemSubshape(self,theItemId : XCAFDoc_AssemblyItemId,theSubshapeIndex : int) -> OCP.TDF.TDF_Label: 
+    def FindAnnotatedItemSubshape(self,theItemLabel : OCP.TDF.TDF_Label,theSubshapeIndex : int) -> OCP.TDF.TDF_Label: 
         """
         Finds a label of the given assembly item's subshape in the annotated items hive.
 
         Finds a label of the given labeled item's subshape in the annotated items hive.
         """
     @overload
-    def FindAnnotatedItemSubshape(self,theItemLabel : OCP.TDF.TDF_Label,theSubshapeIndex : int) -> OCP.TDF.TDF_Label: ...
+    def FindAnnotatedItemSubshape(self,theItemId : XCAFDoc_AssemblyItemId,theSubshapeIndex : int) -> OCP.TDF.TDF_Label: ...
     def FindAttribute(self,anID : OCP.Standard.Standard_GUID,anAttribute : OCP.TDF.TDF_Attribute) -> bool: 
         """
         Finds an associated attribute of <me>, according to <anID>. the returned <anAttribute> is a valid one. The method returns True if found, False otherwise. A removed attribute cannot be found using this method.
@@ -6656,21 +6657,21 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the label of the annotated items hive.
         """
     @overload
-    def GetAttrNotes(self,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: 
+    def GetAttrNotes(self,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: 
         """
         Gets all note labels of the assembly item's attribute. Notes linked to the item itself or to item's subshapes aren't taken into account. The label sequence isn't cleared beforehand.
 
         Gets all note labels of the labeled item's attribute. Notes linked to the item itself or to item's subshapes aren't taken into account. The label sequence isn't cleared beforehand.
         """
     @overload
-    def GetAttrNotes(self,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: ...
+    def GetAttrNotes(self,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: ...
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
         """
         Returns default attribute GUID
         """
     @overload
-    def GetNotes(self,theItemId : XCAFDoc_AssemblyItemId,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: 
+    def GetNotes(self,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> None: 
         """
         Returns all labels from the notes hive. The label sequence isn't cleared beforehand.
 
@@ -6679,7 +6680,7 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Gets all note labels of the labeled item. Notes linked to item's attributes aren't taken into account. The label sequence isn't cleared beforehand.
         """
     @overload
-    def GetNotes(self,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> None: ...
+    def GetNotes(self,theItemId : XCAFDoc_AssemblyItemId,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: ...
     @overload
     def GetNotes(self,theItemLabel : OCP.TDF.TDF_Label,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: ...
     def GetNotesLabel(self) -> OCP.TDF.TDF_Label: 
@@ -6732,14 +6733,14 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6812,23 +6813,23 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Removes all notes from the assembly item's subshape.
         """
     @overload
-    def RemoveAttrNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID,theDelIfOrphan : bool=False) -> bool: 
+    def RemoveAttrNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID,theDelIfOrphan : bool=False) -> bool: 
         """
         Removes a note from the assembly item's attribute.
 
         Removes a note from the labeled item's attribute.
         """
     @overload
-    def RemoveAttrNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID,theDelIfOrphan : bool=False) -> bool: ...
+    def RemoveAttrNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID,theDelIfOrphan : bool=False) -> bool: ...
     @overload
-    def RemoveNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theDelIfOrphan : bool=False) -> bool: 
+    def RemoveNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theDelIfOrphan : bool=False) -> bool: 
         """
         Removes the given note from the assembly item.
 
         Removes the given note from the labeled item.
         """
     @overload
-    def RemoveNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theDelIfOrphan : bool=False) -> bool: ...
+    def RemoveNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theDelIfOrphan : bool=False) -> bool: ...
     @overload
     def RemoveSubshapeNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theSubshapeIndex : int,theDelIfOrphan : bool=False) -> bool: 
         """
@@ -7026,14 +7027,14 @@ class XCAFDoc_ShapeMapTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7142,12 +7143,12 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Adds a new top-level (creates and returns a new label) If makeAssembly is True, treats TopAbs_COMPOUND shapes as assemblies (creates assembly structure). NOTE: <makePrepare> replace components without location in assmebly by located components to avoid some problems. If AutoNaming() is True then automatically attaches names.
         """
     @overload
-    def AddSubShape(self,shapeL : OCP.TDF.TDF_Label,sub : OCP.TopoDS.TopoDS_Shape) -> OCP.TDF.TDF_Label: 
+    def AddSubShape(self,shapeL : OCP.TDF.TDF_Label,sub : OCP.TopoDS.TopoDS_Shape,addedSubShapeL : OCP.TDF.TDF_Label) -> bool: 
         """
         Adds a label for subshape of shape stored on label shapeL Returns Null label if it is not subshape
         """
     @overload
-    def AddSubShape(self,shapeL : OCP.TDF.TDF_Label,sub : OCP.TopoDS.TopoDS_Shape,addedSubShapeL : OCP.TDF.TDF_Label) -> bool: ...
+    def AddSubShape(self,shapeL : OCP.TDF.TDF_Label,sub : OCP.TopoDS.TopoDS_Shape) -> OCP.TDF.TDF_Label: ...
     def AfterAddition(self) -> None: 
         """
         Something to do after adding an Attribute to a label.
@@ -7286,14 +7287,14 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Searchs the SHUO by labels of components from upper_usage componet to next_usage Returns null attribute if no SHUO found
         """
     @overload
-    def FindShape(self,S : OCP.TopoDS.TopoDS_Shape,L : OCP.TDF.TDF_Label,findInstance : bool=False) -> bool: 
+    def FindShape(self,S : OCP.TopoDS.TopoDS_Shape,findInstance : bool=False) -> OCP.TDF.TDF_Label: 
         """
         Returns the label corresponding to shape S (searches among top-level shapes, not including subcomponents of assemblies and subshapes) If findInstance is False (default), seach for the input shape without location If findInstance is True, searches for the input shape as is. Return True if <S> is found.
 
         Does the same as previous method Returns Null label if not found
         """
     @overload
-    def FindShape(self,S : OCP.TopoDS.TopoDS_Shape,findInstance : bool=False) -> OCP.TDF.TDF_Label: ...
+    def FindShape(self,S : OCP.TopoDS.TopoDS_Shape,L : OCP.TDF.TDF_Label,findInstance : bool=False) -> bool: ...
     def FindSubShape(self,shapeL : OCP.TDF.TDF_Label,sub : OCP.TopoDS.TopoDS_Shape,L : OCP.TDF.TDF_Label) -> bool: 
         """
         Finds a label for subshape of shape stored on label shapeL Returns Null label if it is not found
@@ -7459,14 +7460,14 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns True if the label is not used by any assembly, i.e. contains sublabels which are assembly components This is relevant only if IsShape() is True (There is no Father TreeNode on this <L>)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7571,14 +7572,14 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Sets auto-naming mode to <V>. If True then for added shapes, links, assemblies and SHUO's, the TDataStd_Name attribute is automatically added. For shapes it contains a shape type (e.g. "SOLID", "SHELL", etc); for links it has a form "=>[0:1:1:2]" (where a tag is a label containing a shape without a location); for assemblies it is "ASSEMBLY", and "SHUO" for SHUO's. This setting is global; it cannot be made a member function as it is used by static methods as well. By default, auto-naming is enabled. See also AutoNaming().
         """
     @overload
-    def SetExternRefs(self,SHAS : OCP.TColStd.TColStd_SequenceOfHAsciiString) -> OCP.TDF.TDF_Label: 
+    def SetExternRefs(self,L : OCP.TDF.TDF_Label,SHAS : OCP.TColStd.TColStd_SequenceOfHAsciiString) -> None: 
         """
         Sets the names of references on the no-step files
 
         Sets the names of references on the no-step files
         """
     @overload
-    def SetExternRefs(self,L : OCP.TDF.TDF_Label,SHAS : OCP.TColStd.TColStd_SequenceOfHAsciiString) -> None: ...
+    def SetExternRefs(self,SHAS : OCP.TColStd.TColStd_SequenceOfHAsciiString) -> OCP.TDF.TDF_Label: ...
     @overload
     def SetID(self) -> None: 
         """
@@ -7779,14 +7780,14 @@ class XCAFDoc_View(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8067,14 +8068,14 @@ class XCAFDoc_ViewTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8146,7 +8147,7 @@ class XCAFDoc_ViewTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @overload
-    def SetView(self,theShapes : OCP.TDF.TDF_LabelSequence,theGDTs : OCP.TDF.TDF_LabelSequence,theClippingPlanes : OCP.TDF.TDF_LabelSequence,theNotes : OCP.TDF.TDF_LabelSequence,theAnnotations : OCP.TDF.TDF_LabelSequence,theViewL : OCP.TDF.TDF_Label) -> None: 
+    def SetView(self,theShapes : OCP.TDF.TDF_LabelSequence,theGDTs : OCP.TDF.TDF_LabelSequence,theClippingPlanes : OCP.TDF.TDF_LabelSequence,theViewL : OCP.TDF.TDF_Label) -> None: 
         """
         Sets a link with GUID
 
@@ -8157,7 +8158,7 @@ class XCAFDoc_ViewTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def SetView(self,theShapes : OCP.TDF.TDF_LabelSequence,theGDTs : OCP.TDF.TDF_LabelSequence,theViewL : OCP.TDF.TDF_Label) -> None: ...
     @overload
-    def SetView(self,theShapes : OCP.TDF.TDF_LabelSequence,theGDTs : OCP.TDF.TDF_LabelSequence,theClippingPlanes : OCP.TDF.TDF_LabelSequence,theViewL : OCP.TDF.TDF_Label) -> None: ...
+    def SetView(self,theShapes : OCP.TDF.TDF_LabelSequence,theGDTs : OCP.TDF.TDF_LabelSequence,theClippingPlanes : OCP.TDF.TDF_LabelSequence,theNotes : OCP.TDF.TDF_LabelSequence,theAnnotations : OCP.TDF.TDF_LabelSequence,theViewL : OCP.TDF.TDF_Label) -> None: ...
     @staticmethod
     def Set_s(L : OCP.TDF.TDF_Label) -> XCAFDoc_ViewTool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
@@ -8342,14 +8343,14 @@ class XCAFDoc_Volume(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

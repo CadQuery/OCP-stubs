@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.OpenGl
-import OCP.TCollection
-import OCP.Standard
-import OCP.Message
 import OCP.TColStd
-import OCP.Interface
+import OCP.TCollection
 import OCP.IFGraph
+import OCP.Message
+import OCP.Standard
+import OCP.OpenGl
+import OCP.NCollection
+import OCP.Interface
 __all__  = [
 "IFSelect",
 "IFSelect_Activator",
@@ -203,14 +203,14 @@ class IFSelect_Activator(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -327,14 +327,14 @@ class IFSelect_Act(IFSelect_Activator, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -428,14 +428,14 @@ class IFSelect_AppliedModifiers(OCP.Standard.Standard_Transient):
         Returns True if the applied modifier queried by last call to Item is to be applied to all the produced file. Else, <entcount> returned by Item gives the count of entity numbers, each one is queried by ItemNum
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -503,14 +503,14 @@ class IFSelect_SessionDumper(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -592,14 +592,14 @@ class IFSelect_SignatureList(OCP.Standard.Standard_Transient):
         Aknowledges the list in once. Name identifies the Signature
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -667,11 +667,15 @@ class IFSelect_SignatureList(OCP.Standard.Standard_Transient):
     @property
     def ModeSignOnly(self) -> bool:
         """
+        Returns modifiable the SignOnly Mode If False (D), the counter normally counts If True, the counting work is turned off, Add only fills the LastValue, which can be used as signature, when a counter works from data which are not available from a Signature
+
         :type: bool
         """
     @ModeSignOnly.setter
     def ModeSignOnly(self, arg1: bool) -> None:
-        pass
+        """
+        Returns modifiable the SignOnly Mode If False (D), the counter normally counts If True, the counting work is turned off, Add only fills the LastValue, which can be used as signature, when a counter works from data which are not available from a Signature
+        """
     pass
 class IFSelect_ContextModif():
     """
@@ -690,14 +694,14 @@ class IFSelect_ContextModif():
         Adds a Warning Message for an Entity from the original Model If <start> is not an Entity from the original model (e.g. the model itself) this message is added to Global Check.
         """
     @overload
-    def CCheck(self,num : int=0) -> OCP.Interface.Interface_Check: 
+    def CCheck(self,start : OCP.Standard.Standard_Transient) -> OCP.Interface.Interface_Check: 
         """
         Returns a Check given an Entity number (in the original Model) by default a Global Check. Creates it the first time. It can then be acknowledged on the spot, in condition that the caller works by reference ("Interface_Check& check = ...")
 
         Returns a Check attached to an Entity from the original Model It can then be acknowledged on the spot, in condition that the caller works by reference ("Interface_Check& check = ...")
         """
     @overload
-    def CCheck(self,start : OCP.Standard.Standard_Transient) -> OCP.Interface.Interface_Check: ...
+    def CCheck(self,num : int=0) -> OCP.Interface.Interface_Check: ...
     def CheckList(self) -> OCP.Interface.Interface_CheckIterator: 
         """
         Returns the complete CheckList
@@ -791,9 +795,9 @@ class IFSelect_ContextModif():
         Returns the result counterpart of current selected item (in the target model)
         """
     @overload
-    def __init__(self,graph : OCP.Interface.Interface_Graph,filename : str='') -> None: ...
-    @overload
     def __init__(self,graph : OCP.Interface.Interface_Graph,TC : OCP.Interface.Interface_CopyTool,filename : str='') -> None: ...
+    @overload
+    def __init__(self,graph : OCP.Interface.Interface_Graph,filename : str='') -> None: ...
     pass
 class IFSelect_ContextWrite():
     """
@@ -930,14 +934,14 @@ class IFSelect_Dispatch(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1044,14 +1048,14 @@ class IFSelect_DispPerCount(IFSelect_Dispatch, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1163,14 +1167,14 @@ class IFSelect_DispPerFiles(IFSelect_Dispatch, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1274,14 +1278,14 @@ class IFSelect_DispPerOne(IFSelect_Dispatch, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1381,14 +1385,14 @@ class IFSelect_DispPerSignature(IFSelect_Dispatch, OCP.Standard.Standard_Transie
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1500,14 +1504,14 @@ class IFSelect_DispGlobal(IFSelect_Dispatch, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1627,14 +1631,14 @@ class IFSelect_EditForm(OCP.Standard.Standard_Transient):
         Tells if an EditForm is complete or is an extract from Editor
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1794,11 +1798,15 @@ class IFSelect_EditForm(OCP.Standard.Standard_Transient):
     @property
     def EditKeepStatus(self) -> bool:
         """
+        Returns and may change the keep status on modif It starts as False If it is True, Apply does not clear modification status and the EditForm can be loaded again, modified value remain and may be applied again Remark that ApplyData does not clear the modification status, a call to ClearEdit does
+
         :type: bool
         """
     @EditKeepStatus.setter
     def EditKeepStatus(self, arg1: bool) -> None:
-        pass
+        """
+        Returns and may change the keep status on modif It starts as False If it is True, Apply does not clear modification status and the EditForm can be loaded again, modified value remain and may be applied again Remark that ApplyData does not clear the modification status, a call to ClearEdit does
+        """
     pass
 class IFSelect_EditValue():
     """
@@ -1818,6 +1826,7 @@ class IFSelect_EditValue():
 
       IFSelect_EditDynamic
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1873,14 +1882,14 @@ class IFSelect_Editor(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2049,14 +2058,14 @@ class IFSelect_GeneralModifier(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2182,14 +2191,14 @@ class IFSelect_SignCounter(IFSelect_SignatureList, OCP.Standard.Standard_Transie
         Aknowledges the list in once. Name identifies the Signature
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2272,9 +2281,9 @@ class IFSelect_SignCounter(IFSelect_SignatureList, OCP.Standard.Standard_Transie
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,withmap : bool=True,withlist : bool=False) -> None: ...
-    @overload
     def __init__(self,matcher : IFSelect_Signature,withmap : bool=True,withlist : bool=False) -> None: ...
+    @overload
+    def __init__(self,withmap : bool=True,withlist : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2288,11 +2297,15 @@ class IFSelect_SignCounter(IFSelect_SignatureList, OCP.Standard.Standard_Transie
     @property
     def ModeSignOnly(self) -> bool:
         """
+        Returns modifiable the SignOnly Mode If False (D), the counter normally counts If True, the counting work is turned off, Add only fills the LastValue, which can be used as signature, when a counter works from data which are not available from a Signature
+
         :type: bool
         """
     @ModeSignOnly.setter
     def ModeSignOnly(self, arg1: bool) -> None:
-        pass
+        """
+        Returns modifiable the SignOnly Mode If False (D), the counter normally counts If True, the counting work is turned off, Add only fills the LastValue, which can be used as signature, when a counter works from data which are not available from a Signature
+        """
     pass
 class IFSelect_TSeqOfSelection(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -2303,14 +2316,14 @@ class IFSelect_TSeqOfSelection(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IFSelect_TSeqOfSelection) -> None: 
+    def Append(self,theItem : IFSelect_Selection) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IFSelect_Selection) -> None: ...
+    def Append(self,theSeq : IFSelect_TSeqOfSelection) -> None: ...
     def Assign(self,theOther : IFSelect_TSeqOfSelection) -> IFSelect_TSeqOfSelection: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2349,14 +2362,14 @@ class IFSelect_TSeqOfSelection(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : IFSelect_Selection) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IFSelect_Selection) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfSelection) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfSelection) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IFSelect_Selection) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2383,14 +2396,14 @@ class IFSelect_TSeqOfSelection(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : IFSelect_Selection) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2416,11 +2429,11 @@ class IFSelect_TSeqOfSelection(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : IFSelect_TSeqOfSelection) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2453,14 +2466,14 @@ class IFSelect_IntParam(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2543,14 +2556,14 @@ class IFSelect_ListEditor(OCP.Standard.Standard_Transient):
         Tells if a value (in edited list) has been changed, i.e. either modified-value, or added
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2692,14 +2705,14 @@ class IFSelect_ModelCopier(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2802,14 +2815,14 @@ class IFSelect_Modifier(IFSelect_GeneralModifier, OCP.Standard.Standard_Transien
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2899,14 +2912,14 @@ class IFSelect_ModifReorder(IFSelect_Modifier, IFSelect_GeneralModifier, OCP.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3001,14 +3014,14 @@ class IFSelect_ModifEditForm(IFSelect_Modifier, IFSelect_GeneralModifier, OCP.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3111,14 +3124,14 @@ class IFSelect_PacketList(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3213,14 +3226,14 @@ class IFSelect_ParamEditor(IFSelect_Editor, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3351,6 +3364,7 @@ class IFSelect_PrintCount():
 
       IFSelect_ResultCount
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -3382,6 +3396,7 @@ class IFSelect_PrintFail():
 
       IFSelect_FailAndWarn
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -3410,6 +3425,7 @@ class IFSelect_RemainMode():
 
       IFSelect_RemainUndo
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -3442,6 +3458,7 @@ class IFSelect_ReturnStatus():
 
       IFSelect_RetStop
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -3492,14 +3509,14 @@ class IFSelect_Selection(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3589,14 +3606,14 @@ class IFSelect_SelectDeduct(IFSelect_Selection, OCP.Standard.Standard_Transient)
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3670,14 +3687,14 @@ class IFSelect_SelectBase(IFSelect_Selection, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3759,14 +3776,14 @@ class IFSelect_SelectCombine(IFSelect_Selection, OCP.Standard.Standard_Transient
         Returns the rank of an input Selection, 0 if not in the list. Most generally, its value is meaningless, except for testing the presence of an input Selection : - == 0 if <sel> is not an input for <me> - > 0 if <sel> is an input for <me>
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3853,14 +3870,14 @@ class IFSelect_SelectControl(IFSelect_Selection, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3978,14 +3995,14 @@ class IFSelect_SelectAnyList(IFSelect_SelectDeduct, IFSelect_Selection, OCP.Stan
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4107,14 +4124,14 @@ class IFSelect_SelectDiff(IFSelect_SelectControl, IFSelect_Selection, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4201,14 +4218,14 @@ class IFSelect_SelectEntityNumber(IFSelect_SelectBase, IFSelect_Selection, OCP.S
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4315,14 +4332,14 @@ class IFSelect_SelectExtract(IFSelect_SelectDeduct, IFSelect_Selection, OCP.Stan
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4436,14 +4453,14 @@ class IFSelect_SelectExplore(IFSelect_SelectDeduct, IFSelect_Selection, OCP.Stan
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4549,14 +4566,14 @@ class IFSelect_SelectAnyType(IFSelect_SelectExtract, IFSelect_SelectDeduct, IFSe
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4678,14 +4695,14 @@ class IFSelect_SelectFlag(IFSelect_SelectExtract, IFSelect_SelectDeduct, IFSelec
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4804,14 +4821,14 @@ class IFSelect_SelectInList(IFSelect_SelectAnyList, IFSelect_SelectDeduct, IFSel
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4965,14 +4982,14 @@ class IFSelect_SelectIncorrectEntities(IFSelect_SelectFlag, IFSelect_SelectExtra
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5071,14 +5088,14 @@ class IFSelect_SelectIntersection(IFSelect_SelectCombine, IFSelect_Selection, OC
         Returns the rank of an input Selection, 0 if not in the list. Most generally, its value is meaningless, except for testing the presence of an input Selection : - == 0 if <sel> is not an input for <me> - > 0 if <sel> is an input for <me>
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5162,14 +5179,14 @@ class IFSelect_SelectModelEntities(IFSelect_SelectBase, IFSelect_Selection, OCP.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5240,14 +5257,14 @@ class IFSelect_SelectModelRoots(IFSelect_SelectBase, IFSelect_Selection, OCP.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5330,14 +5347,14 @@ class IFSelect_SelectPointed(IFSelect_SelectBase, IFSelect_Selection, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5493,14 +5510,14 @@ class IFSelect_SelectRange(IFSelect_SelectExtract, IFSelect_SelectDeduct, IFSele
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5647,14 +5664,14 @@ class IFSelect_SelectRootComps(IFSelect_SelectExtract, IFSelect_SelectDeduct, IF
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5769,14 +5786,14 @@ class IFSelect_SelectRoots(IFSelect_SelectExtract, IFSelect_SelectDeduct, IFSele
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5895,14 +5912,14 @@ class IFSelect_SelectSent(IFSelect_SelectExtract, IFSelect_SelectDeduct, IFSelec
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6013,14 +6030,14 @@ class IFSelect_SelectShared(IFSelect_SelectDeduct, IFSelect_Selection, OCP.Stand
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6115,14 +6132,14 @@ class IFSelect_SelectSharing(IFSelect_SelectDeduct, IFSelect_Selection, OCP.Stan
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6233,14 +6250,14 @@ class IFSelect_SelectSignature(IFSelect_SelectExtract, IFSelect_SelectDeduct, IF
         Returns True if match must be exact
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6291,11 +6308,11 @@ class IFSelect_SelectSignature(IFSelect_SelectExtract, IFSelect_SelectDeduct, IF
         Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     @overload
+    def __init__(self,matcher : IFSelect_SignCounter,signtext : str,exact : bool=True) -> None: ...
+    @overload
     def __init__(self,matcher : IFSelect_Signature,signtext : OCP.TCollection.TCollection_AsciiString,exact : bool=True) -> None: ...
     @overload
     def __init__(self,matcher : IFSelect_Signature,signtext : str,exact : bool=True) -> None: ...
-    @overload
-    def __init__(self,matcher : IFSelect_SignCounter,signtext : str,exact : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6372,14 +6389,14 @@ class IFSelect_SelectSignedShared(IFSelect_SelectExplore, IFSelect_SelectDeduct,
         Returns True if match must be exact
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6498,14 +6515,14 @@ class IFSelect_SelectSignedSharing(IFSelect_SelectExplore, IFSelect_SelectDeduct
         Returns True if match must be exact
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6624,14 +6641,14 @@ class IFSelect_SelectSuite(IFSelect_SelectDeduct, IFSelect_Selection, OCP.Standa
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6746,14 +6763,14 @@ class IFSelect_SelectType(IFSelect_SelectAnyType, IFSelect_SelectExtract, IFSele
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6804,9 +6821,9 @@ class IFSelect_SelectType(IFSelect_SelectAnyType, IFSelect_SelectExtract, IFSele
         Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,atype : OCP.Standard.Standard_Type) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6863,14 +6880,14 @@ class IFSelect_SelectUnion(IFSelect_SelectCombine, IFSelect_Selection, OCP.Stand
         Returns the rank of an input Selection, 0 if not in the list. Most generally, its value is meaningless, except for testing the presence of an input Selection : - == 0 if <sel> is not an input for <me> - > 0 if <sel> is an input for <me>
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6982,14 +6999,14 @@ class IFSelect_SelectUnknownEntities(IFSelect_SelectExtract, IFSelect_SelectDedu
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7104,14 +7121,14 @@ class IFSelect_SelectErrorEntities(IFSelect_SelectExtract, IFSelect_SelectDeduct
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7194,9 +7211,9 @@ class IFSelect_SelectionIterator():
         Returns the current Selction beeing iterated Error if count of Selection has been passed
         """
     @overload
-    def __init__(self,sel : IFSelect_Selection) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,sel : IFSelect_Selection) -> None: ...
     pass
 class IFSelect_SequenceOfAppliedModifiers(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -7253,14 +7270,14 @@ class IFSelect_SequenceOfAppliedModifiers(OCP.NCollection.NCollection_BaseSequen
     @overload
     def InsertAfter(self,theIndex : int,theSeq : IFSelect_SequenceOfAppliedModifiers) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IFSelect_SequenceOfAppliedModifiers) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : IFSelect_AppliedModifiers) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IFSelect_AppliedModifiers) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IFSelect_SequenceOfAppliedModifiers) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -7287,14 +7304,14 @@ class IFSelect_SequenceOfAppliedModifiers(OCP.NCollection.NCollection_BaseSequen
     @overload
     def Prepend(self,theItem : IFSelect_AppliedModifiers) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7322,9 +7339,9 @@ class IFSelect_SequenceOfAppliedModifiers(OCP.NCollection.NCollection_BaseSequen
     @overload
     def __init__(self,theOther : IFSelect_SequenceOfAppliedModifiers) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -7341,14 +7358,14 @@ class IFSelect_SequenceOfGeneralModifier(OCP.NCollection.NCollection_BaseSequenc
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : IFSelect_GeneralModifier) -> None: 
+    def Append(self,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: ...
+    def Append(self,theItem : IFSelect_GeneralModifier) -> None: ...
     def Assign(self,theOther : IFSelect_SequenceOfGeneralModifier) -> IFSelect_SequenceOfGeneralModifier: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -7387,14 +7404,14 @@ class IFSelect_SequenceOfGeneralModifier(OCP.NCollection.NCollection_BaseSequenc
     @overload
     def InsertAfter(self,theIndex : int,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : IFSelect_GeneralModifier) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IFSelect_GeneralModifier) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -7412,23 +7429,23 @@ class IFSelect_SequenceOfGeneralModifier(OCP.NCollection.NCollection_BaseSequenc
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : IFSelect_GeneralModifier) -> None: 
+    def Prepend(self,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: ...
+    def Prepend(self,theItem : IFSelect_GeneralModifier) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7454,11 +7471,11 @@ class IFSelect_SequenceOfGeneralModifier(OCP.NCollection.NCollection_BaseSequenc
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IFSelect_SequenceOfGeneralModifier) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -7512,14 +7529,14 @@ class IFSelect_SequenceOfInterfaceModel(OCP.NCollection.NCollection_BaseSequence
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.Interface.Interface_InterfaceModel) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : IFSelect_SequenceOfInterfaceModel) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IFSelect_SequenceOfInterfaceModel) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.Interface.Interface_InterfaceModel) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : IFSelect_SequenceOfInterfaceModel) -> None: 
         """
@@ -7546,23 +7563,23 @@ class IFSelect_SequenceOfInterfaceModel(OCP.NCollection.NCollection_BaseSequence
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : IFSelect_SequenceOfInterfaceModel) -> None: 
+    def Prepend(self,theItem : OCP.Interface.Interface_InterfaceModel) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.Interface.Interface_InterfaceModel) -> None: ...
+    def Prepend(self,theSeq : IFSelect_SequenceOfInterfaceModel) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7588,9 +7605,9 @@ class IFSelect_SequenceOfInterfaceModel(OCP.NCollection.NCollection_BaseSequence
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : IFSelect_SequenceOfInterfaceModel) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -7630,14 +7647,14 @@ class IFSelect_BasicDumper(IFSelect_SessionDumper, OCP.Standard.Standard_Transie
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7915,14 +7932,14 @@ class IFSelect_SessionPilot(IFSelect_Activator, OCP.Standard.Standard_Transient)
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8113,14 +8130,14 @@ class IFSelect_ShareOut(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8281,11 +8298,11 @@ class IFSelect_ShareOutResult():
     @overload
     def __init__(self,disp : IFSelect_Dispatch,mod : OCP.Interface.Interface_InterfaceModel) -> None: ...
     @overload
-    def __init__(self,sho : IFSelect_ShareOut,mod : OCP.Interface.Interface_InterfaceModel) -> None: ...
-    @overload
     def __init__(self,disp : IFSelect_Dispatch,G : OCP.Interface.Interface_Graph) -> None: ...
     @overload
     def __init__(self,sho : IFSelect_ShareOut,G : OCP.Interface.Interface_Graph) -> None: ...
+    @overload
+    def __init__(self,sho : IFSelect_ShareOut,mod : OCP.Interface.Interface_InterfaceModel) -> None: ...
     pass
 class IFSelect_Signature(OCP.Interface.Interface_SignType):
     """
@@ -8509,14 +8526,14 @@ class IFSelect_GraphCounter(IFSelect_SignCounter, IFSelect_SignatureList, OCP.St
         Aknowledges the list in once. Name identifies the Signature
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8616,11 +8633,15 @@ class IFSelect_GraphCounter(IFSelect_SignCounter, IFSelect_SignatureList, OCP.St
     @property
     def ModeSignOnly(self) -> bool:
         """
+        Returns modifiable the SignOnly Mode If False (D), the counter normally counts If True, the counting work is turned off, Add only fills the LastValue, which can be used as signature, when a counter works from data which are not available from a Signature
+
         :type: bool
         """
     @ModeSignOnly.setter
     def ModeSignOnly(self, arg1: bool) -> None:
-        pass
+        """
+        Returns modifiable the SignOnly Mode If False (D), the counter normally counts If True, the counting work is turned off, Add only fills the LastValue, which can be used as signature, when a counter works from data which are not available from a Signature
+        """
     pass
 class IFSelect_SignMultiple(IFSelect_Signature, OCP.Interface.Interface_SignType):
     """
@@ -8961,14 +8982,14 @@ class IFSelect_CheckCounter(IFSelect_SignatureList, OCP.Standard.Standard_Transi
         Aknowledges the list in once. Name identifies the Signature
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -9044,11 +9065,15 @@ class IFSelect_CheckCounter(IFSelect_SignatureList, OCP.Standard.Standard_Transi
     @property
     def ModeSignOnly(self) -> bool:
         """
+        Returns modifiable the SignOnly Mode If False (D), the counter normally counts If True, the counting work is turned off, Add only fills the LastValue, which can be used as signature, when a counter works from data which are not available from a Signature
+
         :type: bool
         """
     @ModeSignOnly.setter
     def ModeSignOnly(self, arg1: bool) -> None:
-        pass
+        """
+        Returns modifiable the SignOnly Mode If False (D), the counter normally counts If True, the counting work is turned off, Add only fills the LastValue, which can be used as signature, when a counter works from data which are not available from a Signature
+        """
     pass
 class IFSelect_TSeqOfDispatch(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -9096,23 +9121,23 @@ class IFSelect_TSeqOfDispatch(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IFSelect_TSeqOfDispatch) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : IFSelect_Dispatch) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IFSelect_Dispatch) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : IFSelect_TSeqOfDispatch) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IFSelect_Dispatch) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfDispatch) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfDispatch) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IFSelect_Dispatch) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -9139,14 +9164,14 @@ class IFSelect_TSeqOfDispatch(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : IFSelect_TSeqOfDispatch) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -9172,11 +9197,11 @@ class IFSelect_TSeqOfDispatch(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IFSelect_TSeqOfDispatch) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -9260,27 +9285,27 @@ class IFSelect_HSeqOfSelection(IFSelect_TSeqOfSelection, OCP.NCollection.NCollec
     @overload
     def InsertAfter(self,theIndex : int,theItem : IFSelect_Selection) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IFSelect_Selection) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfSelection) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfSelection) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IFSelect_Selection) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -9312,14 +9337,14 @@ class IFSelect_HSeqOfSelection(IFSelect_TSeqOfSelection, OCP.NCollection.NCollec
     @overload
     def Prepend(self,theItem : IFSelect_Selection) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -9353,9 +9378,9 @@ class IFSelect_HSeqOfSelection(IFSelect_TSeqOfSelection, OCP.NCollection.NCollec
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : IFSelect_TSeqOfSelection) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : IFSelect_TSeqOfSelection) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -9402,14 +9427,14 @@ class IFSelect_Transformer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -9491,14 +9516,14 @@ class IFSelect_TransformStandard(IFSelect_Transformer, OCP.Standard.Standard_Tra
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -9533,14 +9558,14 @@ class IFSelect_TransformStandard(IFSelect_Transformer, OCP.Standard.Standard_Tra
         Performs the Standard Transformation, by calling Copy then ApplyModifiers (which can return an error status)
         """
     @overload
-    def RemoveModifier(self,num : int) -> bool: 
+    def RemoveModifier(self,modif : IFSelect_Modifier) -> bool: 
         """
         Removes a Modifier from the list Returns True if done, False if <modif> not in the list
 
         Removes a Modifier from the list, given its rank Returns True if done, False if <num> is out of range
         """
     @overload
-    def RemoveModifier(self,modif : IFSelect_Modifier) -> bool: ...
+    def RemoveModifier(self,num : int) -> bool: ...
     def Selection(self) -> IFSelect_Selection: 
         """
         Returns the Selection, Null by default
@@ -9623,14 +9648,14 @@ class IFSelect_WorkLibrary(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -9921,14 +9946,14 @@ class IFSelect_WorkSession(OCP.Standard.Standard_Transient):
         Returns Integer Value of an IntParam
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -10031,14 +10056,14 @@ class IFSelect_WorkSession(OCP.Standard.Standard_Transient):
         Returns the Ident attached to a Name, 0 if name not recorded
         """
     @overload
-    def NamedItem(self,name : OCP.TCollection.TCollection_HAsciiString) -> OCP.Standard.Standard_Transient: 
+    def NamedItem(self,name : str) -> OCP.Standard.Standard_Transient: 
         """
         Returns the Item which corresponds to a Variable, given its Name (whatever the type of this Item). Returns a Null Handle if this Name is not recorded
 
         Same as above, but <name> is given through a Handle Especially Usefull with methods SelectionNames, etc...
         """
     @overload
-    def NamedItem(self,name : str) -> OCP.Standard.Standard_Transient: ...
+    def NamedItem(self,name : OCP.TCollection.TCollection_HAsciiString) -> OCP.Standard.Standard_Transient: ...
     def NbFiles(self) -> int: 
         """
         Returns the count of produced Models

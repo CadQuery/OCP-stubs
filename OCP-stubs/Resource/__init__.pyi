@@ -5,8 +5,8 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
-import OCP.Standard
 import OCP.TCollection
+import OCP.Standard
 __all__  = [
 "Resource_DataMapOfAsciiStringAsciiString",
 "Resource_DataMapOfAsciiStringExtendedString",
@@ -71,14 +71,14 @@ class Resource_DataMapOfAsciiStringAsciiString(OCP.NCollection.NCollection_BaseM
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: 
+    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
+    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: ...
     def IsBound(self,theKey : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         IsBound
@@ -112,9 +112,9 @@ class Resource_DataMapOfAsciiStringAsciiString(OCP.NCollection.NCollection_BaseM
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : Resource_DataMapOfAsciiStringAsciiString) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Resource_DataMapOfAsciiStringAsciiString) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -148,14 +148,14 @@ class Resource_DataMapOfAsciiStringExtendedString(OCP.NCollection.NCollection_Ba
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : Resource_DataMapOfAsciiStringExtendedString) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -208,9 +208,9 @@ class Resource_DataMapOfAsciiStringExtendedString(OCP.NCollection.NCollection_Ba
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Resource_DataMapOfAsciiStringExtendedString) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : Resource_DataMapOfAsciiStringExtendedString) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Resource_FormatType():
@@ -239,6 +239,7 @@ class Resource_FormatType():
 
       Resource_GB
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -313,14 +314,14 @@ class Resource_Manager(OCP.Standard.Standard_Transient):
         Gets the value of an integer resource according to its instance and its type.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -339,7 +340,7 @@ class Resource_Manager(OCP.Standard.Standard_Transient):
         Save the user resource structure in the specified file. Creates the file if it does not exist.
         """
     @overload
-    def SetResource(self,aResourceName : str,aValue : float) -> None: 
+    def SetResource(self,aResourceName : str,aValue : str) -> None: 
         """
         Sets the new value of an integer resource. If the resource does not exist, it is created.
 
@@ -350,7 +351,7 @@ class Resource_Manager(OCP.Standard.Standard_Transient):
         Sets the new value of an ExtString resource. If the resource does not exist, it is created.
         """
     @overload
-    def SetResource(self,aResourceName : str,aValue : str) -> None: ...
+    def SetResource(self,aResourceName : str,aValue : float) -> None: ...
     @overload
     def SetResource(self,aResourceName : str,aValue : int) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
@@ -362,9 +363,9 @@ class Resource_Manager(OCP.Standard.Standard_Transient):
         Gets the value of a CString resource according to its instance and its type.
         """
     @overload
-    def __init__(self,aName : str,aDefaultsDirectory : OCP.TCollection.TCollection_AsciiString,anUserDefaultsDirectory : OCP.TCollection.TCollection_AsciiString,Verbose : bool=False) -> None: ...
-    @overload
     def __init__(self,aName : str,Verbose : bool=False) -> None: ...
+    @overload
+    def __init__(self,aName : str,aDefaultsDirectory : OCP.TCollection.TCollection_AsciiString,anUserDefaultsDirectory : OCP.TCollection.TCollection_AsciiString,Verbose : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -397,7 +398,7 @@ class Resource_Unicode():
         """
     @staticmethod
     @overload
-    def ConvertFormatToUnicode_s(theFromStr : str,theToStr : OCP.TCollection.TCollection_ExtendedString) -> None: 
+    def ConvertFormatToUnicode_s(theFormat : Resource_FormatType,theFromStr : str,theToStr : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         Converts the non-ASCII C string (as specified by GetFormat()) to the Unicode string of extended characters.
 
@@ -405,7 +406,7 @@ class Resource_Unicode():
         """
     @staticmethod
     @overload
-    def ConvertFormatToUnicode_s(theFormat : Resource_FormatType,theFromStr : str,theToStr : OCP.TCollection.TCollection_ExtendedString) -> None: ...
+    def ConvertFormatToUnicode_s(theFromStr : str,theToStr : OCP.TCollection.TCollection_ExtendedString) -> None: ...
     @staticmethod
     def ConvertGBKToUnicode_s(fromstr : str,tostr : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """

@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Storage
-import OCP.Standard
 import OCP.TDF
 import OCP.TCollection
+import OCP.Storage
+import OCP.Standard
 __all__  = [
 "BinObjMgt_Persistent",
 "BinObjMgt_RRelocationTable"
@@ -215,14 +215,14 @@ class BinObjMgt_Persistent():
         Sets the current position for get/put. Resets an error state depending on the validity of thePos. Returns the new state (value of IsOK())
         """
     @overload
-    def SetTypeId(self,theId : int) -> None: 
+    def SetTypeId(self,theTypeId : int) -> None: 
         """
         Sets the Id of the type of the object
 
         Sets the Id of the type of the object
         """
     @overload
-    def SetTypeId(self,theTypeId : int) -> None: ...
+    def SetTypeId(self,theId : int) -> None: ...
     def Truncate(self) -> None: 
         """
         Truncates the buffer by current position, i.e. updates mySize

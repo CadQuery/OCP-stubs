@@ -35,9 +35,9 @@ class LDOM_Node():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,anOther : LDOM_Node) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def appendChild(self,aChild : LDOM_Node) -> None: 
         """
         None
@@ -259,9 +259,9 @@ class LDOM_Text(LDOM_CharacterData, LDOM_Node):
         None
         """
     @overload
-    def __init__(self,anOther : LDOM_Text) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,anOther : LDOM_Text) -> None: ...
     def appendChild(self,aChild : LDOM_Node) -> None: 
         """
         None
@@ -393,9 +393,9 @@ class LDOM_Document():
     None
     """
     @overload
-    def __init__(self,aMemManager : LDOM_MemManager) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aMemManager : LDOM_MemManager) -> None: ...
     def createCDATASection(self,theData : LDOMString) -> LDOM_CDATASection: 
         """
         None
@@ -691,9 +691,9 @@ class LDOM_CDATASection(LDOM_Text, LDOM_CharacterData, LDOM_Node):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : LDOM_CDATASection) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def appendChild(self,aChild : LDOM_Node) -> None: 
         """
         None

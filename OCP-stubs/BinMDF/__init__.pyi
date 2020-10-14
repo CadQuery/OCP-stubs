@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.TDF
 import OCP.TCollection
+import OCP.TColStd
+import OCP.Message
 import OCP.Standard
 import OCP.BinObjMgt
-import OCP.Message
-import OCP.TColStd
-import OCP.TDF
 __all__  = [
 "BinMDF",
 "BinMDF_ADriver",
@@ -53,14 +53,14 @@ class BinMDF_ADriver(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -75,14 +75,14 @@ class BinMDF_ADriver(OCP.Standard.Standard_Transient):
         Creates a new attribute from TDF.
         """
     @overload
-    def Paste(self,aSource : OCP.TDF.TDF_Attribute,aTarget : OCP.BinObjMgt.BinObjMgt_Persistent,aRelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
+    def Paste(self,aSource : OCP.BinObjMgt.BinObjMgt_Persistent,aTarget : OCP.TDF.TDF_Attribute,aRelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
         """
         Translate the contents of <aSource> and put it into <aTarget>, using the relocation table <aRelocTable> to keep the sharings.
 
         Translate the contents of <aSource> and put it into <aTarget>, using the relocation table <aRelocTable> to keep the sharings.
         """
     @overload
-    def Paste(self,aSource : OCP.BinObjMgt.BinObjMgt_Persistent,aTarget : OCP.TDF.TDF_Attribute,aRelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,aSource : OCP.TDF.TDF_Attribute,aTarget : OCP.BinObjMgt.BinObjMgt_Persistent,aRelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -119,14 +119,14 @@ class BinMDF_ADriverTable(OCP.Standard.Standard_Transient):
         Adds a translation driver <theDriver>.
         """
     @overload
-    def AssignIds(self,theTypeNames : OCP.TColStd.TColStd_SequenceOfAsciiString) -> None: 
+    def AssignIds(self,theTypes : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         Assigns the IDs to the drivers of the given Types. It uses indices in the map as IDs. Useful in storage procedure.
 
         Assigns the IDs to the drivers of the given Type Names; It uses indices in the sequence as IDs. Useful in retrieval procedure.
         """
     @overload
-    def AssignIds(self,theTypes : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def AssignIds(self,theTypeNames : OCP.TColStd.TColStd_SequenceOfAsciiString) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -161,14 +161,14 @@ class BinMDF_ADriverTable(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -219,14 +219,14 @@ class BinMDF_ReferenceDriver(BinMDF_ADriver, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -302,14 +302,14 @@ class BinMDF_TagSourceDriver(BinMDF_ADriver, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

@@ -5,17 +5,17 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
-import OCP.StepShape
-import OCP.Transfer
-import OCP.StepData
-import OCP.Standard
-import OCP.gp
-import OCP.StepGeom
-import OCP.StepRepr
 import OCP.XSControl
+import OCP.StepRepr
 import OCP.IFSelect
+import OCP.StepGeom
+import OCP.Transfer
+import OCP.Standard
 import OCP.TopoDS
+import OCP.StepShape
+import OCP.StepData
 import OCP.Interface
+import OCP.gp
 __all__  = [
 "STEPControl_ActorRead",
 "STEPControl_ActorWrite",
@@ -65,14 +65,14 @@ class STEPControl_ActorRead(OCP.Transfer.Transfer_ActorOfTransientProcess, OCP.T
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -183,14 +183,14 @@ class STEPControl_ActorWrite(OCP.Transfer.Transfer_ActorOfFinderProcess, OCP.Tra
         Customizable method to check whether shape S should be written as assembly or not Default implementation uses flag GroupMode and analyses the shape itself NOTE: this method can modify shape
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -286,11 +286,15 @@ class STEPControl_ActorWrite(OCP.Transfer.Transfer_ActorOfFinderProcess, OCP.Tra
     @property
     def ModeTrans(self) -> int:
         """
+        Returns the Transfer Mode, modifiable
+
         :type: int
         """
     @ModeTrans.setter
     def ModeTrans(self, arg1: int) -> None:
-        pass
+        """
+        Returns the Transfer Mode, modifiable
+        """
     pass
 class STEPControl_Controller(OCP.XSControl.XSControl_Controller, OCP.Standard.Standard_Transient):
     """
@@ -346,14 +350,14 @@ class STEPControl_Controller(OCP.XSControl.XSControl_Controller, OCP.Standard.St
         Standard Initialisation. It creates a Controller for STEP and records it to various names, available to select it later Returns True when done, False if could not be done
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -465,14 +469,14 @@ class STEPControl_Reader(OCP.XSControl.XSControl_Reader):
         Gives statistics about Transfer
         """
     @overload
-    def GiveList(self,first : str,ent : OCP.Standard.Standard_Transient) -> OCP.TColStd.TColStd_HSequenceOfTransient: 
+    def GiveList(self,first : str='',second : str='') -> OCP.TColStd.TColStd_HSequenceOfTransient: 
         """
         Returns a list of entities from the IGES or STEP file according to the following rules: - if first and second are empty strings, the whole file is selected. - if first is an entity number or label, the entity referred to is selected. - if first is a list of entity numbers/labels separated by commas, the entities referred to are selected, - if first is the name of a selection in the worksession and second is not defined, the list contains the standard output for that selection. - if first is the name of a selection and second is defined, the criterion defined by second is applied to the result of the first selection. A selection is an operator which computes a list of entities from a list given in input according to its type. If no list is specified, the selection computes its list of entities from the whole model. A selection can be: - A predefined selection (xst-transferrable-mode) - A filter based on a signature A Signature is an operator which returns a string from an entity according to its type. For example: - "xst-type" (CDL) - "iges-level" - "step-type". For example, if you wanted to select only the advanced_faces in a STEP file you would use the following code: Example Reader.GiveList("xst-transferrable-roots","step-type(ADVANCED_FACE)"); Warning If the value given to second is incorrect, it will simply be ignored.
 
         Computes a List of entities from the model as follows <first> beeing a Selection, <ent> beeing an entity or a list of entities (as a HSequenceOfTransient) : the standard result of this selection applied to this list if <first> is erroneous, a null handle is returned
         """
     @overload
-    def GiveList(self,first : str='',second : str='') -> OCP.TColStd.TColStd_HSequenceOfTransient: ...
+    def GiveList(self,first : str,ent : OCP.Standard.Standard_Transient) -> OCP.TColStd.TColStd_HSequenceOfTransient: ...
     def Model(self) -> OCP.Interface.Interface_InterfaceModel: 
         """
         Returns the model. It can then be consulted (header, product)
@@ -554,9 +558,9 @@ class STEPControl_Reader(OCP.XSControl.XSControl_Reader):
         Returns the session used in <me>
         """
     @overload
-    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession,scratch : bool=True) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession,scratch : bool=True) -> None: ...
     pass
 class STEPControl_StepModelType():
     """
@@ -580,6 +584,7 @@ class STEPControl_StepModelType():
 
       STEPControl_Hybrid
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

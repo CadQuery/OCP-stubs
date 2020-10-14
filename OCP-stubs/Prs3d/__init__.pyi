@@ -4,23 +4,23 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Aspect
-import OCP.Bnd
-import OCP.TopLoc
-import OCP.gp
-import OCP.TopTools
-import OCP.Geom
-import OCP.Graphic3d
-import OCP.TColStd
-import OCP.GeomAbs
-import OCP.TopoDS
-import OCP.HLRAlgo
-import OCP.Poly
-import OCP.Quantity
-import OCP.NCollection
 import OCP.TCollection
-import OCP.Standard
 import OCP.TColgp
+import OCP.HLRAlgo
+import OCP.TopoDS
+import OCP.NCollection
+import OCP.gp
+import OCP.GeomAbs
+import OCP.TColStd
+import OCP.Poly
+import OCP.Bnd
+import OCP.Quantity
+import OCP.Graphic3d
+import OCP.Aspect
+import OCP.TopTools
+import OCP.Standard
+import OCP.Geom
+import OCP.TopLoc
 __all__  = [
 "Prs3d",
 "Prs3d_Root",
@@ -184,14 +184,14 @@ class Prs3d_BasicAspect(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -253,14 +253,14 @@ class Prs3d_ArrowAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -297,9 +297,9 @@ class Prs3d_ArrowAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,theAspect : OCP.Graphic3d.Graphic3d_AspectLine3d) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,anAngle : float,aLength : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -380,14 +380,14 @@ class Prs3d_DatumAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -519,6 +519,7 @@ class Prs3d_DatumAttribute():
 
       Prs3d_DP_ShadingNumberOfFacettes
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -559,6 +560,7 @@ class Prs3d_DatumAxes():
 
       Prs3d_DA_XYZAxis
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -588,6 +590,7 @@ class Prs3d_DatumMode():
 
       Prs3d_DM_Shaded
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -630,6 +633,7 @@ class Prs3d_DatumParts():
 
       Prs3d_DP_None
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -665,6 +669,7 @@ class Prs3d_DimensionArrowOrientation():
 
       Prs3d_DAO_Fit
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -729,14 +734,14 @@ class Prs3d_DimensionAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Gets type of arrows.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -864,6 +869,7 @@ class Prs3d_DimensionTextHorizontalPosition():
 
       Prs3d_DTHP_Fit
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -892,6 +898,7 @@ class Prs3d_DimensionTextVerticalPosition():
 
       Prs3d_DTVP_Center
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1241,14 +1248,14 @@ class Prs3d_Drawer(OCP.Graphic3d.Graphic3d_PresentationAttributes, OCP.Standard.
         Returns True if automatic triangulation is enabled.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1275,14 +1282,14 @@ class Prs3d_Drawer(OCP.Graphic3d.Graphic3d_PresentationAttributes, OCP.Standard.
         Returns settings for line aspects. These settings can be edited. The default values are: Color: Quantity_NOC_YELLOW Type of line: Aspect_TOL_SOLID Width: 1.0 These attributes are used by the following algorithms: Prs3d_Curve Prs3d_Line Prs3d_HLRShape
         """
     @overload
-    def Link(self,theDrawer : Prs3d_Drawer) -> None: 
+    def Link(self) -> Prs3d_Drawer: 
         """
         Sets theDrawer as a link to which the current object references.
 
         Returns the drawer to which the current object references.
         """
     @overload
-    def Link(self) -> Prs3d_Drawer: ...
+    def Link(self,theDrawer : Prs3d_Drawer) -> None: ...
     def MaximalChordialDeviation(self) -> float: 
         """
         Returns the maximal chordal deviation. The default value is 0.1. Drawings of curves or patches are made with respect to an absolute maximal chordal deviation.
@@ -1414,23 +1421,23 @@ class Prs3d_Drawer(OCP.Graphic3d.Graphic3d_PresentationAttributes, OCP.Standard.
         Enables or disables drawing of free boundaries for shading presentations. The method sets drawing flag owned by the drawer that will be used during visualization instead of the one set in link. theIsEnabled is a boolean flag indicating whether the free boundaries should be drawn or not.
         """
     @overload
-    def SetHLRAngle(self) -> None: 
+    def SetHLRAngle(self,theAngle : float) -> None: 
         """
         Sets anAngle, the angle of maximum chordal deviation for removal of hidden lines created by different viewpoints in different presentations. The default value is 20 * M_PI / 180. Also sets the hasOwnHLRDeviationAngle flag to Standard_True and myPreviousHLRDeviationAngle.
 
         Sets the hasOwnHLRDeviationAngle flag to Standard_False
         """
     @overload
-    def SetHLRAngle(self,theAngle : float) -> None: ...
+    def SetHLRAngle(self) -> None: ...
     @overload
-    def SetHLRDeviationCoefficient(self,theCoefficient : float) -> None: 
+    def SetHLRDeviationCoefficient(self) -> None: 
         """
         Sets the deviation coefficient aCoefficient for removal of hidden lines created by different viewpoints in different presentations. The Default value is 0.02. Also sets the hasOwnHLRDeviationCoefficient flag to Standard_True and myPreviousHLRDeviationCoefficient
 
         Sets the hasOwnHLRDeviationCoefficient flag to Standard_False
         """
     @overload
-    def SetHLRDeviationCoefficient(self) -> None: ...
+    def SetHLRDeviationCoefficient(self,theCoefficient : float) -> None: ...
     def SetHiddenLineAspect(self,theAspect : Prs3d_LineAspect) -> None: 
         """
         Sets the parameter theAspect for the display of hidden lines in hidden line removal mode.
@@ -1695,14 +1702,14 @@ class Prs3d_LineAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1733,9 +1740,9 @@ class Prs3d_LineAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theColor : OCP.Quantity.Quantity_Color,theType : OCP.Aspect.Aspect_TypeOfLine,theWidth : float) -> None: ...
-    @overload
     def __init__(self,theAspect : OCP.Graphic3d.Graphic3d_AspectLine3d) -> None: ...
+    @overload
+    def __init__(self,theColor : OCP.Quantity.Quantity_Color,theType : OCP.Aspect.Aspect_TypeOfLine,theWidth : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1780,14 +1787,14 @@ class Prs3d_IsoAspect(Prs3d_LineAspect, Prs3d_BasicAspect, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1846,7 +1853,7 @@ class Prs3d_NListOfSequenceOfPnt(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : Prs3d_NListOfSequenceOfPnt) -> None: 
+    def Append(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt) -> OCP.TColgp.TColgp_HSequenceOfPnt: 
         """
         Append one item at the end
 
@@ -1855,7 +1862,7 @@ class Prs3d_NListOfSequenceOfPnt(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt) -> OCP.TColgp.TColgp_HSequenceOfPnt: ...
+    def Append(self,theOther : Prs3d_NListOfSequenceOfPnt) -> None: ...
     @overload
     def Append(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt,theIter : Any) -> None: ...
     def Assign(self,theOther : Prs3d_NListOfSequenceOfPnt) -> Prs3d_NListOfSequenceOfPnt: 
@@ -1877,14 +1884,14 @@ class Prs3d_NListOfSequenceOfPnt(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt,theIter : Any) -> OCP.TColgp.TColgp_HSequenceOfPnt: 
+    def InsertAfter(self,theOther : Prs3d_NListOfSequenceOfPnt,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : Prs3d_NListOfSequenceOfPnt,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt,theIter : Any) -> OCP.TColgp.TColgp_HSequenceOfPnt: ...
     @overload
     def InsertBefore(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt,theIter : Any) -> OCP.TColgp.TColgp_HSequenceOfPnt: 
         """
@@ -1930,11 +1937,11 @@ class Prs3d_NListOfSequenceOfPnt(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : Prs3d_NListOfSequenceOfPnt) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Prs3d_PlaneAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
@@ -2002,14 +2009,14 @@ class Prs3d_PlaneAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2128,14 +2135,14 @@ class Prs3d_PointAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2168,9 +2175,9 @@ class Prs3d_PointAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,theType : OCP.Aspect.Aspect_TypeOfMarker,theColor : OCP.Quantity.Quantity_Color,theScale : float) -> None: ...
     @overload
-    def __init__(self,theAspect : OCP.Graphic3d.Graphic3d_AspectMarker3d) -> None: ...
-    @overload
     def __init__(self,theColor : OCP.Quantity.Quantity_Color,theWidth : int,theHeight : int,theTexture : OCP.TColStd.TColStd_HArray1OfByte) -> None: ...
+    @overload
+    def __init__(self,theAspect : OCP.Graphic3d.Graphic3d_AspectMarker3d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2212,7 +2219,7 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         Get clip planes slicing the structure on rendering.
         """
     @overload
-    def Compute(self,theProjector : OCP.Graphic3d.Graphic3d_DataStructureManager,theTrsf : OCP.Geom.Geom_Transformation) -> OCP.Graphic3d.Graphic3d_Structure: 
+    def Compute(self,theProjector : OCP.Graphic3d.Graphic3d_DataStructureManager) -> OCP.Graphic3d.Graphic3d_Structure: 
         """
         None
 
@@ -2225,11 +2232,11 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         Returns the new Structure defined for the new visualization
         """
     @overload
-    def Compute(self,theProjector : OCP.Graphic3d.Graphic3d_DataStructureManager,theStructure : OCP.Graphic3d.Graphic3d_Structure) -> Any: ...
-    @overload
-    def Compute(self,theProjector : OCP.Graphic3d.Graphic3d_DataStructureManager) -> OCP.Graphic3d.Graphic3d_Structure: ...
+    def Compute(self,theProjector : OCP.Graphic3d.Graphic3d_DataStructureManager,theTrsf : OCP.Geom.Geom_Transformation) -> OCP.Graphic3d.Graphic3d_Structure: ...
     @overload
     def Compute(self) -> None: ...
+    @overload
+    def Compute(self,theProjector : OCP.Graphic3d.Graphic3d_DataStructureManager,theStructure : OCP.Graphic3d.Graphic3d_Structure) -> Any: ...
     @overload
     def Compute(self,theProjector : OCP.Graphic3d.Graphic3d_DataStructureManager,theTrsf : OCP.Geom.Geom_Transformation,theStructure : OCP.Graphic3d.Graphic3d_Structure) -> Any: ...
     def ComputeVisual(self) -> OCP.Graphic3d.Graphic3d_TypeOfStructure: 
@@ -2358,14 +2365,14 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         Returns Standard_True if the structure <me> is infinite.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2422,16 +2429,16 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         Prints informations about the network associated with the structure <AStructure>.
         """
     @overload
-    def ReCompute(self,aProjector : OCP.Graphic3d.Graphic3d_DataStructureManager) -> None: 
+    def ReCompute(self) -> None: 
         """
         Forces a new construction of the structure <me> if <me> is displayed and TOS_COMPUTED.
 
         Forces a new construction of the structure <me> if <me> is displayed in <aProjetor> and TOS_COMPUTED.
         """
     @overload
-    def ReCompute(self) -> None: ...
+    def ReCompute(self,aProjector : OCP.Graphic3d.Graphic3d_DataStructureManager) -> None: ...
     @overload
-    def Remove(self) -> None: 
+    def Remove(self,thePrs : OCP.Graphic3d.Graphic3d_Structure) -> None: 
         """
         Suppress the structure <me>. It will be erased at the next screen update. Warning: No more graphic operations in <me> after this call. Category: Methods to modify the class definition
 
@@ -2440,9 +2447,9 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         Suppress the structure in the list of descendants or in the list of ancestors.
         """
     @overload
-    def Remove(self,thePtr : OCP.Graphic3d.Graphic3d_Structure,theType : OCP.Graphic3d.Graphic3d_TypeOfConnection) -> None: ...
+    def Remove(self) -> None: ...
     @overload
-    def Remove(self,thePrs : OCP.Graphic3d.Graphic3d_Structure) -> None: ...
+    def Remove(self,thePtr : OCP.Graphic3d.Graphic3d_Structure,theType : OCP.Graphic3d.Graphic3d_TypeOfConnection) -> None: ...
     def RemoveAll(self) -> None: 
         """
         None
@@ -2573,14 +2580,14 @@ class Prs3d_Projector(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2599,9 +2606,9 @@ class Prs3d_Projector(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,Pers : bool,Focus : float,DX : float,DY : float,DZ : float,XAt : float,YAt : float,ZAt : float,XUp : float,YUp : float,ZUp : float) -> None: ...
-    @overload
     def __init__(self,Pr : OCP.HLRAlgo.HLRAlgo_Projector) -> None: ...
+    @overload
+    def __init__(self,Pers : bool,Focus : float,DX : float,DY : float,DZ : float,XAt : float,YAt : float,ZAt : float,XUp : float,YUp : float,ZUp : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2634,7 +2641,7 @@ class Prs3d_Arrow(Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theLocation : OCP.gp.gp_Pnt,theDirection : OCP.gp.gp_Dir,theAngle : float,theLength : float) -> None: 
+    def Draw_s(theGroup : OCP.Graphic3d.Graphic3d_Group,theLocation : OCP.gp.gp_Pnt,theDirection : OCP.gp.gp_Dir,theAngle : float,theLength : float) -> None: 
         """
         Defines the representation of the arrow. Note that this method does NOT assign any presentation aspects to the primitives group!
 
@@ -2642,7 +2649,7 @@ class Prs3d_Arrow(Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Draw_s(theGroup : OCP.Graphic3d.Graphic3d_Group,theLocation : OCP.gp.gp_Pnt,theDirection : OCP.gp.gp_Dir,theAngle : float,theLength : float) -> None: ...
+    def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theLocation : OCP.gp.gp_Pnt,theDirection : OCP.gp.gp_Dir,theAngle : float,theLength : float) -> None: ...
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
@@ -2687,14 +2694,14 @@ class Prs3d_ShadingAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2871,16 +2878,16 @@ class Prs3d_Text(Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theAttachmentPoint : OCP.gp.gp_Pnt) -> None: ...
-    @staticmethod
-    @overload
-    def Draw_s(theGroup : OCP.Graphic3d.Graphic3d_Group,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theAttachmentPoint : OCP.gp.gp_Pnt) -> None: ...
+    def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theDrawer : Prs3d_Drawer,theText : OCP.TCollection.TCollection_ExtendedString,theAttachmentPoint : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     @overload
     def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theOrientation : OCP.gp.gp_Ax2,theHasOwnAnchor : bool=True) -> None: ...
     @staticmethod
     @overload
-    def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theDrawer : Prs3d_Drawer,theText : OCP.TCollection.TCollection_ExtendedString,theAttachmentPoint : OCP.gp.gp_Pnt) -> None: ...
+    def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theAttachmentPoint : OCP.gp.gp_Pnt) -> None: ...
+    @staticmethod
+    @overload
+    def Draw_s(theGroup : OCP.Graphic3d.Graphic3d_Group,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theAttachmentPoint : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
@@ -2933,14 +2940,14 @@ class Prs3d_TextAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3014,14 +3021,14 @@ class Prs3d_ToolQuadric():
     Base class to build 3D surfaces presentation of quadric surfaces.
     """
     @overload
-    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: 
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: 
         """
         Generate primitives for 3D quadric surface and fill the given array. Optional transformation is applied.
 
         Generate primitives for 3D quadric surface presentation and fill the given array and poly triangulation structure. Optional transformation is applied.
         """
     @overload
-    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
     @staticmethod
     def TrianglesNb_s(theSlicesNb : int,theStacksNb : int) -> int: 
         """
@@ -3038,14 +3045,14 @@ class Prs3d_ToolDisk(Prs3d_ToolQuadric):
         Generate primitives for 3D quadric surface and return a filled array.
         """
     @overload
-    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: 
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: 
         """
         Generate primitives for 3D quadric surface and fill the given array. Optional transformation is applied.
 
         Generate primitives for 3D quadric surface presentation and fill the given array and poly triangulation structure. Optional transformation is applied.
         """
     @overload
-    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
     def SetAngleRange(self,theStartAngle : float,theEndAngle : float) -> None: 
         """
         Set angle range in radians [0, 2*PI] by default.
@@ -3067,14 +3074,14 @@ class Prs3d_ToolCylinder(Prs3d_ToolQuadric):
         Generate primitives for 3D quadric surface and return a filled array.
         """
     @overload
-    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: 
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: 
         """
         Generate primitives for 3D quadric surface and fill the given array. Optional transformation is applied.
 
         Generate primitives for 3D quadric surface presentation and fill the given array and poly triangulation structure. Optional transformation is applied.
         """
     @overload
-    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
     @staticmethod
     def TrianglesNb_s(theSlicesNb : int,theStacksNb : int) -> int: 
         """
@@ -3092,14 +3099,14 @@ class Prs3d_ToolSector(Prs3d_ToolQuadric):
         Generate primitives for 3D quadric surface and return a filled array.
         """
     @overload
-    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: 
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: 
         """
         Generate primitives for 3D quadric surface and fill the given array. Optional transformation is applied.
 
         Generate primitives for 3D quadric surface presentation and fill the given array and poly triangulation structure. Optional transformation is applied.
         """
     @overload
-    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
     @staticmethod
     def TrianglesNb_s(theSlicesNb : int,theStacksNb : int) -> int: 
         """
@@ -3117,14 +3124,14 @@ class Prs3d_ToolSphere(Prs3d_ToolQuadric):
         Generate primitives for 3D quadric surface and return a filled array.
         """
     @overload
-    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: 
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: 
         """
         Generate primitives for 3D quadric surface and fill the given array. Optional transformation is applied.
 
         Generate primitives for 3D quadric surface presentation and fill the given array and poly triangulation structure. Optional transformation is applied.
         """
     @overload
-    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
     @staticmethod
     def TrianglesNb_s(theSlicesNb : int,theStacksNb : int) -> int: 
         """
@@ -3144,6 +3151,7 @@ class Prs3d_TypeOfHLR():
 
       Prs3d_TOH_Algo
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -3179,6 +3187,7 @@ class Prs3d_TypeOfHighlight():
 
       Prs3d_TypeOfHighlight_NB
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -3208,6 +3217,7 @@ class Prs3d_TypeOfLinePicking():
 
       Prs3d_TOLP_Segment
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -3234,6 +3244,7 @@ class Prs3d_VertexDrawMode():
 
       Prs3d_VDM_Inherited
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

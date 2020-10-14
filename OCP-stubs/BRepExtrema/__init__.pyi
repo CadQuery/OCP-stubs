@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.Bnd
-import OCP.Standard
-import OCP.gp
 import OCP.SelectMgr
-import OCP.Extrema
+import OCP.Bnd
 import OCP.Graphic3d
+import OCP.Extrema
+import OCP.Standard
 import OCP.TopoDS
+import OCP.NCollection
+import OCP.gp
 __all__  = [
 "BRepExtrema_DistShapeShape",
 "BRepExtrema_DistanceSS",
@@ -124,9 +124,9 @@ class BRepExtrema_DistShapeShape():
         Returns the value of the minimum distance.
         """
     @overload
-    def __init__(self,Shape1 : OCP.TopoDS.TopoDS_Shape,Shape2 : OCP.TopoDS.TopoDS_Shape,theDeflection : float,F : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Shape1 : OCP.TopoDS.TopoDS_Shape,Shape2 : OCP.TopoDS.TopoDS_Shape,theDeflection : float,F : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     @overload
     def __init__(self,Shape1 : OCP.TopoDS.TopoDS_Shape,Shape2 : OCP.TopoDS.TopoDS_Shape,F : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     pass
@@ -271,9 +271,9 @@ class BRepExtrema_ExtCF():
         Returns the value of the <N>th extremum square distance.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepExtrema_ExtFF():
     """
@@ -320,9 +320,9 @@ class BRepExtrema_ExtFF():
         Returns the value of the <N>th extremum square distance.
         """
     @overload
-    def __init__(self,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face) -> None: ...
     pass
 class BRepExtrema_ExtPC():
     """
@@ -365,9 +365,9 @@ class BRepExtrema_ExtPC():
         if the curve is a trimmed curve, dist1 is a square distance between <P> and the point of parameter FirstParameter <pnt1> and dist2 is a square distance between <P> and the point of parameter LastParameter <pnt2>.
         """
     @overload
-    def __init__(self,V : OCP.TopoDS.TopoDS_Vertex,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,V : OCP.TopoDS.TopoDS_Vertex,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     pass
 class BRepExtrema_ExtPF():
     """
@@ -455,9 +455,9 @@ class BRepExtrema_OverlapTool():
         Sets filtering tool for preliminary checking pairs of mesh elements.
         """
     @overload
-    def __init__(self,theSet1 : BRepExtrema_TriangleSet,theSet2 : BRepExtrema_TriangleSet) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theSet1 : BRepExtrema_TriangleSet,theSet2 : BRepExtrema_TriangleSet) -> None: ...
     pass
 class BRepExtrema_Poly():
     """
@@ -511,9 +511,9 @@ class BRepExtrema_SelfIntersection(BRepExtrema_ElementFilter):
         Returns tolerance value used for self-intersection test.
         """
     @overload
-    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape,theTolerance : float=0.0) -> None: ...
-    @overload
     def __init__(self,theTolerance : float=0.0) -> None: ...
+    @overload
+    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape,theTolerance : float=0.0) -> None: ...
     pass
 class BRepExtrema_SeqOfSolution(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -524,14 +524,14 @@ class BRepExtrema_SeqOfSolution(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : BRepExtrema_SolutionElem) -> None: 
+    def Append(self,theSeq : BRepExtrema_SeqOfSolution) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : BRepExtrema_SeqOfSolution) -> None: ...
+    def Append(self,theItem : BRepExtrema_SolutionElem) -> None: ...
     def Assign(self,theOther : BRepExtrema_SeqOfSolution) -> BRepExtrema_SeqOfSolution: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -561,23 +561,23 @@ class BRepExtrema_SeqOfSolution(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : BRepExtrema_SolutionElem) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : BRepExtrema_SeqOfSolution) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : BRepExtrema_SeqOfSolution) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : BRepExtrema_SolutionElem) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : BRepExtrema_SeqOfSolution) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : BRepExtrema_SolutionElem) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : BRepExtrema_SolutionElem) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : BRepExtrema_SeqOfSolution) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -595,14 +595,14 @@ class BRepExtrema_SeqOfSolution(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : BRepExtrema_SolutionElem) -> None: 
+    def Prepend(self,theSeq : BRepExtrema_SeqOfSolution) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : BRepExtrema_SeqOfSolution) -> None: ...
+    def Prepend(self,theItem : BRepExtrema_SolutionElem) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -781,9 +781,9 @@ class BRepExtrema_ShapeProximity():
         Returns tolerance value for overlap test (distance between shapes).
         """
     @overload
-    def __init__(self,theTolerance : float=0.0) -> None: ...
-    @overload
     def __init__(self,theShape1 : OCP.TopoDS.TopoDS_Shape,theShape2 : OCP.TopoDS.TopoDS_Shape,theTolerance : float=0.0) -> None: ...
+    @overload
+    def __init__(self,theTolerance : float=0.0) -> None: ...
     pass
 class BRepExtrema_SolutionElem():
     """
@@ -822,13 +822,13 @@ class BRepExtrema_SolutionElem():
         Returns the vertex if the solution is a Vertex.
         """
     @overload
-    def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theFace : OCP.TopoDS.TopoDS_Face,theU : float,theV : float) -> None: ...
     @overload
     def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theEdge : OCP.TopoDS.TopoDS_Edge,theParam : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     pass
 class BRepExtrema_SupportType():
     """
@@ -842,6 +842,7 @@ class BRepExtrema_SupportType():
 
       BRepExtrema_IsInFace
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property

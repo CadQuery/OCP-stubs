@@ -4,26 +4,26 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Aspect
-import OCP.TDocStd
-import OCP.Bnd
-import OCP.TopLoc
-import OCP.gp
-import OCP.SelectMgr
-import OCP.Geom
-import OCP.PrsMgr
-import OCP.Graphic3d
-import OCP.TColStd
-import OCP.TopoDS
-import OCP.TDF
-import OCP.Quantity
-import OCP.NCollection
-import OCP.TCollection
 import OCP.TopAbs
-import OCP.Standard
+import OCP.TCollection
+import OCP.TopoDS
+import OCP.TDocStd
 import OCP.TPrsStd
-import OCP.AIS
+import OCP.NCollection
+import OCP.PrsMgr
+import OCP.gp
+import OCP.TDF
+import OCP.TColStd
+import OCP.SelectMgr
+import OCP.Bnd
+import OCP.Quantity
+import OCP.Graphic3d
+import OCP.Aspect
 import OCP.Prs3d
+import OCP.Standard
+import OCP.Geom
+import OCP.AIS
+import OCP.TopLoc
 __all__  = [
 "XCAFPrs",
 "XCAFPrs_AISObject",
@@ -328,14 +328,14 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -539,14 +539,14 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         Assign the label to this presentation (but does not mark it outdated with SetToUpdate()).
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,theMaterial : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aspect. This method assigns the new default material without overriding XDE styles. Re-computation of existing presentation is not required after calling this method.
@@ -620,23 +620,23 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         Use this method to scale the texture (percent of the face). You can specify a scale factor for both U and V. Example: if you set ScaleU and ScaleV to 0.5 and you enable texture repeat, the texture will appear twice on the face in each direction.
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,theValue : float) -> None: 
         """
         Sets transparency value.
@@ -890,11 +890,11 @@ class XCAFPrs_DataMapOfStyleShape(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self,theOther : XCAFPrs_DataMapOfStyleShape) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class XCAFPrs_DocumentExplorer():
@@ -940,14 +940,14 @@ class XCAFPrs_DocumentExplorer():
         Find a shape entity based on a text identifier constructed from OCAF labels defining full path.
         """
     @overload
-    def Init(self,theDocument : OCP.TDocStd.TDocStd_Document,theRoots : OCP.TDF.TDF_LabelSequence,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: 
+    def Init(self,theDocument : OCP.TDocStd.TDocStd_Document,theRoot : OCP.TDF.TDF_Label,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: 
         """
         Initialize the iterator from a single root shape in the document.
 
         Initialize the iterator from the list of root shapes in the document.
         """
     @overload
-    def Init(self,theDocument : OCP.TDocStd.TDocStd_Document,theRoot : OCP.TDF.TDF_Label,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
+    def Init(self,theDocument : OCP.TDocStd.TDocStd_Document,theRoots : OCP.TDF.TDF_LabelSequence,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
     def More(self) -> bool: 
         """
         Return TRUE if iterator points to the valid node.
@@ -957,11 +957,11 @@ class XCAFPrs_DocumentExplorer():
         Go to the next node.
         """
     @overload
+    def __init__(self,theDocument : OCP.TDocStd.TDocStd_Document,theRoots : OCP.TDF.TDF_LabelSequence,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
+    @overload
     def __init__(self,theDocument : OCP.TDocStd.TDocStd_Document,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theDocument : OCP.TDocStd.TDocStd_Document,theRoots : OCP.TDF.TDF_LabelSequence,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
     pass
 class XCAFPrs_DocumentIdIterator():
     """
@@ -1083,14 +1083,14 @@ class XCAFPrs_Driver(OCP.TPrsStd.TPrsStd_Driver, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1149,14 +1149,14 @@ class XCAFPrs_IndexedDataMapOfShapeStyle(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Contains
@@ -1237,9 +1237,9 @@ class XCAFPrs_IndexedDataMapOfShapeStyle(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : XCAFPrs_IndexedDataMapOfShapeStyle) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : XCAFPrs_IndexedDataMapOfShapeStyle) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class XCAFPrs_Style():
@@ -1293,14 +1293,14 @@ class XCAFPrs_Style():
         Set curve color.
         """
     @overload
-    def SetColorSurf(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+    def SetColorSurf(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Set surface color.
 
         Set surface color.
         """
     @overload
-    def SetColorSurf(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetColorSurf(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     def SetVisibility(self,theVisibility : bool) -> None: 
         """
         Assign visibility.

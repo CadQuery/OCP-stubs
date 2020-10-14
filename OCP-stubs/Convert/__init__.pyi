@@ -182,11 +182,11 @@ class Convert_CompPolynomialToPoles():
         returns the poles of the n-dimensional BSpline in the following format : [1..NumPoles][1..Dimension]
         """
     @overload
-    def __init__(self,NumCurves : int,Dimension : int,MaxDegree : int,Continuity : OCP.TColStd.TColStd_Array1OfInteger,NumCoeffPerCurve : OCP.TColStd.TColStd_Array1OfInteger,Coefficients : OCP.TColStd.TColStd_Array1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_Array2OfReal,TrueIntervals : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def __init__(self,Dimension : int,MaxDegree : int,Degree : int,Coefficients : OCP.TColStd.TColStd_Array1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_Array1OfReal,TrueIntervals : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def __init__(self,NumCurves : int,Continuity : int,Dimension : int,MaxDegree : int,NumCoeffPerCurve : OCP.TColStd.TColStd_HArray1OfInteger,Coefficients : OCP.TColStd.TColStd_HArray1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_HArray2OfReal,TrueIntervals : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
     @overload
-    def __init__(self,Dimension : int,MaxDegree : int,Degree : int,Coefficients : OCP.TColStd.TColStd_Array1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_Array1OfReal,TrueIntervals : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def __init__(self,NumCurves : int,Dimension : int,MaxDegree : int,Continuity : OCP.TColStd.TColStd_Array1OfInteger,NumCoeffPerCurve : OCP.TColStd.TColStd_Array1OfInteger,Coefficients : OCP.TColStd.TColStd_Array1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_Array2OfReal,TrueIntervals : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     pass
 class Convert_ElementarySurfaceToBSplineSurface():
     """
@@ -425,9 +425,9 @@ class Convert_ConeToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
         Returns the weight of the pole of index (UIndex,VIndex) to the poles table of the BSpline surface whose data is computed in this framework. Exceptions Standard_OutOfRange if, for the BSpline surface whose data is computed in this framework: - UIndex is outside the bounds of the poles table in the u parametric direction, or - VIndex is outside the bounds of the poles table in the v parametric direction.
         """
     @overload
-    def __init__(self,C : OCP.gp.gp_Cone,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
-    @overload
     def __init__(self,C : OCP.gp.gp_Cone,V1 : float,V2 : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Cone,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
     pass
 class Convert_EllipseToBSplineCurve(Convert_ConicToBSplineCurve):
     """
@@ -475,9 +475,9 @@ class Convert_EllipseToBSplineCurve(Convert_ConicToBSplineCurve):
         Returns the weight of the pole of index Index to the poles table of the BSpline curve whose data is computed in this framework. Exceptions Standard_OutOfRange if Index is outside the bounds of the poles table of the BSpline curve whose data is computed in this framework.
         """
     @overload
-    def __init__(self,E : OCP.gp.gp_Elips2d,U1 : float,U2 : float,Parameterisation : Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
-    @overload
     def __init__(self,E : OCP.gp.gp_Elips2d,Parameterisation : Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
+    @overload
+    def __init__(self,E : OCP.gp.gp_Elips2d,U1 : float,U2 : float,Parameterisation : Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
     pass
 class Convert_GridPolynomialToPoles():
     """
@@ -536,9 +536,9 @@ class Convert_GridPolynomialToPoles():
         Multiplicities of the knots in the V direction
         """
     @overload
-    def __init__(self,MaxUDegree : int,MaxVDegree : int,NumCoeff : OCP.TColStd.TColStd_HArray1OfInteger,Coefficients : OCP.TColStd.TColStd_HArray1OfReal,PolynomialUIntervals : OCP.TColStd.TColStd_HArray1OfReal,PolynomialVIntervals : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
-    @overload
     def __init__(self,NbUSurfaces : int,NBVSurfaces : int,UContinuity : int,VContinuity : int,MaxUDegree : int,MaxVDegree : int,NumCoeffPerSurface : OCP.TColStd.TColStd_HArray2OfInteger,Coefficients : OCP.TColStd.TColStd_HArray1OfReal,PolynomialUIntervals : OCP.TColStd.TColStd_HArray1OfReal,PolynomialVIntervals : OCP.TColStd.TColStd_HArray1OfReal,TrueUIntervals : OCP.TColStd.TColStd_HArray1OfReal,TrueVIntervals : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
+    @overload
+    def __init__(self,MaxUDegree : int,MaxVDegree : int,NumCoeff : OCP.TColStd.TColStd_HArray1OfInteger,Coefficients : OCP.TColStd.TColStd_HArray1OfReal,PolynomialUIntervals : OCP.TColStd.TColStd_HArray1OfReal,PolynomialVIntervals : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
     pass
 class Convert_HyperbolaToBSplineCurve(Convert_ConicToBSplineCurve):
     """
@@ -656,6 +656,7 @@ class Convert_ParameterisationType():
 
       Convert_Polynomial
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -731,14 +732,14 @@ class Convert_SequenceOfArray1OfPoles(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Convert_SequenceOfArray1OfPoles) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Convert_SequenceOfArray1OfPoles) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Convert_SequenceOfArray1OfPoles) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -756,14 +757,14 @@ class Convert_SequenceOfArray1OfPoles(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: 
+    def Prepend(self,theSeq : Convert_SequenceOfArray1OfPoles) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Convert_SequenceOfArray1OfPoles) -> None: ...
+    def Prepend(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -798,11 +799,11 @@ class Convert_SequenceOfArray1OfPoles(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Convert_SequenceOfArray1OfPoles) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : Convert_SequenceOfArray1OfPoles) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -871,11 +872,11 @@ class Convert_SphereToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
         Returns the weight of the pole of index (UIndex,VIndex) to the poles table of the BSpline surface whose data is computed in this framework. Exceptions Standard_OutOfRange if, for the BSpline surface whose data is computed in this framework: - UIndex is outside the bounds of the poles table in the u parametric direction, or - VIndex is outside the bounds of the poles table in the v parametric direction.
         """
     @overload
+    def __init__(self,Sph : OCP.gp.gp_Sphere) -> None: ...
+    @overload
     def __init__(self,Sph : OCP.gp.gp_Sphere,Param1 : float,Param2 : float,UTrim : bool=True) -> None: ...
     @overload
     def __init__(self,Sph : OCP.gp.gp_Sphere,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
-    @overload
-    def __init__(self,Sph : OCP.gp.gp_Sphere) -> None: ...
     pass
 class Convert_TorusToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
     """
@@ -938,9 +939,9 @@ class Convert_TorusToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
         Returns the weight of the pole of index (UIndex,VIndex) to the poles table of the BSpline surface whose data is computed in this framework. Exceptions Standard_OutOfRange if, for the BSpline surface whose data is computed in this framework: - UIndex is outside the bounds of the poles table in the u parametric direction, or - VIndex is outside the bounds of the poles table in the v parametric direction.
         """
     @overload
-    def __init__(self,T : OCP.gp.gp_Torus,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
-    @overload
     def __init__(self,T : OCP.gp.gp_Torus) -> None: ...
+    @overload
+    def __init__(self,T : OCP.gp.gp_Torus,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
     @overload
     def __init__(self,T : OCP.gp.gp_Torus,Param1 : float,Param2 : float,UTrim : bool=True) -> None: ...
     pass

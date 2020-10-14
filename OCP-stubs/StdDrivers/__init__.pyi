@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StdLDrivers
-import OCP.TDocStd
 import OCP.TCollection
 import OCP.PCDM
-import OCP.Storage
-import OCP.Standard
-import OCP.StdObjMgt
 import OCP.Message
+import OCP.Storage
+import OCP.StdObjMgt
+import OCP.Standard
+import OCP.TDocStd
 import OCP.CDM
+import OCP.StdLDrivers
 __all__  = [
 "StdDrivers",
 "StdDrivers_DocumentRetrievalDriver"
@@ -82,14 +82,14 @@ class StdDrivers_DocumentRetrievalDriver(OCP.StdLDrivers.StdLDrivers_DocumentRet
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

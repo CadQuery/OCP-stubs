@@ -42,7 +42,7 @@ class TopExp():
         """
     @staticmethod
     @overload
-    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_MapOfShape) -> None: 
+    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: 
         """
         Tool to explore a topological data structure. Stores in the map <M> all the sub-shapes of <S> of type <T>.
 
@@ -52,13 +52,13 @@ class TopExp():
         """
     @staticmethod
     @overload
+    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_MapOfShape) -> None: ...
+    @staticmethod
+    @overload
     def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: ...
     @staticmethod
     @overload
-    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: ...
-    @staticmethod
-    @overload
-    def Vertices_s(E : OCP.TopoDS.TopoDS_Edge,Vfirst : OCP.TopoDS.TopoDS_Vertex,Vlast : OCP.TopoDS.TopoDS_Vertex,CumOri : bool=False) -> None: 
+    def Vertices_s(W : OCP.TopoDS.TopoDS_Wire,Vfirst : OCP.TopoDS.TopoDS_Vertex,Vlast : OCP.TopoDS.TopoDS_Vertex) -> None: 
         """
         Returns in Vfirst, Vlast the FORWARD and REVERSED vertices of the edge <E>. May be null shapes. CumOri = True : taking account the edge orientation
 
@@ -66,7 +66,7 @@ class TopExp():
         """
     @staticmethod
     @overload
-    def Vertices_s(W : OCP.TopoDS.TopoDS_Wire,Vfirst : OCP.TopoDS.TopoDS_Vertex,Vlast : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def Vertices_s(E : OCP.TopoDS.TopoDS_Edge,Vfirst : OCP.TopoDS.TopoDS_Vertex,Vlast : OCP.TopoDS.TopoDS_Vertex,CumOri : bool=False) -> None: ...
     def __init__(self) -> None: ...
     pass
 class TopExp_Explorer():

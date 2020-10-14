@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepData
 import OCP.TCollection
+import OCP.TColStd
 import OCP.Standard
 import OCP.StepAP214
-import OCP.TColStd
+import OCP.StepData
 import OCP.Interface
 __all__  = [
 "RWStepAP214",
@@ -105,14 +105,14 @@ class RWStepAP214_GeneralModule(OCP.StepData.StepData_GeneralModule, OCP.Interfa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -647,14 +647,14 @@ class RWStepAP214_ReadWriteModule(OCP.StepData.StepData_ReadWriteModule, OCP.Int
         Translate the Type of record <num> in <data> to a positive Case Number, or 0 if failed. Works with a StepReaderData, in which the Type of an Entity is defined as a String : Reads the RecordType <num> then calls CaseNum (this type) Warning : The methods CaseStep, StepType and Recognize, must be in phase (triplets CaseNum-StepType-Type of Object)
         """
     @overload
-    def CaseStep(self,atype : OCP.TCollection.TCollection_AsciiString) -> int: 
+    def CaseStep(self,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> int: 
         """
         associates a positive Case Number to each type of StepAP214 entity, given as a String defined in the EXPRESS form
 
         associates a positive Case Number to each type of StepAP214 Complex entity, given as a String defined in the EXPRESS form
         """
     @overload
-    def CaseStep(self,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> int: ...
+    def CaseStep(self,atype : OCP.TCollection.TCollection_AsciiString) -> int: ...
     def ComplexType(self,CN : int,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> bool: 
         """
         None
@@ -684,14 +684,14 @@ class RWStepAP214_ReadWriteModule(OCP.StepData.StepData_ReadWriteModule, OCP.Int
         returns True if the Case Number corresponds to a Complex Type
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

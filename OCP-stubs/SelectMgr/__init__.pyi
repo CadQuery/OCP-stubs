@@ -4,25 +4,25 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Aspect
-import OCP.Bnd
-import OCP.TopLoc
-import OCP.gp
-import OCP.Geom
-import OCP.Graphic3d
-import OCP.PrsMgr
-import OCP.TColStd
-import OCP.SelectBasics
-import OCP.NCollection
-import OCP.Quantity
-import OCP.TCollection
 import OCP.TopAbs
-import OCP.Standard
-import OCP.AIS
+import OCP.TCollection
 import OCP.TColgp
-import OCP.V3d
+import OCP.NCollection
+import OCP.PrsMgr
+import OCP.gp
+import OCP.TColStd
 import OCP.Select3D
+import OCP.SelectBasics
+import OCP.Bnd
+import OCP.Quantity
+import OCP.Graphic3d
+import OCP.Aspect
 import OCP.Prs3d
+import OCP.Standard
+import OCP.Geom
+import OCP.AIS
+import OCP.V3d
+import OCP.TopLoc
 __all__  = [
 "SelectMgr_Filter",
 "SelectMgr_BaseFrustum",
@@ -100,14 +100,14 @@ class SelectMgr_Filter(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -141,7 +141,7 @@ class SelectMgr_BaseFrustum(OCP.Standard.Standard_Transient):
     This class is an interface for different types of selecting frustums, defining different selection types, like point, box or polyline selection. It contains signatures of functions for detection of overlap by sensitive entity and initializes some data for building the selecting frustum
     """
     @overload
-    def Build(self,arg1 : OCP.gp.gp_Pnt2d,arg2 : OCP.gp.gp_Pnt2d,arg3 : OCP.gp.gp_Pnt2d) -> None: 
+    def Build(self,arg1 : OCP.gp.gp_Pnt2d,arg2 : OCP.gp.gp_Pnt2d) -> None: 
         """
         Builds volume according to the point and given pixel tolerance
 
@@ -152,11 +152,11 @@ class SelectMgr_BaseFrustum(OCP.Standard.Standard_Transient):
         Builds selecting volumes set according to polyline points
         """
     @overload
-    def Build(self,arg1 : OCP.gp.gp_Pnt2d,arg2 : OCP.gp.gp_Pnt2d) -> None: ...
+    def Build(self,arg1 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Build(self,arg1 : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @overload
-    def Build(self,arg1 : OCP.gp.gp_Pnt2d) -> None: ...
+    def Build(self,arg1 : OCP.gp.gp_Pnt2d,arg2 : OCP.gp.gp_Pnt2d,arg3 : OCP.gp.gp_Pnt2d) -> None: ...
     def Camera(self) -> OCP.Graphic3d.Graphic3d_Camera: 
         """
         Return camera definition.
@@ -198,14 +198,14 @@ class SelectMgr_BaseFrustum(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -216,7 +216,7 @@ class SelectMgr_BaseFrustum(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Overlaps(self,theArrayOfPnts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
+    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
         SAT intersection test between defined volume and given axis-aligned box
 
@@ -233,17 +233,17 @@ class SelectMgr_BaseFrustum(OCP.Standard.Standard_Transient):
         SAT intersection test between defined volume and given triangle. The test may be considered of interior part or boundary line defined by triangle vertices depending on given sensitivity type
         """
     @overload
-    def Overlaps(self,thePnt : OCP.gp.gp_Pnt) -> bool: ...
-    @overload
-    def Overlaps(self,theBoxMin : SelectMgr_Vec3,theBoxMax : SelectMgr_Vec3,theInside : bool=None) -> bool: ...
-    @overload
-    def Overlaps(self,theBoxMin : SelectMgr_Vec3,theBoxMax : SelectMgr_Vec3,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    def Overlaps(self,theArrayOfPnts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
     def Overlaps(self,thePt1 : OCP.gp.gp_Pnt,thePt2 : OCP.gp.gp_Pnt,thePt3 : OCP.gp.gp_Pnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
+    def Overlaps(self,theBoxMin : SelectMgr_Vec3,theBoxMax : SelectMgr_Vec3,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,theBoxMin : SelectMgr_Vec3,theBoxMax : SelectMgr_Vec3,theInside : bool=None) -> bool: ...
+    @overload
     def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
-    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    def Overlaps(self,thePnt : OCP.gp.gp_Pnt) -> bool: ...
     def ProjectionMatrix(self) -> OCP.Graphic3d.Graphic3d_Mat4d: 
         """
         Returns current camera projection transformation common for all selecting volumes
@@ -350,14 +350,14 @@ class SelectMgr_CompositionFilter(SelectMgr_Filter, OCP.Standard.Standard_Transi
         Returns true if the filter aFilter is in this framework.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -461,14 +461,14 @@ class SelectMgr_EntityOwner(OCP.Standard.Standard_Transient):
         Returns true if the presentation manager highlights selections corresponding to the selection mode.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -553,9 +553,9 @@ class SelectMgr_EntityOwner(OCP.Standard.Standard_Transient):
         Implements immediate application of location transformation of parent object to dynamic highlight structure
         """
     @overload
-    def __init__(self,aPriority : int=0) -> None: ...
-    @overload
     def __init__(self,aSO : SelectMgr_SelectableObject,aPriority : int=0) -> None: ...
+    @overload
+    def __init__(self,aPriority : int=0) -> None: ...
     @overload
     def __init__(self,theOwner : SelectMgr_EntityOwner,aPriority : int=0) -> None: ...
     @staticmethod
@@ -614,14 +614,14 @@ class SelectMgr_AndFilter(SelectMgr_CompositionFilter, SelectMgr_Filter, OCP.Sta
         Returns true if the filter aFilter is in this framework.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -690,14 +690,14 @@ class SelectMgr_FrustumBuilder(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -821,14 +821,14 @@ class SelectMgr_IndexedDataMapOfOwnerCriterion(OCP.NCollection.NCollection_BaseM
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : SelectMgr_EntityOwner,theValue : SelectMgr_SortCriterion) -> bool: 
+    def FindFromKey(self,theKey1 : SelectMgr_EntityOwner) -> SelectMgr_SortCriterion: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : SelectMgr_EntityOwner) -> SelectMgr_SortCriterion: ...
+    def FindFromKey(self,theKey1 : SelectMgr_EntityOwner,theValue : SelectMgr_SortCriterion) -> bool: ...
     def FindIndex(self,theKey1 : SelectMgr_EntityOwner) -> int: 
         """
         FindIndex
@@ -882,9 +882,9 @@ class SelectMgr_IndexedDataMapOfOwnerCriterion(OCP.NCollection.NCollection_BaseM
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : SelectMgr_IndexedDataMapOfOwnerCriterion) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -984,9 +984,9 @@ class SelectMgr_ListOfFilter(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theOther : SelectMgr_ListOfFilter) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class SelectMgr_OrFilter(SelectMgr_CompositionFilter, SelectMgr_Filter, OCP.Standard.Standard_Transient):
@@ -1034,14 +1034,14 @@ class SelectMgr_OrFilter(SelectMgr_CompositionFilter, SelectMgr_Filter, OCP.Stan
         Returns true if the filter aFilter is in this framework.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1095,6 +1095,7 @@ class SelectMgr_PickingStrategy():
 
       SelectMgr_PickingStrategy_OnlyTopmost
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1114,14 +1115,14 @@ class SelectMgr_RectangularFrustum():
     This class contains representation of rectangular selecting frustum, created in case of point and box selection, and algorithms for overlap detection between selecting frustum and sensitive entities. The principle of frustum calculation: - for point selection: on a near view frustum plane rectangular neighborhood of user-picked point is created according to the pixel tolerance given and then this rectangle is projected onto far view frustum plane. This rectangles define the parallel bases of selecting frustum; - for box selection: box points are projected onto near and far view frustum planes. These 2 projected rectangles define parallel bases of selecting frustum. Overlap detection tests are implemented according to the terms of separating axis theorem (SAT).
     """
     @overload
-    def Build(self,theMinPnt : OCP.gp.gp_Pnt2d,theMaxPnt : OCP.gp.gp_Pnt2d) -> None: 
+    def Build(self,thePoint : OCP.gp.gp_Pnt2d) -> None: 
         """
         Builds volume according to the point and given pixel tolerance
 
         Builds volume according to the selected rectangle
         """
     @overload
-    def Build(self,thePoint : OCP.gp.gp_Pnt2d) -> None: ...
+    def Build(self,theMinPnt : OCP.gp.gp_Pnt2d,theMaxPnt : OCP.gp.gp_Pnt2d) -> None: ...
     def DetectedPoint(self,theDepth : float) -> OCP.gp.gp_Pnt: 
         """
         Calculates the point on a view ray that was detected during the run of selection algo by given depth
@@ -1155,7 +1156,7 @@ class SelectMgr_RectangularFrustum():
         Return view ray direction.
         """
     @overload
-    def Overlaps(self,thePnt : OCP.gp.gp_Pnt) -> bool: 
+    def Overlaps(self,theBoxMin : SelectMgr_Vec3,theBoxMax : SelectMgr_Vec3,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
         SAT intersection test between defined volume and given axis-aligned box
 
@@ -1172,17 +1173,17 @@ class SelectMgr_RectangularFrustum():
         SAT intersection test between defined volume and given triangle. The test may be considered of interior part or boundary line defined by triangle vertices depending on given sensitivity type
         """
     @overload
-    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePnt3 : OCP.gp.gp_Pnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    def Overlaps(self,thePnt : OCP.gp.gp_Pnt) -> bool: ...
     @overload
     def Overlaps(self,theBoxMin : SelectMgr_Vec3,theBoxMax : SelectMgr_Vec3,theInside : bool) -> bool: ...
     @overload
+    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePnt3 : OCP.gp.gp_Pnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    @overload
     def Overlaps(self,theArrayOfPnts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
-    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
-    def Overlaps(self,theBoxMin : SelectMgr_Vec3,theBoxMax : SelectMgr_Vec3,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     def ScaleAndTransform(self,theScaleFactor : int,theTrsf : OCP.gp.gp_GTrsf) -> SelectMgr_BaseFrustum: 
         """
         IMPORTANT: Scaling makes sense only for frustum built on a single point! Note that this method does not perform any checks on type of the frustum. Returns a copy of the frustum resized according to the scale factor given and transforms it using the matrix given. There are no default parameters, but in case if: - transformation only is needed: must be initialized as any negative value; - scale only is needed: must be set to gp_Identity.
@@ -1406,14 +1407,14 @@ class SelectMgr_SelectableObject(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standa
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1464,14 +1465,14 @@ class SelectMgr_SelectableObject(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standa
         Return presentations.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def RemoveChild(self,theObject : OCP.PrsMgr.PrsMgr_PresentableObject) -> None: 
         """
         Removes theObject from children of current object in scene hierarchy.
@@ -1547,14 +1548,14 @@ class SelectMgr_SelectableObject(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standa
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -1572,23 +1573,23 @@ class SelectMgr_SelectableObject(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standa
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -1769,7 +1770,7 @@ class SelectMgr_SelectingVolumeManager(OCP.SelectBasics.SelectBasics_SelectingVo
         Is used for rectangular selection only If theIsToAllow is false, only fully included sensitives will be detected, otherwise the algorithm will mark both included and overlapped entities as matched
         """
     @overload
-    def BuildSelectingVolume(self,thePoint : OCP.gp.gp_Pnt2d) -> None: 
+    def BuildSelectingVolume(self,theMinPt : OCP.gp.gp_Pnt2d,theMaxPt : OCP.gp.gp_Pnt2d) -> None: 
         """
         Builds rectangular selecting frustum for point selection
 
@@ -1778,9 +1779,9 @@ class SelectMgr_SelectingVolumeManager(OCP.SelectBasics.SelectBasics_SelectingVo
         Builds set of triangular selecting frustums for polyline selection
         """
     @overload
-    def BuildSelectingVolume(self,thePoints : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    def BuildSelectingVolume(self,thePoint : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def BuildSelectingVolume(self,theMinPt : OCP.gp.gp_Pnt2d,theMaxPt : OCP.gp.gp_Pnt2d) -> None: ...
+    def BuildSelectingVolume(self,thePoints : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     def Camera(self) -> OCP.Graphic3d.Graphic3d_Camera: 
         """
         Returns current camera definition.
@@ -1826,7 +1827,7 @@ class SelectMgr_SelectingVolumeManager(OCP.SelectBasics.SelectBasics_SelectingVo
         Return object clipping planes.
         """
     @overload
-    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
+    def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : int,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
         SAT intersection test between defined volume and given axis-aligned box
 
@@ -1845,19 +1846,19 @@ class SelectMgr_SelectingVolumeManager(OCP.SelectBasics.SelectBasics_SelectingVo
         SAT intersection test between defined volume and given triangle. The test may be considered of interior part or boundary line defined by triangle vertices depending on given sensitivity type
         """
     @overload
-    def Overlaps(self,theBoxMin : SelectMgr_Vec3,theBoxMax : SelectMgr_Vec3,theInside : bool=None) -> bool: ...
+    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
     def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePnt3 : OCP.gp.gp_Pnt,theSensType : int,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
     def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_HArray1OfPnt,theSensType : int,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
     def Overlaps(self,thePnt : OCP.gp.gp_Pnt) -> bool: ...
     @overload
-    def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : int,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
     def Overlaps(self,theBoxMin : SelectMgr_Vec3,theBoxMax : SelectMgr_Vec3,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,theBoxMin : SelectMgr_Vec3,theBoxMax : SelectMgr_Vec3,theInside : bool=None) -> bool: ...
     def ProjectionMatrix(self) -> OCP.Graphic3d.Graphic3d_Mat4d: 
         """
         Returns current projection transformation common for all selecting volumes
@@ -1871,14 +1872,14 @@ class SelectMgr_SelectingVolumeManager(OCP.SelectBasics.SelectBasics_SelectingVo
         None
         """
     @overload
-    def SetCamera(self,theProjection : OCP.Graphic3d.Graphic3d_Mat4d,theWorldView : OCP.Graphic3d.Graphic3d_Mat4d,theIsOrthographic : bool,theWVPState : OCP.Graphic3d.Graphic3d_WorldViewProjState=OCP.Graphic3d.Graphic3d_WorldViewProjState) -> None: 
+    def SetCamera(self,theCamera : OCP.Graphic3d.Graphic3d_Camera) -> None: 
         """
         Updates camera projection and orientation matrices in all selecting volumes
 
         Updates camera projection and orientation matrices in all selecting volumes
         """
     @overload
-    def SetCamera(self,theCamera : OCP.Graphic3d.Graphic3d_Camera) -> None: ...
+    def SetCamera(self,theProjection : OCP.Graphic3d.Graphic3d_Mat4d,theWorldView : OCP.Graphic3d.Graphic3d_Mat4d,theIsOrthographic : bool,theWVPState : OCP.Graphic3d.Graphic3d_WorldViewProjState=OCP.Graphic3d.Graphic3d_WorldViewProjState) -> None: ...
     def SetPixelTolerance(self,theTolerance : int) -> None: 
         """
         Updates pixel tolerance in all selecting volumes
@@ -1987,14 +1988,14 @@ class SelectMgr_Selection(OCP.Standard.Standard_Transient):
         returns true if no sensitive entity is stored.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2106,14 +2107,14 @@ class SelectMgr_SelectionManager(OCP.Standard.Standard_Transient):
         Returns true if the selection with theMode is active for the selectable object theObject and selector theSelector. If all parameters are set to default values, it returns it there is any active selection in any known viewer selector for object theObject.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2148,14 +2149,14 @@ class SelectMgr_SelectionManager(OCP.Standard.Standard_Transient):
         Allows to manage sensitivity of a particular selection of interactive object theObject and changes previous sensitivity value of all sensitive entities in selection with theMode to the given theNewSensitivity.
         """
     @overload
-    def SetUpdateMode(self,theObject : SelectMgr_SelectableObject,theMode : int,theType : SelectMgr_TypeOfUpdate) -> None: 
+    def SetUpdateMode(self,theObject : SelectMgr_SelectableObject,theType : SelectMgr_TypeOfUpdate) -> None: 
         """
         Sets type of update of all selections of theObject to the given theType.
 
         Sets type of update of selection with theMode of theObject to the given theType.
         """
     @overload
-    def SetUpdateMode(self,theObject : SelectMgr_SelectableObject,theType : SelectMgr_TypeOfUpdate) -> None: ...
+    def SetUpdateMode(self,theObject : SelectMgr_SelectableObject,theMode : int,theType : SelectMgr_TypeOfUpdate) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -2217,14 +2218,14 @@ class SelectMgr_SensitiveEntity(OCP.Standard.Standard_Transient):
         Returns true if this entity belongs to the active selection mode of parent object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2361,14 +2362,14 @@ class SelectMgr_SequenceOfFilter(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : SelectMgr_SequenceOfFilter) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : SelectMgr_Filter) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : SelectMgr_Filter) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : SelectMgr_SequenceOfFilter) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : SelectMgr_SequenceOfFilter) -> None: 
         """
@@ -2437,9 +2438,9 @@ class SelectMgr_SequenceOfFilter(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : SelectMgr_SequenceOfFilter) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -2458,14 +2459,14 @@ class SelectMgr_SequenceOfOwner(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : SelectMgr_EntityOwner) -> None: 
+    def Append(self,theSeq : SelectMgr_SequenceOfOwner) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : SelectMgr_SequenceOfOwner) -> None: ...
+    def Append(self,theItem : SelectMgr_EntityOwner) -> None: ...
     def Assign(self,theOther : SelectMgr_SequenceOfOwner) -> SelectMgr_SequenceOfOwner: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2495,23 +2496,23 @@ class SelectMgr_SequenceOfOwner(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : SelectMgr_EntityOwner) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : SelectMgr_SequenceOfOwner) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : SelectMgr_SequenceOfOwner) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : SelectMgr_EntityOwner) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : SelectMgr_SequenceOfOwner) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : SelectMgr_EntityOwner) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : SelectMgr_EntityOwner) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : SelectMgr_SequenceOfOwner) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2571,11 +2572,11 @@ class SelectMgr_SequenceOfOwner(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : SelectMgr_SequenceOfOwner) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : SelectMgr_SequenceOfOwner) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2592,14 +2593,14 @@ class SelectMgr_SequenceOfSelection(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : SelectMgr_Selection) -> None: 
+    def Append(self,theSeq : SelectMgr_SequenceOfSelection) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : SelectMgr_SequenceOfSelection) -> None: ...
+    def Append(self,theItem : SelectMgr_Selection) -> None: ...
     def Assign(self,theOther : SelectMgr_SequenceOfSelection) -> SelectMgr_SequenceOfSelection: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2672,14 +2673,14 @@ class SelectMgr_SequenceOfSelection(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : SelectMgr_SequenceOfSelection) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2707,9 +2708,9 @@ class SelectMgr_SequenceOfSelection(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : SelectMgr_SequenceOfSelection) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2809,6 +2810,7 @@ class SelectMgr_StateOfSelection():
 
       SelectMgr_SOS_Activated
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2868,7 +2870,7 @@ class SelectMgr_TriangFrustums(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : SelectMgr_TriangularFrustum) -> SelectMgr_TriangularFrustum: 
+    def Append(self,theItem : SelectMgr_TriangularFrustum,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -2879,7 +2881,7 @@ class SelectMgr_TriangFrustums(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theOther : SelectMgr_TriangFrustums) -> None: ...
     @overload
-    def Append(self,theItem : SelectMgr_TriangularFrustum,theIter : Any) -> None: ...
+    def Append(self,theItem : SelectMgr_TriangularFrustum) -> SelectMgr_TriangularFrustum: ...
     def Assign(self,theOther : SelectMgr_TriangFrustums) -> SelectMgr_TriangFrustums: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -2952,11 +2954,11 @@ class SelectMgr_TriangFrustums(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : SelectMgr_TriangFrustums) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class SelectMgr_TriangularFrustum():
@@ -2995,15 +2997,15 @@ class SelectMgr_TriangularFrustum():
         SAT intersection test between defined volume and given triangle. The test may be considered of interior part or boundary line defined by triangle vertices depending on given sensitivity type
         """
     @overload
-    def Overlaps(self,theMinPnt : SelectMgr_Vec3,theMaxPnt : SelectMgr_Vec3,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,theMinPt : SelectMgr_Vec3,theMaxPt : SelectMgr_Vec3,theInside : bool) -> bool: ...
+    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
     def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePnt3 : OCP.gp.gp_Pnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
-    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
-    @overload
     def Overlaps(self,thePnt : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,theMinPnt : SelectMgr_Vec3,theMaxPnt : SelectMgr_Vec3,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,theMinPt : SelectMgr_Vec3,theMaxPt : SelectMgr_Vec3,theInside : bool) -> bool: ...
     def ScaleAndTransform(self,theScale : int,theTrsf : OCP.gp.gp_GTrsf) -> SelectMgr_BaseFrustum: 
         """
         Returns a copy of the frustum transformed according to the matrix given
@@ -3069,14 +3071,14 @@ class SelectMgr_TriangularFrustumSet(SelectMgr_BaseFrustum, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3087,7 +3089,7 @@ class SelectMgr_TriangularFrustumSet(SelectMgr_BaseFrustum, OCP.Standard.Standar
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
+    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
         None
 
@@ -3101,16 +3103,16 @@ class SelectMgr_TriangularFrustumSet(SelectMgr_BaseFrustum, OCP.Standard.Standar
 
         None
         """
-    @overload
-    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePnt3 : OCP.gp.gp_Pnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,theArrayOfPnts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     @overload
     def Overlaps(self,theMinPnt : SelectMgr_Vec3,theMaxPnt : SelectMgr_Vec3,theInside : bool) -> bool: ...
     @overload
+    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePnt3 : OCP.gp.gp_Pnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    @overload
     def Overlaps(self,theMinPnt : SelectMgr_Vec3,theMaxPnt : SelectMgr_Vec3,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,theArrayOfPnts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity,theClipRange : SelectMgr_ViewClipRange,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: ...
     def ProjectionMatrix(self) -> OCP.Graphic3d.Graphic3d_Mat4d: 
         """
         Returns current camera projection transformation common for all selecting volumes
@@ -3188,6 +3190,7 @@ class SelectMgr_TypeOfBVHUpdate():
 
       SelectMgr_TBU_None
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -3217,6 +3220,7 @@ class SelectMgr_TypeOfUpdate():
 
       SelectMgr_TOU_None
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -3329,26 +3333,26 @@ class SelectMgr_Vec3():
     @overload
     def __imul__(self,theRight : SelectMgr_Vec3) -> SelectMgr_Vec3: ...
     @overload
-    def __init__(self,theX : float,theY : float,theZ : float) -> None: ...
-    @overload
     def __init__(self,theVec2 : OCP.Graphic3d.Graphic3d_Vec2d,theZ : float=0.0) -> None: ...
     @overload
-    def __init__(self,theValue : float) -> None: ...
+    def __init__(self,theX : float,theY : float,theZ : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theValue : float) -> None: ...
     def __isub__(self,theDec : SelectMgr_Vec3) -> SelectMgr_Vec3: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theInvFactor : float) -> SelectMgr_Vec3: 
+    def __itruediv__(self,theRight : SelectMgr_Vec3) -> SelectMgr_Vec3: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theRight : SelectMgr_Vec3) -> SelectMgr_Vec3: ...
+    def __itruediv__(self,theInvFactor : float) -> SelectMgr_Vec3: ...
     def __mul__(self,theFactor : float) -> SelectMgr_Vec3: 
         """
         Compute per-component multiplication by scale factor.
@@ -3589,14 +3593,14 @@ class SelectMgr_ViewerSelector(OCP.Standard.Standard_Transient):
         Returns true if the selectable object aSelectableObject having the selection mode aMode is in this selector.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3639,14 +3643,14 @@ class SelectMgr_ViewerSelector(OCP.Standard.Standard_Transient):
         Returns the picked element with the highest priority, and which is the closest to the last successful mouse position.
         """
     @overload
-    def Picked(self,theRank : int) -> SelectMgr_EntityOwner: 
+    def Picked(self) -> SelectMgr_EntityOwner: 
         """
         Returns the entity Owner for the object picked at specified position.
 
         Returns the current selected entity detected by the selector;
         """
     @overload
-    def Picked(self) -> SelectMgr_EntityOwner: ...
+    def Picked(self,theRank : int) -> SelectMgr_EntityOwner: ...
     def PickedData(self,theRank : int) -> SelectMgr_SortCriterion: 
         """
         Returns the Entity for the object picked at specified position.
@@ -3696,14 +3700,14 @@ class SelectMgr_ViewerSelector(OCP.Standard.Standard_Transient):
         Sorts the detected entites by priority and distance. to be redefined if other criterion are used...
         """
     @overload
-    def Status(self,theSelection : SelectMgr_Selection) -> SelectMgr_StateOfSelection: 
+    def Status(self,theSelectableObject : SelectMgr_SelectableObject) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns the selection status Status of the selection aSelection.
 
         None
         """
     @overload
-    def Status(self,theSelectableObject : SelectMgr_SelectableObject) -> OCP.TCollection.TCollection_AsciiString: ...
+    def Status(self,theSelection : SelectMgr_Selection) -> SelectMgr_StateOfSelection: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

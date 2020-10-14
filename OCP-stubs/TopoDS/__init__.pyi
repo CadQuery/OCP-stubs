@@ -6,8 +6,8 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TopAbs
 import OCP.Message
-import OCP.Standard
 import OCP.TopLoc
+import OCP.Standard
 __all__  = [
 "TopoDS",
 "TopoDS_AlertWithShape",
@@ -44,7 +44,7 @@ class TopoDS():
     """
     @staticmethod
     @overload
-    def CompSolid_s(S : TopoDS_Shape) -> TopoDS_CompSolid: 
+    def CompSolid_s(arg0 : TopoDS_Shape) -> TopoDS_CompSolid: 
         """
         Casts shape S to the more specialized return type, CompSolid. Exceptions Standard_TypeMismatch if S cannot be cast to this return type.
 
@@ -52,7 +52,7 @@ class TopoDS():
         """
     @staticmethod
     @overload
-    def CompSolid_s(arg0 : TopoDS_Shape) -> TopoDS_CompSolid: ...
+    def CompSolid_s(S : TopoDS_Shape) -> TopoDS_CompSolid: ...
     @staticmethod
     @overload
     def Compound_s(S : TopoDS_Shape) -> TopoDS_Compound: 
@@ -66,7 +66,7 @@ class TopoDS():
     def Compound_s(arg0 : TopoDS_Shape) -> TopoDS_Compound: ...
     @staticmethod
     @overload
-    def Edge_s(S : TopoDS_Shape) -> TopoDS_Edge: 
+    def Edge_s(arg0 : TopoDS_Shape) -> TopoDS_Edge: 
         """
         Casts shape S to the more specialized return type, Edge Exceptions Standard_TypeMismatch if S cannot be cast to this return type.
 
@@ -74,7 +74,7 @@ class TopoDS():
         """
     @staticmethod
     @overload
-    def Edge_s(arg0 : TopoDS_Shape) -> TopoDS_Edge: ...
+    def Edge_s(S : TopoDS_Shape) -> TopoDS_Edge: ...
     @staticmethod
     @overload
     def Face_s(S : TopoDS_Shape) -> TopoDS_Face: 
@@ -99,7 +99,7 @@ class TopoDS():
     def Shell_s(arg0 : TopoDS_Shape) -> TopoDS_Shell: ...
     @staticmethod
     @overload
-    def Solid_s(arg0 : TopoDS_Shape) -> TopoDS_Solid: 
+    def Solid_s(S : TopoDS_Shape) -> TopoDS_Solid: 
         """
         Casts shape S to the more specialized return type, Solid. Exceptions Standard_TypeMismatch if S cannot be cast to this return type.
 
@@ -107,7 +107,7 @@ class TopoDS():
         """
     @staticmethod
     @overload
-    def Solid_s(S : TopoDS_Shape) -> TopoDS_Solid: ...
+    def Solid_s(arg0 : TopoDS_Shape) -> TopoDS_Solid: ...
     @staticmethod
     @overload
     def Vertex_s(S : TopoDS_Shape) -> TopoDS_Vertex: 
@@ -121,7 +121,7 @@ class TopoDS():
     def Vertex_s(arg0 : TopoDS_Shape) -> TopoDS_Vertex: ...
     @staticmethod
     @overload
-    def Wire_s(S : TopoDS_Shape) -> TopoDS_Wire: 
+    def Wire_s(arg0 : TopoDS_Shape) -> TopoDS_Wire: 
         """
         Casts shape S to the more specialized return type, Wire. Exceptions Standard_TypeMismatch if S cannot be cast to this return type.
 
@@ -129,7 +129,7 @@ class TopoDS():
         """
     @staticmethod
     @overload
-    def Wire_s(arg0 : TopoDS_Shape) -> TopoDS_Wire: ...
+    def Wire_s(S : TopoDS_Shape) -> TopoDS_Wire: ...
     def __init__(self) -> None: ...
     pass
 class TopoDS_AlertWithShape(OCP.Message.Message_Alert, OCP.Standard.Standard_Transient):
@@ -165,14 +165,14 @@ class TopoDS_AlertWithShape(OCP.Message.Message_Alert, OCP.Standard.Standard_Tra
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -259,14 +259,14 @@ class TopoDS_Shape():
     Describes a shape which - references an underlying shape with the potential to be given a location and an orientation - has a location for the underlying shape, giving its placement in the local coordinate system - has an orientation for the underlying shape, in terms of its geometry (as opposed to orientation in relation to other shapes). Note: A Shape is empty if it references an underlying shape which has an empty list of shapes.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -378,14 +378,14 @@ class TopoDS_Shape():
     @overload
     def Locked(self) -> bool: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     def Move(self,thePosition : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Multiplies the Shape location by thePosition.
@@ -412,14 +412,14 @@ class TopoDS_Shape():
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -452,14 +452,14 @@ class TopoDS_Compound(TopoDS_Shape):
     Describes a compound which - references an underlying compound with the potential to be given a location and an orientation - has a location for the underlying compound, giving its placement in the local coordinate system - has an orientation for the underlying compound, in terms of its geometry (as opposed to orientation in relation to other shapes). Casts shape S to the more specialized return type, Compound.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -571,14 +571,14 @@ class TopoDS_Compound(TopoDS_Shape):
     @overload
     def Locked(self) -> bool: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     def Move(self,thePosition : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Multiplies the Shape location by thePosition.
@@ -605,14 +605,14 @@ class TopoDS_Compound(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -645,14 +645,14 @@ class TopoDS_Edge(TopoDS_Shape):
     Describes an edge which - references an underlying edge with the potential to be given a location and an orientation - has a location for the underlying edge, giving its placement in the local coordinate system - has an orientation for the underlying edge, in terms of its geometry (as opposed to orientation in relation to other shapes).
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -764,14 +764,14 @@ class TopoDS_Edge(TopoDS_Shape):
     @overload
     def Locked(self) -> bool: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     def Move(self,thePosition : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Multiplies the Shape location by thePosition.
@@ -798,14 +798,14 @@ class TopoDS_Edge(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -838,14 +838,14 @@ class TopoDS_Face(TopoDS_Shape):
     Describes a face which - references an underlying face with the potential to be given a location and an orientation - has a location for the underlying face, giving its placement in the local coordinate system - has an orientation for the underlying face, in terms of its geometry (as opposed to orientation in relation to other shapes).
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -957,14 +957,14 @@ class TopoDS_Face(TopoDS_Shape):
     @overload
     def Locked(self) -> bool: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     def Move(self,thePosition : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Multiplies the Shape location by thePosition.
@@ -991,14 +991,14 @@ class TopoDS_Face(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -1068,14 +1068,14 @@ class TopoDS_HShape(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1086,7 +1086,7 @@ class TopoDS_HShape(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Shape(self,aShape : TopoDS_Shape) -> None: 
+    def Shape(self) -> TopoDS_Shape: 
         """
         Loads this shape with the shape aShape
 
@@ -1097,15 +1097,15 @@ class TopoDS_HShape(OCP.Standard.Standard_Transient):
         Returns a reference to a constant TopoDS_Shape based on this shape.
         """
     @overload
-    def Shape(self) -> TopoDS_Shape: ...
+    def Shape(self,aShape : TopoDS_Shape) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aShape : TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1162,14 +1162,14 @@ class TopoDS_CompSolid(TopoDS_Shape):
     Describes a composite solid which - references an underlying composite solid with the potential to be given a location and an orientation - has a location for the underlying composite solid, giving its placement in the local coordinate system - has an orientation for the underlying composite solid, in terms of its geometry (as opposed to orientation in relation to other shapes). Casts shape S to the more specialized return type, CompSolid.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -1281,14 +1281,14 @@ class TopoDS_CompSolid(TopoDS_Shape):
     @overload
     def Locked(self) -> bool: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     def Move(self,thePosition : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Multiplies the Shape location by thePosition.
@@ -1315,14 +1315,14 @@ class TopoDS_CompSolid(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -1355,14 +1355,14 @@ class TopoDS_Shell(TopoDS_Shape):
     Describes a shell which - references an underlying shell with the potential to be given a location and an orientation - has a location for the underlying shell, giving its placement in the local coordinate system - has an orientation for the underlying shell, in terms of its geometry (as opposed to orientation in relation to other shapes).
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -1474,14 +1474,14 @@ class TopoDS_Shell(TopoDS_Shape):
     @overload
     def Locked(self) -> bool: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     def Move(self,thePosition : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Multiplies the Shape location by thePosition.
@@ -1508,14 +1508,14 @@ class TopoDS_Shell(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -1548,14 +1548,14 @@ class TopoDS_Solid(TopoDS_Shape):
     Describes a solid shape which - references an underlying solid shape with the potential to be given a location and an orientation - has a location for the underlying shape, giving its placement in the local coordinate system - has an orientation for the underlying shape, in terms of its geometry (as opposed to orientation in relation to other shapes).
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -1667,14 +1667,14 @@ class TopoDS_Solid(TopoDS_Shape):
     @overload
     def Locked(self) -> bool: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     def Move(self,thePosition : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Multiplies the Shape location by thePosition.
@@ -1701,14 +1701,14 @@ class TopoDS_Solid(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -1759,14 +1759,14 @@ class TopoDS_TShape(OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1788,14 +1788,14 @@ class TopoDS_TShape(OCP.Standard.Standard_Transient):
         Returns a copy of the TShape with no sub-shapes.
         """
     @overload
-    def Free(self) -> bool: 
+    def Free(self,theIsFree : bool) -> None: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: ...
+    def Free(self) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -1805,23 +1805,23 @@ class TopoDS_TShape(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1832,14 +1832,14 @@ class TopoDS_TShape(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self) -> bool: 
+    def Locked(self,theIsLocked : bool) -> None: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self,theIsLocked : bool) -> None: ...
+    def Locked(self) -> bool: ...
     @overload
     def Modified(self,theIsModified : bool) -> None: 
         """
@@ -1854,14 +1854,14 @@ class TopoDS_TShape(OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns the type as a term of the ShapeEnum enum : VERTEX, EDGE, WIRE, FACE, ....
@@ -1904,14 +1904,14 @@ class TopoDS_TCompound(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1933,14 +1933,14 @@ class TopoDS_TCompound(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns an empty TCompound.
         """
     @overload
-    def Free(self) -> bool: 
+    def Free(self,theIsFree : bool) -> None: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: ...
+    def Free(self) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -1950,23 +1950,23 @@ class TopoDS_TCompound(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1977,14 +1977,14 @@ class TopoDS_TCompound(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self) -> bool: 
+    def Locked(self,theIsLocked : bool) -> None: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self,theIsLocked : bool) -> None: ...
+    def Locked(self) -> bool: ...
     @overload
     def Modified(self,theIsModified : bool) -> None: 
         """
@@ -1999,14 +1999,14 @@ class TopoDS_TCompound(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns COMPOUND.
@@ -2050,14 +2050,14 @@ class TopoDS_TEdge(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2079,14 +2079,14 @@ class TopoDS_TEdge(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns a copy of the TShape with no sub-shapes.
         """
     @overload
-    def Free(self) -> bool: 
+    def Free(self,theIsFree : bool) -> None: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: ...
+    def Free(self) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -2096,23 +2096,23 @@ class TopoDS_TEdge(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2123,14 +2123,14 @@ class TopoDS_TEdge(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self) -> bool: 
+    def Locked(self,theIsLocked : bool) -> None: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self,theIsLocked : bool) -> None: ...
+    def Locked(self) -> bool: ...
     @overload
     def Modified(self,theIsModified : bool) -> None: 
         """
@@ -2145,14 +2145,14 @@ class TopoDS_TEdge(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns EDGE.
@@ -2195,14 +2195,14 @@ class TopoDS_TFace(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2224,14 +2224,14 @@ class TopoDS_TFace(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns an empty TFace.
         """
     @overload
-    def Free(self) -> bool: 
+    def Free(self,theIsFree : bool) -> None: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: ...
+    def Free(self) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -2241,23 +2241,23 @@ class TopoDS_TFace(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2268,14 +2268,14 @@ class TopoDS_TFace(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self) -> bool: 
+    def Locked(self,theIsLocked : bool) -> None: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self,theIsLocked : bool) -> None: ...
+    def Locked(self) -> bool: ...
     @overload
     def Modified(self,theIsModified : bool) -> None: 
         """
@@ -2290,14 +2290,14 @@ class TopoDS_TFace(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         returns FACE.
@@ -2341,14 +2341,14 @@ class TopoDS_TCompSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2370,14 +2370,14 @@ class TopoDS_TCompSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns an empty TCompSolid.
         """
     @overload
-    def Free(self) -> bool: 
+    def Free(self,theIsFree : bool) -> None: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: ...
+    def Free(self) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -2387,23 +2387,23 @@ class TopoDS_TCompSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2414,14 +2414,14 @@ class TopoDS_TCompSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self) -> bool: 
+    def Locked(self,theIsLocked : bool) -> None: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self,theIsLocked : bool) -> None: ...
+    def Locked(self) -> bool: ...
     @overload
     def Modified(self,theIsModified : bool) -> None: 
         """
@@ -2436,14 +2436,14 @@ class TopoDS_TCompSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         returns COMPSOLID
@@ -2487,14 +2487,14 @@ class TopoDS_TShell(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2516,14 +2516,14 @@ class TopoDS_TShell(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns an empty TShell.
         """
     @overload
-    def Free(self) -> bool: 
+    def Free(self,theIsFree : bool) -> None: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: ...
+    def Free(self) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -2533,23 +2533,23 @@ class TopoDS_TShell(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2560,14 +2560,14 @@ class TopoDS_TShell(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self) -> bool: 
+    def Locked(self,theIsLocked : bool) -> None: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self,theIsLocked : bool) -> None: ...
+    def Locked(self) -> bool: ...
     @overload
     def Modified(self,theIsModified : bool) -> None: 
         """
@@ -2582,14 +2582,14 @@ class TopoDS_TShell(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns SHELL.
@@ -2633,14 +2633,14 @@ class TopoDS_TSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2662,14 +2662,14 @@ class TopoDS_TSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns an empty TSolid.
         """
     @overload
-    def Free(self) -> bool: 
+    def Free(self,theIsFree : bool) -> None: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: ...
+    def Free(self) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -2679,23 +2679,23 @@ class TopoDS_TSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2706,14 +2706,14 @@ class TopoDS_TSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self) -> bool: 
+    def Locked(self,theIsLocked : bool) -> None: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self,theIsLocked : bool) -> None: ...
+    def Locked(self) -> bool: ...
     @overload
     def Modified(self,theIsModified : bool) -> None: 
         """
@@ -2728,14 +2728,14 @@ class TopoDS_TSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         returns SOLID.
@@ -2779,14 +2779,14 @@ class TopoDS_TVertex(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2808,14 +2808,14 @@ class TopoDS_TVertex(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns a copy of the TShape with no sub-shapes.
         """
     @overload
-    def Free(self) -> bool: 
+    def Free(self,theIsFree : bool) -> None: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: ...
+    def Free(self) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -2825,23 +2825,23 @@ class TopoDS_TVertex(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2852,14 +2852,14 @@ class TopoDS_TVertex(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self) -> bool: 
+    def Locked(self,theIsLocked : bool) -> None: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self,theIsLocked : bool) -> None: ...
+    def Locked(self) -> bool: ...
     @overload
     def Modified(self,theIsModified : bool) -> None: 
         """
@@ -2874,14 +2874,14 @@ class TopoDS_TVertex(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns VERTEX.
@@ -2924,14 +2924,14 @@ class TopoDS_TWire(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2953,14 +2953,14 @@ class TopoDS_TWire(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns an empty TWire.
         """
     @overload
-    def Free(self) -> bool: 
+    def Free(self,theIsFree : bool) -> None: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: ...
+    def Free(self) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -2970,23 +2970,23 @@ class TopoDS_TWire(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2997,14 +2997,14 @@ class TopoDS_TWire(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self) -> bool: 
+    def Locked(self,theIsLocked : bool) -> None: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self,theIsLocked : bool) -> None: ...
+    def Locked(self) -> bool: ...
     @overload
     def Modified(self,theIsModified : bool) -> None: 
         """
@@ -3019,14 +3019,14 @@ class TopoDS_TWire(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns WIRE.
@@ -3063,14 +3063,14 @@ class TopoDS_Vertex(TopoDS_Shape):
     Describes a vertex which - references an underlying vertex with the potential to be given a location and an orientation - has a location for the underlying vertex, giving its placement in the local coordinate system - has an orientation for the underlying vertex, in terms of its geometry (as opposed to orientation in relation to other shapes).
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -3182,14 +3182,14 @@ class TopoDS_Vertex(TopoDS_Shape):
     @overload
     def Locked(self) -> bool: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     def Move(self,thePosition : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Multiplies the Shape location by thePosition.
@@ -3216,14 +3216,14 @@ class TopoDS_Vertex(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -3256,14 +3256,14 @@ class TopoDS_Wire(TopoDS_Shape):
     Describes a wire which - references an underlying wire with the potential to be given a location and an orientation - has a location for the underlying wire, giving its placement in the local coordinate system - has an orientation for the underlying wire, in terms of its geometry (as opposed to orientation in relation to other shapes).
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -3375,14 +3375,14 @@ class TopoDS_Wire(TopoDS_Shape):
     @overload
     def Locked(self) -> bool: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     def Move(self,thePosition : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Multiplies the Shape location by thePosition.
@@ -3409,14 +3409,14 @@ class TopoDS_Wire(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.

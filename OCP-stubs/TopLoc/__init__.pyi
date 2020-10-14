@@ -48,14 +48,14 @@ class TopLoc_Datum3D(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -80,9 +80,9 @@ class TopLoc_Datum3D(OCP.Standard.Standard_Transient):
         Returns a gp_Trsf which, when applied to this datum, produces the default datum.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -111,14 +111,14 @@ class TopLoc_IndexedMapOfLocation(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : TopLoc_Location) -> bool: 
         """
         Contains
@@ -180,9 +180,9 @@ class TopLoc_IndexedMapOfLocation(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theOther : TopLoc_IndexedMapOfLocation) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : TopLoc_IndexedMapOfLocation) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -275,11 +275,11 @@ class TopLoc_Location():
         Returns the transformation associated to the coordinate system.
         """
     @overload
-    def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,D : TopLoc_Datum3D) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
     def __mul__(self,Other : TopLoc_Location) -> TopLoc_Location: 
         """
         None
@@ -329,14 +329,14 @@ class TopLoc_MapOfLocation(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def Contains(self,theOther : TopLoc_MapOfLocation) -> bool: 
         """
@@ -419,11 +419,11 @@ class TopLoc_MapOfLocation(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self,theOther : TopLoc_MapOfLocation) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TopLoc_MapOfLocation) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class TopLoc_SListNodeOfItemLocation(OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -447,14 +447,14 @@ class TopLoc_SListNodeOfItemLocation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -533,23 +533,23 @@ class TopLoc_SListOfItemLocation():
         Returns the current value of the list. An error is raised if the list is empty.
         """
     @overload
+    def __init__(self,Other : TopLoc_SListOfItemLocation) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,anItem : TopLoc_ItemLocation,aTail : TopLoc_SListOfItemLocation) -> None: ...
-    @overload
-    def __init__(self,Other : TopLoc_SListOfItemLocation) -> None: ...
     pass
 def HashCode(theLocation : TopLoc_Location,theUpperBound : int) -> int:
     """
     Computes a hash code for the given location, in the range [1, theUpperBound]
     """
 @overload
-def ShallowDump(me : TopLoc_Location,S : Any) -> None:
+def ShallowDump(me : TopLoc_Datum3D,S : Any) -> None:
     """
     None
 
     None
     """
 @overload
-def ShallowDump(me : TopLoc_Datum3D,S : Any) -> None:
+def ShallowDump(me : TopLoc_Location,S : Any) -> None:
     pass

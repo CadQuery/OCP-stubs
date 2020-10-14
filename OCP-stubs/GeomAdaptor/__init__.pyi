@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.GeomAbs
+import OCP.TColStd
 import OCP.Adaptor3d
 import OCP.Standard
-import OCP.gp
 import OCP.Geom
-import OCP.TColStd
-import OCP.GeomAbs
+import OCP.gp
 __all__  = [
 "GeomAdaptor",
 "GeomAdaptor_Curve",
@@ -136,7 +136,7 @@ class GeomAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
         None
         """
     @overload
-    def Load(self,C : OCP.Geom.Geom_Curve,UFirst : float,ULast : float) -> None: 
+    def Load(self,C : OCP.Geom.Geom_Curve) -> None: 
         """
         None
 
@@ -147,7 +147,7 @@ class GeomAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
         ConstructionError is raised if Ufirst>Ulast
         """
     @overload
-    def Load(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    def Load(self,C : OCP.Geom.Geom_Curve,UFirst : float,ULast : float) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
@@ -189,9 +189,9 @@ class GeomAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
         Computes the point of parameter U on the curve
         """
     @overload
-    def __init__(self,C : OCP.Geom.Geom_Curve) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom.Geom_Curve,UFirst : float,ULast : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Geom.Geom_Curve) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -325,14 +325,14 @@ class GeomAdaptor_GHCurve(OCP.Adaptor3d.Adaptor3d_HCurve, OCP.Standard.Standard_
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -565,14 +565,14 @@ class GeomAdaptor_GHSurface(OCP.Adaptor3d.Adaptor3d_HSurface, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -928,14 +928,14 @@ class GeomAdaptor_HCurve(GeomAdaptor_GHCurve, OCP.Adaptor3d.Adaptor3d_HCurve, OC
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1032,13 +1032,13 @@ class GeomAdaptor_HCurve(GeomAdaptor_GHCurve, OCP.Adaptor3d.Adaptor3d_HCurve, OC
         None
         """
     @overload
-    def __init__(self,AS : GeomAdaptor_Curve) -> None: ...
-    @overload
-    def __init__(self,S : OCP.Geom.Geom_Curve) -> None: ...
-    @overload
     def __init__(self,S : OCP.Geom.Geom_Curve,UFirst : float,ULast : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,AS : GeomAdaptor_Curve) -> None: ...
+    @overload
+    def __init__(self,S : OCP.Geom.Geom_Curve) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1175,14 +1175,14 @@ class GeomAdaptor_HSurface(GeomAdaptor_GHSurface, OCP.Adaptor3d.Adaptor3d_HSurfa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1393,11 +1393,11 @@ class GeomAdaptor_HSurface(GeomAdaptor_GHSurface, OCP.Adaptor3d.Adaptor3d_HSurfa
     @overload
     def __init__(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float=0.0,TolV : float=0.0) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
     def __init__(self,AS : GeomAdaptor_Surface) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1531,14 +1531,14 @@ class GeomAdaptor_HSurfaceOfLinearExtrusion(OCP.Adaptor3d.Adaptor3d_HSurface, OC
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1747,9 +1747,9 @@ class GeomAdaptor_HSurfaceOfLinearExtrusion(OCP.Adaptor3d.Adaptor3d_HSurface, OC
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : GeomAdaptor_SurfaceOfLinearExtrusion) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1883,14 +1883,14 @@ class GeomAdaptor_HSurfaceOfRevolution(OCP.Adaptor3d.Adaptor3d_HSurface, OCP.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2099,9 +2099,9 @@ class GeomAdaptor_HSurfaceOfRevolution(OCP.Adaptor3d.Adaptor3d_HSurface, OCP.Sta
         None
         """
     @overload
-    def __init__(self,S : GeomAdaptor_SurfaceOfRevolution) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : GeomAdaptor_SurfaceOfRevolution) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2224,7 +2224,7 @@ class GeomAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
         None
         """
     @overload
-    def Load(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float=0.0,TolV : float=0.0) -> None: 
+    def Load(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float,TolV : float) -> None: 
         """
         None
 
@@ -2234,10 +2234,10 @@ class GeomAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
 
         ConstructionError is raised if UFirst>ULast or VFirst>VLast
         """
-    @overload
-    def Load(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float,TolV : float) -> None: ...
     @overload
     def Load(self,S : OCP.Geom.Geom_Surface) -> None: ...
+    @overload
+    def Load(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float=0.0,TolV : float=0.0) -> None: ...
     def NbUIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of U intervals for continuity <S>. May be one if UContinuity(me) >= <S>
@@ -2337,11 +2337,11 @@ class GeomAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
         Computes the point of parameters U,V on the surface.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float=0.0,TolV : float=0.0) -> None: ...
     @overload
     def __init__(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def __init__(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float=0.0,TolV : float=0.0) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class GeomAdaptor_SurfaceOfLinearExtrusion(GeomAdaptor_Surface, OCP.Adaptor3d.Adaptor3d_Surface):
     """
@@ -2444,14 +2444,14 @@ class GeomAdaptor_SurfaceOfLinearExtrusion(GeomAdaptor_Surface, OCP.Adaptor3d.Ad
         None
         """
     @overload
-    def Load(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def Load(self,V : OCP.gp.gp_Dir) -> None: 
         """
         Changes the Curve
 
         Changes the Direction
         """
     @overload
-    def Load(self,V : OCP.gp.gp_Dir) -> None: ...
+    def Load(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
     def NbUIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of U intervals for continuity <S>. May be one if UContinuity(me) >= <S>
@@ -2551,11 +2551,11 @@ class GeomAdaptor_SurfaceOfLinearExtrusion(GeomAdaptor_Surface, OCP.Adaptor3d.Ad
         Computes the point of parameters U,V on the surface.
         """
     @overload
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve,V : OCP.gp.gp_Dir) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
     pass
 class GeomAdaptor_SurfaceOfRevolution(GeomAdaptor_Surface, OCP.Adaptor3d.Adaptor3d_Surface):
     """
@@ -2771,7 +2771,7 @@ class GeomAdaptor_SurfaceOfRevolution(GeomAdaptor_Surface, OCP.Adaptor3d.Adaptor
     @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve,V : OCP.gp.gp_Ax1) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve,V : OCP.gp.gp_Ax1) -> None: ...
     pass

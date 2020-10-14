@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.StepData
 import OCP.TCollection
-import OCP.Standard
-import OCP.StepRepr
 import OCP.TColStd
+import OCP.StepRepr
+import OCP.Standard
+import OCP.StepData
+import OCP.NCollection
 import OCP.Interface
 __all__  = [
 "StepElement_AnalysisItemWithinRepresentation",
@@ -146,14 +146,14 @@ class StepElement_AnalysisItemWithinRepresentation(OCP.Standard.Standard_Transie
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -284,13 +284,13 @@ class StepElement_Array1OfCurveElementEndReleasePacket():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepElement_CurveElementEndReleasePacket,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : StepElement_Array1OfCurveElementEndReleasePacket) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepElement_Array1OfCurveElementEndReleasePacket) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepElement_CurveElementEndReleasePacket,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepElement_Array1OfCurveElementSectionDefinition():
@@ -370,13 +370,13 @@ class StepElement_Array1OfCurveElementSectionDefinition():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepElement_Array1OfCurveElementSectionDefinition) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepElement_CurveElementSectionDefinition,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepElement_Array1OfHSequenceOfCurveElementPurposeMember():
@@ -458,11 +458,11 @@ class StepElement_Array1OfHSequenceOfCurveElementPurposeMember():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : StepElement_HSequenceOfCurveElementPurposeMember,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfHSequenceOfCurveElementPurposeMember) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember():
@@ -544,11 +544,11 @@ class StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember():
     @overload
     def __init__(self,theBegin : StepElement_HSequenceOfSurfaceElementPurposeMember,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepElement_Array1OfMeasureOrUnspecifiedValue():
@@ -628,13 +628,13 @@ class StepElement_Array1OfMeasureOrUnspecifiedValue():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepElement_Array1OfMeasureOrUnspecifiedValue) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepElement_MeasureOrUnspecifiedValue,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : StepElement_MeasureOrUnspecifiedValue,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepElement_Array1OfMeasureOrUnspecifiedValue) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepElement_Array1OfSurfaceSection():
@@ -714,13 +714,13 @@ class StepElement_Array1OfSurfaceSection():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepElement_Array1OfSurfaceSection) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepElement_SurfaceSection,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : StepElement_Array1OfSurfaceSection) -> None: ...
+    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepElement_SurfaceSection,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepElement_Array1OfVolumeElementPurpose():
@@ -800,13 +800,13 @@ class StepElement_Array1OfVolumeElementPurpose():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepElement_Array1OfVolumeElementPurpose) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : StepElement_VolumeElementPurpose,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepElement_Array1OfVolumeElementPurpose) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepElement_Array1OfVolumeElementPurposeMember():
@@ -886,11 +886,11 @@ class StepElement_Array1OfVolumeElementPurposeMember():
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfVolumeElementPurposeMember) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepElement_VolumeElementPurposeMember,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -966,9 +966,9 @@ class StepElement_Array2OfCurveElementPurposeMember():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepElement_CurveElementPurposeMember,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepElement_CurveElementPurposeMember,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array2OfCurveElementPurposeMember) -> None: ...
     @overload
@@ -1045,13 +1045,13 @@ class StepElement_Array2OfSurfaceElementPurpose():
         Constant value access
         """
     @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : StepElement_SurfaceElementPurpose,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array2OfSurfaceElementPurpose) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class StepElement_Array2OfSurfaceElementPurposeMember():
     """
@@ -1124,11 +1124,11 @@ class StepElement_Array2OfSurfaceElementPurposeMember():
         Constant value access
         """
     @overload
+    def __init__(self,theBegin : StepElement_SurfaceElementPurposeMember,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepElement_SurfaceElementPurposeMember,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array2OfSurfaceElementPurposeMember) -> None: ...
     pass
@@ -1165,14 +1165,14 @@ class StepElement_ElementDescriptor(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1218,6 +1218,7 @@ class StepElement_CurveEdge():
 
       StepElement_ElementEdge
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1260,14 +1261,14 @@ class StepElement_CurveElementEndReleasePacket(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1484,14 +1485,14 @@ class StepElement_CurveElementFreedomMember(OCP.StepData.StepData_SelectNamed, O
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1760,14 +1761,14 @@ class StepElement_CurveElementPurposeMember(OCP.StepData.StepData_SelectNamed, O
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1894,14 +1895,14 @@ class StepElement_CurveElementSectionDefinition(OCP.Standard.Standard_Transient)
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1976,14 +1977,14 @@ class StepElement_CurveElementSectionDerivedDefinitions(StepElement_CurveElement
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2107,6 +2108,7 @@ class StepElement_Element2dShape():
 
       StepElement_Triangle
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2360,14 +2362,14 @@ class StepElement_ElementAspectMember(OCP.StepData.StepData_SelectNamed, OCP.Ste
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2494,14 +2496,14 @@ class StepElement_Curve3dElementDescriptor(StepElement_ElementDescriptor, OCP.St
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2580,14 +2582,14 @@ class StepElement_ElementMaterial(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2645,6 +2647,7 @@ class StepElement_ElementOrder():
 
       StepElement_Cubic
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2668,6 +2671,7 @@ class StepElement_ElementVolume():
 
       StepElement_Volume
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2703,6 +2707,7 @@ class StepElement_EnumeratedCurveElementFreedom():
 
       StepElement_None
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2743,6 +2748,7 @@ class StepElement_EnumeratedCurveElementPurpose():
 
       StepElement_Warping
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2778,6 +2784,7 @@ class StepElement_EnumeratedSurfaceElementPurpose():
 
       StepElement_NormalToPlaneShear
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2803,6 +2810,7 @@ class StepElement_EnumeratedVolumeElementPurpose():
 
       StepElement_StressDisplacement
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -2882,14 +2890,14 @@ class StepElement_HArray1OfCurveElementEndReleasePacket(StepElement_Array1OfCurv
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2940,13 +2948,13 @@ class StepElement_HArray1OfCurveElementEndReleasePacket(StepElement_Array1OfCurv
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepElement_CurveElementEndReleasePacket) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfCurveElementEndReleasePacket) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3025,14 +3033,14 @@ class StepElement_HArray1OfCurveElementSectionDefinition(StepElement_Array1OfCur
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3083,13 +3091,13 @@ class StepElement_HArray1OfCurveElementSectionDefinition(StepElement_Array1OfCur
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_CurveElementSectionDefinition) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepElement_Array1OfCurveElementSectionDefinition) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_CurveElementSectionDefinition) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3168,14 +3176,14 @@ class StepElement_HArray1OfHSequenceOfCurveElementPurposeMember(StepElement_Arra
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3226,13 +3234,13 @@ class StepElement_HArray1OfHSequenceOfCurveElementPurposeMember(StepElement_Arra
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepElement_Array1OfHSequenceOfCurveElementPurposeMember) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_HSequenceOfCurveElementPurposeMember) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepElement_Array1OfHSequenceOfCurveElementPurposeMember) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_HSequenceOfCurveElementPurposeMember) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3311,14 +3319,14 @@ class StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember(StepElement_Ar
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3373,9 +3381,9 @@ class StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember(StepElement_Ar
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepElement_HSequenceOfSurfaceElementPurposeMember) -> None: ...
     @overload
-    def __init__(self,theOther : StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3454,14 +3462,14 @@ class StepElement_HArray1OfMeasureOrUnspecifiedValue(StepElement_Array1OfMeasure
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3512,11 +3520,11 @@ class StepElement_HArray1OfMeasureOrUnspecifiedValue(StepElement_Array1OfMeasure
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepElement_MeasureOrUnspecifiedValue) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfMeasureOrUnspecifiedValue) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -3597,14 +3605,14 @@ class StepElement_HArray1OfSurfaceSection(StepElement_Array1OfSurfaceSection, OC
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3655,13 +3663,13 @@ class StepElement_HArray1OfSurfaceSection(StepElement_Array1OfSurfaceSection, OC
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepElement_Array1OfSurfaceSection) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepElement_SurfaceSection) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepElement_Array1OfSurfaceSection) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3740,14 +3748,14 @@ class StepElement_HArray1OfVolumeElementPurpose(StepElement_Array1OfVolumeElemen
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3798,9 +3806,9 @@ class StepElement_HArray1OfVolumeElementPurpose(StepElement_Array1OfVolumeElemen
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfVolumeElementPurpose) -> None: ...
     @overload
@@ -3883,14 +3891,14 @@ class StepElement_HArray1OfVolumeElementPurposeMember(StepElement_Array1OfVolume
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3941,13 +3949,13 @@ class StepElement_HArray1OfVolumeElementPurposeMember(StepElement_Array1OfVolume
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_VolumeElementPurposeMember) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepElement_Array1OfVolumeElementPurposeMember) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_VolumeElementPurposeMember) -> None: ...
+    def __init__(self,theOther : StepElement_Array1OfVolumeElementPurposeMember) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -4010,14 +4018,14 @@ class StepElement_HArray2OfCurveElementPurposeMember(StepElement_Array2OfCurveEl
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4078,11 +4086,11 @@ class StepElement_HArray2OfCurveElementPurposeMember(StepElement_Array2OfCurveEl
         Constant value access
         """
     @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepElement_CurveElementPurposeMember) -> None: ...
+    @overload
     def __init__(self,theOther : StepElement_Array2OfCurveElementPurposeMember) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
-    @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepElement_CurveElementPurposeMember) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4144,14 +4152,14 @@ class StepElement_HArray2OfSurfaceElementPurpose(StepElement_Array2OfSurfaceElem
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4212,9 +4220,9 @@ class StepElement_HArray2OfSurfaceElementPurpose(StepElement_Array2OfSurfaceElem
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepElement_SurfaceElementPurpose) -> None: ...
-    @overload
     def __init__(self,theOther : StepElement_Array2OfSurfaceElementPurpose) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepElement_SurfaceElementPurpose) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @staticmethod
@@ -4278,14 +4286,14 @@ class StepElement_HArray2OfSurfaceElementPurposeMember(StepElement_Array2OfSurfa
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4346,9 +4354,9 @@ class StepElement_HArray2OfSurfaceElementPurposeMember(StepElement_Array2OfSurfa
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepElement_Array2OfSurfaceElementPurposeMember) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepElement_SurfaceElementPurposeMember) -> None: ...
     @staticmethod
@@ -4484,9 +4492,9 @@ class StepElement_SequenceOfCurveElementPurposeMember(OCP.NCollection.NCollectio
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -4618,11 +4626,11 @@ class StepElement_SequenceOfCurveElementSectionDefinition(OCP.NCollection.NColle
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -4639,14 +4647,14 @@ class StepElement_SequenceOfElementMaterial(OCP.NCollection.NCollection_BaseSequ
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : StepElement_ElementMaterial) -> None: 
+    def Append(self,theSeq : StepElement_SequenceOfElementMaterial) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : StepElement_SequenceOfElementMaterial) -> None: ...
+    def Append(self,theItem : StepElement_ElementMaterial) -> None: ...
     def Assign(self,theOther : StepElement_SequenceOfElementMaterial) -> StepElement_SequenceOfElementMaterial: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4719,14 +4727,14 @@ class StepElement_SequenceOfElementMaterial(OCP.NCollection.NCollection_BaseSequ
     @overload
     def Prepend(self,theItem : StepElement_ElementMaterial) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4752,9 +4760,9 @@ class StepElement_SequenceOfElementMaterial(OCP.NCollection.NCollection_BaseSequ
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : StepElement_SequenceOfElementMaterial) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -4844,23 +4852,23 @@ class StepElement_SequenceOfSurfaceElementPurposeMember(OCP.NCollection.NCollect
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: 
+    def Prepend(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: ...
+    def Prepend(self,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4886,9 +4894,9 @@ class StepElement_SequenceOfSurfaceElementPurposeMember(OCP.NCollection.NCollect
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -5073,14 +5081,14 @@ class StepElement_MeasureOrUnspecifiedValueMember(OCP.StepData.StepData_SelectNa
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5180,14 +5188,14 @@ class StepElement_HSequenceOfCurveElementPurposeMember(StepElement_SequenceOfCur
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : StepElement_CurveElementPurposeMember) -> None: 
+    def Append(self,theSequence : StepElement_SequenceOfCurveElementPurposeMember) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
+    def Append(self,theItem : StepElement_CurveElementPurposeMember) -> None: ...
     def Assign(self,theOther : StepElement_SequenceOfCurveElementPurposeMember) -> StepElement_SequenceOfCurveElementPurposeMember: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5263,14 +5271,14 @@ class StepElement_HSequenceOfCurveElementPurposeMember(StepElement_SequenceOfCur
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5343,9 +5351,9 @@ class StepElement_HSequenceOfCurveElementPurposeMember(StepElement_SequenceOfCur
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -5369,14 +5377,14 @@ class StepElement_HSequenceOfCurveElementSectionDefinition(StepElement_SequenceO
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : StepElement_SequenceOfCurveElementSectionDefinition) -> None: 
+    def Append(self,theItem : StepElement_CurveElementSectionDefinition) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : StepElement_CurveElementSectionDefinition) -> None: ...
+    def Append(self,theSequence : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
     def Assign(self,theOther : StepElement_SequenceOfCurveElementSectionDefinition) -> StepElement_SequenceOfCurveElementSectionDefinition: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5452,14 +5460,14 @@ class StepElement_HSequenceOfCurveElementSectionDefinition(StepElement_SequenceO
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5532,9 +5540,9 @@ class StepElement_HSequenceOfCurveElementSectionDefinition(StepElement_SequenceO
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -5641,14 +5649,14 @@ class StepElement_HSequenceOfElementMaterial(StepElement_SequenceOfElementMateri
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5680,14 +5688,14 @@ class StepElement_HSequenceOfElementMaterial(StepElement_SequenceOfElementMateri
     @overload
     def Prepend(self,theItem : StepElement_ElementMaterial) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5747,14 +5755,14 @@ class StepElement_HSequenceOfSurfaceElementPurposeMember(StepElement_SequenceOfS
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: 
+    def Append(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: ...
+    def Append(self,theSequence : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
     def Assign(self,theOther : StepElement_SequenceOfSurfaceElementPurposeMember) -> StepElement_SequenceOfSurfaceElementPurposeMember: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5830,14 +5838,14 @@ class StepElement_HSequenceOfSurfaceElementPurposeMember(StepElement_SequenceOfS
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5860,23 +5868,23 @@ class StepElement_HSequenceOfSurfaceElementPurposeMember(StepElement_SequenceOfS
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: 
+    def Prepend(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: ...
+    def Prepend(self,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5963,14 +5971,14 @@ class StepElement_Surface3dElementDescriptor(StepElement_ElementDescriptor, OCP.
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6057,14 +6065,14 @@ class StepElement_SurfaceElementProperty(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6285,14 +6293,14 @@ class StepElement_SurfaceElementPurposeMember(OCP.StepData.StepData_SelectNamed,
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6415,14 +6423,14 @@ class StepElement_SurfaceSection(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6497,14 +6505,14 @@ class StepElement_SurfaceSectionField(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6563,14 +6571,14 @@ class StepElement_SurfaceSectionFieldConstant(StepElement_SurfaceSectionField, O
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6637,14 +6645,14 @@ class StepElement_SurfaceSectionFieldVarying(StepElement_SurfaceSectionField, OC
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6711,14 +6719,14 @@ class StepElement_UniformSurfaceSection(StepElement_SurfaceSection, OCP.Standard
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6796,6 +6804,7 @@ class StepElement_UnspecifiedValue():
 
       StepElement_Unspecified
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -6842,14 +6851,14 @@ class StepElement_Volume3dElementDescriptor(StepElement_ElementDescriptor, OCP.S
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6917,6 +6926,7 @@ class StepElement_Volume3dElementShape():
 
       StepElement_Pyramid
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -7108,14 +7118,14 @@ class StepElement_VolumeElementPurposeMember(OCP.StepData.StepData_SelectNamed, 
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

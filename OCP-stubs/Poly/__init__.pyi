@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.Standard
-import OCP.gp
-import OCP.TColgp
 import OCP.TColStd
+import OCP.TColgp
 import OCP.TShort
+import OCP.Standard
+import OCP.NCollection
+import OCP.gp
 __all__  = [
 "Poly_Array1OfTriangle",
 "Poly_CoherentLink",
@@ -106,11 +106,11 @@ class Poly_Array1OfTriangle():
         Constant value access
         """
     @overload
+    def __init__(self,theBegin : Poly_Triangle,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Poly_Array1OfTriangle) -> None: ...
-    @overload
-    def __init__(self,theBegin : Poly_Triangle,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -144,11 +144,11 @@ class Poly_CoherentLink():
         Set the attribute of the Link.
         """
     @overload
-    def __init__(self,iNode0 : int,iNode1 : int) -> None: ...
-    @overload
     def __init__(self,theTri : Poly_CoherentTriangle,iSide : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,iNode0 : int,iNode1 : int) -> None: ...
     pass
 class Poly_CoherentNode(OCP.gp.gp_XYZ):
     """
@@ -196,9 +196,9 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         None
         """
     @overload
-    def Coord(self) -> Tuple[float, float, float]: ...
-    @overload
     def Coord(self,Index : int) -> float: ...
+    @overload
+    def Coord(self) -> Tuple[float, float, float]: ...
     def Cross(self,Right : OCP.gp.gp_XYZ) -> None: 
         """
         <me>.X() = <me>.Y() * Other.Z() - <me>.Z() * Other.Y() <me>.Y() = <me>.Z() * Other.X() - <me>.X() * Other.Z() <me>.Z() = <me>.X() * Other.Y() - <me>.Y() * Other.X()
@@ -306,7 +306,7 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         computes Sqrt (X*X + Y*Y + Z*Z) where X, Y and Z are the three coordinates of this XYZ object.
         """
     @overload
-    def Multiplied(self,Scalar : float) -> OCP.gp.gp_XYZ: 
+    def Multiplied(self,Matrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: 
         """
         New.X() = <me>.X() * Scalar; New.Y() = <me>.Y() * Scalar; New.Z() = <me>.Z() * Scalar;
 
@@ -323,9 +323,9 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
     @overload
     def Multiplied(self,Other : OCP.gp.gp_XYZ) -> OCP.gp.gp_XYZ: ...
     @overload
-    def Multiplied(self,Matrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: ...
+    def Multiplied(self,Scalar : float) -> OCP.gp.gp_XYZ: ...
     @overload
-    def Multiply(self,Scalar : float) -> None: 
+    def Multiply(self,Matrix : OCP.gp.gp_Mat) -> None: 
         """
         <me>.X() = <me>.X() * Scalar; <me>.Y() = <me>.Y() * Scalar; <me>.Z() = <me>.Z() * Scalar;
 
@@ -339,10 +339,10 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
 
         <me> = Matrix * <me>
         """
+    @overload
+    def Multiply(self,Scalar : float) -> None: ...
     @overload
     def Multiply(self,Other : OCP.gp.gp_XYZ) -> None: ...
-    @overload
-    def Multiply(self,Matrix : OCP.gp.gp_Mat) -> None: ...
     def Normalize(self) -> None: 
         """
         <me>.X() = <me>.X()/ <me>.Modulus() <me>.Y() = <me>.Y()/ <me>.Modulus() <me>.Z() = <me>.Z()/ <me>.Modulus() Raised if <me>.Modulus() <= Resolution from gp
@@ -383,15 +383,15 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         modifies the coordinate of range Index Index = 1 => X is modified Index = 2 => Y is modified Index = 3 => Z is modified Raises OutOfRange if Index != {1, 2, 3}.
         """
     @overload
-    def SetCoord(self,Index : int,Xi : float) -> None: ...
-    @overload
     def SetCoord(self,i : int,X : float) -> None: ...
+    @overload
+    def SetCoord(self,Index : int,Xi : float) -> None: ...
     def SetIndex(self,theIndex : int) -> None: 
         """
         Set the value of node Index.
         """
     @overload
-    def SetLinearForm(self,XYZ1 : OCP.gp.gp_XYZ,XYZ2 : OCP.gp.gp_XYZ) -> None: 
+    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,XYZ2 : OCP.gp.gp_XYZ) -> None: 
         """
         <me> is set to the following linear form : A1 * XYZ1 + A2 * XYZ2 + A3 * XYZ3 + XYZ4
 
@@ -418,21 +418,21 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         <me> is set to the following linear form : A1 * XYZ1 + A2 * XYZ2 + A3 * XYZ3 + XYZ4
         """
     @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ,A3 : float,XYZ3 : OCP.gp.gp_XYZ) -> None: ...
-    @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ,XYZ3 : OCP.gp.gp_XYZ) -> None: ...
+    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ,A3 : float,XYZ3 : OCP.gp.gp_XYZ,XYZ4 : OCP.gp.gp_XYZ) -> None: ...
     @overload
     def SetLinearForm(self,Left : OCP.gp.gp_XYZ,Right : OCP.gp.gp_XYZ) -> None: ...
     @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ) -> None: ...
-    @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,XYZ2 : OCP.gp.gp_XYZ) -> None: ...
+    def SetLinearForm(self,XYZ1 : OCP.gp.gp_XYZ,XYZ2 : OCP.gp.gp_XYZ) -> None: ...
     @overload
     def SetLinearForm(self,L : float,Left : OCP.gp.gp_XYZ,R : float,Right : OCP.gp.gp_XYZ) -> None: ...
     @overload
     def SetLinearForm(self,L : float,Left : OCP.gp.gp_XYZ,Right : OCP.gp.gp_XYZ) -> None: ...
     @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ,A3 : float,XYZ3 : OCP.gp.gp_XYZ,XYZ4 : OCP.gp.gp_XYZ) -> None: ...
+    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ,A3 : float,XYZ3 : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ,XYZ3 : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ) -> None: ...
     def SetNormal(self,theVector : OCP.gp.gp_XYZ) -> None: 
         """
         Define the normal vector in the Node.
@@ -508,7 +508,7 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         None
         """
     @overload
-    def __imul__(self,Matrix : OCP.gp.gp_Mat) -> None: 
+    def __imul__(self,Scalar : float) -> None: 
         """
         None
 
@@ -519,7 +519,7 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
     @overload
     def __imul__(self,Other : OCP.gp.gp_XYZ) -> None: ...
     @overload
-    def __imul__(self,Scalar : float) -> None: ...
+    def __imul__(self,Matrix : OCP.gp.gp_Mat) -> None: ...
     @overload
     def __init__(self,thePnt : OCP.gp.gp_XYZ) -> None: ...
     @overload
@@ -537,7 +537,7 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         None
         """
     @overload
-    def __mul__(self,Other : OCP.gp.gp_XYZ) -> float: 
+    def __mul__(self,Matrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: 
         """
         None
 
@@ -545,16 +545,16 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
 
         None
         """
-    @overload
-    def __mul__(self,Matrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: ...
     @overload
     def __mul__(self,Scalar : float) -> OCP.gp.gp_XYZ: ...
+    @overload
+    def __mul__(self,Other : OCP.gp.gp_XYZ) -> float: ...
     def __pow__(self,Right : OCP.gp.gp_XYZ) -> OCP.gp.gp_XYZ: 
         """
         None
         """
     @overload
-    def __rmul__(self,Other : OCP.gp.gp_XYZ) -> float: 
+    def __rmul__(self,Scalar : float) -> OCP.gp.gp_XYZ: 
         """
         None
 
@@ -565,7 +565,7 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
     @overload
     def __rmul__(self,Matrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: ...
     @overload
-    def __rmul__(self,Scalar : float) -> OCP.gp.gp_XYZ: ...
+    def __rmul__(self,Other : OCP.gp.gp_XYZ) -> float: ...
     def __sub__(self,Right : OCP.gp.gp_XYZ) -> OCP.gp.gp_XYZ: 
         """
         None
@@ -608,14 +608,14 @@ class Poly_CoherentTriangle():
         Query the node index in the position given by the parameter 'ind'
         """
     @overload
-    def RemoveConnection(self,theTri : Poly_CoherentTriangle) -> bool: 
+    def RemoveConnection(self,iConn : int) -> None: 
         """
         Remove the connection with the given index.
 
         Remove the connection with the given Triangle.
         """
     @overload
-    def RemoveConnection(self,iConn : int) -> None: ...
+    def RemoveConnection(self,theTri : Poly_CoherentTriangle) -> bool: ...
     @overload
     def SetConnection(self,theTri : Poly_CoherentTriangle) -> bool: 
         """
@@ -626,9 +626,9 @@ class Poly_CoherentTriangle():
     @overload
     def SetConnection(self,iConn : int,theTr : Poly_CoherentTriangle) -> bool: ...
     @overload
-    def __init__(self,iNode0 : int,iNode1 : int,iNode2 : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,iNode0 : int,iNode1 : int,iNode2 : int) -> None: ...
     pass
 class Poly_CoherentTriangulation(OCP.Standard.Standard_Transient):
     """
@@ -699,14 +699,14 @@ class Poly_CoherentTriangulation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -824,9 +824,9 @@ class Poly_Connect():
         Returns the index of the current triangle to which the iterator, defined with the function Initialize, points. This is an index in the triangles table specific to the triangulation analyzed by this tool
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theTriangulation : Poly_Triangulation) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Poly_HArray1OfTriangle(Poly_Array1OfTriangle, OCP.Standard.Standard_Transient):
     def Array1(self) -> Poly_Array1OfTriangle: 
@@ -894,14 +894,14 @@ class Poly_HArray1OfTriangle(Poly_Array1OfTriangle, OCP.Standard.Standard_Transi
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -952,9 +952,9 @@ class Poly_HArray1OfTriangle(Poly_Array1OfTriangle, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
-    def __init__(self,theOther : Poly_Array1OfTriangle) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : Poly_Array1OfTriangle) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : Poly_Triangle) -> None: ...
     @overload
@@ -980,7 +980,7 @@ class Poly_ListOfTriangulation(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : Poly_ListOfTriangulation) -> None: 
+    def Append(self,theItem : Poly_Triangulation,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -991,7 +991,7 @@ class Poly_ListOfTriangulation(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : Poly_Triangulation) -> Poly_Triangulation: ...
     @overload
-    def Append(self,theItem : Poly_Triangulation,theIter : Any) -> None: ...
+    def Append(self,theOther : Poly_ListOfTriangulation) -> None: ...
     def Assign(self,theOther : Poly_ListOfTriangulation) -> Poly_ListOfTriangulation: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1020,14 +1020,14 @@ class Poly_ListOfTriangulation(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theOther : Poly_ListOfTriangulation,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theOther : Poly_ListOfTriangulation,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : Poly_Triangulation,theIter : Any) -> Poly_Triangulation: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : Poly_Triangulation,theIter : Any) -> Poly_Triangulation: ...
+    def InsertBefore(self,theOther : Poly_ListOfTriangulation,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1064,11 +1064,11 @@ class Poly_ListOfTriangulation(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theOther : Poly_ListOfTriangulation) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : Poly_ListOfTriangulation) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class Poly_MakeLoops2D():
@@ -1117,14 +1117,14 @@ class Poly_Polygon2D(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1177,14 +1177,14 @@ class Poly_Polygon3D(OCP.Standard.Standard_Transient):
         Decrements the reference counter of this object; returns the decremented value
         """
     @overload
-    def Deflection(self,D : float) -> None: 
+    def Deflection(self) -> float: 
         """
         Returns the deflection of this polygon
 
         Sets the deflection of this polygon to D. See more on deflection in Poly_Polygon2D
         """
     @overload
-    def Deflection(self) -> float: ...
+    def Deflection(self,D : float) -> None: ...
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -1206,14 +1206,14 @@ class Poly_Polygon3D(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1269,14 +1269,14 @@ class Poly_PolygonOnTriangulation(OCP.Standard.Standard_Transient):
         Decrements the reference counter of this object; returns the decremented value
         """
     @overload
-    def Deflection(self,D : float) -> None: 
+    def Deflection(self) -> float: 
         """
         Returns the deflection of this polygon
 
         Sets the deflection of this polygon to D. See more on deflection in Poly_Polygones2D.
         """
     @overload
-    def Deflection(self) -> float: ...
+    def Deflection(self,D : float) -> None: ...
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -1298,14 +1298,14 @@ class Poly_PolygonOnTriangulation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1363,7 +1363,7 @@ class Poly_Triangle():
         Returns the node indices of this triangle in N1, N2 and N3.
         """
     @overload
-    def Set(self,Index : int,Node : int) -> None: 
+    def Set(self,N1 : int,N2 : int,N3 : int) -> None: 
         """
         Sets the value of the three nodes of this triangle to N1, N2 and N3 respectively.
 
@@ -1372,7 +1372,7 @@ class Poly_Triangle():
         Sets the value of the Indexth node of this triangle to Node. Raises OutOfRange if Index is not in 1,2,3
         """
     @overload
-    def Set(self,N1 : int,N2 : int,N3 : int) -> None: ...
+    def Set(self,Index : int,Node : int) -> None: ...
     def Value(self,Index : int) -> int: 
         """
         Get the node of given Index. Raises OutOfRange from Standard if Index is not in 1,2,3
@@ -1380,9 +1380,9 @@ class Poly_Triangle():
         Get the node of given Index. Raises OutOfRange from Standard if Index is not in 1,2,3
         """
     @overload
-    def __init__(self,N1 : int,N2 : int,N3 : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,N1 : int,N2 : int,N3 : int) -> None: ...
     pass
 class Poly_Triangulation(OCP.Standard.Standard_Transient):
     """
@@ -1458,14 +1458,14 @@ class Poly_Triangulation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1532,11 +1532,11 @@ class Poly_Triangulation(OCP.Standard.Standard_Transient):
         Returns the table of 2D nodes (2D points) associated with each 3D node of this triangulation. The function HasUVNodes checks if 2D nodes are associated with the 3D nodes of this triangulation. Const reference on the 2d nodes values.
         """
     @overload
+    def __init__(self,nbNodes : int,nbTriangles : int,UVNodes : bool) -> None: ...
+    @overload
     def __init__(self,Nodes : OCP.TColgp.TColgp_Array1OfPnt,UVNodes : OCP.TColgp.TColgp_Array1OfPnt2d,Triangles : Poly_Array1OfTriangle) -> None: ...
     @overload
     def __init__(self,theTriangulation : Poly_Triangulation) -> None: ...
-    @overload
-    def __init__(self,nbNodes : int,nbTriangles : int,UVNodes : bool) -> None: ...
     @overload
     def __init__(self,Nodes : OCP.TColgp.TColgp_Array1OfPnt,Triangles : Poly_Array1OfTriangle) -> None: ...
     @staticmethod

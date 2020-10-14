@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StdObjMgt
+import OCP.gp
 import OCP.TopoDS
 import OCP.TopLoc
-import OCP.gp
+import OCP.StdObjMgt
 __all__  = [
 "StdObject_Location",
 "StdObject_Shape",

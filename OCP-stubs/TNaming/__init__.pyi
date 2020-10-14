@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.TopAbs
-import OCP.Standard
-import OCP.TopLoc
-import OCP.TopTools
-import OCP.gp
-import OCP.TopoDS
 import OCP.TDF
+import OCP.TopAbs
+import OCP.TopTools
+import OCP.Standard
+import OCP.TopoDS
+import OCP.NCollection
+import OCP.TopLoc
+import OCP.gp
 __all__  = [
 "TNaming",
 "TNaming_Builder",
@@ -120,10 +120,10 @@ class TNaming():
         """
     @staticmethod
     @overload
-    def Print_s(ACCESS : OCP.TDF.TDF_Label,S : Any) -> Any: ...
+    def Print_s(EVOL : TNaming_Evolution,S : Any) -> Any: ...
     @staticmethod
     @overload
-    def Print_s(EVOL : TNaming_Evolution,S : Any) -> Any: ...
+    def Print_s(ACCESS : OCP.TDF.TDF_Label,S : Any) -> Any: ...
     @staticmethod
     @overload
     def Replicate_s(NS : TNaming_NamedShape,T : OCP.gp.gp_Trsf,L : OCP.TDF.TDF_Label) -> None: 
@@ -166,14 +166,14 @@ class TNaming_Builder():
         Records the shape oldShape which was deleted from the current label. As an example, consider the case of a face removed by a Boolean operation.
         """
     @overload
-    def Generated(self,newShape : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Generated(self,oldShape : OCP.TopoDS.TopoDS_Shape,newShape : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Records the shape newShape which was generated during a topological construction. As an example, consider the case of a face generated in construction of a box.
 
         Records the shape newShape which was generated from the shape oldShape during a topological construction. As an example, consider the case of a face generated from an edge in construction of a prism.
         """
     @overload
-    def Generated(self,oldShape : OCP.TopoDS.TopoDS_Shape,newShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Generated(self,newShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def Modify(self,oldShape : OCP.TopoDS.TopoDS_Shape,newShape : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Records the shape newShape which is a modification of the shape oldShape. As an example, consider the case of a face split or merged in a Boolean operation.
@@ -239,14 +239,14 @@ class TNaming_DataMapOfShapeShapesSet(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TNaming_DataMapOfShapeShapesSet) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -256,14 +256,14 @@ class TNaming_DataMapOfShapeShapesSet(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TNaming_ShapesSet: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TNaming_ShapesSet) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TNaming_ShapesSet) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TNaming_ShapesSet: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -299,9 +299,9 @@ class TNaming_DataMapOfShapeShapesSet(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theOther : TNaming_DataMapOfShapeShapesSet) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TNaming_DeltaOnModification(OCP.TDF.TDF_DeltaOnModification, OCP.TDF.TDF_AttributeDelta, OCP.Standard.Standard_Transient):
@@ -345,14 +345,14 @@ class TNaming_DeltaOnModification(OCP.TDF.TDF_DeltaOnModification, OCP.TDF.TDF_A
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -420,14 +420,14 @@ class TNaming_DeltaOnRemoval(OCP.TDF.TDF_DeltaOnRemoval, OCP.TDF.TDF_AttributeDe
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -475,6 +475,7 @@ class TNaming_Evolution():
 
       TNaming_SELECTED
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -597,11 +598,11 @@ class TNaming_Iterator():
         Returns the old shape in this iterator object. This shape can be a null one.
         """
     @overload
-    def __init__(self,aLabel : OCP.TDF.TDF_Label) -> None: ...
-    @overload
     def __init__(self,aLabel : OCP.TDF.TDF_Label,aTrans : int) -> None: ...
     @overload
     def __init__(self,anAtt : TNaming_NamedShape) -> None: ...
+    @overload
+    def __init__(self,aLabel : OCP.TDF.TDF_Label) -> None: ...
     pass
 class TNaming_IteratorOnShapesSet():
     """
@@ -632,9 +633,9 @@ class TNaming_IteratorOnShapesSet():
         None
         """
     @overload
-    def __init__(self,S : TNaming_ShapesSet) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : TNaming_ShapesSet) -> None: ...
     pass
 class TNaming_ListOfIndexedDataMapOfShapeListOfShape(OCP.NCollection.NCollection_BaseList):
     """
@@ -654,9 +655,9 @@ class TNaming_ListOfIndexedDataMapOfShapeListOfShape(OCP.NCollection.NCollection
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : TNaming_ListOfIndexedDataMapOfShapeListOfShape) -> None: ...
-    @overload
     def Append(self,theItem : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape) -> OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape: ...
+    @overload
+    def Append(self,theOther : TNaming_ListOfIndexedDataMapOfShapeListOfShape) -> None: ...
     def Assign(self,theOther : TNaming_ListOfIndexedDataMapOfShapeListOfShape) -> TNaming_ListOfIndexedDataMapOfShapeListOfShape: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -729,11 +730,11 @@ class TNaming_ListOfIndexedDataMapOfShapeListOfShape(OCP.NCollection.NCollection
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : TNaming_ListOfIndexedDataMapOfShapeListOfShape) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : TNaming_ListOfIndexedDataMapOfShapeListOfShape) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TNaming_ListOfMapOfShape(OCP.NCollection.NCollection_BaseList):
@@ -754,9 +755,9 @@ class TNaming_ListOfMapOfShape(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.TopTools.TopTools_MapOfShape,theIter : Any) -> None: ...
-    @overload
     def Append(self,theOther : TNaming_ListOfMapOfShape) -> None: ...
+    @overload
+    def Append(self,theItem : OCP.TopTools.TopTools_MapOfShape,theIter : Any) -> None: ...
     def Assign(self,theOther : TNaming_ListOfMapOfShape) -> TNaming_ListOfMapOfShape: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -804,14 +805,14 @@ class TNaming_ListOfMapOfShape(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : TNaming_ListOfMapOfShape) -> None: 
+    def Prepend(self,theItem : OCP.TopTools.TopTools_MapOfShape) -> OCP.TopTools.TopTools_MapOfShape: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : OCP.TopTools.TopTools_MapOfShape) -> OCP.TopTools.TopTools_MapOfShape: ...
+    def Prepend(self,theOther : TNaming_ListOfMapOfShape) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -829,9 +830,9 @@ class TNaming_ListOfMapOfShape(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : TNaming_ListOfMapOfShape) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -929,11 +930,11 @@ class TNaming_ListOfNamedShape(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : TNaming_ListOfNamedShape) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TNaming_ListOfNamedShape) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TNaming_Localizer():
@@ -1006,23 +1007,23 @@ class TNaming_MapOfNamedShape(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     @overload
-    def Contains(self,theOther : TNaming_MapOfNamedShape) -> bool: 
+    def Contains(self,K : TNaming_NamedShape) -> bool: 
         """
         Contains
 
         Returns true if this map contains ALL keys of another map.
         """
     @overload
-    def Contains(self,K : TNaming_NamedShape) -> bool: ...
+    def Contains(self,theOther : TNaming_MapOfNamedShape) -> bool: ...
     def Differ(self,theOther : TNaming_MapOfNamedShape) -> bool: 
         """
         Apply to this Map the symmetric difference (aka exclusive disjunction, boolean XOR) operation with another (given) Map. The result contains the values that are contained only in this or the operand map, but not in both. This algorithm is similar to method Difference(). Returns True if contents of this map is changed.
@@ -1096,11 +1097,11 @@ class TNaming_MapOfNamedShape(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theOther : TNaming_MapOfNamedShape) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TNaming_MapOfNamedShape) -> None: ...
     pass
 class TNaming_Name():
     """
@@ -1115,23 +1116,23 @@ class TNaming_Name():
         None
         """
     @overload
-    def ContextLabel(self) -> OCP.TDF.TDF_Label: 
+    def ContextLabel(self,theLab : OCP.TDF.TDF_Label) -> None: 
         """
         None
 
         None
         """
     @overload
-    def ContextLabel(self,theLab : OCP.TDF.TDF_Label) -> None: ...
+    def ContextLabel(self) -> OCP.TDF.TDF_Label: ...
     @overload
-    def Index(self,I : int) -> None: 
+    def Index(self) -> int: 
         """
         None
 
         None
         """
     @overload
-    def Index(self) -> int: ...
+    def Index(self,I : int) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -1168,23 +1169,23 @@ class TNaming_Name():
         None
         """
     @overload
-    def StopNamedShape(self,arg1 : TNaming_NamedShape) -> None: 
+    def StopNamedShape(self) -> TNaming_NamedShape: 
         """
         None
 
         None
         """
     @overload
-    def StopNamedShape(self) -> TNaming_NamedShape: ...
+    def StopNamedShape(self,arg1 : TNaming_NamedShape) -> None: ...
     @overload
-    def Type(self,aType : TNaming_NameType) -> None: 
+    def Type(self) -> TNaming_NameType: 
         """
         None
 
         None
         """
     @overload
-    def Type(self) -> TNaming_NameType: ...
+    def Type(self,aType : TNaming_NameType) -> None: ...
     def __init__(self) -> None: ...
     pass
 class TNaming_NameType():
@@ -1217,6 +1218,7 @@ class TNaming_NameType():
 
       TNaming_SHELLIN
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1404,14 +1406,14 @@ class TNaming_NamedShape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1463,14 +1465,14 @@ class TNaming_NamedShape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
     @overload
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @overload
-    def SetVersion(self,v : int) -> None: 
+    def SetVersion(self,version : int) -> None: 
         """
         Set the Version of the attribute.
 
         Set the Version of the attribute.
         """
     @overload
-    def SetVersion(self,version : int) -> None: ...
+    def SetVersion(self,v : int) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1678,14 +1680,14 @@ class TNaming_Naming(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1829,11 +1831,11 @@ class TNaming_NewShapeIterator():
     @overload
     def __init__(self,anIterator : TNaming_NewShapeIterator) -> None: ...
     @overload
-    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,access : OCP.TDF.TDF_Label) -> None: ...
-    @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,Transaction : int,access : OCP.TDF.TDF_Label) -> None: ...
     @overload
     def __init__(self,anIterator : TNaming_Iterator) -> None: ...
+    @overload
+    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,access : OCP.TDF.TDF_Label) -> None: ...
     pass
 class TNaming_OldShapeIterator():
     """
@@ -1866,13 +1868,13 @@ class TNaming_OldShapeIterator():
         None
         """
     @overload
-    def __init__(self,anIterator : TNaming_OldShapeIterator) -> None: ...
-    @overload
-    def __init__(self,anIterator : TNaming_Iterator) -> None: ...
-    @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,access : OCP.TDF.TDF_Label) -> None: ...
     @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,Transaction : int,access : OCP.TDF.TDF_Label) -> None: ...
+    @overload
+    def __init__(self,anIterator : TNaming_OldShapeIterator) -> None: ...
+    @overload
+    def __init__(self,anIterator : TNaming_Iterator) -> None: ...
     pass
 class TNaming_RefShape():
     """
@@ -1887,7 +1889,7 @@ class TNaming_RefShape():
         None
         """
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def Shape(self,S : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
 
@@ -1898,7 +1900,7 @@ class TNaming_RefShape():
         None
         """
     @overload
-    def Shape(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
@@ -1965,18 +1967,18 @@ class TNaming_Scope():
         None
         """
     @overload
-    def WithValid(self) -> bool: 
+    def WithValid(self,mode : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def WithValid(self,mode : bool) -> None: ...
-    @overload
-    def __init__(self,WithValid : bool) -> None: ...
+    def WithValid(self) -> bool: ...
     @overload
     def __init__(self,valid : OCP.TDF.TDF_LabelMap) -> None: ...
+    @overload
+    def __init__(self,WithValid : bool) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -1998,14 +2000,14 @@ class TNaming_Selector():
         Returns the NamedShape build or under construction, which contains the topological naming..
         """
     @overload
-    def Select(self,Selection : OCP.TopoDS.TopoDS_Shape,Context : OCP.TopoDS.TopoDS_Shape,Geometry : bool=False,KeepOrientatation : bool=False) -> bool: 
+    def Select(self,Selection : OCP.TopoDS.TopoDS_Shape,Geometry : bool=False,KeepOrientatation : bool=False) -> bool: 
         """
         Creates a topological naming on the label aLabel given as an argument at construction time. If successful, the shape Selection - found in the shape Context - is now identified in the named shape returned in NamedShape. If Geometry is true, NamedShape contains the first appearance of Selection. This syntax is more robust than the previous syntax for this method.
 
         Creates a topological naming on the label aLabel given as an argument at construction time. If successful, the shape Selection is now identified in the named shape returned in NamedShape. If Geometry is true, NamedShape contains the first appearance of Selection.
         """
     @overload
-    def Select(self,Selection : OCP.TopoDS.TopoDS_Shape,Geometry : bool=False,KeepOrientatation : bool=False) -> bool: ...
+    def Select(self,Selection : OCP.TopoDS.TopoDS_Shape,Context : OCP.TopoDS.TopoDS_Shape,Geometry : bool=False,KeepOrientatation : bool=False) -> bool: ...
     def Solve(self,Valid : OCP.TDF.TDF_LabelMap) -> bool: 
         """
         Updates the topological naming on the label aLabel given as an argument at construction time. The underlying shape returned in the method NamedShape is updated. To read this shape, use the method TNaming_Tool::GetShape
@@ -2068,7 +2070,7 @@ class TNaming_ShapesSet():
         None
         """
     @overload
-    def Remove(self,Shapes : TNaming_ShapesSet) -> None: 
+    def Remove(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Removes <S> in <me>.
 
@@ -2077,7 +2079,7 @@ class TNaming_ShapesSet():
         Removes <S> in <me>.
         """
     @overload
-    def Remove(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: ...
+    def Remove(self,Shapes : TNaming_ShapesSet) -> None: ...
     @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape,Type : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE) -> None: ...
     @overload
@@ -2105,7 +2107,7 @@ class TNaming_Tool():
     def CurrentNamedShape_s(NS : TNaming_NamedShape) -> TNaming_NamedShape: ...
     @staticmethod
     @overload
-    def CurrentShape_s(NS : TNaming_NamedShape) -> OCP.TopoDS.TopoDS_Shape: 
+    def CurrentShape_s(NS : TNaming_NamedShape,Updated : OCP.TDF.TDF_LabelMap) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the last Modification of <NS>. Returns the shape CurrentShape contained in the named shape attribute NS. CurrentShape is the current state of the entities if they have been modified in other attributes of the same data structure. Each call to this function creates a new compound.
 
@@ -2113,7 +2115,7 @@ class TNaming_Tool():
         """
     @staticmethod
     @overload
-    def CurrentShape_s(NS : TNaming_NamedShape,Updated : OCP.TDF.TDF_LabelMap) -> OCP.TopoDS.TopoDS_Shape: ...
+    def CurrentShape_s(NS : TNaming_NamedShape) -> OCP.TopoDS.TopoDS_Shape: ...
     @staticmethod
     def FindShape_s(Valid : OCP.TDF.TDF_LabelMap,Forbiden : OCP.TDF.TDF_LabelMap,Arg : TNaming_NamedShape,S : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
@@ -2190,14 +2192,14 @@ class TNaming_TranslateTool(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2451,14 +2453,14 @@ class TNaming_UsedShapes(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

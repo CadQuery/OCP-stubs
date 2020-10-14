@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDocStd
-import OCP.CDF
-import OCP.TCollection
-import OCP.Standard
-import OCP.Message
 import OCP.Resource
-import OCP.PCDM
+import OCP.TCollection
+import OCP.CDF
 import OCP.TColStd
+import OCP.PCDM
+import OCP.Message
+import OCP.Standard
+import OCP.TDocStd
 import OCP.CDM
 __all__  = [
 "XCAFApp_Application"
@@ -100,14 +100,14 @@ class XCAFApp_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicati
         Returns an index for the document found in the path path in this applicative session. If the returned value is 0, the document is not present in the applicative session. This method can be used for the interactive part of an application. For instance, on a call to Open, the document to be opened may already be in memory. IsInSession checks to see if this is the case. Open can be made to depend on the value of the index returned: if IsInSession returns 0, the document is opened; if it returns another value, a message is displayed asking the user if he wants to override the version of the document in memory. Example: Standard_Integer insession = A->IsInSession(aDoc); if (insession > 0) { std::cout << "document " << insession << " is already in session" << std::endl; return 0; }
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -151,14 +151,14 @@ class XCAFApp_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicati
         Notification that is fired at each OpenTransaction event.
         """
     @overload
-    def Open(self,theIStream : Any,theDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: 
+    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
         Retrieves the document aDoc stored under the name aName in the directory directory. In order not to override a version of aDoc which is already in memory, this method can be made to depend on the value returned by IsInSession.
 
         Retrieves aDoc from standard SEEKABLE stream theIStream. the stream should support SEEK fuctionality
         """
     @overload
-    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    def Open(self,theIStream : Any,theDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: ...
     def Read(self,theIStream : Any) -> OCP.CDM.CDM_Document: 
         """
         Reads aDoc from standard SEEKABLE stream theIStream, the stream should support SEEK fuctionality
@@ -189,16 +189,16 @@ class XCAFApp_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicati
     @overload
     def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True) -> OCP.CDM.CDM_Document: ...
     @overload
-    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_StoreStatus: 
+    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save aDoc active document. Exceptions: Standard_NotImplemented if the document was not retrieved in the applicative session by using Open.
 
         Save the document overwriting the previous file
         """
     @overload
-    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: 
+    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save the active document in the file <name> in the path <path> ; o verwrites the file if it already exists.
 
@@ -213,7 +213,7 @@ class XCAFApp_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicati
     @overload
     def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : Any) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
     def SetDefaultFolder(self,aFolder : str) -> bool: 
         """
         None

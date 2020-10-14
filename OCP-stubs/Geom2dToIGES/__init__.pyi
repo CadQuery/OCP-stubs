@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Geom2d
 import OCP.IGESGeom
 import OCP.IGESData
+import OCP.Geom2d
 __all__  = [
 "Geom2dToIGES_Geom2dEntity",
 "Geom2dToIGES_Geom2dCurve",
@@ -34,9 +34,9 @@ class Geom2dToIGES_Geom2dEntity():
         Sets the value of the UnitFlag
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,GE : Geom2dToIGES_Geom2dEntity) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Geom2dToIGES_Geom2dCurve(Geom2dToIGES_Geom2dEntity):
     """
@@ -88,14 +88,14 @@ class Geom2dToIGES_Geom2dPoint(Geom2dToIGES_Geom2dEntity):
         Sets the value of the UnitFlag
         """
     @overload
-    def Transfer2dPoint(self,start : OCP.Geom2d.Geom2d_CartesianPoint) -> OCP.IGESGeom.IGESGeom_Point: 
+    def Transfer2dPoint(self,start : OCP.Geom2d.Geom2d_Point) -> OCP.IGESGeom.IGESGeom_Point: 
         """
         Transfert a Point from Geom to IGES. If this Entity could not be converted, this member returns a NullEntity.
 
         Transfert a CartesianPoint from Geom to IGES. If this Entity could not be converted, this member returns a NullEntity.
         """
     @overload
-    def Transfer2dPoint(self,start : OCP.Geom2d.Geom2d_Point) -> OCP.IGESGeom.IGESGeom_Point: ...
+    def Transfer2dPoint(self,start : OCP.Geom2d.Geom2d_CartesianPoint) -> OCP.IGESGeom.IGESGeom_Point: ...
     @overload
     def __init__(self,G2dE : Geom2dToIGES_Geom2dEntity) -> None: ...
     @overload
@@ -135,7 +135,7 @@ class Geom2dToIGES_Geom2dVector(Geom2dToIGES_Geom2dEntity):
     @overload
     def Transfer2dVector(self,start : OCP.Geom2d.Geom2d_Direction) -> OCP.IGESGeom.IGESGeom_Direction: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,G2dE : Geom2dToIGES_Geom2dEntity) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass

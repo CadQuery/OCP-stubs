@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.Adaptor3d
 import OCP.TopAbs
+import OCP.TColStd
+import OCP.Adaptor3d
+import OCP.Standard
 import OCP.TopoDS
 import OCP.BRepAdaptor
-import OCP.Standard
-import OCP.gp
-import OCP.TColStd
+import OCP.NCollection
 import OCP.Adaptor2d
+import OCP.gp
 __all__  = [
 "BRepTopAdaptor_FClass2d",
 "BRepTopAdaptor_HVertex",
@@ -74,14 +74,14 @@ class BRepTopAdaptor_HVertex(OCP.Adaptor3d.Adaptor3d_HVertex, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -179,14 +179,14 @@ class BRepTopAdaptor_MapOfShapeTool(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepTopAdaptor_Tool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : BRepTopAdaptor_Tool) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : BRepTopAdaptor_Tool) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepTopAdaptor_Tool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -244,14 +244,14 @@ class BRepTopAdaptor_Tool():
         None
         """
     @overload
-    def Init(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,Tol2d : float) -> None: 
+    def Init(self,F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> None: ...
+    def Init(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,Tol2d : float) -> None: ...
     def SetTopolTool(self,TT : BRepTopAdaptor_TopolTool) -> None: 
         """
         None
@@ -325,7 +325,7 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         None
         """
     @overload
-    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: 
+    def Initialize(self,Curve : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
         """
         None
 
@@ -333,19 +333,19 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
 
         None
         """
-    @overload
-    def Initialize(self,Curve : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
     @overload
     def Initialize(self) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -417,14 +417,14 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Tol3d(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def Tol3d(self,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> float: 
         """
         returns 3d tolerance of the arc C
 
         returns 3d tolerance of the vertex V
         """
     @overload
-    def Tol3d(self,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> float: ...
+    def Tol3d(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: ...
     def UParameters(self,theArray : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         return the set of U parameters on the surface obtained by the method SamplePnts
@@ -442,9 +442,9 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

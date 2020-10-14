@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.StepData
-import OCP.StepShape
 import OCP.TCollection
-import OCP.Standard
 import OCP.StepBasic
+import OCP.StepShape
+import OCP.Standard
+import OCP.StepData
+import OCP.NCollection
 __all__  = [
 "StepRepr_ShapeAspect",
 "StepRepr_DerivedShapeAspect",
@@ -133,14 +133,14 @@ class StepRepr_ShapeAspect(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -227,14 +227,14 @@ class StepRepr_DerivedShapeAspect(StepRepr_ShapeAspect, OCP.Standard.Standard_Tr
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -365,13 +365,13 @@ class StepRepr_Array1OfMaterialPropertyRepresentation():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepRepr_Array1OfMaterialPropertyRepresentation) -> None: ...
+    def __init__(self,theBegin : StepRepr_MaterialPropertyRepresentation,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepRepr_Array1OfMaterialPropertyRepresentation) -> None: ...
     @overload
-    def __init__(self,theBegin : StepRepr_MaterialPropertyRepresentation,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepRepr_Array1OfPropertyDefinitionRepresentation():
@@ -451,13 +451,13 @@ class StepRepr_Array1OfPropertyDefinitionRepresentation():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepRepr_PropertyDefinitionRepresentation,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepRepr_Array1OfPropertyDefinitionRepresentation) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepRepr_PropertyDefinitionRepresentation,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepRepr_Array1OfRepresentationItem():
@@ -537,13 +537,13 @@ class StepRepr_Array1OfRepresentationItem():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepRepr_RepresentationItem,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepRepr_Array1OfRepresentationItem) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepRepr_Array1OfShapeAspect():
@@ -625,11 +625,11 @@ class StepRepr_Array1OfShapeAspect():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepRepr_Array1OfShapeAspect) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : StepRepr_ShapeAspect,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepRepr_Array1OfShapeAspect) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class StepRepr_ProductDefinitionUsage(OCP.StepBasic.StepBasic_ProductDefinitionRelationship, OCP.Standard.Standard_Transient):
@@ -669,23 +669,23 @@ class StepRepr_ProductDefinitionUsage(OCP.StepBasic.StepBasic_ProductDefinitionR
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aId : OCP.TCollection.TCollection_HAsciiString,aName : OCP.TCollection.TCollection_HAsciiString,hasDescription : bool,aDescription : OCP.TCollection.TCollection_HAsciiString,aRelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aRelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
+    def Init(self,aId : OCP.TCollection.TCollection_HAsciiString,aName : OCP.TCollection.TCollection_HAsciiString,hasDescription : bool,aDescription : OCP.TCollection.TCollection_HAsciiString,aRelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aRelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
         """
         Initialize all fields (own and inherited)
 
         Initialize all fields (own and inherited)
         """
     @overload
-    def Init(self,aId : OCP.TCollection.TCollection_HAsciiString,aName : OCP.TCollection.TCollection_HAsciiString,hasDescription : bool,aDescription : OCP.TCollection.TCollection_HAsciiString,aRelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aRelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
+    def Init(self,aId : OCP.TCollection.TCollection_HAsciiString,aName : OCP.TCollection.TCollection_HAsciiString,hasDescription : bool,aDescription : OCP.TCollection.TCollection_HAsciiString,aRelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aRelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -728,14 +728,14 @@ class StepRepr_ProductDefinitionUsage(OCP.StepBasic.StepBasic_ProductDefinitionR
         Set field Name
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatedProductDefinition
 
         Set field RelatedProductDefinition in AP242
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
     def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
         """
@@ -795,14 +795,14 @@ class StepRepr_AssemblyComponentUsageSubstitute(OCP.Standard.Standard_Transient)
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -885,14 +885,14 @@ class StepRepr_CompositeShapeAspect(StepRepr_ShapeAspect, OCP.Standard.Standard_
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -979,14 +979,14 @@ class StepRepr_CentreOfSymmetry(StepRepr_DerivedShapeAspect, StepRepr_ShapeAspec
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1200,14 +1200,14 @@ class StepRepr_Representation(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1294,14 +1294,14 @@ class StepRepr_CompShAspAndDatumFeatAndShAsp(StepRepr_ShapeAspect, OCP.Standard.
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1388,14 +1388,14 @@ class StepRepr_CompGroupShAspAndCompShAspAndDatumFeatAndShAsp(StepRepr_CompShAsp
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1482,14 +1482,14 @@ class StepRepr_CompositeGroupShapeAspect(StepRepr_CompositeShapeAspect, StepRepr
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1576,14 +1576,14 @@ class StepRepr_ContinuosShapeAspect(StepRepr_CompositeShapeAspect, StepRepr_Shap
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1663,14 +1663,14 @@ class StepRepr_RepresentationItem(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1741,14 +1741,14 @@ class StepRepr_ConfigurationDesign(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1929,14 +1929,14 @@ class StepRepr_ConfigurationEffectivity(OCP.StepBasic.StepBasic_ProductDefinitio
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2023,14 +2023,14 @@ class StepRepr_ConfigurationItem(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2118,14 +2118,14 @@ class StepRepr_ConstructiveGeometryRepresentation(StepRepr_Representation, OCP.S
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2209,14 +2209,14 @@ class StepRepr_RepresentationRelationship(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2303,14 +2303,14 @@ class StepRepr_BetweenShapeAspect(StepRepr_ContinuosShapeAspect, StepRepr_Compos
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2401,14 +2401,14 @@ class StepRepr_DataEnvironment(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2480,14 +2480,14 @@ class StepRepr_DefinitionalRepresentation(StepRepr_Representation, OCP.Standard.
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2574,14 +2574,14 @@ class StepRepr_Apex(StepRepr_DerivedShapeAspect, StepRepr_ShapeAspect, OCP.Stand
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2665,14 +2665,14 @@ class StepRepr_DescriptiveRepresentationItem(StepRepr_RepresentationItem, OCP.St
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2743,14 +2743,14 @@ class StepRepr_Extension(StepRepr_DerivedShapeAspect, StepRepr_ShapeAspect, OCP.
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2834,14 +2834,14 @@ class StepRepr_ExternallyDefinedRepresentation(StepRepr_Representation, OCP.Stan
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2932,14 +2932,14 @@ class StepRepr_ShapeAspectRelationship(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3023,14 +3023,14 @@ class StepRepr_FunctionallyDefinedTransformation(OCP.Standard.Standard_Transient
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3101,14 +3101,14 @@ class StepRepr_GeometricAlignment(StepRepr_DerivedShapeAspect, StepRepr_ShapeAsp
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3196,14 +3196,14 @@ class StepRepr_RepresentationContext(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3271,14 +3271,14 @@ class StepRepr_GlobalUnitAssignedContext(StepRepr_RepresentationContext, OCP.Sta
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3394,14 +3394,14 @@ class StepRepr_HArray1OfMaterialPropertyRepresentation(StepRepr_Array1OfMaterial
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3452,13 +3452,13 @@ class StepRepr_HArray1OfMaterialPropertyRepresentation(StepRepr_Array1OfMaterial
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_MaterialPropertyRepresentation) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepRepr_Array1OfMaterialPropertyRepresentation) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_MaterialPropertyRepresentation) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3537,14 +3537,14 @@ class StepRepr_HArray1OfPropertyDefinitionRepresentation(StepRepr_Array1OfProper
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3595,13 +3595,13 @@ class StepRepr_HArray1OfPropertyDefinitionRepresentation(StepRepr_Array1OfProper
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_PropertyDefinitionRepresentation) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepRepr_Array1OfPropertyDefinitionRepresentation) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_PropertyDefinitionRepresentation) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3680,14 +3680,14 @@ class StepRepr_HArray1OfRepresentationItem(StepRepr_Array1OfRepresentationItem, 
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3738,11 +3738,11 @@ class StepRepr_HArray1OfRepresentationItem(StepRepr_Array1OfRepresentationItem, 
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_RepresentationItem) -> None: ...
-    @overload
     def __init__(self,theOther : StepRepr_Array1OfRepresentationItem) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_RepresentationItem) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
@@ -3823,14 +3823,14 @@ class StepRepr_HArray1OfShapeAspect(StepRepr_Array1OfShapeAspect, OCP.Standard.S
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3881,13 +3881,13 @@ class StepRepr_HArray1OfShapeAspect(StepRepr_Array1OfShapeAspect, OCP.Standard.S
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_ShapeAspect) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepRepr_Array1OfShapeAspect) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_ShapeAspect) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3946,23 +3946,23 @@ class StepRepr_SequenceOfMaterialPropertyRepresentation(OCP.NCollection.NCollect
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepRepr_MaterialPropertyRepresentation) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : StepRepr_MaterialPropertyRepresentation) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : StepRepr_MaterialPropertyRepresentation) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepRepr_MaterialPropertyRepresentation) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -3980,23 +3980,23 @@ class StepRepr_SequenceOfMaterialPropertyRepresentation(OCP.NCollection.NCollect
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: 
+    def Prepend(self,theItem : StepRepr_MaterialPropertyRepresentation) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : StepRepr_MaterialPropertyRepresentation) -> None: ...
+    def Prepend(self,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4022,11 +4022,11 @@ class StepRepr_SequenceOfMaterialPropertyRepresentation(OCP.NCollection.NCollect
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -4080,14 +4080,14 @@ class StepRepr_SequenceOfRepresentationItem(OCP.NCollection.NCollection_BaseSequ
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepRepr_RepresentationItem) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : StepRepr_RepresentationItem) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: 
         """
@@ -4158,9 +4158,9 @@ class StepRepr_SequenceOfRepresentationItem(OCP.NCollection.NCollection_BaseSequ
     @overload
     def __init__(self,theOther : StepRepr_SequenceOfRepresentationItem) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -4194,14 +4194,14 @@ class StepRepr_IntegerRepresentationItem(StepRepr_RepresentationItem, OCP.Standa
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4276,14 +4276,14 @@ class StepRepr_ItemDefinedTransformation(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4374,23 +4374,23 @@ class StepRepr_MakeFromUsageOption(StepRepr_ProductDefinitionUsage, OCP.StepBasi
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aRanking : int,aRankingRationale : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: 
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aRanking : int,aRankingRationale : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: 
         """
         Initialize all fields (own and inherited)
 
         Initialize all fields (own and inherited)
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aRanking : int,aRankingRationale : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: ...
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aRanking : int,aRankingRationale : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4457,14 +4457,14 @@ class StepRepr_MakeFromUsageOption(StepRepr_ProductDefinitionUsage, OCP.StepBasi
         Set field RankingRationale
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatedProductDefinition
 
         Set field RelatedProductDefinition in AP242
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
     def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
         """
@@ -4516,14 +4516,14 @@ class StepRepr_MappedItem(StepRepr_RepresentationItem, OCP.Standard.Standard_Tra
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4599,14 +4599,14 @@ class StepRepr_MaterialDesignation(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4689,14 +4689,14 @@ class StepRepr_PropertyDefinition(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4771,14 +4771,14 @@ class StepRepr_PropertyDefinitionRepresentation(OCP.Standard.Standard_Transient)
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4845,14 +4845,14 @@ class StepRepr_MeasureRepresentationItem(StepRepr_RepresentationItem, OCP.Standa
         Init all fields
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4935,23 +4935,23 @@ class StepRepr_AssemblyComponentUsage(StepRepr_ProductDefinitionUsage, OCP.StepB
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Initialize all fields (own and inherited)
 
         Initialize all fields (own and inherited)
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5002,14 +5002,14 @@ class StepRepr_AssemblyComponentUsage(StepRepr_ProductDefinitionUsage, OCP.StepB
         Set field ReferenceDesignator
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatedProductDefinition
 
         Set field RelatedProductDefinition in AP242
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
     def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
         """
@@ -5068,14 +5068,14 @@ class StepRepr_ParallelOffset(StepRepr_DerivedShapeAspect, StepRepr_ShapeAspect,
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5171,14 +5171,14 @@ class StepRepr_ParametricRepresentationContext(StepRepr_RepresentationContext, O
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5245,14 +5245,14 @@ class StepRepr_PerpendicularTo(StepRepr_DerivedShapeAspect, StepRepr_ShapeAspect
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5347,14 +5347,14 @@ class StepRepr_ProductConcept(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5445,14 +5445,14 @@ class StepRepr_ProductDefinitionShape(StepRepr_PropertyDefinition, OCP.Standard.
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5535,23 +5535,23 @@ class StepRepr_NextAssemblyUsageOccurrence(StepRepr_AssemblyComponentUsage, Step
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Initialize all fields (own and inherited)
 
         Initialize all fields (own and inherited)
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5602,14 +5602,14 @@ class StepRepr_NextAssemblyUsageOccurrence(StepRepr_AssemblyComponentUsage, Step
         Set field ReferenceDesignator
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatedProductDefinition
 
         Set field RelatedProductDefinition in AP242
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
     def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
         """
@@ -5673,23 +5673,23 @@ class StepRepr_PromissoryUsageOccurrence(StepRepr_AssemblyComponentUsage, StepRe
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Initialize all fields (own and inherited)
 
         Initialize all fields (own and inherited)
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasReferenceDesignator : bool,aReferenceDesignator : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5740,14 +5740,14 @@ class StepRepr_PromissoryUsageOccurrence(StepRepr_AssemblyComponentUsage, StepRe
         Set field ReferenceDesignator
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatedProductDefinition
 
         Set field RelatedProductDefinition in AP242
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
     def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
         """
@@ -5814,14 +5814,14 @@ class StepRepr_MaterialProperty(StepRepr_PropertyDefinition, OCP.Standard.Standa
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5896,14 +5896,14 @@ class StepRepr_PropertyDefinitionRelationship(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5994,14 +5994,14 @@ class StepRepr_MaterialPropertyRepresentation(StepRepr_PropertyDefinitionReprese
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6084,23 +6084,23 @@ class StepRepr_QuantifiedAssemblyComponentUsage(StepRepr_AssemblyComponentUsage,
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: 
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: 
         """
         Initialize all fields (own and inherited)
 
         Initialize all fields (own and inherited)
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: ...
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6159,14 +6159,14 @@ class StepRepr_QuantifiedAssemblyComponentUsage(StepRepr_AssemblyComponentUsage,
         Set field ReferenceDesignator
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatedProductDefinition
 
         Set field RelatedProductDefinition in AP242
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
     def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
         """
@@ -6233,14 +6233,14 @@ class StepRepr_ReprItemAndMeasureWithUnit(StepRepr_RepresentationItem, OCP.Stand
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6323,14 +6323,14 @@ class StepRepr_ReprItemAndMeasureWithUnitAndQRI(StepRepr_ReprItemAndMeasureWithU
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6414,14 +6414,14 @@ class StepRepr_ReprItemAndLengthMeasureWithUnit(StepRepr_ReprItemAndMeasureWithU
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6509,14 +6509,14 @@ class StepRepr_ReprItemAndLengthMeasureWithUnitAndQRI(StepRepr_ReprItemAndMeasur
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6604,14 +6604,14 @@ class StepRepr_ReprItemAndPlaneAngleMeasureWithUnit(StepRepr_ReprItemAndMeasureW
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6699,14 +6699,14 @@ class StepRepr_ReprItemAndPlaneAngleMeasureWithUnitAndQRI(StepRepr_ReprItemAndMe
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6786,14 +6786,14 @@ class StepRepr_CharacterizedRepresentation(StepRepr_Representation, OCP.Standard
         Returns a CharacterizedRepresentation
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6885,14 +6885,14 @@ class StepRepr_GlobalUncertaintyAssignedContext(StepRepr_RepresentationContext, 
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6971,14 +6971,14 @@ class StepRepr_CompoundRepresentationItem(StepRepr_RepresentationItem, OCP.Stand
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7058,14 +7058,14 @@ class StepRepr_RepresentationMap(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7137,14 +7137,14 @@ class StepRepr_ConstructiveGeometryRepresentationRelationship(StepRepr_Represent
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7228,14 +7228,14 @@ class StepRepr_ShapeRepresentationRelationship(StepRepr_RepresentationRelationsh
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7478,36 +7478,36 @@ class StepRepr_HSequenceOfMaterialPropertyRepresentation(StepRepr_SequenceOfMate
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepRepr_MaterialPropertyRepresentation) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : StepRepr_MaterialPropertyRepresentation) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : StepRepr_MaterialPropertyRepresentation) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepRepr_MaterialPropertyRepresentation) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7530,23 +7530,23 @@ class StepRepr_HSequenceOfMaterialPropertyRepresentation(StepRepr_SequenceOfMate
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: 
+    def Prepend(self,theItem : StepRepr_MaterialPropertyRepresentation) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : StepRepr_MaterialPropertyRepresentation) -> None: ...
+    def Prepend(self,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7667,14 +7667,14 @@ class StepRepr_HSequenceOfRepresentationItem(StepRepr_SequenceOfRepresentationIt
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepRepr_RepresentationItem) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : StepRepr_RepresentationItem) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: 
         """
@@ -7689,14 +7689,14 @@ class StepRepr_HSequenceOfRepresentationItem(StepRepr_SequenceOfRepresentationIt
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7769,9 +7769,9 @@ class StepRepr_HSequenceOfRepresentationItem(StepRepr_SequenceOfRepresentationIt
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepRepr_SequenceOfRepresentationItem) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -7822,14 +7822,14 @@ class StepRepr_AllAroundShapeAspect(StepRepr_ContinuosShapeAspect, StepRepr_Comp
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7920,14 +7920,14 @@ class StepRepr_ShapeAspectDerivingRelationship(StepRepr_ShapeAspectRelationship,
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8018,14 +8018,14 @@ class StepRepr_FeatureForDatumTargetRelationship(StepRepr_ShapeAspectRelationshi
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8116,14 +8116,14 @@ class StepRepr_ShapeAspectTransition(StepRepr_ShapeAspectRelationship, OCP.Stand
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8321,14 +8321,14 @@ class StepRepr_RepresentationRelationshipWithTransformation(StepRepr_ShapeRepres
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8420,14 +8420,14 @@ class StepRepr_ShapeRepresentationRelationshipWithTransformation(StepRepr_Repres
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8530,23 +8530,23 @@ class StepRepr_SpecifiedHigherUsageOccurrence(StepRepr_AssemblyComponentUsage, S
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aUpperUsage : StepRepr_AssemblyComponentUsage,aNextUsage : StepRepr_NextAssemblyUsageOccurrence) -> None: 
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aUpperUsage : StepRepr_AssemblyComponentUsage,aNextUsage : StepRepr_NextAssemblyUsageOccurrence) -> None: 
         """
         Initialize all fields (own and inherited)
 
         Initialize all fields (own and inherited)
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aUpperUsage : StepRepr_AssemblyComponentUsage,aNextUsage : StepRepr_NextAssemblyUsageOccurrence) -> None: ...
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aUpperUsage : StepRepr_AssemblyComponentUsage,aNextUsage : StepRepr_NextAssemblyUsageOccurrence) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8605,14 +8605,14 @@ class StepRepr_SpecifiedHigherUsageOccurrence(StepRepr_AssemblyComponentUsage, S
         Set field ReferenceDesignator
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatedProductDefinition
 
         Set field RelatedProductDefinition in AP242
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
     def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
         """
@@ -8687,14 +8687,14 @@ class StepRepr_StructuralResponseProperty(StepRepr_PropertyDefinition, OCP.Stand
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8769,14 +8769,14 @@ class StepRepr_StructuralResponsePropertyDefinitionRepresentation(StepRepr_Prope
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8848,23 +8848,23 @@ class StepRepr_SuppliedPartRelationship(OCP.StepBasic.StepBasic_ProductDefinitio
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aId : OCP.TCollection.TCollection_HAsciiString,aName : OCP.TCollection.TCollection_HAsciiString,hasDescription : bool,aDescription : OCP.TCollection.TCollection_HAsciiString,aRelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aRelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
+    def Init(self,aId : OCP.TCollection.TCollection_HAsciiString,aName : OCP.TCollection.TCollection_HAsciiString,hasDescription : bool,aDescription : OCP.TCollection.TCollection_HAsciiString,aRelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aRelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
         """
         Initialize all fields (own and inherited)
 
         Initialize all fields (own and inherited)
         """
     @overload
-    def Init(self,aId : OCP.TCollection.TCollection_HAsciiString,aName : OCP.TCollection.TCollection_HAsciiString,hasDescription : bool,aDescription : OCP.TCollection.TCollection_HAsciiString,aRelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aRelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
+    def Init(self,aId : OCP.TCollection.TCollection_HAsciiString,aName : OCP.TCollection.TCollection_HAsciiString,hasDescription : bool,aDescription : OCP.TCollection.TCollection_HAsciiString,aRelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aRelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8907,14 +8907,14 @@ class StepRepr_SuppliedPartRelationship(OCP.StepBasic.StepBasic_ProductDefinitio
         Set field Name
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatedProductDefinition
 
         Set field RelatedProductDefinition in AP242
         """
     @overload
-    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
     def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
         """
@@ -8973,14 +8973,14 @@ class StepRepr_Tangent(StepRepr_DerivedShapeAspect, StepRepr_ShapeAspect, OCP.St
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -9173,14 +9173,14 @@ class StepRepr_ValueRange(StepRepr_CompoundRepresentationItem, StepRepr_Represen
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -9260,14 +9260,14 @@ class StepRepr_ValueRepresentationItem(StepRepr_RepresentationItem, OCP.Standard
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

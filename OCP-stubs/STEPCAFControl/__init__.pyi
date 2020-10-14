@@ -4,27 +4,27 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepShape
-import OCP.TDocStd
-import OCP.IFSelect
 import OCP.Resource
-import OCP.STEPConstruct
-import OCP.TopoDS
-import OCP.StepVisual
-import OCP.TDF
-import OCP.NCollection
-import OCP.Transfer
-import OCP.XCAFDoc
 import OCP.TCollection
-import OCP.Standard
-import OCP.StepDimTol
-import OCP.StepGeom
 import OCP.StepRepr
-import OCP.XSControl
+import OCP.XCAFDoc
 import OCP.XCAFDimTolObjects
 import OCP.StepBasic
-import OCP.Interface
+import OCP.StepGeom
+import OCP.Transfer
+import OCP.StepShape
+import OCP.TopoDS
+import OCP.StepDimTol
+import OCP.TDocStd
+import OCP.NCollection
 import OCP.STEPControl
+import OCP.StepVisual
+import OCP.TDF
+import OCP.XSControl
+import OCP.IFSelect
+import OCP.STEPConstruct
+import OCP.Standard
+import OCP.Interface
 __all__  = [
 "STEPCAFControl_ActorWrite",
 "STEPCAFControl_Controller",
@@ -71,14 +71,14 @@ class STEPCAFControl_ActorWrite(OCP.STEPControl.STEPControl_ActorWrite, OCP.Tran
         Check whether shape S is assembly Returns True if shape is registered in assemblies map
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -182,11 +182,15 @@ class STEPCAFControl_ActorWrite(OCP.STEPControl.STEPControl_ActorWrite, OCP.Tran
     @property
     def ModeTrans(self) -> int:
         """
+        Returns the Transfer Mode, modifiable
+
         :type: int
         """
     @ModeTrans.setter
     def ModeTrans(self, arg1: int) -> None:
-        pass
+        """
+        Returns the Transfer Mode, modifiable
+        """
     pass
 class STEPCAFControl_Controller(OCP.STEPControl.STEPControl_Controller, OCP.XSControl.XSControl_Controller, OCP.Standard.Standard_Transient):
     """
@@ -242,14 +246,14 @@ class STEPCAFControl_Controller(OCP.STEPControl.STEPControl_Controller, OCP.XSCo
         Standard Initialisation. It creates a Controller for STEP-XCAF and records it to various names, available to select it later Returns True when done, False if could not be done
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -431,11 +435,11 @@ class STEPCAFControl_DataMapOfLabelShape(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : STEPCAFControl_DataMapOfLabelShape) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class STEPCAFControl_ExternFile(OCP.Standard.Standard_Transient):
@@ -499,14 +503,14 @@ class STEPCAFControl_ExternFile(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -632,7 +636,7 @@ class STEPCAFControl_GDTProperty():
         """
     @staticmethod
     @overload
-    def GetGeomToleranceType_s(theType : OCP.StepDimTol.StepDimTol_GeometricToleranceType) -> OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType: 
+    def GetGeomToleranceType_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType) -> OCP.StepDimTol.StepDimTol_GeometricToleranceType: 
         """
         None
 
@@ -640,7 +644,7 @@ class STEPCAFControl_GDTProperty():
         """
     @staticmethod
     @overload
-    def GetGeomToleranceType_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType) -> OCP.StepDimTol.StepDimTol_GeometricToleranceType: ...
+    def GetGeomToleranceType_s(theType : OCP.StepDimTol.StepDimTol_GeometricToleranceType) -> OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType: ...
     @staticmethod
     def GetGeomTolerance_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType) -> OCP.StepDimTol.StepDimTol_GeometricTolerance: 
         """
@@ -658,7 +662,7 @@ class STEPCAFControl_GDTProperty():
         """
     @staticmethod
     @overload
-    def GetTolValueType_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue) -> OCP.TCollection.TCollection_HAsciiString: 
+    def GetTolValueType_s(theDescription : OCP.TCollection.TCollection_HAsciiString,theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue) -> bool: 
         """
         None
 
@@ -666,7 +670,7 @@ class STEPCAFControl_GDTProperty():
         """
     @staticmethod
     @overload
-    def GetTolValueType_s(theDescription : OCP.TCollection.TCollection_HAsciiString,theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue) -> bool: ...
+    def GetTolValueType_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue) -> OCP.TCollection.TCollection_HAsciiString: ...
     @staticmethod
     def IsDimensionalLocation_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType) -> bool: 
         """
@@ -741,14 +745,14 @@ class STEPCAFControl_Reader():
         Returns number of roots recognized for transfer Shortcut for Reader().NbRootsForTransfer()
         """
     @overload
-    def Perform(self,filename : OCP.TCollection.TCollection_AsciiString,doc : OCP.TDocStd.TDocStd_Document) -> bool: 
+    def Perform(self,filename : str,doc : OCP.TDocStd.TDocStd_Document) -> bool: 
         """
         None
 
         Translate STEP file given by filename into the document Return True if succeeded, and False in case of fail
         """
     @overload
-    def Perform(self,filename : str,doc : OCP.TDocStd.TDocStd_Document) -> bool: ...
+    def Perform(self,filename : OCP.TCollection.TCollection_AsciiString,doc : OCP.TDocStd.TDocStd_Document) -> bool: ...
     def ReadFile(self,filename : str) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Loads a file and returns the read status Provided for use like single-file reader
@@ -806,9 +810,9 @@ class STEPCAFControl_Reader():
         Translates currently loaded STEP file into the document Returns True if succeeded, and False in case of fail Provided for use like single-file reader
         """
     @overload
-    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession,scratch : bool=True) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession,scratch : bool=True) -> None: ...
     pass
 class STEPCAFControl_Writer():
     """
@@ -819,14 +823,14 @@ class STEPCAFControl_Writer():
         Returns basic reader for root file
         """
     @overload
-    def ExternFile(self,name : str,ef : STEPCAFControl_ExternFile) -> bool: 
+    def ExternFile(self,L : OCP.TDF.TDF_Label,ef : STEPCAFControl_ExternFile) -> bool: 
         """
         Returns data on external file by its original label Returns False if no external file with given name is read
 
         Returns data on external file by its name Returns False if no external file with given name is read
         """
     @overload
-    def ExternFile(self,L : OCP.TDF.TDF_Label,ef : STEPCAFControl_ExternFile) -> bool: ...
+    def ExternFile(self,name : str,ef : STEPCAFControl_ExternFile) -> bool: ...
     def ExternFiles(self) -> Any: 
         """
         Returns data on external files Returns Null handle if no external files are read
@@ -901,14 +905,14 @@ class STEPCAFControl_Writer():
         Set SHUO mode for indicate write SHUO or not.
         """
     @overload
-    def Transfer(self,L : OCP.TDF.TDF_Label,mode : OCP.STEPControl.STEPControl_StepModelType=STEPControl_StepModelType.STEPControl_AsIs,multi : str=None) -> bool: 
+    def Transfer(self,doc : OCP.TDocStd.TDocStd_Document,mode : OCP.STEPControl.STEPControl_StepModelType=STEPControl_StepModelType.STEPControl_AsIs,multi : str=None) -> bool: 
         """
         Transfers a document (or single label) to a STEP model The mode of translation of shape is AsIs If multi is not null pointer, it switches to multifile mode (with external refs), and string pointed by <multi> gives prefix for names of extern files (can be empty string) Returns True if translation is OK
 
         Method to transfer part of the document specified by label
         """
     @overload
-    def Transfer(self,doc : OCP.TDocStd.TDocStd_Document,mode : OCP.STEPControl.STEPControl_StepModelType=STEPControl_StepModelType.STEPControl_AsIs,multi : str=None) -> bool: ...
+    def Transfer(self,L : OCP.TDF.TDF_Label,mode : OCP.STEPControl.STEPControl_StepModelType=STEPControl_StepModelType.STEPControl_AsIs,multi : str=None) -> bool: ...
     def Write(self,filename : str) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Writes all the produced models into file In case of multimodel with extern references, filename will be a name of root file, all other files have names of corresponding parts Provided for use like single-file writer

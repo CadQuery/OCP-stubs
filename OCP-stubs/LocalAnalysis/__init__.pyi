@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Geom2d
-import OCP.GeomLProp
-import OCP.Geom
 import OCP.GeomAbs
+import OCP.GeomLProp
+import OCP.Geom2d
+import OCP.Geom
 __all__  = [
 "LocalAnalysis",
 "LocalAnalysis_CurveContinuity",
@@ -122,6 +122,7 @@ class LocalAnalysis_StatusErrorType():
 
       LocalAnalysis_CurvatureNotDefined
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -224,9 +225,9 @@ class LocalAnalysis_SurfaceContinuity():
         None
         """
     @overload
-    def __init__(self,curv1 : OCP.Geom2d.Geom2d_Curve,curv2 : OCP.Geom2d.Geom2d_Curve,U : float,Surf1 : OCP.Geom.Geom_Surface,Surf2 : OCP.Geom.Geom_Surface,Order : OCP.GeomAbs.GeomAbs_Shape,EpsNul : float=0.001,EpsC0 : float=0.001,EpsC1 : float=0.001,EpsC2 : float=0.001,EpsG1 : float=0.001,Percent : float=0.01,Maxlen : float=10000.0) -> None: ...
-    @overload
     def __init__(self,EpsNul : float=0.001,EpsC0 : float=0.001,EpsC1 : float=0.001,EpsC2 : float=0.001,EpsG1 : float=0.001,Percent : float=0.01,Maxlen : float=10000.0) -> None: ...
+    @overload
+    def __init__(self,curv1 : OCP.Geom2d.Geom2d_Curve,curv2 : OCP.Geom2d.Geom2d_Curve,U : float,Surf1 : OCP.Geom.Geom_Surface,Surf2 : OCP.Geom.Geom_Surface,Order : OCP.GeomAbs.GeomAbs_Shape,EpsNul : float=0.001,EpsC0 : float=0.001,EpsC1 : float=0.001,EpsC2 : float=0.001,EpsG1 : float=0.001,Percent : float=0.01,Maxlen : float=10000.0) -> None: ...
     @overload
     def __init__(self,Surf1 : OCP.Geom.Geom_Surface,u1 : float,v1 : float,Surf2 : OCP.Geom.Geom_Surface,u2 : float,v2 : float,Order : OCP.GeomAbs.GeomAbs_Shape,EpsNul : float=0.001,EpsC0 : float=0.001,EpsC1 : float=0.001,EpsC2 : float=0.001,EpsG1 : float=0.001,Percent : float=0.01,Maxlen : float=10000.0) -> None: ...
     pass

@@ -4,22 +4,22 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Bnd
-import OCP.TopLoc
-import OCP.gp
-import OCP.Geom
-import OCP.Graphic3d
-import OCP.TColStd
-import OCP.TopoDS
+import OCP.TopAbs
+import OCP.BRep
+import OCP.TColgp
 import OCP.HLRAlgo
 import OCP.Adaptor3d
-import OCP.Prs3d
-import OCP.TopAbs
+import OCP.TopoDS
 import OCP.BRepAdaptor
-import OCP.TColgp
-import OCP.Poly
 import OCP.Adaptor2d
-import OCP.BRep
+import OCP.gp
+import OCP.TColStd
+import OCP.Poly
+import OCP.Bnd
+import OCP.Graphic3d
+import OCP.Prs3d
+import OCP.Geom
+import OCP.TopLoc
 __all__  = [
 "StdPrs_BndBox",
 "StdPrs_Curve",
@@ -71,7 +71,7 @@ class StdPrs_BndBox(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def FillSegments_s(theBox : OCP.Bnd.Bnd_OBB) -> OCP.Graphic3d.Graphic3d_ArrayOfSegments: 
+    def FillSegments_s(theSegments : OCP.Graphic3d.Graphic3d_ArrayOfSegments,theBox : OCP.Bnd.Bnd_OBB) -> None: 
         """
         Create primitive array with line segments for displaying a box.
 
@@ -81,15 +81,15 @@ class StdPrs_BndBox(OCP.Prs3d.Prs3d_Root):
 
         Create primitive array with line segments for displaying a box.
         """
-    @staticmethod
-    @overload
-    def FillSegments_s(theBox : OCP.Bnd.Bnd_Box) -> OCP.Graphic3d.Graphic3d_ArrayOfSegments: ...
-    @staticmethod
-    @overload
-    def FillSegments_s(theSegments : OCP.Graphic3d.Graphic3d_ArrayOfSegments,theBox : OCP.Bnd.Bnd_OBB) -> None: ...
     @staticmethod
     @overload
     def FillSegments_s(theSegments : OCP.Graphic3d.Graphic3d_ArrayOfSegments,theBox : OCP.Bnd.Bnd_Box) -> None: ...
+    @staticmethod
+    @overload
+    def FillSegments_s(theBox : OCP.Bnd.Bnd_OBB) -> OCP.Graphic3d.Graphic3d_ArrayOfSegments: ...
+    @staticmethod
+    @overload
+    def FillSegments_s(theBox : OCP.Bnd.Bnd_Box) -> OCP.Graphic3d.Graphic3d_ArrayOfSegments: ...
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
@@ -108,7 +108,7 @@ class StdPrs_Curve(OCP.Prs3d.Prs3d_Root):
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer,drawCurve : bool=True) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,Points : OCP.TColgp.TColgp_SequenceOfPnt,aNbPoints : int=30,drawCurve : bool=True) -> None: 
         """
         Adds to the presentation aPresentation the drawing of the curve aCurve. The aspect is defined by LineAspect in aDrawer. If drawCurve equals Standard_False the curve will not be displayed, it is used if the curve is a part of some shape and PrimitiveArray visualization approach is activated (it is activated by default).
 
@@ -120,13 +120,13 @@ class StdPrs_Curve(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer,Points : OCP.TColgp.TColgp_SequenceOfPnt,drawCurve : bool=True) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,Points : OCP.TColgp.TColgp_SequenceOfPnt,aNbPoints : int=30,drawCurve : bool=True) -> None: ...
-    @staticmethod
-    @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer,drawCurve : bool=True) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer,drawCurve : bool=True) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer,Points : OCP.TColgp.TColgp_SequenceOfPnt,drawCurve : bool=True) -> None: ...
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
@@ -134,7 +134,7 @@ class StdPrs_Curve(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: 
+    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: 
         """
         returns true if the distance between the point (X,Y,Z) and the drawing of the curve is less than aDistance.
 
@@ -144,12 +144,12 @@ class StdPrs_Curve(OCP.Prs3d.Prs3d_Root):
 
         returns true if the distance between the point (X,Y,Z) and the drawing of the curve aCurve is less than aDistance. The drawing is considered between the points of parameter U1 and U2;
         """
+    @staticmethod
+    @overload
+    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
     @staticmethod
     @overload
     def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDeflection : float,aNbPoints : int) -> bool: ...
-    @staticmethod
-    @overload
-    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
     @staticmethod
     @overload
     def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDeflection : float,aLimit : float,aNbPoints : int) -> bool: ...
@@ -166,7 +166,7 @@ class StdPrs_DeflectionCurve(OCP.Prs3d.Prs3d_Root):
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDeflection : float,Points : OCP.TColgp.TColgp_SequenceOfPnt,anAngle : float=0.2,drawCurve : bool=True) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDeflection : float,aLimit : float,anAngle : float=0.2,drawCurve : bool=True) -> None: 
         """
         adds to the presentation aPresentation the drawing of the curve aCurve with respect to the maximal chordial deviation defined by the drawer aDrawer. The aspect is defined by LineAspect in aDrawer. If drawCurve equals Standard_False the curve will not be displayed, it is used if the curve is a part of some shape and PrimitiveArray visualization approach is activated (it is activated by default).
 
@@ -180,7 +180,7 @@ class StdPrs_DeflectionCurve(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDeflection : float,aLimit : float,anAngle : float=0.2,drawCurve : bool=True) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDeflection : float,Points : OCP.TColgp.TColgp_SequenceOfPnt,anAngle : float=0.2,drawCurve : bool=True) -> None: ...
     @staticmethod
     @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer,drawCurve : bool=True) -> None: ...
@@ -197,7 +197,7 @@ class StdPrs_DeflectionCurve(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: 
+    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: 
         """
         returns true if the distance between the point (X,Y,Z) and the drawing of the curve aCurve with respect of the maximal chordial deviation defined by the drawer aDrawer is less then aDistance.
 
@@ -209,13 +209,13 @@ class StdPrs_DeflectionCurve(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Match_s(theX : float,theY : float,theZ : float,theDistance : float,theCurve : OCP.Adaptor3d.Adaptor3d_Curve,theU1 : float,theU2 : float,theDeflection : float,theAngle : float) -> bool: ...
-    @staticmethod
-    @overload
-    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
-    @staticmethod
-    @overload
     def Match_s(theX : float,theY : float,theZ : float,theDistance : float,theCurve : OCP.Adaptor3d.Adaptor3d_Curve,theDeflection : float,theLimit : float,theAngle : float) -> bool: ...
+    @staticmethod
+    @overload
+    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
+    @staticmethod
+    @overload
+    def Match_s(theX : float,theY : float,theZ : float,theDistance : float,theCurve : OCP.Adaptor3d.Adaptor3d_Curve,theU1 : float,theU2 : float,theDeflection : float,theAngle : float) -> bool: ...
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
@@ -308,7 +308,7 @@ class StdPrs_Isolines(OCP.Prs3d.Prs3d_Root):
     """
     @staticmethod
     @overload
-    def AddOnSurface_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float) -> None: 
+    def AddOnSurface_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float,theUIsoParams : OCP.TColStd.TColStd_SequenceOfReal,theVIsoParams : OCP.TColStd.TColStd_SequenceOfReal) -> None: 
         """
         Computes isolines on surface and adds them to presentation.
 
@@ -316,15 +316,15 @@ class StdPrs_Isolines(OCP.Prs3d.Prs3d_Root):
 
         Computes isolines on surface and adds them to presentation.
         """
-    @staticmethod
-    @overload
-    def AddOnSurface_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float,theUIsoParams : OCP.TColStd.TColStd_SequenceOfReal,theVIsoParams : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
     @staticmethod
     @overload
     def AddOnSurface_s(theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float,theUPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt,theVPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: ...
     @staticmethod
     @overload
-    def AddOnTriangulation_s(theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theUPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt,theVPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: 
+    def AddOnSurface_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float) -> None: ...
+    @staticmethod
+    @overload
+    def AddOnTriangulation_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
         Computes isolines on triangulation and adds them to a presentation.
 
@@ -334,13 +334,13 @@ class StdPrs_Isolines(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
+    def AddOnTriangulation_s(theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theUPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt,theVPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: ...
+    @staticmethod
+    @overload
     def AddOnTriangulation_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theTriangulation : OCP.Poly.Poly_Triangulation,theSurface : OCP.Geom.Geom_Surface,theLocation : OCP.TopLoc.TopLoc_Location,theDrawer : OCP.Prs3d.Prs3d_Drawer,theUIsoParams : OCP.TColStd.TColStd_SequenceOfReal,theVIsoParams : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
     @staticmethod
     @overload
-    def AddOnTriangulation_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float,theUPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt,theVPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: 
+    def Add_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float) -> None: 
         """
         Computes isolines presentation for a TopoDS face. This method chooses proper version of isoline builder algorithm : on triangulation or surface depending on the flag passed from Prs3d_Drawer attributes. This method is a default way to display isolines for a given TopoDS face.
 
@@ -348,7 +348,7 @@ class StdPrs_Isolines(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Add_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float) -> None: ...
+    def Add_s(theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float,theUPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt,theVPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: ...
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
@@ -561,9 +561,9 @@ class StdPrs_ToolRFace():
         Return current curve.
         """
     @overload
-    def __init__(self,aSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface) -> None: ...
     pass
 class StdPrs_ToolTriangulatedShape():
     """
@@ -576,7 +576,7 @@ class StdPrs_ToolTriangulatedShape():
         """
     @staticmethod
     @overload
-    def ComputeNormals_s(theFace : OCP.TopoDS.TopoDS_Face,theTris : OCP.Poly.Poly_Triangulation) -> None: 
+    def ComputeNormals_s(theFace : OCP.TopoDS.TopoDS_Face,theTris : OCP.Poly.Poly_Triangulation,thePolyConnect : OCP.Poly.Poly_Connect) -> None: 
         """
         Computes nodal normals for Poly_Triangulation structure using UV coordinates and surface. Does nothing if triangulation already defines normals.
 
@@ -584,7 +584,7 @@ class StdPrs_ToolTriangulatedShape():
         """
     @staticmethod
     @overload
-    def ComputeNormals_s(theFace : OCP.TopoDS.TopoDS_Face,theTris : OCP.Poly.Poly_Triangulation,thePolyConnect : OCP.Poly.Poly_Connect) -> None: ...
+    def ComputeNormals_s(theFace : OCP.TopoDS.TopoDS_Face,theTris : OCP.Poly.Poly_Triangulation) -> None: ...
     @staticmethod
     def IsClosed_s(theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
@@ -650,6 +650,7 @@ class StdPrs_Volume():
 
       StdPrs_Volume_Opened
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -681,7 +682,7 @@ class StdPrs_WFDeflectionRestrictedFace(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aFace : OCP.BRepAdaptor.BRepAdaptor_HSurface,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aFace : OCP.BRepAdaptor.BRepAdaptor_HSurface,DrawUIso : bool,DrawVIso : bool,Deflection : float,NBUiso : int,NBViso : int,aDrawer : OCP.Prs3d.Prs3d_Drawer,Curves : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: 
         """
         Defines a display featuring U and V isoparameters. Adds the surface aFace to the StdPrs_WFRestrictedFace algorithm. This face is found in a shape in the presentation object aPresentation, and its display attributes - in particular, the number of U and V isoparameters - are set in the attribute manager aDrawer. aFace is BRepAdaptor_HSurface surface created from a face in a topological shape. which is passed as an argument through the BRepAdaptor_HSurface surface created from it. This is what allows the topological face to be treated as a geometric surface.
 
@@ -689,7 +690,7 @@ class StdPrs_WFDeflectionRestrictedFace(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aFace : OCP.BRepAdaptor.BRepAdaptor_HSurface,DrawUIso : bool,DrawVIso : bool,Deflection : float,NBUiso : int,NBViso : int,aDrawer : OCP.Prs3d.Prs3d_Drawer,Curves : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aFace : OCP.BRepAdaptor.BRepAdaptor_HSurface,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: ...
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """

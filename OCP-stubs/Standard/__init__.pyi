@@ -324,7 +324,7 @@ class Standard_Dump():
         """
     @staticmethod
     @overload
-    def GetPointerInfo_s(thePointer : capsule,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: 
+    def GetPointerInfo_s(thePointer : Standard_Transient,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Convert handle pointer to address of the pointer. If the handle is NULL, the result is an empty string.
 
@@ -332,7 +332,7 @@ class Standard_Dump():
         """
     @staticmethod
     @overload
-    def GetPointerInfo_s(thePointer : Standard_Transient,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: ...
+    def GetPointerInfo_s(thePointer : capsule,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: ...
     @staticmethod
     def GetPointerPrefix_s() -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -455,15 +455,15 @@ class Standard_GUID():
         None
         """
     @overload
-    def __init__(self,a32b : int,a16b1 : str,a16b2 : str,a16b3 : str,a8b1 : int,a8b2 : int,a8b3 : int,a8b4 : int,a8b5 : int,a8b6 : int) -> None: ...
-    @overload
-    def __init__(self,aGuid : GUID) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,aGuid : str) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,a32b : int,a16b1 : str,a16b2 : str,a16b3 : str,a8b1 : int,a8b2 : int,a8b3 : int,a8b4 : int,a8b5 : int,a8b6 : int) -> None: ...
     @overload
     def __init__(self,aGuid : Standard_GUID) -> None: ...
+    @overload
+    def __init__(self,aGuid : GUID) -> None: ...
     pass
 class Standard_HandlerStatus():
     """
@@ -477,6 +477,7 @@ class Standard_HandlerStatus():
 
       Standard_HandlerProcessed
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -785,14 +786,14 @@ class Standard_Transient():
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theTypeName : str) -> bool: 
         """
@@ -807,9 +808,9 @@ class Standard_Transient():
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,arg1 : Standard_Transient) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,arg1 : Standard_Transient) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> Standard_Type: 
         """
@@ -914,14 +915,14 @@ class Standard_Persistent(Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theTypeName : str) -> bool: 
         """
@@ -949,11 +950,15 @@ class Standard_Persistent(Standard_Transient):
     @property
     def TypeNum(self) -> int:
         """
+        None
+
         :type: int
         """
     @TypeNum.setter
     def TypeNum(self, arg1: int) -> None:
-        pass
+        """
+        None
+        """
     pass
 class Standard_Type(Standard_Transient):
     """
@@ -980,14 +985,14 @@ class Standard_Type(Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theTypeName : str) -> bool: 
         """
@@ -1019,14 +1024,14 @@ class Standard_Type(Standard_Transient):
         Returns the size of the class instance in bytes
         """
     @overload
-    def SubType(self,theOther : str) -> bool: 
+    def SubType(self,theOther : Standard_Type) -> bool: 
         """
         Returns True if this type is the same as theOther, or inherits from theOther. Note that multiple inheritance is not supported.
 
         Returns True if this type is the same as theOther, or inherits from theOther. Note that multiple inheritance is not supported.
         """
     @overload
-    def SubType(self,theOther : Standard_Type) -> bool: ...
+    def SubType(self,theOther : str) -> bool: ...
     def SystemName(self) -> str: 
         """
         Returns the system type name of the class (typeinfo.name)
@@ -1181,8 +1186,18 @@ def IsDigit(me : str) -> bool:
     None
     """
 @overload
-def IsEqual(Value1 : float,Value2 : float) -> bool:
+def IsEqual(theOne : str,theTwo : str) -> bool:
     """
+    None
+
+    None
+
+    None
+
+    None
+
+    None
+
     None
 
     None
@@ -1192,22 +1207,12 @@ def IsEqual(Value1 : float,Value2 : float) -> bool:
     None
 
     None
-
-    None
-
-    None
-
-    None
-
-    None
-
-    None
     """
 @overload
-def IsEqual(One : int,Two : int) -> bool:
+def IsEqual(One : str,Two : str) -> bool:
     pass
 @overload
-def IsEqual(theOne : str,theTwo : str) -> bool:
+def IsEqual(One : int,Two : int) -> bool:
     pass
 @overload
 def IsEqual(theOne : int,theTwo : int) -> bool:
@@ -1216,7 +1221,7 @@ def IsEqual(theOne : int,theTwo : int) -> bool:
 def IsEqual(One : capsule,Two : capsule) -> bool:
     pass
 @overload
-def IsEqual(One : str,Two : str) -> bool:
+def IsEqual(Value1 : float,Value2 : float) -> bool:
     pass
 def IsEven(Value : int) -> bool:
     """
@@ -1415,14 +1420,14 @@ def Sqrt(arg0 : float) -> float:
     None
     """
 @overload
-def Square(Value : float) -> float:
+def Square(Value : int) -> int:
     """
     None
 
     None
     """
 @overload
-def Square(Value : int) -> int:
+def Square(Value : float) -> float:
     pass
 def Standard_ASSERT_DO_NOTHING() -> None:
     """

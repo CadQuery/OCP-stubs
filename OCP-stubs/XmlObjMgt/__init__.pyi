@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.LDOM
-import OCP.Storage
 import OCP.TCollection
+import OCP.Storage
+import OCP.LDOM
 import OCP.gp
 __all__  = [
 "XmlObjMgt",
@@ -128,7 +128,7 @@ class XmlObjMgt_GP():
     """
     @staticmethod
     @overload
-    def Translate_s(aStr : LDOMString,T : OCP.gp.gp_XYZ) -> bool: 
+    def Translate_s(aStr : LDOMString,T : OCP.gp.gp_Trsf) -> bool: 
         """
         None
 
@@ -144,19 +144,19 @@ class XmlObjMgt_GP():
         """
     @staticmethod
     @overload
-    def Translate_s(aStr : LDOMString,T : OCP.gp.gp_Trsf) -> bool: ...
+    def Translate_s(aStr : LDOMString,T : OCP.gp.gp_XYZ) -> bool: ...
+    @staticmethod
+    @overload
+    def Translate_s(aMat : OCP.gp.gp_Mat) -> LDOMString: ...
     @staticmethod
     @overload
     def Translate_s(aTrsf : OCP.gp.gp_Trsf) -> LDOMString: ...
     @staticmethod
     @overload
-    def Translate_s(anXYZ : OCP.gp.gp_XYZ) -> LDOMString: ...
-    @staticmethod
-    @overload
     def Translate_s(aStr : LDOMString,T : OCP.gp.gp_Mat) -> bool: ...
     @staticmethod
     @overload
-    def Translate_s(aMat : OCP.gp.gp_Mat) -> LDOMString: ...
+    def Translate_s(anXYZ : OCP.gp.gp_XYZ) -> LDOMString: ...
     def __init__(self) -> None: ...
     pass
 class XmlObjMgt_Persistent():
@@ -190,9 +190,9 @@ class XmlObjMgt_Persistent():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theElement : OCP.LDOM.LDOM_Element,theRef : LDOMString) -> None: ...
-    @overload
     def __init__(self,theElement : OCP.LDOM.LDOM_Element) -> None: ...
+    @overload
+    def __init__(self,theElement : OCP.LDOM.LDOM_Element,theRef : LDOMString) -> None: ...
     pass
 class XmlObjMgt_RRelocationTable():
     """

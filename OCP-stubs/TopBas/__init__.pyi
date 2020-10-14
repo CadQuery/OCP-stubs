@@ -19,7 +19,7 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : TopBas_ListOfTestInterference) -> None: 
+    def Append(self,theItem : TopBas_TestInterference,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -30,7 +30,7 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : TopBas_TestInterference) -> TopBas_TestInterference: ...
     @overload
-    def Append(self,theItem : TopBas_TestInterference,theIter : Any) -> None: ...
+    def Append(self,theOther : TopBas_ListOfTestInterference) -> None: ...
     def Assign(self,theOther : TopBas_ListOfTestInterference) -> TopBas_ListOfTestInterference: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -50,23 +50,23 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : TopBas_ListOfTestInterference,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : TopBas_TestInterference,theIter : Any) -> TopBas_TestInterference: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : TopBas_TestInterference,theIter : Any) -> TopBas_TestInterference: ...
+    def InsertAfter(self,theOther : TopBas_ListOfTestInterference,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theOther : TopBas_ListOfTestInterference,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : TopBas_TestInterference,theIter : Any) -> TopBas_TestInterference: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : TopBas_TestInterference,theIter : Any) -> TopBas_TestInterference: ...
+    def InsertBefore(self,theOther : TopBas_ListOfTestInterference,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -160,23 +160,31 @@ class TopBas_TestInterference():
     @overload
     def Transition(self,Tr : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Inters : float,Bound : int,Orient : OCP.TopAbs.TopAbs_Orientation,Trans : OCP.TopAbs.TopAbs_Orientation,BTrans : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @property
     def ChangeBoundary(self) -> int:
         """
+        None
+
         :type: int
         """
     @ChangeBoundary.setter
     def ChangeBoundary(self, arg1: int) -> None:
-        pass
+        """
+        None
+        """
     @property
     def ChangeIntersection(self) -> float:
         """
+        None
+
         :type: float
         """
     @ChangeIntersection.setter
     def ChangeIntersection(self, arg1: float) -> None:
-        pass
+        """
+        None
+        """
     pass

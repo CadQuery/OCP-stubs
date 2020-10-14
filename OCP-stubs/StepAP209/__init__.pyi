@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepData
-import OCP.Transfer
-import OCP.StepShape
-import OCP.StepFEA
+import OCP.XSControl
 import OCP.StepRepr
 import OCP.STEPConstruct
-import OCP.StepElement
-import OCP.XSControl
 import OCP.StepBasic
+import OCP.Transfer
+import OCP.StepShape
+import OCP.StepElement
+import OCP.StepData
+import OCP.StepFEA
 import OCP.Interface
 __all__  = [
 "StepAP209_Construct"
@@ -42,7 +42,7 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
         Create fea structure
         """
     @overload
-    def FeaModel(self,Prod : OCP.StepBasic.StepBasic_Product) -> OCP.StepFEA.StepFEA_FeaModel: 
+    def FeaModel(self,PDS : OCP.StepRepr.StepRepr_ProductDefinitionShape) -> OCP.StepFEA.StepFEA_FeaModel: 
         """
         None
 
@@ -52,10 +52,10 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
 
         None
         """
+    @overload
+    def FeaModel(self,Prod : OCP.StepBasic.StepBasic_Product) -> OCP.StepFEA.StepFEA_FeaModel: ...
     @overload
     def FeaModel(self,PDF : OCP.StepBasic.StepBasic_ProductDefinitionFormation) -> OCP.StepFEA.StepFEA_FeaModel: ...
-    @overload
-    def FeaModel(self,PDS : OCP.StepRepr.StepRepr_ProductDefinitionShape) -> OCP.StepFEA.StepFEA_FeaModel: ...
     @overload
     def FeaModel(self,PD : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.StepFEA.StepFEA_FeaModel: ...
     def FinderProcess(self) -> OCP.Transfer.Transfer_FinderProcess: 
@@ -117,11 +117,11 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
         None
         """
     @overload
+    def IdealShape(self,Prod : OCP.StepBasic.StepBasic_Product) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
+    @overload
     def IdealShape(self,PDF : OCP.StepBasic.StepBasic_ProductDefinitionFormation) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
     @overload
     def IdealShape(self,PD : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
-    @overload
-    def IdealShape(self,Prod : OCP.StepBasic.StepBasic_Product) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
     def Init(self,WS : OCP.XSControl.XSControl_WorkSession) -> bool: 
         """
         Initializes tool; returns True if succeeded

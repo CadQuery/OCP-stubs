@@ -4,18 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.Transfer
-import OCP.TCollection
 import OCP.TopAbs
-import OCP.OpenGl
-import OCP.Standard
-import OCP.TopTools
-import OCP.gp
+import OCP.TCollection
+import OCP.TColStd
 import OCP.IFSelect
 import OCP.Message
+import OCP.TopTools
+import OCP.Transfer
+import OCP.Standard
 import OCP.TopoDS
+import OCP.OpenGl
 import OCP.Interface
+import OCP.gp
 __all__  = [
 "XSControl",
 "XSControl_ConnectedShapes",
@@ -114,14 +114,14 @@ class XSControl_ConnectedShapes(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSelec
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -160,9 +160,9 @@ class XSControl_ConnectedShapes(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSelec
         Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     @overload
-    def __init__(self,TR : XSControl_TransferReader) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,TR : XSControl_TransferReader) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -223,14 +223,14 @@ class XSControl_Controller(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -450,11 +450,11 @@ class XSControl_Reader():
         Returns the session used in <me>
         """
     @overload
-    def __init__(self,WS : XSControl_WorkSession,scratch : bool=True) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,norm : str) -> None: ...
+    @overload
+    def __init__(self,WS : XSControl_WorkSession,scratch : bool=True) -> None: ...
     pass
 class XSControl_SelectForTransfer(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSelect.IFSelect_SelectDeduct, OCP.IFSelect.IFSelect_Selection, OCP.Standard.Standard_Transient):
     """
@@ -521,14 +521,14 @@ class XSControl_SelectForTransfer(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSel
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -583,9 +583,9 @@ class XSControl_SelectForTransfer(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSel
         Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     @overload
-    def __init__(self,TR : XSControl_TransferReader) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,TR : XSControl_TransferReader) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -673,9 +673,9 @@ class XSControl_SignTransferStatus(OCP.IFSelect.IFSelect_Signature, OCP.Interfac
         Returns the Signature for a Transient object, as its transfer status
         """
     @overload
-    def __init__(self,TR : XSControl_TransferReader) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,TR : XSControl_TransferReader) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -777,14 +777,14 @@ class XSControl_TransferReader(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -969,14 +969,14 @@ class XSControl_TransferWriter(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1228,14 +1228,14 @@ class XSControl_Vars(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1539,14 +1539,14 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         Returns Integer Value of an IntParam
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2115,9 +2115,9 @@ class XSControl_Writer():
         Writes the produced model
         """
     @overload
-    def __init__(self,WS : XSControl_WorkSession,scratch : bool=True) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,norm : str) -> None: ...
+    @overload
+    def __init__(self,WS : XSControl_WorkSession,scratch : bool=True) -> None: ...
     pass

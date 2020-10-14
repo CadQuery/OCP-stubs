@@ -4,26 +4,26 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Aspect
-import OCP.Bnd
-import OCP.TopLoc
-import OCP.gp
-import OCP.SelectMgr
-import OCP.Geom
-import OCP.PrsMgr
-import OCP.Graphic3d
-import OCP.TopoDS
-import OCP.TColStd
-import OCP.Quantity
-import OCP.TCollection
 import OCP.TopAbs
-import OCP.Standard
-import OCP.AIS
+import OCP.TCollection
 import OCP.TColgp
-import OCP.V3d
+import OCP.TopoDS
+import OCP.PrsMgr
+import OCP.gp
+import OCP.TColStd
 import OCP.Select3D
+import OCP.SelectMgr
+import OCP.Bnd
+import OCP.Quantity
+import OCP.Graphic3d
+import OCP.Aspect
 import OCP.Prs3d
 import OCP.Image
+import OCP.Standard
+import OCP.Geom
+import OCP.AIS
+import OCP.V3d
+import OCP.TopLoc
 __all__  = [
 "StdSelect",
 "StdSelect_BRepOwner",
@@ -153,14 +153,14 @@ class StdSelect_BRepOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Returns true if an object with the selection mode aMode is highlighted in the presentation manager aPM.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -195,14 +195,14 @@ class StdSelect_BRepOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Returns a selectable object detected in the working context.
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -236,14 +236,14 @@ class StdSelect_BRepOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Returns the shape.
         """
     @overload
-    def State(self) -> int: 
+    def State(self,theStatus : int) -> None: 
         """
         Returns selection state.
 
         Set the state of the owner. The method is deprecated. Use SetSelected() instead.
         """
     @overload
-    def State(self,theStatus : int) -> None: ...
+    def State(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -257,11 +257,11 @@ class StdSelect_BRepOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Implements immediate application of location transformation of parent object to dynamic highlight structure
         """
     @overload
-    def __init__(self,aPriority : int) -> None: ...
-    @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,theOrigin : OCP.SelectMgr.SelectMgr_SelectableObject,aPriority : int=0,FromDecomposition : bool=False) -> None: ...
     @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aPriority : int=0,ComesFromDecomposition : bool=False) -> None: ...
+    @overload
+    def __init__(self,aPriority : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -327,6 +327,7 @@ class StdSelect_DisplayMode():
 
       StdSelect_DM_HLR
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -371,14 +372,14 @@ class StdSelect_EdgeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -445,14 +446,14 @@ class StdSelect_FaceFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -526,6 +527,7 @@ class StdSelect_SensitivityMode():
 
       StdSelect_SM_VIEW
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -690,14 +692,14 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -798,14 +800,14 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -823,23 +825,23 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
+    def SetToUpdate(self) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -857,14 +859,14 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         Set Z layer ID and update all presentations of the presentable object. The layers mechanism allows drawing objects in higher layers in overlay of objects in lower layers.
         """
     @overload
-    def Shape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
         None
         """
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def SynchronizeAspects(self) -> None: 
         """
         Synchronize presentation aspects after their modification.
@@ -991,14 +993,14 @@ class StdSelect_ShapeTypeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1046,6 +1048,7 @@ class StdSelect_TypeOfEdge():
 
       StdSelect_Circle
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1081,6 +1084,7 @@ class StdSelect_TypeOfFace():
 
       StdSelect_Cone
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1110,6 +1114,7 @@ class StdSelect_TypeOfResult():
 
       StdSelect_TOR_MULTIPLE
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1144,6 +1149,7 @@ class StdSelect_TypeOfSelectionImage():
 
       StdSelect_TypeOfSelectionImage_ColoredSelectionMode
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1212,14 +1218,14 @@ class StdSelect_ViewerSelector3d(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Sta
         Returns sensitive entity that was detected during the previous run of selection algorithm
         """
     @overload
-    def DisplaySensitive(self,theView : OCP.V3d.V3d_View) -> None: 
+    def DisplaySensitive(self,theSel : OCP.SelectMgr.SelectMgr_Selection,theTrsf : OCP.gp.gp_Trsf,theView : OCP.V3d.V3d_View,theToClearOthers : bool=True) -> None: 
         """
         Displays sensitives in view <theView>.
 
         None
         """
     @overload
-    def DisplaySensitive(self,theSel : OCP.SelectMgr.SelectMgr_Selection,theTrsf : OCP.gp.gp_Trsf,theView : OCP.V3d.V3d_View,theToClearOthers : bool=True) -> None: ...
+    def DisplaySensitive(self,theView : OCP.V3d.V3d_View) -> None: ...
     def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -1261,14 +1267,14 @@ class StdSelect_ViewerSelector3d(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Sta
         Returns true if the selectable object aSelectableObject having the selection mode aMode is in this selector.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1311,7 +1317,7 @@ class StdSelect_ViewerSelector3d(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Sta
         Returns the picked element with the highest priority, and which is the closest to the last successful mouse position.
         """
     @overload
-    def Pick(self,theXPix : int,theYPix : int,theView : OCP.V3d.V3d_View) -> None: 
+    def Pick(self,thePolyline : OCP.TColgp.TColgp_Array1OfPnt2d,theView : OCP.V3d.V3d_View) -> None: 
         """
         Picks the sensitive entity at the pixel coordinates of the mouse <theXPix> and <theYPix>. The selector looks for touched areas and owners.
 
@@ -1320,9 +1326,9 @@ class StdSelect_ViewerSelector3d(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Sta
         pick action - input pixel values for polyline selection for selection.
         """
     @overload
-    def Pick(self,thePolyline : OCP.TColgp.TColgp_Array1OfPnt2d,theView : OCP.V3d.V3d_View) -> None: ...
-    @overload
     def Pick(self,theXPMin : int,theYPMin : int,theXPMax : int,theYPMax : int,theView : OCP.V3d.V3d_View) -> None: ...
+    @overload
+    def Pick(self,theXPix : int,theYPix : int,theView : OCP.V3d.V3d_View) -> None: ...
     @overload
     def Picked(self,theRank : int) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
         """
@@ -1389,14 +1395,14 @@ class StdSelect_ViewerSelector3d(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Sta
         Sorts the detected entites by priority and distance. to be redefined if other criterion are used...
         """
     @overload
-    def Status(self,theSelectableObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> OCP.TCollection.TCollection_AsciiString: 
+    def Status(self,theSelection : OCP.SelectMgr.SelectMgr_Selection) -> OCP.SelectMgr.SelectMgr_StateOfSelection: 
         """
         Returns the selection status Status of the selection aSelection.
 
         None
         """
     @overload
-    def Status(self,theSelection : OCP.SelectMgr.SelectMgr_Selection) -> OCP.SelectMgr.SelectMgr_StateOfSelection: ...
+    def Status(self,theSelectableObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> OCP.TCollection.TCollection_AsciiString: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

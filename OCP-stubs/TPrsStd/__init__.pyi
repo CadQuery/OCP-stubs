@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Quantity
+import OCP.TDF
 import OCP.TCollection
+import OCP.TDataXtd
+import OCP.Quantity
+import OCP.Graphic3d
 import OCP.Standard
 import OCP.AIS
-import OCP.TDataXtd
-import OCP.Graphic3d
 import OCP.V3d
-import OCP.TDF
 __all__  = [
 "TPrsStd_AISPresentation",
 "TPrsStd_AISViewer",
@@ -224,14 +224,14 @@ class TPrsStd_AISPresentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -328,7 +328,7 @@ class TPrsStd_AISPresentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         """
     @staticmethod
     @overload
-    def Set_s(master : OCP.TDF.TDF_Attribute) -> TPrsStd_AISPresentation: 
+    def Set_s(L : OCP.TDF.TDF_Label,driver : OCP.Standard.Standard_GUID) -> TPrsStd_AISPresentation: 
         """
         Creates or retrieves the presentation attribute on the label L, and sets the GUID driver.
 
@@ -336,7 +336,7 @@ class TPrsStd_AISPresentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         """
     @staticmethod
     @overload
-    def Set_s(L : OCP.TDF.TDF_Label,driver : OCP.Standard.Standard_GUID) -> TPrsStd_AISPresentation: ...
+    def Set_s(master : OCP.TDF.TDF_Attribute) -> TPrsStd_AISPresentation: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -500,7 +500,7 @@ class TPrsStd_AISViewer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Find_s(acces : OCP.TDF.TDF_Label,IC : OCP.AIS.AIS_InteractiveContext) -> bool: 
+    def Find_s(acces : OCP.TDF.TDF_Label,A : TPrsStd_AISViewer) -> bool: 
         """
         Finds the viewer attribute at the label access, the root of the data framework. Calling this function can be used to initialize an AIS viewer
 
@@ -513,7 +513,7 @@ class TPrsStd_AISViewer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def Find_s(acces : OCP.TDF.TDF_Label,V : OCP.V3d.V3d_Viewer) -> bool: ...
     @staticmethod
     @overload
-    def Find_s(acces : OCP.TDF.TDF_Label,A : TPrsStd_AISViewer) -> bool: ...
+    def Find_s(acces : OCP.TDF.TDF_Label,IC : OCP.AIS.AIS_InteractiveContext) -> bool: ...
     def Forget(self,aTransaction : int) -> None: 
         """
         Forgets the attribute. <aTransaction> is the current transaction in which the forget is done. A forgotten attribute is also flagged not "Valid".
@@ -569,14 +569,14 @@ class TPrsStd_AISViewer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -702,14 +702,14 @@ class TPrsStd_Driver(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -763,14 +763,14 @@ class TPrsStd_ConstraintDriver(TPrsStd_Driver, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -946,14 +946,14 @@ class TPrsStd_AxisDriver(TPrsStd_Driver, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1029,14 +1029,14 @@ class TPrsStd_DriverTable(OCP.Standard.Standard_Transient):
         Fills the table with standard drivers
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1091,14 +1091,14 @@ class TPrsStd_GeometryDriver(TPrsStd_Driver, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1153,14 +1153,14 @@ class TPrsStd_NamedShapeDriver(TPrsStd_Driver, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1215,14 +1215,14 @@ class TPrsStd_PlaneDriver(TPrsStd_Driver, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1277,14 +1277,14 @@ class TPrsStd_PointDriver(TPrsStd_Driver, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

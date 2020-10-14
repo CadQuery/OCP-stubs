@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Poly
 import OCP.OSD
+import OCP.Message
 import OCP.Standard
 import OCP.gp
-import OCP.Poly
-import OCP.Message
 __all__  = [
 "RWStl",
 "RWStl_Reader"
@@ -29,7 +29,7 @@ class RWStl():
         """
     @staticmethod
     @overload
-    def ReadFile_s(theFile : str,aProgInd : OCP.Message.Message_ProgressIndicator=None) -> OCP.Poly.Poly_Triangulation: 
+    def ReadFile_s(theFile : OCP.OSD.OSD_Path,aProgInd : OCP.Message.Message_ProgressIndicator=None) -> OCP.Poly.Poly_Triangulation: 
         """
         Read specified STL file and returns its content as triangulation. In case of error, returns Null handle.
 
@@ -37,7 +37,7 @@ class RWStl():
         """
     @staticmethod
     @overload
-    def ReadFile_s(theFile : OCP.OSD.OSD_Path,aProgInd : OCP.Message.Message_ProgressIndicator=None) -> OCP.Poly.Poly_Triangulation: ...
+    def ReadFile_s(theFile : str,aProgInd : OCP.Message.Message_ProgressIndicator=None) -> OCP.Poly.Poly_Triangulation: ...
     @staticmethod
     def WriteAscii_s(theMesh : OCP.Poly.Poly_Triangulation,thePath : OCP.OSD.OSD_Path,theProgInd : OCP.Message.Message_ProgressIndicator=None) -> bool: 
         """
@@ -87,14 +87,14 @@ class RWStl_Reader(OCP.Standard.Standard_Transient):
         Guess whether the stream is an Ascii STL file, by analysis of the first bytes (~200). The function attempts to put back the read symbols to the stream which thus must support ungetc(). Returns true if the stream seems to contain Ascii STL.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

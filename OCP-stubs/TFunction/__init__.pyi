@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
+import OCP.TDF
 import OCP.TColStd
 import OCP.Standard
-import OCP.TDF
 __all__  = [
 "TFunction_Array1OfDataMapOfGUIDDriver",
 "TFunction_DataMapOfLabelListOfLabel",
@@ -109,9 +109,9 @@ class TFunction_Array1OfDataMapOfGUIDDriver():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TFunction_DataMapOfLabelListOfLabel(OCP.NCollection.NCollection_BaseMap):
@@ -143,14 +143,14 @@ class TFunction_DataMapOfLabelListOfLabel(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TFunction_DataMapOfLabelListOfLabel) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -203,9 +203,9 @@ class TFunction_DataMapOfLabelListOfLabel(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theOther : TFunction_DataMapOfLabelListOfLabel) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TFunction_DoubleMapOfIntegerLabel(OCP.NCollection.NCollection_BaseMap):
@@ -246,23 +246,23 @@ class TFunction_DoubleMapOfIntegerLabel(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find1(self,theKey1 : int) -> OCP.TDF.TDF_Label: 
+    def Find1(self,theKey1 : int,theKey2 : OCP.TDF.TDF_Label) -> bool: 
         """
         Find the Key1 and return Key2 value. Raises an exception if Key1 was not bound.
 
         Find the Key1 and return Key2 value (by copying its value).
         """
     @overload
-    def Find1(self,theKey1 : int,theKey2 : OCP.TDF.TDF_Label) -> bool: ...
+    def Find1(self,theKey1 : int) -> OCP.TDF.TDF_Label: ...
     @overload
-    def Find2(self,theKey2 : OCP.TDF.TDF_Label) -> int: 
+    def Find2(self,theKey2 : OCP.TDF.TDF_Label,theKey1 : int) -> bool: 
         """
         Find the Key2 and return Key1 value. Raises an exception if Key2 was not bound.
 
         Find the Key2 and return Key1 value (by copying its value).
         """
     @overload
-    def Find2(self,theKey2 : OCP.TDF.TDF_Label,theKey1 : int) -> bool: ...
+    def Find2(self,theKey2 : OCP.TDF.TDF_Label) -> int: ...
     def IsBound1(self,theKey1 : int) -> bool: 
         """
         IsBound1
@@ -310,9 +310,9 @@ class TFunction_DoubleMapOfIntegerLabel(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theOther : TFunction_DoubleMapOfIntegerLabel) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class TFunction_Driver(OCP.Standard.Standard_Transient):
     """
@@ -351,14 +351,14 @@ class TFunction_Driver(OCP.Standard.Standard_Transient):
         Initializes the label L for this function prior to its execution.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -451,14 +451,14 @@ class TFunction_DriverTable(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -504,6 +504,7 @@ class TFunction_ExecutionStatus():
 
       TFunction_ES_Failed
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -676,14 +677,14 @@ class TFunction_Function(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -797,14 +798,14 @@ class TFunction_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
     @overload
     def AddNext(self,funcID : int) -> bool: ...
     @overload
-    def AddPrevious(self,func : OCP.TDF.TDF_Label) -> bool: 
+    def AddPrevious(self,funcID : int) -> bool: 
         """
         Defines a reference to the function as a previous one.
 
         Defines a reference to the function as a previous one.
         """
     @overload
-    def AddPrevious(self,funcID : int) -> bool: ...
+    def AddPrevious(self,func : OCP.TDF.TDF_Label) -> bool: ...
     def AfterAddition(self) -> None: 
         """
         Something to do after adding an Attribute to a label.
@@ -952,14 +953,14 @@ class TFunction_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1015,14 +1016,14 @@ class TFunction_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
     @overload
     def RemoveNext(self,func : OCP.TDF.TDF_Label) -> bool: ...
     @overload
-    def RemovePrevious(self,funcID : int) -> bool: 
+    def RemovePrevious(self,func : OCP.TDF.TDF_Label) -> bool: 
         """
         Removes a reference to the function as a previous one.
 
         Removes a reference to the function as a previous one.
         """
     @overload
-    def RemovePrevious(self,func : OCP.TDF.TDF_Label) -> bool: ...
+    def RemovePrevious(self,funcID : int) -> bool: ...
     def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
@@ -1137,14 +1138,14 @@ class TFunction_HArray1OfDataMapOfGUIDDriver(TFunction_Array1OfDataMapOfGUIDDriv
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1195,13 +1196,13 @@ class TFunction_HArray1OfDataMapOfGUIDDriver(TFunction_Array1OfDataMapOfGUIDDriv
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : Any) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1335,9 +1336,9 @@ class TFunction_Iterator():
         Defines the mode of iteration - usage or not of the execution status. If the iterator takes into account the execution status, the method ::Current() returns only "not executed" functions while their status is not changed. If the iterator ignores the execution status, the method ::Current() returns the functions following their dependencies and ignoring the execution status.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Access : OCP.TDF.TDF_Label) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
@@ -1480,7 +1481,7 @@ class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the map of touched labels in this logbook. A touched label is the one modified by the end user.
         """
     @overload
-    def GetValid(self,Ls : OCP.TDF.TDF_LabelMap) -> None: 
+    def GetValid(self) -> OCP.TDF.TDF_LabelMap: 
         """
         None
 
@@ -1489,7 +1490,7 @@ class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the map of valid labels in this logbook.
         """
     @overload
-    def GetValid(self) -> OCP.TDF.TDF_LabelMap: ...
+    def GetValid(self,Ls : OCP.TDF.TDF_LabelMap) -> None: ...
     def ID(self) -> OCP.Standard.Standard_GUID: 
         """
         Returns the ID of the attribute.
@@ -1525,14 +1526,14 @@ class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1756,14 +1757,14 @@ class TFunction_Scope(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def GetFunction(self,ID : int) -> OCP.TDF.TDF_Label: 
+    def GetFunction(self,L : OCP.TDF.TDF_Label) -> int: 
         """
         Returns an ID of the function.
 
         Returns the label of the function with this ID.
         """
     @overload
-    def GetFunction(self,L : OCP.TDF.TDF_Label) -> int: ...
+    def GetFunction(self,ID : int) -> OCP.TDF.TDF_Label: ...
     def GetFunctions(self) -> TFunction_DoubleMapOfIntegerLabel: 
         """
         Returns the scope of functions.
@@ -1782,14 +1783,14 @@ class TFunction_Scope(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Get the reference counter of this object
         """
     @overload
-    def HasFunction(self,ID : int) -> bool: 
+    def HasFunction(self,L : OCP.TDF.TDF_Label) -> bool: 
         """
         Returns true if the function exists with such an ID.
 
         Returns true if the label contains a function of this scope.
         """
     @overload
-    def HasFunction(self,L : OCP.TDF.TDF_Label) -> bool: ...
+    def HasFunction(self,ID : int) -> bool: ...
     def ID(self) -> OCP.Standard.Standard_GUID: 
         """
         None
@@ -1815,14 +1816,14 @@ class TFunction_Scope(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

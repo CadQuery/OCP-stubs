@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
-import OCP.gp
-import OCP.Geom
 import OCP.Graphic3d
-import OCP.TopoDS
 import OCP.Prs3d
+import OCP.TopoDS
+import OCP.Geom
+import OCP.gp
 __all__  = [
 "DsgPrs",
 "DsgPrs_AnglePresentation",
@@ -94,7 +94,7 @@ class DsgPrs_AnglePresentation():
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theval : float,thevalstring : OCP.TCollection.TCollection_ExtendedString,CenterPoint : OCP.gp.gp_Pnt,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,dir1 : OCP.gp.gp_Dir,dir2 : OCP.gp.gp_Dir,axisdir : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theval : float,thevalstring : OCP.TCollection.TCollection_ExtendedString,CenterPoint : OCP.gp.gp_Pnt,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,dir1 : OCP.gp.gp_Dir,dir2 : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide) -> None: 
         """
         Draws the presenation of the full angle of a cone. VminCircle - a circle at V parameter = Vmin VmaxCircle - a circle at V parameter = Vmax aCircle - a circle at V parameter from projection of aPosition to axis of the cone
 
@@ -112,22 +112,22 @@ class DsgPrs_AnglePresentation():
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theval : float,CenterPoint : OCP.gp.gp_Pnt,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,dir1 : OCP.gp.gp_Dir,dir2 : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theval : float,theCenter : OCP.gp.gp_Pnt,AttachmentPoint1 : OCP.gp.gp_Pnt,theAxe : OCP.gp.gp_Ax1,ArrowSide : DsgPrs_ArrowSide) -> None: ...
-    @staticmethod
-    @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theval : float,thevalstring : OCP.TCollection.TCollection_ExtendedString,CenterPoint : OCP.gp.gp_Pnt,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,dir1 : OCP.gp.gp_Dir,dir2 : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theval : float,thevalstring : OCP.TCollection.TCollection_ExtendedString,CenterPoint : OCP.gp.gp_Pnt,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,dir1 : OCP.gp.gp_Dir,dir2 : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theval : float,thevalstring : OCP.TCollection.TCollection_ExtendedString,CenterPoint : OCP.gp.gp_Pnt,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,dir1 : OCP.gp.gp_Dir,dir2 : OCP.gp.gp_Dir,axisdir : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theval : float,thevalstring : OCP.TCollection.TCollection_ExtendedString,CenterPoint : OCP.gp.gp_Pnt,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,dir1 : OCP.gp.gp_Dir,dir2 : OCP.gp.gp_Dir,axisdir : OCP.gp.gp_Dir,isPlane : bool,AxisOfSurf : OCP.gp.gp_Ax1,OffsetPoint : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide) -> None: ...
     @staticmethod
     @overload
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theval : float,CenterPoint : OCP.gp.gp_Pnt,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,dir1 : OCP.gp.gp_Dir,dir2 : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt) -> None: ...
+    @staticmethod
+    @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aVal : float,aText : OCP.TCollection.TCollection_ExtendedString,aCircle : OCP.gp.gp_Circ,aPosition : OCP.gp.gp_Pnt,Apex : OCP.gp.gp_Pnt,VminCircle : OCP.gp.gp_Circ,VmaxCircle : OCP.gp.gp_Circ,aArrowSize : float) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theval : float,theCenter : OCP.gp.gp_Pnt,AttachmentPoint1 : OCP.gp.gp_Pnt,theAxe : OCP.gp.gp_Ax1,ArrowSide : DsgPrs_ArrowSide) -> None: ...
     def __init__(self) -> None: ...
     pass
 class DsgPrs_ArrowSide():
@@ -154,6 +154,7 @@ class DsgPrs_ArrowSide():
 
       DsgPrs_AS_FIRSTPT_LASTAR
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -181,7 +182,7 @@ class DsgPrs_Chamf2dPresentation():
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aPntAttach : OCP.gp.gp_Pnt,aPntEnd : OCP.gp.gp_Pnt,aText : OCP.TCollection.TCollection_ExtendedString) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aPntAttach : OCP.gp.gp_Pnt,aPntEnd : OCP.gp.gp_Pnt,aText : OCP.TCollection.TCollection_ExtendedString,ArrowSide : DsgPrs_ArrowSide) -> None: 
         """
         Defines the display of elements showing 2D chamfers on shapes. These include the text aText, the point of attachment, aPntAttach and the end point aPntEnd. These arguments are added to the presentation object aPresentation. Their display attributes are defined by the attribute manager aDrawer.
 
@@ -189,7 +190,7 @@ class DsgPrs_Chamf2dPresentation():
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aPntAttach : OCP.gp.gp_Pnt,aPntEnd : OCP.gp.gp_Pnt,aText : OCP.TCollection.TCollection_ExtendedString,ArrowSide : DsgPrs_ArrowSide) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aPntAttach : OCP.gp.gp_Pnt,aPntEnd : OCP.gp.gp_Pnt,aText : OCP.TCollection.TCollection_ExtendedString) -> None: ...
     def __init__(self) -> None: ...
     pass
 class DsgPrs_ConcentricPresentation():
@@ -323,7 +324,7 @@ class DsgPrs_IdenticPresentation():
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,aAx2 : OCP.gp.gp_Ax2,aCenter : OCP.gp.gp_Pnt,aFAttach : OCP.gp.gp_Pnt,aSAttach : OCP.gp.gp_Pnt,aPntOffset : OCP.gp.gp_Pnt,aPntOnCirc : OCP.gp.gp_Pnt) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,aAx2 : OCP.gp.gp_Ax2,aCenter : OCP.gp.gp_Pnt,aFAttach : OCP.gp.gp_Pnt,aSAttach : OCP.gp.gp_Pnt,aPntOffset : OCP.gp.gp_Pnt) -> None: 
         """
         draws a line between <aPntAttach> and <aPntOffset>.
 
@@ -337,16 +338,16 @@ class DsgPrs_IdenticPresentation():
         """
     @staticmethod
     @overload
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,aFAttach : OCP.gp.gp_Pnt,aSAttach : OCP.gp.gp_Pnt,aPntOffset : OCP.gp.gp_Pnt) -> None: ...
+    @staticmethod
+    @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,aPntAttach : OCP.gp.gp_Pnt,aPntOffset : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     @overload
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,aAx2 : OCP.gp.gp_Ax2,aCenter : OCP.gp.gp_Pnt,aFAttach : OCP.gp.gp_Pnt,aSAttach : OCP.gp.gp_Pnt,aPntOffset : OCP.gp.gp_Pnt,aPntOnCirc : OCP.gp.gp_Pnt) -> None: ...
+    @staticmethod
+    @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,anEllipse : OCP.gp.gp_Elips,aFAttach : OCP.gp.gp_Pnt,aSAttach : OCP.gp.gp_Pnt,aPntOffset : OCP.gp.gp_Pnt,aPntOnElli : OCP.gp.gp_Pnt) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,aAx2 : OCP.gp.gp_Ax2,aCenter : OCP.gp.gp_Pnt,aFAttach : OCP.gp.gp_Pnt,aSAttach : OCP.gp.gp_Pnt,aPntOffset : OCP.gp.gp_Pnt) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,aFAttach : OCP.gp.gp_Pnt,aSAttach : OCP.gp.gp_Pnt,aPntOffset : OCP.gp.gp_Pnt) -> None: ...
     def __init__(self) -> None: ...
     pass
 class DsgPrs_LengthPresentation():
@@ -355,7 +356,7 @@ class DsgPrs_LengthPresentation():
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,SecondSurf : OCP.Geom.Geom_Surface,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt) -> None: 
         """
         Draws a line segment representing a length in the display aPresentation. This segment joins the points AttachmentPoint1 and AttachmentPoint2, along the direction aDirection. The text aText will be displayed at the offset point OffsetPoint. The line and text attributes are specified by the attribute manager aDrawer.
 
@@ -369,13 +370,13 @@ class DsgPrs_LengthPresentation():
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide) -> None: ...
     @staticmethod
     @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,PlaneOfFaces : OCP.gp.gp_Pln,aDirection : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide) -> None: ...
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,SecondSurf : OCP.Geom.Geom_Surface,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide) -> None: ...
     @staticmethod
     @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide) -> None: ...
@@ -399,13 +400,13 @@ class DsgPrs_MidPointPresentation():
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theAxe : OCP.gp.gp_Ax2,MidPoint : OCP.gp.gp_Pnt,Position : OCP.gp.gp_Pnt,AttachPoint : OCP.gp.gp_Pnt,Point1 : OCP.gp.gp_Pnt,Point2 : OCP.gp.gp_Pnt,first : bool) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theAxe : OCP.gp.gp_Ax2,MidPoint : OCP.gp.gp_Pnt,Position : OCP.gp.gp_Pnt,AttachPoint : OCP.gp.gp_Pnt,first : bool) -> None: ...
     @staticmethod
     @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,anElips : OCP.gp.gp_Elips,MidPoint : OCP.gp.gp_Pnt,Position : OCP.gp.gp_Pnt,AttachPoint : OCP.gp.gp_Pnt,Point1 : OCP.gp.gp_Pnt,Point2 : OCP.gp.gp_Pnt,first : bool) -> None: ...
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theAxe : OCP.gp.gp_Ax2,MidPoint : OCP.gp.gp_Pnt,Position : OCP.gp.gp_Pnt,AttachPoint : OCP.gp.gp_Pnt,first : bool) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,theAxe : OCP.gp.gp_Ax2,MidPoint : OCP.gp.gp_Pnt,Position : OCP.gp.gp_Pnt,AttachPoint : OCP.gp.gp_Pnt,Point1 : OCP.gp.gp_Pnt,Point2 : OCP.gp.gp_Pnt,first : bool) -> None: ...
     def __init__(self) -> None: ...
     pass
 class DsgPrs_OffsetPresentation():
@@ -430,7 +431,7 @@ class DsgPrs_ParalPresentation():
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt) -> None: 
         """
         Defines the display of elements showing relations of parallelism between shapes. These include the two points of attachment AttachmentPoint1 and AttachmentPoint1, the direction aDirection, and the offset point OffsetPoint. These arguments are added to the presentation object aPresentation. Their display attributes are defined by the attribute manager aDrawer.
 
@@ -438,7 +439,7 @@ class DsgPrs_ParalPresentation():
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection : OCP.gp.gp_Dir,OffsetPoint : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide) -> None: ...
     def __init__(self) -> None: ...
     pass
 class DsgPrs_PerpenPresentation():
@@ -458,7 +459,7 @@ class DsgPrs_RadiusPresentation():
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint : OCP.gp.gp_Pnt,Center : OCP.gp.gp_Pnt,EndOfArrow : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide,drawFromCenter : bool=True,reverseArrow : bool=False) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint : OCP.gp.gp_Pnt,aCircle : OCP.gp.gp_Circ,firstparam : float,lastparam : float,drawFromCenter : bool=True,reverseArrow : bool=False) -> None: 
         """
         Adds the point AttachmentPoint, the circle aCircle, the text aText, and the parameters firstparam and lastparam to the presentation object aPresentation. The display attributes of these elements is defined by the attribute manager aDrawer. If the Boolean drawFromCenter is false, the arrowhead will point towards the center of aCircle. If the Boolean reverseArrow is true, the arrowhead will point away from the attachment point.
 
@@ -466,7 +467,7 @@ class DsgPrs_RadiusPresentation():
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint : OCP.gp.gp_Pnt,aCircle : OCP.gp.gp_Circ,firstparam : float,lastparam : float,drawFromCenter : bool=True,reverseArrow : bool=False) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,aText : OCP.TCollection.TCollection_ExtendedString,AttachmentPoint : OCP.gp.gp_Pnt,Center : OCP.gp.gp_Pnt,EndOfArrow : OCP.gp.gp_Pnt,ArrowSide : DsgPrs_ArrowSide,drawFromCenter : bool=True,reverseArrow : bool=False) -> None: ...
     def __init__(self) -> None: ...
     pass
 class DsgPrs_ShadedPlanePresentation():
@@ -508,7 +509,7 @@ class DsgPrs_SymmetricPresentation():
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection1 : OCP.gp.gp_Dir,aAxis : OCP.gp.gp_Lin,OffsetPoint : OCP.gp.gp_Pnt) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aCircle1 : OCP.gp.gp_Circ,aAxis : OCP.gp.gp_Lin,OffsetPoint : OCP.gp.gp_Pnt) -> None: 
         """
         Adds the points OffsetPoint, AttachmentPoint1, AttachmentPoint2, the direction aDirection1 and the axis anAxis to the presentation object aPresentation. The display attributes of the symmetry are defined by the attribute manager aDrawer. This syntax is used for display of symmetries between two segments.
 
@@ -521,7 +522,7 @@ class DsgPrs_SymmetricPresentation():
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aAxis : OCP.gp.gp_Lin,OffsetPoint : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aCircle1 : OCP.gp.gp_Circ,aAxis : OCP.gp.gp_Lin,OffsetPoint : OCP.gp.gp_Pnt) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aDrawer : OCP.Prs3d.Prs3d_Drawer,AttachmentPoint1 : OCP.gp.gp_Pnt,AttachmentPoint2 : OCP.gp.gp_Pnt,aDirection1 : OCP.gp.gp_Dir,aAxis : OCP.gp.gp_Lin,OffsetPoint : OCP.gp.gp_Pnt) -> None: ...
     def __init__(self) -> None: ...
     pass
 class DsgPrs_TangentPresentation():
@@ -541,7 +542,7 @@ class DsgPrs_XYZAxisPresentation():
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,anLineAspect : OCP.Prs3d.Prs3d_LineAspect,aDir : OCP.gp.gp_Dir,aVal : float,aText : str,aPfirst : OCP.gp.gp_Pnt,aPlast : OCP.gp.gp_Pnt) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aLineAspect : OCP.Prs3d.Prs3d_LineAspect,anArrowAspect : OCP.Prs3d.Prs3d_ArrowAspect,aTextAspect : OCP.Prs3d.Prs3d_TextAspect,aDir : OCP.gp.gp_Dir,aVal : float,aText : str,aPfirst : OCP.gp.gp_Pnt,aPlast : OCP.gp.gp_Pnt) -> None: 
         """
         Draws each axis of a trihedron displayed in the presentation aPresentation and with lines shown by the values of aLineAspect. Each axis is defined by: - the first and last points aPfirst and aPlast - the direction aDir and - the value aVal which provides a value for length. The value for length is provided so that the trihedron can vary in length relative to the scale of shape display. Each axis will be identified as X, Y, or Z by the text aText.
 
@@ -549,7 +550,7 @@ class DsgPrs_XYZAxisPresentation():
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aLineAspect : OCP.Prs3d.Prs3d_LineAspect,anArrowAspect : OCP.Prs3d.Prs3d_ArrowAspect,aTextAspect : OCP.Prs3d.Prs3d_TextAspect,aDir : OCP.gp.gp_Dir,aVal : float,aText : str,aPfirst : OCP.gp.gp_Pnt,aPlast : OCP.gp.gp_Pnt) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,anLineAspect : OCP.Prs3d.Prs3d_LineAspect,aDir : OCP.gp.gp_Dir,aVal : float,aText : str,aPfirst : OCP.gp.gp_Pnt,aPlast : OCP.gp.gp_Pnt) -> None: ...
     def __init__(self) -> None: ...
     pass
 class DsgPrs_XYZPlanePresentation():

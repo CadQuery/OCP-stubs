@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Quantity
-import OCP.TDataStd
-import OCP.Standard
-import OCP.gp
+import OCP.TDF
 import OCP.Poly
+import OCP.Quantity
+import OCP.TShort
+import OCP.Standard
 import OCP.TopoDS
 import OCP.TNaming
-import OCP.TDF
-import OCP.TShort
+import OCP.TDataStd
+import OCP.gp
 __all__  = [
 "TDataXtd",
 "TDataXtd_Array1OfTrsf",
@@ -77,7 +77,7 @@ class TDataXtd():
         """
     @staticmethod
     @overload
-    def Print_s(GEO : TDataXtd_GeometryEnum,S : Any) -> Any: 
+    def Print_s(CTR : TDataXtd_ConstraintEnum,S : Any) -> Any: 
         """
         Prints the name of the geometry dimension <GEO> as a String on the Stream <S> and returns <S>.
 
@@ -85,7 +85,7 @@ class TDataXtd():
         """
     @staticmethod
     @overload
-    def Print_s(CTR : TDataXtd_ConstraintEnum,S : Any) -> Any: ...
+    def Print_s(GEO : TDataXtd_GeometryEnum,S : Any) -> Any: ...
     def __init__(self) -> None: ...
     pass
 class TDataXtd_Array1OfTrsf():
@@ -165,13 +165,13 @@ class TDataXtd_Array1OfTrsf():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_Trsf,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TDataXtd_Array1OfTrsf) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : OCP.gp.gp_Trsf,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> iterator: ...
     pass
 class TDataXtd_Axis(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
@@ -317,14 +317,14 @@ class TDataXtd_Axis(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -564,14 +564,14 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def Inverted(self) -> bool: 
+    def Inverted(self,status : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Inverted(self,status : bool) -> None: ...
+    def Inverted(self) -> bool: ...
     def IsAttribute(self,anID : OCP.Standard.Standard_GUID) -> bool: 
         """
         Returns true if it exists an associated attribute of <me> with <anID> as ID.
@@ -593,14 +593,14 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -660,7 +660,7 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
     @overload
     def Reversed(self) -> bool: ...
     @overload
-    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape,G3 : OCP.TNaming.TNaming_NamedShape) -> None: 
+    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape,G3 : OCP.TNaming.TNaming_NamedShape,G4 : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
         Finds or creates the constraint attribute defined by the topological attribute G1 and the constraint type type.
 
@@ -673,9 +673,9 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
     @overload
     def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape) -> None: ...
     @overload
-    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape,G3 : OCP.TNaming.TNaming_NamedShape,G4 : OCP.TNaming.TNaming_NamedShape) -> None: ...
-    @overload
     def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape) -> None: ...
+    @overload
+    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape,G3 : OCP.TNaming.TNaming_NamedShape) -> None: ...
     def SetGeometry(self,Index : int,G : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
         Finds or creates the underlying geometry of the constraint defined by the topological attribute G and the integer index Index.
@@ -721,14 +721,14 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
         """
     @overload
-    def Verified(self,status : bool) -> None: 
+    def Verified(self) -> bool: 
         """
         Returns true if this constraint attribute is valid. By default, true is returned. When the value of a dimension is changed or when a geometry is moved, false is returned until the solver sets it back to true.
 
         Returns true if this constraint attribute defined by status is valid. By default, true is returned. When the value of a dimension is changed or when a geometry is moved, false is returned until the solver sets it back to true. If status is false, Verified is set to false.
         """
     @overload
-    def Verified(self) -> bool: ...
+    def Verified(self,status : bool) -> None: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -799,6 +799,7 @@ class TDataXtd_ConstraintEnum():
 
       TDataXtd_OFFSET
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -909,7 +910,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def Circle_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Circ) -> bool: ...
     @staticmethod
     @overload
-    def Cylinder_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Cylinder) -> bool: 
+    def Cylinder_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Cylinder) -> bool: 
         """
         Returns the cylinder attribute defined by the label L and the cylinder G.
 
@@ -917,7 +918,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Cylinder_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Cylinder) -> bool: ...
+    def Cylinder_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Cylinder) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1028,14 +1029,14 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1082,7 +1083,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Plane_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Pln) -> bool: 
+    def Plane_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Pln) -> bool: 
         """
         Returns the plane attribute defined by the label L and the plane G.
 
@@ -1090,7 +1091,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Plane_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Pln) -> bool: ...
+    def Plane_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Pln) -> bool: ...
     @staticmethod
     @overload
     def Point_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Pnt) -> bool: 
@@ -1140,7 +1141,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Type_s(S : OCP.TNaming.TNaming_NamedShape) -> TDataXtd_GeometryEnum: 
+    def Type_s(L : OCP.TDF.TDF_Label) -> TDataXtd_GeometryEnum: 
         """
         Returns the label L used to define the type of geometric construction for the geometry attribute.
 
@@ -1148,7 +1149,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Type_s(L : OCP.TDF.TDF_Label) -> TDataXtd_GeometryEnum: ...
+    def Type_s(S : OCP.TNaming.TNaming_NamedShape) -> TDataXtd_GeometryEnum: ...
     def UntilTransaction(self) -> int: 
         """
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
@@ -1187,6 +1188,7 @@ class TDataXtd_GeometryEnum():
 
       TDataXtd_CYLINDER
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -1273,14 +1275,14 @@ class TDataXtd_HArray1OfTrsf(TDataXtd_Array1OfTrsf, OCP.Standard.Standard_Transi
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1331,13 +1333,13 @@ class TDataXtd_HArray1OfTrsf(TDataXtd_Array1OfTrsf, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Trsf) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TDataXtd_Array1OfTrsf) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Trsf) -> None: ...
     def __iter__(self) -> iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1497,14 +1499,14 @@ class TDataXtd_Pattern(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1613,7 +1615,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         Something to do after applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
         """
     @overload
-    def Axis1(self) -> OCP.TNaming.TNaming_NamedShape: 
+    def Axis1(self,Axis1 : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
         None
 
@@ -1622,9 +1624,9 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Axis1(self,Axis1 : OCP.TNaming.TNaming_NamedShape) -> None: ...
+    def Axis1(self) -> OCP.TNaming.TNaming_NamedShape: ...
     @overload
-    def Axis1Reversed(self) -> bool: 
+    def Axis1Reversed(self,Axis1Reversed : bool) -> None: 
         """
         None
 
@@ -1633,7 +1635,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Axis1Reversed(self,Axis1Reversed : bool) -> None: ...
+    def Axis1Reversed(self) -> bool: ...
     @overload
     def Axis2(self,Axis2 : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
@@ -1784,14 +1786,14 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1818,7 +1820,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
         """
     @overload
-    def Mirror(self,plane : OCP.TNaming.TNaming_NamedShape) -> None: 
+    def Mirror(self) -> OCP.TNaming.TNaming_NamedShape: 
         """
         None
 
@@ -1827,7 +1829,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Mirror(self) -> OCP.TNaming.TNaming_NamedShape: ...
+    def Mirror(self,plane : OCP.TNaming.TNaming_NamedShape) -> None: ...
     @overload
     def NbInstances1(self) -> OCP.TDataStd.TDataStd_Integer: 
         """
@@ -1889,7 +1891,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         Find, or create, a PatternStd attribute
         """
     @overload
-    def Signature(self) -> int: 
+    def Signature(self,signature : int) -> None: 
         """
         None
 
@@ -1898,7 +1900,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Signature(self,signature : int) -> None: ...
+    def Signature(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1914,7 +1916,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
         """
     @overload
-    def Value1(self,value : OCP.TDataStd.TDataStd_Real) -> None: 
+    def Value1(self) -> OCP.TDataStd.TDataStd_Real: 
         """
         None
 
@@ -1923,7 +1925,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Value1(self) -> OCP.TDataStd.TDataStd_Real: ...
+    def Value1(self,value : OCP.TDataStd.TDataStd_Real) -> None: ...
     @overload
     def Value2(self,value : OCP.TDataStd.TDataStd_Real) -> None: 
         """
@@ -2087,14 +2089,14 @@ class TDataXtd_Placement(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2319,14 +2321,14 @@ class TDataXtd_Plane(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2557,14 +2559,14 @@ class TDataXtd_Point(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2804,14 +2806,14 @@ class TDataXtd_Position(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3090,14 +3092,14 @@ class TDataXtd_Presentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3413,14 +3415,14 @@ class TDataXtd_Shape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3671,14 +3673,14 @@ class TDataXtd_Triangulation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3775,7 +3777,7 @@ class TDataXtd_Triangulation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         """
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label,theTriangulation : OCP.Poly.Poly_Triangulation) -> TDataXtd_Triangulation: 
+    def Set_s(theLabel : OCP.TDF.TDF_Label) -> TDataXtd_Triangulation: 
         """
         Finds or creates a triangulation attribute.
 
@@ -3783,7 +3785,7 @@ class TDataXtd_Triangulation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         """
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label) -> TDataXtd_Triangulation: ...
+    def Set_s(theLabel : OCP.TDF.TDF_Label,theTriangulation : OCP.Poly.Poly_Triangulation) -> TDataXtd_Triangulation: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

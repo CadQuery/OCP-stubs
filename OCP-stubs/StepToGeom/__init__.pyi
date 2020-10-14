@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Geom2d
-import OCP.gp
-import OCP.Geom
 import OCP.StepGeom
+import OCP.Geom2d
+import OCP.Geom
+import OCP.gp
 __all__  = [
 "StepToGeom"
 ]

@@ -4,22 +4,22 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepShape
-import OCP.StepData
-import OCP.TopLoc
-import OCP.gp
-import OCP.TColStd
-import OCP.TopoDS
-import OCP.StepVisual
-import OCP.StepAP203
-import OCP.Quantity
-import OCP.Transfer
 import OCP.TCollection
-import OCP.Standard
-import OCP.StepGeom
 import OCP.StepRepr
-import OCP.XSControl
 import OCP.StepBasic
+import OCP.StepGeom
+import OCP.Transfer
+import OCP.StepShape
+import OCP.TopoDS
+import OCP.gp
+import OCP.StepAP203
+import OCP.TColStd
+import OCP.StepVisual
+import OCP.XSControl
+import OCP.Quantity
+import OCP.TopLoc
+import OCP.Standard
+import OCP.StepData
 import OCP.Interface
 __all__  = [
 "STEPConstruct",
@@ -45,7 +45,7 @@ class STEPConstruct():
         """
     @staticmethod
     @overload
-    def FindEntity_s(FinderProcess : OCP.Transfer.Transfer_FinderProcess,Shape : OCP.TopoDS.TopoDS_Shape,Loc : OCP.TopLoc.TopLoc_Location) -> OCP.StepRepr.StepRepr_RepresentationItem: 
+    def FindEntity_s(FinderProcess : OCP.Transfer.Transfer_FinderProcess,Shape : OCP.TopoDS.TopoDS_Shape) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         Returns STEP entity of the (sub)type of RepresentationItem which is a result of the tranalation of the Shape, or Null if no result is recorded
 
@@ -53,7 +53,7 @@ class STEPConstruct():
         """
     @staticmethod
     @overload
-    def FindEntity_s(FinderProcess : OCP.Transfer.Transfer_FinderProcess,Shape : OCP.TopoDS.TopoDS_Shape) -> OCP.StepRepr.StepRepr_RepresentationItem: ...
+    def FindEntity_s(FinderProcess : OCP.Transfer.Transfer_FinderProcess,Shape : OCP.TopoDS.TopoDS_Shape,Loc : OCP.TopLoc.TopLoc_Location) -> OCP.StepRepr.StepRepr_RepresentationItem: ...
     @staticmethod
     def FindShape_s(TransientProcess : OCP.Transfer.Transfer_TransientProcess,item : OCP.StepRepr.StepRepr_RepresentationItem) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -139,9 +139,9 @@ class STEPConstruct_AP203Context():
         Takes NAUO which describes assembly link to component and creates the security_classification entity associated to it as required by the AP203
         """
     @overload
-    def Init(self,nauo : OCP.StepRepr.StepRepr_NextAssemblyUsageOccurrence) -> None: ...
-    @overload
     def Init(self,SDRTool : STEPConstruct_Part) -> None: ...
+    @overload
+    def Init(self,nauo : OCP.StepRepr.StepRepr_NextAssemblyUsageOccurrence) -> None: ...
     def InitApprovalRequisites(self) -> None: 
         """
         Initializes Approver and ApprovalDateTime entities according to Approval entity
@@ -363,14 +363,14 @@ class STEPConstruct_Tool():
         Returns FinderProcess (writing; Null if not loaded)
         """
     @overload
-    def Graph(self,recompute : bool) -> OCP.Interface.Interface_Graph: 
+    def Graph(self,recompute : bool=False) -> OCP.Interface.Interface_Graph: 
         """
         Returns current graph (recomputing if necessary)
 
         Returns current graph (recomputing if necessary)
         """
     @overload
-    def Graph(self,recompute : bool=False) -> OCP.Interface.Interface_Graph: ...
+    def Graph(self,recompute : bool) -> OCP.Interface.Interface_Graph: ...
     def Model(self) -> OCP.Interface.Interface_InterfaceModel: 
         """
         Returns current model (Null if not loaded)
@@ -652,14 +652,14 @@ class STEPConstruct_Styles(STEPConstruct_Tool):
         Extract color definitions from the style entity For each type of color supported, result can be either NULL if it is not defined by that style, or last definition (if they are 1 or more)
         """
     @overload
-    def Graph(self,recompute : bool) -> OCP.Interface.Interface_Graph: 
+    def Graph(self,recompute : bool=False) -> OCP.Interface.Interface_Graph: 
         """
         Returns current graph (recomputing if necessary)
 
         Returns current graph (recomputing if necessary)
         """
     @overload
-    def Graph(self,recompute : bool=False) -> OCP.Interface.Interface_Graph: ...
+    def Graph(self,recompute : bool) -> OCP.Interface.Interface_Graph: ...
     def Init(self,WS : OCP.XSControl.XSControl_WorkSession) -> bool: 
         """
         Initializes tool; returns True if succeeded
@@ -738,14 +738,14 @@ class STEPConstruct_ExternRefs(STEPConstruct_Tool):
         Returns the ApplicationProtocolDefinition of the PDM schema NOTE: if not defined then create new APD with new Application Context
         """
     @overload
-    def Graph(self,recompute : bool) -> OCP.Interface.Interface_Graph: 
+    def Graph(self,recompute : bool=False) -> OCP.Interface.Interface_Graph: 
         """
         Returns current graph (recomputing if necessary)
 
         Returns current graph (recomputing if necessary)
         """
     @overload
-    def Graph(self,recompute : bool=False) -> OCP.Interface.Interface_Graph: ...
+    def Graph(self,recompute : bool) -> OCP.Interface.Interface_Graph: ...
     def Init(self,WS : OCP.XSControl.XSControl_WorkSession) -> bool: 
         """
         Initializes tool; returns True if succeeded
@@ -789,9 +789,9 @@ class STEPConstruct_ExternRefs(STEPConstruct_Tool):
         Adds all the currently defined external refs to the model Returns number of written extern refs
         """
     @overload
-    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession) -> None: ...
     def checkAP214Shared(self) -> None: ...
     pass
 class STEPConstruct_UnitContext():
@@ -807,14 +807,14 @@ class STEPConstruct_UnitContext():
         Returns the areaFactor
         """
     @overload
-    def ComputeFactors(self,aContext : OCP.StepRepr.StepRepr_GlobalUnitAssignedContext) -> int: 
+    def ComputeFactors(self,aUnit : OCP.StepBasic.StepBasic_NamedUnit) -> int: 
         """
         Computes the length, plane angle and solid angle conversion factor . Returns a status, 0 if OK
 
         None
         """
     @overload
-    def ComputeFactors(self,aUnit : OCP.StepBasic.StepBasic_NamedUnit) -> int: ...
+    def ComputeFactors(self,aContext : OCP.StepRepr.StepRepr_GlobalUnitAssignedContext) -> int: ...
     def ComputeTolerance(self,aContext : OCP.StepRepr.StepRepr_GlobalUncertaintyAssignedContext) -> int: 
         """
         Computes the uncertainty value (for length)
@@ -934,23 +934,23 @@ class STEPConstruct_ValidationProps(STEPConstruct_Tool):
         Returns value of Real-Valued property (Area or Volume) If Property is neither Area nor Volume, returns False Else returns True and isArea indicates whether property is area or volume
         """
     @overload
-    def GetPropShape(self,PD : OCP.StepRepr.StepRepr_PropertyDefinition) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetPropShape(self,ProdDef : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns Shape associated with given SDR or Null Shape if not found
 
         Returns Shape associated with given PpD or Null Shape if not found
         """
     @overload
-    def GetPropShape(self,ProdDef : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetPropShape(self,PD : OCP.StepRepr.StepRepr_PropertyDefinition) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def Graph(self,recompute : bool) -> OCP.Interface.Interface_Graph: 
+    def Graph(self,recompute : bool=False) -> OCP.Interface.Interface_Graph: 
         """
         Returns current graph (recomputing if necessary)
 
         Returns current graph (recomputing if necessary)
         """
     @overload
-    def Graph(self,recompute : bool=False) -> OCP.Interface.Interface_Graph: ...
+    def Graph(self,recompute : bool) -> OCP.Interface.Interface_Graph: ...
     def Init(self,WS : OCP.XSControl.XSControl_WorkSession) -> bool: 
         """
         Load worksession; returns True if succeeded
@@ -982,7 +982,7 @@ class STEPConstruct_ValidationProps(STEPConstruct_Tool):
         Returns currently loaded WorkSession
         """
     @overload
-    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession) -> None: ...
     pass

@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepShape
-import OCP.Transfer
 import OCP.TCollection
+import OCP.TColStd
+import OCP.Transfer
+import OCP.StepShape
 import OCP.TopoDS
 import OCP.Standard
-import OCP.TColStd
 __all__  = [
 "TopoDSToStep",
 "TopoDSToStep_Root",
@@ -124,6 +124,7 @@ class TopoDSToStep_BuilderError():
 
       TopoDSToStep_BuilderOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -151,6 +152,7 @@ class TopoDSToStep_FacetedError():
 
       TopoDSToStep_PCurveNotLinear
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -211,6 +213,7 @@ class TopoDSToStep_MakeEdgeError():
 
       TopoDSToStep_EdgeOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -242,6 +245,7 @@ class TopoDSToStep_MakeFaceError():
 
       TopoDSToStep_FaceOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -366,11 +370,11 @@ class TopoDSToStep_MakeShellBasedSurfaceModel(TopoDSToStep_Root):
         None
         """
     @overload
+    def __init__(self,F : OCP.TopoDS.TopoDS_Face,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shell,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
     @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
-    @overload
-    def __init__(self,F : OCP.TopoDS.TopoDS_Face,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -401,9 +405,9 @@ class TopoDSToStep_MakeStepEdge(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -467,9 +471,9 @@ class TopoDSToStep_MakeStepVertex(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,V : OCP.TopoDS.TopoDS_Vertex,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -522,6 +526,7 @@ class TopoDSToStep_MakeVertexError():
 
       TopoDSToStep_VertexOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -548,6 +553,7 @@ class TopoDSToStep_MakeWireError():
 
       TopoDSToStep_WireOther
     """
+    def __index__(self) -> int: ...
     def __init__(self,arg0 : int) -> None: ...
     def __int__(self) -> int: ...
     @property
@@ -718,9 +724,9 @@ class TopoDSToStep_WireframeBuilder(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @property
     def Tolerance(self) -> float:
         """

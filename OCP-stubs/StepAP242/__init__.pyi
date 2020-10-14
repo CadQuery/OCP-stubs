@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepData
-import OCP.StepShape
 import OCP.TCollection
-import OCP.StepDimTol
-import OCP.Standard
 import OCP.StepRepr
-import OCP.StepAP214
 import OCP.StepBasic
+import OCP.StepShape
+import OCP.Standard
+import OCP.StepDimTol
+import OCP.StepAP214
+import OCP.StepData
 __all__  = [
 "StepAP242_ItemIdentifiedRepresentationUsage",
 "StepAP242_GeometricItemSpecificUsage",
@@ -62,14 +62,14 @@ class StepAP242_ItemIdentifiedRepresentationUsage(OCP.Standard.Standard_Transien
         Init all fields own and inherited
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -176,14 +176,14 @@ class StepAP242_GeometricItemSpecificUsage(StepAP242_ItemIdentifiedRepresentatio
         Init all fields own and inherited
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -279,14 +279,14 @@ class StepAP242_IdAttribute(OCP.Standard.Standard_Transient):
         Init all field own and inherited
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -511,14 +511,14 @@ class StepAP242_DraughtingModelItemAssociation(StepAP242_ItemIdentifiedRepresent
         Init all fields own and inherited
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
     def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """

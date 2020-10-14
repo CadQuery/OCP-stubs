@@ -53,7 +53,7 @@ class Precision():
         """
     @staticmethod
     @overload
-    def PApproximation_s(T : float) -> float: 
+    def PApproximation_s() -> float: 
         """
         Returns a precision value in parametric space, which may be used by approximation algorithms. The purpose of this function is to provide an acceptable level of precision in parametric space, for an approximation process to define the adjustment limits. The parametric tolerance of approximation is designed to give a mean value in relation with the dimension of the curve or the surface. It considers that a variation of parameter equal to 1. along a curve (or an isoparametric curve of a surface) generates a segment whose length is equal to 100. (default value), or T. The parametric tolerance of intersection is equal to : - Precision::Approximation() / 100., or Precision::Approximation() / T.
 
@@ -61,10 +61,10 @@ class Precision():
         """
     @staticmethod
     @overload
-    def PApproximation_s() -> float: ...
+    def PApproximation_s(T : float) -> float: ...
     @staticmethod
     @overload
-    def PConfusion_s(T : float) -> float: 
+    def PConfusion_s() -> float: 
         """
         Returns a precision value in parametric space, which may be used : - to test the coincidence of two points in the real space, by using parameter values, or - to test the equality of two parameter values in a parametric space. The parametric tolerance of confusion is designed to give a mean value in relation with the dimension of the curve or the surface. It considers that a variation of parameter equal to 1. along a curve (or an isoparametric curve of a surface) generates a segment whose length is equal to 100. (default value), or T. The parametric tolerance of confusion is equal to : - Precision::Confusion() / 100., or Precision::Confusion() / T. The value of the parametric tolerance of confusion is also used to define : - the parametric tolerance of intersection, and - the parametric tolerance of approximation. Warning It is rather difficult to define a unique precision value in parametric space. - First consider a curve (c) ; if M is the point of parameter u and M' the point of parameter u+du on the curve, call 'parametric tangent' at point M, for the variation du of the parameter, the quantity : T(u,du)=MM'/du (where MM' represents the distance between the two points M and M', in the real space). - Consider the other curve resulting from a scaling transformation of (c) with a scale factor equal to 10. The 'parametric tangent' at the point of parameter u of this curve is ten times greater than the previous one. This shows that for two different curves, the distance between two points on the curve, resulting from the same variation of parameter du, may vary considerably. - Moreover, the variation of the parameter along the curve is generally not proportional to the curvilinear abscissa along the curve. So the distance between two points resulting from the same variation of parameter du, at two different points of a curve, may completely differ. - Moreover, the parameterization of a surface may generate two quite different 'parametric tangent' values in the u or in the v parametric direction. - Last, close to the poles of a sphere (the points which correspond to the values -Pi/2. and Pi/2. of the v parameter) the u parameter may change from 0 to 2.Pi without impacting on the resulting point. Therefore, take great care when adjusting a parametric tolerance to your own algorithm.
 
@@ -72,10 +72,10 @@ class Precision():
         """
     @staticmethod
     @overload
-    def PConfusion_s() -> float: ...
+    def PConfusion_s(T : float) -> float: ...
     @staticmethod
     @overload
-    def PIntersection_s(T : float) -> float: 
+    def PIntersection_s() -> float: 
         """
         Returns a precision value in parametric space, which may be used by intersection algorithms, to decide that a solution is reached. The purpose of this function is to provide an acceptable level of precision in parametric space, for an intersection process to define the adjustment limits. The parametric tolerance of intersection is designed to give a mean value in relation with the dimension of the curve or the surface. It considers that a variation of parameter equal to 1. along a curve (or an isoparametric curve of a surface) generates a segment whose length is equal to 100. (default value), or T. The parametric tolerance of intersection is equal to : - Precision::Intersection() / 100., or Precision::Intersection() / T.
 
@@ -83,7 +83,7 @@ class Precision():
         """
     @staticmethod
     @overload
-    def PIntersection_s() -> float: ...
+    def PIntersection_s(T : float) -> float: ...
     @staticmethod
     @overload
     def Parametric_s(P : float) -> float: 
