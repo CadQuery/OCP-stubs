@@ -4,16 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.BOPDS
-import OCP.Message
 import OCP.TopTools
-import OCP.Standard
-import OCP.TopoDS
-import OCP.IntTools
+import io
 import OCP.NCollection
+import OCP.Message
 import OCP.BOPTools
 import OCP.BRepTools
+import OCP.IntTools
+import OCP.gp
+import OCP.TopoDS
+import OCP.Bnd
+import OCP.BOPDS
+import OCP.Standard
+import OCP.TopAbs
 __all__  = [
 "BOPAlgo_AlertAcquiredSelfIntersection",
 "BOPAlgo_AlertBOPNotAllowed",
@@ -46,6 +49,7 @@ __all__  = [
 "BOPAlgo_AlertTooFewArguments",
 "BOPAlgo_AlertTooSmallEdge",
 "BOPAlgo_AlertUnableToGlue",
+"BOPAlgo_AlertUnableToMakeClosedEdgeOnFace",
 "BOPAlgo_AlertUnableToMakeIdentical",
 "BOPAlgo_AlertUnableToMakePeriodic",
 "BOPAlgo_AlertUnableToOrientTheShape",
@@ -119,6 +123,10 @@ class BOPAlgo_AlertAcquiredSelfIntersection(OCP.TopoDS.TopoDS_AlertWithShape, OC
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -198,6 +206,10 @@ class BOPAlgo_AlertBOPNotAllowed(OCP.Message.Message_Alert, OCP.Standard.Standar
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -268,6 +280,10 @@ class BOPAlgo_AlertBOPNotSet(OCP.Message.Message_Alert, OCP.Standard.Standard_Tr
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -337,6 +353,10 @@ class BOPAlgo_AlertBadPositioning(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -416,6 +436,10 @@ class BOPAlgo_AlertBuilderFailed(OCP.Message.Message_Alert, OCP.Standard.Standar
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -485,6 +509,10 @@ class BOPAlgo_AlertBuildingPCurveFailed(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Me
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -564,6 +592,10 @@ class BOPAlgo_AlertEmptyShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Mess
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -641,6 +673,10 @@ class BOPAlgo_AlertFaceBuilderUnusedEdges(OCP.TopoDS.TopoDS_AlertWithShape, OCP.
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -720,6 +756,10 @@ class BOPAlgo_AlertIntersectionFailed(OCP.Message.Message_Alert, OCP.Standard.St
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -789,6 +829,10 @@ class BOPAlgo_AlertIntersectionOfPairOfShapesFailed(OCP.TopoDS.TopoDS_AlertWithS
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -868,6 +912,10 @@ class BOPAlgo_AlertMultiDimensionalArguments(OCP.Message.Message_Alert, OCP.Stan
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -937,6 +985,10 @@ class BOPAlgo_AlertMultipleArguments(OCP.Message.Message_Alert, OCP.Standard.Sta
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1008,6 +1060,10 @@ class BOPAlgo_AlertNoFacesToRemove(OCP.Message.Message_Alert, OCP.Standard.Stand
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1077,6 +1133,10 @@ class BOPAlgo_AlertNoFiller(OCP.Message.Message_Alert, OCP.Standard.Standard_Tra
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1148,6 +1208,10 @@ class BOPAlgo_AlertNoPeriodicityRequired(OCP.Message.Message_Alert, OCP.Standard
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1217,6 +1281,10 @@ class BOPAlgo_AlertNotSplittableEdge(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Messa
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1296,6 +1364,10 @@ class BOPAlgo_AlertNullInputShapes(OCP.Message.Message_Alert, OCP.Standard.Stand
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1366,6 +1438,10 @@ class BOPAlgo_AlertPostTreatFF(OCP.Message.Message_Alert, OCP.Standard.Standard_
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1435,6 +1511,10 @@ class BOPAlgo_AlertRemovalOfIBForEdgesFailed(OCP.TopoDS.TopoDS_AlertWithShape, O
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1514,6 +1594,10 @@ class BOPAlgo_AlertRemovalOfIBForFacesFailed(OCP.TopoDS.TopoDS_AlertWithShape, O
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1591,6 +1675,10 @@ class BOPAlgo_AlertRemovalOfIBForMDimShapes(OCP.TopoDS.TopoDS_AlertWithShape, OC
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1670,6 +1758,10 @@ class BOPAlgo_AlertRemovalOfIBForSolidsFailed(OCP.TopoDS.TopoDS_AlertWithShape, 
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1748,6 +1840,10 @@ class BOPAlgo_AlertRemoveFeaturesFailed(OCP.Message.Message_Alert, OCP.Standard.
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1817,6 +1913,10 @@ class BOPAlgo_AlertSelfInterferingShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Me
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1896,6 +1996,10 @@ class BOPAlgo_AlertShapeIsNotPeriodic(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Mess
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1973,6 +2077,10 @@ class BOPAlgo_AlertShellSplitterFailed(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Mes
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2052,6 +2160,10 @@ class BOPAlgo_AlertSolidBuilderFailed(OCP.Message.Message_Alert, OCP.Standard.St
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2121,6 +2233,10 @@ class BOPAlgo_AlertSolidBuilderUnusedFaces(OCP.TopoDS.TopoDS_AlertWithShape, OCP
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2200,6 +2316,10 @@ class BOPAlgo_AlertTooFewArguments(OCP.Message.Message_Alert, OCP.Standard.Stand
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2269,6 +2389,10 @@ class BOPAlgo_AlertTooSmallEdge(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2348,6 +2472,92 @@ class BOPAlgo_AlertUnableToGlue(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetMessageKey(self) -> str: 
+        """
+        Return a C string to be used as a key for generating text user messages describing this alert. The messages are generated with help of Message_Msg class, in Message_Report::Dump(). Base implementation returns dynamic type name of the instance.
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def GetShape(self) -> OCP.TopoDS.TopoDS_Shape: 
+        """
+        Returns contained shape
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
+        """
+        Returns false.
+        """
+    def SetShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: 
+        """
+        Sets the shape
+        """
+    def SupportsMerge(self) -> bool: 
+        """
+        Returns false.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class BOPAlgo_AlertUnableToMakeClosedEdgeOnFace(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Message_Alert, OCP.Standard.Standard_Transient):
+    """
+    Unable to make closed edge on face (to make a seam)
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2425,6 +2635,10 @@ class BOPAlgo_AlertUnableToMakeIdentical(OCP.TopoDS.TopoDS_AlertWithShape, OCP.M
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2504,6 +2718,10 @@ class BOPAlgo_AlertUnableToMakePeriodic(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Me
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2581,6 +2799,10 @@ class BOPAlgo_AlertUnableToOrientTheShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2660,6 +2882,10 @@ class BOPAlgo_AlertUnableToRemoveTheFeature(OCP.TopoDS.TopoDS_AlertWithShape, OC
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2737,6 +2963,10 @@ class BOPAlgo_AlertUnableToRepeat(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2816,6 +3046,10 @@ class BOPAlgo_AlertUnableToTrim(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2894,6 +3128,10 @@ class BOPAlgo_AlertUnknownShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2971,6 +3209,10 @@ class BOPAlgo_AlertUnsupportedType(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -3062,11 +3304,11 @@ class BOPAlgo_Options():
         """
         Clears the warnings of the algorithm
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -3112,7 +3354,7 @@ class BOPAlgo_Options():
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -3129,9 +3371,9 @@ class BOPAlgo_Options():
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_Algo(BOPAlgo_Options):
     """
@@ -3157,11 +3399,11 @@ class BOPAlgo_Algo(BOPAlgo_Options):
         """
         Clears the warnings of the algorithm
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -3211,7 +3453,7 @@ class BOPAlgo_Algo(BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -3252,11 +3494,11 @@ class BOPAlgo_BuilderShape(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Clears the warnings of the algorithm
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -3338,7 +3580,7 @@ class BOPAlgo_BuilderShape(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -3388,14 +3630,14 @@ class BOPAlgo_Builder(BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options):
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -3412,11 +3654,11 @@ class BOPAlgo_Builder(BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options):
         """
         Returns the Context, tool for cashing heavy algorithms.
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -3542,7 +3784,7 @@ class BOPAlgo_Builder(BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -3603,11 +3845,11 @@ class BOPAlgo_BuilderArea(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Clears the warnings of the algorithm
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -3673,7 +3915,7 @@ class BOPAlgo_BuilderArea(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -3726,11 +3968,11 @@ class BOPAlgo_BuilderFace(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
         """
         Clears the warnings of the algorithm
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -3808,7 +4050,7 @@ class BOPAlgo_BuilderFace(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -3833,9 +4075,9 @@ class BOPAlgo_BuilderFace(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
 class BOPAlgo_ToolsProvider(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options):
     """
@@ -3866,14 +4108,14 @@ class BOPAlgo_ToolsProvider(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo,
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -3890,11 +4132,11 @@ class BOPAlgo_ToolsProvider(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo,
         """
         Returns the Context, tool for cashing heavy algorithms.
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -4020,7 +4262,7 @@ class BOPAlgo_ToolsProvider(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo,
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -4057,9 +4299,9 @@ class BOPAlgo_ToolsProvider(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo,
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
 class BOPAlgo_BuilderSolid(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
     """
@@ -4089,11 +4331,11 @@ class BOPAlgo_BuilderSolid(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
         """
         Clears the warnings of the algorithm
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -4163,7 +4405,7 @@ class BOPAlgo_BuilderSolid(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -4225,14 +4467,14 @@ class BOPAlgo_CellsBuilder(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, 
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -4249,11 +4491,11 @@ class BOPAlgo_CellsBuilder(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, 
         """
         Returns the Context, tool for cashing heavy algorithms.
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -4399,7 +4641,7 @@ class BOPAlgo_CellsBuilder(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, 
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -4428,9 +4670,9 @@ class BOPAlgo_CellsBuilder(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, 
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
 class BOPAlgo_CheckResult():
     """
@@ -4540,30 +4782,38 @@ class BOPAlgo_CheckStatus():
 
       BOPAlgo_NotValid
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BOPAlgo_BadType: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_BadType
-    BOPAlgo_CheckUnknown: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_CheckUnknown
-    BOPAlgo_GeomAbs_C0: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_GeomAbs_C0
-    BOPAlgo_IncompatibilityOfEdge: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfEdge
-    BOPAlgo_IncompatibilityOfFace: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfFace
-    BOPAlgo_IncompatibilityOfVertex: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfVertex
-    BOPAlgo_InvalidCurveOnSurface: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_InvalidCurveOnSurface
-    BOPAlgo_NonRecoverableFace: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_NonRecoverableFace
-    BOPAlgo_NotValid: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_NotValid
-    BOPAlgo_OperationAborted: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_OperationAborted
-    BOPAlgo_SelfIntersect: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_SelfIntersect
-    BOPAlgo_TooSmallEdge: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_TooSmallEdge
-    __entries: dict # value = {'BOPAlgo_CheckUnknown': (BOPAlgo_CheckStatus.BOPAlgo_CheckUnknown, None), 'BOPAlgo_BadType': (BOPAlgo_CheckStatus.BOPAlgo_BadType, None), 'BOPAlgo_SelfIntersect': (BOPAlgo_CheckStatus.BOPAlgo_SelfIntersect, None), 'BOPAlgo_TooSmallEdge': (BOPAlgo_CheckStatus.BOPAlgo_TooSmallEdge, None), 'BOPAlgo_NonRecoverableFace': (BOPAlgo_CheckStatus.BOPAlgo_NonRecoverableFace, None), 'BOPAlgo_IncompatibilityOfVertex': (BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfVertex, None), 'BOPAlgo_IncompatibilityOfEdge': (BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfEdge, None), 'BOPAlgo_IncompatibilityOfFace': (BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfFace, None), 'BOPAlgo_OperationAborted': (BOPAlgo_CheckStatus.BOPAlgo_OperationAborted, None), 'BOPAlgo_GeomAbs_C0': (BOPAlgo_CheckStatus.BOPAlgo_GeomAbs_C0, None), 'BOPAlgo_InvalidCurveOnSurface': (BOPAlgo_CheckStatus.BOPAlgo_InvalidCurveOnSurface, None), 'BOPAlgo_NotValid': (BOPAlgo_CheckStatus.BOPAlgo_NotValid, None)}
-    __members__: dict # value = {'BOPAlgo_CheckUnknown': BOPAlgo_CheckStatus.BOPAlgo_CheckUnknown, 'BOPAlgo_BadType': BOPAlgo_CheckStatus.BOPAlgo_BadType, 'BOPAlgo_SelfIntersect': BOPAlgo_CheckStatus.BOPAlgo_SelfIntersect, 'BOPAlgo_TooSmallEdge': BOPAlgo_CheckStatus.BOPAlgo_TooSmallEdge, 'BOPAlgo_NonRecoverableFace': BOPAlgo_CheckStatus.BOPAlgo_NonRecoverableFace, 'BOPAlgo_IncompatibilityOfVertex': BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfVertex, 'BOPAlgo_IncompatibilityOfEdge': BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfEdge, 'BOPAlgo_IncompatibilityOfFace': BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfFace, 'BOPAlgo_OperationAborted': BOPAlgo_CheckStatus.BOPAlgo_OperationAborted, 'BOPAlgo_GeomAbs_C0': BOPAlgo_CheckStatus.BOPAlgo_GeomAbs_C0, 'BOPAlgo_InvalidCurveOnSurface': BOPAlgo_CheckStatus.BOPAlgo_InvalidCurveOnSurface, 'BOPAlgo_NotValid': BOPAlgo_CheckStatus.BOPAlgo_NotValid}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BOPAlgo_BadType: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_BadType: 1>
+    BOPAlgo_CheckUnknown: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_CheckUnknown: 0>
+    BOPAlgo_GeomAbs_C0: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_GeomAbs_C0: 9>
+    BOPAlgo_IncompatibilityOfEdge: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfEdge: 6>
+    BOPAlgo_IncompatibilityOfFace: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfFace: 7>
+    BOPAlgo_IncompatibilityOfVertex: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfVertex: 5>
+    BOPAlgo_InvalidCurveOnSurface: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_InvalidCurveOnSurface: 10>
+    BOPAlgo_NonRecoverableFace: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_NonRecoverableFace: 4>
+    BOPAlgo_NotValid: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_NotValid: 11>
+    BOPAlgo_OperationAborted: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_OperationAborted: 8>
+    BOPAlgo_SelfIntersect: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_SelfIntersect: 2>
+    BOPAlgo_TooSmallEdge: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_TooSmallEdge: 3>
+    __entries: dict # value = {'BOPAlgo_CheckUnknown': (<BOPAlgo_CheckStatus.BOPAlgo_CheckUnknown: 0>, None), 'BOPAlgo_BadType': (<BOPAlgo_CheckStatus.BOPAlgo_BadType: 1>, None), 'BOPAlgo_SelfIntersect': (<BOPAlgo_CheckStatus.BOPAlgo_SelfIntersect: 2>, None), 'BOPAlgo_TooSmallEdge': (<BOPAlgo_CheckStatus.BOPAlgo_TooSmallEdge: 3>, None), 'BOPAlgo_NonRecoverableFace': (<BOPAlgo_CheckStatus.BOPAlgo_NonRecoverableFace: 4>, None), 'BOPAlgo_IncompatibilityOfVertex': (<BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfVertex: 5>, None), 'BOPAlgo_IncompatibilityOfEdge': (<BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfEdge: 6>, None), 'BOPAlgo_IncompatibilityOfFace': (<BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfFace: 7>, None), 'BOPAlgo_OperationAborted': (<BOPAlgo_CheckStatus.BOPAlgo_OperationAborted: 8>, None), 'BOPAlgo_GeomAbs_C0': (<BOPAlgo_CheckStatus.BOPAlgo_GeomAbs_C0: 9>, None), 'BOPAlgo_InvalidCurveOnSurface': (<BOPAlgo_CheckStatus.BOPAlgo_InvalidCurveOnSurface: 10>, None), 'BOPAlgo_NotValid': (<BOPAlgo_CheckStatus.BOPAlgo_NotValid: 11>, None)}
+    __members__: dict # value = {'BOPAlgo_CheckUnknown': <BOPAlgo_CheckStatus.BOPAlgo_CheckUnknown: 0>, 'BOPAlgo_BadType': <BOPAlgo_CheckStatus.BOPAlgo_BadType: 1>, 'BOPAlgo_SelfIntersect': <BOPAlgo_CheckStatus.BOPAlgo_SelfIntersect: 2>, 'BOPAlgo_TooSmallEdge': <BOPAlgo_CheckStatus.BOPAlgo_TooSmallEdge: 3>, 'BOPAlgo_NonRecoverableFace': <BOPAlgo_CheckStatus.BOPAlgo_NonRecoverableFace: 4>, 'BOPAlgo_IncompatibilityOfVertex': <BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfVertex: 5>, 'BOPAlgo_IncompatibilityOfEdge': <BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfEdge: 6>, 'BOPAlgo_IncompatibilityOfFace': <BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfFace: 7>, 'BOPAlgo_OperationAborted': <BOPAlgo_CheckStatus.BOPAlgo_OperationAborted: 8>, 'BOPAlgo_GeomAbs_C0': <BOPAlgo_CheckStatus.BOPAlgo_GeomAbs_C0: 9>, 'BOPAlgo_InvalidCurveOnSurface': <BOPAlgo_CheckStatus.BOPAlgo_InvalidCurveOnSurface: 10>, 'BOPAlgo_NotValid': <BOPAlgo_CheckStatus.BOPAlgo_NotValid: 11>}
     pass
 class BOPAlgo_PaveFiller(BOPAlgo_Algo, BOPAlgo_Options):
     """
@@ -4605,11 +4855,11 @@ class BOPAlgo_PaveFiller(BOPAlgo_Algo, BOPAlgo_Options):
         """
         None
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -4691,7 +4941,7 @@ class BOPAlgo_PaveFiller(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -4712,9 +4962,9 @@ class BOPAlgo_PaveFiller(BOPAlgo_Algo, BOPAlgo_Options):
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
 class BOPAlgo_EdgeInfo():
     """
@@ -4732,6 +4982,10 @@ class BOPAlgo_EdgeInfo():
         """
         None
         """
+    def IsInside(self) -> bool: 
+        """
+        None
+        """
     def Passed(self) -> bool: 
         """
         None
@@ -4745,6 +4999,10 @@ class BOPAlgo_EdgeInfo():
         None
         """
     def SetInFlag(self,theFlag : bool) -> None: 
+        """
+        None
+        """
+    def SetIsInside(self,theIsInside : bool) -> None: 
         """
         None
         """
@@ -4766,21 +5024,29 @@ class BOPAlgo_GlueEnum():
 
       BOPAlgo_GlueFull
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BOPAlgo_GlueFull: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = BOPAlgo_GlueEnum.BOPAlgo_GlueFull
-    BOPAlgo_GlueOff: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = BOPAlgo_GlueEnum.BOPAlgo_GlueOff
-    BOPAlgo_GlueShift: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = BOPAlgo_GlueEnum.BOPAlgo_GlueShift
-    __entries: dict # value = {'BOPAlgo_GlueOff': (BOPAlgo_GlueEnum.BOPAlgo_GlueOff, None), 'BOPAlgo_GlueShift': (BOPAlgo_GlueEnum.BOPAlgo_GlueShift, None), 'BOPAlgo_GlueFull': (BOPAlgo_GlueEnum.BOPAlgo_GlueFull, None)}
-    __members__: dict # value = {'BOPAlgo_GlueOff': BOPAlgo_GlueEnum.BOPAlgo_GlueOff, 'BOPAlgo_GlueShift': BOPAlgo_GlueEnum.BOPAlgo_GlueShift, 'BOPAlgo_GlueFull': BOPAlgo_GlueEnum.BOPAlgo_GlueFull}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BOPAlgo_GlueFull: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = <BOPAlgo_GlueEnum.BOPAlgo_GlueFull: 2>
+    BOPAlgo_GlueOff: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = <BOPAlgo_GlueEnum.BOPAlgo_GlueOff: 0>
+    BOPAlgo_GlueShift: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = <BOPAlgo_GlueEnum.BOPAlgo_GlueShift: 1>
+    __entries: dict # value = {'BOPAlgo_GlueOff': (<BOPAlgo_GlueEnum.BOPAlgo_GlueOff: 0>, None), 'BOPAlgo_GlueShift': (<BOPAlgo_GlueEnum.BOPAlgo_GlueShift: 1>, None), 'BOPAlgo_GlueFull': (<BOPAlgo_GlueEnum.BOPAlgo_GlueFull: 2>, None)}
+    __members__: dict # value = {'BOPAlgo_GlueOff': <BOPAlgo_GlueEnum.BOPAlgo_GlueOff: 0>, 'BOPAlgo_GlueShift': <BOPAlgo_GlueEnum.BOPAlgo_GlueShift: 1>, 'BOPAlgo_GlueFull': <BOPAlgo_GlueEnum.BOPAlgo_GlueFull: 2>}
     pass
 class BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo(OCP.NCollection.NCollection_BaseMap):
     """
@@ -4811,14 +5077,14 @@ class BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo(OCP.NCollection.NCollection_Ba
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Contains
@@ -4836,14 +5102,14 @@ class BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo(OCP.NCollection.NCollection_Ba
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> BOPAlgo_ListOfEdgeInfo: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : BOPAlgo_ListOfEdgeInfo) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : BOPAlgo_ListOfEdgeInfo) -> bool: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> BOPAlgo_ListOfEdgeInfo: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         FindIndex
@@ -4884,7 +5150,7 @@ class BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo(OCP.NCollection.NCollection_Ba
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -4899,10 +5165,10 @@ class BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo(OCP.NCollection.NCollection_Ba
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
     """
@@ -4944,14 +5210,14 @@ class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : BOPAlgo_CheckResult,theIter : Any) -> BOPAlgo_CheckResult: 
+    def InsertAfter(self,theOther : BOPAlgo_ListOfCheckResult,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : BOPAlgo_ListOfCheckResult,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : BOPAlgo_CheckResult,theIter : Any) -> BOPAlgo_CheckResult: ...
     @overload
     def InsertBefore(self,theItem : BOPAlgo_CheckResult,theIter : Any) -> BOPAlgo_CheckResult: 
         """
@@ -4997,12 +5263,12 @@ class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : BOPAlgo_ListOfCheckResult) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
     """
@@ -5013,7 +5279,7 @@ class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : BOPAlgo_EdgeInfo,theIter : Any) -> None: 
+    def Append(self,theOther : BOPAlgo_ListOfEdgeInfo) -> None: 
         """
         Append one item at the end
 
@@ -5022,7 +5288,7 @@ class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : BOPAlgo_ListOfEdgeInfo) -> None: ...
+    def Append(self,theItem : BOPAlgo_EdgeInfo,theIter : Any) -> None: ...
     @overload
     def Append(self,theItem : BOPAlgo_EdgeInfo) -> BOPAlgo_EdgeInfo: ...
     def Assign(self,theOther : BOPAlgo_ListOfEdgeInfo) -> BOPAlgo_ListOfEdgeInfo: 
@@ -5044,23 +5310,23 @@ class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : BOPAlgo_ListOfEdgeInfo,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : BOPAlgo_EdgeInfo,theIter : Any) -> BOPAlgo_EdgeInfo: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : BOPAlgo_EdgeInfo,theIter : Any) -> BOPAlgo_EdgeInfo: ...
+    def InsertAfter(self,theOther : BOPAlgo_ListOfEdgeInfo,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theItem : BOPAlgo_EdgeInfo,theIter : Any) -> BOPAlgo_EdgeInfo: 
+    def InsertBefore(self,theOther : BOPAlgo_ListOfEdgeInfo,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : BOPAlgo_ListOfEdgeInfo,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : BOPAlgo_EdgeInfo,theIter : Any) -> BOPAlgo_EdgeInfo: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -5072,14 +5338,14 @@ class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : BOPAlgo_ListOfEdgeInfo) -> None: 
+    def Prepend(self,theItem : BOPAlgo_EdgeInfo) -> BOPAlgo_EdgeInfo: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : BOPAlgo_EdgeInfo) -> BOPAlgo_EdgeInfo: ...
+    def Prepend(self,theOther : BOPAlgo_ListOfEdgeInfo) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -5099,10 +5365,10 @@ class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : BOPAlgo_ListOfEdgeInfo) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : BOPAlgo_ListOfEdgeInfo) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPAlgo_MakeConnected(BOPAlgo_Options):
     """
@@ -5140,11 +5406,11 @@ class BOPAlgo_MakeConnected(BOPAlgo_Options):
         """
         Clears the warnings of the algorithm
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -5234,7 +5500,7 @@ class BOPAlgo_MakeConnected(BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -5284,11 +5550,11 @@ class BOPAlgo_MakePeriodic(BOPAlgo_Options):
         """
         Clears the warnings of the algorithm
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -5418,7 +5684,7 @@ class BOPAlgo_MakePeriodic(BOPAlgo_Options):
         """
         Sets the periodicity parameters.
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -5532,14 +5798,14 @@ class BOPAlgo_MakerVolume(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, B
         Returns the solid box <mySBox>.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -5558,11 +5824,11 @@ class BOPAlgo_MakerVolume(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, B
         """
         Returns the Context, tool for cashing heavy algorithms.
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -5714,7 +5980,7 @@ class BOPAlgo_MakerVolume(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, B
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -5743,9 +6009,9 @@ class BOPAlgo_MakerVolume(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, B
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_Operation():
     """
@@ -5765,24 +6031,32 @@ class BOPAlgo_Operation():
 
       BOPAlgo_UNKNOWN
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BOPAlgo_COMMON: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_COMMON
-    BOPAlgo_CUT: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_CUT
-    BOPAlgo_CUT21: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_CUT21
-    BOPAlgo_FUSE: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_FUSE
-    BOPAlgo_SECTION: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_SECTION
-    BOPAlgo_UNKNOWN: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_UNKNOWN
-    __entries: dict # value = {'BOPAlgo_COMMON': (BOPAlgo_Operation.BOPAlgo_COMMON, None), 'BOPAlgo_FUSE': (BOPAlgo_Operation.BOPAlgo_FUSE, None), 'BOPAlgo_CUT': (BOPAlgo_Operation.BOPAlgo_CUT, None), 'BOPAlgo_CUT21': (BOPAlgo_Operation.BOPAlgo_CUT21, None), 'BOPAlgo_SECTION': (BOPAlgo_Operation.BOPAlgo_SECTION, None), 'BOPAlgo_UNKNOWN': (BOPAlgo_Operation.BOPAlgo_UNKNOWN, None)}
-    __members__: dict # value = {'BOPAlgo_COMMON': BOPAlgo_Operation.BOPAlgo_COMMON, 'BOPAlgo_FUSE': BOPAlgo_Operation.BOPAlgo_FUSE, 'BOPAlgo_CUT': BOPAlgo_Operation.BOPAlgo_CUT, 'BOPAlgo_CUT21': BOPAlgo_Operation.BOPAlgo_CUT21, 'BOPAlgo_SECTION': BOPAlgo_Operation.BOPAlgo_SECTION, 'BOPAlgo_UNKNOWN': BOPAlgo_Operation.BOPAlgo_UNKNOWN}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BOPAlgo_COMMON: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_COMMON: 0>
+    BOPAlgo_CUT: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_CUT: 2>
+    BOPAlgo_CUT21: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_CUT21: 3>
+    BOPAlgo_FUSE: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_FUSE: 1>
+    BOPAlgo_SECTION: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_SECTION: 4>
+    BOPAlgo_UNKNOWN: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_UNKNOWN: 5>
+    __entries: dict # value = {'BOPAlgo_COMMON': (<BOPAlgo_Operation.BOPAlgo_COMMON: 0>, None), 'BOPAlgo_FUSE': (<BOPAlgo_Operation.BOPAlgo_FUSE: 1>, None), 'BOPAlgo_CUT': (<BOPAlgo_Operation.BOPAlgo_CUT: 2>, None), 'BOPAlgo_CUT21': (<BOPAlgo_Operation.BOPAlgo_CUT21: 3>, None), 'BOPAlgo_SECTION': (<BOPAlgo_Operation.BOPAlgo_SECTION: 4>, None), 'BOPAlgo_UNKNOWN': (<BOPAlgo_Operation.BOPAlgo_UNKNOWN: 5>, None)}
+    __members__: dict # value = {'BOPAlgo_COMMON': <BOPAlgo_Operation.BOPAlgo_COMMON: 0>, 'BOPAlgo_FUSE': <BOPAlgo_Operation.BOPAlgo_FUSE: 1>, 'BOPAlgo_CUT': <BOPAlgo_Operation.BOPAlgo_CUT: 2>, 'BOPAlgo_CUT21': <BOPAlgo_Operation.BOPAlgo_CUT21: 3>, 'BOPAlgo_SECTION': <BOPAlgo_Operation.BOPAlgo_SECTION: 4>, 'BOPAlgo_UNKNOWN': <BOPAlgo_Operation.BOPAlgo_UNKNOWN: 5>}
     pass
 class BOPAlgo_ArgumentAnalyzer(BOPAlgo_Algo, BOPAlgo_Options):
     """
@@ -5808,11 +6082,11 @@ class BOPAlgo_ArgumentAnalyzer(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Clears the warnings of the algorithm
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -5882,7 +6156,7 @@ class BOPAlgo_ArgumentAnalyzer(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -6032,11 +6306,11 @@ class BOPAlgo_CheckerSI(BOPAlgo_PaveFiller, BOPAlgo_Algo, BOPAlgo_Options):
         """
         None
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -6122,7 +6396,7 @@ class BOPAlgo_CheckerSI(BOPAlgo_PaveFiller, BOPAlgo_Algo, BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -6176,11 +6450,11 @@ class BOPAlgo_RemoveFeatures(BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options
         """
         Clears the warnings of the algorithm
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -6270,7 +6544,7 @@ class BOPAlgo_RemoveFeatures(BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -6325,14 +6599,14 @@ class BOPAlgo_Section(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAl
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -6349,11 +6623,11 @@ class BOPAlgo_Section(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAl
         """
         Returns the Context, tool for cashing heavy algorithms.
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -6479,7 +6753,7 @@ class BOPAlgo_Section(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAl
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -6508,32 +6782,32 @@ class BOPAlgo_Section(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAl
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_SectionAttribute():
     """
     Class is a container of the flags used by intersection algorithm
     """
     @overload
-    def Approximation(self,theApprox : bool) -> None: 
+    def Approximation(self) -> bool: 
         """
         Sets the Approximation flag
 
         Returns the Approximation flag
         """
     @overload
-    def Approximation(self) -> bool: ...
+    def Approximation(self,theApprox : bool) -> None: ...
     @overload
-    def PCurveOnS1(self,thePCurveOnS1 : bool) -> None: 
+    def PCurveOnS1(self) -> bool: 
         """
         Sets the PCurveOnS1 flag
 
         Returns the PCurveOnS1 flag
         """
     @overload
-    def PCurveOnS1(self) -> bool: ...
+    def PCurveOnS1(self,thePCurveOnS1 : bool) -> None: ...
     @overload
     def PCurveOnS2(self) -> bool: 
         """
@@ -6576,11 +6850,11 @@ class BOPAlgo_ShellSplitter(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Clears the warnings of the algorithm
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -6630,7 +6904,7 @@ class BOPAlgo_ShellSplitter(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -6660,9 +6934,9 @@ class BOPAlgo_ShellSplitter(BOPAlgo_Algo, BOPAlgo_Options):
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_Splitter(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options):
     """
@@ -6693,14 +6967,14 @@ class BOPAlgo_Splitter(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderSh
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -6717,11 +6991,11 @@ class BOPAlgo_Splitter(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderSh
         """
         Returns the Context, tool for cashing heavy algorithms.
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -6847,7 +7121,7 @@ class BOPAlgo_Splitter(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderSh
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -6884,9 +7158,9 @@ class BOPAlgo_Splitter(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderSh
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
 class BOPAlgo_Tools():
     """
@@ -6923,9 +7197,9 @@ class BOPAlgo_Tools():
         Finds chains of intersecting vertices
         """
     @staticmethod
-    def TreatCompound_s(theS : OCP.TopoDS.TopoDS_Shape,theMFence : OCP.TopTools.TopTools_MapOfShape,theLS : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def TrsfToPoint_s(theBox1 : OCP.Bnd.Bnd_Box,theBox2 : OCP.Bnd.Bnd_Box,theTrsf : OCP.gp.gp_Trsf,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt,theCriteria : float=100000.0) -> bool: 
         """
-        Collect in the output list recursively all non-compound subshapes of the first level of the given shape theS. If a shape presents in the map theMFence it is skipped. All shapes put in the output are also added into theMFence.
+        Computes the transformation needed to move the objects to the given point to increase the quality of computations. Returns true if the objects are located far from the given point (relatively given criteria), false otherwise.
         """
     @staticmethod
     def WiresToFaces_s(theWires : OCP.TopoDS.TopoDS_Shape,theFaces : OCP.TopoDS.TopoDS_Shape,theAngTol : float=1e-08) -> bool: 
@@ -6963,14 +7237,14 @@ class BOPAlgo_BOP(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderShape, 
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -6987,11 +7261,11 @@ class BOPAlgo_BOP(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderShape, 
         """
         Returns the Context, tool for cashing heavy algorithms.
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -7125,7 +7399,7 @@ class BOPAlgo_BOP(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderShape, 
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -7162,32 +7436,32 @@ class BOPAlgo_BOP(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderShape, 
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
 class BOPAlgo_WireEdgeSet():
     """
     None
     """
     @overload
-    def AddShape(self,sS : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def AddShape(self,aW : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def AddShape(self,aW : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def AddShape(self,sS : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
-    def AddStartElement(self,sS : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def AddStartElement(self,aE : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def AddStartElement(self,aE : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def AddStartElement(self,sS : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def Clear(self) -> None: 
         """
         None
@@ -7251,11 +7525,11 @@ class BOPAlgo_WireSplitter(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Returns the context
         """
-    def DumpErrors(self,theOS : Any) -> None: 
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the error status into the given stream
         """
-    def DumpWarnings(self,theOS : Any) -> None: 
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
         """
         Dumps the warning statuses into the given stream
         """
@@ -7314,7 +7588,7 @@ class BOPAlgo_WireSplitter(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theObj : OCP.Message.Message_ProgressIndicator) -> None: 
+    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
         """
         Set the Progress Indicator object.
         """
@@ -7348,24 +7622,24 @@ class BOPAlgo_WireSplitter(BOPAlgo_Algo, BOPAlgo_Options):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
-BOPAlgo_BadType: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_BadType
-BOPAlgo_COMMON: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_COMMON
-BOPAlgo_CUT: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_CUT
-BOPAlgo_CUT21: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_CUT21
-BOPAlgo_CheckUnknown: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_CheckUnknown
-BOPAlgo_FUSE: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_FUSE
-BOPAlgo_GeomAbs_C0: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_GeomAbs_C0
-BOPAlgo_GlueFull: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = BOPAlgo_GlueEnum.BOPAlgo_GlueFull
-BOPAlgo_GlueOff: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = BOPAlgo_GlueEnum.BOPAlgo_GlueOff
-BOPAlgo_GlueShift: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = BOPAlgo_GlueEnum.BOPAlgo_GlueShift
-BOPAlgo_IncompatibilityOfEdge: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfEdge
-BOPAlgo_IncompatibilityOfFace: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfFace
-BOPAlgo_IncompatibilityOfVertex: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfVertex
-BOPAlgo_InvalidCurveOnSurface: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_InvalidCurveOnSurface
-BOPAlgo_NonRecoverableFace: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_NonRecoverableFace
-BOPAlgo_NotValid: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_NotValid
-BOPAlgo_OperationAborted: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_OperationAborted
-BOPAlgo_SECTION: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_SECTION
-BOPAlgo_SelfIntersect: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_SelfIntersect
-BOPAlgo_TooSmallEdge: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = BOPAlgo_CheckStatus.BOPAlgo_TooSmallEdge
-BOPAlgo_UNKNOWN: OCP.BOPAlgo.BOPAlgo_Operation # value = BOPAlgo_Operation.BOPAlgo_UNKNOWN
+BOPAlgo_BadType: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_BadType: 1>
+BOPAlgo_COMMON: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_COMMON: 0>
+BOPAlgo_CUT: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_CUT: 2>
+BOPAlgo_CUT21: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_CUT21: 3>
+BOPAlgo_CheckUnknown: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_CheckUnknown: 0>
+BOPAlgo_FUSE: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_FUSE: 1>
+BOPAlgo_GeomAbs_C0: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_GeomAbs_C0: 9>
+BOPAlgo_GlueFull: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = <BOPAlgo_GlueEnum.BOPAlgo_GlueFull: 2>
+BOPAlgo_GlueOff: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = <BOPAlgo_GlueEnum.BOPAlgo_GlueOff: 0>
+BOPAlgo_GlueShift: OCP.BOPAlgo.BOPAlgo_GlueEnum # value = <BOPAlgo_GlueEnum.BOPAlgo_GlueShift: 1>
+BOPAlgo_IncompatibilityOfEdge: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfEdge: 6>
+BOPAlgo_IncompatibilityOfFace: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfFace: 7>
+BOPAlgo_IncompatibilityOfVertex: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_IncompatibilityOfVertex: 5>
+BOPAlgo_InvalidCurveOnSurface: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_InvalidCurveOnSurface: 10>
+BOPAlgo_NonRecoverableFace: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_NonRecoverableFace: 4>
+BOPAlgo_NotValid: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_NotValid: 11>
+BOPAlgo_OperationAborted: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_OperationAborted: 8>
+BOPAlgo_SECTION: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_SECTION: 4>
+BOPAlgo_SelfIntersect: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_SelfIntersect: 2>
+BOPAlgo_TooSmallEdge: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_TooSmallEdge: 3>
+BOPAlgo_UNKNOWN: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_UNKNOWN: 5>

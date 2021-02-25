@@ -4,26 +4,27 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.Geom2d
-import OCP.GeomInt
-import OCP.Adaptor3d
 import OCP.GeomAdaptor
-import OCP.TopoDS
-import OCP.BRepAdaptor
 import OCP.NCollection
+import OCP.Geom
+import OCP.IntSurf
+import OCP.TopoDS
+import OCP.Bnd
+import OCP.BRepClass3d
+import OCP.BRepAdaptor
+import OCP.Geom2dHatch
+import OCP.Standard
+import OCP.IntPatch
+import OCP.TopAbs
+import OCP.Adaptor3d
+import OCP.GeomInt
+import OCP.TColStd
+import io
 import OCP.Adaptor2d
 import OCP.gp
 import OCP.GeomAbs
-import OCP.TColStd
+import OCP.Geom2d
 import OCP.GeomAPI
-import OCP.Bnd
-import OCP.IntSurf
-import OCP.IntPatch
-import OCP.Standard
-import OCP.Geom2dHatch
-import OCP.Geom
-import OCP.BRepClass3d
 __all__  = [
 "IntTools",
 "IntTools_Array1OfRange",
@@ -185,14 +186,14 @@ class IntTools_Array1OfRange():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : IntTools_Range,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : IntTools_Array1OfRange) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IntTools_Array1OfRoots():
     """
@@ -271,14 +272,14 @@ class IntTools_Array1OfRoots():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : IntTools_Root,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : IntTools_Root,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : IntTools_Array1OfRoots) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IntTools_BaseRangeSample():
     """
@@ -297,9 +298,9 @@ class IntTools_BaseRangeSample():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theDepth : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntTools_BeanFaceIntersector():
     """
@@ -319,26 +320,30 @@ class IntTools_BeanFaceIntersector():
         Initializes the algorithm theUMinParameter, ... are used for optimization purposes
         """
     @overload
-    def Init(self,theEdge : OCP.TopoDS.TopoDS_Edge,theFace : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def Init(self,theCurve : OCP.BRepAdaptor.BRepAdaptor_Curve,theSurface : OCP.BRepAdaptor.BRepAdaptor_Surface,theBeanTolerance : float,theFaceTolerance : float) -> None: ...
+    @overload
+    def Init(self,theEdge : OCP.TopoDS.TopoDS_Edge,theFace : OCP.TopoDS.TopoDS_Face) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns Done/NotDone state of the algorithm.
+        """
+    def MinimalSquareDistance(self) -> float: 
+        """
+        Returns the minimal distance found between edge and face
         """
     def Perform(self) -> None: 
         """
         Launches the algorithm
         """
     @overload
-    def Result(self,theResults : IntTools_SequenceOfRanges) -> None: 
+    def Result(self) -> IntTools_SequenceOfRanges: 
         """
         None
 
         None
         """
     @overload
-    def Result(self) -> IntTools_SequenceOfRanges: ...
+    def Result(self,theResults : IntTools_SequenceOfRanges) -> None: ...
     def SetBeanParameters(self,theFirstParOnCurve : float,theLastParOnCurve : float) -> None: 
         """
         Set restrictions for curve
@@ -354,11 +359,11 @@ class IntTools_BeanFaceIntersector():
     @overload
     def __init__(self,theCurve : OCP.BRepAdaptor.BRepAdaptor_Curve,theSurface : OCP.BRepAdaptor.BRepAdaptor_Surface,theBeanTolerance : float,theFaceTolerance : float) -> None: ...
     @overload
-    def __init__(self,theEdge : OCP.TopoDS.TopoDS_Edge,theFace : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theCurve : OCP.BRepAdaptor.BRepAdaptor_Curve,theSurface : OCP.BRepAdaptor.BRepAdaptor_Surface,theFirstParOnCurve : float,theLastParOnCurve : float,theUMinParameter : float,theUMaxParameter : float,theVMinParameter : float,theVMaxParameter : float,theBeanTolerance : float,theFaceTolerance : float) -> None: ...
+    @overload
+    def __init__(self,theEdge : OCP.TopoDS.TopoDS_Edge,theFace : OCP.TopoDS.TopoDS_Face) -> None: ...
     pass
 class IntTools_CArray1OfInteger():
     """
@@ -401,9 +406,9 @@ class IntTools_CArray1OfInteger():
         Returns the value of the <Index>th element of the array.
         """
     @overload
-    def __init__(self,Item : int,Length : int) -> None: ...
-    @overload
     def __init__(self,Length : int=0) -> None: ...
+    @overload
+    def __init__(self,Item : int,Length : int) -> None: ...
     pass
 class IntTools_CArray1OfReal():
     """
@@ -459,14 +464,14 @@ class IntTools_CommonPrt():
         Modifier
         """
     @overload
-    def AppendRange2(self,aR : IntTools_Range) -> None: 
+    def AppendRange2(self,tf : float,tl : float) -> None: 
         """
         Appends the range of second edge.
 
         Appends the range of second edge.
         """
     @overload
-    def AppendRange2(self,tf : float,tl : float) -> None: ...
+    def AppendRange2(self,aR : IntTools_Range) -> None: ...
     def Assign(self,Other : IntTools_CommonPrt) -> IntTools_CommonPrt: 
         """
         None
@@ -554,9 +559,9 @@ class IntTools_CommonPrt():
         Returns parameter of second vertex
         """
     @overload
-    def __init__(self,aCPrt : IntTools_CommonPrt) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aCPrt : IntTools_CommonPrt) -> None: ...
     pass
 class IntTools_Context(OCP.Standard.Standard_Transient):
     """
@@ -629,14 +634,14 @@ class IntTools_Context(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def IsPointInFace(self,aF : OCP.TopoDS.TopoDS_Face,aP2D : OCP.gp.gp_Pnt2d) -> bool: 
+    def IsPointInFace(self,aP3D : OCP.gp.gp_Pnt,aF : OCP.TopoDS.TopoDS_Face,aTol : float) -> bool: 
         """
         Returns true if the point aP2D is inside the boundaries of the face aF, otherwise returns false
 
         Returns true if the point aP2D is inside the boundaries of the face aF, otherwise returns false
         """
     @overload
-    def IsPointInFace(self,aP3D : OCP.gp.gp_Pnt,aF : OCP.TopoDS.TopoDS_Face,aTol : float) -> bool: ...
+    def IsPointInFace(self,aF : OCP.TopoDS.TopoDS_Face,aP2D : OCP.gp.gp_Pnt2d) -> bool: ...
     def IsPointInOnFace(self,aF : OCP.TopoDS.TopoDS_Face,aP2D : OCP.gp.gp_Pnt2d) -> bool: 
         """
         Returns true if the point aP2D is inside or on the boundaries of aF
@@ -715,9 +720,9 @@ class IntTools_Context(OCP.Standard.Standard_Transient):
         Computes the boundaries of the face using surface adaptor
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -794,9 +799,9 @@ class IntTools_Curve():
         Returns the type of the 3d curve
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,the3dCurve3d : OCP.Geom.Geom_Curve,the2dCurve1 : OCP.Geom2d.Geom2d_Curve,the2dCurve2 : OCP.Geom2d.Geom2d_Curve,theTolerance : float=0.0,theTangentialTolerance : float=0.0) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntTools_CurveRangeLocalizeData():
     """
@@ -881,9 +886,9 @@ class IntTools_CurveRangeSample(IntTools_BaseRangeSample):
         None
         """
     @overload
-    def __init__(self,theIndex : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theIndex : int) -> None: ...
     pass
 class IntTools_CurveRangeSampleMapHasher():
     """
@@ -930,14 +935,14 @@ class IntTools_DataMapOfCurveSampleBox(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : IntTools_DataMapOfCurveSampleBox) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -947,14 +952,14 @@ class IntTools_DataMapOfCurveSampleBox(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : IntTools_CurveRangeSample) -> OCP.Bnd.Bnd_Box: 
+    def Find(self,theKey : IntTools_CurveRangeSample,theValue : OCP.Bnd.Bnd_Box) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : IntTools_CurveRangeSample,theValue : OCP.Bnd.Bnd_Box) -> bool: ...
+    def Find(self,theKey : IntTools_CurveRangeSample) -> OCP.Bnd.Bnd_Box: ...
     def IsBound(self,theKey : IntTools_CurveRangeSample) -> bool: 
         """
         IsBound
@@ -979,7 +984,7 @@ class IntTools_DataMapOfCurveSampleBox(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -988,12 +993,12 @@ class IntTools_DataMapOfCurveSampleBox(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IntTools_DataMapOfCurveSampleBox) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IntTools_DataMapOfSurfaceSampleBox(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1024,14 +1029,14 @@ class IntTools_DataMapOfSurfaceSampleBox(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : IntTools_DataMapOfSurfaceSampleBox) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1041,14 +1046,14 @@ class IntTools_DataMapOfSurfaceSampleBox(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : IntTools_SurfaceRangeSample) -> OCP.Bnd.Bnd_Box: 
+    def Find(self,theKey : IntTools_SurfaceRangeSample,theValue : OCP.Bnd.Bnd_Box) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : IntTools_SurfaceRangeSample,theValue : OCP.Bnd.Bnd_Box) -> bool: ...
+    def Find(self,theKey : IntTools_SurfaceRangeSample) -> OCP.Bnd.Bnd_Box: ...
     def IsBound(self,theKey : IntTools_SurfaceRangeSample) -> bool: 
         """
         IsBound
@@ -1073,7 +1078,7 @@ class IntTools_DataMapOfSurfaceSampleBox(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1082,12 +1087,12 @@ class IntTools_DataMapOfSurfaceSampleBox(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : IntTools_DataMapOfSurfaceSampleBox) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IntTools_EdgeEdge():
     """
@@ -1120,7 +1125,7 @@ class IntTools_EdgeEdge():
         Performs the intersection between edges
         """
     @overload
-    def SetEdge1(self,theEdge : OCP.TopoDS.TopoDS_Edge,aT1 : float,aT2 : float) -> None: 
+    def SetEdge1(self,theEdge : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Sets the first edge
 
@@ -1131,9 +1136,9 @@ class IntTools_EdgeEdge():
         Sets the first edge and its range
         """
     @overload
-    def SetEdge1(self,theEdge : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def SetEdge1(self,theEdge : OCP.TopoDS.TopoDS_Edge,aT1 : float,aT2 : float) -> None: ...
     @overload
-    def SetEdge2(self,theEdge : OCP.TopoDS.TopoDS_Edge,aT1 : float,aT2 : float) -> None: 
+    def SetEdge2(self,theEdge : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Sets the second edge
 
@@ -1144,7 +1149,7 @@ class IntTools_EdgeEdge():
         Sets the first edge and its range
         """
     @overload
-    def SetEdge2(self,theEdge : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def SetEdge2(self,theEdge : OCP.TopoDS.TopoDS_Edge,aT1 : float,aT2 : float) -> None: ...
     def SetFuzzyValue(self,theFuzz : float) -> None: 
         """
         Sets the Fuzzy value
@@ -1152,7 +1157,7 @@ class IntTools_EdgeEdge():
         Sets the Fuzzy value
         """
     @overload
-    def SetRange1(self,theRange1 : IntTools_Range) -> None: 
+    def SetRange1(self,theRange : IntTools_Range) -> None: 
         """
         Sets the range for the first edge
 
@@ -1165,7 +1170,7 @@ class IntTools_EdgeEdge():
     @overload
     def SetRange1(self,aT1 : float,aT2 : float) -> None: ...
     @overload
-    def SetRange1(self,theRange : IntTools_Range) -> None: ...
+    def SetRange1(self,theRange1 : IntTools_Range) -> None: ...
     @overload
     def SetRange2(self,theRange : IntTools_Range) -> None: 
         """
@@ -1186,9 +1191,9 @@ class IntTools_EdgeEdge():
     @overload
     def __init__(self,theEdge1 : OCP.TopoDS.TopoDS_Edge,aT11 : float,aT12 : float,theEdge2 : OCP.TopoDS.TopoDS_Edge,aT21 : float,aT22 : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theEdge1 : OCP.TopoDS.TopoDS_Edge,theEdge2 : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntTools_EdgeFace():
     """
@@ -1225,6 +1230,10 @@ class IntTools_EdgeFace():
     def IsDone(self) -> bool: 
         """
         Returns TRUE if computation was successful. Otherwise returns FALSE.
+        """
+    def MinimalDistance(self) -> float: 
+        """
+        Returns the minimal distance found between edge and face
         """
     def Perform(self) -> None: 
         """
@@ -1369,7 +1378,7 @@ class IntTools_ListOfBox(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.Bnd.Bnd_Box) -> OCP.Bnd.Bnd_Box: 
+    def Append(self,theOther : IntTools_ListOfBox) -> None: 
         """
         Append one item at the end
 
@@ -1378,7 +1387,7 @@ class IntTools_ListOfBox(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : IntTools_ListOfBox) -> None: ...
+    def Append(self,theItem : OCP.Bnd.Bnd_Box) -> OCP.Bnd.Bnd_Box: ...
     @overload
     def Append(self,theItem : OCP.Bnd.Bnd_Box,theIter : Any) -> None: ...
     def Assign(self,theOther : IntTools_ListOfBox) -> IntTools_ListOfBox: 
@@ -1428,14 +1437,14 @@ class IntTools_ListOfBox(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : IntTools_ListOfBox) -> None: 
+    def Prepend(self,theItem : OCP.Bnd.Bnd_Box) -> OCP.Bnd.Bnd_Box: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : OCP.Bnd.Bnd_Box) -> OCP.Bnd.Bnd_Box: ...
+    def Prepend(self,theOther : IntTools_ListOfBox) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1453,12 +1462,12 @@ class IntTools_ListOfBox(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : IntTools_ListOfBox) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : IntTools_ListOfBox) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IntTools_ListOfCurveRangeSample(OCP.NCollection.NCollection_BaseList):
     """
@@ -1469,7 +1478,7 @@ class IntTools_ListOfCurveRangeSample(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : IntTools_CurveRangeSample,theIter : Any) -> None: 
+    def Append(self,theOther : IntTools_ListOfCurveRangeSample) -> None: 
         """
         Append one item at the end
 
@@ -1478,9 +1487,9 @@ class IntTools_ListOfCurveRangeSample(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : IntTools_CurveRangeSample) -> IntTools_CurveRangeSample: ...
+    def Append(self,theItem : IntTools_CurveRangeSample,theIter : Any) -> None: ...
     @overload
-    def Append(self,theOther : IntTools_ListOfCurveRangeSample) -> None: ...
+    def Append(self,theItem : IntTools_CurveRangeSample) -> IntTools_CurveRangeSample: ...
     def Assign(self,theOther : IntTools_ListOfCurveRangeSample) -> IntTools_ListOfCurveRangeSample: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1500,14 +1509,14 @@ class IntTools_ListOfCurveRangeSample(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : IntTools_CurveRangeSample,theIter : Any) -> IntTools_CurveRangeSample: 
+    def InsertAfter(self,theOther : IntTools_ListOfCurveRangeSample,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : IntTools_ListOfCurveRangeSample,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : IntTools_CurveRangeSample,theIter : Any) -> IntTools_CurveRangeSample: ...
     @overload
     def InsertBefore(self,theOther : IntTools_ListOfCurveRangeSample,theIter : Any) -> None: 
         """
@@ -1553,12 +1562,12 @@ class IntTools_ListOfCurveRangeSample(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : IntTools_ListOfCurveRangeSample) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IntTools_ListOfSurfaceRangeSample(OCP.NCollection.NCollection_BaseList):
     """
@@ -1569,7 +1578,7 @@ class IntTools_ListOfSurfaceRangeSample(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : IntTools_SurfaceRangeSample) -> IntTools_SurfaceRangeSample: 
+    def Append(self,theOther : IntTools_ListOfSurfaceRangeSample) -> None: 
         """
         Append one item at the end
 
@@ -1578,9 +1587,9 @@ class IntTools_ListOfSurfaceRangeSample(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : IntTools_ListOfSurfaceRangeSample) -> None: ...
-    @overload
     def Append(self,theItem : IntTools_SurfaceRangeSample,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : IntTools_SurfaceRangeSample) -> IntTools_SurfaceRangeSample: ...
     def Assign(self,theOther : IntTools_ListOfSurfaceRangeSample) -> IntTools_ListOfSurfaceRangeSample: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1609,14 +1618,14 @@ class IntTools_ListOfSurfaceRangeSample(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : IntTools_SurfaceRangeSample,theIter : Any) -> IntTools_SurfaceRangeSample: ...
     @overload
-    def InsertBefore(self,theOther : IntTools_ListOfSurfaceRangeSample,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : IntTools_SurfaceRangeSample,theIter : Any) -> IntTools_SurfaceRangeSample: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : IntTools_SurfaceRangeSample,theIter : Any) -> IntTools_SurfaceRangeSample: ...
+    def InsertBefore(self,theOther : IntTools_ListOfSurfaceRangeSample,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1653,12 +1662,12 @@ class IntTools_ListOfSurfaceRangeSample(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : IntTools_ListOfSurfaceRangeSample) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : IntTools_ListOfSurfaceRangeSample) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IntTools_MapOfCurveSample(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1681,23 +1690,23 @@ class IntTools_MapOfCurveSample(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     @overload
-    def Contains(self,theOther : IntTools_MapOfCurveSample) -> bool: 
+    def Contains(self,K : IntTools_CurveRangeSample) -> bool: 
         """
         Contains
 
         Returns true if this map contains ALL keys of another map.
         """
     @overload
-    def Contains(self,K : IntTools_CurveRangeSample) -> bool: ...
+    def Contains(self,theOther : IntTools_MapOfCurveSample) -> bool: ...
     def Differ(self,theOther : IntTools_MapOfCurveSample) -> bool: 
         """
         Apply to this Map the symmetric difference (aka exclusive disjunction, boolean XOR) operation with another (given) Map. The result contains the values that are contained only in this or the operand map, but not in both. This algorithm is similar to method Difference(). Returns True if contents of this map is changed.
@@ -1750,7 +1759,7 @@ class IntTools_MapOfCurveSample(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1771,11 +1780,11 @@ class IntTools_MapOfCurveSample(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IntTools_MapOfCurveSample) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class IntTools_MapOfSurfaceSample(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1798,14 +1807,14 @@ class IntTools_MapOfSurfaceSample(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def Contains(self,theOther : IntTools_MapOfSurfaceSample) -> bool: 
         """
@@ -1867,7 +1876,7 @@ class IntTools_MapOfSurfaceSample(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1888,11 +1897,11 @@ class IntTools_MapOfSurfaceSample(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : IntTools_MapOfSurfaceSample) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntTools_MarkedRangeSet():
     """
@@ -1903,20 +1912,20 @@ class IntTools_MarkedRangeSet():
         Returns flag of the range with index theIndex
         """
     @overload
-    def GetIndex(self,theValue : float,UseLower : bool) -> int: 
+    def GetIndex(self,theValue : float) -> int: 
         """
         Returns index of range which contains theValue. If theValue do not belong any range returns 0.
 
         Returns index of range which contains theValue If theValue do not belong any range returns 0. If UseLower is Standard_True then lower boundary of the range can be equal to theValue, otherwise upper boundary of the range can be equal to theValue.
         """
     @overload
-    def GetIndex(self,theValue : float) -> int: ...
+    def GetIndex(self,theValue : float,UseLower : bool) -> int: ...
     def GetIndices(self,theValue : float) -> OCP.TColStd.TColStd_SequenceOfInteger: 
         """
         None
         """
     @overload
-    def InsertRange(self,theRange : IntTools_Range,theFlag : int) -> bool: 
+    def InsertRange(self,theRange : IntTools_Range,theFlag : int,theIndex : int) -> bool: 
         """
         Inserts a new range marked with flag theFlag It replace the existing ranges or parts of ranges and their flags. Returns True if the range is inside the initial boundaries, otherwise or in case of some error returns False
 
@@ -1927,11 +1936,11 @@ class IntTools_MarkedRangeSet():
         Inserts a new range marked with flag theFlag It replace the existing ranges or parts of ranges and their flags. The index theIndex is a position where the range will be inserted. Returns True if the range is inside the initial boundaries, otherwise or in case of some error returns False
         """
     @overload
-    def InsertRange(self,theFirstBoundary : float,theLastBoundary : float,theFlag : int,theIndex : int) -> bool: ...
-    @overload
-    def InsertRange(self,theRange : IntTools_Range,theFlag : int,theIndex : int) -> bool: ...
+    def InsertRange(self,theRange : IntTools_Range,theFlag : int) -> bool: ...
     @overload
     def InsertRange(self,theFirstBoundary : float,theLastBoundary : float,theFlag : int) -> bool: ...
+    @overload
+    def InsertRange(self,theFirstBoundary : float,theLastBoundary : float,theFlag : int,theIndex : int) -> bool: ...
     def Length(self) -> int: 
         """
         Returns number of ranges
@@ -1955,11 +1964,11 @@ class IntTools_MarkedRangeSet():
         Build set of ranges based on the array of progressive sorted values
         """
     @overload
-    def __init__(self,theSortedArray : IntTools_CArray1OfReal,theInitFlag : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theFirstBoundary : float,theLastBoundary : float,theInitFlag : int) -> None: ...
+    @overload
+    def __init__(self,theSortedArray : IntTools_CArray1OfReal,theInitFlag : int) -> None: ...
     pass
 class IntTools_PntOn2Faces():
     """
@@ -2061,9 +2070,9 @@ class IntTools_Range():
         Modifier
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aFirst : float,aLast : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntTools_Root():
     """
@@ -2135,14 +2144,14 @@ class IntTools_SequenceOfCommonPrts(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IntTools_SequenceOfCommonPrts) -> None: 
+    def Append(self,theItem : IntTools_CommonPrt) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IntTools_CommonPrt) -> None: ...
+    def Append(self,theSeq : IntTools_SequenceOfCommonPrts) -> None: ...
     def Assign(self,theOther : IntTools_SequenceOfCommonPrts) -> IntTools_SequenceOfCommonPrts: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2172,23 +2181,23 @@ class IntTools_SequenceOfCommonPrts(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntTools_SequenceOfCommonPrts) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : IntTools_CommonPrt) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntTools_CommonPrt) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : IntTools_SequenceOfCommonPrts) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntTools_SequenceOfCommonPrts) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : IntTools_CommonPrt) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntTools_CommonPrt) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IntTools_SequenceOfCommonPrts) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2206,14 +2215,14 @@ class IntTools_SequenceOfCommonPrts(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : IntTools_SequenceOfCommonPrts) -> None: 
+    def Prepend(self,theItem : IntTools_CommonPrt) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : IntTools_CommonPrt) -> None: ...
+    def Prepend(self,theSeq : IntTools_SequenceOfCommonPrts) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -2250,10 +2259,10 @@ class IntTools_SequenceOfCommonPrts(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : IntTools_SequenceOfCommonPrts) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2269,14 +2278,14 @@ class IntTools_SequenceOfCurves(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IntTools_SequenceOfCurves) -> None: 
+    def Append(self,theItem : IntTools_Curve) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IntTools_Curve) -> None: ...
+    def Append(self,theSeq : IntTools_SequenceOfCurves) -> None: ...
     def Assign(self,theOther : IntTools_SequenceOfCurves) -> IntTools_SequenceOfCurves: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2306,23 +2315,23 @@ class IntTools_SequenceOfCurves(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntTools_Curve) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : IntTools_SequenceOfCurves) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntTools_SequenceOfCurves) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : IntTools_Curve) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntTools_SequenceOfCurves) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : IntTools_Curve) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntTools_Curve) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IntTools_SequenceOfCurves) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2349,14 +2358,14 @@ class IntTools_SequenceOfCurves(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : IntTools_Curve) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2382,12 +2391,12 @@ class IntTools_SequenceOfCurves(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : IntTools_SequenceOfCurves) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2440,23 +2449,23 @@ class IntTools_SequenceOfPntOn2Faces(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntTools_PntOn2Faces) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : IntTools_SequenceOfPntOn2Faces) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntTools_SequenceOfPntOn2Faces) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : IntTools_PntOn2Faces) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntTools_SequenceOfPntOn2Faces) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : IntTools_PntOn2Faces) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntTools_PntOn2Faces) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IntTools_SequenceOfPntOn2Faces) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2474,14 +2483,14 @@ class IntTools_SequenceOfPntOn2Faces(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : IntTools_PntOn2Faces) -> None: 
+    def Prepend(self,theSeq : IntTools_SequenceOfPntOn2Faces) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : IntTools_SequenceOfPntOn2Faces) -> None: ...
+    def Prepend(self,theItem : IntTools_PntOn2Faces) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -2521,7 +2530,7 @@ class IntTools_SequenceOfPntOn2Faces(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self,theOther : IntTools_SequenceOfPntOn2Faces) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2583,14 +2592,14 @@ class IntTools_SequenceOfRanges(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : IntTools_Range) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntTools_Range) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IntTools_SequenceOfRanges) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntTools_SequenceOfRanges) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IntTools_Range) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2617,14 +2626,14 @@ class IntTools_SequenceOfRanges(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : IntTools_Range) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2650,12 +2659,12 @@ class IntTools_SequenceOfRanges(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IntTools_SequenceOfRanges) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2717,14 +2726,14 @@ class IntTools_SequenceOfRoots(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : IntTools_SequenceOfRoots) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntTools_Root) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IntTools_SequenceOfRoots) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntTools_SequenceOfRoots) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IntTools_Root) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2786,10 +2795,10 @@ class IntTools_SequenceOfRoots(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : IntTools_SequenceOfRoots) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -3003,11 +3012,11 @@ class IntTools_SurfaceRangeLocalizeData():
         Set the V parameter of the grid points at that index.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbSampleU : int,theNbSampleV : int,theMinRangeU : float,theMinRangeV : float) -> None: ...
     @overload
     def __init__(self,Other : IntTools_SurfaceRangeLocalizeData) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class IntTools_SurfaceRangeSample():
     """
@@ -3146,13 +3155,13 @@ class IntTools_SurfaceRangeSample():
         None
         """
     @overload
-    def __init__(self,Other : IntTools_SurfaceRangeSample) -> None: ...
+    def __init__(self,theRangeU : IntTools_CurveRangeSample,theRangeV : IntTools_CurveRangeSample) -> None: ...
     @overload
     def __init__(self,theIndexU : int,theDepthU : int,theIndexV : int,theDepthV : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theRangeU : IntTools_CurveRangeSample,theRangeV : IntTools_CurveRangeSample) -> None: ...
+    def __init__(self,Other : IntTools_SurfaceRangeSample) -> None: ...
     pass
 class IntTools_SurfaceRangeSampleMapHasher():
     """
@@ -3221,7 +3230,7 @@ class IntTools_Tools():
         """
     @staticmethod
     @overload
-    def IsDirsCoinside_s(D1 : OCP.gp.gp_Dir,D2 : OCP.gp.gp_Dir,aTol : float) -> bool: 
+    def IsDirsCoinside_s(D1 : OCP.gp.gp_Dir,D2 : OCP.gp.gp_Dir) -> bool: 
         """
         Returns True if D1 and D2 coinside
 
@@ -3229,7 +3238,7 @@ class IntTools_Tools():
         """
     @staticmethod
     @overload
-    def IsDirsCoinside_s(D1 : OCP.gp.gp_Dir,D2 : OCP.gp.gp_Dir) -> bool: ...
+    def IsDirsCoinside_s(D1 : OCP.gp.gp_Dir,D2 : OCP.gp.gp_Dir,aTol : float) -> bool: ...
     @staticmethod
     def IsInRange_s(theRRef : IntTools_Range,theR : IntTools_Range,theTol : float) -> bool: 
         """
@@ -3252,7 +3261,7 @@ class IntTools_Tools():
         """
     @staticmethod
     @overload
-    def IsVertex_s(aCmnPrt : IntTools_CommonPrt) -> bool: 
+    def IsVertex_s(E : OCP.TopoDS.TopoDS_Edge,t : float) -> bool: 
         """
         Computes square distance between a point on the edge E corresponded to parameter t and vertices of edge E. Returns True if this distance is less than square tolerance of vertex, otherwise returns false.
 
@@ -3264,13 +3273,13 @@ class IntTools_Tools():
         """
     @staticmethod
     @overload
-    def IsVertex_s(E : OCP.TopoDS.TopoDS_Edge,t : float) -> bool: ...
+    def IsVertex_s(E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,t : float) -> bool: ...
+    @staticmethod
+    @overload
+    def IsVertex_s(aCmnPrt : IntTools_CommonPrt) -> bool: ...
     @staticmethod
     @overload
     def IsVertex_s(aP : OCP.gp.gp_Pnt,aTolPV : float,aV : OCP.TopoDS.TopoDS_Vertex) -> bool: ...
-    @staticmethod
-    @overload
-    def IsVertex_s(E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,t : float) -> bool: ...
     @staticmethod
     def MakeFaceFromWireAndFace_s(aW : OCP.TopoDS.TopoDS_Wire,aF : OCP.TopoDS.TopoDS_Face,aFNew : OCP.TopoDS.TopoDS_Face) -> None: 
         """
@@ -3427,14 +3436,14 @@ class IntTools_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.Standar
         None
         """
     @overload
-    def Orientation(self,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> OCP.TopAbs.TopAbs_Orientation: 
+    def Orientation(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         If the function returns the orientation of the arc. If the orientation is FORWARD or REVERSED, the arc is a "real" limit of the surface. If the orientation is INTERNAL or EXTERNAL, the arc is considered as an arc on the surface.
 
         Returns the orientation of the vertex V. The vertex has been found with an exploration on a given arc. The orientation is the orientation of the vertex on this arc.
         """
     @overload
-    def Orientation(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> OCP.TopAbs.TopAbs_Orientation: ...
     def Pnt(self,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> OCP.gp.gp_Pnt: 
         """
         returns 3d point of the vertex V

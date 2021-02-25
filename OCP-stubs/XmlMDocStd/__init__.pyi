@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
+import OCP.XmlObjMgt
 import OCP.TCollection
 import OCP.XmlMDF
-import OCP.XmlObjMgt
 import OCP.Message
 import OCP.Standard
 __all__  = [
@@ -67,6 +67,14 @@ class XmlMDocStd_XLinkDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standard_Tr
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
+    def Namespace(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the namespace string
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None

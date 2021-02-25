@@ -4,9 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
 import OCP.TDF
 import OCP.TColStd
+import io
+import OCP.NCollection
 import OCP.Standard
 __all__  = [
 "TFunction_Array1OfDataMapOfGUIDDriver",
@@ -105,14 +106,14 @@ class TFunction_Array1OfDataMapOfGUIDDriver():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : Any,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : Any,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TFunction_DataMapOfLabelListOfLabel(OCP.NCollection.NCollection_BaseMap):
     """
@@ -143,14 +144,14 @@ class TFunction_DataMapOfLabelListOfLabel(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TFunction_DataMapOfLabelListOfLabel) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -192,7 +193,7 @@ class TFunction_DataMapOfLabelListOfLabel(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -201,12 +202,12 @@ class TFunction_DataMapOfLabelListOfLabel(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : TFunction_DataMapOfLabelListOfLabel) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
+    def __init__(self,theOther : TFunction_DataMapOfLabelListOfLabel) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TFunction_DoubleMapOfIntegerLabel(OCP.NCollection.NCollection_BaseMap):
     """
@@ -229,14 +230,14 @@ class TFunction_DoubleMapOfIntegerLabel(OCP.NCollection.NCollection_BaseMap):
         Bind
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TFunction_DoubleMapOfIntegerLabel) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -246,23 +247,23 @@ class TFunction_DoubleMapOfIntegerLabel(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find1(self,theKey1 : int,theKey2 : OCP.TDF.TDF_Label) -> bool: 
+    def Find1(self,theKey1 : int) -> OCP.TDF.TDF_Label: 
         """
         Find the Key1 and return Key2 value. Raises an exception if Key1 was not bound.
 
         Find the Key1 and return Key2 value (by copying its value).
         """
     @overload
-    def Find1(self,theKey1 : int) -> OCP.TDF.TDF_Label: ...
+    def Find1(self,theKey1 : int,theKey2 : OCP.TDF.TDF_Label) -> bool: ...
     @overload
-    def Find2(self,theKey2 : OCP.TDF.TDF_Label,theKey1 : int) -> bool: 
+    def Find2(self,theKey2 : OCP.TDF.TDF_Label) -> int: 
         """
         Find the Key2 and return Key1 value. Raises an exception if Key2 was not bound.
 
         Find the Key2 and return Key1 value (by copying its value).
         """
     @overload
-    def Find2(self,theKey2 : OCP.TDF.TDF_Label) -> int: ...
+    def Find2(self,theKey2 : OCP.TDF.TDF_Label,theKey1 : int) -> bool: ...
     def IsBound1(self,theKey1 : int) -> bool: 
         """
         IsBound1
@@ -295,7 +296,7 @@ class TFunction_DoubleMapOfIntegerLabel(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -421,7 +422,7 @@ class TFunction_DriverTable(OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -504,23 +505,31 @@ class TFunction_ExecutionStatus():
 
       TFunction_ES_Failed
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TFunction_ES_Executing: OCP.TFunction.TFunction_ExecutionStatus # value = TFunction_ExecutionStatus.TFunction_ES_Executing
-    TFunction_ES_Failed: OCP.TFunction.TFunction_ExecutionStatus # value = TFunction_ExecutionStatus.TFunction_ES_Failed
-    TFunction_ES_NotExecuted: OCP.TFunction.TFunction_ExecutionStatus # value = TFunction_ExecutionStatus.TFunction_ES_NotExecuted
-    TFunction_ES_Succeeded: OCP.TFunction.TFunction_ExecutionStatus # value = TFunction_ExecutionStatus.TFunction_ES_Succeeded
-    TFunction_ES_WrongDefinition: OCP.TFunction.TFunction_ExecutionStatus # value = TFunction_ExecutionStatus.TFunction_ES_WrongDefinition
-    __entries: dict # value = {'TFunction_ES_WrongDefinition': (TFunction_ExecutionStatus.TFunction_ES_WrongDefinition, None), 'TFunction_ES_NotExecuted': (TFunction_ExecutionStatus.TFunction_ES_NotExecuted, None), 'TFunction_ES_Executing': (TFunction_ExecutionStatus.TFunction_ES_Executing, None), 'TFunction_ES_Succeeded': (TFunction_ExecutionStatus.TFunction_ES_Succeeded, None), 'TFunction_ES_Failed': (TFunction_ExecutionStatus.TFunction_ES_Failed, None)}
-    __members__: dict # value = {'TFunction_ES_WrongDefinition': TFunction_ExecutionStatus.TFunction_ES_WrongDefinition, 'TFunction_ES_NotExecuted': TFunction_ExecutionStatus.TFunction_ES_NotExecuted, 'TFunction_ES_Executing': TFunction_ExecutionStatus.TFunction_ES_Executing, 'TFunction_ES_Succeeded': TFunction_ExecutionStatus.TFunction_ES_Succeeded, 'TFunction_ES_Failed': TFunction_ExecutionStatus.TFunction_ES_Failed}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TFunction_ES_Executing: OCP.TFunction.TFunction_ExecutionStatus # value = <TFunction_ExecutionStatus.TFunction_ES_Executing: 2>
+    TFunction_ES_Failed: OCP.TFunction.TFunction_ExecutionStatus # value = <TFunction_ExecutionStatus.TFunction_ES_Failed: 4>
+    TFunction_ES_NotExecuted: OCP.TFunction.TFunction_ExecutionStatus # value = <TFunction_ExecutionStatus.TFunction_ES_NotExecuted: 1>
+    TFunction_ES_Succeeded: OCP.TFunction.TFunction_ExecutionStatus # value = <TFunction_ExecutionStatus.TFunction_ES_Succeeded: 3>
+    TFunction_ES_WrongDefinition: OCP.TFunction.TFunction_ExecutionStatus # value = <TFunction_ExecutionStatus.TFunction_ES_WrongDefinition: 0>
+    __entries: dict # value = {'TFunction_ES_WrongDefinition': (<TFunction_ExecutionStatus.TFunction_ES_WrongDefinition: 0>, None), 'TFunction_ES_NotExecuted': (<TFunction_ExecutionStatus.TFunction_ES_NotExecuted: 1>, None), 'TFunction_ES_Executing': (<TFunction_ExecutionStatus.TFunction_ES_Executing: 2>, None), 'TFunction_ES_Succeeded': (<TFunction_ExecutionStatus.TFunction_ES_Succeeded: 3>, None), 'TFunction_ES_Failed': (<TFunction_ExecutionStatus.TFunction_ES_Failed: 4>, None)}
+    __members__: dict # value = {'TFunction_ES_WrongDefinition': <TFunction_ExecutionStatus.TFunction_ES_WrongDefinition: 0>, 'TFunction_ES_NotExecuted': <TFunction_ExecutionStatus.TFunction_ES_NotExecuted: 1>, 'TFunction_ES_Executing': <TFunction_ExecutionStatus.TFunction_ES_Executing: 2>, 'TFunction_ES_Succeeded': <TFunction_ExecutionStatus.TFunction_ES_Succeeded: 3>, 'TFunction_ES_Failed': <TFunction_ExecutionStatus.TFunction_ES_Failed: 4>}
     pass
 class TFunction_Function(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
@@ -587,14 +596,14 @@ class TFunction_Function(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -603,15 +612,19 @@ class TFunction_Function(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -745,7 +758,7 @@ class TFunction_Function(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
-    def Set_s(L : OCP.TDF.TDF_Label) -> TFunction_Function: 
+    def Set_s(L : OCP.TDF.TDF_Label,DriverID : OCP.Standard.Standard_GUID) -> TFunction_Function: 
         """
         Static methods: ============== Finds or Creates a function attribute on the label <L>. Returns the function attribute.
 
@@ -753,7 +766,7 @@ class TFunction_Function(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
     @staticmethod
     @overload
-    def Set_s(L : OCP.TDF.TDF_Label,DriverID : OCP.Standard.Standard_GUID) -> TFunction_Function: ...
+    def Set_s(L : OCP.TDF.TDF_Label) -> TFunction_Function: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -789,14 +802,14 @@ class TFunction_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
         """
     @overload
-    def AddNext(self,func : OCP.TDF.TDF_Label) -> bool: 
+    def AddNext(self,funcID : int) -> bool: 
         """
         Defines a reference to the function as a next one.
 
         Defines a reference to the function as a next one.
         """
     @overload
-    def AddNext(self,funcID : int) -> bool: ...
+    def AddNext(self,func : OCP.TDF.TDF_Label) -> bool: ...
     @overload
     def AddPrevious(self,funcID : int) -> bool: 
         """
@@ -863,14 +876,14 @@ class TFunction_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -879,15 +892,19 @@ class TFunction_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1016,14 +1033,14 @@ class TFunction_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
     @overload
     def RemoveNext(self,func : OCP.TDF.TDF_Label) -> bool: ...
     @overload
-    def RemovePrevious(self,func : OCP.TDF.TDF_Label) -> bool: 
+    def RemovePrevious(self,funcID : int) -> bool: 
         """
         Removes a reference to the function as a previous one.
 
         Removes a reference to the function as a previous one.
         """
     @overload
-    def RemovePrevious(self,funcID : int) -> bool: ...
+    def RemovePrevious(self,func : OCP.TDF.TDF_Label) -> bool: ...
     def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
@@ -1196,14 +1213,14 @@ class TFunction_HArray1OfDataMapOfGUIDDriver(TFunction_Array1OfDataMapOfGUIDDriv
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : Any) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : Any) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1287,9 +1304,9 @@ class TFunction_IFunction():
         Updates dependencies for all functions of the scope. It returns false in case of an error. An empty constructor.
         """
     @overload
-    def __init__(self,L : OCP.TDF.TDF_Label) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,L : OCP.TDF.TDF_Label) -> None: ...
     pass
 class TFunction_Iterator():
     """
@@ -1299,7 +1316,7 @@ class TFunction_Iterator():
         """
         Returns the current list of functions. If the iterator uses the execution status, the returned list contains only the functions with "not executed" status.
         """
-    def Dump(self,OS : Any) -> Any: 
+    def Dump(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1336,9 +1353,9 @@ class TFunction_Iterator():
         Defines the mode of iteration - usage or not of the execution status. If the iterator takes into account the execution status, the method ::Current() returns only "not executed" functions while their status is not changed. If the iterator ignores the execution status, the method ::Current() returns the functions following their dependencies and ignoring the execution status.
         """
     @overload
-    def __init__(self,Access : OCP.TDF.TDF_Label) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Access : OCP.TDF.TDF_Label) -> None: ...
     pass
 class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
@@ -1409,14 +1426,14 @@ class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1431,15 +1448,19 @@ class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
 
         Sets status of execution.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Prints th data of the attributes (touched, impacted and valid labels).
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1481,7 +1502,7 @@ class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the map of touched labels in this logbook. A touched label is the one modified by the end user.
         """
     @overload
-    def GetValid(self) -> OCP.TDF.TDF_LabelMap: 
+    def GetValid(self,Ls : OCP.TDF.TDF_LabelMap) -> None: 
         """
         None
 
@@ -1490,7 +1511,7 @@ class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the map of valid labels in this logbook.
         """
     @overload
-    def GetValid(self,Ls : OCP.TDF.TDF_LabelMap) -> None: ...
+    def GetValid(self) -> OCP.TDF.TDF_LabelMap: ...
     def ID(self) -> OCP.Standard.Standard_GUID: 
         """
         Returns the ID of the attribute.
@@ -1596,14 +1617,14 @@ class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Sets the label L as a touched label in this logbook. In other words, L is understood to have been modified by the end user.
         """
     @overload
-    def SetValid(self,Ls : OCP.TDF.TDF_LabelMap) -> None: 
+    def SetValid(self,L : OCP.TDF.TDF_Label,WithChildren : bool=False) -> None: 
         """
         Sets the label L as a valid label in this logbook.
 
         None
         """
     @overload
-    def SetValid(self,L : OCP.TDF.TDF_Label,WithChildren : bool=False) -> None: ...
+    def SetValid(self,Ls : OCP.TDF.TDF_LabelMap) -> None: ...
     @staticmethod
     def Set_s(Access : OCP.TDF.TDF_Label) -> TFunction_Logbook: 
         """
@@ -1708,14 +1729,14 @@ class TFunction_Scope(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1724,15 +1745,19 @@ class TFunction_Scope(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1922,8 +1947,8 @@ class TFunction_Scope(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-TFunction_ES_Executing: OCP.TFunction.TFunction_ExecutionStatus # value = TFunction_ExecutionStatus.TFunction_ES_Executing
-TFunction_ES_Failed: OCP.TFunction.TFunction_ExecutionStatus # value = TFunction_ExecutionStatus.TFunction_ES_Failed
-TFunction_ES_NotExecuted: OCP.TFunction.TFunction_ExecutionStatus # value = TFunction_ExecutionStatus.TFunction_ES_NotExecuted
-TFunction_ES_Succeeded: OCP.TFunction.TFunction_ExecutionStatus # value = TFunction_ExecutionStatus.TFunction_ES_Succeeded
-TFunction_ES_WrongDefinition: OCP.TFunction.TFunction_ExecutionStatus # value = TFunction_ExecutionStatus.TFunction_ES_WrongDefinition
+TFunction_ES_Executing: OCP.TFunction.TFunction_ExecutionStatus # value = <TFunction_ExecutionStatus.TFunction_ES_Executing: 2>
+TFunction_ES_Failed: OCP.TFunction.TFunction_ExecutionStatus # value = <TFunction_ExecutionStatus.TFunction_ES_Failed: 4>
+TFunction_ES_NotExecuted: OCP.TFunction.TFunction_ExecutionStatus # value = <TFunction_ExecutionStatus.TFunction_ES_NotExecuted: 1>
+TFunction_ES_Succeeded: OCP.TFunction.TFunction_ExecutionStatus # value = <TFunction_ExecutionStatus.TFunction_ES_Succeeded: 3>
+TFunction_ES_WrongDefinition: OCP.TFunction.TFunction_ExecutionStatus # value = <TFunction_ExecutionStatus.TFunction_ES_WrongDefinition: 0>

@@ -6,15 +6,16 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.GProp
 import OCP.TColStd
-import OCP.TopAbs
+import OCP.math
+import OCP.gp
 import OCP.GeomAbs
-import OCP.Poly
 import OCP.TColgp
+import OCP.TopAbs
 import OCP.TopoDS
 import OCP.BRepAdaptor
-import OCP.math
+import BRepGProp_MeshProps
 import OCP.TopLoc
-import OCP.gp
+import OCP.Poly
 __all__  = [
 "BRepGProp",
 "BRepGProp_Cinert",
@@ -127,7 +128,7 @@ class BRepGProp_Domain():
     Arc iterator. Returns only Forward and Reversed edges from the face in an undigested order.
     """
     @overload
-    def Init(self) -> None: 
+    def Init(self,F : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         Initializes the domain with the face.
 
@@ -138,7 +139,7 @@ class BRepGProp_Domain():
         Initializes the exploration with the face already set.
         """
     @overload
-    def Init(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    def Init(self) -> None: ...
     def More(self) -> bool: 
         """
         Returns True if there is another arc of curve in the list.
@@ -258,7 +259,7 @@ class BRepGProp_Face():
         Returns the parametric value of the end point of the current arc of curve.
         """
     @overload
-    def Load(self,F : OCP.TopoDS.TopoDS_Face) -> None: 
+    def Load(self,E : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
         None
 
@@ -267,9 +268,9 @@ class BRepGProp_Face():
         Loading the boundary arc. This arc is either a top, bottom, left or right bound of a UV rectangle in which the parameters of surface are defined. If IsFirstParam is equal to Standard_True, the face is initialized by either left of bottom bound. Otherwise it is initialized by the top or right one. If theIsoType is equal to GeomAbs_IsoU, the face is initialized with either left or right bound. Otherwise - with either top or bottom one.
         """
     @overload
-    def Load(self,IsFirstParam : bool,theIsoType : OCP.GeomAbs.GeomAbs_IsoType) -> None: ...
+    def Load(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
-    def Load(self,E : OCP.TopoDS.TopoDS_Edge) -> bool: ...
+    def Load(self,IsFirstParam : bool,theIsoType : OCP.GeomAbs.GeomAbs_IsoType) -> None: ...
     def NaturalRestriction(self) -> bool: 
         """
         Returns Standard_True if the face is not trimmed.
@@ -315,9 +316,9 @@ class BRepGProp_Face():
         Returns the value of the boundary curve of the face.
         """
     @overload
-    def __init__(self,IsUseSpan : bool=False) -> None: ...
-    @overload
     def __init__(self,F : OCP.TopoDS.TopoDS_Face,IsUseSpan : bool=False) -> None: ...
+    @overload
+    def __init__(self,IsUseSpan : bool=False) -> None: ...
     pass
 class BRepGProp_MeshCinert(OCP.GProp.GProp_GProps):
     """
@@ -374,6 +375,39 @@ class BRepGProp_MeshProps(OCP.GProp.GProp_GProps):
     """
     Computes the global properties of a surface mesh. The mesh can be interpreted as just a surface or as a piece of volume limited by this surface.
     """
+    class BRepGProp_MeshObjType_e():
+        """
+        Describes types of geometric objects. - Vinert is 3D closed region of space delimited with Point and surface mesh; - Sinert is surface mesh in 3D space.
+
+        Members:
+
+          Vinert
+
+          Sinert
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        Sinert: OCP.BRepGProp.BRepGProp_MeshObjType_e # value = <BRepGProp_MeshObjType_e.Sinert: 1>
+        Vinert: OCP.BRepGProp.BRepGProp_MeshObjType_e # value = <BRepGProp_MeshObjType_e.Vinert: 0>
+        __entries: dict # value = {'Vinert': (<BRepGProp_MeshObjType_e.Vinert: 0>, None), 'Sinert': (<BRepGProp_MeshObjType_e.Sinert: 1>, None)}
+        __members__: dict # value = {'Vinert': <BRepGProp_MeshObjType_e.Vinert: 0>, 'Sinert': <BRepGProp_MeshObjType_e.Sinert: 1>}
+        pass
     def Add(self,Item : OCP.GProp.GProp_GProps,Density : float=1.0) -> None: 
         """
         Either - initializes the global properties retained by this framework from those retained by the framework Item, or - brings together the global properties still retained by this framework with those retained by the framework Item. The value Density, which is 1.0 by default, is used as the density of the system analysed by Item. Sometimes the density will have already been given at the time of construction of the framework Item. This may be the case for example, if Item is a GProp_PGProps framework built to compute the global properties of a set of points ; or another GProp_GProps object which already retains composite global properties. In these cases the real density was perhaps already taken into account at the time of construction of Item. Note that this is not checked: if the density of parts of the system is taken into account two or more times, results of the computation will be false. Notes : - The point relative to which the inertia of Item is computed (i.e. the reference point of Item) may be different from the reference point in this framework. Huygens' theorem is applied automatically to transfer inertia values to the reference point in this framework. - The function Add is used once per component of the system. After that, you use the interrogation functions available to access values computed for the system. - The system whose global properties are already brought together by this framework is referred to as the current system. However, the current system is not retained by this framework, which maintains only its global properties. Exceptions Standard_DomainError if Density is less than or equal to gp::Resolution().
@@ -387,7 +421,7 @@ class BRepGProp_MeshProps(OCP.GProp.GProp_GProps):
         """
         Returns the center of mass of the current system. If the gravitational field is uniform, it is the center of gravity. The coordinates returned for the center of mass are expressed in the absolute Cartesian coordinate system.
         """
-    def GetMeshObjType(self) -> Any: 
+    def GetMeshObjType(self) -> BRepGProp_MeshProps.BRepGProp_MeshObjType_e: 
         """
         Get type of mesh object
         """
@@ -428,7 +462,9 @@ class BRepGProp_MeshProps(OCP.GProp.GProp_GProps):
         """
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
-    def __init__(self,theType : Any) -> None: ...
+    def __init__(self,theType : BRepGProp_MeshProps.BRepGProp_MeshObjType_e) -> None: ...
+    Sinert: OCP.BRepGProp.BRepGProp_MeshObjType_e # value = <BRepGProp_MeshObjType_e.Sinert: 1>
+    Vinert: OCP.BRepGProp.BRepGProp_MeshObjType_e # value = <BRepGProp_MeshObjType_e.Vinert: 0>
     pass
 class BRepGProp_Sinert(OCP.GProp.GProp_GProps):
     """
@@ -459,7 +495,7 @@ class BRepGProp_Sinert(OCP.GProp.GProp_GProps):
         computes the moment of inertia of the material system about the axis A.
         """
     @overload
-    def Perform(self,S : BRepGProp_Face) -> None: 
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Eps : float) -> float: 
         """
         None
 
@@ -472,7 +508,7 @@ class BRepGProp_Sinert(OCP.GProp.GProp_GProps):
     @overload
     def Perform(self,S : BRepGProp_Face,Eps : float) -> float: ...
     @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Eps : float) -> float: ...
+    def Perform(self,S : BRepGProp_Face) -> None: ...
     @overload
     def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain) -> None: ...
     def PrincipalProperties(self) -> OCP.GProp.GProp_PrincipalProps: 
@@ -492,15 +528,15 @@ class BRepGProp_Sinert(OCP.GProp.GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
+    def __init__(self,S : BRepGProp_Face,SLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
     def __init__(self,S : BRepGProp_Face,SLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,SLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
     @overload
     def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,SLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def __init__(self,S : BRepGProp_Face,SLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,SLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class BRepGProp_TFunction(OCP.math.math_Function):
     """
@@ -533,23 +569,23 @@ class BRepGProp_TFunction(OCP.math.math_Function):
         Setting the expected number of Kronrod points for the outer integral computation. This number is required for computation of a value of tolerance for inner integral computation. After GetStateNumber method call, this number is recomputed by the same law as in math_KronrodSingleIntegration, i.e. next number of points is equal to the current number plus a square root of the current number. If the law in math_KronrodSingleIntegration is changed, the modification algo should be modified accordingly.
         """
     @overload
-    def SetTolerance(self,aTol : float) -> None: 
+    def SetTolerance(self,theTolerance : float) -> None: 
         """
         Setting the tolerance for inner integration
 
         Setting the tolerance for inner integration
         """
     @overload
-    def SetTolerance(self,theTolerance : float) -> None: ...
+    def SetTolerance(self,aTol : float) -> None: ...
     @overload
-    def SetValueType(self,aType : OCP.GProp.GProp_ValueType) -> None: 
+    def SetValueType(self,theType : OCP.GProp.GProp_ValueType) -> None: 
         """
         Setting the type of the value to be returned. This parameter is directly passed to the UFunction.
 
         Setting the type of the value to be returned. This parameter is directly passed to the UFunction.
         """
     @overload
-    def SetValueType(self,theType : OCP.GProp.GProp_ValueType) -> None: ...
+    def SetValueType(self,aType : OCP.GProp.GProp_ValueType) -> None: ...
     def Value(self,X : float,F : float) -> bool: 
         """
         Returns a value of the function. The value represents an integral of UFunction. It is computed with the predefined tolerance using the adaptive Gauss-Kronrod method.
@@ -611,7 +647,7 @@ class BRepGProp_Vinert(OCP.GProp.GProp_GProps):
         computes the moment of inertia of the material system about the axis A.
         """
     @overload
-    def Perform(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,Eps : float) -> float: 
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln) -> None: 
         """
         None
 
@@ -637,28 +673,28 @@ class BRepGProp_Vinert(OCP.GProp.GProp_GProps):
 
         None
         """
-    @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Eps : float) -> float: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt,Eps : float) -> float: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln,Eps : float) -> float: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln,Eps : float) -> float: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain) -> None: ...
     @overload
     def Perform(self,S : BRepGProp_Face) -> None: ...
     @overload
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain) -> None: ...
+    @overload
     def Perform(self,S : BRepGProp_Face,Eps : float) -> float: ...
     @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln) -> None: ...
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Eps : float) -> float: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln,Eps : float) -> float: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln,Eps : float) -> float: ...
     @overload
     def Perform(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln) -> None: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt,Eps : float) -> float: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,Eps : float) -> float: ...
     def PrincipalProperties(self) -> OCP.GProp.GProp_PrincipalProps: 
         """
         Computes the principal properties of inertia of the current system. There is always a set of axes for which the products of inertia of a geometric system are equal to 0; i.e. the matrix of inertia of the system is diagonal. These axes are the principal axes of inertia. Their origin is coincident with the center of mass of the system. The associated moments are called the principal moments of inertia. This function computes the eigen values and the eigen vectors of the matrix of inertia of the system. Results are stored by using a presentation framework of principal properties of inertia (GProp_PrincipalProps object) which may be queried to access the value sought.
@@ -676,31 +712,31 @@ class BRepGProp_Vinert(OCP.GProp.GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
-    def __init__(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
-    @overload
-    def __init__(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
-    @overload
-    def __init__(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    def __init__(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
     @overload
-    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
-    @overload
-    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,VLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
     @overload
-    def __init__(self,S : BRepGProp_Face,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
+    @overload
+    def __init__(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
+    @overload
+    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,VLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,S : BRepGProp_Face,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
+    @overload
+    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,S : BRepGProp_Face,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
     pass
 class BRepGProp_VinertGK(OCP.GProp.GProp_GProps):
     """
@@ -731,7 +767,7 @@ class BRepGProp_VinertGK(OCP.GProp.GProp_GProps):
         computes the moment of inertia of the material system about the axis A.
         """
     @overload
-    def Perform(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: 
+    def Perform(self,theSurface : BRepGProp_Face,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: 
         """
         Computes the global properties of a region of 3D space delimited with the naturally restricted surface and the point VLocation.
 
@@ -746,11 +782,11 @@ class BRepGProp_VinertGK(OCP.GProp.GProp_GProps):
         Computes the global properties of a region of 3D space delimited with the surface bounded by the domain and the plane.
         """
     @overload
-    def Perform(self,theSurface : BRepGProp_Face,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
-    @overload
-    def Perform(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePlane : OCP.gp.gp_Pln,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
+    def Perform(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
     @overload
     def Perform(self,theSurface : BRepGProp_Face,thePlane : OCP.gp.gp_Pln,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
+    @overload
+    def Perform(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePlane : OCP.gp.gp_Pln,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
     @overload
     def Perform(self,theSurface : BRepGProp_Face,thePoint : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
     @overload
@@ -772,17 +808,17 @@ class BRepGProp_VinertGK(OCP.GProp.GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
-    def __init__(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePoint : OCP.gp.gp_Pnt,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
-    @overload
-    def __init__(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
-    @overload
-    def __init__(self,theSurface : BRepGProp_Face,thePlane : OCP.gp.gp_Pln,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePlane : OCP.gp.gp_Pln,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
     @overload
     def __init__(self,theSurface : BRepGProp_Face,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
     @overload
-    def __init__(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePlane : OCP.gp.gp_Pln,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
+    def __init__(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
     @overload
     def __init__(self,theSurface : BRepGProp_Face,thePoint : OCP.gp.gp_Pnt,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
+    @overload
+    def __init__(self,theSurface : BRepGProp_Face,thePlane : OCP.gp.gp_Pln,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
+    @overload
+    def __init__(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePoint : OCP.gp.gp_Pnt,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass

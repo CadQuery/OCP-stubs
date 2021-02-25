@@ -4,18 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.TColStd
-import OCP.Geom2d
-import OCP.TColgp
 import OCP.Adaptor3d
-import OCP.Standard
-import OCP.Geom
+import OCP.TColStd
+import io
 import OCP.NCollection
 import OCP.AppParCurves
 import OCP.Adaptor2d
 import OCP.AppCont
 import OCP.gp
+import OCP.Geom
+import OCP.TColgp
+import OCP.GeomAbs
+import OCP.Geom2d
+import OCP.Standard
 __all__  = [
 "Approx_Array1OfAdHSurface",
 "Approx_Array1OfGTrsf2d",
@@ -119,14 +120,14 @@ class Approx_Array1OfAdHSurface():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : Approx_Array1OfAdHSurface) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.Adaptor3d.Adaptor3d_HSurface,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Approx_Array1OfAdHSurface) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Approx_Array1OfGTrsf2d():
     """
@@ -205,14 +206,14 @@ class Approx_Array1OfGTrsf2d():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Approx_Array1OfGTrsf2d) -> None: ...
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_GTrsf2d,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : OCP.gp.gp_GTrsf2d,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Approx_Curve2d():
     """
@@ -248,7 +249,7 @@ class Approx_Curve3d():
         """
         None
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Print on the stream o information about the object
         """
@@ -298,7 +299,14 @@ class Approx_CurveOnSurface():
         """
         None
         """
+    def Perform(self,theMaxSegments : int,theMaxDegree : int,theContinuity : OCP.GeomAbs.GeomAbs_Shape,theOnly3d : bool=False,theOnly2d : bool=False) -> None: 
+        """
+        Constructs the 3d curve. Input parameters are ignored when the input curve is U-isoline or V-isoline.
+        """
+    @overload
     def __init__(self,C2D : OCP.Adaptor2d.Adaptor2d_HCurve2d,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,First : float,Last : float,Tol : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxDegree : int,MaxSegments : int,Only3d : bool=False,Only2d : bool=False) -> None: ...
+    @overload
+    def __init__(self,theC2D : OCP.Adaptor2d.Adaptor2d_HCurve2d,theSurf : OCP.Adaptor3d.Adaptor3d_HSurface,theFirst : float,theLast : float,theTol : float) -> None: ...
     pass
 class Approx_CurvilinearParameter():
     """
@@ -316,7 +324,7 @@ class Approx_CurvilinearParameter():
         """
         returns the Bspline curve corresponding to the reparametrized 3D curve
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         print the maximum errors(s)
         """
@@ -341,11 +349,11 @@ class Approx_CurvilinearParameter():
         returns the maximum error on the reparametrized 3D curve
         """
     @overload
-    def __init__(self,C2D1 : OCP.Adaptor2d.Adaptor2d_HCurve2d,Surf1 : OCP.Adaptor3d.Adaptor3d_HSurface,C2D2 : OCP.Adaptor2d.Adaptor2d_HCurve2d,Surf2 : OCP.Adaptor3d.Adaptor3d_HSurface,Tol : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxDegree : int,MaxSegments : int) -> None: ...
-    @overload
     def __init__(self,C3D : OCP.Adaptor3d.Adaptor3d_HCurve,Tol : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxDegree : int,MaxSegments : int) -> None: ...
     @overload
     def __init__(self,C2D : OCP.Adaptor2d.Adaptor2d_HCurve2d,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Tol : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxDegree : int,MaxSegments : int) -> None: ...
+    @overload
+    def __init__(self,C2D1 : OCP.Adaptor2d.Adaptor2d_HCurve2d,Surf1 : OCP.Adaptor3d.Adaptor3d_HSurface,C2D2 : OCP.Adaptor2d.Adaptor2d_HCurve2d,Surf2 : OCP.Adaptor3d.Adaptor3d_HSurface,Tol : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxDegree : int,MaxSegments : int) -> None: ...
     pass
 class Approx_CurvlinFunc(OCP.Standard.Standard_Transient):
     """
@@ -503,6 +511,10 @@ class Approx_FitAndDivide():
         """
         changes the degrees of the approximation.
         """
+    def SetHangChecking(self,theHangChecking : bool) -> None: 
+        """
+        Set value of hang checking flag if this flag = true, possible hang of algorithm is checked and algorithm is forced to stop. By default hang checking is used.
+        """
     def SetInvOrder(self,theInvOrder : bool) -> None: 
         """
         Set inverse order of degree selection: if theInvOrdr = true, current degree is chosen by inverse order - from maxdegree to mindegree. By default inverse order is used.
@@ -559,6 +571,10 @@ class Approx_FitAndDivide2d():
     def SetDegrees(self,degreemin : int,degreemax : int) -> None: 
         """
         changes the degrees of the approximation.
+        """
+    def SetHangChecking(self,theHangChecking : bool) -> None: 
+        """
+        Set value of hang checking flag if this flag = true, possible hang of algorithm is checked and algorithm is forced to stop. By default hang checking is used.
         """
     def SetInvOrder(self,theInvOrder : bool) -> None: 
         """
@@ -707,12 +723,12 @@ class Approx_HArray1OfAdHSurface(Approx_Array1OfAdHSurface, OCP.Standard.Standar
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
     @overload
     def __init__(self,theOther : Approx_Array1OfAdHSurface) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -850,12 +866,12 @@ class Approx_HArray1OfGTrsf2d(Approx_Array1OfGTrsf2d, OCP.Standard.Standard_Tran
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_GTrsf2d) -> None: ...
     @overload
-    def __init__(self,theOther : Approx_Array1OfGTrsf2d) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : Approx_Array1OfGTrsf2d) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -910,49 +926,49 @@ class Approx_ParametrizationType():
 
       Approx_IsoParametric
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Approx_Centripetal: OCP.Approx.Approx_ParametrizationType # value = Approx_ParametrizationType.Approx_Centripetal
-    Approx_ChordLength: OCP.Approx.Approx_ParametrizationType # value = Approx_ParametrizationType.Approx_ChordLength
-    Approx_IsoParametric: OCP.Approx.Approx_ParametrizationType # value = Approx_ParametrizationType.Approx_IsoParametric
-    __entries: dict # value = {'Approx_ChordLength': (Approx_ParametrizationType.Approx_ChordLength, None), 'Approx_Centripetal': (Approx_ParametrizationType.Approx_Centripetal, None), 'Approx_IsoParametric': (Approx_ParametrizationType.Approx_IsoParametric, None)}
-    __members__: dict # value = {'Approx_ChordLength': Approx_ParametrizationType.Approx_ChordLength, 'Approx_Centripetal': Approx_ParametrizationType.Approx_Centripetal, 'Approx_IsoParametric': Approx_ParametrizationType.Approx_IsoParametric}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Approx_Centripetal: OCP.Approx.Approx_ParametrizationType # value = <Approx_ParametrizationType.Approx_Centripetal: 1>
+    Approx_ChordLength: OCP.Approx.Approx_ParametrizationType # value = <Approx_ParametrizationType.Approx_ChordLength: 0>
+    Approx_IsoParametric: OCP.Approx.Approx_ParametrizationType # value = <Approx_ParametrizationType.Approx_IsoParametric: 2>
+    __entries: dict # value = {'Approx_ChordLength': (<Approx_ParametrizationType.Approx_ChordLength: 0>, None), 'Approx_Centripetal': (<Approx_ParametrizationType.Approx_Centripetal: 1>, None), 'Approx_IsoParametric': (<Approx_ParametrizationType.Approx_IsoParametric: 2>, None)}
+    __members__: dict # value = {'Approx_ChordLength': <Approx_ParametrizationType.Approx_ChordLength: 0>, 'Approx_Centripetal': <Approx_ParametrizationType.Approx_Centripetal: 1>, 'Approx_IsoParametric': <Approx_ParametrizationType.Approx_IsoParametric: 2>}
     pass
 class Approx_SameParameter():
     """
     Approximation of a PCurve on a surface to make its parameter be the same that the parameter of a given 3d reference curve.
     """
-    def Curve2d(self) -> OCP.Geom2d.Geom2d_BSplineCurve: 
+    def Curve2d(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
-        Returns the 2D curve that has the same parameter as the 3D curve once evaluated on the surface up to the specified tolerance
-
-        Returns the 2D curve that has the same parameter as the 3D curve once evaluated on the surface up to the specified tolerance
+        Returns the 2D curve that has the same parameter as the 3D curve once evaluated on the surface up to the specified tolerance.
         """
     def IsDone(self) -> bool: 
         """
-        None
-
-        None
+        Returns .false. if calculations failed, .true. if calculations succeed
         """
     def IsSameParameter(self) -> bool: 
         """
         Tells whether the original data had already the same parameter up to the tolerance : in that case nothing is done.
-
-        Tells whether the original data had already the same parameter up to the tolerance : in that case nothing is done.
         """
     def TolReached(self) -> float: 
         """
-        None
-
-        None
+        Returns tolerance (maximal distance) between 3d curve and curve on surface, generated by 2d curve and surface.
         """
     @overload
     def __init__(self,C3D : OCP.Adaptor3d.Adaptor3d_HCurve,C2D : OCP.Adaptor2d.Adaptor2d_HCurve2d,S : OCP.Adaptor3d.Adaptor3d_HSurface,Tol : float) -> None: ...
@@ -970,14 +986,14 @@ class Approx_SequenceOfHArray1OfReal(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
+    def Append(self,theSeq : Approx_SequenceOfHArray1OfReal) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Approx_SequenceOfHArray1OfReal) -> None: ...
+    def Append(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
     def Assign(self,theOther : Approx_SequenceOfHArray1OfReal) -> Approx_SequenceOfHArray1OfReal: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1007,14 +1023,14 @@ class Approx_SequenceOfHArray1OfReal(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Approx_SequenceOfHArray1OfReal) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Approx_SequenceOfHArray1OfReal) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
@@ -1041,23 +1057,23 @@ class Approx_SequenceOfHArray1OfReal(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
+    def Prepend(self,theSeq : Approx_SequenceOfHArray1OfReal) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Approx_SequenceOfHArray1OfReal) -> None: ...
+    def Prepend(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1083,12 +1099,12 @@ class Approx_SequenceOfHArray1OfReal(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : Approx_SequenceOfHArray1OfReal) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : Approx_SequenceOfHArray1OfReal) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1097,7 +1113,7 @@ class Approx_SequenceOfHArray1OfReal(OCP.NCollection.NCollection_BaseSequence):
     pass
 class Approx_Status():
     """
-    None
+    It is an auxiliary flag being used in inner computations
 
     Members:
 
@@ -1107,21 +1123,29 @@ class Approx_Status():
 
       Approx_NoApproximation
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Approx_NoApproximation: OCP.Approx.Approx_Status # value = Approx_Status.Approx_NoApproximation
-    Approx_NoPointsAdded: OCP.Approx.Approx_Status # value = Approx_Status.Approx_NoPointsAdded
-    Approx_PointsAdded: OCP.Approx.Approx_Status # value = Approx_Status.Approx_PointsAdded
-    __entries: dict # value = {'Approx_PointsAdded': (Approx_Status.Approx_PointsAdded, None), 'Approx_NoPointsAdded': (Approx_Status.Approx_NoPointsAdded, None), 'Approx_NoApproximation': (Approx_Status.Approx_NoApproximation, None)}
-    __members__: dict # value = {'Approx_PointsAdded': Approx_Status.Approx_PointsAdded, 'Approx_NoPointsAdded': Approx_Status.Approx_NoPointsAdded, 'Approx_NoApproximation': Approx_Status.Approx_NoApproximation}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Approx_NoApproximation: OCP.Approx.Approx_Status # value = <Approx_Status.Approx_NoApproximation: 2>
+    Approx_NoPointsAdded: OCP.Approx.Approx_Status # value = <Approx_Status.Approx_NoPointsAdded: 1>
+    Approx_PointsAdded: OCP.Approx.Approx_Status # value = <Approx_Status.Approx_PointsAdded: 0>
+    __entries: dict # value = {'Approx_PointsAdded': (<Approx_Status.Approx_PointsAdded: 0>, None), 'Approx_NoPointsAdded': (<Approx_Status.Approx_NoPointsAdded: 1>, None), 'Approx_NoApproximation': (<Approx_Status.Approx_NoApproximation: 2>, None)}
+    __members__: dict # value = {'Approx_PointsAdded': <Approx_Status.Approx_PointsAdded: 0>, 'Approx_NoPointsAdded': <Approx_Status.Approx_NoPointsAdded: 1>, 'Approx_NoApproximation': <Approx_Status.Approx_NoApproximation: 2>}
     pass
 class Approx_SweepApproximation():
     """
@@ -1167,7 +1191,7 @@ class Approx_SweepApproximation():
         """
         None
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         display information on approximation.
         """
@@ -1386,9 +1410,9 @@ class Approx_SweepFunction(OCP.Standard.Standard_Transient):
         None
         """
     pass
-Approx_Centripetal: OCP.Approx.Approx_ParametrizationType # value = Approx_ParametrizationType.Approx_Centripetal
-Approx_ChordLength: OCP.Approx.Approx_ParametrizationType # value = Approx_ParametrizationType.Approx_ChordLength
-Approx_IsoParametric: OCP.Approx.Approx_ParametrizationType # value = Approx_ParametrizationType.Approx_IsoParametric
-Approx_NoApproximation: OCP.Approx.Approx_Status # value = Approx_Status.Approx_NoApproximation
-Approx_NoPointsAdded: OCP.Approx.Approx_Status # value = Approx_Status.Approx_NoPointsAdded
-Approx_PointsAdded: OCP.Approx.Approx_Status # value = Approx_Status.Approx_PointsAdded
+Approx_Centripetal: OCP.Approx.Approx_ParametrizationType # value = <Approx_ParametrizationType.Approx_Centripetal: 1>
+Approx_ChordLength: OCP.Approx.Approx_ParametrizationType # value = <Approx_ParametrizationType.Approx_ChordLength: 0>
+Approx_IsoParametric: OCP.Approx.Approx_ParametrizationType # value = <Approx_ParametrizationType.Approx_IsoParametric: 2>
+Approx_NoApproximation: OCP.Approx.Approx_Status # value = <Approx_Status.Approx_NoApproximation: 2>
+Approx_NoPointsAdded: OCP.Approx.Approx_Status # value = <Approx_Status.Approx_NoPointsAdded: 1>
+Approx_PointsAdded: OCP.Approx.Approx_Status # value = <Approx_Status.Approx_PointsAdded: 0>

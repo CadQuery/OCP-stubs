@@ -4,28 +4,27 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.TColgp
-import OCP.HLRAlgo
-import OCP.TopoDS
 import OCP.NCollection
+import OCP.TColgp
+import OCP.Bnd
+import OCP.Standard
+import OCP.SelectMgr
+import OCP.Poly
+import OCP.Quantity
+import OCP.TCollection
+import OCP.TColStd
+import io
 import OCP.gp
 import OCP.GeomAbs
-import OCP.TColStd
-import OCP.Poly
-import OCP.Bnd
-import OCP.Quantity
 import OCP.Graphic3d
 import OCP.Aspect
-import OCP.TopTools
-import OCP.Standard
-import OCP.Geom
 import OCP.TopLoc
 __all__  = [
 "Prs3d",
-"Prs3d_Root",
+"Prs3d_Arrow",
 "Prs3d_BasicAspect",
 "Prs3d_ArrowAspect",
+"Prs3d_Root",
 "Prs3d_DatumAspect",
 "Prs3d_DatumAttribute",
 "Prs3d_DatumAxes",
@@ -44,10 +43,8 @@ __all__  = [
 "Prs3d_PlaneAspect",
 "Prs3d_PointAspect",
 "Prs3d_PresentationShadow",
-"Prs3d_Projector",
-"Prs3d_Arrow",
+"Prs3d_BndBox",
 "Prs3d_ShadingAspect",
-"Prs3d_ShapeTool",
 "Prs3d_Text",
 "Prs3d_TextAspect",
 "Prs3d_ToolQuadric",
@@ -55,6 +52,7 @@ __all__  = [
 "Prs3d_ToolCylinder",
 "Prs3d_ToolSector",
 "Prs3d_ToolSphere",
+"Prs3d_ToolTorus",
 "Prs3d_TypeOfHLR",
 "Prs3d_TypeOfHighlight",
 "Prs3d_TypeOfLinePicking",
@@ -118,15 +116,26 @@ class Prs3d():
     The Prs3d package provides the following services - a presentation object (the context for all modifications to the display, its presentation will be displayed in every view of an active viewer) - an attribute manager governing how objects such as color, width, and type of line are displayed; these are generic objects, whereas those in StdPrs are specific geometries and topologies. - generic algorithms providing default settings for objects such as points, curves, surfaces and shapes - a root object which provides the abstract framework for the DsgPrs definitions at work in display of dimensions, relations and trihedra.
     """
     @staticmethod
+    def AddFreeEdges_s(theSegments : OCP.TColgp.TColgp_SequenceOfPnt,thePolyTri : OCP.Poly.Poly_Triangulation,theLocation : OCP.gp.gp_Trsf) -> None: 
+        """
+        Add triangulation free edges into sequence of line segments.
+        """
+    @staticmethod
     def AddPrimitivesGroup_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theAspect : Prs3d_LineAspect,thePolylines : Prs3d_NListOfSequenceOfPnt) -> None: 
         """
         Add primitives into new group in presentation and clear the list of polylines.
         """
     @staticmethod
-    def GetDeflection_s(theShape : OCP.TopoDS.TopoDS_Shape,theDrawer : Prs3d_Drawer) -> float: 
+    @overload
+    def GetDeflection_s(theBndBox : OCP.Bnd.Bnd_Box,theDeviationCoefficient : float,theMaximalChordialDeviation : float) -> float: 
         """
-        Computes the absolute deflection value depending on the type of deflection in theDrawer: Aspect_TOD_RELATIVE: the absolute deflection is computed using the relative deviation coefficient from theDrawer and the shape's bounding box; Aspect_TOD_ABSOLUTE: the maximal chordial deviation from theDrawer is returned. In case of the type of deflection in theDrawer computed relative deflection for shape is stored as absolute deflection. It is necessary to use it later on for sub-shapes. This function should always be used to compute the deflection value for building discrete representations of the shape (triangualtion, wireframe) to avoid incosistencies between different representations of the shape and undesirable visual artifacts.
+        Computes the absolute deflection value based on relative deflection Prs3d_Drawer::DeviationCoefficient().
+
+        Computes the absolute deflection value based on relative deflection Prs3d_Drawer::DeviationCoefficient().
         """
+    @staticmethod
+    @overload
+    def GetDeflection_s(theBndMin : OCP.SelectMgr.SelectMgr_Vec3,theBndMax : OCP.SelectMgr.SelectMgr_Vec3,theDeviationCoefficient : float) -> float: ...
     @staticmethod
     def MatchSegment_s(X : float,Y : float,Z : float,aDistance : float,p1 : OCP.gp.gp_Pnt,p2 : OCP.gp.gp_Pnt,dist : float) -> bool: 
         """
@@ -139,20 +148,31 @@ class Prs3d():
         """
     def __init__(self) -> None: ...
     pass
-class Prs3d_Root():
+class Prs3d_Arrow():
     """
-    A root class for the standard presentation algorithms of the StdPrs package.
+    Provides class methods to draw an arrow at a given location, along a given direction and using a given angle.
     """
     @staticmethod
-    def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
+    def DrawSegments_s(theLocation : OCP.gp.gp_Pnt,theDir : OCP.gp.gp_Dir,theAngle : float,theLength : float,theNbSegments : int) -> OCP.Graphic3d.Graphic3d_ArrayOfSegments: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        Defines the representation of the arrow as a container of segments.
         """
     @staticmethod
-    def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
+    def DrawShaded_s(theAxis : OCP.gp.gp_Ax1,theTubeRadius : float,theAxisLength : float,theConeRadius : float,theConeLength : float,theNbFacettes : int) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        Defines the representation of the arrow as shaded triangulation.
         """
+    @staticmethod
+    @overload
+    def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theLocation : OCP.gp.gp_Pnt,theDirection : OCP.gp.gp_Dir,theAngle : float,theLength : float) -> None: 
+        """
+        Defines the representation of the arrow. Note that this method does NOT assign any presentation aspects to the primitives group!
+
+        Alias to another method Draw() for backward compatibility.
+        """
+    @staticmethod
+    @overload
+    def Draw_s(theGroup : OCP.Graphic3d.Graphic3d_Group,theLocation : OCP.gp.gp_Pnt,theDirection : OCP.gp.gp_Dir,theAngle : float,theLength : float) -> None: ...
     def __init__(self) -> None: ...
     pass
 class Prs3d_BasicAspect(OCP.Standard.Standard_Transient):
@@ -167,7 +187,7 @@ class Prs3d_BasicAspect(OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -236,7 +256,7 @@ class Prs3d_ArrowAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -311,6 +331,22 @@ class Prs3d_ArrowAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         None
         """
     pass
+class Prs3d_Root():
+    """
+    A root class for the standard presentation algorithms of the StdPrs package.
+    """
+    @staticmethod
+    def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
+        """
+        None
+        """
+    @staticmethod
+    def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
 class Prs3d_DatumAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
     """
     A framework to define the display of datums.A framework to define the display of datums.
@@ -355,7 +391,7 @@ class Prs3d_DatumAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         """
         Returns true if the third axis can be drawn.
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -519,26 +555,34 @@ class Prs3d_DatumAttribute():
 
       Prs3d_DP_ShadingNumberOfFacettes
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Prs3d_DA_XAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DA_XAxisLength
-    Prs3d_DA_YAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DA_YAxisLength
-    Prs3d_DA_ZAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DA_ZAxisLength
-    Prs3d_DP_ShadingConeLengthPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DP_ShadingConeLengthPercent
-    Prs3d_DP_ShadingConeRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DP_ShadingConeRadiusPercent
-    Prs3d_DP_ShadingNumberOfFacettes: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DP_ShadingNumberOfFacettes
-    Prs3d_DP_ShadingOriginRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DP_ShadingOriginRadiusPercent
-    Prs3d_DP_ShadingTubeRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DP_ShadingTubeRadiusPercent
-    __entries: dict # value = {'Prs3d_DA_XAxisLength': (Prs3d_DatumAttribute.Prs3d_DA_XAxisLength, None), 'Prs3d_DA_YAxisLength': (Prs3d_DatumAttribute.Prs3d_DA_YAxisLength, None), 'Prs3d_DA_ZAxisLength': (Prs3d_DatumAttribute.Prs3d_DA_ZAxisLength, None), 'Prs3d_DP_ShadingTubeRadiusPercent': (Prs3d_DatumAttribute.Prs3d_DP_ShadingTubeRadiusPercent, None), 'Prs3d_DP_ShadingConeRadiusPercent': (Prs3d_DatumAttribute.Prs3d_DP_ShadingConeRadiusPercent, None), 'Prs3d_DP_ShadingConeLengthPercent': (Prs3d_DatumAttribute.Prs3d_DP_ShadingConeLengthPercent, None), 'Prs3d_DP_ShadingOriginRadiusPercent': (Prs3d_DatumAttribute.Prs3d_DP_ShadingOriginRadiusPercent, None), 'Prs3d_DP_ShadingNumberOfFacettes': (Prs3d_DatumAttribute.Prs3d_DP_ShadingNumberOfFacettes, None)}
-    __members__: dict # value = {'Prs3d_DA_XAxisLength': Prs3d_DatumAttribute.Prs3d_DA_XAxisLength, 'Prs3d_DA_YAxisLength': Prs3d_DatumAttribute.Prs3d_DA_YAxisLength, 'Prs3d_DA_ZAxisLength': Prs3d_DatumAttribute.Prs3d_DA_ZAxisLength, 'Prs3d_DP_ShadingTubeRadiusPercent': Prs3d_DatumAttribute.Prs3d_DP_ShadingTubeRadiusPercent, 'Prs3d_DP_ShadingConeRadiusPercent': Prs3d_DatumAttribute.Prs3d_DP_ShadingConeRadiusPercent, 'Prs3d_DP_ShadingConeLengthPercent': Prs3d_DatumAttribute.Prs3d_DP_ShadingConeLengthPercent, 'Prs3d_DP_ShadingOriginRadiusPercent': Prs3d_DatumAttribute.Prs3d_DP_ShadingOriginRadiusPercent, 'Prs3d_DP_ShadingNumberOfFacettes': Prs3d_DatumAttribute.Prs3d_DP_ShadingNumberOfFacettes}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Prs3d_DA_XAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DA_XAxisLength: 0>
+    Prs3d_DA_YAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DA_YAxisLength: 1>
+    Prs3d_DA_ZAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DA_ZAxisLength: 2>
+    Prs3d_DP_ShadingConeLengthPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DP_ShadingConeLengthPercent: 5>
+    Prs3d_DP_ShadingConeRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DP_ShadingConeRadiusPercent: 4>
+    Prs3d_DP_ShadingNumberOfFacettes: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DP_ShadingNumberOfFacettes: 7>
+    Prs3d_DP_ShadingOriginRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DP_ShadingOriginRadiusPercent: 6>
+    Prs3d_DP_ShadingTubeRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DP_ShadingTubeRadiusPercent: 3>
+    __entries: dict # value = {'Prs3d_DA_XAxisLength': (<Prs3d_DatumAttribute.Prs3d_DA_XAxisLength: 0>, None), 'Prs3d_DA_YAxisLength': (<Prs3d_DatumAttribute.Prs3d_DA_YAxisLength: 1>, None), 'Prs3d_DA_ZAxisLength': (<Prs3d_DatumAttribute.Prs3d_DA_ZAxisLength: 2>, None), 'Prs3d_DP_ShadingTubeRadiusPercent': (<Prs3d_DatumAttribute.Prs3d_DP_ShadingTubeRadiusPercent: 3>, None), 'Prs3d_DP_ShadingConeRadiusPercent': (<Prs3d_DatumAttribute.Prs3d_DP_ShadingConeRadiusPercent: 4>, None), 'Prs3d_DP_ShadingConeLengthPercent': (<Prs3d_DatumAttribute.Prs3d_DP_ShadingConeLengthPercent: 5>, None), 'Prs3d_DP_ShadingOriginRadiusPercent': (<Prs3d_DatumAttribute.Prs3d_DP_ShadingOriginRadiusPercent: 6>, None), 'Prs3d_DP_ShadingNumberOfFacettes': (<Prs3d_DatumAttribute.Prs3d_DP_ShadingNumberOfFacettes: 7>, None)}
+    __members__: dict # value = {'Prs3d_DA_XAxisLength': <Prs3d_DatumAttribute.Prs3d_DA_XAxisLength: 0>, 'Prs3d_DA_YAxisLength': <Prs3d_DatumAttribute.Prs3d_DA_YAxisLength: 1>, 'Prs3d_DA_ZAxisLength': <Prs3d_DatumAttribute.Prs3d_DA_ZAxisLength: 2>, 'Prs3d_DP_ShadingTubeRadiusPercent': <Prs3d_DatumAttribute.Prs3d_DP_ShadingTubeRadiusPercent: 3>, 'Prs3d_DP_ShadingConeRadiusPercent': <Prs3d_DatumAttribute.Prs3d_DP_ShadingConeRadiusPercent: 4>, 'Prs3d_DP_ShadingConeLengthPercent': <Prs3d_DatumAttribute.Prs3d_DP_ShadingConeLengthPercent: 5>, 'Prs3d_DP_ShadingOriginRadiusPercent': <Prs3d_DatumAttribute.Prs3d_DP_ShadingOriginRadiusPercent: 6>, 'Prs3d_DP_ShadingNumberOfFacettes': <Prs3d_DatumAttribute.Prs3d_DP_ShadingNumberOfFacettes: 7>}
     pass
 class Prs3d_DatumAxes():
     """
@@ -560,25 +604,33 @@ class Prs3d_DatumAxes():
 
       Prs3d_DA_XYZAxis
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Prs3d_DA_XAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_XAxis
-    Prs3d_DA_XYAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_XYAxis
-    Prs3d_DA_XYZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_XYZAxis
-    Prs3d_DA_XZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_XZAxis
-    Prs3d_DA_YAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_YAxis
-    Prs3d_DA_YZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_YZAxis
-    Prs3d_DA_ZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_ZAxis
-    __entries: dict # value = {'Prs3d_DA_XAxis': (Prs3d_DatumAxes.Prs3d_DA_XAxis, None), 'Prs3d_DA_YAxis': (Prs3d_DatumAxes.Prs3d_DA_YAxis, None), 'Prs3d_DA_ZAxis': (Prs3d_DatumAxes.Prs3d_DA_ZAxis, None), 'Prs3d_DA_XYAxis': (Prs3d_DatumAxes.Prs3d_DA_XYAxis, None), 'Prs3d_DA_YZAxis': (Prs3d_DatumAxes.Prs3d_DA_YZAxis, None), 'Prs3d_DA_XZAxis': (Prs3d_DatumAxes.Prs3d_DA_XZAxis, None), 'Prs3d_DA_XYZAxis': (Prs3d_DatumAxes.Prs3d_DA_XYZAxis, None)}
-    __members__: dict # value = {'Prs3d_DA_XAxis': Prs3d_DatumAxes.Prs3d_DA_XAxis, 'Prs3d_DA_YAxis': Prs3d_DatumAxes.Prs3d_DA_YAxis, 'Prs3d_DA_ZAxis': Prs3d_DatumAxes.Prs3d_DA_ZAxis, 'Prs3d_DA_XYAxis': Prs3d_DatumAxes.Prs3d_DA_XYAxis, 'Prs3d_DA_YZAxis': Prs3d_DatumAxes.Prs3d_DA_YZAxis, 'Prs3d_DA_XZAxis': Prs3d_DatumAxes.Prs3d_DA_XZAxis, 'Prs3d_DA_XYZAxis': Prs3d_DatumAxes.Prs3d_DA_XYZAxis}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Prs3d_DA_XAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_XAxis: 1>
+    Prs3d_DA_XYAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_XYAxis: 3>
+    Prs3d_DA_XYZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_XYZAxis: 7>
+    Prs3d_DA_XZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_XZAxis: 5>
+    Prs3d_DA_YAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_YAxis: 2>
+    Prs3d_DA_YZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_YZAxis: 6>
+    Prs3d_DA_ZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_ZAxis: 4>
+    __entries: dict # value = {'Prs3d_DA_XAxis': (<Prs3d_DatumAxes.Prs3d_DA_XAxis: 1>, None), 'Prs3d_DA_YAxis': (<Prs3d_DatumAxes.Prs3d_DA_YAxis: 2>, None), 'Prs3d_DA_ZAxis': (<Prs3d_DatumAxes.Prs3d_DA_ZAxis: 4>, None), 'Prs3d_DA_XYAxis': (<Prs3d_DatumAxes.Prs3d_DA_XYAxis: 3>, None), 'Prs3d_DA_YZAxis': (<Prs3d_DatumAxes.Prs3d_DA_YZAxis: 6>, None), 'Prs3d_DA_XZAxis': (<Prs3d_DatumAxes.Prs3d_DA_XZAxis: 5>, None), 'Prs3d_DA_XYZAxis': (<Prs3d_DatumAxes.Prs3d_DA_XYZAxis: 7>, None)}
+    __members__: dict # value = {'Prs3d_DA_XAxis': <Prs3d_DatumAxes.Prs3d_DA_XAxis: 1>, 'Prs3d_DA_YAxis': <Prs3d_DatumAxes.Prs3d_DA_YAxis: 2>, 'Prs3d_DA_ZAxis': <Prs3d_DatumAxes.Prs3d_DA_ZAxis: 4>, 'Prs3d_DA_XYAxis': <Prs3d_DatumAxes.Prs3d_DA_XYAxis: 3>, 'Prs3d_DA_YZAxis': <Prs3d_DatumAxes.Prs3d_DA_YZAxis: 6>, 'Prs3d_DA_XZAxis': <Prs3d_DatumAxes.Prs3d_DA_XZAxis: 5>, 'Prs3d_DA_XYZAxis': <Prs3d_DatumAxes.Prs3d_DA_XYZAxis: 7>}
     pass
 class Prs3d_DatumMode():
     """
@@ -590,20 +642,28 @@ class Prs3d_DatumMode():
 
       Prs3d_DM_Shaded
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Prs3d_DM_Shaded: OCP.Prs3d.Prs3d_DatumMode # value = Prs3d_DatumMode.Prs3d_DM_Shaded
-    Prs3d_DM_WireFrame: OCP.Prs3d.Prs3d_DatumMode # value = Prs3d_DatumMode.Prs3d_DM_WireFrame
-    __entries: dict # value = {'Prs3d_DM_WireFrame': (Prs3d_DatumMode.Prs3d_DM_WireFrame, None), 'Prs3d_DM_Shaded': (Prs3d_DatumMode.Prs3d_DM_Shaded, None)}
-    __members__: dict # value = {'Prs3d_DM_WireFrame': Prs3d_DatumMode.Prs3d_DM_WireFrame, 'Prs3d_DM_Shaded': Prs3d_DatumMode.Prs3d_DM_Shaded}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Prs3d_DM_Shaded: OCP.Prs3d.Prs3d_DatumMode # value = <Prs3d_DatumMode.Prs3d_DM_Shaded: 1>
+    Prs3d_DM_WireFrame: OCP.Prs3d.Prs3d_DatumMode # value = <Prs3d_DatumMode.Prs3d_DM_WireFrame: 0>
+    __entries: dict # value = {'Prs3d_DM_WireFrame': (<Prs3d_DatumMode.Prs3d_DM_WireFrame: 0>, None), 'Prs3d_DM_Shaded': (<Prs3d_DatumMode.Prs3d_DM_Shaded: 1>, None)}
+    __members__: dict # value = {'Prs3d_DM_WireFrame': <Prs3d_DatumMode.Prs3d_DM_WireFrame: 0>, 'Prs3d_DM_Shaded': <Prs3d_DatumMode.Prs3d_DM_Shaded: 1>}
     pass
 class Prs3d_DatumParts():
     """
@@ -633,29 +693,37 @@ class Prs3d_DatumParts():
 
       Prs3d_DP_None
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Prs3d_DP_None: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_None
-    Prs3d_DP_Origin: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_Origin
-    Prs3d_DP_XArrow: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_XArrow
-    Prs3d_DP_XAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_XAxis
-    Prs3d_DP_XOYAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_XOYAxis
-    Prs3d_DP_XOZAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_XOZAxis
-    Prs3d_DP_YArrow: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_YArrow
-    Prs3d_DP_YAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_YAxis
-    Prs3d_DP_YOZAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_YOZAxis
-    Prs3d_DP_ZArrow: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_ZArrow
-    Prs3d_DP_ZAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_ZAxis
-    __entries: dict # value = {'Prs3d_DP_Origin': (Prs3d_DatumParts.Prs3d_DP_Origin, None), 'Prs3d_DP_XAxis': (Prs3d_DatumParts.Prs3d_DP_XAxis, None), 'Prs3d_DP_YAxis': (Prs3d_DatumParts.Prs3d_DP_YAxis, None), 'Prs3d_DP_ZAxis': (Prs3d_DatumParts.Prs3d_DP_ZAxis, None), 'Prs3d_DP_XArrow': (Prs3d_DatumParts.Prs3d_DP_XArrow, None), 'Prs3d_DP_YArrow': (Prs3d_DatumParts.Prs3d_DP_YArrow, None), 'Prs3d_DP_ZArrow': (Prs3d_DatumParts.Prs3d_DP_ZArrow, None), 'Prs3d_DP_XOYAxis': (Prs3d_DatumParts.Prs3d_DP_XOYAxis, None), 'Prs3d_DP_YOZAxis': (Prs3d_DatumParts.Prs3d_DP_YOZAxis, None), 'Prs3d_DP_XOZAxis': (Prs3d_DatumParts.Prs3d_DP_XOZAxis, None), 'Prs3d_DP_None': (Prs3d_DatumParts.Prs3d_DP_None, None)}
-    __members__: dict # value = {'Prs3d_DP_Origin': Prs3d_DatumParts.Prs3d_DP_Origin, 'Prs3d_DP_XAxis': Prs3d_DatumParts.Prs3d_DP_XAxis, 'Prs3d_DP_YAxis': Prs3d_DatumParts.Prs3d_DP_YAxis, 'Prs3d_DP_ZAxis': Prs3d_DatumParts.Prs3d_DP_ZAxis, 'Prs3d_DP_XArrow': Prs3d_DatumParts.Prs3d_DP_XArrow, 'Prs3d_DP_YArrow': Prs3d_DatumParts.Prs3d_DP_YArrow, 'Prs3d_DP_ZArrow': Prs3d_DatumParts.Prs3d_DP_ZArrow, 'Prs3d_DP_XOYAxis': Prs3d_DatumParts.Prs3d_DP_XOYAxis, 'Prs3d_DP_YOZAxis': Prs3d_DatumParts.Prs3d_DP_YOZAxis, 'Prs3d_DP_XOZAxis': Prs3d_DatumParts.Prs3d_DP_XOZAxis, 'Prs3d_DP_None': Prs3d_DatumParts.Prs3d_DP_None}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Prs3d_DP_None: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_None: 10>
+    Prs3d_DP_Origin: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_Origin: 0>
+    Prs3d_DP_XArrow: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_XArrow: 4>
+    Prs3d_DP_XAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_XAxis: 1>
+    Prs3d_DP_XOYAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_XOYAxis: 7>
+    Prs3d_DP_XOZAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_XOZAxis: 9>
+    Prs3d_DP_YArrow: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_YArrow: 5>
+    Prs3d_DP_YAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_YAxis: 2>
+    Prs3d_DP_YOZAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_YOZAxis: 8>
+    Prs3d_DP_ZArrow: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_ZArrow: 6>
+    Prs3d_DP_ZAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_ZAxis: 3>
+    __entries: dict # value = {'Prs3d_DP_Origin': (<Prs3d_DatumParts.Prs3d_DP_Origin: 0>, None), 'Prs3d_DP_XAxis': (<Prs3d_DatumParts.Prs3d_DP_XAxis: 1>, None), 'Prs3d_DP_YAxis': (<Prs3d_DatumParts.Prs3d_DP_YAxis: 2>, None), 'Prs3d_DP_ZAxis': (<Prs3d_DatumParts.Prs3d_DP_ZAxis: 3>, None), 'Prs3d_DP_XArrow': (<Prs3d_DatumParts.Prs3d_DP_XArrow: 4>, None), 'Prs3d_DP_YArrow': (<Prs3d_DatumParts.Prs3d_DP_YArrow: 5>, None), 'Prs3d_DP_ZArrow': (<Prs3d_DatumParts.Prs3d_DP_ZArrow: 6>, None), 'Prs3d_DP_XOYAxis': (<Prs3d_DatumParts.Prs3d_DP_XOYAxis: 7>, None), 'Prs3d_DP_YOZAxis': (<Prs3d_DatumParts.Prs3d_DP_YOZAxis: 8>, None), 'Prs3d_DP_XOZAxis': (<Prs3d_DatumParts.Prs3d_DP_XOZAxis: 9>, None), 'Prs3d_DP_None': (<Prs3d_DatumParts.Prs3d_DP_None: 10>, None)}
+    __members__: dict # value = {'Prs3d_DP_Origin': <Prs3d_DatumParts.Prs3d_DP_Origin: 0>, 'Prs3d_DP_XAxis': <Prs3d_DatumParts.Prs3d_DP_XAxis: 1>, 'Prs3d_DP_YAxis': <Prs3d_DatumParts.Prs3d_DP_YAxis: 2>, 'Prs3d_DP_ZAxis': <Prs3d_DatumParts.Prs3d_DP_ZAxis: 3>, 'Prs3d_DP_XArrow': <Prs3d_DatumParts.Prs3d_DP_XArrow: 4>, 'Prs3d_DP_YArrow': <Prs3d_DatumParts.Prs3d_DP_YArrow: 5>, 'Prs3d_DP_ZArrow': <Prs3d_DatumParts.Prs3d_DP_ZArrow: 6>, 'Prs3d_DP_XOYAxis': <Prs3d_DatumParts.Prs3d_DP_XOYAxis: 7>, 'Prs3d_DP_YOZAxis': <Prs3d_DatumParts.Prs3d_DP_YOZAxis: 8>, 'Prs3d_DP_XOZAxis': <Prs3d_DatumParts.Prs3d_DP_XOZAxis: 9>, 'Prs3d_DP_None': <Prs3d_DatumParts.Prs3d_DP_None: 10>}
     pass
 class Prs3d_DimensionArrowOrientation():
     """
@@ -669,21 +737,29 @@ class Prs3d_DimensionArrowOrientation():
 
       Prs3d_DAO_Fit
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Prs3d_DAO_External: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = Prs3d_DimensionArrowOrientation.Prs3d_DAO_External
-    Prs3d_DAO_Fit: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = Prs3d_DimensionArrowOrientation.Prs3d_DAO_Fit
-    Prs3d_DAO_Internal: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = Prs3d_DimensionArrowOrientation.Prs3d_DAO_Internal
-    __entries: dict # value = {'Prs3d_DAO_Internal': (Prs3d_DimensionArrowOrientation.Prs3d_DAO_Internal, None), 'Prs3d_DAO_External': (Prs3d_DimensionArrowOrientation.Prs3d_DAO_External, None), 'Prs3d_DAO_Fit': (Prs3d_DimensionArrowOrientation.Prs3d_DAO_Fit, None)}
-    __members__: dict # value = {'Prs3d_DAO_Internal': Prs3d_DimensionArrowOrientation.Prs3d_DAO_Internal, 'Prs3d_DAO_External': Prs3d_DimensionArrowOrientation.Prs3d_DAO_External, 'Prs3d_DAO_Fit': Prs3d_DimensionArrowOrientation.Prs3d_DAO_Fit}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Prs3d_DAO_External: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = <Prs3d_DimensionArrowOrientation.Prs3d_DAO_External: 1>
+    Prs3d_DAO_Fit: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = <Prs3d_DimensionArrowOrientation.Prs3d_DAO_Fit: 2>
+    Prs3d_DAO_Internal: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = <Prs3d_DimensionArrowOrientation.Prs3d_DAO_Internal: 0>
+    __entries: dict # value = {'Prs3d_DAO_Internal': (<Prs3d_DimensionArrowOrientation.Prs3d_DAO_Internal: 0>, None), 'Prs3d_DAO_External': (<Prs3d_DimensionArrowOrientation.Prs3d_DAO_External: 1>, None), 'Prs3d_DAO_Fit': (<Prs3d_DimensionArrowOrientation.Prs3d_DAO_Fit: 2>, None)}
+    __members__: dict # value = {'Prs3d_DAO_Internal': <Prs3d_DimensionArrowOrientation.Prs3d_DAO_Internal: 0>, 'Prs3d_DAO_External': <Prs3d_DimensionArrowOrientation.Prs3d_DAO_External: 1>, 'Prs3d_DAO_Fit': <Prs3d_DimensionArrowOrientation.Prs3d_DAO_Fit: 2>}
     pass
 class Prs3d_DimensionAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
     """
@@ -709,7 +785,7 @@ class Prs3d_DimensionAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -869,22 +945,30 @@ class Prs3d_DimensionTextHorizontalPosition():
 
       Prs3d_DTHP_Fit
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Prs3d_DTHP_Center: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Center
-    Prs3d_DTHP_Fit: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Fit
-    Prs3d_DTHP_Left: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Left
-    Prs3d_DTHP_Right: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Right
-    __entries: dict # value = {'Prs3d_DTHP_Left': (Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Left, None), 'Prs3d_DTHP_Right': (Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Right, None), 'Prs3d_DTHP_Center': (Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Center, None), 'Prs3d_DTHP_Fit': (Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Fit, None)}
-    __members__: dict # value = {'Prs3d_DTHP_Left': Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Left, 'Prs3d_DTHP_Right': Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Right, 'Prs3d_DTHP_Center': Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Center, 'Prs3d_DTHP_Fit': Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Fit}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Prs3d_DTHP_Center: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Center: 2>
+    Prs3d_DTHP_Fit: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Fit: 3>
+    Prs3d_DTHP_Left: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Left: 0>
+    Prs3d_DTHP_Right: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Right: 1>
+    __entries: dict # value = {'Prs3d_DTHP_Left': (<Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Left: 0>, None), 'Prs3d_DTHP_Right': (<Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Right: 1>, None), 'Prs3d_DTHP_Center': (<Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Center: 2>, None), 'Prs3d_DTHP_Fit': (<Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Fit: 3>, None)}
+    __members__: dict # value = {'Prs3d_DTHP_Left': <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Left: 0>, 'Prs3d_DTHP_Right': <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Right: 1>, 'Prs3d_DTHP_Center': <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Center: 2>, 'Prs3d_DTHP_Fit': <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Fit: 3>}
     pass
 class Prs3d_DimensionTextVerticalPosition():
     """
@@ -898,21 +982,29 @@ class Prs3d_DimensionTextVerticalPosition():
 
       Prs3d_DTVP_Center
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Prs3d_DTVP_Above: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Above
-    Prs3d_DTVP_Below: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Below
-    Prs3d_DTVP_Center: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Center
-    __entries: dict # value = {'Prs3d_DTVP_Above': (Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Above, None), 'Prs3d_DTVP_Below': (Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Below, None), 'Prs3d_DTVP_Center': (Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Center, None)}
-    __members__: dict # value = {'Prs3d_DTVP_Above': Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Above, 'Prs3d_DTVP_Below': Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Below, 'Prs3d_DTVP_Center': Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Center}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Prs3d_DTVP_Above: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = <Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Above: 0>
+    Prs3d_DTVP_Below: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = <Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Below: 1>
+    Prs3d_DTVP_Center: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = <Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Center: 2>
+    __entries: dict # value = {'Prs3d_DTVP_Above': (<Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Above: 0>, None), 'Prs3d_DTVP_Below': (<Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Below: 1>, None), 'Prs3d_DTVP_Center': (<Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Center: 2>, None)}
+    __members__: dict # value = {'Prs3d_DTVP_Above': <Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Above: 0>, 'Prs3d_DTVP_Below': <Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Below: 1>, 'Prs3d_DTVP_Center': <Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Center: 2>}
     pass
 class Prs3d_DimensionUnits():
     """
@@ -977,7 +1069,7 @@ class Prs3d_Drawer(OCP.Graphic3d.Graphic3d_PresentationAttributes, OCP.Standard.
         """
     def DeviationAngle(self) -> float: 
         """
-        Returns the value for deviation angle.
+        Returns the value for deviation angle in radians, 20 * M_PI / 180 by default.
         """
     def DeviationCoefficient(self) -> float: 
         """
@@ -1019,7 +1111,7 @@ class Prs3d_Drawer(OCP.Graphic3d.Graphic3d_PresentationAttributes, OCP.Standard.
         """
         Returns Standard_True if the hidden lines are to be drawn. By default the hidden lines are not drawn.
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -1057,11 +1149,7 @@ class Prs3d_Drawer(OCP.Graphic3d.Graphic3d_PresentationAttributes, OCP.Standard.
         """
     def HLRAngle(self) -> float: 
         """
-        Returns the real number value of the deviation angle in hidden line removal views. The default value is 20 * M_PI / 180.
-        """
-    def HLRDeviationCoefficient(self) -> float: 
-        """
-        Returns the real number value of the hidden line removal deviation coefficient in this framework, if the flag hasOwnHLRDeviationCoefficient is true or there is no Link. Else the shape's HLR deviation coefficient is used. A Deviation coefficient is used in the shading display mode. The shape is seen decomposed into triangles. These are used to calculate reflection of light from the surface of the object. The triangles are formed from chords of the curves in the shape. The deviation coefficient give the highest value of the angle with which a chord can deviate from a tangent to a curve. If this limit is reached, a new triangle is begun. To find the hidden lines, hidden line display mode entails recalculation of the view at each different projector perspective. Since hidden lines entail calculations of more than usual complexity to decompose them into these triangles, a deviation coefficient allowing greater tolerance is used. This increases efficiency in calculation. The Default value is 0.02.
+        None
         """
     def HasLink(self) -> bool: 
         """
@@ -1133,11 +1221,7 @@ class Prs3d_Drawer(OCP.Graphic3d.Graphic3d_PresentationAttributes, OCP.Standard.
         """
     def HasOwnHLRDeviationAngle(self) -> bool: 
         """
-        Returns true if the there is a setting for HLR deviation angle in this framework for a specific interactive object.
-        """
-    def HasOwnHLRDeviationCoefficient(self) -> bool: 
-        """
-        Returns true if the there is a setting for HLR deviation coefficient in this framework for a specific interactive object.
+        None
         """
     def HasOwnHiddenLineAspect(self) -> bool: 
         """
@@ -1320,11 +1404,7 @@ class Prs3d_Drawer(OCP.Graphic3d.Graphic3d_PresentationAttributes, OCP.Standard.
         """
     def PreviousHLRDeviationAngle(self) -> float: 
         """
-        Returns the previous value of the HLR deviation angle.
-        """
-    def PreviousHLRDeviationCoefficient(self) -> float: 
-        """
-        Returns the previous value of the hidden line removal deviation coefficient.
+        None
         """
     def SectionAspect(self) -> Prs3d_LineAspect: 
         """
@@ -1364,14 +1444,14 @@ class Prs3d_Drawer(OCP.Graphic3d.Graphic3d_PresentationAttributes, OCP.Standard.
     @overload
     def SetDeviationAngle(self) -> None: ...
     @overload
-    def SetDeviationCoefficient(self,theCoefficient : float) -> None: 
+    def SetDeviationCoefficient(self) -> None: 
         """
         Sets the deviation coefficient theCoefficient. Also sets the hasOwnDeviationCoefficient flag to Standard_True and myPreviousDeviationCoefficient
 
         Sets the hasOwnDeviationCoefficient flag to Standard_False
         """
     @overload
-    def SetDeviationCoefficient(self) -> None: ...
+    def SetDeviationCoefficient(self,theCoefficient : float) -> None: ...
     def SetDimAngleDisplayUnits(self,theUnits : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Sets angle units in which value for dimension presentation is displayed. The method sets value owned by the drawer that will be used during visualization instead of the one set in link.
@@ -1423,21 +1503,10 @@ class Prs3d_Drawer(OCP.Graphic3d.Graphic3d_PresentationAttributes, OCP.Standard.
     @overload
     def SetHLRAngle(self,theAngle : float) -> None: 
         """
-        Sets anAngle, the angle of maximum chordal deviation for removal of hidden lines created by different viewpoints in different presentations. The default value is 20 * M_PI / 180. Also sets the hasOwnHLRDeviationAngle flag to Standard_True and myPreviousHLRDeviationAngle.
-
-        Sets the hasOwnHLRDeviationAngle flag to Standard_False
+        None
         """
     @overload
     def SetHLRAngle(self) -> None: ...
-    @overload
-    def SetHLRDeviationCoefficient(self) -> None: 
-        """
-        Sets the deviation coefficient aCoefficient for removal of hidden lines created by different viewpoints in different presentations. The Default value is 0.02. Also sets the hasOwnHLRDeviationCoefficient flag to Standard_True and myPreviousHLRDeviationCoefficient
-
-        Sets the hasOwnHLRDeviationCoefficient flag to Standard_False
-        """
-    @overload
-    def SetHLRDeviationCoefficient(self,theCoefficient : float) -> None: ...
     def SetHiddenLineAspect(self,theAspect : Prs3d_LineAspect) -> None: 
         """
         Sets the parameter theAspect for the display of hidden lines in hidden line removal mode.
@@ -1576,7 +1645,7 @@ class Prs3d_Drawer(OCP.Graphic3d.Graphic3d_PresentationAttributes, OCP.Standard.
         """
     def ShadingAspect(self) -> Prs3d_ShadingAspect: 
         """
-        Returns settings for shading aspects. These settings can be edited. The default values are: - Color: Quantity_NOC_YELLOW - Material: Graphic3d_NOM_BRASS Shading aspect is obtained through decomposition of 3d faces into triangles, each side of each triangle being a chord of the corresponding curved edge in the face. Reflection of light in each projector perspective is then calculated for each of the resultant triangular planes.
+        Returns settings for shading aspects. These settings can be edited. The default values are: - Color: Quantity_NOC_YELLOW - Material: Graphic3d_NameOfMaterial_Brass Shading aspect is obtained through decomposition of 3d faces into triangles, each side of each triangle being a chord of the corresponding curved edge in the face. Reflection of light in each projector perspective is then calculated for each of the resultant triangular planes.
         """
     def TextAspect(self) -> Prs3d_TextAspect: 
         """
@@ -1685,7 +1754,7 @@ class Prs3d_LineAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -1770,7 +1839,7 @@ class Prs3d_IsoAspect(Prs3d_LineAspect, Prs3d_BasicAspect, OCP.Standard.Standard
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -1853,7 +1922,7 @@ class Prs3d_NListOfSequenceOfPnt(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt) -> OCP.TColgp.TColgp_HSequenceOfPnt: 
+    def Append(self,theOther : Prs3d_NListOfSequenceOfPnt) -> None: 
         """
         Append one item at the end
 
@@ -1862,7 +1931,7 @@ class Prs3d_NListOfSequenceOfPnt(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : Prs3d_NListOfSequenceOfPnt) -> None: ...
+    def Append(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt) -> OCP.TColgp.TColgp_HSequenceOfPnt: ...
     @overload
     def Append(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt,theIter : Any) -> None: ...
     def Assign(self,theOther : Prs3d_NListOfSequenceOfPnt) -> Prs3d_NListOfSequenceOfPnt: 
@@ -1893,14 +1962,14 @@ class Prs3d_NListOfSequenceOfPnt(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt,theIter : Any) -> OCP.TColgp.TColgp_HSequenceOfPnt: ...
     @overload
-    def InsertBefore(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt,theIter : Any) -> OCP.TColgp.TColgp_HSequenceOfPnt: 
+    def InsertBefore(self,theOther : Prs3d_NListOfSequenceOfPnt,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : Prs3d_NListOfSequenceOfPnt,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt,theIter : Any) -> OCP.TColgp.TColgp_HSequenceOfPnt: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1912,14 +1981,14 @@ class Prs3d_NListOfSequenceOfPnt(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt) -> OCP.TColgp.TColgp_HSequenceOfPnt: 
+    def Prepend(self,theOther : Prs3d_NListOfSequenceOfPnt) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : Prs3d_NListOfSequenceOfPnt) -> None: ...
+    def Prepend(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt) -> OCP.TColgp.TColgp_HSequenceOfPnt: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1937,12 +2006,12 @@ class Prs3d_NListOfSequenceOfPnt(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Prs3d_NListOfSequenceOfPnt) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : Prs3d_NListOfSequenceOfPnt) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Prs3d_PlaneAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
     """
@@ -1988,7 +2057,7 @@ class Prs3d_PlaneAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         """
         Returns true if the display of isoparameters is allowed.
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -2110,7 +2179,7 @@ class Prs3d_PointAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -2173,11 +2242,11 @@ class Prs3d_PointAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
+    def __init__(self,theAspect : OCP.Graphic3d.Graphic3d_AspectMarker3d) -> None: ...
+    @overload
     def __init__(self,theType : OCP.Aspect.Aspect_TypeOfMarker,theColor : OCP.Quantity.Quantity_Color,theScale : float) -> None: ...
     @overload
     def __init__(self,theColor : OCP.Quantity.Quantity_Color,theWidth : int,theHeight : int,theTexture : OCP.TColStd.TColStd_HArray1OfByte) -> None: ...
-    @overload
-    def __init__(self,theAspect : OCP.Graphic3d.Graphic3d_AspectMarker3d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2218,27 +2287,10 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         """
         Get clip planes slicing the structure on rendering.
         """
-    @overload
-    def Compute(self,theProjector : OCP.Graphic3d.Graphic3d_DataStructureManager) -> OCP.Graphic3d.Graphic3d_Structure: 
+    def Compute(self) -> None: 
         """
         None
-
-        Returns the new Structure defined for the new visualization
-
-        Returns the new Structure defined for the new visualization
-
-        Returns the new Structure defined for the new visualization
-
-        Returns the new Structure defined for the new visualization
         """
-    @overload
-    def Compute(self,theProjector : OCP.Graphic3d.Graphic3d_DataStructureManager,theTrsf : OCP.Geom.Geom_Transformation) -> OCP.Graphic3d.Graphic3d_Structure: ...
-    @overload
-    def Compute(self) -> None: ...
-    @overload
-    def Compute(self,theProjector : OCP.Graphic3d.Graphic3d_DataStructureManager,theStructure : OCP.Graphic3d.Graphic3d_Structure) -> Any: ...
-    @overload
-    def Compute(self,theProjector : OCP.Graphic3d.Graphic3d_DataStructureManager,theTrsf : OCP.Geom.Geom_Transformation,theStructure : OCP.Graphic3d.Graphic3d_Structure) -> Any: ...
     def ComputeVisual(self) -> OCP.Graphic3d.Graphic3d_TypeOfStructure: 
         """
         None
@@ -2288,13 +2340,17 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         """
         Returns the current display priority for this structure.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
     def Erase(self) -> None: 
         """
-        Erases the structure <me> in all the views of the visualiser.
+        Erases this structure in all the views of the visualiser.
         """
     def GetRefCount(self) -> int: 
         """
@@ -2316,7 +2372,7 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         """
         None
         """
-    def GraphicTransform(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def GraphicTransform(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Internal method which sets new transformation without calling graphic manager callbacks.
         """
@@ -2447,9 +2503,9 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         Suppress the structure in the list of descendants or in the list of ancestors.
         """
     @overload
-    def Remove(self) -> None: ...
-    @overload
     def Remove(self,thePtr : OCP.Graphic3d.Graphic3d_Structure,theType : OCP.Graphic3d.Graphic3d_TypeOfConnection) -> None: ...
+    @overload
+    def Remove(self) -> None: ...
     def RemoveAll(self) -> None: 
         """
         None
@@ -2494,7 +2550,7 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         """
         Modifies the current transform persistence (pan, zoom or rotate)
         """
-    def SetTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Modifies the current local transformation
         """
@@ -2518,7 +2574,7 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Transform(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def Transform(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         None
         """
@@ -2526,7 +2582,7 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         """
         Returns transform persistence of the presentable object.
         """
-    def Transformation(self) -> OCP.Geom.Geom_Transformation: 
+    def Transformation(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return local transformation.
         """
@@ -2544,6 +2600,10 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         Returns the visualisation mode for the structure <me>.
         """
     def __init__(self,theViewer : OCP.Graphic3d.Graphic3d_StructureManager,thePrs : OCP.Graphic3d.Graphic3d_Structure) -> None: ...
+    def computeHLR(self,theProjector : OCP.Graphic3d.Graphic3d_Camera,theStructure : OCP.Graphic3d.Graphic3d_Structure) -> Any: 
+        """
+        Returns the new Structure defined for the new visualization
+        """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2555,107 +2615,58 @@ class Prs3d_PresentationShadow(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.S
         None
         """
     pass
-class Prs3d_Projector(OCP.Standard.Standard_Transient):
+class Prs3d_BndBox(Prs3d_Root):
     """
-    A projector object. This object defines the parameters of a view for a visualization algorithm. It is, for example, used by the hidden line removal algorithms.A projector object. This object defines the parameters of a view for a visualization algorithm. It is, for example, used by the hidden line removal algorithms.A projector object. This object defines the parameters of a view for a visualization algorithm. It is, for example, used by the hidden line removal algorithms.
+    Tool for computing bounding box presentation.
     """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def Projector(self) -> OCP.HLRAlgo.HLRAlgo_Projector: 
-        """
-        Returns a projector object for use in a hidden line removal algorithm.
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    @overload
-    def __init__(self,Pr : OCP.HLRAlgo.HLRAlgo_Projector) -> None: ...
-    @overload
-    def __init__(self,Pers : bool,Focus : float,DX : float,DY : float,DZ : float,XAt : float,YAt : float,ZAt : float,XUp : float,YUp : float,ZUp : float) -> None: ...
     @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+    @overload
+    def Add_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theBndBox : OCP.Bnd.Bnd_OBB,theDrawer : Prs3d_Drawer) -> None: 
         """
-        None
+        Computes presentation of a bounding box.
+
+        Computes presentation of a bounding box.
         """
     @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-class Prs3d_Arrow(Prs3d_Root):
-    """
-    Provides class methods to draw an arrow at a given location, along a given direction and using a given angle.
-    """
+    @overload
+    def Add_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theBndBox : OCP.Bnd.Bnd_Box,theDrawer : Prs3d_Drawer) -> None: ...
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
-        """
-    @staticmethod
-    def DrawSegments_s(theLocation : OCP.gp.gp_Pnt,theDir : OCP.gp.gp_Dir,theAngle : float,theLength : float,theNbSegments : int) -> OCP.Graphic3d.Graphic3d_ArrayOfSegments: 
-        """
-        Defines the representation of the arrow as a container of segments.
-        """
-    @staticmethod
-    def DrawShaded_s(theAxis : OCP.gp.gp_Ax1,theTubeRadius : float,theAxisLength : float,theConeRadius : float,theConeLength : float,theNbFacettes : int) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
-        """
-        Defines the representation of the arrow as shaded triangulation.
+        None
         """
     @staticmethod
     @overload
-    def Draw_s(theGroup : OCP.Graphic3d.Graphic3d_Group,theLocation : OCP.gp.gp_Pnt,theDirection : OCP.gp.gp_Dir,theAngle : float,theLength : float) -> None: 
+    def FillSegments_s(theSegments : OCP.Graphic3d.Graphic3d_ArrayOfSegments,theBox : OCP.Bnd.Bnd_Box) -> None: 
         """
-        Defines the representation of the arrow. Note that this method does NOT assign any presentation aspects to the primitives group!
+        Create primitive array with line segments for displaying a box.
 
-        Alias to another method Draw() for backward compatibility.
+        Create primitive array with line segments for displaying a box.
+
+        Create primitive array with line segments for displaying a box.
+
+        Create primitive array with line segments for displaying a box.
         """
     @staticmethod
     @overload
-    def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theLocation : OCP.gp.gp_Pnt,theDirection : OCP.gp.gp_Dir,theAngle : float,theLength : float) -> None: ...
+    def FillSegments_s(theBox : OCP.Bnd.Bnd_Box) -> OCP.Graphic3d.Graphic3d_ArrayOfSegments: ...
+    @staticmethod
+    @overload
+    def FillSegments_s(theSegments : OCP.Graphic3d.Graphic3d_ArrayOfSegments,theBox : OCP.Bnd.Bnd_OBB) -> None: ...
+    @staticmethod
+    @overload
+    def FillSegments_s(theBox : OCP.Bnd.Bnd_OBB) -> OCP.Graphic3d.Graphic3d_ArrayOfSegments: ...
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
+    @staticmethod
+    def fillSegments_s(theSegments : OCP.Graphic3d.Graphic3d_ArrayOfSegments,theBox : OCP.gp.gp_Pnt) -> None: 
+        """
+        Create primitive array with line segments for displaying a box.
+        """
     pass
 class Prs3d_ShadingAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
     """
@@ -2677,7 +2688,7 @@ class Prs3d_ShadingAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -2740,9 +2751,9 @@ class Prs3d_ShadingAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Returns the polygons transparency value.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAspect : OCP.Graphic3d.Graphic3d_AspectFillArea3d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2754,117 +2765,13 @@ class Prs3d_ShadingAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class Prs3d_ShapeTool():
-    """
-    describes the behaviour requested for a wireframe shape presentation.
-    """
-    def CurrentTriangulation(self,l : OCP.TopLoc.TopLoc_Location) -> OCP.Poly.Poly_Triangulation: 
-        """
-        None
-        """
-    def CurveBound(self) -> OCP.Bnd.Bnd_Box: 
-        """
-        None
-        """
-    def FaceBound(self) -> OCP.Bnd.Bnd_Box: 
-        """
-        None
-        """
-    def FacesOfEdge(self) -> OCP.TopTools.TopTools_HSequenceOfShape: 
-        """
-        None
-        """
-    def GetCurve(self) -> OCP.TopoDS.TopoDS_Edge: 
-        """
-        None
-        """
-    def GetFace(self) -> OCP.TopoDS.TopoDS_Face: 
-        """
-        None
-        """
-    def GetVertex(self) -> OCP.TopoDS.TopoDS_Vertex: 
-        """
-        None
-        """
-    def HasCurve(self) -> bool: 
-        """
-        None
-        """
-    def HasSurface(self) -> bool: 
-        """
-        None
-        """
-    def InitCurve(self) -> None: 
-        """
-        None
-        """
-    def InitFace(self) -> None: 
-        """
-        None
-        """
-    def InitVertex(self) -> None: 
-        """
-        None
-        """
-    def IsPlanarFace(self) -> bool: 
-        """
-        None
-        """
-    @staticmethod
-    def IsPlanarFace_s(theFace : OCP.TopoDS.TopoDS_Face) -> bool: 
-        """
-        None
-        """
-    def MoreCurve(self) -> bool: 
-        """
-        None
-        """
-    def MoreFace(self) -> bool: 
-        """
-        None
-        """
-    def MoreVertex(self) -> bool: 
-        """
-        None
-        """
-    def Neighbours(self) -> int: 
-        """
-        None
-        """
-    def NextCurve(self) -> None: 
-        """
-        None
-        """
-    def NextFace(self) -> None: 
-        """
-        None
-        """
-    def NextVertex(self) -> None: 
-        """
-        None
-        """
-    def Polygon3D(self,l : OCP.TopLoc.TopLoc_Location) -> OCP.Poly.Poly_Polygon3D: 
-        """
-        None
-        """
-    def PolygonOnTriangulation(self,Indices : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,l : OCP.TopLoc.TopLoc_Location) -> Any: 
-        """
-        None
-        """
-    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape,theAllVertices : bool=False) -> None: ...
-    pass
-class Prs3d_Text(Prs3d_Root):
+class Prs3d_Text():
     """
     A framework to define the display of texts.
     """
     @staticmethod
-    def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
-        """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
-        """
-    @staticmethod
     @overload
-    def Draw_s(theGroup : OCP.Graphic3d.Graphic3d_Group,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theOrientation : OCP.gp.gp_Ax2,theHasOwnAnchor : bool=True) -> None: 
+    def Draw_s(theGroup : OCP.Graphic3d.Graphic3d_Group,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theAttachmentPoint : OCP.gp.gp_Pnt) -> OCP.Graphic3d.Graphic3d_Text: 
         """
         Defines the display of the text.
 
@@ -2878,21 +2785,16 @@ class Prs3d_Text(Prs3d_Root):
         """
     @staticmethod
     @overload
+    def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theAttachmentPoint : OCP.gp.gp_Pnt) -> None: ...
+    @staticmethod
+    @overload
     def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theDrawer : Prs3d_Drawer,theText : OCP.TCollection.TCollection_ExtendedString,theAttachmentPoint : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     @overload
     def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theOrientation : OCP.gp.gp_Ax2,theHasOwnAnchor : bool=True) -> None: ...
     @staticmethod
     @overload
-    def Draw_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theAttachmentPoint : OCP.gp.gp_Pnt) -> None: ...
-    @staticmethod
-    @overload
-    def Draw_s(theGroup : OCP.Graphic3d.Graphic3d_Group,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theAttachmentPoint : OCP.gp.gp_Pnt) -> None: ...
-    @staticmethod
-    def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
-        """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
-        """
+    def Draw_s(theGroup : OCP.Graphic3d.Graphic3d_Group,theAspect : Prs3d_TextAspect,theText : OCP.TCollection.TCollection_ExtendedString,theOrientation : OCP.gp.gp_Ax2,theHasOwnAnchor : bool=True) -> OCP.Graphic3d.Graphic3d_Text: ...
     def __init__(self) -> None: ...
     pass
 class Prs3d_TextAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
@@ -2915,7 +2817,7 @@ class Prs3d_TextAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -3002,9 +2904,9 @@ class Prs3d_TextAspect(Prs3d_BasicAspect, OCP.Standard.Standard_Transient):
         Returns the vertical alignment of the text. The range of values includes: - normal - top - cap - half - base - bottom
         """
     @overload
-    def __init__(self,theAspect : OCP.Graphic3d.Graphic3d_AspectText3d) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAspect : OCP.Graphic3d.Graphic3d_AspectText3d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3020,36 +2922,57 @@ class Prs3d_ToolQuadric():
     """
     Base class to build 3D surfaces presentation of quadric surfaces.
     """
+    def CreatePolyTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Poly.Poly_Triangulation: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
+    def CreateTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
     @overload
     def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: 
         """
-        Generate primitives for 3D quadric surface and fill the given array. Optional transformation is applied.
+        Generate primitives for 3D quadric surface and fill the given array.
 
-        Generate primitives for 3D quadric surface presentation and fill the given array and poly triangulation structure. Optional transformation is applied.
+        Generate primitives for 3D quadric surface presentation.
         """
     @overload
     def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
     @staticmethod
     def TrianglesNb_s(theSlicesNb : int,theStacksNb : int) -> int: 
         """
-        Number of triangles for presentation with the given params.
+        Return number of triangles for presentation with the given params.
+        """
+    @staticmethod
+    def VerticesNb_s(theSlicesNb : int,theStacksNb : int,theIsIndexed : bool=True) -> int: 
+        """
+        Return number of vertices for presentation with the given params.
         """
     pass
 class Prs3d_ToolDisk(Prs3d_ToolQuadric):
     """
     Standard presentation algorithm that outputs graphical primitives for disk surface.
     """
+    def CreatePolyTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Poly.Poly_Triangulation: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
+    def CreateTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
     @staticmethod
     def Create_s(theInnerRadius : float,theOuterRadius : float,theNbSlices : int,theNbStacks : int,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
         """
-        Generate primitives for 3D quadric surface and return a filled array.
+        Generate primitives for 3D quadric surface.
         """
     @overload
     def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: 
         """
-        Generate primitives for 3D quadric surface and fill the given array. Optional transformation is applied.
+        Generate primitives for 3D quadric surface and fill the given array.
 
-        Generate primitives for 3D quadric surface presentation and fill the given array and poly triangulation structure. Optional transformation is applied.
+        Generate primitives for 3D quadric surface presentation.
         """
     @overload
     def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
@@ -3060,7 +2983,12 @@ class Prs3d_ToolDisk(Prs3d_ToolQuadric):
     @staticmethod
     def TrianglesNb_s(theSlicesNb : int,theStacksNb : int) -> int: 
         """
-        Number of triangles for presentation with the given params.
+        Return number of triangles for presentation with the given params.
+        """
+    @staticmethod
+    def VerticesNb_s(theSlicesNb : int,theStacksNb : int,theIsIndexed : bool=True) -> int: 
+        """
+        Return number of vertices for presentation with the given params.
         """
     def __init__(self,theInnerRadius : float,theOuterRadius : float,theNbSlices : int,theNbStacks : int) -> None: ...
     pass
@@ -3068,6 +2996,14 @@ class Prs3d_ToolCylinder(Prs3d_ToolQuadric):
     """
     Standard presentation algorithm that outputs graphical primitives for cylindrical surface.
     """
+    def CreatePolyTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Poly.Poly_Triangulation: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
+    def CreateTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
     @staticmethod
     def Create_s(theBottomRad : float,theTopRad : float,theHeight : float,theNbSlices : int,theNbStacks : int,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
         """
@@ -3076,16 +3012,21 @@ class Prs3d_ToolCylinder(Prs3d_ToolQuadric):
     @overload
     def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: 
         """
-        Generate primitives for 3D quadric surface and fill the given array. Optional transformation is applied.
+        Generate primitives for 3D quadric surface and fill the given array.
 
-        Generate primitives for 3D quadric surface presentation and fill the given array and poly triangulation structure. Optional transformation is applied.
+        Generate primitives for 3D quadric surface presentation.
         """
     @overload
     def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
     @staticmethod
     def TrianglesNb_s(theSlicesNb : int,theStacksNb : int) -> int: 
         """
-        Number of triangles for presentation with the given params.
+        Return number of triangles for presentation with the given params.
+        """
+    @staticmethod
+    def VerticesNb_s(theSlicesNb : int,theStacksNb : int,theIsIndexed : bool=True) -> int: 
+        """
+        Return number of vertices for presentation with the given params.
         """
     def __init__(self,theBottomRad : float,theTopRad : float,theHeight : float,theNbSlices : int,theNbStacks : int) -> None: ...
     pass
@@ -3093,24 +3034,37 @@ class Prs3d_ToolSector(Prs3d_ToolQuadric):
     """
     Standard presentation algorithm that outputs graphical primitives for disk surface.
     """
+    def CreatePolyTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Poly.Poly_Triangulation: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
+    def CreateTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
     @staticmethod
     def Create_s(theRadius : float,theNbSlices : int,theNbStacks : int,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
         """
-        Generate primitives for 3D quadric surface and return a filled array.
+        Generate primitives for 3D quadric surface.
         """
     @overload
     def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: 
         """
-        Generate primitives for 3D quadric surface and fill the given array. Optional transformation is applied.
+        Generate primitives for 3D quadric surface and fill the given array.
 
-        Generate primitives for 3D quadric surface presentation and fill the given array and poly triangulation structure. Optional transformation is applied.
+        Generate primitives for 3D quadric surface presentation.
         """
     @overload
     def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
     @staticmethod
     def TrianglesNb_s(theSlicesNb : int,theStacksNb : int) -> int: 
         """
-        Number of triangles for presentation with the given params.
+        Return number of triangles for presentation with the given params.
+        """
+    @staticmethod
+    def VerticesNb_s(theSlicesNb : int,theStacksNb : int,theIsIndexed : bool=True) -> int: 
+        """
+        Return number of vertices for presentation with the given params.
         """
     def __init__(self,theRadius : float,theNbSlices : int,theNbStacks : int) -> None: ...
     pass
@@ -3118,26 +3072,100 @@ class Prs3d_ToolSphere(Prs3d_ToolQuadric):
     """
     Standard presentation algorithm that outputs graphical primitives for spherical surface.
     """
+    def CreatePolyTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Poly.Poly_Triangulation: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
+    def CreateTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
     @staticmethod
     def Create_s(theRadius : float,theNbSlices : int,theNbStacks : int,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
         """
-        Generate primitives for 3D quadric surface and return a filled array.
+        Generate primitives for 3D quadric surface.
         """
     @overload
     def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: 
         """
-        Generate primitives for 3D quadric surface and fill the given array. Optional transformation is applied.
+        Generate primitives for 3D quadric surface and fill the given array.
 
-        Generate primitives for 3D quadric surface presentation and fill the given array and poly triangulation structure. Optional transformation is applied.
+        Generate primitives for 3D quadric surface presentation.
         """
     @overload
     def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
     @staticmethod
     def TrianglesNb_s(theSlicesNb : int,theStacksNb : int) -> int: 
         """
-        Number of triangles for presentation with the given params.
+        Return number of triangles for presentation with the given params.
+        """
+    @staticmethod
+    def VerticesNb_s(theSlicesNb : int,theStacksNb : int,theIsIndexed : bool=True) -> int: 
+        """
+        Return number of vertices for presentation with the given params.
         """
     def __init__(self,theRadius : float,theNbSlices : int,theNbStacks : int) -> None: ...
+    pass
+class Prs3d_ToolTorus(Prs3d_ToolQuadric):
+    """
+    Standard presentation algorithm that outputs graphical primitives for torus surface.
+    """
+    def CreatePolyTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Poly.Poly_Triangulation: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
+    def CreateTriangulation(self,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
+        """
+        Generate primitives for 3D quadric surface presentation.
+        """
+    @staticmethod
+    @overload
+    def Create_s(theMajorRad : float,theMinorRad : float,theAngle1 : float,theAngle2 : float,theNbSlices : int,theNbStacks : int,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
+        """
+        Generate primitives for 3D quadric surface (complete torus).
+
+        Generate primitives for 3D quadric surface (torus segment).
+
+        Generate primitives for 3D quadric surface (torus ring segment).
+
+        Generate primitives for 3D quadric surface (segment of the torus ring segment).
+        """
+    @staticmethod
+    @overload
+    def Create_s(theMajorRad : float,theMinorRad : float,theAngle1 : float,theAngle2 : float,theAngle : float,theNbSlices : int,theNbStacks : int,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: ...
+    @staticmethod
+    @overload
+    def Create_s(theMajorRad : float,theMinorRad : float,theAngle : float,theNbSlices : int,theNbStacks : int,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: ...
+    @staticmethod
+    @overload
+    def Create_s(theMajorRad : float,theMinorRad : float,theNbSlices : int,theNbStacks : int,theTrsf : OCP.gp.gp_Trsf) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: ...
+    @overload
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTriangulation : OCP.Poly.Poly_Triangulation,theTrsf : OCP.gp.gp_Trsf) -> Any: 
+        """
+        Generate primitives for 3D quadric surface and fill the given array.
+
+        Generate primitives for 3D quadric surface presentation.
+        """
+    @overload
+    def FillArray(self,theArray : OCP.Graphic3d.Graphic3d_ArrayOfTriangles,theTrsf : OCP.gp.gp_Trsf) -> Any: ...
+    @staticmethod
+    def TrianglesNb_s(theSlicesNb : int,theStacksNb : int) -> int: 
+        """
+        Return number of triangles for presentation with the given params.
+        """
+    @staticmethod
+    def VerticesNb_s(theSlicesNb : int,theStacksNb : int,theIsIndexed : bool=True) -> int: 
+        """
+        Return number of vertices for presentation with the given params.
+        """
+    @overload
+    def __init__(self,theMajorRad : float,theMinorRad : float,theAngle1 : float,theAngle2 : float,theNbSlices : int,theNbStacks : int) -> None: ...
+    @overload
+    def __init__(self,theMajorRad : float,theMinorRad : float,theAngle : float,theNbSlices : int,theNbStacks : int) -> None: ...
+    @overload
+    def __init__(self,theMajorRad : float,theMinorRad : float,theAngle1 : float,theAngle2 : float,theAngle : float,theNbSlices : int,theNbStacks : int) -> None: ...
+    @overload
+    def __init__(self,theMajorRad : float,theMinorRad : float,theNbSlices : int,theNbStacks : int) -> None: ...
     pass
 class Prs3d_TypeOfHLR():
     """
@@ -3151,21 +3179,29 @@ class Prs3d_TypeOfHLR():
 
       Prs3d_TOH_Algo
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Prs3d_TOH_Algo: OCP.Prs3d.Prs3d_TypeOfHLR # value = Prs3d_TypeOfHLR.Prs3d_TOH_Algo
-    Prs3d_TOH_NotSet: OCP.Prs3d.Prs3d_TypeOfHLR # value = Prs3d_TypeOfHLR.Prs3d_TOH_NotSet
-    Prs3d_TOH_PolyAlgo: OCP.Prs3d.Prs3d_TypeOfHLR # value = Prs3d_TypeOfHLR.Prs3d_TOH_PolyAlgo
-    __entries: dict # value = {'Prs3d_TOH_NotSet': (Prs3d_TypeOfHLR.Prs3d_TOH_NotSet, None), 'Prs3d_TOH_PolyAlgo': (Prs3d_TypeOfHLR.Prs3d_TOH_PolyAlgo, None), 'Prs3d_TOH_Algo': (Prs3d_TypeOfHLR.Prs3d_TOH_Algo, None)}
-    __members__: dict # value = {'Prs3d_TOH_NotSet': Prs3d_TypeOfHLR.Prs3d_TOH_NotSet, 'Prs3d_TOH_PolyAlgo': Prs3d_TypeOfHLR.Prs3d_TOH_PolyAlgo, 'Prs3d_TOH_Algo': Prs3d_TypeOfHLR.Prs3d_TOH_Algo}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Prs3d_TOH_Algo: OCP.Prs3d.Prs3d_TypeOfHLR # value = <Prs3d_TypeOfHLR.Prs3d_TOH_Algo: 2>
+    Prs3d_TOH_NotSet: OCP.Prs3d.Prs3d_TypeOfHLR # value = <Prs3d_TypeOfHLR.Prs3d_TOH_NotSet: 0>
+    Prs3d_TOH_PolyAlgo: OCP.Prs3d.Prs3d_TypeOfHLR # value = <Prs3d_TypeOfHLR.Prs3d_TOH_PolyAlgo: 1>
+    __entries: dict # value = {'Prs3d_TOH_NotSet': (<Prs3d_TypeOfHLR.Prs3d_TOH_NotSet: 0>, None), 'Prs3d_TOH_PolyAlgo': (<Prs3d_TypeOfHLR.Prs3d_TOH_PolyAlgo: 1>, None), 'Prs3d_TOH_Algo': (<Prs3d_TypeOfHLR.Prs3d_TOH_Algo: 2>, None)}
+    __members__: dict # value = {'Prs3d_TOH_NotSet': <Prs3d_TypeOfHLR.Prs3d_TOH_NotSet: 0>, 'Prs3d_TOH_PolyAlgo': <Prs3d_TypeOfHLR.Prs3d_TOH_PolyAlgo: 1>, 'Prs3d_TOH_Algo': <Prs3d_TypeOfHLR.Prs3d_TOH_Algo: 2>}
     pass
 class Prs3d_TypeOfHighlight():
     """
@@ -3187,25 +3223,33 @@ class Prs3d_TypeOfHighlight():
 
       Prs3d_TypeOfHighlight_NB
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Prs3d_TypeOfHighlight_Dynamic: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Dynamic
-    Prs3d_TypeOfHighlight_LocalDynamic: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalDynamic
-    Prs3d_TypeOfHighlight_LocalSelected: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalSelected
-    Prs3d_TypeOfHighlight_NB: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_NB
-    Prs3d_TypeOfHighlight_None: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_None
-    Prs3d_TypeOfHighlight_Selected: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Selected
-    Prs3d_TypeOfHighlight_SubIntensity: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_SubIntensity
-    __entries: dict # value = {'Prs3d_TypeOfHighlight_None': (Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_None, None), 'Prs3d_TypeOfHighlight_Selected': (Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Selected, None), 'Prs3d_TypeOfHighlight_Dynamic': (Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Dynamic, None), 'Prs3d_TypeOfHighlight_LocalSelected': (Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalSelected, None), 'Prs3d_TypeOfHighlight_LocalDynamic': (Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalDynamic, None), 'Prs3d_TypeOfHighlight_SubIntensity': (Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_SubIntensity, None), 'Prs3d_TypeOfHighlight_NB': (Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_NB, None)}
-    __members__: dict # value = {'Prs3d_TypeOfHighlight_None': Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_None, 'Prs3d_TypeOfHighlight_Selected': Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Selected, 'Prs3d_TypeOfHighlight_Dynamic': Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Dynamic, 'Prs3d_TypeOfHighlight_LocalSelected': Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalSelected, 'Prs3d_TypeOfHighlight_LocalDynamic': Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalDynamic, 'Prs3d_TypeOfHighlight_SubIntensity': Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_SubIntensity, 'Prs3d_TypeOfHighlight_NB': Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_NB}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Prs3d_TypeOfHighlight_Dynamic: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Dynamic: 2>
+    Prs3d_TypeOfHighlight_LocalDynamic: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalDynamic: 4>
+    Prs3d_TypeOfHighlight_LocalSelected: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalSelected: 3>
+    Prs3d_TypeOfHighlight_NB: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_NB: 6>
+    Prs3d_TypeOfHighlight_None: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_None: 0>
+    Prs3d_TypeOfHighlight_Selected: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Selected: 1>
+    Prs3d_TypeOfHighlight_SubIntensity: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_SubIntensity: 5>
+    __entries: dict # value = {'Prs3d_TypeOfHighlight_None': (<Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_None: 0>, None), 'Prs3d_TypeOfHighlight_Selected': (<Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Selected: 1>, None), 'Prs3d_TypeOfHighlight_Dynamic': (<Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Dynamic: 2>, None), 'Prs3d_TypeOfHighlight_LocalSelected': (<Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalSelected: 3>, None), 'Prs3d_TypeOfHighlight_LocalDynamic': (<Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalDynamic: 4>, None), 'Prs3d_TypeOfHighlight_SubIntensity': (<Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_SubIntensity: 5>, None), 'Prs3d_TypeOfHighlight_NB': (<Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_NB: 6>, None)}
+    __members__: dict # value = {'Prs3d_TypeOfHighlight_None': <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_None: 0>, 'Prs3d_TypeOfHighlight_Selected': <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Selected: 1>, 'Prs3d_TypeOfHighlight_Dynamic': <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Dynamic: 2>, 'Prs3d_TypeOfHighlight_LocalSelected': <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalSelected: 3>, 'Prs3d_TypeOfHighlight_LocalDynamic': <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalDynamic: 4>, 'Prs3d_TypeOfHighlight_SubIntensity': <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_SubIntensity: 5>, 'Prs3d_TypeOfHighlight_NB': <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_NB: 6>}
     pass
 class Prs3d_TypeOfLinePicking():
     """
@@ -3217,20 +3261,28 @@ class Prs3d_TypeOfLinePicking():
 
       Prs3d_TOLP_Segment
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Prs3d_TOLP_Point: OCP.Prs3d.Prs3d_TypeOfLinePicking # value = Prs3d_TypeOfLinePicking.Prs3d_TOLP_Point
-    Prs3d_TOLP_Segment: OCP.Prs3d.Prs3d_TypeOfLinePicking # value = Prs3d_TypeOfLinePicking.Prs3d_TOLP_Segment
-    __entries: dict # value = {'Prs3d_TOLP_Point': (Prs3d_TypeOfLinePicking.Prs3d_TOLP_Point, None), 'Prs3d_TOLP_Segment': (Prs3d_TypeOfLinePicking.Prs3d_TOLP_Segment, None)}
-    __members__: dict # value = {'Prs3d_TOLP_Point': Prs3d_TypeOfLinePicking.Prs3d_TOLP_Point, 'Prs3d_TOLP_Segment': Prs3d_TypeOfLinePicking.Prs3d_TOLP_Segment}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Prs3d_TOLP_Point: OCP.Prs3d.Prs3d_TypeOfLinePicking # value = <Prs3d_TypeOfLinePicking.Prs3d_TOLP_Point: 0>
+    Prs3d_TOLP_Segment: OCP.Prs3d.Prs3d_TypeOfLinePicking # value = <Prs3d_TypeOfLinePicking.Prs3d_TOLP_Segment: 1>
+    __entries: dict # value = {'Prs3d_TOLP_Point': (<Prs3d_TypeOfLinePicking.Prs3d_TOLP_Point: 0>, None), 'Prs3d_TOLP_Segment': (<Prs3d_TypeOfLinePicking.Prs3d_TOLP_Segment: 1>, None)}
+    __members__: dict # value = {'Prs3d_TOLP_Point': <Prs3d_TypeOfLinePicking.Prs3d_TOLP_Point: 0>, 'Prs3d_TOLP_Segment': <Prs3d_TypeOfLinePicking.Prs3d_TOLP_Segment: 1>}
     pass
 class Prs3d_VertexDrawMode():
     """
@@ -3244,72 +3296,80 @@ class Prs3d_VertexDrawMode():
 
       Prs3d_VDM_Inherited
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Prs3d_VDM_All: OCP.Prs3d.Prs3d_VertexDrawMode # value = Prs3d_VertexDrawMode.Prs3d_VDM_All
-    Prs3d_VDM_Inherited: OCP.Prs3d.Prs3d_VertexDrawMode # value = Prs3d_VertexDrawMode.Prs3d_VDM_Inherited
-    Prs3d_VDM_Isolated: OCP.Prs3d.Prs3d_VertexDrawMode # value = Prs3d_VertexDrawMode.Prs3d_VDM_Isolated
-    __entries: dict # value = {'Prs3d_VDM_Isolated': (Prs3d_VertexDrawMode.Prs3d_VDM_Isolated, None), 'Prs3d_VDM_All': (Prs3d_VertexDrawMode.Prs3d_VDM_All, None), 'Prs3d_VDM_Inherited': (Prs3d_VertexDrawMode.Prs3d_VDM_Inherited, None)}
-    __members__: dict # value = {'Prs3d_VDM_Isolated': Prs3d_VertexDrawMode.Prs3d_VDM_Isolated, 'Prs3d_VDM_All': Prs3d_VertexDrawMode.Prs3d_VDM_All, 'Prs3d_VDM_Inherited': Prs3d_VertexDrawMode.Prs3d_VDM_Inherited}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Prs3d_VDM_All: OCP.Prs3d.Prs3d_VertexDrawMode # value = <Prs3d_VertexDrawMode.Prs3d_VDM_All: 1>
+    Prs3d_VDM_Inherited: OCP.Prs3d.Prs3d_VertexDrawMode # value = <Prs3d_VertexDrawMode.Prs3d_VDM_Inherited: 2>
+    Prs3d_VDM_Isolated: OCP.Prs3d.Prs3d_VertexDrawMode # value = <Prs3d_VertexDrawMode.Prs3d_VDM_Isolated: 0>
+    __entries: dict # value = {'Prs3d_VDM_Isolated': (<Prs3d_VertexDrawMode.Prs3d_VDM_Isolated: 0>, None), 'Prs3d_VDM_All': (<Prs3d_VertexDrawMode.Prs3d_VDM_All: 1>, None), 'Prs3d_VDM_Inherited': (<Prs3d_VertexDrawMode.Prs3d_VDM_Inherited: 2>, None)}
+    __members__: dict # value = {'Prs3d_VDM_Isolated': <Prs3d_VertexDrawMode.Prs3d_VDM_Isolated: 0>, 'Prs3d_VDM_All': <Prs3d_VertexDrawMode.Prs3d_VDM_All: 1>, 'Prs3d_VDM_Inherited': <Prs3d_VertexDrawMode.Prs3d_VDM_Inherited: 2>}
     pass
-Prs3d_DAO_External: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = Prs3d_DimensionArrowOrientation.Prs3d_DAO_External
-Prs3d_DAO_Fit: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = Prs3d_DimensionArrowOrientation.Prs3d_DAO_Fit
-Prs3d_DAO_Internal: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = Prs3d_DimensionArrowOrientation.Prs3d_DAO_Internal
-Prs3d_DA_XAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_XAxis
-Prs3d_DA_XAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DA_XAxisLength
-Prs3d_DA_XYAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_XYAxis
-Prs3d_DA_XYZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_XYZAxis
-Prs3d_DA_XZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_XZAxis
-Prs3d_DA_YAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_YAxis
-Prs3d_DA_YAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DA_YAxisLength
-Prs3d_DA_YZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_YZAxis
-Prs3d_DA_ZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = Prs3d_DatumAxes.Prs3d_DA_ZAxis
-Prs3d_DA_ZAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DA_ZAxisLength
-Prs3d_DM_Shaded: OCP.Prs3d.Prs3d_DatumMode # value = Prs3d_DatumMode.Prs3d_DM_Shaded
-Prs3d_DM_WireFrame: OCP.Prs3d.Prs3d_DatumMode # value = Prs3d_DatumMode.Prs3d_DM_WireFrame
-Prs3d_DP_None: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_None
-Prs3d_DP_Origin: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_Origin
-Prs3d_DP_ShadingConeLengthPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DP_ShadingConeLengthPercent
-Prs3d_DP_ShadingConeRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DP_ShadingConeRadiusPercent
-Prs3d_DP_ShadingNumberOfFacettes: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DP_ShadingNumberOfFacettes
-Prs3d_DP_ShadingOriginRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DP_ShadingOriginRadiusPercent
-Prs3d_DP_ShadingTubeRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = Prs3d_DatumAttribute.Prs3d_DP_ShadingTubeRadiusPercent
-Prs3d_DP_XArrow: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_XArrow
-Prs3d_DP_XAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_XAxis
-Prs3d_DP_XOYAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_XOYAxis
-Prs3d_DP_XOZAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_XOZAxis
-Prs3d_DP_YArrow: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_YArrow
-Prs3d_DP_YAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_YAxis
-Prs3d_DP_YOZAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_YOZAxis
-Prs3d_DP_ZArrow: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_ZArrow
-Prs3d_DP_ZAxis: OCP.Prs3d.Prs3d_DatumParts # value = Prs3d_DatumParts.Prs3d_DP_ZAxis
-Prs3d_DTHP_Center: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Center
-Prs3d_DTHP_Fit: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Fit
-Prs3d_DTHP_Left: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Left
-Prs3d_DTHP_Right: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Right
-Prs3d_DTVP_Above: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Above
-Prs3d_DTVP_Below: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Below
-Prs3d_DTVP_Center: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Center
-Prs3d_TOH_Algo: OCP.Prs3d.Prs3d_TypeOfHLR # value = Prs3d_TypeOfHLR.Prs3d_TOH_Algo
-Prs3d_TOH_NotSet: OCP.Prs3d.Prs3d_TypeOfHLR # value = Prs3d_TypeOfHLR.Prs3d_TOH_NotSet
-Prs3d_TOH_PolyAlgo: OCP.Prs3d.Prs3d_TypeOfHLR # value = Prs3d_TypeOfHLR.Prs3d_TOH_PolyAlgo
-Prs3d_TOLP_Point: OCP.Prs3d.Prs3d_TypeOfLinePicking # value = Prs3d_TypeOfLinePicking.Prs3d_TOLP_Point
-Prs3d_TOLP_Segment: OCP.Prs3d.Prs3d_TypeOfLinePicking # value = Prs3d_TypeOfLinePicking.Prs3d_TOLP_Segment
-Prs3d_TypeOfHighlight_Dynamic: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Dynamic
-Prs3d_TypeOfHighlight_LocalDynamic: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalDynamic
-Prs3d_TypeOfHighlight_LocalSelected: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalSelected
-Prs3d_TypeOfHighlight_NB: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_NB
-Prs3d_TypeOfHighlight_None: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_None
-Prs3d_TypeOfHighlight_Selected: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Selected
-Prs3d_TypeOfHighlight_SubIntensity: OCP.Prs3d.Prs3d_TypeOfHighlight # value = Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_SubIntensity
-Prs3d_VDM_All: OCP.Prs3d.Prs3d_VertexDrawMode # value = Prs3d_VertexDrawMode.Prs3d_VDM_All
-Prs3d_VDM_Inherited: OCP.Prs3d.Prs3d_VertexDrawMode # value = Prs3d_VertexDrawMode.Prs3d_VDM_Inherited
-Prs3d_VDM_Isolated: OCP.Prs3d.Prs3d_VertexDrawMode # value = Prs3d_VertexDrawMode.Prs3d_VDM_Isolated
+Prs3d_DAO_External: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = <Prs3d_DimensionArrowOrientation.Prs3d_DAO_External: 1>
+Prs3d_DAO_Fit: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = <Prs3d_DimensionArrowOrientation.Prs3d_DAO_Fit: 2>
+Prs3d_DAO_Internal: OCP.Prs3d.Prs3d_DimensionArrowOrientation # value = <Prs3d_DimensionArrowOrientation.Prs3d_DAO_Internal: 0>
+Prs3d_DA_XAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_XAxis: 1>
+Prs3d_DA_XAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DA_XAxisLength: 0>
+Prs3d_DA_XYAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_XYAxis: 3>
+Prs3d_DA_XYZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_XYZAxis: 7>
+Prs3d_DA_XZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_XZAxis: 5>
+Prs3d_DA_YAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_YAxis: 2>
+Prs3d_DA_YAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DA_YAxisLength: 1>
+Prs3d_DA_YZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_YZAxis: 6>
+Prs3d_DA_ZAxis: OCP.Prs3d.Prs3d_DatumAxes # value = <Prs3d_DatumAxes.Prs3d_DA_ZAxis: 4>
+Prs3d_DA_ZAxisLength: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DA_ZAxisLength: 2>
+Prs3d_DM_Shaded: OCP.Prs3d.Prs3d_DatumMode # value = <Prs3d_DatumMode.Prs3d_DM_Shaded: 1>
+Prs3d_DM_WireFrame: OCP.Prs3d.Prs3d_DatumMode # value = <Prs3d_DatumMode.Prs3d_DM_WireFrame: 0>
+Prs3d_DP_None: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_None: 10>
+Prs3d_DP_Origin: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_Origin: 0>
+Prs3d_DP_ShadingConeLengthPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DP_ShadingConeLengthPercent: 5>
+Prs3d_DP_ShadingConeRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DP_ShadingConeRadiusPercent: 4>
+Prs3d_DP_ShadingNumberOfFacettes: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DP_ShadingNumberOfFacettes: 7>
+Prs3d_DP_ShadingOriginRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DP_ShadingOriginRadiusPercent: 6>
+Prs3d_DP_ShadingTubeRadiusPercent: OCP.Prs3d.Prs3d_DatumAttribute # value = <Prs3d_DatumAttribute.Prs3d_DP_ShadingTubeRadiusPercent: 3>
+Prs3d_DP_XArrow: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_XArrow: 4>
+Prs3d_DP_XAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_XAxis: 1>
+Prs3d_DP_XOYAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_XOYAxis: 7>
+Prs3d_DP_XOZAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_XOZAxis: 9>
+Prs3d_DP_YArrow: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_YArrow: 5>
+Prs3d_DP_YAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_YAxis: 2>
+Prs3d_DP_YOZAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_YOZAxis: 8>
+Prs3d_DP_ZArrow: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_ZArrow: 6>
+Prs3d_DP_ZAxis: OCP.Prs3d.Prs3d_DatumParts # value = <Prs3d_DatumParts.Prs3d_DP_ZAxis: 3>
+Prs3d_DTHP_Center: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Center: 2>
+Prs3d_DTHP_Fit: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Fit: 3>
+Prs3d_DTHP_Left: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Left: 0>
+Prs3d_DTHP_Right: OCP.Prs3d.Prs3d_DimensionTextHorizontalPosition # value = <Prs3d_DimensionTextHorizontalPosition.Prs3d_DTHP_Right: 1>
+Prs3d_DTVP_Above: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = <Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Above: 0>
+Prs3d_DTVP_Below: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = <Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Below: 1>
+Prs3d_DTVP_Center: OCP.Prs3d.Prs3d_DimensionTextVerticalPosition # value = <Prs3d_DimensionTextVerticalPosition.Prs3d_DTVP_Center: 2>
+Prs3d_TOH_Algo: OCP.Prs3d.Prs3d_TypeOfHLR # value = <Prs3d_TypeOfHLR.Prs3d_TOH_Algo: 2>
+Prs3d_TOH_NotSet: OCP.Prs3d.Prs3d_TypeOfHLR # value = <Prs3d_TypeOfHLR.Prs3d_TOH_NotSet: 0>
+Prs3d_TOH_PolyAlgo: OCP.Prs3d.Prs3d_TypeOfHLR # value = <Prs3d_TypeOfHLR.Prs3d_TOH_PolyAlgo: 1>
+Prs3d_TOLP_Point: OCP.Prs3d.Prs3d_TypeOfLinePicking # value = <Prs3d_TypeOfLinePicking.Prs3d_TOLP_Point: 0>
+Prs3d_TOLP_Segment: OCP.Prs3d.Prs3d_TypeOfLinePicking # value = <Prs3d_TypeOfLinePicking.Prs3d_TOLP_Segment: 1>
+Prs3d_TypeOfHighlight_Dynamic: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Dynamic: 2>
+Prs3d_TypeOfHighlight_LocalDynamic: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalDynamic: 4>
+Prs3d_TypeOfHighlight_LocalSelected: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_LocalSelected: 3>
+Prs3d_TypeOfHighlight_NB: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_NB: 6>
+Prs3d_TypeOfHighlight_None: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_None: 0>
+Prs3d_TypeOfHighlight_Selected: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_Selected: 1>
+Prs3d_TypeOfHighlight_SubIntensity: OCP.Prs3d.Prs3d_TypeOfHighlight # value = <Prs3d_TypeOfHighlight.Prs3d_TypeOfHighlight_SubIntensity: 5>
+Prs3d_VDM_All: OCP.Prs3d.Prs3d_VertexDrawMode # value = <Prs3d_VertexDrawMode.Prs3d_VDM_All: 1>
+Prs3d_VDM_Inherited: OCP.Prs3d.Prs3d_VertexDrawMode # value = <Prs3d_VertexDrawMode.Prs3d_VDM_Inherited: 2>
+Prs3d_VDM_Isolated: OCP.Prs3d.Prs3d_VertexDrawMode # value = <Prs3d_VertexDrawMode.Prs3d_VDM_Isolated: 0>

@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.Geom2dAdaptor
-import OCP.Geom2d
-import OCP.IntRes2d
 import OCP.HatchGen
+import io
 import OCP.Geom2dInt
 import OCP.NCollection
 import OCP.Adaptor2d
 import OCP.gp
+import OCP.IntRes2d
+import OCP.Geom2dAdaptor
+import OCP.Geom2d
+import OCP.TopAbs
 __all__  = [
 "Geom2dHatch_Classifier",
 "Geom2dHatch_Element",
@@ -73,18 +74,16 @@ class Geom2dHatch_Element():
         Returns the curve associated to the element.
         """
     @overload
-    def Orientation(self,Orientation : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Sets the orientation of the element.
 
         Returns the orientation of the element.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,Orientation : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,Other : Geom2dHatch_Element) -> None: ...
     @overload
     def __init__(self,Curve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Orientation : OCP.TopAbs.TopAbs_Orientation=TopAbs_Orientation.TopAbs_FORWARD) -> None: ...
     pass
@@ -245,16 +244,16 @@ class Geom2dHatch_Hatcher():
         Removes all the hatchings from the hatcher.
         """
     @overload
-    def ComputeDomains(self,IndH : int) -> None: 
+    def ComputeDomains(self) -> None: 
         """
         Computes the domains of all the hatchings.
 
         Computes the domains of the IndH-th hatching.
         """
     @overload
-    def ComputeDomains(self) -> None: ...
+    def ComputeDomains(self,IndH : int) -> None: ...
     @overload
-    def Confusion2d(self) -> float: 
+    def Confusion2d(self,Confusion : float) -> None: 
         """
         Sets the confusion tolerance.
 
@@ -263,9 +262,9 @@ class Geom2dHatch_Hatcher():
         Returns the 2d confusion tolerance, i.e. the value under which two points are considered identical in the parametric space of the hatching.
         """
     @overload
-    def Confusion2d(self,Confusion : float) -> None: ...
+    def Confusion2d(self) -> float: ...
     @overload
-    def Confusion3d(self,Confusion : float) -> None: 
+    def Confusion3d(self) -> float: 
         """
         Sets the confusion tolerance.
 
@@ -274,7 +273,7 @@ class Geom2dHatch_Hatcher():
         Returns the 3d confusion tolerance, i.e. the value under which two points are considered identical in the 3d space of the hatching.
         """
     @overload
-    def Confusion3d(self) -> float: ...
+    def Confusion3d(self,Confusion : float) -> None: ...
     def Domain(self,IndH : int,IDom : int) -> OCP.HatchGen.HatchGen_Domain: 
         """
         Returns the IDom-th domain of the IndH-th hatching.
@@ -296,7 +295,7 @@ class Geom2dHatch_Hatcher():
         Returns the curve associated to the IndH-th hatching.
         """
     @overload
-    def Intersector(self,Intersector : Geom2dHatch_Intersector) -> None: 
+    def Intersector(self) -> Geom2dHatch_Intersector: 
         """
         Sets the associated intersector.
 
@@ -305,7 +304,7 @@ class Geom2dHatch_Hatcher():
         Returns the associated intersector.
         """
     @overload
-    def Intersector(self) -> Geom2dHatch_Intersector: ...
+    def Intersector(self,Intersector : Geom2dHatch_Intersector) -> None: ...
     def IsDone(self,IndH : int) -> bool: 
         """
         Returns the fact that the domains were computed for the IndH-th hatching.
@@ -376,9 +375,9 @@ class Geom2dHatch_Hatcher():
         Trims the IndH-th hatching by the elements already given.
         """
     @overload
-    def Trim(self,IndH : int) -> None: ...
-    @overload
     def Trim(self) -> None: ...
+    @overload
+    def Trim(self,IndH : int) -> None: ...
     def TrimDone(self,IndH : int) -> bool: 
         """
         Returns the fact that the intersections were computed for the IndH-th hatching.
@@ -463,32 +462,32 @@ class Geom2dHatch_Hatching():
         Removes the Index-th intersection point of the hatching. The exception OutOfRange is raised if Index < 1 or Index > NbPoints.
         """
     @overload
-    def Status(self,theStatus : OCP.HatchGen.HatchGen_ErrorStatus) -> None: 
+    def Status(self) -> OCP.HatchGen.HatchGen_ErrorStatus: 
         """
         Sets the error status.
 
         Returns the error status.
         """
     @overload
-    def Status(self) -> OCP.HatchGen.HatchGen_ErrorStatus: ...
+    def Status(self,theStatus : OCP.HatchGen.HatchGen_ErrorStatus) -> None: ...
     @overload
-    def TrimDone(self,Flag : bool) -> None: 
+    def TrimDone(self) -> bool: 
         """
         Sets the flag about the trimming computations to the given value.
 
         Returns the flag about the trimming computations.
         """
     @overload
-    def TrimDone(self) -> bool: ...
+    def TrimDone(self,Flag : bool) -> None: ...
     @overload
-    def TrimFailed(self,Flag : bool) -> None: 
+    def TrimFailed(self) -> bool: 
         """
         Sets the flag about the trimming failure to the given value.
 
         Returns the flag about the trimming failure.
         """
     @overload
-    def TrimFailed(self) -> bool: ...
+    def TrimFailed(self,Flag : bool) -> None: ...
     @overload
     def __init__(self,Curve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve) -> None: ...
     @overload
@@ -644,14 +643,14 @@ class Geom2dHatch_MapOfElements(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int) -> Geom2dHatch_Element: 
+    def Find(self,theKey : int,theValue : Geom2dHatch_Element) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int,theValue : Geom2dHatch_Element) -> bool: ...
+    def Find(self,theKey : int) -> Geom2dHatch_Element: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -676,7 +675,7 @@ class Geom2dHatch_MapOfElements(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -685,10 +684,10 @@ class Geom2dHatch_MapOfElements(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : Geom2dHatch_MapOfElements) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : Geom2dHatch_MapOfElements) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass

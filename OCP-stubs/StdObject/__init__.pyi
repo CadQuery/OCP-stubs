@@ -6,8 +6,8 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.gp
 import OCP.TopoDS
-import OCP.TopLoc
 import OCP.StdObjMgt
+import OCP.TopLoc
 __all__  = [
 "StdObject_Location",
 "StdObject_Shape",
@@ -47,12 +47,12 @@ class StdObject_Shape():
     def __init__(self) -> None: ...
     pass
 @overload
-def write(theWriteData : OCP.StdObjMgt.StdObjMgt_WriteData,theAx : OCP.gp.gp_Ax1) -> OCP.StdObjMgt.StdObjMgt_WriteData:
+def write(theWriteData : OCP.StdObjMgt.StdObjMgt_WriteData,theAx : OCP.gp.gp_Ax2d) -> OCP.StdObjMgt.StdObjMgt_WriteData:
     """
     None
 
     None
     """
 @overload
-def write(theWriteData : OCP.StdObjMgt.StdObjMgt_WriteData,theAx : OCP.gp.gp_Ax2d) -> OCP.StdObjMgt.StdObjMgt_WriteData:
+def write(theWriteData : OCP.StdObjMgt.StdObjMgt_WriteData,theAx : OCP.gp.gp_Ax1) -> OCP.StdObjMgt.StdObjMgt_WriteData:
     pass

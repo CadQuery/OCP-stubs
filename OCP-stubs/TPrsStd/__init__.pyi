@@ -4,14 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Quantity
+import OCP.TDataXtd
 import OCP.TDF
 import OCP.TCollection
-import OCP.TDataXtd
-import OCP.Quantity
-import OCP.Graphic3d
-import OCP.Standard
+import io
 import OCP.AIS
 import OCP.V3d
+import OCP.Graphic3d
+import OCP.Standard
 __all__  = [
 "TPrsStd_AISPresentation",
 "TPrsStd_AISViewer",
@@ -98,14 +99,14 @@ class TPrsStd_AISPresentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -118,9 +119,13 @@ class TPrsStd_AISPresentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         """
         Display presentation of object in AIS viewer. If <update> = True then AISObject is recomputed and all the visualization settings are applied
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -130,7 +135,7 @@ class TPrsStd_AISPresentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         """
         Removes the presentation of this AIS presentation attribute from the TPrsStd_AISViewer. If remove is true, this AIS presentation attribute is removed from the interactive context.
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -328,7 +333,7 @@ class TPrsStd_AISPresentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         """
     @staticmethod
     @overload
-    def Set_s(L : OCP.TDF.TDF_Label,driver : OCP.Standard.Standard_GUID) -> TPrsStd_AISPresentation: 
+    def Set_s(master : OCP.TDF.TDF_Attribute) -> TPrsStd_AISPresentation: 
         """
         Creates or retrieves the presentation attribute on the label L, and sets the GUID driver.
 
@@ -336,7 +341,7 @@ class TPrsStd_AISPresentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         """
     @staticmethod
     @overload
-    def Set_s(master : OCP.TDF.TDF_Attribute) -> TPrsStd_AISPresentation: ...
+    def Set_s(L : OCP.TDF.TDF_Label,driver : OCP.Standard.Standard_GUID) -> TPrsStd_AISPresentation: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -466,14 +471,14 @@ class TPrsStd_AISViewer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -482,15 +487,19 @@ class TPrsStd_AISViewer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """

@@ -5,6 +5,7 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.gp
+import io
 __all__  = [
 "GccEnt",
 "GccEnt_Array1OfPosition",
@@ -40,7 +41,7 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def Outside_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: 
+    def Outside_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: 
         """
         Constructs a qualified line, so that the solution computed by a construction algorithm using the qualified circle or line and the circle or line are external to one another.
 
@@ -48,10 +49,10 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def Outside_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: ...
+    def Outside_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: ...
     @staticmethod
     @overload
-    def PositionFromString_s(thePositionString : str,thePosition : GccEnt_Position) -> bool: 
+    def PositionFromString_s(thePositionString : str) -> GccEnt_Position: 
         """
         Returns the position from the given string identifier (using case-insensitive comparison).
 
@@ -59,20 +60,20 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def PositionFromString_s(thePositionString : str) -> GccEnt_Position: ...
+    def PositionFromString_s(thePositionString : str,thePosition : GccEnt_Position) -> bool: ...
     @staticmethod
     def PositionToString_s(thePosition : GccEnt_Position) -> str: 
         """
         Returns the string name for a given position.
         """
     @staticmethod
-    def Print_s(thePosition : GccEnt_Position,theStream : Any) -> Any: 
+    def Print_s(thePosition : GccEnt_Position,theStream : io.BytesIO) -> io.BytesIO: 
         """
         Prints the name of Position type as a String on the Stream.
         """
     @staticmethod
     @overload
-    def Unqualified_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: 
+    def Unqualified_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: 
         """
         Constructs a qualified line, so that the relative position to the circle or line of the solution computed by a construction algorithm using the qualified circle or line is not qualified, i.e. all solutions apply.
 
@@ -80,7 +81,7 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def Unqualified_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: ...
+    def Unqualified_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: ...
     def __init__(self) -> None: ...
     pass
 class GccEnt_Array1OfPosition():
@@ -162,12 +163,12 @@ class GccEnt_Array1OfPosition():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : GccEnt_Array1OfPosition) -> None: ...
     @overload
     def __init__(self,theBegin : GccEnt_Position,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class GccEnt_BadQualifier(Exception, BaseException):
     class type():
@@ -196,23 +197,31 @@ class GccEnt_Position():
 
       GccEnt_noqualifier
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    GccEnt_enclosed: OCP.GccEnt.GccEnt_Position # value = GccEnt_Position.GccEnt_enclosed
-    GccEnt_enclosing: OCP.GccEnt.GccEnt_Position # value = GccEnt_Position.GccEnt_enclosing
-    GccEnt_noqualifier: OCP.GccEnt.GccEnt_Position # value = GccEnt_Position.GccEnt_noqualifier
-    GccEnt_outside: OCP.GccEnt.GccEnt_Position # value = GccEnt_Position.GccEnt_outside
-    GccEnt_unqualified: OCP.GccEnt.GccEnt_Position # value = GccEnt_Position.GccEnt_unqualified
-    __entries: dict # value = {'GccEnt_unqualified': (GccEnt_Position.GccEnt_unqualified, None), 'GccEnt_enclosing': (GccEnt_Position.GccEnt_enclosing, None), 'GccEnt_enclosed': (GccEnt_Position.GccEnt_enclosed, None), 'GccEnt_outside': (GccEnt_Position.GccEnt_outside, None), 'GccEnt_noqualifier': (GccEnt_Position.GccEnt_noqualifier, None)}
-    __members__: dict # value = {'GccEnt_unqualified': GccEnt_Position.GccEnt_unqualified, 'GccEnt_enclosing': GccEnt_Position.GccEnt_enclosing, 'GccEnt_enclosed': GccEnt_Position.GccEnt_enclosed, 'GccEnt_outside': GccEnt_Position.GccEnt_outside, 'GccEnt_noqualifier': GccEnt_Position.GccEnt_noqualifier}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    GccEnt_enclosed: OCP.GccEnt.GccEnt_Position # value = <GccEnt_Position.GccEnt_enclosed: 2>
+    GccEnt_enclosing: OCP.GccEnt.GccEnt_Position # value = <GccEnt_Position.GccEnt_enclosing: 1>
+    GccEnt_noqualifier: OCP.GccEnt.GccEnt_Position # value = <GccEnt_Position.GccEnt_noqualifier: 4>
+    GccEnt_outside: OCP.GccEnt.GccEnt_Position # value = <GccEnt_Position.GccEnt_outside: 3>
+    GccEnt_unqualified: OCP.GccEnt.GccEnt_Position # value = <GccEnt_Position.GccEnt_unqualified: 0>
+    __entries: dict # value = {'GccEnt_unqualified': (<GccEnt_Position.GccEnt_unqualified: 0>, None), 'GccEnt_enclosing': (<GccEnt_Position.GccEnt_enclosing: 1>, None), 'GccEnt_enclosed': (<GccEnt_Position.GccEnt_enclosed: 2>, None), 'GccEnt_outside': (<GccEnt_Position.GccEnt_outside: 3>, None), 'GccEnt_noqualifier': (<GccEnt_Position.GccEnt_noqualifier: 4>, None)}
+    __members__: dict # value = {'GccEnt_unqualified': <GccEnt_Position.GccEnt_unqualified: 0>, 'GccEnt_enclosing': <GccEnt_Position.GccEnt_enclosing: 1>, 'GccEnt_enclosed': <GccEnt_Position.GccEnt_enclosed: 2>, 'GccEnt_outside': <GccEnt_Position.GccEnt_outside: 3>, 'GccEnt_noqualifier': <GccEnt_Position.GccEnt_noqualifier: 4>}
     pass
 class GccEnt_QualifiedCirc():
     """
@@ -270,8 +279,8 @@ class GccEnt_QualifiedLin():
         """
     def __init__(self,Qualified : OCP.gp.gp_Lin2d,Qualifier : GccEnt_Position) -> None: ...
     pass
-GccEnt_enclosed: OCP.GccEnt.GccEnt_Position # value = GccEnt_Position.GccEnt_enclosed
-GccEnt_enclosing: OCP.GccEnt.GccEnt_Position # value = GccEnt_Position.GccEnt_enclosing
-GccEnt_noqualifier: OCP.GccEnt.GccEnt_Position # value = GccEnt_Position.GccEnt_noqualifier
-GccEnt_outside: OCP.GccEnt.GccEnt_Position # value = GccEnt_Position.GccEnt_outside
-GccEnt_unqualified: OCP.GccEnt.GccEnt_Position # value = GccEnt_Position.GccEnt_unqualified
+GccEnt_enclosed: OCP.GccEnt.GccEnt_Position # value = <GccEnt_Position.GccEnt_enclosed: 2>
+GccEnt_enclosing: OCP.GccEnt.GccEnt_Position # value = <GccEnt_Position.GccEnt_enclosing: 1>
+GccEnt_noqualifier: OCP.GccEnt.GccEnt_Position # value = <GccEnt_Position.GccEnt_noqualifier: 4>
+GccEnt_outside: OCP.GccEnt.GccEnt_Position # value = <GccEnt_Position.GccEnt_outside: 3>
+GccEnt_unqualified: OCP.GccEnt.GccEnt_Position # value = <GccEnt_Position.GccEnt_unqualified: 0>

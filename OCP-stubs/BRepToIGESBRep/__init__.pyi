@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.IGESData
 import OCP.IGESSolid
 import OCP.Transfer
-import OCP.Standard
+import OCP.IGESData
 import OCP.TopoDS
+import OCP.Standard
 import OCP.BRepToIGES
 __all__  = [
 "BRepToIGESBRep_Entity"
@@ -22,27 +22,27 @@ class BRepToIGESBRep_Entity(OCP.BRepToIGES.BRepToIGES_BREntity):
         Stores <myedge> in "myEdges" and <mycurve3d> in "myCurves". Returns the index of <myedge>.
         """
     @overload
-    def AddFail(self,start : OCP.TopoDS.TopoDS_Shape,amess : str) -> None: 
+    def AddFail(self,start : OCP.Standard.Standard_Transient,amess : str) -> None: 
         """
         Records a new Fail message
 
         Records a new Fail message
         """
     @overload
-    def AddFail(self,start : OCP.Standard.Standard_Transient,amess : str) -> None: ...
+    def AddFail(self,start : OCP.TopoDS.TopoDS_Shape,amess : str) -> None: ...
     def AddVertex(self,myvertex : OCP.TopoDS.TopoDS_Vertex) -> int: 
         """
         Stores <myvertex> in "myVertices" Returns the index of <myvertex>.
         """
     @overload
-    def AddWarning(self,start : OCP.Standard.Standard_Transient,amess : str) -> None: 
+    def AddWarning(self,start : OCP.TopoDS.TopoDS_Shape,amess : str) -> None: 
         """
         Records a new Warning message
 
         Records a new Warning message
         """
     @overload
-    def AddWarning(self,start : OCP.TopoDS.TopoDS_Shape,amess : str) -> None: ...
+    def AddWarning(self,start : OCP.Standard.Standard_Transient,amess : str) -> None: ...
     def Clear(self) -> None: 
         """
         Clears the contents of the fields
@@ -60,14 +60,14 @@ class BRepToIGESBRep_Entity(OCP.BRepToIGES.BRepToIGES_BREntity):
         Returns mode for writing pcurves (value of parameter write.surfacecurve.mode)
         """
     @overload
-    def GetShapeResult(self,start : OCP.Standard.Standard_Transient) -> OCP.Standard.Standard_Transient: 
+    def GetShapeResult(self,start : OCP.TopoDS.TopoDS_Shape) -> OCP.Standard.Standard_Transient: 
         """
         Returns the result of the transfer of the Shape "start" contained in "TheMap" . (if HasShapeResult is True).
 
         Returns the result of the transfer of the Transient "start" contained in "TheMap" . (if HasShapeResult is True).
         """
     @overload
-    def GetShapeResult(self,start : OCP.TopoDS.TopoDS_Shape) -> OCP.Standard.Standard_Transient: ...
+    def GetShapeResult(self,start : OCP.Standard.Standard_Transient) -> OCP.Standard.Standard_Transient: ...
     def GetTransferProcess(self) -> OCP.Transfer.Transfer_FinderProcess: 
         """
         Returns the value of "TheMap"
@@ -102,35 +102,35 @@ class BRepToIGESBRep_Entity(OCP.BRepToIGES.BRepToIGES_BREntity):
         Set the value of "TheModel"
         """
     @overload
-    def SetShapeResult(self,start : OCP.TopoDS.TopoDS_Shape,result : OCP.Standard.Standard_Transient) -> None: 
+    def SetShapeResult(self,start : OCP.Standard.Standard_Transient,result : OCP.Standard.Standard_Transient) -> None: 
         """
         set in "TheMap" the result of the transfer of the Shape "start".
 
         set in "TheMap" the result of the transfer of the Transient "start".
         """
     @overload
-    def SetShapeResult(self,start : OCP.Standard.Standard_Transient,result : OCP.Standard.Standard_Transient) -> None: ...
+    def SetShapeResult(self,start : OCP.TopoDS.TopoDS_Shape,result : OCP.Standard.Standard_Transient) -> None: ...
     def SetTransferProcess(self,TP : OCP.Transfer.Transfer_FinderProcess) -> None: 
         """
         Set the value of "TheMap"
         """
-    def TransferCompSolid(self,start : OCP.TopoDS.TopoDS_CompSolid) -> OCP.IGESData.IGESData_IGESEntity: 
+    def TransferCompSolid(self,start : OCP.TopoDS.TopoDS_CompSolid,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IGESData.IGESData_IGESEntity: 
         """
         Transfert an CompSolid entity from TopoDS to IGES If this Entity could not be converted, this member returns a NullEntity.
         """
-    def TransferCompound(self,start : OCP.TopoDS.TopoDS_Compound) -> OCP.IGESData.IGESData_IGESEntity: 
+    def TransferCompound(self,start : OCP.TopoDS.TopoDS_Compound,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IGESData.IGESData_IGESEntity: 
         """
         Transfert a Compound entity from TopoDS to IGES If this Entity could not be converted, this member returns a NullEntity.
         """
     @overload
-    def TransferEdge(self,myedge : OCP.TopoDS.TopoDS_Edge) -> OCP.IGESData.IGESData_IGESEntity: 
+    def TransferEdge(self,myedge : OCP.TopoDS.TopoDS_Edge,myface : OCP.TopoDS.TopoDS_Face,length : float) -> OCP.IGESData.IGESData_IGESEntity: 
         """
         Transfert an Edge entity from TopoDS to IGES If this Entity could not be converted, this member returns a NullEntity.
 
         Transfert an Edge entity from TopoDS to IGES If this Entity could not be converted, this member returns a NullEntity.
         """
     @overload
-    def TransferEdge(self,myedge : OCP.TopoDS.TopoDS_Edge,myface : OCP.TopoDS.TopoDS_Face,length : float) -> OCP.IGESData.IGESData_IGESEntity: ...
+    def TransferEdge(self,myedge : OCP.TopoDS.TopoDS_Edge) -> OCP.IGESData.IGESData_IGESEntity: ...
     def TransferEdgeList(self) -> None: 
         """
         Transfert an Edge entity from TopoDS to IGES
@@ -139,15 +139,15 @@ class BRepToIGESBRep_Entity(OCP.BRepToIGES.BRepToIGES_BREntity):
         """
         Transfert a Face entity from TopoDS to IGES If this Entity could not be converted, this member returns a NullEntity.
         """
-    def TransferShape(self,start : OCP.TopoDS.TopoDS_Shape) -> OCP.IGESData.IGESData_IGESEntity: 
+    def TransferShape(self,start : OCP.TopoDS.TopoDS_Shape,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IGESData.IGESData_IGESEntity: 
         """
         Returns the result of the transfert of any Shape If the transfer has failed, this member return a NullEntity.
         """
-    def TransferShell(self,start : OCP.TopoDS.TopoDS_Shell) -> OCP.IGESSolid.IGESSolid_Shell: 
+    def TransferShell(self,start : OCP.TopoDS.TopoDS_Shell,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IGESSolid.IGESSolid_Shell: 
         """
         Transfert an Shell entity from TopoDS to IGES If this Entity could not be converted, this member returns a NullEntity.
         """
-    def TransferSolid(self,start : OCP.TopoDS.TopoDS_Solid) -> OCP.IGESSolid.IGESSolid_ManifoldSolid: 
+    def TransferSolid(self,start : OCP.TopoDS.TopoDS_Solid,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IGESSolid.IGESSolid_ManifoldSolid: 
         """
         Transfert a Solid entity from TopoDS to IGES If this Entity could not be converted, this member returns a NullEntity.
         """

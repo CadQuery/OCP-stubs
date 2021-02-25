@@ -4,16 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Resource
 import OCP.TDF
-import OCP.TCollection
-import OCP.CDF
 import OCP.TColStd
-import OCP.PCDM
-import OCP.Message
-import OCP.Standard
-import OCP.CDM
+import OCP.CDF
+import io
+import OCP.TCollection
 import OCP.NCollection
+import OCP.Message
+import OCP.PCDM
+import OCP.CDM
+import OCP.Resource
+import OCP.Standard
 __all__  = [
 "TDocStd",
 "TDocStd_Application",
@@ -85,6 +86,10 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -150,7 +155,15 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         """
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
-        Redefines message driver, by default outputs to std::cout.
+        Returns default messenger;
+        """
+    def MetaDataDriver(self) -> OCP.CDF.CDF_MetaDataDriver: 
+        """
+        returns MetaDatdDriver of this application
+        """
+    def MetaDataLookUpTable(self) -> Any: 
+        """
+        Returns MetaData LookUpTable
         """
     def Name(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
@@ -177,15 +190,15 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         Notification that is fired at each OpenTransaction event.
         """
     @overload
-    def Open(self,theIStream : Any,theDoc : TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: 
+    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
         Retrieves the document aDoc stored under the name aName in the directory directory. In order not to override a version of aDoc which is already in memory, this method can be made to depend on the value returned by IsInSession.
 
         Retrieves aDoc from standard SEEKABLE stream theIStream. the stream should support SEEK fuctionality
         """
     @overload
-    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: ...
-    def Read(self,theIStream : Any) -> OCP.CDM.CDM_Document: 
+    def Open(self,theIStream : io.BytesIO,theDoc : TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    def Read(self,theIStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
         """
         Reads aDoc from standard SEEKABLE stream theIStream, the stream should support SEEK fuctionality
         """
@@ -206,25 +219,25 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         Returns the name of the file containing the resources of this application, for support of legacy method of loading formats data from resource files.
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True) -> OCP.CDM.CDM_Document: 
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
         """
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. The content of {aFolder}, {aName} and {aVersion} depends on the Database Manager system. If the DBMS is only based on the OS, {aFolder} is a directory and {aName} is the name of a file. In this case the use of the syntax with {aVersion} has no sense. For example:
 
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. -- If the DBMS is only based on the OS, this syntax should not be used.
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True) -> OCP.CDM.CDM_Document: ...
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: ...
     @overload
-    def Save(self,aDoc : TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: 
+    def Save(self,aDoc : TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save aDoc active document. Exceptions: Standard_NotImplemented if the document was not retrieved in the applicative session by using Open.
 
         Save the document overwriting the previous file
         """
     @overload
-    def Save(self,aDoc : TDocStd_Document) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def Save(self,aDoc : TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,aDoc : TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: 
+    def SaveAs(self,theDoc : TDocStd_Document,theOStream : io.BytesIO,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save the active document in the file <name> in the path <path> ; o verwrites the file if it already exists.
 
@@ -235,11 +248,11 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         Save theDoc TO standard SEEKABLE stream theOStream. the stream should support SEEK fuctionality
         """
     @overload
-    def SaveAs(self,theDoc : TDocStd_Document,theOStream : Any) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,aDoc : TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,aDoc : TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,theDoc : TDocStd_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,theDoc : TDocStd_Document,theOStream : Any,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,aDoc : TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     def SetDefaultFolder(self,aFolder : str) -> bool: 
         """
         None
@@ -285,7 +298,7 @@ class TDocStd_ApplicationDelta(OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def Dump(self,anOS : Any) -> None: 
+    def Dump(self,anOS : io.BytesIO) -> None: 
         """
         None
         """
@@ -377,9 +390,13 @@ class TDocStd_CompoundDelta(OCP.TDF.TDF_Delta, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def Dump(self,OS : Any) -> None: 
+    def Dump(self,OS : io.BytesIO) -> None: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -501,7 +518,7 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         """
     def CanCloseReference(self,aDocument : OCP.CDM.CDM_Document,aReferenceIdentifier : int) -> bool: 
         """
-        A referenced document may indicate through this virtual method that it does not allow the closing of aDocument which it references through the reference aReferenceIdentifier. By default returns Standard_True;;
+        A referenced document may indicate through this virtual method that it does not allow the closing of aDocument which it references through the reference aReferenceIdentifier. By default returns Standard_True.
         """
     def ChangeStorageFormat(self,newStorageFormat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
@@ -544,7 +561,7 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         Copies a reference to this document. This method avoid retrieval of referenced document. The arguments are the original document and a valid reference identifier Returns the local identifier.
         """
     @overload
-    def CreateReference(self,anOtherDocument : OCP.CDM.CDM_Document) -> int: 
+    def CreateReference(self,aMetaData : OCP.CDM.CDM_MetaData,aReferenceIdentifier : int,anApplication : OCP.CDM.CDM_Application,aToDocumentVersion : int,UseStorageConfiguration : bool) -> None: 
         """
         Creates a reference from this document to {anOtherDocument}. Returns a reference identifier. This reference identifier is unique in the document and will not be used for the next references, even after the storing of the document. If there is already a reference between the two documents, the reference is not created, but its reference identifier is returned.
 
@@ -553,7 +570,7 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def CreateReference(self,aMetaData : OCP.CDM.CDM_MetaData,aReferenceIdentifier : int,anApplication : OCP.CDM.CDM_Application,aToDocumentVersion : int,UseStorageConfiguration : bool) -> None: ...
+    def CreateReference(self,anOtherDocument : OCP.CDM.CDM_Document) -> int: ...
     @overload
     def CreateReference(self,aMetaData : OCP.CDM.CDM_MetaData,anApplication : OCP.CDM.CDM_Application,aDocumentVersion : int,UseStorageConfiguration : bool) -> int: ...
     def DecrementRefCounter(self) -> int: 
@@ -575,6 +592,10 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
     def Document(self,aReferenceIdentifier : int) -> OCP.CDM.CDM_Document: 
         """
         Returns the To Document of the reference identified by aReferenceIdentifier. If the ToDocument is stored and has not yet been retrieved, this method will retrieve it.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -601,16 +622,6 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
     def FindFileExtension(self) -> bool: 
         """
         None
-        """
-    @staticmethod
-    def FindFromPresentation_s(aPresentation : OCP.TCollection.TCollection_ExtendedString) -> OCP.CDM.CDM_Document: 
-        """
-        returns the document having the given alphanumeric presentation.
-        """
-    @staticmethod
-    def FindPresentation_s(aPresentation : OCP.TCollection.TCollection_ExtendedString) -> bool: 
-        """
-        indicates whether a document having the given presentation does exist.
         """
     def Folder(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
@@ -760,14 +771,14 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         the document is saved in a file.
         """
     @overload
-    def IsStored(self,aReferenceIdentifier : int) -> bool: 
+    def IsStored(self) -> bool: 
         """
         returns True if the To Document of the reference identified by aReferenceIdentifier has already been stored, False otherwise.
 
         None
         """
     @overload
-    def IsStored(self) -> bool: ...
+    def IsStored(self,aReferenceIdentifier : int) -> bool: ...
     def IsUpToDate(self,aReferenceIdentifier : int) -> bool: 
         """
         returns true if the modification counter found in the given reference is equal to the actual modification counter of the To Document. This method is able to deal with a reference to a not retrieved document.
@@ -819,11 +830,7 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         """
         Performs the procedure of delta compaction Makes all deltas starting from "from" delta till the last one to be one delta.
         """
-    def Presentation(self) -> str: 
-        """
-        Returns an alphanumeric string identifying this document in a unique manner in the current process. The presentation may change when the document is stored. Tries to get the 'FileFormat`.Presentation resource This item is used to give a default presentation to the document.
-        """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1061,14 +1068,14 @@ class TDocStd_LabelIDMapDataMap(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TDocStd_LabelIDMapDataMap) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1078,14 +1085,14 @@ class TDocStd_LabelIDMapDataMap(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TDF.TDF_Label) -> OCP.TDF.TDF_IDMap: 
+    def Find(self,theKey : OCP.TDF.TDF_Label,theValue : OCP.TDF.TDF_IDMap) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TDF.TDF_Label,theValue : OCP.TDF.TDF_IDMap) -> bool: ...
+    def Find(self,theKey : OCP.TDF.TDF_Label) -> OCP.TDF.TDF_IDMap: ...
     def IsBound(self,theKey : OCP.TDF.TDF_Label) -> bool: 
         """
         IsBound
@@ -1110,7 +1117,7 @@ class TDocStd_LabelIDMapDataMap(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1121,10 +1128,10 @@ class TDocStd_LabelIDMapDataMap(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theOther : TDocStd_LabelIDMapDataMap) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TDocStd_Modified(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
@@ -1214,14 +1221,14 @@ class TDocStd_Modified(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1230,15 +1237,19 @@ class TDocStd_Modified(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1446,7 +1457,7 @@ class TDocStd_MultiTransactionManager(OCP.Standard.Standard_Transient):
 
         Returns the added documents to the transaction manager.
         """
-    def DumpTransaction(self,theOS : Any) -> None: 
+    def DumpTransaction(self,theOS : io.BytesIO) -> None: 
         """
         Dumps transactions in undos and redos
         """
@@ -1629,14 +1640,14 @@ class TDocStd_Owner(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1645,15 +1656,19 @@ class TDocStd_Owner(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1768,10 +1783,14 @@ class TDocStd_Owner(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def SetDocument(self,document : TDocStd_Document) -> None: 
         """
         None
+
+        None
         """
     @staticmethod
     def SetDocument_s(indata : OCP.TDF.TDF_Data,doc : TDocStd_Document) -> None: 
         """
+        None
+
         None
         """
     @overload
@@ -1848,14 +1867,14 @@ class TDocStd_SequenceOfApplicationDelta(OCP.NCollection.NCollection_BaseSequenc
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: 
+    def Append(self,theItem : TDocStd_ApplicationDelta) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : TDocStd_ApplicationDelta) -> None: ...
+    def Append(self,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: ...
     def Assign(self,theOther : TDocStd_SequenceOfApplicationDelta) -> TDocStd_SequenceOfApplicationDelta: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1885,23 +1904,23 @@ class TDocStd_SequenceOfApplicationDelta(OCP.NCollection.NCollection_BaseSequenc
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : TDocStd_ApplicationDelta) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : TDocStd_ApplicationDelta) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : TDocStd_ApplicationDelta) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : TDocStd_ApplicationDelta) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1919,14 +1938,14 @@ class TDocStd_SequenceOfApplicationDelta(OCP.NCollection.NCollection_BaseSequenc
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : TDocStd_ApplicationDelta) -> None: 
+    def Prepend(self,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: ...
+    def Prepend(self,theItem : TDocStd_ApplicationDelta) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1961,12 +1980,12 @@ class TDocStd_SequenceOfApplicationDelta(OCP.NCollection.NCollection_BaseSequenc
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : TDocStd_SequenceOfApplicationDelta) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1982,14 +2001,14 @@ class TDocStd_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TDocStd_Document) -> None: 
+    def Append(self,theSeq : TDocStd_SequenceOfDocument) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : TDocStd_SequenceOfDocument) -> None: ...
+    def Append(self,theItem : TDocStd_Document) -> None: ...
     def Assign(self,theOther : TDocStd_SequenceOfDocument) -> TDocStd_SequenceOfDocument: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2053,23 +2072,23 @@ class TDocStd_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : TDocStd_Document) -> None: 
+    def Prepend(self,theSeq : TDocStd_SequenceOfDocument) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TDocStd_SequenceOfDocument) -> None: ...
+    def Prepend(self,theItem : TDocStd_Document) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2095,12 +2114,12 @@ class TDocStd_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : TDocStd_SequenceOfDocument) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self,theOther : TDocStd_SequenceOfDocument) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2172,14 +2191,14 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2197,15 +2216,19 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @overload
     def DocumentEntry(self,aDocEntry : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the attribute on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -2293,7 +2316,7 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
         """
     @overload
-    def LabelEntry(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def LabelEntry(self,aLabel : OCP.TDF.TDF_Label) -> None: 
         """
         Sets the label entry for this external link attribute with the label aLabel. aLabel pilots the importation of data from the document entry.
 
@@ -2302,9 +2325,9 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the contents of the field <myLabelEntry>.
         """
     @overload
-    def LabelEntry(self,aLabel : OCP.TDF.TDF_Label) -> None: ...
-    @overload
     def LabelEntry(self,aLabEntry : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @overload
+    def LabelEntry(self) -> OCP.TCollection.TCollection_AsciiString: ...
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         Returns a null handle.
@@ -2459,14 +2482,14 @@ class TDocStd_XLinkRoot(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2475,15 +2498,19 @@ class TDocStd_XLinkRoot(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the attribute on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """

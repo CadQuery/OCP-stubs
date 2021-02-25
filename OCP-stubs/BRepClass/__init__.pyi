@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.IntRes2d
-import OCP.TopoDS
 import OCP.Geom2dInt
 import OCP.gp
+import OCP.TopoDS
+import OCP.IntRes2d
+import OCP.TopAbs
 __all__  = [
 "BRepClass_Edge",
 "BRepClass_FClass2dOfFClassifier",
@@ -43,9 +43,9 @@ class BRepClass_Edge():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepClass_FClass2dOfFClassifier():
     """
@@ -156,11 +156,11 @@ class BRepClass_FaceClassifier(BRepClass_FClassifier):
         Returns the result of the classification.
         """
     @overload
-    def __init__(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt2d,Tol : float) -> None: ...
-    @overload
     def __init__(self,F : BRepClass_FaceExplorer,P : OCP.gp.gp_Pnt2d,Tol : float) -> None: ...
     @overload
     def __init__(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,Tol : float) -> None: ...
+    @overload
+    def __init__(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt2d,Tol : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass

@@ -6,15 +6,15 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
 import OCP.TColStd
-import OCP.StepRepr
-import OCP.StepBasic
-import OCP.StepGeom
-import OCP.TColgp
-import OCP.Standard
-import OCP.StepShape
-import OCP.StepData
 import OCP.NCollection
+import OCP.StepBasic
+import OCP.StepRepr
 import OCP.Interface
+import OCP.TColgp
+import OCP.StepGeom
+import OCP.StepShape
+import OCP.Standard
+import OCP.StepData
 __all__  = [
 "StepVisual_StyledItem",
 "StepVisual_AnnotationOccurrence",
@@ -39,6 +39,7 @@ __all__  = [
 "StepVisual_Array1OfLayeredItem",
 "StepVisual_Array1OfPresentationStyleAssignment",
 "StepVisual_Array1OfPresentationStyleSelect",
+"StepVisual_Array1OfRenderingPropertiesSelect",
 "StepVisual_Array1OfStyleContextSelect",
 "StepVisual_Array1OfSurfaceStyleElementSelect",
 "StepVisual_Array1OfTessellatedItem",
@@ -75,7 +76,7 @@ __all__  = [
 "StepVisual_DraughtingAnnotationOccurrence",
 "StepVisual_DraughtingCallout",
 "StepVisual_DraughtingCalloutElement",
-"StepVisual_CharacterizedObjectAndCharacterizedRepresentationAndDraughtingModelAndRepresentation",
+"StepVisual_CharacterizedObjAndRepresentationAndDraughtingModel",
 "StepVisual_PreDefinedColour",
 "StepVisual_PreDefinedItem",
 "StepVisual_ExternallyDefinedCurveFont",
@@ -96,6 +97,7 @@ __all__  = [
 "StepVisual_HArray1OfLayeredItem",
 "StepVisual_HArray1OfPresentationStyleAssignment",
 "StepVisual_HArray1OfPresentationStyleSelect",
+"StepVisual_HArray1OfRenderingPropertiesSelect",
 "StepVisual_HArray1OfStyleContextSelect",
 "StepVisual_HArray1OfSurfaceStyleElementSelect",
 "StepVisual_HArray1OfTextOrCharacter",
@@ -132,8 +134,10 @@ __all__  = [
 "StepVisual_PresentationView",
 "StepVisual_PresentedItem",
 "StepVisual_PresentedItemRepresentation",
+"StepVisual_RenderingPropertiesSelect",
+"StepVisual_ShadingSurfaceMethod",
 "StepVisual_StyleContextSelect",
-"StepVisual_AnnotationCurveOccurrenceAndAnnotationOccurrenceAndGeomReprItemAndReprItemAndStyledItem",
+"StepVisual_AnnotationCurveOccurrenceAndGeomReprItem",
 "StepVisual_StyledItemTarget",
 "StepVisual_SurfaceSide",
 "StepVisual_SurfaceSideStyle",
@@ -142,8 +146,12 @@ __all__  = [
 "StepVisual_SurfaceStyleElementSelect",
 "StepVisual_SurfaceStyleFillArea",
 "StepVisual_SurfaceStyleParameterLine",
+"StepVisual_SurfaceStyleReflectanceAmbient",
+"StepVisual_SurfaceStyleRendering",
+"StepVisual_SurfaceStyleRenderingWithProperties",
 "StepVisual_SurfaceStyleSegmentationCurve",
 "StepVisual_SurfaceStyleSilhouette",
+"StepVisual_SurfaceStyleTransparent",
 "StepVisual_SurfaceStyleUsage",
 "StepVisual_Template",
 "StepVisual_TemplateInstance",
@@ -172,6 +180,10 @@ __all__  = [
 "StepVisual_ssBoth",
 "StepVisual_ssNegative",
 "StepVisual_ssPositive",
+"StepVisual_ssmColourShading",
+"StepVisual_ssmConstantShading",
+"StepVisual_ssmDotShading",
+"StepVisual_ssmNormalShading",
 "StepVisual_tpDown",
 "StepVisual_tpLeft",
 "StepVisual_tpRight",
@@ -1343,14 +1355,14 @@ class StepVisual_Array1OfAnnotationPlaneElement():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfAnnotationPlaneElement) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : StepVisual_AnnotationPlaneElement,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : StepVisual_Array1OfAnnotationPlaneElement) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfBoxCharacteristicSelect():
     """
@@ -1429,14 +1441,14 @@ class StepVisual_Array1OfBoxCharacteristicSelect():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepVisual_BoxCharacteristicSelect,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfBoxCharacteristicSelect) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepVisual_BoxCharacteristicSelect,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfCameraModelD3MultiClippingInterectionSelect():
     """
@@ -1515,14 +1527,14 @@ class StepVisual_Array1OfCameraModelD3MultiClippingInterectionSelect():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : StepVisual_Array1OfCameraModelD3MultiClippingInterectionSelect) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : StepVisual_CameraModelD3MultiClippingInterectionSelect,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : StepVisual_Array1OfCameraModelD3MultiClippingInterectionSelect) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfCameraModelD3MultiClippingUnionSelect():
     """
@@ -1601,14 +1613,14 @@ class StepVisual_Array1OfCameraModelD3MultiClippingUnionSelect():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfCameraModelD3MultiClippingUnionSelect) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfCameraModelD3MultiClippingUnionSelect) -> None: ...
     @overload
     def __init__(self,theBegin : StepVisual_CameraModelD3MultiClippingUnionSelect,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfCurveStyleFontPattern():
     """
@@ -1687,14 +1699,14 @@ class StepVisual_Array1OfCurveStyleFontPattern():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepVisual_CurveStyleFontPattern,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfCurveStyleFontPattern) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfCurveStyleFontPattern) -> None: ...
+    def __init__(self,theBegin : StepVisual_CurveStyleFontPattern,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfDirectionCountSelect():
     """
@@ -1773,14 +1785,14 @@ class StepVisual_Array1OfDirectionCountSelect():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfDirectionCountSelect) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepVisual_DirectionCountSelect,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfDirectionCountSelect) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfDraughtingCalloutElement():
     """
@@ -1859,14 +1871,14 @@ class StepVisual_Array1OfDraughtingCalloutElement():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : StepVisual_Array1OfDraughtingCalloutElement) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : StepVisual_DraughtingCalloutElement,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : StepVisual_Array1OfDraughtingCalloutElement) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfFillStyleSelect():
     """
@@ -1945,14 +1957,14 @@ class StepVisual_Array1OfFillStyleSelect():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfFillStyleSelect) -> None: ...
     @overload
     def __init__(self,theBegin : StepVisual_FillStyleSelect,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfInvisibleItem():
     """
@@ -2031,14 +2043,14 @@ class StepVisual_Array1OfInvisibleItem():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : StepVisual_InvisibleItem,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfInvisibleItem) -> None: ...
     @overload
-    def __init__(self,theBegin : StepVisual_InvisibleItem,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfLayeredItem():
     """
@@ -2117,14 +2129,14 @@ class StepVisual_Array1OfLayeredItem():
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theBegin : StepVisual_LayeredItem,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfLayeredItem) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfPresentationStyleAssignment():
     """
@@ -2203,14 +2215,14 @@ class StepVisual_Array1OfPresentationStyleAssignment():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfPresentationStyleAssignment) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepVisual_PresentationStyleAssignment,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theBegin : StepVisual_PresentationStyleAssignment,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfPresentationStyleAssignment) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfPresentationStyleSelect():
     """
@@ -2293,10 +2305,96 @@ class StepVisual_Array1OfPresentationStyleSelect():
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theBegin : StepVisual_PresentationStyleSelect,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
+    pass
+class StepVisual_Array1OfRenderingPropertiesSelect():
+    """
+    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    """
+    def Assign(self,theOther : StepVisual_Array1OfRenderingPropertiesSelect) -> StepVisual_Array1OfRenderingPropertiesSelect: 
+        """
+        Copies data of theOther array to this. This array should be pre-allocated and have the same length as theOther; otherwise exception Standard_DimensionMismatch is thrown.
+        """
+    def ChangeFirst(self) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Returns first element
+        """
+    def ChangeLast(self) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Returns last element
+        """
+    def ChangeValue(self,theIndex : int) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Variable value access
+        """
+    def First(self) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Returns first element
+        """
+    def Init(self,theValue : StepVisual_RenderingPropertiesSelect) -> None: 
+        """
+        Initialise the items with theValue
+        """
+    def IsAllocated(self) -> bool: 
+        """
+        IsAllocated flag - for naming compatibility
+        """
+    def IsDeletable(self) -> bool: 
+        """
+        myDeletable flag
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        Return TRUE if array has zero length.
+        """
+    def Last(self) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Returns last element
+        """
+    def Length(self) -> int: 
+        """
+        Length query (the same)
+        """
+    def Lower(self) -> int: 
+        """
+        Lower bound
+        """
+    def Move(self,theOther : StepVisual_Array1OfRenderingPropertiesSelect) -> StepVisual_Array1OfRenderingPropertiesSelect: 
+        """
+        Move assignment. This array will borrow all the data from theOther. The moved object will keep pointer to the memory buffer and range, but it will not free the buffer on destruction.
+        """
+    def Resize(self,theLower : int,theUpper : int,theToCopyData : bool) -> None: 
+        """
+        Resizes the array to specified bounds. No re-allocation will be done if length of array does not change, but existing values will not be discarded if theToCopyData set to FALSE.
+        """
+    def SetValue(self,theIndex : int,theItem : StepVisual_RenderingPropertiesSelect) -> None: 
+        """
+        Set value
+        """
+    def Size(self) -> int: 
+        """
+        Size query
+        """
+    def Upper(self) -> int: 
+        """
+        Upper bound
+        """
+    def Value(self,theIndex : int) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Constant value access
+        """
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : StepVisual_PresentationStyleSelect,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : StepVisual_Array1OfRenderingPropertiesSelect) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepVisual_RenderingPropertiesSelect,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfStyleContextSelect():
     """
@@ -2375,14 +2473,14 @@ class StepVisual_Array1OfStyleContextSelect():
         Constant value access
         """
     @overload
+    def __init__(self,theOther : StepVisual_Array1OfStyleContextSelect) -> None: ...
+    @overload
     def __init__(self,theBegin : StepVisual_StyleContextSelect,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfStyleContextSelect) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfSurfaceStyleElementSelect():
     """
@@ -2461,14 +2559,14 @@ class StepVisual_Array1OfSurfaceStyleElementSelect():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepVisual_SurfaceStyleElementSelect,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfSurfaceStyleElementSelect) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : StepVisual_SurfaceStyleElementSelect,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfSurfaceStyleElementSelect) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfTessellatedItem():
     """
@@ -2549,12 +2647,12 @@ class StepVisual_Array1OfTessellatedItem():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theBegin : StepVisual_TessellatedItem,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : StepVisual_Array1OfTessellatedItem) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepVisual_TessellatedItem,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfTextOrCharacter():
     """
@@ -2633,14 +2731,14 @@ class StepVisual_Array1OfTextOrCharacter():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfTextOrCharacter) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : StepVisual_TextOrCharacter,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfTextOrCharacter) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Colour(OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -3747,20 +3845,28 @@ class StepVisual_CentralOrParallel():
 
       StepVisual_copParallel
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepVisual_copCentral: OCP.StepVisual.StepVisual_CentralOrParallel # value = StepVisual_CentralOrParallel.StepVisual_copCentral
-    StepVisual_copParallel: OCP.StepVisual.StepVisual_CentralOrParallel # value = StepVisual_CentralOrParallel.StepVisual_copParallel
-    __entries: dict # value = {'StepVisual_copCentral': (StepVisual_CentralOrParallel.StepVisual_copCentral, None), 'StepVisual_copParallel': (StepVisual_CentralOrParallel.StepVisual_copParallel, None)}
-    __members__: dict # value = {'StepVisual_copCentral': StepVisual_CentralOrParallel.StepVisual_copCentral, 'StepVisual_copParallel': StepVisual_CentralOrParallel.StepVisual_copParallel}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepVisual_copCentral: OCP.StepVisual.StepVisual_CentralOrParallel # value = <StepVisual_CentralOrParallel.StepVisual_copCentral: 0>
+    StepVisual_copParallel: OCP.StepVisual.StepVisual_CentralOrParallel # value = <StepVisual_CentralOrParallel.StepVisual_copParallel: 1>
+    __entries: dict # value = {'StepVisual_copCentral': (<StepVisual_CentralOrParallel.StepVisual_copCentral: 0>, None), 'StepVisual_copParallel': (<StepVisual_CentralOrParallel.StepVisual_copParallel: 1>, None)}
+    __members__: dict # value = {'StepVisual_copCentral': <StepVisual_CentralOrParallel.StepVisual_copCentral: 0>, 'StepVisual_copParallel': <StepVisual_CentralOrParallel.StepVisual_copParallel: 1>}
     pass
 class StepVisual_DraughtingModel(OCP.StepRepr.StepRepr_Representation, OCP.Standard.Standard_Transient):
     """
@@ -5203,7 +5309,7 @@ class StepVisual_DraughtingCalloutElement(OCP.StepData.StepData_SelectType):
         """
     def __init__(self) -> None: ...
     pass
-class StepVisual_CharacterizedObjectAndCharacterizedRepresentationAndDraughtingModelAndRepresentation(StepVisual_DraughtingModel, OCP.StepRepr.StepRepr_Representation, OCP.Standard.Standard_Transient):
+class StepVisual_CharacterizedObjAndRepresentationAndDraughtingModel(StepVisual_DraughtingModel, OCP.StepRepr.StepRepr_Representation, OCP.Standard.Standard_Transient):
     """
     Added for Dimensional Tolerances Complex STEP entity Characterized_Object & Characterized_Representation & Draughting_Model & RepresentationAdded for Dimensional Tolerances Complex STEP entity Characterized_Object & Characterized_Representation & Draughting_Model & RepresentationAdded for Dimensional Tolerances Complex STEP entity Characterized_Object & Characterized_Representation & Draughting_Model & Representation
     """
@@ -6081,14 +6187,14 @@ class StepVisual_HArray1OfAnnotationPlaneElement(StepVisual_Array1OfAnnotationPl
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_AnnotationPlaneElement) -> None: ...
-    @overload
-    def __init__(self,theOther : StepVisual_Array1OfAnnotationPlaneElement) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_AnnotationPlaneElement) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfAnnotationPlaneElement) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6224,14 +6330,14 @@ class StepVisual_HArray1OfBoxCharacteristicSelect(StepVisual_Array1OfBoxCharacte
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_BoxCharacteristicSelect) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfBoxCharacteristicSelect) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfBoxCharacteristicSelect) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_BoxCharacteristicSelect) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6369,12 +6475,12 @@ class StepVisual_HArray1OfCameraModelD3MultiClippingInterectionSelect(StepVisual
     @overload
     def __init__(self,theOther : StepVisual_Array1OfCameraModelD3MultiClippingInterectionSelect) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_CameraModelD3MultiClippingInterectionSelect) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_CameraModelD3MultiClippingInterectionSelect) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6512,12 +6618,12 @@ class StepVisual_HArray1OfCameraModelD3MultiClippingUnionSelect(StepVisual_Array
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_CameraModelD3MultiClippingUnionSelect) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfCameraModelD3MultiClippingUnionSelect) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_CameraModelD3MultiClippingUnionSelect) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6653,14 +6759,14 @@ class StepVisual_HArray1OfCurveStyleFontPattern(StepVisual_Array1OfCurveStyleFon
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_CurveStyleFontPattern) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfCurveStyleFontPattern) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfCurveStyleFontPattern) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_CurveStyleFontPattern) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6796,14 +6902,14 @@ class StepVisual_HArray1OfDirectionCountSelect(StepVisual_Array1OfDirectionCount
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfDirectionCountSelect) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_DirectionCountSelect) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_DirectionCountSelect) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6939,14 +7045,14 @@ class StepVisual_HArray1OfDraughtingCalloutElement(StepVisual_Array1OfDraughting
         Constant value access
         """
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_DraughtingCalloutElement) -> None: ...
+    @overload
     def __init__(self,theOther : StepVisual_Array1OfDraughtingCalloutElement) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_DraughtingCalloutElement) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7082,14 +7188,14 @@ class StepVisual_HArray1OfFillStyleSelect(StepVisual_Array1OfFillStyleSelect, OC
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfFillStyleSelect) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_FillStyleSelect) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7225,14 +7331,14 @@ class StepVisual_HArray1OfInvisibleItem(StepVisual_Array1OfInvisibleItem, OCP.St
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_InvisibleItem) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfInvisibleItem) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_InvisibleItem) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7368,14 +7474,14 @@ class StepVisual_HArray1OfLayeredItem(StepVisual_Array1OfLayeredItem, OCP.Standa
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfLayeredItem) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfLayeredItem) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_LayeredItem) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7515,10 +7621,10 @@ class StepVisual_HArray1OfPresentationStyleAssignment(StepVisual_Array1OfPresent
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_PresentationStyleAssignment) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfPresentationStyleAssignment) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7656,12 +7762,155 @@ class StepVisual_HArray1OfPresentationStyleSelect(StepVisual_Array1OfPresentatio
     @overload
     def __init__(self,theOther : StepVisual_Array1OfPresentationStyleSelect) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_PresentationStyleSelect) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_HArray1OfRenderingPropertiesSelect(StepVisual_Array1OfRenderingPropertiesSelect, OCP.Standard.Standard_Transient):
+    def Array1(self) -> StepVisual_Array1OfRenderingPropertiesSelect: 
+        """
+        None
+        """
+    def Assign(self,theOther : StepVisual_Array1OfRenderingPropertiesSelect) -> StepVisual_Array1OfRenderingPropertiesSelect: 
+        """
+        Copies data of theOther array to this. This array should be pre-allocated and have the same length as theOther; otherwise exception Standard_DimensionMismatch is thrown.
+        """
+    def ChangeArray1(self) -> StepVisual_Array1OfRenderingPropertiesSelect: 
+        """
+        None
+        """
+    def ChangeFirst(self) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Returns first element
+        """
+    def ChangeLast(self) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Returns last element
+        """
+    def ChangeValue(self,theIndex : int) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Variable value access
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def First(self) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Returns first element
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theValue : StepVisual_RenderingPropertiesSelect) -> None: 
+        """
+        Initialise the items with theValue
+        """
+    def IsAllocated(self) -> bool: 
+        """
+        IsAllocated flag - for naming compatibility
+        """
+    def IsDeletable(self) -> bool: 
+        """
+        myDeletable flag
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        Return TRUE if array has zero length.
+        """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_PresentationStyleSelect) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Last(self) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Returns last element
+        """
+    def Length(self) -> int: 
+        """
+        Length query (the same)
+        """
+    def Lower(self) -> int: 
+        """
+        Lower bound
+        """
+    def Move(self,theOther : StepVisual_Array1OfRenderingPropertiesSelect) -> StepVisual_Array1OfRenderingPropertiesSelect: 
+        """
+        Move assignment. This array will borrow all the data from theOther. The moved object will keep pointer to the memory buffer and range, but it will not free the buffer on destruction.
+        """
+    def Resize(self,theLower : int,theUpper : int,theToCopyData : bool) -> None: 
+        """
+        Resizes the array to specified bounds. No re-allocation will be done if length of array does not change, but existing values will not be discarded if theToCopyData set to FALSE.
+        """
+    def SetValue(self,theIndex : int,theItem : StepVisual_RenderingPropertiesSelect) -> None: 
+        """
+        Set value
+        """
+    def Size(self) -> int: 
+        """
+        Size query
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Upper(self) -> int: 
+        """
+        Upper bound
+        """
+    def Value(self,theIndex : int) -> StepVisual_RenderingPropertiesSelect: 
+        """
+        Constant value access
+        """
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfRenderingPropertiesSelect) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_RenderingPropertiesSelect) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7797,14 +8046,14 @@ class StepVisual_HArray1OfStyleContextSelect(StepVisual_Array1OfStyleContextSele
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfStyleContextSelect) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_StyleContextSelect) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfStyleContextSelect) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7940,14 +8189,14 @@ class StepVisual_HArray1OfSurfaceStyleElementSelect(StepVisual_Array1OfSurfaceSt
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfSurfaceStyleElementSelect) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_SurfaceStyleElementSelect) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -8090,7 +8339,7 @@ class StepVisual_HArray1OfTextOrCharacter(StepVisual_Array1OfTextOrCharacter, OC
     def __init__(self,theOther : StepVisual_Array1OfTextOrCharacter) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -8807,25 +9056,33 @@ class StepVisual_MarkerType():
 
       StepVisual_mtTriangle
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepVisual_mtAsterisk: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtAsterisk
-    StepVisual_mtDot: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtDot
-    StepVisual_mtPlus: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtPlus
-    StepVisual_mtRing: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtRing
-    StepVisual_mtSquare: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtSquare
-    StepVisual_mtTriangle: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtTriangle
-    StepVisual_mtX: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtX
-    __entries: dict # value = {'StepVisual_mtDot': (StepVisual_MarkerType.StepVisual_mtDot, None), 'StepVisual_mtX': (StepVisual_MarkerType.StepVisual_mtX, None), 'StepVisual_mtPlus': (StepVisual_MarkerType.StepVisual_mtPlus, None), 'StepVisual_mtAsterisk': (StepVisual_MarkerType.StepVisual_mtAsterisk, None), 'StepVisual_mtRing': (StepVisual_MarkerType.StepVisual_mtRing, None), 'StepVisual_mtSquare': (StepVisual_MarkerType.StepVisual_mtSquare, None), 'StepVisual_mtTriangle': (StepVisual_MarkerType.StepVisual_mtTriangle, None)}
-    __members__: dict # value = {'StepVisual_mtDot': StepVisual_MarkerType.StepVisual_mtDot, 'StepVisual_mtX': StepVisual_MarkerType.StepVisual_mtX, 'StepVisual_mtPlus': StepVisual_MarkerType.StepVisual_mtPlus, 'StepVisual_mtAsterisk': StepVisual_MarkerType.StepVisual_mtAsterisk, 'StepVisual_mtRing': StepVisual_MarkerType.StepVisual_mtRing, 'StepVisual_mtSquare': StepVisual_MarkerType.StepVisual_mtSquare, 'StepVisual_mtTriangle': StepVisual_MarkerType.StepVisual_mtTriangle}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepVisual_mtAsterisk: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtAsterisk: 3>
+    StepVisual_mtDot: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtDot: 0>
+    StepVisual_mtPlus: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtPlus: 2>
+    StepVisual_mtRing: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtRing: 4>
+    StepVisual_mtSquare: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtSquare: 5>
+    StepVisual_mtTriangle: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtTriangle: 6>
+    StepVisual_mtX: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtX: 1>
+    __entries: dict # value = {'StepVisual_mtDot': (<StepVisual_MarkerType.StepVisual_mtDot: 0>, None), 'StepVisual_mtX': (<StepVisual_MarkerType.StepVisual_mtX: 1>, None), 'StepVisual_mtPlus': (<StepVisual_MarkerType.StepVisual_mtPlus: 2>, None), 'StepVisual_mtAsterisk': (<StepVisual_MarkerType.StepVisual_mtAsterisk: 3>, None), 'StepVisual_mtRing': (<StepVisual_MarkerType.StepVisual_mtRing: 4>, None), 'StepVisual_mtSquare': (<StepVisual_MarkerType.StepVisual_mtSquare: 5>, None), 'StepVisual_mtTriangle': (<StepVisual_MarkerType.StepVisual_mtTriangle: 6>, None)}
+    __members__: dict # value = {'StepVisual_mtDot': <StepVisual_MarkerType.StepVisual_mtDot: 0>, 'StepVisual_mtX': <StepVisual_MarkerType.StepVisual_mtX: 1>, 'StepVisual_mtPlus': <StepVisual_MarkerType.StepVisual_mtPlus: 2>, 'StepVisual_mtAsterisk': <StepVisual_MarkerType.StepVisual_mtAsterisk: 3>, 'StepVisual_mtRing': <StepVisual_MarkerType.StepVisual_mtRing: 4>, 'StepVisual_mtSquare': <StepVisual_MarkerType.StepVisual_mtSquare: 5>, 'StepVisual_mtTriangle': <StepVisual_MarkerType.StepVisual_mtTriangle: 6>}
     pass
 class StepVisual_PresentationRepresentation(OCP.StepRepr.StepRepr_Representation, OCP.Standard.Standard_Transient):
     def ContextOfItems(self) -> OCP.StepRepr.StepRepr_RepresentationContext: 
@@ -9017,19 +9274,27 @@ class StepVisual_NullStyle():
 
       StepVisual_Null
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepVisual_Null: OCP.StepVisual.StepVisual_NullStyle # value = StepVisual_NullStyle.StepVisual_Null
-    __entries: dict # value = {'StepVisual_Null': (StepVisual_NullStyle.StepVisual_Null, None)}
-    __members__: dict # value = {'StepVisual_Null': StepVisual_NullStyle.StepVisual_Null}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepVisual_Null: OCP.StepVisual.StepVisual_NullStyle # value = <StepVisual_NullStyle.StepVisual_Null: 0>
+    __entries: dict # value = {'StepVisual_Null': (<StepVisual_NullStyle.StepVisual_Null: 0>, None)}
+    __members__: dict # value = {'StepVisual_Null': <StepVisual_NullStyle.StepVisual_Null: 0>}
     pass
 class StepVisual_NullStyleMember(OCP.StepData.StepData_SelectInt, OCP.StepData.StepData_SelectMember, OCP.Standard.Standard_Transient):
     """
@@ -11047,6 +11312,155 @@ class StepVisual_PresentedItemRepresentation(OCP.Standard.Standard_Transient):
         None
         """
     pass
+class StepVisual_RenderingPropertiesSelect(OCP.StepData.StepData_SelectType):
+    """
+    Representation of STEP SELECT type RenderingPropertiesSelect
+    """
+    def Boolean(self) -> bool: 
+        """
+        None
+        """
+    def CaseMem(self,ent : OCP.StepData.StepData_SelectMember) -> int: 
+        """
+        Recognize a SelectMember (kind, name). Returns a positive value which identifies the case in the List of immediate cases (distinct from the List of Entity Types). Zero if not recognizes Default returns 0, saying that no immediate value is allowed
+        """
+    def CaseMember(self) -> int: 
+        """
+        Returns the Type of the stored SelectMember, or zero if it is Null or Entity. Calls the method CaseMem on Value
+        """
+    def CaseNum(self,ent : OCP.Standard.Standard_Transient) -> int: 
+        """
+        Recognizes a kind of RenderingPropertiesSelect select type -- 1 -> SurfaceStyleReflectanceAmbient -- 2 -> SurfaceStyleTransparent
+        """
+    def CaseNumber(self) -> int: 
+        """
+        Recognizes the Type of the stored Entity, or zero if it is Null or SelectMember. Calls the first method CaseNum on Value
+        """
+    def Description(self) -> OCP.StepData.StepData_PDescr: 
+        """
+        Returns the Description which corresponds to <me> Null if no specific description to give. This description is used to control reading an check validity. Default returns a Null Handle, i.e. undefined description It can suffice if CaseNum and CaseMem give enough control
+        """
+    def Int(self) -> int: 
+        """
+        This internal method gives access to a value implemented by an Integer (to read it)
+        """
+    def Integer(self) -> int: 
+        """
+        Gets the value as an Integer
+        """
+    def IsNull(self) -> bool: 
+        """
+        Returns True if there is no Stored Entity (i.e. it is Null)
+        """
+    def Logical(self) -> OCP.StepData.StepData_Logical: 
+        """
+        None
+        """
+    def Matches(self,ent : OCP.Standard.Standard_Transient) -> bool: 
+        """
+        Returns True if the Type of an Entity complies with the definition list of the SelectType. Also checks for a SelectMember Default Implementation looks for CaseNum or CaseMem positive
+        """
+    def Member(self) -> OCP.StepData.StepData_SelectMember: 
+        """
+        Returns Value as a SelectMember. Null if not a SelectMember
+        """
+    def NewMember(self) -> OCP.StepData.StepData_SelectMember: 
+        """
+        Returns a preferred SelectMember. Default returns a Null By default, a SelectMember can be set according to data type and Name : it is a SelectNamed if Name is defined
+        """
+    def Nullify(self) -> None: 
+        """
+        Nullifies the Stored Entity
+        """
+    def Real(self) -> float: 
+        """
+        None
+        """
+    def SelectName(self) -> str: 
+        """
+        Returns the type name of SelectMember. If no SelectMember or with no type name, returns an empty string To change it, pass through the SelectMember itself
+        """
+    def SetBoolean(self,val : bool,name : str='') -> None: 
+        """
+        None
+        """
+    def SetInt(self,val : int) -> None: 
+        """
+        This internal method gives access to a value implemented by an Integer (to set it) : a SelectMember MUST ALREADY BE THERE !
+        """
+    def SetInteger(self,val : int,name : str='') -> None: 
+        """
+        Sets a new Integer value, with an optional type name Warning : If a SelectMember is already set, works on it : value and name must then be accepted by this SelectMember
+        """
+    def SetLogical(self,val : OCP.StepData.StepData_Logical,name : str='') -> None: 
+        """
+        None
+        """
+    def SetReal(self,val : float,name : str='') -> None: 
+        """
+        None
+        """
+    def SetValue(self,ent : OCP.Standard.Standard_Transient) -> None: 
+        """
+        Stores an Entity. This allows to define a specific SelectType class with one read method per member Type, which returns the Value casted with the good Type.
+        """
+    def SurfaceStyleReflectanceAmbient(self) -> StepVisual_SurfaceStyleReflectanceAmbient: 
+        """
+        Returns Value as SurfaceStyleReflectanceAmbient (or Null if another type)
+        """
+    def SurfaceStyleTransparent(self) -> StepVisual_SurfaceStyleTransparent: 
+        """
+        Returns Value as SurfaceStyleTransparent (or Null if another type)
+        """
+    def Type(self) -> OCP.Standard.Standard_Type: 
+        """
+        Returns the Effective (Dynamic) Type of the Stored Entity If it is Null, returns TYPE(Transient)
+        """
+    def Value(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns the Stored Entity. Can be used to define specific read methods (see above)
+        """
+    def __init__(self) -> None: ...
+    pass
+class StepVisual_ShadingSurfaceMethod():
+    """
+    None
+
+    Members:
+
+      StepVisual_ssmConstantShading
+
+      StepVisual_ssmColourShading
+
+      StepVisual_ssmDotShading
+
+      StepVisual_ssmNormalShading
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepVisual_ssmColourShading: OCP.StepVisual.StepVisual_ShadingSurfaceMethod # value = <StepVisual_ShadingSurfaceMethod.StepVisual_ssmColourShading: 1>
+    StepVisual_ssmConstantShading: OCP.StepVisual.StepVisual_ShadingSurfaceMethod # value = <StepVisual_ShadingSurfaceMethod.StepVisual_ssmConstantShading: 0>
+    StepVisual_ssmDotShading: OCP.StepVisual.StepVisual_ShadingSurfaceMethod # value = <StepVisual_ShadingSurfaceMethod.StepVisual_ssmDotShading: 2>
+    StepVisual_ssmNormalShading: OCP.StepVisual.StepVisual_ShadingSurfaceMethod # value = <StepVisual_ShadingSurfaceMethod.StepVisual_ssmNormalShading: 3>
+    __entries: dict # value = {'StepVisual_ssmConstantShading': (<StepVisual_ShadingSurfaceMethod.StepVisual_ssmConstantShading: 0>, None), 'StepVisual_ssmColourShading': (<StepVisual_ShadingSurfaceMethod.StepVisual_ssmColourShading: 1>, None), 'StepVisual_ssmDotShading': (<StepVisual_ShadingSurfaceMethod.StepVisual_ssmDotShading: 2>, None), 'StepVisual_ssmNormalShading': (<StepVisual_ShadingSurfaceMethod.StepVisual_ssmNormalShading: 3>, None)}
+    __members__: dict # value = {'StepVisual_ssmConstantShading': <StepVisual_ShadingSurfaceMethod.StepVisual_ssmConstantShading: 0>, 'StepVisual_ssmColourShading': <StepVisual_ShadingSurfaceMethod.StepVisual_ssmColourShading: 1>, 'StepVisual_ssmDotShading': <StepVisual_ShadingSurfaceMethod.StepVisual_ssmDotShading: 2>, 'StepVisual_ssmNormalShading': <StepVisual_ShadingSurfaceMethod.StepVisual_ssmNormalShading: 3>}
+    pass
 class StepVisual_StyleContextSelect(OCP.StepData.StepData_SelectType):
     """
     None
@@ -11161,7 +11575,7 @@ class StepVisual_StyleContextSelect(OCP.StepData.StepData_SelectType):
         """
     def __init__(self) -> None: ...
     pass
-class StepVisual_AnnotationCurveOccurrenceAndAnnotationOccurrenceAndGeomReprItemAndReprItemAndStyledItem(StepVisual_AnnotationCurveOccurrence, StepVisual_AnnotationOccurrence, StepVisual_StyledItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+class StepVisual_AnnotationCurveOccurrenceAndGeomReprItem(StepVisual_AnnotationCurveOccurrence, StepVisual_AnnotationOccurrence, StepVisual_StyledItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     """
     Added for Dimensional Tolerances Complex STEP entity AnnotationCurveOccurrence & AnnotationOccurrence & GeometricRepresentationItem & RepresentationItem & StyledItemAdded for Dimensional Tolerances Complex STEP entity AnnotationCurveOccurrence & AnnotationOccurrence & GeometricRepresentationItem & RepresentationItem & StyledItemAdded for Dimensional Tolerances Complex STEP entity AnnotationCurveOccurrence & AnnotationOccurrence & GeometricRepresentationItem & RepresentationItem & StyledItem
     """
@@ -11394,21 +11808,29 @@ class StepVisual_SurfaceSide():
 
       StepVisual_ssBoth
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepVisual_ssBoth: OCP.StepVisual.StepVisual_SurfaceSide # value = StepVisual_SurfaceSide.StepVisual_ssBoth
-    StepVisual_ssNegative: OCP.StepVisual.StepVisual_SurfaceSide # value = StepVisual_SurfaceSide.StepVisual_ssNegative
-    StepVisual_ssPositive: OCP.StepVisual.StepVisual_SurfaceSide # value = StepVisual_SurfaceSide.StepVisual_ssPositive
-    __entries: dict # value = {'StepVisual_ssNegative': (StepVisual_SurfaceSide.StepVisual_ssNegative, None), 'StepVisual_ssPositive': (StepVisual_SurfaceSide.StepVisual_ssPositive, None), 'StepVisual_ssBoth': (StepVisual_SurfaceSide.StepVisual_ssBoth, None)}
-    __members__: dict # value = {'StepVisual_ssNegative': StepVisual_SurfaceSide.StepVisual_ssNegative, 'StepVisual_ssPositive': StepVisual_SurfaceSide.StepVisual_ssPositive, 'StepVisual_ssBoth': StepVisual_SurfaceSide.StepVisual_ssBoth}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepVisual_ssBoth: OCP.StepVisual.StepVisual_SurfaceSide # value = <StepVisual_SurfaceSide.StepVisual_ssBoth: 2>
+    StepVisual_ssNegative: OCP.StepVisual.StepVisual_SurfaceSide # value = <StepVisual_SurfaceSide.StepVisual_ssNegative: 0>
+    StepVisual_ssPositive: OCP.StepVisual.StepVisual_SurfaceSide # value = <StepVisual_SurfaceSide.StepVisual_ssPositive: 1>
+    __entries: dict # value = {'StepVisual_ssNegative': (<StepVisual_SurfaceSide.StepVisual_ssNegative: 0>, None), 'StepVisual_ssPositive': (<StepVisual_SurfaceSide.StepVisual_ssPositive: 1>, None), 'StepVisual_ssBoth': (<StepVisual_SurfaceSide.StepVisual_ssBoth: 2>, None)}
+    __members__: dict # value = {'StepVisual_ssNegative': <StepVisual_SurfaceSide.StepVisual_ssNegative: 0>, 'StepVisual_ssPositive': <StepVisual_SurfaceSide.StepVisual_ssPositive: 1>, 'StepVisual_ssBoth': <StepVisual_SurfaceSide.StepVisual_ssBoth: 2>}
     pass
 class StepVisual_SurfaceSideStyle(OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -11645,7 +12067,7 @@ class StepVisual_SurfaceStyleElementSelect(OCP.StepData.StepData_SelectType):
         """
     def CaseNum(self,ent : OCP.Standard.Standard_Transient) -> int: 
         """
-        Recognizes a SurfaceStyleElementSelect Kind Entity that is : 1 -> SurfaceStyleFillArea 2 -> SurfaceStyleBoundary 3 -> SurfaceStyleParameterLine 4 -> SurfaceStyleSilhouette 5 -> SurfaceStyleSegmentationCurve 6 -> SurfaceStyleControlGrid 0 else
+        Recognizes a SurfaceStyleElementSelect Kind Entity that is : 1 -> SurfaceStyleFillArea 2 -> SurfaceStyleBoundary 3 -> SurfaceStyleParameterLine 4 -> SurfaceStyleSilhouette 5 -> SurfaceStyleSegmentationCurve 6 -> SurfaceStyleControlGrid 7 -> SurfaceStyleRendering 0 else
         """
     def CaseNumber(self) -> int: 
         """
@@ -11730,6 +12152,10 @@ class StepVisual_SurfaceStyleElementSelect(OCP.StepData.StepData_SelectType):
     def SurfaceStyleParameterLine(self) -> StepVisual_SurfaceStyleParameterLine: 
         """
         returns Value as a SurfaceStyleParameterLine (Null if another type)
+        """
+    def SurfaceStyleRendering(self) -> StepVisual_SurfaceStyleRendering: 
+        """
+        returns Value as a SurfaceStyleRendering (Null if another type)
         """
     def Type(self) -> OCP.Standard.Standard_Type: 
         """
@@ -11891,6 +12317,240 @@ class StepVisual_SurfaceStyleParameterLine(OCP.Standard.Standard_Transient):
         None
         """
     pass
+class StepVisual_SurfaceStyleReflectanceAmbient(OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity SurfaceStyleReflectanceAmbientRepresentation of STEP entity SurfaceStyleReflectanceAmbientRepresentation of STEP entity SurfaceStyleReflectanceAmbient
+    """
+    def AmbientReflectance(self) -> float: 
+        """
+        Returns field AmbientReflectance
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theAmbientReflectance : float) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def SetAmbientReflectance(self,theAmbientReflectance : float) -> None: 
+        """
+        Sets field AmbientReflectance
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_SurfaceStyleRendering(OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity SurfaceStyleRenderingRepresentation of STEP entity SurfaceStyleRenderingRepresentation of STEP entity SurfaceStyleRendering
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRenderingMethod : StepVisual_ShadingSurfaceMethod,theSurfaceColour : StepVisual_Colour) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def RenderingMethod(self) -> StepVisual_ShadingSurfaceMethod: 
+        """
+        Returns field RenderingMethod
+        """
+    def SetRenderingMethod(self,theRenderingMethod : StepVisual_ShadingSurfaceMethod) -> None: 
+        """
+        Sets field RenderingMethod
+        """
+    def SetSurfaceColour(self,theSurfaceColour : StepVisual_Colour) -> None: 
+        """
+        Sets field SurfaceColour
+        """
+    def SurfaceColour(self) -> StepVisual_Colour: 
+        """
+        Returns field SurfaceColour
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_SurfaceStyleRenderingWithProperties(StepVisual_SurfaceStyleRendering, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity SurfaceStyleRenderingWithPropertiesRepresentation of STEP entity SurfaceStyleRenderingWithPropertiesRepresentation of STEP entity SurfaceStyleRenderingWithProperties
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theSurfaceStyleRendering_RenderingMethod : StepVisual_ShadingSurfaceMethod,theSurfaceStyleRendering_SurfaceColour : StepVisual_Colour,theProperties : StepVisual_HArray1OfRenderingPropertiesSelect) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Properties(self) -> StepVisual_HArray1OfRenderingPropertiesSelect: 
+        """
+        Returns field Properties
+        """
+    def RenderingMethod(self) -> StepVisual_ShadingSurfaceMethod: 
+        """
+        Returns field RenderingMethod
+        """
+    def SetProperties(self,theProperties : StepVisual_HArray1OfRenderingPropertiesSelect) -> None: 
+        """
+        Sets field Properties
+        """
+    def SetRenderingMethod(self,theRenderingMethod : StepVisual_ShadingSurfaceMethod) -> None: 
+        """
+        Sets field RenderingMethod
+        """
+    def SetSurfaceColour(self,theSurfaceColour : StepVisual_Colour) -> None: 
+        """
+        Sets field SurfaceColour
+        """
+    def SurfaceColour(self) -> StepVisual_Colour: 
+        """
+        Returns field SurfaceColour
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
 class StepVisual_SurfaceStyleSegmentationCurve(OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
         """
@@ -12012,6 +12672,76 @@ class StepVisual_SurfaceStyleSilhouette(OCP.Standard.Standard_Transient):
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_SurfaceStyleTransparent(OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity SurfaceStyleTransparentRepresentation of STEP entity SurfaceStyleTransparentRepresentation of STEP entity SurfaceStyleTransparent
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theTransparency : float) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def SetTransparency(self,theTransparency : float) -> None: 
+        """
+        Sets field Transparency
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Transparency(self) -> float: 
+        """
+        Returns field Transparency
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -12826,22 +13556,30 @@ class StepVisual_TextPath():
 
       StepVisual_tpLeft
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepVisual_tpDown: OCP.StepVisual.StepVisual_TextPath # value = StepVisual_TextPath.StepVisual_tpDown
-    StepVisual_tpLeft: OCP.StepVisual.StepVisual_TextPath # value = StepVisual_TextPath.StepVisual_tpLeft
-    StepVisual_tpRight: OCP.StepVisual.StepVisual_TextPath # value = StepVisual_TextPath.StepVisual_tpRight
-    StepVisual_tpUp: OCP.StepVisual.StepVisual_TextPath # value = StepVisual_TextPath.StepVisual_tpUp
-    __entries: dict # value = {'StepVisual_tpUp': (StepVisual_TextPath.StepVisual_tpUp, None), 'StepVisual_tpRight': (StepVisual_TextPath.StepVisual_tpRight, None), 'StepVisual_tpDown': (StepVisual_TextPath.StepVisual_tpDown, None), 'StepVisual_tpLeft': (StepVisual_TextPath.StepVisual_tpLeft, None)}
-    __members__: dict # value = {'StepVisual_tpUp': StepVisual_TextPath.StepVisual_tpUp, 'StepVisual_tpRight': StepVisual_TextPath.StepVisual_tpRight, 'StepVisual_tpDown': StepVisual_TextPath.StepVisual_tpDown, 'StepVisual_tpLeft': StepVisual_TextPath.StepVisual_tpLeft}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepVisual_tpDown: OCP.StepVisual.StepVisual_TextPath # value = <StepVisual_TextPath.StepVisual_tpDown: 2>
+    StepVisual_tpLeft: OCP.StepVisual.StepVisual_TextPath # value = <StepVisual_TextPath.StepVisual_tpLeft: 3>
+    StepVisual_tpRight: OCP.StepVisual.StepVisual_TextPath # value = <StepVisual_TextPath.StepVisual_tpRight: 1>
+    StepVisual_tpUp: OCP.StepVisual.StepVisual_TextPath # value = <StepVisual_TextPath.StepVisual_tpUp: 0>
+    __entries: dict # value = {'StepVisual_tpUp': (<StepVisual_TextPath.StepVisual_tpUp: 0>, None), 'StepVisual_tpRight': (<StepVisual_TextPath.StepVisual_tpRight: 1>, None), 'StepVisual_tpDown': (<StepVisual_TextPath.StepVisual_tpDown: 2>, None), 'StepVisual_tpLeft': (<StepVisual_TextPath.StepVisual_tpLeft: 3>, None)}
+    __members__: dict # value = {'StepVisual_tpUp': <StepVisual_TextPath.StepVisual_tpUp: 0>, 'StepVisual_tpRight': <StepVisual_TextPath.StepVisual_tpRight: 1>, 'StepVisual_tpDown': <StepVisual_TextPath.StepVisual_tpDown: 2>, 'StepVisual_tpLeft': <StepVisual_TextPath.StepVisual_tpLeft: 3>}
     pass
 class StepVisual_TextStyle(OCP.Standard.Standard_Transient):
     def CharacterAppearance(self) -> StepVisual_TextStyleForDefinedFont: 
@@ -13153,7 +13891,7 @@ class StepVisual_VectorOfHSequenceOfInteger(OCP.NCollection.NCollection_BaseVect
     def __init__(self,theOther : StepVisual_VectorOfHSequenceOfInteger) -> None: ...
     @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_ViewVolume(OCP.Standard.Standard_Transient):
     def BackPlaneClipping(self) -> bool: 
@@ -13286,20 +14024,24 @@ class StepVisual_ViewVolume(OCP.Standard.Standard_Transient):
         None
         """
     pass
-StepVisual_Null: OCP.StepVisual.StepVisual_NullStyle # value = StepVisual_NullStyle.StepVisual_Null
-StepVisual_copCentral: OCP.StepVisual.StepVisual_CentralOrParallel # value = StepVisual_CentralOrParallel.StepVisual_copCentral
-StepVisual_copParallel: OCP.StepVisual.StepVisual_CentralOrParallel # value = StepVisual_CentralOrParallel.StepVisual_copParallel
-StepVisual_mtAsterisk: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtAsterisk
-StepVisual_mtDot: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtDot
-StepVisual_mtPlus: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtPlus
-StepVisual_mtRing: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtRing
-StepVisual_mtSquare: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtSquare
-StepVisual_mtTriangle: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtTriangle
-StepVisual_mtX: OCP.StepVisual.StepVisual_MarkerType # value = StepVisual_MarkerType.StepVisual_mtX
-StepVisual_ssBoth: OCP.StepVisual.StepVisual_SurfaceSide # value = StepVisual_SurfaceSide.StepVisual_ssBoth
-StepVisual_ssNegative: OCP.StepVisual.StepVisual_SurfaceSide # value = StepVisual_SurfaceSide.StepVisual_ssNegative
-StepVisual_ssPositive: OCP.StepVisual.StepVisual_SurfaceSide # value = StepVisual_SurfaceSide.StepVisual_ssPositive
-StepVisual_tpDown: OCP.StepVisual.StepVisual_TextPath # value = StepVisual_TextPath.StepVisual_tpDown
-StepVisual_tpLeft: OCP.StepVisual.StepVisual_TextPath # value = StepVisual_TextPath.StepVisual_tpLeft
-StepVisual_tpRight: OCP.StepVisual.StepVisual_TextPath # value = StepVisual_TextPath.StepVisual_tpRight
-StepVisual_tpUp: OCP.StepVisual.StepVisual_TextPath # value = StepVisual_TextPath.StepVisual_tpUp
+StepVisual_Null: OCP.StepVisual.StepVisual_NullStyle # value = <StepVisual_NullStyle.StepVisual_Null: 0>
+StepVisual_copCentral: OCP.StepVisual.StepVisual_CentralOrParallel # value = <StepVisual_CentralOrParallel.StepVisual_copCentral: 0>
+StepVisual_copParallel: OCP.StepVisual.StepVisual_CentralOrParallel # value = <StepVisual_CentralOrParallel.StepVisual_copParallel: 1>
+StepVisual_mtAsterisk: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtAsterisk: 3>
+StepVisual_mtDot: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtDot: 0>
+StepVisual_mtPlus: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtPlus: 2>
+StepVisual_mtRing: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtRing: 4>
+StepVisual_mtSquare: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtSquare: 5>
+StepVisual_mtTriangle: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtTriangle: 6>
+StepVisual_mtX: OCP.StepVisual.StepVisual_MarkerType # value = <StepVisual_MarkerType.StepVisual_mtX: 1>
+StepVisual_ssBoth: OCP.StepVisual.StepVisual_SurfaceSide # value = <StepVisual_SurfaceSide.StepVisual_ssBoth: 2>
+StepVisual_ssNegative: OCP.StepVisual.StepVisual_SurfaceSide # value = <StepVisual_SurfaceSide.StepVisual_ssNegative: 0>
+StepVisual_ssPositive: OCP.StepVisual.StepVisual_SurfaceSide # value = <StepVisual_SurfaceSide.StepVisual_ssPositive: 1>
+StepVisual_ssmColourShading: OCP.StepVisual.StepVisual_ShadingSurfaceMethod # value = <StepVisual_ShadingSurfaceMethod.StepVisual_ssmColourShading: 1>
+StepVisual_ssmConstantShading: OCP.StepVisual.StepVisual_ShadingSurfaceMethod # value = <StepVisual_ShadingSurfaceMethod.StepVisual_ssmConstantShading: 0>
+StepVisual_ssmDotShading: OCP.StepVisual.StepVisual_ShadingSurfaceMethod # value = <StepVisual_ShadingSurfaceMethod.StepVisual_ssmDotShading: 2>
+StepVisual_ssmNormalShading: OCP.StepVisual.StepVisual_ShadingSurfaceMethod # value = <StepVisual_ShadingSurfaceMethod.StepVisual_ssmNormalShading: 3>
+StepVisual_tpDown: OCP.StepVisual.StepVisual_TextPath # value = <StepVisual_TextPath.StepVisual_tpDown: 2>
+StepVisual_tpLeft: OCP.StepVisual.StepVisual_TextPath # value = <StepVisual_TextPath.StepVisual_tpLeft: 3>
+StepVisual_tpRight: OCP.StepVisual.StepVisual_TextPath # value = <StepVisual_TextPath.StepVisual_tpRight: 1>
+StepVisual_tpUp: OCP.StepVisual.StepVisual_TextPath # value = <StepVisual_TextPath.StepVisual_tpUp: 0>

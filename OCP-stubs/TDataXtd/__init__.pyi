@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDF
-import OCP.Poly
 import OCP.Quantity
-import OCP.TShort
-import OCP.Standard
-import OCP.TopoDS
 import OCP.TNaming
-import OCP.TDataStd
+import OCP.TDF
+import io
 import OCP.gp
+import OCP.TDataStd
+import OCP.TShort
+import OCP.TopoDS
+import OCP.Standard
+import OCP.Poly
 __all__  = [
 "TDataXtd",
 "TDataXtd_Array1OfTrsf",
@@ -77,7 +78,7 @@ class TDataXtd():
         """
     @staticmethod
     @overload
-    def Print_s(CTR : TDataXtd_ConstraintEnum,S : Any) -> Any: 
+    def Print_s(GEO : TDataXtd_GeometryEnum,S : io.BytesIO) -> io.BytesIO: 
         """
         Prints the name of the geometry dimension <GEO> as a String on the Stream <S> and returns <S>.
 
@@ -85,7 +86,7 @@ class TDataXtd():
         """
     @staticmethod
     @overload
-    def Print_s(GEO : TDataXtd_GeometryEnum,S : Any) -> Any: ...
+    def Print_s(CTR : TDataXtd_ConstraintEnum,S : io.BytesIO) -> io.BytesIO: ...
     def __init__(self) -> None: ...
     pass
 class TDataXtd_Array1OfTrsf():
@@ -165,16 +166,16 @@ class TDataXtd_Array1OfTrsf():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : OCP.gp.gp_Trsf,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : TDataXtd_Array1OfTrsf) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_Trsf,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
-class TDataXtd_Axis(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class TDataXtd_Axis(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     The basis to define an axis attribute.The basis to define an axis attribute.The basis to define an axis attribute.
     """
@@ -239,14 +240,14 @@ class TDataXtd_Axis(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -255,15 +256,19 @@ class TDataXtd_Axis(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -354,7 +359,7 @@ class TDataXtd_Axis(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -362,7 +367,7 @@ class TDataXtd_Axis(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -486,14 +491,14 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -502,15 +507,19 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -564,14 +573,14 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def Inverted(self,status : bool) -> None: 
+    def Inverted(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Inverted(self) -> bool: ...
+    def Inverted(self,status : bool) -> None: ...
     def IsAttribute(self,anID : OCP.Standard.Standard_GUID) -> bool: 
         """
         Returns true if it exists an associated attribute of <me> with <anID> as ID.
@@ -660,7 +669,7 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
     @overload
     def Reversed(self) -> bool: ...
     @overload
-    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape,G3 : OCP.TNaming.TNaming_NamedShape,G4 : OCP.TNaming.TNaming_NamedShape) -> None: 
+    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
         Finds or creates the constraint attribute defined by the topological attribute G1 and the constraint type type.
 
@@ -671,11 +680,11 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Finds or creates the constraint attribute defined by the topological attributes G1, G2, G3 and G4, and by the constraint type type. methods to read constraint fields =================================
         """
     @overload
-    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape) -> None: ...
-    @overload
     def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape) -> None: ...
     @overload
     def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape,G3 : OCP.TNaming.TNaming_NamedShape) -> None: ...
+    @overload
+    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape,G3 : OCP.TNaming.TNaming_NamedShape,G4 : OCP.TNaming.TNaming_NamedShape) -> None: ...
     def SetGeometry(self,Index : int,G : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
         Finds or creates the underlying geometry of the constraint defined by the topological attribute G and the integer index Index.
@@ -799,44 +808,52 @@ class TDataXtd_ConstraintEnum():
 
       TDataXtd_OFFSET
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TDataXtd_ALIGN_AXES: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_ALIGN_AXES
-    TDataXtd_ALIGN_FACES: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_ALIGN_FACES
-    TDataXtd_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_ANGLE
-    TDataXtd_AXES_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_AXES_ANGLE
-    TDataXtd_AXIS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_AXIS
-    TDataXtd_COINCIDENT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_COINCIDENT
-    TDataXtd_CONCENTRIC: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_CONCENTRIC
-    TDataXtd_DIAMETER: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_DIAMETER
-    TDataXtd_DISTANCE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_DISTANCE
-    TDataXtd_EQUAL_DISTANCE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_EQUAL_DISTANCE
-    TDataXtd_EQUAL_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_EQUAL_RADIUS
-    TDataXtd_FACES_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_FACES_ANGLE
-    TDataXtd_FIX: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_FIX
-    TDataXtd_FROM: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_FROM
-    TDataXtd_MAJOR_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_MAJOR_RADIUS
-    TDataXtd_MATE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_MATE
-    TDataXtd_MIDPOINT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_MIDPOINT
-    TDataXtd_MINOR_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_MINOR_RADIUS
-    TDataXtd_OFFSET: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_OFFSET
-    TDataXtd_PARALLEL: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_PARALLEL
-    TDataXtd_PERPENDICULAR: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_PERPENDICULAR
-    TDataXtd_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_RADIUS
-    TDataXtd_RIGID: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_RIGID
-    TDataXtd_ROUND: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_ROUND
-    TDataXtd_SYMMETRY: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_SYMMETRY
-    TDataXtd_TANGENT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_TANGENT
-    __entries: dict # value = {'TDataXtd_RADIUS': (TDataXtd_ConstraintEnum.TDataXtd_RADIUS, None), 'TDataXtd_DIAMETER': (TDataXtd_ConstraintEnum.TDataXtd_DIAMETER, None), 'TDataXtd_MINOR_RADIUS': (TDataXtd_ConstraintEnum.TDataXtd_MINOR_RADIUS, None), 'TDataXtd_MAJOR_RADIUS': (TDataXtd_ConstraintEnum.TDataXtd_MAJOR_RADIUS, None), 'TDataXtd_TANGENT': (TDataXtd_ConstraintEnum.TDataXtd_TANGENT, None), 'TDataXtd_PARALLEL': (TDataXtd_ConstraintEnum.TDataXtd_PARALLEL, None), 'TDataXtd_PERPENDICULAR': (TDataXtd_ConstraintEnum.TDataXtd_PERPENDICULAR, None), 'TDataXtd_CONCENTRIC': (TDataXtd_ConstraintEnum.TDataXtd_CONCENTRIC, None), 'TDataXtd_COINCIDENT': (TDataXtd_ConstraintEnum.TDataXtd_COINCIDENT, None), 'TDataXtd_DISTANCE': (TDataXtd_ConstraintEnum.TDataXtd_DISTANCE, None), 'TDataXtd_ANGLE': (TDataXtd_ConstraintEnum.TDataXtd_ANGLE, None), 'TDataXtd_EQUAL_RADIUS': (TDataXtd_ConstraintEnum.TDataXtd_EQUAL_RADIUS, None), 'TDataXtd_SYMMETRY': (TDataXtd_ConstraintEnum.TDataXtd_SYMMETRY, None), 'TDataXtd_MIDPOINT': (TDataXtd_ConstraintEnum.TDataXtd_MIDPOINT, None), 'TDataXtd_EQUAL_DISTANCE': (TDataXtd_ConstraintEnum.TDataXtd_EQUAL_DISTANCE, None), 'TDataXtd_FIX': (TDataXtd_ConstraintEnum.TDataXtd_FIX, None), 'TDataXtd_RIGID': (TDataXtd_ConstraintEnum.TDataXtd_RIGID, None), 'TDataXtd_FROM': (TDataXtd_ConstraintEnum.TDataXtd_FROM, None), 'TDataXtd_AXIS': (TDataXtd_ConstraintEnum.TDataXtd_AXIS, None), 'TDataXtd_MATE': (TDataXtd_ConstraintEnum.TDataXtd_MATE, None), 'TDataXtd_ALIGN_FACES': (TDataXtd_ConstraintEnum.TDataXtd_ALIGN_FACES, None), 'TDataXtd_ALIGN_AXES': (TDataXtd_ConstraintEnum.TDataXtd_ALIGN_AXES, None), 'TDataXtd_AXES_ANGLE': (TDataXtd_ConstraintEnum.TDataXtd_AXES_ANGLE, None), 'TDataXtd_FACES_ANGLE': (TDataXtd_ConstraintEnum.TDataXtd_FACES_ANGLE, None), 'TDataXtd_ROUND': (TDataXtd_ConstraintEnum.TDataXtd_ROUND, None), 'TDataXtd_OFFSET': (TDataXtd_ConstraintEnum.TDataXtd_OFFSET, None)}
-    __members__: dict # value = {'TDataXtd_RADIUS': TDataXtd_ConstraintEnum.TDataXtd_RADIUS, 'TDataXtd_DIAMETER': TDataXtd_ConstraintEnum.TDataXtd_DIAMETER, 'TDataXtd_MINOR_RADIUS': TDataXtd_ConstraintEnum.TDataXtd_MINOR_RADIUS, 'TDataXtd_MAJOR_RADIUS': TDataXtd_ConstraintEnum.TDataXtd_MAJOR_RADIUS, 'TDataXtd_TANGENT': TDataXtd_ConstraintEnum.TDataXtd_TANGENT, 'TDataXtd_PARALLEL': TDataXtd_ConstraintEnum.TDataXtd_PARALLEL, 'TDataXtd_PERPENDICULAR': TDataXtd_ConstraintEnum.TDataXtd_PERPENDICULAR, 'TDataXtd_CONCENTRIC': TDataXtd_ConstraintEnum.TDataXtd_CONCENTRIC, 'TDataXtd_COINCIDENT': TDataXtd_ConstraintEnum.TDataXtd_COINCIDENT, 'TDataXtd_DISTANCE': TDataXtd_ConstraintEnum.TDataXtd_DISTANCE, 'TDataXtd_ANGLE': TDataXtd_ConstraintEnum.TDataXtd_ANGLE, 'TDataXtd_EQUAL_RADIUS': TDataXtd_ConstraintEnum.TDataXtd_EQUAL_RADIUS, 'TDataXtd_SYMMETRY': TDataXtd_ConstraintEnum.TDataXtd_SYMMETRY, 'TDataXtd_MIDPOINT': TDataXtd_ConstraintEnum.TDataXtd_MIDPOINT, 'TDataXtd_EQUAL_DISTANCE': TDataXtd_ConstraintEnum.TDataXtd_EQUAL_DISTANCE, 'TDataXtd_FIX': TDataXtd_ConstraintEnum.TDataXtd_FIX, 'TDataXtd_RIGID': TDataXtd_ConstraintEnum.TDataXtd_RIGID, 'TDataXtd_FROM': TDataXtd_ConstraintEnum.TDataXtd_FROM, 'TDataXtd_AXIS': TDataXtd_ConstraintEnum.TDataXtd_AXIS, 'TDataXtd_MATE': TDataXtd_ConstraintEnum.TDataXtd_MATE, 'TDataXtd_ALIGN_FACES': TDataXtd_ConstraintEnum.TDataXtd_ALIGN_FACES, 'TDataXtd_ALIGN_AXES': TDataXtd_ConstraintEnum.TDataXtd_ALIGN_AXES, 'TDataXtd_AXES_ANGLE': TDataXtd_ConstraintEnum.TDataXtd_AXES_ANGLE, 'TDataXtd_FACES_ANGLE': TDataXtd_ConstraintEnum.TDataXtd_FACES_ANGLE, 'TDataXtd_ROUND': TDataXtd_ConstraintEnum.TDataXtd_ROUND, 'TDataXtd_OFFSET': TDataXtd_ConstraintEnum.TDataXtd_OFFSET}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TDataXtd_ALIGN_AXES: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_ALIGN_AXES: 21>
+    TDataXtd_ALIGN_FACES: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_ALIGN_FACES: 20>
+    TDataXtd_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_ANGLE: 10>
+    TDataXtd_AXES_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_AXES_ANGLE: 22>
+    TDataXtd_AXIS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_AXIS: 18>
+    TDataXtd_COINCIDENT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_COINCIDENT: 8>
+    TDataXtd_CONCENTRIC: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_CONCENTRIC: 7>
+    TDataXtd_DIAMETER: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_DIAMETER: 1>
+    TDataXtd_DISTANCE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_DISTANCE: 9>
+    TDataXtd_EQUAL_DISTANCE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_EQUAL_DISTANCE: 14>
+    TDataXtd_EQUAL_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_EQUAL_RADIUS: 11>
+    TDataXtd_FACES_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_FACES_ANGLE: 23>
+    TDataXtd_FIX: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_FIX: 15>
+    TDataXtd_FROM: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_FROM: 17>
+    TDataXtd_MAJOR_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_MAJOR_RADIUS: 3>
+    TDataXtd_MATE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_MATE: 19>
+    TDataXtd_MIDPOINT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_MIDPOINT: 13>
+    TDataXtd_MINOR_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_MINOR_RADIUS: 2>
+    TDataXtd_OFFSET: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_OFFSET: 25>
+    TDataXtd_PARALLEL: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_PARALLEL: 5>
+    TDataXtd_PERPENDICULAR: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_PERPENDICULAR: 6>
+    TDataXtd_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_RADIUS: 0>
+    TDataXtd_RIGID: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_RIGID: 16>
+    TDataXtd_ROUND: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_ROUND: 24>
+    TDataXtd_SYMMETRY: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_SYMMETRY: 12>
+    TDataXtd_TANGENT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_TANGENT: 4>
+    __entries: dict # value = {'TDataXtd_RADIUS': (<TDataXtd_ConstraintEnum.TDataXtd_RADIUS: 0>, None), 'TDataXtd_DIAMETER': (<TDataXtd_ConstraintEnum.TDataXtd_DIAMETER: 1>, None), 'TDataXtd_MINOR_RADIUS': (<TDataXtd_ConstraintEnum.TDataXtd_MINOR_RADIUS: 2>, None), 'TDataXtd_MAJOR_RADIUS': (<TDataXtd_ConstraintEnum.TDataXtd_MAJOR_RADIUS: 3>, None), 'TDataXtd_TANGENT': (<TDataXtd_ConstraintEnum.TDataXtd_TANGENT: 4>, None), 'TDataXtd_PARALLEL': (<TDataXtd_ConstraintEnum.TDataXtd_PARALLEL: 5>, None), 'TDataXtd_PERPENDICULAR': (<TDataXtd_ConstraintEnum.TDataXtd_PERPENDICULAR: 6>, None), 'TDataXtd_CONCENTRIC': (<TDataXtd_ConstraintEnum.TDataXtd_CONCENTRIC: 7>, None), 'TDataXtd_COINCIDENT': (<TDataXtd_ConstraintEnum.TDataXtd_COINCIDENT: 8>, None), 'TDataXtd_DISTANCE': (<TDataXtd_ConstraintEnum.TDataXtd_DISTANCE: 9>, None), 'TDataXtd_ANGLE': (<TDataXtd_ConstraintEnum.TDataXtd_ANGLE: 10>, None), 'TDataXtd_EQUAL_RADIUS': (<TDataXtd_ConstraintEnum.TDataXtd_EQUAL_RADIUS: 11>, None), 'TDataXtd_SYMMETRY': (<TDataXtd_ConstraintEnum.TDataXtd_SYMMETRY: 12>, None), 'TDataXtd_MIDPOINT': (<TDataXtd_ConstraintEnum.TDataXtd_MIDPOINT: 13>, None), 'TDataXtd_EQUAL_DISTANCE': (<TDataXtd_ConstraintEnum.TDataXtd_EQUAL_DISTANCE: 14>, None), 'TDataXtd_FIX': (<TDataXtd_ConstraintEnum.TDataXtd_FIX: 15>, None), 'TDataXtd_RIGID': (<TDataXtd_ConstraintEnum.TDataXtd_RIGID: 16>, None), 'TDataXtd_FROM': (<TDataXtd_ConstraintEnum.TDataXtd_FROM: 17>, None), 'TDataXtd_AXIS': (<TDataXtd_ConstraintEnum.TDataXtd_AXIS: 18>, None), 'TDataXtd_MATE': (<TDataXtd_ConstraintEnum.TDataXtd_MATE: 19>, None), 'TDataXtd_ALIGN_FACES': (<TDataXtd_ConstraintEnum.TDataXtd_ALIGN_FACES: 20>, None), 'TDataXtd_ALIGN_AXES': (<TDataXtd_ConstraintEnum.TDataXtd_ALIGN_AXES: 21>, None), 'TDataXtd_AXES_ANGLE': (<TDataXtd_ConstraintEnum.TDataXtd_AXES_ANGLE: 22>, None), 'TDataXtd_FACES_ANGLE': (<TDataXtd_ConstraintEnum.TDataXtd_FACES_ANGLE: 23>, None), 'TDataXtd_ROUND': (<TDataXtd_ConstraintEnum.TDataXtd_ROUND: 24>, None), 'TDataXtd_OFFSET': (<TDataXtd_ConstraintEnum.TDataXtd_OFFSET: 25>, None)}
+    __members__: dict # value = {'TDataXtd_RADIUS': <TDataXtd_ConstraintEnum.TDataXtd_RADIUS: 0>, 'TDataXtd_DIAMETER': <TDataXtd_ConstraintEnum.TDataXtd_DIAMETER: 1>, 'TDataXtd_MINOR_RADIUS': <TDataXtd_ConstraintEnum.TDataXtd_MINOR_RADIUS: 2>, 'TDataXtd_MAJOR_RADIUS': <TDataXtd_ConstraintEnum.TDataXtd_MAJOR_RADIUS: 3>, 'TDataXtd_TANGENT': <TDataXtd_ConstraintEnum.TDataXtd_TANGENT: 4>, 'TDataXtd_PARALLEL': <TDataXtd_ConstraintEnum.TDataXtd_PARALLEL: 5>, 'TDataXtd_PERPENDICULAR': <TDataXtd_ConstraintEnum.TDataXtd_PERPENDICULAR: 6>, 'TDataXtd_CONCENTRIC': <TDataXtd_ConstraintEnum.TDataXtd_CONCENTRIC: 7>, 'TDataXtd_COINCIDENT': <TDataXtd_ConstraintEnum.TDataXtd_COINCIDENT: 8>, 'TDataXtd_DISTANCE': <TDataXtd_ConstraintEnum.TDataXtd_DISTANCE: 9>, 'TDataXtd_ANGLE': <TDataXtd_ConstraintEnum.TDataXtd_ANGLE: 10>, 'TDataXtd_EQUAL_RADIUS': <TDataXtd_ConstraintEnum.TDataXtd_EQUAL_RADIUS: 11>, 'TDataXtd_SYMMETRY': <TDataXtd_ConstraintEnum.TDataXtd_SYMMETRY: 12>, 'TDataXtd_MIDPOINT': <TDataXtd_ConstraintEnum.TDataXtd_MIDPOINT: 13>, 'TDataXtd_EQUAL_DISTANCE': <TDataXtd_ConstraintEnum.TDataXtd_EQUAL_DISTANCE: 14>, 'TDataXtd_FIX': <TDataXtd_ConstraintEnum.TDataXtd_FIX: 15>, 'TDataXtd_RIGID': <TDataXtd_ConstraintEnum.TDataXtd_RIGID: 16>, 'TDataXtd_FROM': <TDataXtd_ConstraintEnum.TDataXtd_FROM: 17>, 'TDataXtd_AXIS': <TDataXtd_ConstraintEnum.TDataXtd_AXIS: 18>, 'TDataXtd_MATE': <TDataXtd_ConstraintEnum.TDataXtd_MATE: 19>, 'TDataXtd_ALIGN_FACES': <TDataXtd_ConstraintEnum.TDataXtd_ALIGN_FACES: 20>, 'TDataXtd_ALIGN_AXES': <TDataXtd_ConstraintEnum.TDataXtd_ALIGN_AXES: 21>, 'TDataXtd_AXES_ANGLE': <TDataXtd_ConstraintEnum.TDataXtd_AXES_ANGLE: 22>, 'TDataXtd_FACES_ANGLE': <TDataXtd_ConstraintEnum.TDataXtd_FACES_ANGLE: 23>, 'TDataXtd_ROUND': <TDataXtd_ConstraintEnum.TDataXtd_ROUND: 24>, 'TDataXtd_OFFSET': <TDataXtd_ConstraintEnum.TDataXtd_OFFSET: 25>}
     pass
 class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
@@ -899,7 +916,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Circle_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Circ) -> bool: 
+    def Circle_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Circ) -> bool: 
         """
         Returns the circle attribute defined by the label L and the circle G.
 
@@ -907,7 +924,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Circle_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Circ) -> bool: ...
+    def Circle_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Circ) -> bool: ...
     @staticmethod
     @overload
     def Cylinder_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Cylinder) -> bool: 
@@ -936,14 +953,14 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -952,9 +969,13 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -971,7 +992,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @staticmethod
     @overload
     def Ellipse_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Elips) -> bool: ...
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1094,7 +1115,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def Plane_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Pln) -> bool: ...
     @staticmethod
     @overload
-    def Point_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Pnt) -> bool: 
+    def Point_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Pnt) -> bool: 
         """
         Returns the point attribute defined by the label L and the point G.
 
@@ -1102,7 +1123,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Point_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Pnt) -> bool: ...
+    def Point_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Pnt) -> bool: ...
     def References(self,aDataSet : OCP.TDF.TDF_DataSet) -> None: 
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
@@ -1141,7 +1162,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Type_s(L : OCP.TDF.TDF_Label) -> TDataXtd_GeometryEnum: 
+    def Type_s(S : OCP.TNaming.TNaming_NamedShape) -> TDataXtd_GeometryEnum: 
         """
         Returns the label L used to define the type of geometric construction for the geometry attribute.
 
@@ -1149,7 +1170,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Type_s(S : OCP.TNaming.TNaming_NamedShape) -> TDataXtd_GeometryEnum: ...
+    def Type_s(L : OCP.TDF.TDF_Label) -> TDataXtd_GeometryEnum: ...
     def UntilTransaction(self) -> int: 
         """
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
@@ -1188,26 +1209,34 @@ class TDataXtd_GeometryEnum():
 
       TDataXtd_CYLINDER
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TDataXtd_ANY_GEOM: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_ANY_GEOM
-    TDataXtd_CIRCLE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_CIRCLE
-    TDataXtd_CYLINDER: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_CYLINDER
-    TDataXtd_ELLIPSE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_ELLIPSE
-    TDataXtd_LINE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_LINE
-    TDataXtd_PLANE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_PLANE
-    TDataXtd_POINT: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_POINT
-    TDataXtd_SPLINE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_SPLINE
-    __entries: dict # value = {'TDataXtd_ANY_GEOM': (TDataXtd_GeometryEnum.TDataXtd_ANY_GEOM, None), 'TDataXtd_POINT': (TDataXtd_GeometryEnum.TDataXtd_POINT, None), 'TDataXtd_LINE': (TDataXtd_GeometryEnum.TDataXtd_LINE, None), 'TDataXtd_CIRCLE': (TDataXtd_GeometryEnum.TDataXtd_CIRCLE, None), 'TDataXtd_ELLIPSE': (TDataXtd_GeometryEnum.TDataXtd_ELLIPSE, None), 'TDataXtd_SPLINE': (TDataXtd_GeometryEnum.TDataXtd_SPLINE, None), 'TDataXtd_PLANE': (TDataXtd_GeometryEnum.TDataXtd_PLANE, None), 'TDataXtd_CYLINDER': (TDataXtd_GeometryEnum.TDataXtd_CYLINDER, None)}
-    __members__: dict # value = {'TDataXtd_ANY_GEOM': TDataXtd_GeometryEnum.TDataXtd_ANY_GEOM, 'TDataXtd_POINT': TDataXtd_GeometryEnum.TDataXtd_POINT, 'TDataXtd_LINE': TDataXtd_GeometryEnum.TDataXtd_LINE, 'TDataXtd_CIRCLE': TDataXtd_GeometryEnum.TDataXtd_CIRCLE, 'TDataXtd_ELLIPSE': TDataXtd_GeometryEnum.TDataXtd_ELLIPSE, 'TDataXtd_SPLINE': TDataXtd_GeometryEnum.TDataXtd_SPLINE, 'TDataXtd_PLANE': TDataXtd_GeometryEnum.TDataXtd_PLANE, 'TDataXtd_CYLINDER': TDataXtd_GeometryEnum.TDataXtd_CYLINDER}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TDataXtd_ANY_GEOM: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_ANY_GEOM: 0>
+    TDataXtd_CIRCLE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_CIRCLE: 3>
+    TDataXtd_CYLINDER: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_CYLINDER: 7>
+    TDataXtd_ELLIPSE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_ELLIPSE: 4>
+    TDataXtd_LINE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_LINE: 2>
+    TDataXtd_PLANE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_PLANE: 6>
+    TDataXtd_POINT: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_POINT: 1>
+    TDataXtd_SPLINE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_SPLINE: 5>
+    __entries: dict # value = {'TDataXtd_ANY_GEOM': (<TDataXtd_GeometryEnum.TDataXtd_ANY_GEOM: 0>, None), 'TDataXtd_POINT': (<TDataXtd_GeometryEnum.TDataXtd_POINT: 1>, None), 'TDataXtd_LINE': (<TDataXtd_GeometryEnum.TDataXtd_LINE: 2>, None), 'TDataXtd_CIRCLE': (<TDataXtd_GeometryEnum.TDataXtd_CIRCLE: 3>, None), 'TDataXtd_ELLIPSE': (<TDataXtd_GeometryEnum.TDataXtd_ELLIPSE: 4>, None), 'TDataXtd_SPLINE': (<TDataXtd_GeometryEnum.TDataXtd_SPLINE: 5>, None), 'TDataXtd_PLANE': (<TDataXtd_GeometryEnum.TDataXtd_PLANE: 6>, None), 'TDataXtd_CYLINDER': (<TDataXtd_GeometryEnum.TDataXtd_CYLINDER: 7>, None)}
+    __members__: dict # value = {'TDataXtd_ANY_GEOM': <TDataXtd_GeometryEnum.TDataXtd_ANY_GEOM: 0>, 'TDataXtd_POINT': <TDataXtd_GeometryEnum.TDataXtd_POINT: 1>, 'TDataXtd_LINE': <TDataXtd_GeometryEnum.TDataXtd_LINE: 2>, 'TDataXtd_CIRCLE': <TDataXtd_GeometryEnum.TDataXtd_CIRCLE: 3>, 'TDataXtd_ELLIPSE': <TDataXtd_GeometryEnum.TDataXtd_ELLIPSE: 4>, 'TDataXtd_SPLINE': <TDataXtd_GeometryEnum.TDataXtd_SPLINE: 5>, 'TDataXtd_PLANE': <TDataXtd_GeometryEnum.TDataXtd_PLANE: 6>, 'TDataXtd_CYLINDER': <TDataXtd_GeometryEnum.TDataXtd_CYLINDER: 7>}
     pass
 class TDataXtd_HArray1OfTrsf(TDataXtd_Array1OfTrsf, OCP.Standard.Standard_Transient):
     def Array1(self) -> TDataXtd_Array1OfTrsf: 
@@ -1333,14 +1362,14 @@ class TDataXtd_HArray1OfTrsf(TDataXtd_Array1OfTrsf, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : TDataXtd_Array1OfTrsf) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TDataXtd_Array1OfTrsf) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Trsf) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1421,14 +1450,14 @@ class TDataXtd_Pattern(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1437,15 +1466,19 @@ class TDataXtd_Pattern(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1626,7 +1659,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
     @overload
     def Axis1(self) -> OCP.TNaming.TNaming_NamedShape: ...
     @overload
-    def Axis1Reversed(self,Axis1Reversed : bool) -> None: 
+    def Axis1Reversed(self) -> bool: 
         """
         None
 
@@ -1635,7 +1668,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Axis1Reversed(self) -> bool: ...
+    def Axis1Reversed(self,Axis1Reversed : bool) -> None: ...
     @overload
     def Axis2(self,Axis2 : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
@@ -1703,14 +1736,14 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1719,15 +1752,19 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1820,7 +1857,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
         """
     @overload
-    def Mirror(self) -> OCP.TNaming.TNaming_NamedShape: 
+    def Mirror(self,plane : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
         None
 
@@ -1829,7 +1866,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Mirror(self,plane : OCP.TNaming.TNaming_NamedShape) -> None: ...
+    def Mirror(self) -> OCP.TNaming.TNaming_NamedShape: ...
     @overload
     def NbInstances1(self) -> OCP.TDataStd.TDataStd_Integer: 
         """
@@ -1842,7 +1879,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
     @overload
     def NbInstances1(self,NbInstances1 : OCP.TDataStd.TDataStd_Integer) -> None: ...
     @overload
-    def NbInstances2(self,NbInstances2 : OCP.TDataStd.TDataStd_Integer) -> None: 
+    def NbInstances2(self) -> OCP.TDataStd.TDataStd_Integer: 
         """
         None
 
@@ -1851,7 +1888,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def NbInstances2(self) -> OCP.TDataStd.TDataStd_Integer: ...
+    def NbInstances2(self,NbInstances2 : OCP.TDataStd.TDataStd_Integer) -> None: ...
     def NbTrsfs(self) -> int: 
         """
         None
@@ -1916,7 +1953,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
         """
     @overload
-    def Value1(self) -> OCP.TDataStd.TDataStd_Real: 
+    def Value1(self,value : OCP.TDataStd.TDataStd_Real) -> None: 
         """
         None
 
@@ -1925,7 +1962,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Value1(self,value : OCP.TDataStd.TDataStd_Real) -> None: ...
+    def Value1(self) -> OCP.TDataStd.TDataStd_Real: ...
     @overload
     def Value2(self,value : OCP.TDataStd.TDataStd_Real) -> None: 
         """
@@ -1949,7 +1986,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     pass
-class TDataXtd_Placement(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class TDataXtd_Placement(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def AddAttribute(self,other : OCP.TDF.TDF_Attribute) -> None: 
         """
         Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
@@ -2011,14 +2048,14 @@ class TDataXtd_Placement(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2027,15 +2064,19 @@ class TDataXtd_Placement(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -2126,7 +2167,7 @@ class TDataXtd_Placement(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         None
         """
-    def Paste(self,Into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -2134,7 +2175,7 @@ class TDataXtd_Placement(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,With : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -2178,7 +2219,7 @@ class TDataXtd_Placement(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         None
         """
     pass
-class TDataXtd_Plane(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class TDataXtd_Plane(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     The basis to define a plane attribute. Warning: Use TDataXtd_Geometry attribute to retrieve the gp_Pln of the Plane attributeThe basis to define a plane attribute. Warning: Use TDataXtd_Geometry attribute to retrieve the gp_Pln of the Plane attributeThe basis to define a plane attribute. Warning: Use TDataXtd_Geometry attribute to retrieve the gp_Pln of the Plane attribute
     """
@@ -2243,14 +2284,14 @@ class TDataXtd_Plane(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2259,15 +2300,19 @@ class TDataXtd_Plane(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -2358,7 +2403,7 @@ class TDataXtd_Plane(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Paste(self,Into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -2366,7 +2411,7 @@ class TDataXtd_Plane(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,With : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -2416,7 +2461,7 @@ class TDataXtd_Plane(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class TDataXtd_Point(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class TDataXtd_Point(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     The basis to define a point attribute. The topological attribute must contain a vertex. You use this class to create reference points in a design.The basis to define a point attribute. The topological attribute must contain a vertex. You use this class to create reference points in a design.The basis to define a point attribute. The topological attribute must contain a vertex. You use this class to create reference points in a design.
     """
@@ -2481,14 +2526,14 @@ class TDataXtd_Point(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2497,15 +2542,19 @@ class TDataXtd_Point(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -2596,7 +2645,7 @@ class TDataXtd_Point(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Paste(self,Into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -2604,7 +2653,7 @@ class TDataXtd_Point(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,With : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -2719,14 +2768,14 @@ class TDataXtd_Position(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2735,15 +2784,19 @@ class TDataXtd_Position(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -2978,14 +3031,14 @@ class TDataXtd_Presentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2994,15 +3047,19 @@ class TDataXtd_Presentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3252,6 +3309,16 @@ class TDataXtd_Presentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         """
     def __init__(self) -> None: ...
     @staticmethod
+    def getColorNameFromOldEnum_s(theOld : int) -> OCP.Quantity.Quantity_NameOfColor: 
+        """
+        Convert values of old Quantity_NameOfColor to new enumeration for reading old documents after #0030969 (Coding Rules - refactor Quantity_Color.cxx color table definition).
+        """
+    @staticmethod
+    def getOldColorNameFromNewEnum_s(theNew : OCP.Quantity.Quantity_NameOfColor) -> int: 
+        """
+        Convert Quantity_NameOfColor to old enumeration value for writing documents in compatible format.
+        """
+    @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
         None
@@ -3262,7 +3329,7 @@ class TDataXtd_Presentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         None
         """
     pass
-class TDataXtd_Shape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class TDataXtd_Shape(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     A Shape is associated in the framework with : a NamedShape attributeA Shape is associated in the framework with : a NamedShape attributeA Shape is associated in the framework with : a NamedShape attribute
     """
@@ -3327,14 +3394,14 @@ class TDataXtd_Shape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3343,15 +3410,19 @@ class TDataXtd_Shape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3457,7 +3528,7 @@ class TDataXtd_Shape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Find, or create, a Shape attribute. the Shape attribute is returned. Raises if <label> has attribute.
         """
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -3465,7 +3536,7 @@ class TDataXtd_Shape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -3583,14 +3654,14 @@ class TDataXtd_Triangulation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3599,15 +3670,19 @@ class TDataXtd_Triangulation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3777,7 +3852,7 @@ class TDataXtd_Triangulation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         """
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label) -> TDataXtd_Triangulation: 
+    def Set_s(theLabel : OCP.TDF.TDF_Label,theTriangulation : OCP.Poly.Poly_Triangulation) -> TDataXtd_Triangulation: 
         """
         Finds or creates a triangulation attribute.
 
@@ -3785,7 +3860,7 @@ class TDataXtd_Triangulation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         """
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label,theTriangulation : OCP.Poly.Poly_Triangulation) -> TDataXtd_Triangulation: ...
+    def Set_s(theLabel : OCP.TDF.TDF_Label) -> TDataXtd_Triangulation: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3820,37 +3895,37 @@ class TDataXtd_Triangulation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         None
         """
     pass
-TDataXtd_ALIGN_AXES: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_ALIGN_AXES
-TDataXtd_ALIGN_FACES: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_ALIGN_FACES
-TDataXtd_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_ANGLE
-TDataXtd_ANY_GEOM: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_ANY_GEOM
-TDataXtd_AXES_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_AXES_ANGLE
-TDataXtd_AXIS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_AXIS
-TDataXtd_CIRCLE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_CIRCLE
-TDataXtd_COINCIDENT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_COINCIDENT
-TDataXtd_CONCENTRIC: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_CONCENTRIC
-TDataXtd_CYLINDER: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_CYLINDER
-TDataXtd_DIAMETER: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_DIAMETER
-TDataXtd_DISTANCE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_DISTANCE
-TDataXtd_ELLIPSE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_ELLIPSE
-TDataXtd_EQUAL_DISTANCE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_EQUAL_DISTANCE
-TDataXtd_EQUAL_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_EQUAL_RADIUS
-TDataXtd_FACES_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_FACES_ANGLE
-TDataXtd_FIX: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_FIX
-TDataXtd_FROM: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_FROM
-TDataXtd_LINE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_LINE
-TDataXtd_MAJOR_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_MAJOR_RADIUS
-TDataXtd_MATE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_MATE
-TDataXtd_MIDPOINT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_MIDPOINT
-TDataXtd_MINOR_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_MINOR_RADIUS
-TDataXtd_OFFSET: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_OFFSET
-TDataXtd_PARALLEL: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_PARALLEL
-TDataXtd_PERPENDICULAR: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_PERPENDICULAR
-TDataXtd_PLANE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_PLANE
-TDataXtd_POINT: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_POINT
-TDataXtd_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_RADIUS
-TDataXtd_RIGID: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_RIGID
-TDataXtd_ROUND: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_ROUND
-TDataXtd_SPLINE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = TDataXtd_GeometryEnum.TDataXtd_SPLINE
-TDataXtd_SYMMETRY: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_SYMMETRY
-TDataXtd_TANGENT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = TDataXtd_ConstraintEnum.TDataXtd_TANGENT
+TDataXtd_ALIGN_AXES: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_ALIGN_AXES: 21>
+TDataXtd_ALIGN_FACES: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_ALIGN_FACES: 20>
+TDataXtd_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_ANGLE: 10>
+TDataXtd_ANY_GEOM: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_ANY_GEOM: 0>
+TDataXtd_AXES_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_AXES_ANGLE: 22>
+TDataXtd_AXIS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_AXIS: 18>
+TDataXtd_CIRCLE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_CIRCLE: 3>
+TDataXtd_COINCIDENT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_COINCIDENT: 8>
+TDataXtd_CONCENTRIC: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_CONCENTRIC: 7>
+TDataXtd_CYLINDER: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_CYLINDER: 7>
+TDataXtd_DIAMETER: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_DIAMETER: 1>
+TDataXtd_DISTANCE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_DISTANCE: 9>
+TDataXtd_ELLIPSE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_ELLIPSE: 4>
+TDataXtd_EQUAL_DISTANCE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_EQUAL_DISTANCE: 14>
+TDataXtd_EQUAL_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_EQUAL_RADIUS: 11>
+TDataXtd_FACES_ANGLE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_FACES_ANGLE: 23>
+TDataXtd_FIX: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_FIX: 15>
+TDataXtd_FROM: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_FROM: 17>
+TDataXtd_LINE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_LINE: 2>
+TDataXtd_MAJOR_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_MAJOR_RADIUS: 3>
+TDataXtd_MATE: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_MATE: 19>
+TDataXtd_MIDPOINT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_MIDPOINT: 13>
+TDataXtd_MINOR_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_MINOR_RADIUS: 2>
+TDataXtd_OFFSET: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_OFFSET: 25>
+TDataXtd_PARALLEL: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_PARALLEL: 5>
+TDataXtd_PERPENDICULAR: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_PERPENDICULAR: 6>
+TDataXtd_PLANE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_PLANE: 6>
+TDataXtd_POINT: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_POINT: 1>
+TDataXtd_RADIUS: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_RADIUS: 0>
+TDataXtd_RIGID: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_RIGID: 16>
+TDataXtd_ROUND: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_ROUND: 24>
+TDataXtd_SPLINE: OCP.TDataXtd.TDataXtd_GeometryEnum # value = <TDataXtd_GeometryEnum.TDataXtd_SPLINE: 5>
+TDataXtd_SYMMETRY: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_SYMMETRY: 12>
+TDataXtd_TANGENT: OCP.TDataXtd.TDataXtd_ConstraintEnum # value = <TDataXtd_ConstraintEnum.TDataXtd_TANGENT: 4>

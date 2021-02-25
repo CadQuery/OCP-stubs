@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.TColStd
 import OCP.Adaptor3d
-import OCP.Standard
-import OCP.TopoDS
-import OCP.BRepAdaptor
+import OCP.TColStd
+import io
 import OCP.NCollection
 import OCP.Adaptor2d
 import OCP.gp
+import OCP.TopoDS
+import OCP.BRepAdaptor
+import OCP.Standard
+import OCP.TopAbs
 __all__  = [
 "BRepTopAdaptor_FClass2d",
 "BRepTopAdaptor_HVertex",
@@ -179,14 +180,14 @@ class BRepTopAdaptor_MapOfShapeTool(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : BRepTopAdaptor_Tool) -> bool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepTopAdaptor_Tool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepTopAdaptor_Tool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : BRepTopAdaptor_Tool) -> bool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -211,7 +212,7 @@ class BRepTopAdaptor_MapOfShapeTool(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -220,12 +221,12 @@ class BRepTopAdaptor_MapOfShapeTool(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : BRepTopAdaptor_MapOfShapeTool) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepTopAdaptor_Tool():
     """
@@ -257,11 +258,11 @@ class BRepTopAdaptor_Tool():
         None
         """
     @overload
+    def __init__(self,F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,Tol2d : float) -> None: ...
-    @overload
-    def __init__(self,F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> None: ...
     pass
 class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.Standard_Transient):
     def BSplSamplePnts(self,theDefl : float,theNUmin : int,theNVmin : int) -> None: 
@@ -325,7 +326,7 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         None
         """
     @overload
-    def Initialize(self,Curve : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def Initialize(self) -> None: 
         """
         None
 
@@ -334,7 +335,7 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         None
         """
     @overload
-    def Initialize(self) -> None: ...
+    def Initialize(self,Curve : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
     @overload
     def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
     @overload
@@ -392,14 +393,14 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         None
         """
     @overload
-    def Orientation(self,C : OCP.Adaptor3d.Adaptor3d_HVertex) -> OCP.TopAbs.TopAbs_Orientation: 
+    def Orientation(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         If the function returns the orientation of the arc. If the orientation is FORWARD or REVERSED, the arc is a "real" limit of the surface. If the orientation is INTERNAL or EXTERNAL, the arc is considered as an arc on the surface.
 
         If the function returns the orientation of the arc. If the orientation is FORWARD or REVERSED, the arc is a "real" limit of the surface. If the orientation is INTERNAL or EXTERNAL, the arc is considered as an arc on the surface.
         """
     @overload
-    def Orientation(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,C : OCP.Adaptor3d.Adaptor3d_HVertex) -> OCP.TopAbs.TopAbs_Orientation: ...
     def Pnt(self,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> OCP.gp.gp_Pnt: 
         """
         returns 3d point of the vertex V
@@ -442,9 +443,9 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         None
         """
     @overload
-    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

@@ -4,12 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.GeomAbs
-import OCP.TColGeom
-import OCP.TColgp
 import OCP.Adaptor3d
+import OCP.TColStd
+import OCP.TColGeom
+import io
+import OCP.GeomAbs
 import OCP.Geom
+import OCP.TColgp
 __all__  = [
 "GeomConvert",
 "GeomConvert_ApproxCurve",
@@ -64,7 +65,7 @@ class GeomConvert():
         """
     @staticmethod
     @overload
-    def SplitBSplineCurve_s(C : OCP.Geom.Geom_BSplineCurve,FromU1 : float,ToU2 : float,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineCurve: 
+    def SplitBSplineCurve_s(C : OCP.Geom.Geom_BSplineCurve,FromK1 : int,ToK2 : int,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineCurve: 
         """
         Convert a curve from Geom by an approximation method
 
@@ -72,10 +73,10 @@ class GeomConvert():
         """
     @staticmethod
     @overload
-    def SplitBSplineCurve_s(C : OCP.Geom.Geom_BSplineCurve,FromK1 : int,ToK2 : int,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineCurve: ...
+    def SplitBSplineCurve_s(C : OCP.Geom.Geom_BSplineCurve,FromU1 : float,ToU2 : float,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineCurve: ...
     @staticmethod
     @overload
-    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromUK1 : int,ToUK2 : int,FromVK1 : int,ToVK2 : int,SameUOrientation : bool=True,SameVOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: 
+    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromU1 : float,ToU2 : float,FromV1 : float,ToV2 : float,ParametricTolerance : float,SameUOrientation : bool=True,SameVOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: 
         """
         Computes the B-spline surface patche between the knots values FromUK1, ToUK2, FromVK1, ToVK2. If S is periodic in one direction the patche has the same orientation as S in this direction if the flag is true in this direction (SameUOrientation, SameVOrientation). If S is not periodic SameUOrientation and SameVOrientation are not used for the computation and S is oriented FromUK1 ToUK2 and FromVK1 ToVK2. Raised if FromUK1 = ToUK2 or FromVK1 = ToVK2 FromUK1 or ToUK2 are out of the bounds [FirstUKnotIndex, LastUKnotIndex] FromVK1 or ToVK2 are out of the bounds [FirstVKnotIndex, LastVKnotIndex]
 
@@ -87,13 +88,13 @@ class GeomConvert():
         """
     @staticmethod
     @overload
-    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromParam1 : float,ToParam2 : float,USplit : bool,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: ...
-    @staticmethod
-    @overload
-    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromU1 : float,ToU2 : float,FromV1 : float,ToV2 : float,ParametricTolerance : float,SameUOrientation : bool=True,SameVOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: ...
+    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromUK1 : int,ToUK2 : int,FromVK1 : int,ToVK2 : int,SameUOrientation : bool=True,SameVOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: ...
     @staticmethod
     @overload
     def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromK1 : int,ToK2 : int,USplit : bool,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: ...
+    @staticmethod
+    @overload
+    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromParam1 : float,ToParam2 : float,USplit : bool,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: ...
     @staticmethod
     def SurfaceToBSplineSurface_s(S : OCP.Geom.Geom_Surface) -> OCP.Geom.Geom_BSplineSurface: 
         """
@@ -109,7 +110,7 @@ class GeomConvert_ApproxCurve():
         """
         Returns the BSpline curve resulting from the approximation algorithm.
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Print on the stream o information about the object
         """
@@ -134,7 +135,7 @@ class GeomConvert_ApproxSurface():
     """
     A framework to convert a surface to a BSpline surface. This is done by approximation to a BSpline surface within a given tolerance.
     """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints on the stream o informations on the current state of the object.
         """
@@ -198,9 +199,9 @@ class GeomConvert_BSplineCurveToBezierCurve():
         Returns the number of BezierCurve arcs. If at the creation time you have decomposed the basis curve between the parametric values UFirst, ULast the number of BezierCurve arcs depends on the number of knots included inside the interval [UFirst, ULast]. If you have decomposed the whole basis B-spline curve the number of BezierCurve arcs NbArcs is equal to the number of knots less one.
         """
     @overload
-    def __init__(self,BasisCurve : OCP.Geom.Geom_BSplineCurve) -> None: ...
-    @overload
     def __init__(self,BasisCurve : OCP.Geom.Geom_BSplineCurve,U1 : float,U2 : float,ParametricTolerance : float) -> None: ...
+    @overload
+    def __init__(self,BasisCurve : OCP.Geom.Geom_BSplineCurve) -> None: ...
     pass
 class GeomConvert_BSplineSurfaceKnotSplitting():
     """
@@ -257,9 +258,9 @@ class GeomConvert_BSplineSurfaceToBezierSurface():
         This methode returns the bspline's v-knots associated to the converted Patches Raised if the length of Curves is not equal to NbVPatches + 1.
         """
     @overload
-    def __init__(self,BasisSurface : OCP.Geom.Geom_BSplineSurface,U1 : float,U2 : float,V1 : float,V2 : float,ParametricTolerance : float) -> None: ...
-    @overload
     def __init__(self,BasisSurface : OCP.Geom.Geom_BSplineSurface) -> None: ...
+    @overload
+    def __init__(self,BasisSurface : OCP.Geom.Geom_BSplineSurface,U1 : float,U2 : float,V1 : float,V2 : float,ParametricTolerance : float) -> None: ...
     pass
 class GeomConvert_CompBezierSurfacesToBSplineSurface():
     """
@@ -336,11 +337,11 @@ class GeomConvert_CompBezierSurfacesToBSplineSurface():
         -- Returns the multiplicities table for the v parametric direction of the knots of the BSpline surface whose data is computed in this framework.
         """
     @overload
+    def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface,Tolerance : float,RemoveKnots : bool=True) -> None: ...
+    @overload
     def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface,UKnots : OCP.TColStd.TColStd_Array1OfReal,VKnots : OCP.TColStd.TColStd_Array1OfReal,UContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C0,VContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C0,Tolerance : float=0.0001) -> None: ...
     @overload
     def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface) -> None: ...
-    @overload
-    def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface,Tolerance : float,RemoveKnots : bool=True) -> None: ...
     pass
 class GeomConvert_CompCurveToBSplineCurve():
     """
@@ -359,7 +360,7 @@ class GeomConvert_CompCurveToBSplineCurve():
         Clear a result curve
         """
     @overload
-    def __init__(self,BasisCurve : OCP.Geom.Geom_BoundedCurve,Parameterisation : OCP.Convert.Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
-    @overload
     def __init__(self,Parameterisation : OCP.Convert.Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
+    @overload
+    def __init__(self,BasisCurve : OCP.Geom.Geom_BoundedCurve,Parameterisation : OCP.Convert.Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
     pass

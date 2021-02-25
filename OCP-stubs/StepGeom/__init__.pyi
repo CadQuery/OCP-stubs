@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TColStd
-import OCP.StepRepr
+import OCP.TCollection
 import OCP.StepBasic
+import OCP.StepRepr
+import OCP.Interface
 import OCP.Standard
 import OCP.StepData
-import OCP.Interface
 __all__  = [
 "StepGeom_Array1OfBoundaryCurve",
 "StepGeom_Array1OfCartesianPoint",
@@ -235,14 +235,14 @@ class StepGeom_Array1OfBoundaryCurve():
         Constant value access
         """
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepGeom_Array1OfBoundaryCurve) -> None: ...
     @overload
     def __init__(self,theBegin : StepGeom_BoundaryCurve,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfCartesianPoint():
     """
@@ -323,12 +323,12 @@ class StepGeom_Array1OfCartesianPoint():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : StepGeom_CartesianPoint,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepGeom_Array1OfCartesianPoint) -> None: ...
     @overload
+    def __init__(self,theBegin : StepGeom_CartesianPoint,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfCompositeCurveSegment():
     """
@@ -407,14 +407,14 @@ class StepGeom_Array1OfCompositeCurveSegment():
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepGeom_Array1OfCompositeCurveSegment) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : StepGeom_CompositeCurveSegment,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfCurve():
     """
@@ -493,14 +493,14 @@ class StepGeom_Array1OfCurve():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepGeom_Array1OfCurve) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepGeom_Curve,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepGeom_Array1OfCurve) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfPcurveOrSurface():
     """
@@ -579,14 +579,14 @@ class StepGeom_Array1OfPcurveOrSurface():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepGeom_PcurveOrSurface,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepGeom_Array1OfPcurveOrSurface) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : StepGeom_PcurveOrSurface,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfSurfaceBoundary():
     """
@@ -665,14 +665,14 @@ class StepGeom_Array1OfSurfaceBoundary():
         Constant value access
         """
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theBegin : StepGeom_SurfaceBoundary,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepGeom_Array1OfSurfaceBoundary) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfTrimmingSelect():
     """
@@ -753,12 +753,12 @@ class StepGeom_Array1OfTrimmingSelect():
     @overload
     def __init__(self,theOther : StepGeom_Array1OfTrimmingSelect) -> None: ...
     @overload
-    def __init__(self,theBegin : StepGeom_TrimmingSelect,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : StepGeom_TrimmingSelect,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array2OfCartesianPoint():
     """
@@ -831,13 +831,13 @@ class StepGeom_Array2OfCartesianPoint():
         Constant value access
         """
     @overload
+    def __init__(self,theOther : StepGeom_Array2OfCartesianPoint) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepGeom_CartesianPoint,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : StepGeom_Array2OfCartesianPoint) -> None: ...
     pass
 class StepGeom_Array2OfSurfacePatch():
     """
@@ -912,11 +912,11 @@ class StepGeom_Array2OfSurfacePatch():
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : StepGeom_SurfacePatch,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepGeom_Array2OfSurfacePatch) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepGeom_SurfacePatch,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class StepGeom_GeometricRepresentationItem(OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -1362,24 +1362,32 @@ class StepGeom_BSplineCurveForm():
 
       StepGeom_bscfUnspecified
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepGeom_bscfCircularArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfCircularArc
-    StepGeom_bscfEllipticArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfEllipticArc
-    StepGeom_bscfHyperbolicArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfHyperbolicArc
-    StepGeom_bscfParabolicArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfParabolicArc
-    StepGeom_bscfPolylineForm: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfPolylineForm
-    StepGeom_bscfUnspecified: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfUnspecified
-    __entries: dict # value = {'StepGeom_bscfPolylineForm': (StepGeom_BSplineCurveForm.StepGeom_bscfPolylineForm, None), 'StepGeom_bscfCircularArc': (StepGeom_BSplineCurveForm.StepGeom_bscfCircularArc, None), 'StepGeom_bscfEllipticArc': (StepGeom_BSplineCurveForm.StepGeom_bscfEllipticArc, None), 'StepGeom_bscfParabolicArc': (StepGeom_BSplineCurveForm.StepGeom_bscfParabolicArc, None), 'StepGeom_bscfHyperbolicArc': (StepGeom_BSplineCurveForm.StepGeom_bscfHyperbolicArc, None), 'StepGeom_bscfUnspecified': (StepGeom_BSplineCurveForm.StepGeom_bscfUnspecified, None)}
-    __members__: dict # value = {'StepGeom_bscfPolylineForm': StepGeom_BSplineCurveForm.StepGeom_bscfPolylineForm, 'StepGeom_bscfCircularArc': StepGeom_BSplineCurveForm.StepGeom_bscfCircularArc, 'StepGeom_bscfEllipticArc': StepGeom_BSplineCurveForm.StepGeom_bscfEllipticArc, 'StepGeom_bscfParabolicArc': StepGeom_BSplineCurveForm.StepGeom_bscfParabolicArc, 'StepGeom_bscfHyperbolicArc': StepGeom_BSplineCurveForm.StepGeom_bscfHyperbolicArc, 'StepGeom_bscfUnspecified': StepGeom_BSplineCurveForm.StepGeom_bscfUnspecified}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepGeom_bscfCircularArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfCircularArc: 1>
+    StepGeom_bscfEllipticArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfEllipticArc: 2>
+    StepGeom_bscfHyperbolicArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfHyperbolicArc: 4>
+    StepGeom_bscfParabolicArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfParabolicArc: 3>
+    StepGeom_bscfPolylineForm: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfPolylineForm: 0>
+    StepGeom_bscfUnspecified: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfUnspecified: 5>
+    __entries: dict # value = {'StepGeom_bscfPolylineForm': (<StepGeom_BSplineCurveForm.StepGeom_bscfPolylineForm: 0>, None), 'StepGeom_bscfCircularArc': (<StepGeom_BSplineCurveForm.StepGeom_bscfCircularArc: 1>, None), 'StepGeom_bscfEllipticArc': (<StepGeom_BSplineCurveForm.StepGeom_bscfEllipticArc: 2>, None), 'StepGeom_bscfParabolicArc': (<StepGeom_BSplineCurveForm.StepGeom_bscfParabolicArc: 3>, None), 'StepGeom_bscfHyperbolicArc': (<StepGeom_BSplineCurveForm.StepGeom_bscfHyperbolicArc: 4>, None), 'StepGeom_bscfUnspecified': (<StepGeom_BSplineCurveForm.StepGeom_bscfUnspecified: 5>, None)}
+    __members__: dict # value = {'StepGeom_bscfPolylineForm': <StepGeom_BSplineCurveForm.StepGeom_bscfPolylineForm: 0>, 'StepGeom_bscfCircularArc': <StepGeom_BSplineCurveForm.StepGeom_bscfCircularArc: 1>, 'StepGeom_bscfEllipticArc': <StepGeom_BSplineCurveForm.StepGeom_bscfEllipticArc: 2>, 'StepGeom_bscfParabolicArc': <StepGeom_BSplineCurveForm.StepGeom_bscfParabolicArc: 3>, 'StepGeom_bscfHyperbolicArc': <StepGeom_BSplineCurveForm.StepGeom_bscfHyperbolicArc: 4>, 'StepGeom_bscfUnspecified': <StepGeom_BSplineCurveForm.StepGeom_bscfUnspecified: 5>}
     pass
 class StepGeom_BoundedCurve(StepGeom_Curve, StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -1658,29 +1666,37 @@ class StepGeom_BSplineSurfaceForm():
 
       StepGeom_bssfUnspecified
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepGeom_bssfConicalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfConicalSurf
-    StepGeom_bssfCylindricalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfCylindricalSurf
-    StepGeom_bssfGeneralisedCone: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfGeneralisedCone
-    StepGeom_bssfPlaneSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfPlaneSurf
-    StepGeom_bssfQuadricSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfQuadricSurf
-    StepGeom_bssfRuledSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfRuledSurf
-    StepGeom_bssfSphericalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfSphericalSurf
-    StepGeom_bssfSurfOfLinearExtrusion: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfLinearExtrusion
-    StepGeom_bssfSurfOfRevolution: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfRevolution
-    StepGeom_bssfToroidalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfToroidalSurf
-    StepGeom_bssfUnspecified: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfUnspecified
-    __entries: dict # value = {'StepGeom_bssfPlaneSurf': (StepGeom_BSplineSurfaceForm.StepGeom_bssfPlaneSurf, None), 'StepGeom_bssfCylindricalSurf': (StepGeom_BSplineSurfaceForm.StepGeom_bssfCylindricalSurf, None), 'StepGeom_bssfConicalSurf': (StepGeom_BSplineSurfaceForm.StepGeom_bssfConicalSurf, None), 'StepGeom_bssfSphericalSurf': (StepGeom_BSplineSurfaceForm.StepGeom_bssfSphericalSurf, None), 'StepGeom_bssfToroidalSurf': (StepGeom_BSplineSurfaceForm.StepGeom_bssfToroidalSurf, None), 'StepGeom_bssfSurfOfRevolution': (StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfRevolution, None), 'StepGeom_bssfRuledSurf': (StepGeom_BSplineSurfaceForm.StepGeom_bssfRuledSurf, None), 'StepGeom_bssfGeneralisedCone': (StepGeom_BSplineSurfaceForm.StepGeom_bssfGeneralisedCone, None), 'StepGeom_bssfQuadricSurf': (StepGeom_BSplineSurfaceForm.StepGeom_bssfQuadricSurf, None), 'StepGeom_bssfSurfOfLinearExtrusion': (StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfLinearExtrusion, None), 'StepGeom_bssfUnspecified': (StepGeom_BSplineSurfaceForm.StepGeom_bssfUnspecified, None)}
-    __members__: dict # value = {'StepGeom_bssfPlaneSurf': StepGeom_BSplineSurfaceForm.StepGeom_bssfPlaneSurf, 'StepGeom_bssfCylindricalSurf': StepGeom_BSplineSurfaceForm.StepGeom_bssfCylindricalSurf, 'StepGeom_bssfConicalSurf': StepGeom_BSplineSurfaceForm.StepGeom_bssfConicalSurf, 'StepGeom_bssfSphericalSurf': StepGeom_BSplineSurfaceForm.StepGeom_bssfSphericalSurf, 'StepGeom_bssfToroidalSurf': StepGeom_BSplineSurfaceForm.StepGeom_bssfToroidalSurf, 'StepGeom_bssfSurfOfRevolution': StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfRevolution, 'StepGeom_bssfRuledSurf': StepGeom_BSplineSurfaceForm.StepGeom_bssfRuledSurf, 'StepGeom_bssfGeneralisedCone': StepGeom_BSplineSurfaceForm.StepGeom_bssfGeneralisedCone, 'StepGeom_bssfQuadricSurf': StepGeom_BSplineSurfaceForm.StepGeom_bssfQuadricSurf, 'StepGeom_bssfSurfOfLinearExtrusion': StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfLinearExtrusion, 'StepGeom_bssfUnspecified': StepGeom_BSplineSurfaceForm.StepGeom_bssfUnspecified}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepGeom_bssfConicalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfConicalSurf: 2>
+    StepGeom_bssfCylindricalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfCylindricalSurf: 1>
+    StepGeom_bssfGeneralisedCone: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfGeneralisedCone: 7>
+    StepGeom_bssfPlaneSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfPlaneSurf: 0>
+    StepGeom_bssfQuadricSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfQuadricSurf: 8>
+    StepGeom_bssfRuledSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfRuledSurf: 6>
+    StepGeom_bssfSphericalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfSphericalSurf: 3>
+    StepGeom_bssfSurfOfLinearExtrusion: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfLinearExtrusion: 9>
+    StepGeom_bssfSurfOfRevolution: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfRevolution: 5>
+    StepGeom_bssfToroidalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfToroidalSurf: 4>
+    StepGeom_bssfUnspecified: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfUnspecified: 10>
+    __entries: dict # value = {'StepGeom_bssfPlaneSurf': (<StepGeom_BSplineSurfaceForm.StepGeom_bssfPlaneSurf: 0>, None), 'StepGeom_bssfCylindricalSurf': (<StepGeom_BSplineSurfaceForm.StepGeom_bssfCylindricalSurf: 1>, None), 'StepGeom_bssfConicalSurf': (<StepGeom_BSplineSurfaceForm.StepGeom_bssfConicalSurf: 2>, None), 'StepGeom_bssfSphericalSurf': (<StepGeom_BSplineSurfaceForm.StepGeom_bssfSphericalSurf: 3>, None), 'StepGeom_bssfToroidalSurf': (<StepGeom_BSplineSurfaceForm.StepGeom_bssfToroidalSurf: 4>, None), 'StepGeom_bssfSurfOfRevolution': (<StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfRevolution: 5>, None), 'StepGeom_bssfRuledSurf': (<StepGeom_BSplineSurfaceForm.StepGeom_bssfRuledSurf: 6>, None), 'StepGeom_bssfGeneralisedCone': (<StepGeom_BSplineSurfaceForm.StepGeom_bssfGeneralisedCone: 7>, None), 'StepGeom_bssfQuadricSurf': (<StepGeom_BSplineSurfaceForm.StepGeom_bssfQuadricSurf: 8>, None), 'StepGeom_bssfSurfOfLinearExtrusion': (<StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfLinearExtrusion: 9>, None), 'StepGeom_bssfUnspecified': (<StepGeom_BSplineSurfaceForm.StepGeom_bssfUnspecified: 10>, None)}
+    __members__: dict # value = {'StepGeom_bssfPlaneSurf': <StepGeom_BSplineSurfaceForm.StepGeom_bssfPlaneSurf: 0>, 'StepGeom_bssfCylindricalSurf': <StepGeom_BSplineSurfaceForm.StepGeom_bssfCylindricalSurf: 1>, 'StepGeom_bssfConicalSurf': <StepGeom_BSplineSurfaceForm.StepGeom_bssfConicalSurf: 2>, 'StepGeom_bssfSphericalSurf': <StepGeom_BSplineSurfaceForm.StepGeom_bssfSphericalSurf: 3>, 'StepGeom_bssfToroidalSurf': <StepGeom_BSplineSurfaceForm.StepGeom_bssfToroidalSurf: 4>, 'StepGeom_bssfSurfOfRevolution': <StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfRevolution: 5>, 'StepGeom_bssfRuledSurf': <StepGeom_BSplineSurfaceForm.StepGeom_bssfRuledSurf: 6>, 'StepGeom_bssfGeneralisedCone': <StepGeom_BSplineSurfaceForm.StepGeom_bssfGeneralisedCone: 7>, 'StepGeom_bssfQuadricSurf': <StepGeom_BSplineSurfaceForm.StepGeom_bssfQuadricSurf: 8>, 'StepGeom_bssfSurfOfLinearExtrusion': <StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfLinearExtrusion: 9>, 'StepGeom_bssfUnspecified': <StepGeom_BSplineSurfaceForm.StepGeom_bssfUnspecified: 10>}
     pass
 class StepGeom_BoundedSurface(StepGeom_Surface, StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -2045,14 +2061,14 @@ class StepGeom_BezierCurveAndRationalBSplineCurve(StepGeom_BSplineCurve, StepGeo
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aBezierCurve : StepGeom_BezierCurve,aRationalBSplineCurve : StepGeom_RationalBSplineCurve) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aBezierCurve : StepGeom_BezierCurve,aRationalBSplineCurve : StepGeom_RationalBSplineCurve) -> None: ...
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3914,14 +3930,14 @@ class StepGeom_BSplineCurveWithKnotsAndRationalBSplineCurve(StepGeom_BSplineCurv
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aBSplineCurveWithKnots : StepGeom_BSplineCurveWithKnots,aRationalBSplineCurve : StepGeom_RationalBSplineCurve) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aKnotMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aKnots : OCP.TColStd.TColStd_HArray1OfReal,aKnotSpec : StepGeom_KnotType,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aKnotMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aKnots : OCP.TColStd.TColStd_HArray1OfReal,aKnotSpec : StepGeom_KnotType,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aBSplineCurveWithKnots : StepGeom_BSplineCurveWithKnots,aRationalBSplineCurve : StepGeom_RationalBSplineCurve) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5233,14 +5249,14 @@ class StepGeom_GeometricRepresentationContextAndGlobalUnitAssignedContext(OCP.St
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aCoordinateSpaceDimension : int,aUnits : OCP.StepBasic.StepBasic_HArray1OfNamedUnit) -> None: 
+    def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aGeometricRepresentationContext : StepGeom_GeometricRepresentationContext,aGlobalUnitAssignedContext : OCP.StepRepr.StepRepr_GlobalUnitAssignedContext) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aGeometricRepresentationContext : StepGeom_GeometricRepresentationContext,aGlobalUnitAssignedContext : OCP.StepRepr.StepRepr_GlobalUnitAssignedContext) -> None: ...
+    def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aCoordinateSpaceDimension : int,aUnits : OCP.StepBasic.StepBasic_HArray1OfNamedUnit) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5349,14 +5365,14 @@ class StepGeom_GeometricRepresentationContextAndParametricRepresentationContext(
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aCoordinateSpaceDimension : int) -> None: 
+    def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aGeometricRepresentationContext : StepGeom_GeometricRepresentationContext,aParametricRepresentationContext : OCP.StepRepr.StepRepr_ParametricRepresentationContext) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aGeometricRepresentationContext : StepGeom_GeometricRepresentationContext,aParametricRepresentationContext : OCP.StepRepr.StepRepr_ParametricRepresentationContext) -> None: ...
+    def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aCoordinateSpaceDimension : int) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5630,14 +5646,14 @@ class StepGeom_HArray1OfBoundaryCurve(StepGeom_Array1OfBoundaryCurve, OCP.Standa
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_BoundaryCurve) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_BoundaryCurve) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepGeom_Array1OfBoundaryCurve) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5780,7 +5796,7 @@ class StepGeom_HArray1OfCartesianPoint(StepGeom_Array1OfCartesianPoint, OCP.Stan
     def __init__(self,theOther : StepGeom_Array1OfCartesianPoint) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_CartesianPoint) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5916,14 +5932,14 @@ class StepGeom_HArray1OfCompositeCurveSegment(StepGeom_Array1OfCompositeCurveSeg
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepGeom_Array1OfCompositeCurveSegment) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_CompositeCurveSegment) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepGeom_Array1OfCompositeCurveSegment) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6059,14 +6075,14 @@ class StepGeom_HArray1OfCurve(StepGeom_Array1OfCurve, OCP.Standard.Standard_Tran
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepGeom_Array1OfCurve) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : StepGeom_Array1OfCurve) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_Curve) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6204,12 +6220,12 @@ class StepGeom_HArray1OfPcurveOrSurface(StepGeom_Array1OfPcurveOrSurface, OCP.St
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_PcurveOrSurface) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepGeom_Array1OfPcurveOrSurface) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_PcurveOrSurface) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6345,14 +6361,14 @@ class StepGeom_HArray1OfSurfaceBoundary(StepGeom_Array1OfSurfaceBoundary, OCP.St
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepGeom_Array1OfSurfaceBoundary) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_SurfaceBoundary) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : StepGeom_Array1OfSurfaceBoundary) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6488,14 +6504,14 @@ class StepGeom_HArray1OfTrimmingSelect(StepGeom_Array1OfTrimmingSelect, OCP.Stan
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepGeom_Array1OfTrimmingSelect) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_TrimmingSelect) -> None: ...
     @overload
+    def __init__(self,theOther : StepGeom_Array1OfTrimmingSelect) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6625,11 +6641,11 @@ class StepGeom_HArray2OfCartesianPoint(StepGeom_Array2OfCartesianPoint, OCP.Stan
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepGeom_Array2OfCartesianPoint) -> None: ...
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepGeom_CartesianPoint) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepGeom_CartesianPoint) -> None: ...
+    def __init__(self,theOther : StepGeom_Array2OfCartesianPoint) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6759,11 +6775,11 @@ class StepGeom_HArray2OfSurfacePatch(StepGeom_Array2OfSurfacePatch, OCP.Standard
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepGeom_SurfacePatch) -> None: ...
     @overload
     def __init__(self,theOther : StepGeom_Array2OfSurfacePatch) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6979,22 +6995,30 @@ class StepGeom_KnotType():
 
       StepGeom_ktPiecewiseBezierKnots
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepGeom_ktPiecewiseBezierKnots: OCP.StepGeom.StepGeom_KnotType # value = StepGeom_KnotType.StepGeom_ktPiecewiseBezierKnots
-    StepGeom_ktQuasiUniformKnots: OCP.StepGeom.StepGeom_KnotType # value = StepGeom_KnotType.StepGeom_ktQuasiUniformKnots
-    StepGeom_ktUniformKnots: OCP.StepGeom.StepGeom_KnotType # value = StepGeom_KnotType.StepGeom_ktUniformKnots
-    StepGeom_ktUnspecified: OCP.StepGeom.StepGeom_KnotType # value = StepGeom_KnotType.StepGeom_ktUnspecified
-    __entries: dict # value = {'StepGeom_ktUniformKnots': (StepGeom_KnotType.StepGeom_ktUniformKnots, None), 'StepGeom_ktUnspecified': (StepGeom_KnotType.StepGeom_ktUnspecified, None), 'StepGeom_ktQuasiUniformKnots': (StepGeom_KnotType.StepGeom_ktQuasiUniformKnots, None), 'StepGeom_ktPiecewiseBezierKnots': (StepGeom_KnotType.StepGeom_ktPiecewiseBezierKnots, None)}
-    __members__: dict # value = {'StepGeom_ktUniformKnots': StepGeom_KnotType.StepGeom_ktUniformKnots, 'StepGeom_ktUnspecified': StepGeom_KnotType.StepGeom_ktUnspecified, 'StepGeom_ktQuasiUniformKnots': StepGeom_KnotType.StepGeom_ktQuasiUniformKnots, 'StepGeom_ktPiecewiseBezierKnots': StepGeom_KnotType.StepGeom_ktPiecewiseBezierKnots}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepGeom_ktPiecewiseBezierKnots: OCP.StepGeom.StepGeom_KnotType # value = <StepGeom_KnotType.StepGeom_ktPiecewiseBezierKnots: 3>
+    StepGeom_ktQuasiUniformKnots: OCP.StepGeom.StepGeom_KnotType # value = <StepGeom_KnotType.StepGeom_ktQuasiUniformKnots: 2>
+    StepGeom_ktUniformKnots: OCP.StepGeom.StepGeom_KnotType # value = <StepGeom_KnotType.StepGeom_ktUniformKnots: 0>
+    StepGeom_ktUnspecified: OCP.StepGeom.StepGeom_KnotType # value = <StepGeom_KnotType.StepGeom_ktUnspecified: 1>
+    __entries: dict # value = {'StepGeom_ktUniformKnots': (<StepGeom_KnotType.StepGeom_ktUniformKnots: 0>, None), 'StepGeom_ktUnspecified': (<StepGeom_KnotType.StepGeom_ktUnspecified: 1>, None), 'StepGeom_ktQuasiUniformKnots': (<StepGeom_KnotType.StepGeom_ktQuasiUniformKnots: 2>, None), 'StepGeom_ktPiecewiseBezierKnots': (<StepGeom_KnotType.StepGeom_ktPiecewiseBezierKnots: 3>, None)}
+    __members__: dict # value = {'StepGeom_ktUniformKnots': <StepGeom_KnotType.StepGeom_ktUniformKnots: 0>, 'StepGeom_ktUnspecified': <StepGeom_KnotType.StepGeom_ktUnspecified: 1>, 'StepGeom_ktQuasiUniformKnots': <StepGeom_KnotType.StepGeom_ktQuasiUniformKnots: 2>, 'StepGeom_ktPiecewiseBezierKnots': <StepGeom_KnotType.StepGeom_ktPiecewiseBezierKnots: 3>}
     pass
 class StepGeom_Line(StepGeom_Curve, StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -8323,21 +8347,29 @@ class StepGeom_PreferredSurfaceCurveRepresentation():
 
       StepGeom_pscrPcurveS2
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepGeom_pscrCurve3d: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrCurve3d
-    StepGeom_pscrPcurveS1: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS1
-    StepGeom_pscrPcurveS2: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS2
-    __entries: dict # value = {'StepGeom_pscrCurve3d': (StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrCurve3d, None), 'StepGeom_pscrPcurveS1': (StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS1, None), 'StepGeom_pscrPcurveS2': (StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS2, None)}
-    __members__: dict # value = {'StepGeom_pscrCurve3d': StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrCurve3d, 'StepGeom_pscrPcurveS1': StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS1, 'StepGeom_pscrPcurveS2': StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS2}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepGeom_pscrCurve3d: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = <StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrCurve3d: 0>
+    StepGeom_pscrPcurveS1: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = <StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS1: 1>
+    StepGeom_pscrPcurveS2: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = <StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS2: 2>
+    __entries: dict # value = {'StepGeom_pscrCurve3d': (<StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrCurve3d: 0>, None), 'StepGeom_pscrPcurveS1': (<StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS1: 1>, None), 'StepGeom_pscrPcurveS2': (<StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS2: 2>, None)}
+    __members__: dict # value = {'StepGeom_pscrCurve3d': <StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrCurve3d: 0>, 'StepGeom_pscrPcurveS1': <StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS1: 1>, 'StepGeom_pscrPcurveS2': <StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS2: 2>}
     pass
 class StepGeom_QuasiUniformCurve(StepGeom_BSplineCurve, StepGeom_BoundedCurve, StepGeom_Curve, StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     def ClosedCurve(self) -> OCP.StepData.StepData_Logical: 
@@ -8496,14 +8528,14 @@ class StepGeom_QuasiUniformCurveAndRationalBSplineCurve(StepGeom_BSplineCurve, S
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aQuasiUniformCurve : StepGeom_QuasiUniformCurve,aRationalBSplineCurve : StepGeom_RationalBSplineCurve) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aQuasiUniformCurve : StepGeom_QuasiUniformCurve,aRationalBSplineCurve : StepGeom_RationalBSplineCurve) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -9720,14 +9752,14 @@ class StepGeom_BSplineSurfaceWithKnotsAndRationalBSplineSurface(StepGeom_BSpline
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aBSplineSurfaceWithKnots : StepGeom_BSplineSurfaceWithKnots,aRationalBSplineSurface : StepGeom_RationalBSplineSurface) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aUMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aVMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aUKnots : OCP.TColStd.TColStd_HArray1OfReal,aVKnots : OCP.TColStd.TColStd_HArray1OfReal,aKnotSpec : StepGeom_KnotType,aWeightsData : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aUMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aVMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aUKnots : OCP.TColStd.TColStd_HArray1OfReal,aVKnots : OCP.TColStd.TColStd_HArray1OfReal,aKnotSpec : StepGeom_KnotType,aWeightsData : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aBSplineSurfaceWithKnots : StepGeom_BSplineSurfaceWithKnots,aRationalBSplineSurface : StepGeom_RationalBSplineSurface) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -10785,22 +10817,30 @@ class StepGeom_TransitionCode():
 
       StepGeom_tcContSameGradientSameCurvature
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepGeom_tcContSameGradient: OCP.StepGeom.StepGeom_TransitionCode # value = StepGeom_TransitionCode.StepGeom_tcContSameGradient
-    StepGeom_tcContSameGradientSameCurvature: OCP.StepGeom.StepGeom_TransitionCode # value = StepGeom_TransitionCode.StepGeom_tcContSameGradientSameCurvature
-    StepGeom_tcContinuous: OCP.StepGeom.StepGeom_TransitionCode # value = StepGeom_TransitionCode.StepGeom_tcContinuous
-    StepGeom_tcDiscontinuous: OCP.StepGeom.StepGeom_TransitionCode # value = StepGeom_TransitionCode.StepGeom_tcDiscontinuous
-    __entries: dict # value = {'StepGeom_tcDiscontinuous': (StepGeom_TransitionCode.StepGeom_tcDiscontinuous, None), 'StepGeom_tcContinuous': (StepGeom_TransitionCode.StepGeom_tcContinuous, None), 'StepGeom_tcContSameGradient': (StepGeom_TransitionCode.StepGeom_tcContSameGradient, None), 'StepGeom_tcContSameGradientSameCurvature': (StepGeom_TransitionCode.StepGeom_tcContSameGradientSameCurvature, None)}
-    __members__: dict # value = {'StepGeom_tcDiscontinuous': StepGeom_TransitionCode.StepGeom_tcDiscontinuous, 'StepGeom_tcContinuous': StepGeom_TransitionCode.StepGeom_tcContinuous, 'StepGeom_tcContSameGradient': StepGeom_TransitionCode.StepGeom_tcContSameGradient, 'StepGeom_tcContSameGradientSameCurvature': StepGeom_TransitionCode.StepGeom_tcContSameGradientSameCurvature}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepGeom_tcContSameGradient: OCP.StepGeom.StepGeom_TransitionCode # value = <StepGeom_TransitionCode.StepGeom_tcContSameGradient: 2>
+    StepGeom_tcContSameGradientSameCurvature: OCP.StepGeom.StepGeom_TransitionCode # value = <StepGeom_TransitionCode.StepGeom_tcContSameGradientSameCurvature: 3>
+    StepGeom_tcContinuous: OCP.StepGeom.StepGeom_TransitionCode # value = <StepGeom_TransitionCode.StepGeom_tcContinuous: 1>
+    StepGeom_tcDiscontinuous: OCP.StepGeom.StepGeom_TransitionCode # value = <StepGeom_TransitionCode.StepGeom_tcDiscontinuous: 0>
+    __entries: dict # value = {'StepGeom_tcDiscontinuous': (<StepGeom_TransitionCode.StepGeom_tcDiscontinuous: 0>, None), 'StepGeom_tcContinuous': (<StepGeom_TransitionCode.StepGeom_tcContinuous: 1>, None), 'StepGeom_tcContSameGradient': (<StepGeom_TransitionCode.StepGeom_tcContSameGradient: 2>, None), 'StepGeom_tcContSameGradientSameCurvature': (<StepGeom_TransitionCode.StepGeom_tcContSameGradientSameCurvature: 3>, None)}
+    __members__: dict # value = {'StepGeom_tcDiscontinuous': <StepGeom_TransitionCode.StepGeom_tcDiscontinuous: 0>, 'StepGeom_tcContinuous': <StepGeom_TransitionCode.StepGeom_tcContinuous: 1>, 'StepGeom_tcContSameGradient': <StepGeom_TransitionCode.StepGeom_tcContSameGradient: 2>, 'StepGeom_tcContSameGradientSameCurvature': <StepGeom_TransitionCode.StepGeom_tcContSameGradientSameCurvature: 3>}
     pass
 class StepGeom_TrimmedCurve(StepGeom_BoundedCurve, StepGeom_Curve, StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     def BasisCurve(self) -> StepGeom_Curve: 
@@ -11087,21 +11127,29 @@ class StepGeom_TrimmingPreference():
 
       StepGeom_tpUnspecified
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepGeom_tpCartesian: OCP.StepGeom.StepGeom_TrimmingPreference # value = StepGeom_TrimmingPreference.StepGeom_tpCartesian
-    StepGeom_tpParameter: OCP.StepGeom.StepGeom_TrimmingPreference # value = StepGeom_TrimmingPreference.StepGeom_tpParameter
-    StepGeom_tpUnspecified: OCP.StepGeom.StepGeom_TrimmingPreference # value = StepGeom_TrimmingPreference.StepGeom_tpUnspecified
-    __entries: dict # value = {'StepGeom_tpCartesian': (StepGeom_TrimmingPreference.StepGeom_tpCartesian, None), 'StepGeom_tpParameter': (StepGeom_TrimmingPreference.StepGeom_tpParameter, None), 'StepGeom_tpUnspecified': (StepGeom_TrimmingPreference.StepGeom_tpUnspecified, None)}
-    __members__: dict # value = {'StepGeom_tpCartesian': StepGeom_TrimmingPreference.StepGeom_tpCartesian, 'StepGeom_tpParameter': StepGeom_TrimmingPreference.StepGeom_tpParameter, 'StepGeom_tpUnspecified': StepGeom_TrimmingPreference.StepGeom_tpUnspecified}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepGeom_tpCartesian: OCP.StepGeom.StepGeom_TrimmingPreference # value = <StepGeom_TrimmingPreference.StepGeom_tpCartesian: 0>
+    StepGeom_tpParameter: OCP.StepGeom.StepGeom_TrimmingPreference # value = <StepGeom_TrimmingPreference.StepGeom_tpParameter: 1>
+    StepGeom_tpUnspecified: OCP.StepGeom.StepGeom_TrimmingPreference # value = <StepGeom_TrimmingPreference.StepGeom_tpUnspecified: 2>
+    __entries: dict # value = {'StepGeom_tpCartesian': (<StepGeom_TrimmingPreference.StepGeom_tpCartesian: 0>, None), 'StepGeom_tpParameter': (<StepGeom_TrimmingPreference.StepGeom_tpParameter: 1>, None), 'StepGeom_tpUnspecified': (<StepGeom_TrimmingPreference.StepGeom_tpUnspecified: 2>, None)}
+    __members__: dict # value = {'StepGeom_tpCartesian': <StepGeom_TrimmingPreference.StepGeom_tpCartesian: 0>, 'StepGeom_tpParameter': <StepGeom_TrimmingPreference.StepGeom_tpParameter: 1>, 'StepGeom_tpUnspecified': <StepGeom_TrimmingPreference.StepGeom_tpUnspecified: 2>}
     pass
 class StepGeom_TrimmingSelect(OCP.StepData.StepData_SelectType):
     """
@@ -11988,34 +12036,34 @@ class StepGeom_VectorOrDirection(OCP.StepData.StepData_SelectType):
         """
     def __init__(self) -> None: ...
     pass
-StepGeom_bscfCircularArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfCircularArc
-StepGeom_bscfEllipticArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfEllipticArc
-StepGeom_bscfHyperbolicArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfHyperbolicArc
-StepGeom_bscfParabolicArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfParabolicArc
-StepGeom_bscfPolylineForm: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfPolylineForm
-StepGeom_bscfUnspecified: OCP.StepGeom.StepGeom_BSplineCurveForm # value = StepGeom_BSplineCurveForm.StepGeom_bscfUnspecified
-StepGeom_bssfConicalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfConicalSurf
-StepGeom_bssfCylindricalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfCylindricalSurf
-StepGeom_bssfGeneralisedCone: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfGeneralisedCone
-StepGeom_bssfPlaneSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfPlaneSurf
-StepGeom_bssfQuadricSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfQuadricSurf
-StepGeom_bssfRuledSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfRuledSurf
-StepGeom_bssfSphericalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfSphericalSurf
-StepGeom_bssfSurfOfLinearExtrusion: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfLinearExtrusion
-StepGeom_bssfSurfOfRevolution: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfRevolution
-StepGeom_bssfToroidalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfToroidalSurf
-StepGeom_bssfUnspecified: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = StepGeom_BSplineSurfaceForm.StepGeom_bssfUnspecified
-StepGeom_ktPiecewiseBezierKnots: OCP.StepGeom.StepGeom_KnotType # value = StepGeom_KnotType.StepGeom_ktPiecewiseBezierKnots
-StepGeom_ktQuasiUniformKnots: OCP.StepGeom.StepGeom_KnotType # value = StepGeom_KnotType.StepGeom_ktQuasiUniformKnots
-StepGeom_ktUniformKnots: OCP.StepGeom.StepGeom_KnotType # value = StepGeom_KnotType.StepGeom_ktUniformKnots
-StepGeom_ktUnspecified: OCP.StepGeom.StepGeom_KnotType # value = StepGeom_KnotType.StepGeom_ktUnspecified
-StepGeom_pscrCurve3d: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrCurve3d
-StepGeom_pscrPcurveS1: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS1
-StepGeom_pscrPcurveS2: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS2
-StepGeom_tcContSameGradient: OCP.StepGeom.StepGeom_TransitionCode # value = StepGeom_TransitionCode.StepGeom_tcContSameGradient
-StepGeom_tcContSameGradientSameCurvature: OCP.StepGeom.StepGeom_TransitionCode # value = StepGeom_TransitionCode.StepGeom_tcContSameGradientSameCurvature
-StepGeom_tcContinuous: OCP.StepGeom.StepGeom_TransitionCode # value = StepGeom_TransitionCode.StepGeom_tcContinuous
-StepGeom_tcDiscontinuous: OCP.StepGeom.StepGeom_TransitionCode # value = StepGeom_TransitionCode.StepGeom_tcDiscontinuous
-StepGeom_tpCartesian: OCP.StepGeom.StepGeom_TrimmingPreference # value = StepGeom_TrimmingPreference.StepGeom_tpCartesian
-StepGeom_tpParameter: OCP.StepGeom.StepGeom_TrimmingPreference # value = StepGeom_TrimmingPreference.StepGeom_tpParameter
-StepGeom_tpUnspecified: OCP.StepGeom.StepGeom_TrimmingPreference # value = StepGeom_TrimmingPreference.StepGeom_tpUnspecified
+StepGeom_bscfCircularArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfCircularArc: 1>
+StepGeom_bscfEllipticArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfEllipticArc: 2>
+StepGeom_bscfHyperbolicArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfHyperbolicArc: 4>
+StepGeom_bscfParabolicArc: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfParabolicArc: 3>
+StepGeom_bscfPolylineForm: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfPolylineForm: 0>
+StepGeom_bscfUnspecified: OCP.StepGeom.StepGeom_BSplineCurveForm # value = <StepGeom_BSplineCurveForm.StepGeom_bscfUnspecified: 5>
+StepGeom_bssfConicalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfConicalSurf: 2>
+StepGeom_bssfCylindricalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfCylindricalSurf: 1>
+StepGeom_bssfGeneralisedCone: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfGeneralisedCone: 7>
+StepGeom_bssfPlaneSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfPlaneSurf: 0>
+StepGeom_bssfQuadricSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfQuadricSurf: 8>
+StepGeom_bssfRuledSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfRuledSurf: 6>
+StepGeom_bssfSphericalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfSphericalSurf: 3>
+StepGeom_bssfSurfOfLinearExtrusion: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfLinearExtrusion: 9>
+StepGeom_bssfSurfOfRevolution: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfSurfOfRevolution: 5>
+StepGeom_bssfToroidalSurf: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfToroidalSurf: 4>
+StepGeom_bssfUnspecified: OCP.StepGeom.StepGeom_BSplineSurfaceForm # value = <StepGeom_BSplineSurfaceForm.StepGeom_bssfUnspecified: 10>
+StepGeom_ktPiecewiseBezierKnots: OCP.StepGeom.StepGeom_KnotType # value = <StepGeom_KnotType.StepGeom_ktPiecewiseBezierKnots: 3>
+StepGeom_ktQuasiUniformKnots: OCP.StepGeom.StepGeom_KnotType # value = <StepGeom_KnotType.StepGeom_ktQuasiUniformKnots: 2>
+StepGeom_ktUniformKnots: OCP.StepGeom.StepGeom_KnotType # value = <StepGeom_KnotType.StepGeom_ktUniformKnots: 0>
+StepGeom_ktUnspecified: OCP.StepGeom.StepGeom_KnotType # value = <StepGeom_KnotType.StepGeom_ktUnspecified: 1>
+StepGeom_pscrCurve3d: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = <StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrCurve3d: 0>
+StepGeom_pscrPcurveS1: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = <StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS1: 1>
+StepGeom_pscrPcurveS2: OCP.StepGeom.StepGeom_PreferredSurfaceCurveRepresentation # value = <StepGeom_PreferredSurfaceCurveRepresentation.StepGeom_pscrPcurveS2: 2>
+StepGeom_tcContSameGradient: OCP.StepGeom.StepGeom_TransitionCode # value = <StepGeom_TransitionCode.StepGeom_tcContSameGradient: 2>
+StepGeom_tcContSameGradientSameCurvature: OCP.StepGeom.StepGeom_TransitionCode # value = <StepGeom_TransitionCode.StepGeom_tcContSameGradientSameCurvature: 3>
+StepGeom_tcContinuous: OCP.StepGeom.StepGeom_TransitionCode # value = <StepGeom_TransitionCode.StepGeom_tcContinuous: 1>
+StepGeom_tcDiscontinuous: OCP.StepGeom.StepGeom_TransitionCode # value = <StepGeom_TransitionCode.StepGeom_tcDiscontinuous: 0>
+StepGeom_tpCartesian: OCP.StepGeom.StepGeom_TrimmingPreference # value = <StepGeom_TrimmingPreference.StepGeom_tpCartesian: 0>
+StepGeom_tpParameter: OCP.StepGeom.StepGeom_TrimmingPreference # value = <StepGeom_TrimmingPreference.StepGeom_tpParameter: 1>
+StepGeom_tpUnspecified: OCP.StepGeom.StepGeom_TrimmingPreference # value = <StepGeom_TrimmingPreference.StepGeom_tpUnspecified: 2>

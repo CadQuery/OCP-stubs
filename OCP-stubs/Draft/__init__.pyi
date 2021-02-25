@@ -4,17 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.Poly
-import OCP.Geom2d
 import OCP.TopTools
-import OCP.TopLoc
-import OCP.Standard
-import OCP.TopoDS
-import OCP.Geom
+import OCP.Poly
+import io
 import OCP.NCollection
-import OCP.BRepTools
 import OCP.gp
+import OCP.BRepTools
+import OCP.Geom
+import OCP.GeomAbs
+import OCP.TopoDS
+import OCP.Geom2d
+import OCP.Standard
+import OCP.TopLoc
 __all__  = [
 "Draft",
 "Draft_EdgeInfo",
@@ -107,14 +108,14 @@ class Draft_EdgeInfo():
         None
         """
     @overload
-    def Tolerance(self) -> float: 
+    def Tolerance(self,tol : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Tolerance(self,tol : float) -> None: ...
+    def Tolerance(self) -> float: ...
     @overload
     def __init__(self,HasNewGeometry : bool) -> None: ...
     @overload
@@ -134,22 +135,30 @@ class Draft_ErrorStatus():
 
       Draft_VertexRecomputation
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Draft_EdgeRecomputation: OCP.Draft.Draft_ErrorStatus # value = Draft_ErrorStatus.Draft_EdgeRecomputation
-    Draft_FaceRecomputation: OCP.Draft.Draft_ErrorStatus # value = Draft_ErrorStatus.Draft_FaceRecomputation
-    Draft_NoError: OCP.Draft.Draft_ErrorStatus # value = Draft_ErrorStatus.Draft_NoError
-    Draft_VertexRecomputation: OCP.Draft.Draft_ErrorStatus # value = Draft_ErrorStatus.Draft_VertexRecomputation
-    __entries: dict # value = {'Draft_NoError': (Draft_ErrorStatus.Draft_NoError, None), 'Draft_FaceRecomputation': (Draft_ErrorStatus.Draft_FaceRecomputation, None), 'Draft_EdgeRecomputation': (Draft_ErrorStatus.Draft_EdgeRecomputation, None), 'Draft_VertexRecomputation': (Draft_ErrorStatus.Draft_VertexRecomputation, None)}
-    __members__: dict # value = {'Draft_NoError': Draft_ErrorStatus.Draft_NoError, 'Draft_FaceRecomputation': Draft_ErrorStatus.Draft_FaceRecomputation, 'Draft_EdgeRecomputation': Draft_ErrorStatus.Draft_EdgeRecomputation, 'Draft_VertexRecomputation': Draft_ErrorStatus.Draft_VertexRecomputation}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Draft_EdgeRecomputation: OCP.Draft.Draft_ErrorStatus # value = <Draft_ErrorStatus.Draft_EdgeRecomputation: 2>
+    Draft_FaceRecomputation: OCP.Draft.Draft_ErrorStatus # value = <Draft_ErrorStatus.Draft_FaceRecomputation: 1>
+    Draft_NoError: OCP.Draft.Draft_ErrorStatus # value = <Draft_ErrorStatus.Draft_NoError: 0>
+    Draft_VertexRecomputation: OCP.Draft.Draft_ErrorStatus # value = <Draft_ErrorStatus.Draft_VertexRecomputation: 3>
+    __entries: dict # value = {'Draft_NoError': (<Draft_ErrorStatus.Draft_NoError: 0>, None), 'Draft_FaceRecomputation': (<Draft_ErrorStatus.Draft_FaceRecomputation: 1>, None), 'Draft_EdgeRecomputation': (<Draft_ErrorStatus.Draft_EdgeRecomputation: 2>, None), 'Draft_VertexRecomputation': (<Draft_ErrorStatus.Draft_VertexRecomputation: 3>, None)}
+    __members__: dict # value = {'Draft_NoError': <Draft_ErrorStatus.Draft_NoError: 0>, 'Draft_FaceRecomputation': <Draft_ErrorStatus.Draft_FaceRecomputation: 1>, 'Draft_EdgeRecomputation': <Draft_ErrorStatus.Draft_EdgeRecomputation: 2>, 'Draft_VertexRecomputation': <Draft_ErrorStatus.Draft_VertexRecomputation: 3>}
     pass
 class Draft_FaceInfo():
     """
@@ -197,9 +206,9 @@ class Draft_FaceInfo():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.Geom.Geom_Surface,HasNewGeometry : bool) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Draft_IndexedDataMapOfEdgeEdgeInfo(OCP.NCollection.NCollection_BaseMap):
     """
@@ -230,14 +239,14 @@ class Draft_IndexedDataMapOfEdgeEdgeInfo(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
         Contains
@@ -255,14 +264,14 @@ class Draft_IndexedDataMapOfEdgeEdgeInfo(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Edge) -> Draft_EdgeInfo: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Edge,theValue : Draft_EdgeInfo) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Edge,theValue : Draft_EdgeInfo) -> bool: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Edge) -> Draft_EdgeInfo: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Edge) -> int: 
         """
         FindIndex
@@ -303,7 +312,7 @@ class Draft_IndexedDataMapOfEdgeEdgeInfo(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -318,10 +327,10 @@ class Draft_IndexedDataMapOfEdgeEdgeInfo(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : Draft_IndexedDataMapOfEdgeEdgeInfo) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : Draft_IndexedDataMapOfEdgeEdgeInfo) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Draft_IndexedDataMapOfFaceFaceInfo(OCP.NCollection.NCollection_BaseMap):
     """
@@ -425,7 +434,7 @@ class Draft_IndexedDataMapOfFaceFaceInfo(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -438,12 +447,12 @@ class Draft_IndexedDataMapOfFaceFaceInfo(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : Draft_IndexedDataMapOfFaceFaceInfo) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Draft_IndexedDataMapOfVertexVertexInfo(OCP.NCollection.NCollection_BaseMap):
     """
@@ -499,14 +508,14 @@ class Draft_IndexedDataMapOfVertexVertexInfo(OCP.NCollection.NCollection_BaseMap
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Vertex,theValue : Draft_VertexInfo) -> bool: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Vertex) -> Draft_VertexInfo: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Vertex) -> Draft_VertexInfo: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Vertex,theValue : Draft_VertexInfo) -> bool: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Vertex) -> int: 
         """
         FindIndex
@@ -547,7 +556,7 @@ class Draft_IndexedDataMapOfVertexVertexInfo(OCP.NCollection.NCollection_BaseMap
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -560,12 +569,12 @@ class Draft_IndexedDataMapOfVertexVertexInfo(OCP.NCollection.NCollection_BaseMap
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self,theOther : Draft_IndexedDataMapOfVertexVertexInfo) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self,theOther : Draft_IndexedDataMapOfVertexVertexInfo) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Draft_Modification(OCP.BRepTools.BRepTools_Modification, OCP.Standard.Standard_Transient):
     def Add(self,F : OCP.TopoDS.TopoDS_Face,Direction : OCP.gp.gp_Dir,Angle : float,NeutralPlane : OCP.gp.gp_Pln,Flag : bool=True) -> bool: 
@@ -740,7 +749,7 @@ class Draft_VertexInfo():
         """
     def __init__(self) -> None: ...
     pass
-Draft_EdgeRecomputation: OCP.Draft.Draft_ErrorStatus # value = Draft_ErrorStatus.Draft_EdgeRecomputation
-Draft_FaceRecomputation: OCP.Draft.Draft_ErrorStatus # value = Draft_ErrorStatus.Draft_FaceRecomputation
-Draft_NoError: OCP.Draft.Draft_ErrorStatus # value = Draft_ErrorStatus.Draft_NoError
-Draft_VertexRecomputation: OCP.Draft.Draft_ErrorStatus # value = Draft_ErrorStatus.Draft_VertexRecomputation
+Draft_EdgeRecomputation: OCP.Draft.Draft_ErrorStatus # value = <Draft_ErrorStatus.Draft_EdgeRecomputation: 2>
+Draft_FaceRecomputation: OCP.Draft.Draft_ErrorStatus # value = <Draft_ErrorStatus.Draft_FaceRecomputation: 1>
+Draft_NoError: OCP.Draft.Draft_ErrorStatus # value = <Draft_ErrorStatus.Draft_NoError: 0>
+Draft_VertexRecomputation: OCP.Draft.Draft_ErrorStatus # value = <Draft_ErrorStatus.Draft_VertexRecomputation: 3>

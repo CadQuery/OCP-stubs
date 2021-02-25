@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Bisector
 import OCP.TColStd
+import io
+import OCP.MAT
+import OCP.NCollection
+import OCP.TColGeom2d
+import OCP.gp
 import OCP.GeomAbs
 import OCP.Geom2d
-import OCP.MAT
 import OCP.Standard
-import OCP.TColGeom2d
-import OCP.Bisector
-import OCP.NCollection
-import OCP.gp
 __all__  = [
 "MAT2d_Array2OfConnexion",
 "MAT2d_BiInt",
@@ -104,11 +105,11 @@ class MAT2d_Array2OfConnexion():
         Constant value access
         """
     @overload
+    def __init__(self,theBegin : MAT2d_Connexion,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : MAT2d_Array2OfConnexion) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBegin : MAT2d_Connexion,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
@@ -239,14 +240,14 @@ class MAT2d_Connexion(OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Distance(self) -> float: 
+    def Distance(self,aDistance : float) -> None: 
         """
         Returns the distance between the two points.
 
         None
         """
     @overload
-    def Distance(self,aDistance : float) -> None: ...
+    def Distance(self) -> float: ...
     def Dump(self,Deep : int=0,Offset : int=0) -> None: 
         """
         Print <me>.
@@ -273,23 +274,23 @@ class MAT2d_Connexion(OCP.Standard.Standard_Transient):
     @overload
     def IndexFirstLine(self) -> int: ...
     @overload
-    def IndexItemOnFirst(self,anIndex : int) -> None: 
+    def IndexItemOnFirst(self) -> int: 
         """
         Returns the Index of the item on the first line.
 
         None
         """
     @overload
-    def IndexItemOnFirst(self) -> int: ...
+    def IndexItemOnFirst(self,anIndex : int) -> None: ...
     @overload
-    def IndexItemOnSecond(self) -> int: 
+    def IndexItemOnSecond(self,anIndex : int) -> None: 
         """
         Returns the Index of the item on the second line.
 
         None
         """
     @overload
-    def IndexItemOnSecond(self,anIndex : int) -> None: ...
+    def IndexItemOnSecond(self) -> int: ...
     @overload
     def IndexSecondLine(self,anIndex : int) -> None: 
         """
@@ -331,32 +332,32 @@ class MAT2d_Connexion(OCP.Standard.Standard_Transient):
     @overload
     def ParameterOnFirst(self) -> float: ...
     @overload
-    def ParameterOnSecond(self,aParameter : float) -> None: 
+    def ParameterOnSecond(self) -> float: 
         """
         Returns the parameter of the point on the secondline.
 
         None
         """
     @overload
-    def ParameterOnSecond(self) -> float: ...
+    def ParameterOnSecond(self,aParameter : float) -> None: ...
     @overload
-    def PointOnFirst(self,aPoint : OCP.gp.gp_Pnt2d) -> None: 
+    def PointOnFirst(self) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the point on the firstline.
 
         None
         """
     @overload
-    def PointOnFirst(self) -> OCP.gp.gp_Pnt2d: ...
+    def PointOnFirst(self,aPoint : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def PointOnSecond(self) -> OCP.gp.gp_Pnt2d: 
+    def PointOnSecond(self,aPoint : OCP.gp.gp_Pnt2d) -> None: 
         """
         Returns the point on the secondline.
 
         None
         """
     @overload
-    def PointOnSecond(self,aPoint : OCP.gp.gp_Pnt2d) -> None: ...
+    def PointOnSecond(self) -> OCP.gp.gp_Pnt2d: ...
     def Reverse(self) -> MAT2d_Connexion: 
         """
         Returns the reverse connexion of <me>. the firstpoint is the secondpoint. the secondpoint is the firstpoint.
@@ -366,9 +367,9 @@ class MAT2d_Connexion(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,LineA : int,LineB : int,ItemA : int,ItemB : int,Distance : float,ParameterOnA : float,ParameterOnB : float,PointA : OCP.gp.gp_Pnt2d,PointB : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,LineA : int,LineB : int,ItemA : int,ItemB : int,Distance : float,ParameterOnA : float,ParameterOnB : float,PointA : OCP.gp.gp_Pnt2d,PointB : OCP.gp.gp_Pnt2d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -401,9 +402,9 @@ class MAT2d_CutCurve():
         Returns the Indexth curve. raises if Index not in the range [1,NbCurves()]
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class MAT2d_DataMapOfBiIntInteger(OCP.NCollection.NCollection_BaseMap):
     """
@@ -434,14 +435,14 @@ class MAT2d_DataMapOfBiIntInteger(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : MAT2d_DataMapOfBiIntInteger) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -483,7 +484,7 @@ class MAT2d_DataMapOfBiIntInteger(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -492,12 +493,12 @@ class MAT2d_DataMapOfBiIntInteger(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : MAT2d_DataMapOfBiIntInteger) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theOther : MAT2d_DataMapOfBiIntInteger) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MAT2d_DataMapOfBiIntSequenceOfInteger(OCP.NCollection.NCollection_BaseMap):
     """
@@ -577,7 +578,7 @@ class MAT2d_DataMapOfBiIntSequenceOfInteger(OCP.NCollection.NCollection_BaseMap)
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -586,12 +587,12 @@ class MAT2d_DataMapOfBiIntSequenceOfInteger(OCP.NCollection.NCollection_BaseMap)
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theOther : MAT2d_DataMapOfBiIntSequenceOfInteger) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : MAT2d_DataMapOfBiIntSequenceOfInteger) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MAT2d_DataMapOfIntegerBisec(OCP.NCollection.NCollection_BaseMap):
     """
@@ -622,14 +623,14 @@ class MAT2d_DataMapOfIntegerBisec(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : MAT2d_DataMapOfIntegerBisec) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -639,14 +640,14 @@ class MAT2d_DataMapOfIntegerBisec(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int,theValue : OCP.Bisector.Bisector_Bisec) -> bool: 
+    def Find(self,theKey : int) -> OCP.Bisector.Bisector_Bisec: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int) -> OCP.Bisector.Bisector_Bisec: ...
+    def Find(self,theKey : int,theValue : OCP.Bisector.Bisector_Bisec) -> bool: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -671,7 +672,7 @@ class MAT2d_DataMapOfIntegerBisec(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -685,7 +686,7 @@ class MAT2d_DataMapOfIntegerBisec(OCP.NCollection.NCollection_BaseMap):
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : MAT2d_DataMapOfIntegerBisec) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MAT2d_DataMapOfIntegerPnt2d(OCP.NCollection.NCollection_BaseMap):
     """
@@ -733,14 +734,14 @@ class MAT2d_DataMapOfIntegerPnt2d(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int) -> OCP.gp.gp_Pnt2d: 
+    def Find(self,theKey : int,theValue : OCP.gp.gp_Pnt2d) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int,theValue : OCP.gp.gp_Pnt2d) -> bool: ...
+    def Find(self,theKey : int) -> OCP.gp.gp_Pnt2d: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -765,7 +766,7 @@ class MAT2d_DataMapOfIntegerPnt2d(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -774,12 +775,12 @@ class MAT2d_DataMapOfIntegerPnt2d(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : MAT2d_DataMapOfIntegerPnt2d) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : MAT2d_DataMapOfIntegerPnt2d) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MAT2d_DataMapOfIntegerSequenceOfConnexion(OCP.NCollection.NCollection_BaseMap):
     """
@@ -859,7 +860,7 @@ class MAT2d_DataMapOfIntegerSequenceOfConnexion(OCP.NCollection.NCollection_Base
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -868,12 +869,12 @@ class MAT2d_DataMapOfIntegerSequenceOfConnexion(OCP.NCollection.NCollection_Base
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : MAT2d_DataMapOfIntegerSequenceOfConnexion) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MAT2d_DataMapOfIntegerVec2d(OCP.NCollection.NCollection_BaseMap):
     """
@@ -953,7 +954,7 @@ class MAT2d_DataMapOfIntegerVec2d(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -962,12 +963,12 @@ class MAT2d_DataMapOfIntegerVec2d(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : MAT2d_DataMapOfIntegerVec2d) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : MAT2d_DataMapOfIntegerVec2d) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MAT2d_MapBiIntHasher():
     """
@@ -1070,14 +1071,14 @@ class MAT2d_SequenceOfConnexion(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : MAT2d_Connexion) -> None: 
+    def Append(self,theSeq : MAT2d_SequenceOfConnexion) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : MAT2d_SequenceOfConnexion) -> None: ...
+    def Append(self,theItem : MAT2d_Connexion) -> None: ...
     def Assign(self,theOther : MAT2d_SequenceOfConnexion) -> MAT2d_SequenceOfConnexion: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1150,14 +1151,14 @@ class MAT2d_SequenceOfConnexion(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : MAT2d_SequenceOfConnexion) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1183,12 +1184,12 @@ class MAT2d_SequenceOfConnexion(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : MAT2d_SequenceOfConnexion) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : MAT2d_SequenceOfConnexion) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1275,23 +1276,23 @@ class MAT2d_SequenceOfSequenceOfCurve(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.TColGeom2d.TColGeom2d_SequenceOfCurve) -> None: 
+    def Prepend(self,theSeq : MAT2d_SequenceOfSequenceOfCurve) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : MAT2d_SequenceOfSequenceOfCurve) -> None: ...
+    def Prepend(self,theItem : OCP.TColGeom2d.TColGeom2d_SequenceOfCurve) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1322,7 +1323,7 @@ class MAT2d_SequenceOfSequenceOfCurve(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1338,14 +1339,14 @@ class MAT2d_SequenceOfSequenceOfGeometry(OCP.NCollection.NCollection_BaseSequenc
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TColGeom2d.TColGeom2d_SequenceOfGeometry) -> None: 
+    def Append(self,theSeq : MAT2d_SequenceOfSequenceOfGeometry) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : MAT2d_SequenceOfSequenceOfGeometry) -> None: ...
+    def Append(self,theItem : OCP.TColGeom2d.TColGeom2d_SequenceOfGeometry) -> None: ...
     def Assign(self,theOther : MAT2d_SequenceOfSequenceOfGeometry) -> MAT2d_SequenceOfSequenceOfGeometry: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1409,23 +1410,23 @@ class MAT2d_SequenceOfSequenceOfGeometry(OCP.NCollection.NCollection_BaseSequenc
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.TColGeom2d.TColGeom2d_SequenceOfGeometry) -> None: 
+    def Prepend(self,theSeq : MAT2d_SequenceOfSequenceOfGeometry) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : MAT2d_SequenceOfSequenceOfGeometry) -> None: ...
+    def Prepend(self,theItem : OCP.TColGeom2d.TColGeom2d_SequenceOfGeometry) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1451,12 +1452,12 @@ class MAT2d_SequenceOfSequenceOfGeometry(OCP.NCollection.NCollection_BaseSequenc
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : MAT2d_SequenceOfSequenceOfGeometry) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : MAT2d_SequenceOfSequenceOfGeometry) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1548,13 +1549,13 @@ class MAT2d_Tool2d():
         Returns tolerance to test the confusion of two points.
         """
     @overload
-    def TrimBisector(self,abisector : OCP.MAT.MAT_Bisector,apoint : int) -> bool: 
+    def TrimBisector(self,abisector : OCP.MAT.MAT_Bisector) -> bool: 
         """
         Trims the geometric bisector by the <firstparameter> of <abisector>. If the parameter is out of the bisector, Return FALSE. else Return True.
 
         Trims the geometric bisector by the point of index <apoint> in <theGeomPnts>. If the point is out of the bisector, Return FALSE. else Return True.
         """
     @overload
-    def TrimBisector(self,abisector : OCP.MAT.MAT_Bisector) -> bool: ...
+    def TrimBisector(self,abisector : OCP.MAT.MAT_Bisector,apoint : int) -> bool: ...
     def __init__(self) -> None: ...
     pass

@@ -4,9 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.TCollection
 import OCP.TColStd
+import OCP.TCollection
+import io
+import OCP.NCollection
 import OCP.Standard
 __all__  = [
 "Expr",
@@ -1077,14 +1078,14 @@ class Expr_Array1OfGeneralExpression():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : Expr_GeneralExpression,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : Expr_Array1OfGeneralExpression) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theBegin : Expr_GeneralExpression,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : Expr_Array1OfGeneralExpression) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Expr_Array1OfNamedUnknown():
     """
@@ -1163,14 +1164,14 @@ class Expr_Array1OfNamedUnknown():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : Expr_NamedUnknown,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Expr_Array1OfNamedUnknown) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : Expr_NamedUnknown,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Expr_Array1OfSingleRelation():
     """
@@ -1249,14 +1250,14 @@ class Expr_Array1OfSingleRelation():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : Expr_Array1OfSingleRelation) -> None: ...
     @overload
     def __init__(self,theBegin : Expr_SingleRelation,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : Expr_Array1OfSingleRelation) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Expr_BinaryExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transient):
     """
@@ -2820,14 +2821,14 @@ class Expr_FunctionDerivative(Expr_GeneralFunction, OCP.Standard.Standard_Transi
         Returns the derivation variable of <me>.
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: 
+    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: 
         """
         Returns Derivative of <me> for variable <var>.
 
         Returns Derivative of <me> for variable <var> with degree <deg>.
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: ...
+    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -3849,7 +3850,7 @@ class Expr_MapOfNamedUnknown(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -3862,9 +3863,9 @@ class Expr_MapOfNamedUnknown(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theOther : Expr_MapOfNamedUnknown) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : Expr_MapOfNamedUnknown) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -4147,14 +4148,14 @@ class Expr_NamedFunction(Expr_GeneralFunction, OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: 
+    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: 
         """
         Returns Derivative of <me> for variable <var>.
 
         Returns Derivative of <me> for variable <var> with degree <deg>.
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: ...
+    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -4937,9 +4938,9 @@ class Expr_Product(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standard.Sta
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,exps : Expr_SequenceOfGeneralExpression) -> None: ...
-    @overload
     def __init__(self,exp1 : Expr_GeneralExpression,exp2 : Expr_GeneralExpression) -> None: ...
+    @overload
+    def __init__(self,exps : Expr_SequenceOfGeneralExpression) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4996,14 +4997,14 @@ class Expr_SequenceOfGeneralExpression(OCP.NCollection.NCollection_BaseSequence)
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Expr_GeneralExpression) -> None: 
+    def Append(self,theSeq : Expr_SequenceOfGeneralExpression) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Expr_SequenceOfGeneralExpression) -> None: ...
+    def Append(self,theItem : Expr_GeneralExpression) -> None: ...
     def Assign(self,theOther : Expr_SequenceOfGeneralExpression) -> Expr_SequenceOfGeneralExpression: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5076,14 +5077,14 @@ class Expr_SequenceOfGeneralExpression(OCP.NCollection.NCollection_BaseSequence)
     @overload
     def Prepend(self,theSeq : Expr_SequenceOfGeneralExpression) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5109,12 +5110,12 @@ class Expr_SequenceOfGeneralExpression(OCP.NCollection.NCollection_BaseSequence)
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : Expr_SequenceOfGeneralExpression) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5130,14 +5131,14 @@ class Expr_SequenceOfGeneralRelation(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Expr_SequenceOfGeneralRelation) -> None: 
+    def Append(self,theItem : Expr_GeneralRelation) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Expr_GeneralRelation) -> None: ...
+    def Append(self,theSeq : Expr_SequenceOfGeneralRelation) -> None: ...
     def Assign(self,theOther : Expr_SequenceOfGeneralRelation) -> Expr_SequenceOfGeneralRelation: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5167,14 +5168,14 @@ class Expr_SequenceOfGeneralRelation(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Expr_GeneralRelation) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Expr_SequenceOfGeneralRelation) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Expr_SequenceOfGeneralRelation) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : Expr_GeneralRelation) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Expr_GeneralRelation) -> None: 
         """
@@ -5210,14 +5211,14 @@ class Expr_SequenceOfGeneralRelation(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : Expr_GeneralRelation) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5243,12 +5244,12 @@ class Expr_SequenceOfGeneralRelation(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Expr_SequenceOfGeneralRelation) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theOther : Expr_SequenceOfGeneralRelation) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6137,9 +6138,9 @@ class Expr_Sum(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standard.Standar
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,exps : Expr_SequenceOfGeneralExpression) -> None: ...
-    @overload
     def __init__(self,exp1 : Expr_GeneralExpression,exp2 : Expr_GeneralExpression) -> None: ...
+    @overload
+    def __init__(self,exps : Expr_SequenceOfGeneralExpression) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6974,7 +6975,7 @@ def __rmul__(x : float,y : Expr_GeneralExpression) -> Expr_Product:
 def __rmul__(x : Expr_GeneralExpression,y : float) -> Expr_Product:
     pass
 @overload
-def __sub__(x : float,y : Expr_GeneralExpression) -> Expr_Difference:
+def __sub__(x : Expr_GeneralExpression) -> Expr_UnaryMinus:
     """
     None
 
@@ -6985,10 +6986,10 @@ def __sub__(x : float,y : Expr_GeneralExpression) -> Expr_Difference:
     None
     """
 @overload
-def __sub__(x : Expr_GeneralExpression,y : float) -> Expr_Difference:
+def __sub__(x : float,y : Expr_GeneralExpression) -> Expr_Difference:
     pass
 @overload
-def __sub__(x : Expr_GeneralExpression) -> Expr_UnaryMinus:
+def __sub__(x : Expr_GeneralExpression,y : float) -> Expr_Difference:
     pass
 @overload
 def __sub__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Difference:

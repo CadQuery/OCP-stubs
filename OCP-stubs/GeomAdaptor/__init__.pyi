@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.TColStd
 import OCP.Adaptor3d
-import OCP.Standard
-import OCP.Geom
+import OCP.TColStd
 import OCP.gp
+import OCP.GeomAbs
+import OCP.Geom
+import OCP.Standard
 __all__  = [
 "GeomAdaptor",
 "GeomAdaptor_Curve",
@@ -189,11 +189,11 @@ class GeomAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
         Computes the point of parameter U on the curve
         """
     @overload
-    def __init__(self,C : OCP.Geom.Geom_Curve,UFirst : float,ULast : float) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,C : OCP.Geom.Geom_Curve) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,C : OCP.Geom.Geom_Curve,UFirst : float,ULast : float) -> None: ...
     pass
 class GeomAdaptor_GHCurve(OCP.Adaptor3d.Adaptor3d_HCurve, OCP.Standard.Standard_Transient):
     def BSpline(self) -> OCP.Geom.Geom_BSplineCurve: 
@@ -1391,13 +1391,13 @@ class GeomAdaptor_HSurface(GeomAdaptor_GHSurface, OCP.Adaptor3d.Adaptor3d_HSurfa
         None
         """
     @overload
-    def __init__(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float=0.0,TolV : float=0.0) -> None: ...
-    @overload
     def __init__(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
     def __init__(self,AS : GeomAdaptor_Surface) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float=0.0,TolV : float=0.0) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2224,7 +2224,7 @@ class GeomAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
         None
         """
     @overload
-    def Load(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float,TolV : float) -> None: 
+    def Load(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float=0.0,TolV : float=0.0) -> None: 
         """
         None
 
@@ -2237,7 +2237,7 @@ class GeomAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
     @overload
     def Load(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def Load(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float=0.0,TolV : float=0.0) -> None: ...
+    def Load(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float,TolV : float) -> None: ...
     def NbUIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of U intervals for continuity <S>. May be one if UContinuity(me) >= <S>
@@ -2337,11 +2337,11 @@ class GeomAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
         Computes the point of parameters U,V on the surface.
         """
     @overload
-    def __init__(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float=0.0,TolV : float=0.0) -> None: ...
-    @overload
     def __init__(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,TolU : float=0.0,TolV : float=0.0) -> None: ...
     pass
 class GeomAdaptor_SurfaceOfLinearExtrusion(GeomAdaptor_Surface, OCP.Adaptor3d.Adaptor3d_Surface):
     """
@@ -2444,14 +2444,14 @@ class GeomAdaptor_SurfaceOfLinearExtrusion(GeomAdaptor_Surface, OCP.Adaptor3d.Ad
         None
         """
     @overload
-    def Load(self,V : OCP.gp.gp_Dir) -> None: 
+    def Load(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
         """
         Changes the Curve
 
         Changes the Direction
         """
     @overload
-    def Load(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def Load(self,V : OCP.gp.gp_Dir) -> None: ...
     def NbUIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of U intervals for continuity <S>. May be one if UContinuity(me) >= <S>
@@ -2662,14 +2662,14 @@ class GeomAdaptor_SurfaceOfRevolution(GeomAdaptor_Surface, OCP.Adaptor3d.Adaptor
         None
         """
     @overload
-    def Load(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def Load(self,V : OCP.gp.gp_Ax1) -> None: 
         """
         Changes the Curve
 
         Changes the Direction
         """
     @overload
-    def Load(self,V : OCP.gp.gp_Ax1) -> None: ...
+    def Load(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
     def NbUIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of U intervals for continuity <S>. May be one if UContinuity(me) >= <S>
@@ -2771,7 +2771,7 @@ class GeomAdaptor_SurfaceOfRevolution(GeomAdaptor_Surface, OCP.Adaptor3d.Adaptor
     @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve,V : OCP.gp.gp_Ax1) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass

@@ -5,11 +5,12 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
-import OCP.TColgp
-import OCP.TShort
-import OCP.Standard
+import io
 import OCP.NCollection
 import OCP.gp
+import OCP.TShort
+import OCP.TColgp
+import OCP.Standard
 __all__  = [
 "Poly_Array1OfTriangle",
 "Poly_CoherentLink",
@@ -106,14 +107,14 @@ class Poly_Array1OfTriangle():
         Constant value access
         """
     @overload
+    def __init__(self,theOther : Poly_Array1OfTriangle) -> None: ...
+    @overload
     def __init__(self,theBegin : Poly_Triangle,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : Poly_Array1OfTriangle) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Poly_CoherentLink():
     """
@@ -144,11 +145,11 @@ class Poly_CoherentLink():
         Set the attribute of the Link.
         """
     @overload
-    def __init__(self,theTri : Poly_CoherentTriangle,iSide : int) -> None: ...
+    def __init__(self,iNode0 : int,iNode1 : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,iNode0 : int,iNode1 : int) -> None: ...
+    def __init__(self,theTri : Poly_CoherentTriangle,iSide : int) -> None: ...
     pass
 class Poly_CoherentNode(OCP.gp.gp_XYZ):
     """
@@ -185,7 +186,7 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         Reset the Node to void.
         """
     @overload
-    def Coord(self,i : int) -> float: 
+    def Coord(self) -> Tuple[float, float, float]: 
         """
         returns the coordinate of range Index : Index = 1 => X is returned Index = 2 => Y is returned Index = 3 => Z is returned
 
@@ -195,10 +196,10 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
 
         None
         """
+    @overload
+    def Coord(self,i : int) -> float: ...
     @overload
     def Coord(self,Index : int) -> float: ...
-    @overload
-    def Coord(self) -> Tuple[float, float, float]: ...
     def Cross(self,Right : OCP.gp.gp_XYZ) -> None: 
         """
         <me>.X() = <me>.Y() * Other.Z() - <me>.Z() * Other.Y() <me>.Y() = <me>.Z() * Other.X() - <me>.X() * Other.Z() <me>.Z() = <me>.X() * Other.Y() - <me>.Y() * Other.X()
@@ -259,11 +260,11 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
 
         computes the triple scalar product
         """
-    def Dump(self,theStream : Any) -> None: 
+    def Dump(self,theStream : io.BytesIO) -> None: 
         """
         None
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -291,6 +292,10 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         """
         Query if the Node contains a normal vector.
         """
+    def InitFromJson(self,theSStream : Any,theStreamPos : int) -> bool: 
+        """
+        Inits the content of me from the stream
+        """
     def IsEqual(self,Other : OCP.gp.gp_XYZ,Tolerance : float) -> bool: 
         """
         Returns True if he coordinates of this XYZ object are equal to the respective coordinates Other, within the specified tolerance Tolerance. I.e.: abs(<me>.X() - Other.X()) <= Tolerance and abs(<me>.Y() - Other.Y()) <= Tolerance and abs(<me>.Z() - Other.Z()) <= Tolerance.
@@ -306,7 +311,7 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         computes Sqrt (X*X + Y*Y + Z*Z) where X, Y and Z are the three coordinates of this XYZ object.
         """
     @overload
-    def Multiplied(self,Matrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: 
+    def Multiplied(self,Scalar : float) -> OCP.gp.gp_XYZ: 
         """
         New.X() = <me>.X() * Scalar; New.Y() = <me>.Y() * Scalar; New.Z() = <me>.Z() * Scalar;
 
@@ -320,10 +325,10 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
 
         New = Matrix * <me>
         """
+    @overload
+    def Multiplied(self,Matrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: ...
     @overload
     def Multiplied(self,Other : OCP.gp.gp_XYZ) -> OCP.gp.gp_XYZ: ...
-    @overload
-    def Multiplied(self,Scalar : float) -> OCP.gp.gp_XYZ: ...
     @overload
     def Multiply(self,Matrix : OCP.gp.gp_Mat) -> None: 
         """
@@ -340,9 +345,9 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         <me> = Matrix * <me>
         """
     @overload
-    def Multiply(self,Scalar : float) -> None: ...
-    @overload
     def Multiply(self,Other : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def Multiply(self,Scalar : float) -> None: ...
     def Normalize(self) -> None: 
         """
         <me>.X() = <me>.X()/ <me>.Modulus() <me>.Y() = <me>.Y()/ <me>.Modulus() <me>.Z() = <me>.Z()/ <me>.Modulus() Raised if <me>.Modulus() <= Resolution from gp
@@ -383,15 +388,15 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         modifies the coordinate of range Index Index = 1 => X is modified Index = 2 => Y is modified Index = 3 => Z is modified Raises OutOfRange if Index != {1, 2, 3}.
         """
     @overload
-    def SetCoord(self,i : int,X : float) -> None: ...
-    @overload
     def SetCoord(self,Index : int,Xi : float) -> None: ...
+    @overload
+    def SetCoord(self,i : int,X : float) -> None: ...
     def SetIndex(self,theIndex : int) -> None: 
         """
         Set the value of node Index.
         """
     @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,XYZ2 : OCP.gp.gp_XYZ) -> None: 
+    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ,A3 : float,XYZ3 : OCP.gp.gp_XYZ) -> None: 
         """
         <me> is set to the following linear form : A1 * XYZ1 + A2 * XYZ2 + A3 * XYZ3 + XYZ4
 
@@ -418,21 +423,21 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         <me> is set to the following linear form : A1 * XYZ1 + A2 * XYZ2 + A3 * XYZ3 + XYZ4
         """
     @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ,A3 : float,XYZ3 : OCP.gp.gp_XYZ,XYZ4 : OCP.gp.gp_XYZ) -> None: ...
-    @overload
-    def SetLinearForm(self,Left : OCP.gp.gp_XYZ,Right : OCP.gp.gp_XYZ) -> None: ...
-    @overload
-    def SetLinearForm(self,XYZ1 : OCP.gp.gp_XYZ,XYZ2 : OCP.gp.gp_XYZ) -> None: ...
+    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ) -> None: ...
     @overload
     def SetLinearForm(self,L : float,Left : OCP.gp.gp_XYZ,R : float,Right : OCP.gp.gp_XYZ) -> None: ...
     @overload
-    def SetLinearForm(self,L : float,Left : OCP.gp.gp_XYZ,Right : OCP.gp.gp_XYZ) -> None: ...
-    @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ,A3 : float,XYZ3 : OCP.gp.gp_XYZ) -> None: ...
-    @overload
     def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ,XYZ3 : OCP.gp.gp_XYZ) -> None: ...
     @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ) -> None: ...
+    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,XYZ2 : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def SetLinearForm(self,XYZ1 : OCP.gp.gp_XYZ,XYZ2 : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def SetLinearForm(self,Left : OCP.gp.gp_XYZ,Right : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def SetLinearForm(self,A1 : float,XYZ1 : OCP.gp.gp_XYZ,A2 : float,XYZ2 : OCP.gp.gp_XYZ,A3 : float,XYZ3 : OCP.gp.gp_XYZ,XYZ4 : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def SetLinearForm(self,L : float,Left : OCP.gp.gp_XYZ,Right : OCP.gp.gp_XYZ) -> None: ...
     def SetNormal(self,theVector : OCP.gp.gp_XYZ) -> None: 
         """
         Define the normal vector in the Node.
@@ -508,7 +513,7 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         None
         """
     @overload
-    def __imul__(self,Scalar : float) -> None: 
+    def __imul__(self,Matrix : OCP.gp.gp_Mat) -> None: 
         """
         None
 
@@ -519,11 +524,11 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
     @overload
     def __imul__(self,Other : OCP.gp.gp_XYZ) -> None: ...
     @overload
-    def __imul__(self,Matrix : OCP.gp.gp_Mat) -> None: ...
-    @overload
-    def __init__(self,thePnt : OCP.gp.gp_XYZ) -> None: ...
+    def __imul__(self,Scalar : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,thePnt : OCP.gp.gp_XYZ) -> None: ...
     def __ipow__(self,Right : OCP.gp.gp_XYZ) -> None: 
         """
         None
@@ -537,7 +542,7 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         None
         """
     @overload
-    def __mul__(self,Matrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: 
+    def __mul__(self,Scalar : float) -> OCP.gp.gp_XYZ: 
         """
         None
 
@@ -545,10 +550,10 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
 
         None
         """
-    @overload
-    def __mul__(self,Scalar : float) -> OCP.gp.gp_XYZ: ...
     @overload
     def __mul__(self,Other : OCP.gp.gp_XYZ) -> float: ...
+    @overload
+    def __mul__(self,Matrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: ...
     def __pow__(self,Right : OCP.gp.gp_XYZ) -> OCP.gp.gp_XYZ: 
         """
         None
@@ -563,9 +568,9 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         None
         """
     @overload
-    def __rmul__(self,Matrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: ...
-    @overload
     def __rmul__(self,Other : OCP.gp.gp_XYZ) -> float: ...
+    @overload
+    def __rmul__(self,Matrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: ...
     def __sub__(self,Right : OCP.gp.gp_XYZ) -> OCP.gp.gp_XYZ: 
         """
         None
@@ -608,14 +613,14 @@ class Poly_CoherentTriangle():
         Query the node index in the position given by the parameter 'ind'
         """
     @overload
-    def RemoveConnection(self,iConn : int) -> None: 
+    def RemoveConnection(self,theTri : Poly_CoherentTriangle) -> bool: 
         """
         Remove the connection with the given index.
 
         Remove the connection with the given Triangle.
         """
     @overload
-    def RemoveConnection(self,theTri : Poly_CoherentTriangle) -> bool: ...
+    def RemoveConnection(self,iConn : int) -> None: ...
     @overload
     def SetConnection(self,theTri : Poly_CoherentTriangle) -> bool: 
         """
@@ -674,7 +679,7 @@ class Poly_CoherentTriangulation(OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def Dump(self,arg1 : Any) -> None: 
+    def Dump(self,arg1 : io.BytesIO) -> None: 
         """
         Debugging output.
         """
@@ -956,10 +961,10 @@ class Poly_HArray1OfTriangle(Poly_Array1OfTriangle, OCP.Standard.Standard_Transi
     @overload
     def __init__(self,theOther : Poly_Array1OfTriangle) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : Poly_Triangle) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : Poly_Triangle) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -989,9 +994,9 @@ class Poly_ListOfTriangulation(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : Poly_Triangulation) -> Poly_Triangulation: ...
-    @overload
     def Append(self,theOther : Poly_ListOfTriangulation) -> None: ...
+    @overload
+    def Append(self,theItem : Poly_Triangulation) -> Poly_Triangulation: ...
     def Assign(self,theOther : Poly_ListOfTriangulation) -> Poly_ListOfTriangulation: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1011,14 +1016,14 @@ class Poly_ListOfTriangulation(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : Poly_Triangulation,theIter : Any) -> Poly_Triangulation: 
+    def InsertAfter(self,theOther : Poly_ListOfTriangulation,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : Poly_ListOfTriangulation,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : Poly_Triangulation,theIter : Any) -> Poly_Triangulation: ...
     @overload
     def InsertBefore(self,theItem : Poly_Triangulation,theIter : Any) -> Poly_Triangulation: 
         """
@@ -1039,14 +1044,14 @@ class Poly_ListOfTriangulation(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : Poly_ListOfTriangulation) -> None: 
+    def Prepend(self,theItem : Poly_Triangulation) -> Poly_Triangulation: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : Poly_Triangulation) -> Poly_Triangulation: ...
+    def Prepend(self,theOther : Poly_ListOfTriangulation) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1064,12 +1069,12 @@ class Poly_ListOfTriangulation(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : Poly_ListOfTriangulation) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
+    def __init__(self,theOther : Poly_ListOfTriangulation) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Poly_MakeLoops2D():
     """
@@ -1085,8 +1090,12 @@ class Poly_MakeLoops3D():
     pass
 class Poly_Polygon2D(OCP.Standard.Standard_Transient):
     """
-    Provides a polygon in 2D space (for example, in the parametric space of a surface). It is generally an approximate representation of a curve. A Polygon2D is defined by a table of nodes. Each node is a 2D point. If the polygon is closed, the point of closure is repeated at the end of the table of nodes.Provides a polygon in 2D space (for example, in the parametric space of a surface). It is generally an approximate representation of a curve. A Polygon2D is defined by a table of nodes. Each node is a 2D point. If the polygon is closed, the point of closure is repeated at the end of the table of nodes.Provides a polygon in 2D space (for example, in the parametric space of a surface). It is generally an approximate representation of a curve. A Polygon2D is defined by a table of nodes. Each node is a 2D point. If the polygon is closed, the point of closure is repeated at the end of the table of nodes.
+    Provides a polygon in 2D space (for example, in the parametric space of a surface). It is generally an approximate representation of a curve. A Polygon2D is defined by a table of nodes. Each node is a 2D point. If the polygon is closed, the point of closure is repeated at the end of the table of nodes.Provides a polygon in 2D space (for example, in the parametric space of a surface). It is generally an approximate representation of a curve. A Polygon2D is defined by a table of nodes. Each node is a 2D point. If the polygon is closed, the point of closure is repeated at the end of the table of nodes.
     """
+    def ChangeNodes(self) -> OCP.TColgp.TColgp_Array1OfPnt2d: 
+        """
+        Returns the table of nodes for this polygon.
+        """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1096,13 +1105,17 @@ class Poly_Polygon2D(OCP.Standard.Standard_Transient):
         """
         Returns the deflection of this polygon. Deflection is used in cases where the polygon is an approximate representation of a curve. Deflection represents the maximum distance permitted between any point on the curve and the corresponding point on the polygon. By default the deflection value is equal to 0. An algorithm using this 2D polygon with a deflection value equal to 0 considers that it is working with a true polygon and not with an approximate representation of a curve. The Deflection function is used to modify the deflection value of this polygon. The deflection value can be used by any algorithm working with 2D polygons. For example: - An algorithm may use a unique deflection value for all its polygons. In this case it is not necessary to use the Deflection function. - Or an algorithm may want to attach a different deflection to each polygon. In this case, the Deflection function is used to set a value on each polygon, and later to fetch the value.
 
-        Sets the deflection of this polygon to D
+        Sets the deflection of this polygon.
         """
     @overload
-    def Deflection(self,D : float) -> None: ...
+    def Deflection(self,theDefl : float) -> None: ...
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1137,8 +1150,6 @@ class Poly_Polygon2D(OCP.Standard.Standard_Transient):
     def NbNodes(self) -> int: 
         """
         Returns the number of nodes in this polygon. Note: If the polygon is closed, the point of closure is repeated at the end of its table of nodes. Thus, on a closed triangle, the function NbNodes returns 4.
-
-        Returns the number of nodes in this polygon. Note: If the polygon is closed, the point of closure is repeated at the end of its table of nodes. Thus, on a closed triangle, the function NbNodes returns 4.
         """
     def Nodes(self) -> OCP.TColgp.TColgp_Array1OfPnt2d: 
         """
@@ -1148,7 +1159,10 @@ class Poly_Polygon2D(OCP.Standard.Standard_Transient):
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    @overload
     def __init__(self,Nodes : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    @overload
+    def __init__(self,theNbNodes : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1162,8 +1176,12 @@ class Poly_Polygon2D(OCP.Standard.Standard_Transient):
     pass
 class Poly_Polygon3D(OCP.Standard.Standard_Transient):
     """
-    This class Provides a polygon in 3D space. It is generally an approximate representation of a curve. A Polygon3D is defined by a table of nodes. Each node is a 3D point. If the polygon is closed, the point of closure is repeated at the end of the table of nodes. If the polygon is an approximate representation of a curve, you can associate with each of its nodes the value of the parameter of the corresponding point on the curve.This class Provides a polygon in 3D space. It is generally an approximate representation of a curve. A Polygon3D is defined by a table of nodes. Each node is a 3D point. If the polygon is closed, the point of closure is repeated at the end of the table of nodes. If the polygon is an approximate representation of a curve, you can associate with each of its nodes the value of the parameter of the corresponding point on the curve.This class Provides a polygon in 3D space. It is generally an approximate representation of a curve. A Polygon3D is defined by a table of nodes. Each node is a 3D point. If the polygon is closed, the point of closure is repeated at the end of the table of nodes. If the polygon is an approximate representation of a curve, you can associate with each of its nodes the value of the parameter of the corresponding point on the curve.
+    This class Provides a polygon in 3D space. It is generally an approximate representation of a curve. A Polygon3D is defined by a table of nodes. Each node is a 3D point. If the polygon is closed, the point of closure is repeated at the end of the table of nodes. If the polygon is an approximate representation of a curve, you can associate with each of its nodes the value of the parameter of the corresponding point on the curve.This class Provides a polygon in 3D space. It is generally an approximate representation of a curve. A Polygon3D is defined by a table of nodes. Each node is a 3D point. If the polygon is closed, the point of closure is repeated at the end of the table of nodes. If the polygon is an approximate representation of a curve, you can associate with each of its nodes the value of the parameter of the corresponding point on the curve.
     """
+    def ChangeNodes(self) -> OCP.TColgp.TColgp_Array1OfPnt: 
+        """
+        Returns the table of nodes for this polygon.
+        """
     def ChangeParameters(self) -> OCP.TColStd.TColStd_Array1OfReal: 
         """
         Returns the table of the parameters associated with each node in this polygon. ChangeParameters function returnes the array as shared. Therefore if the table is selected by reference you can, by simply modifying it, directly modify the data structure of this polygon.
@@ -1181,13 +1199,17 @@ class Poly_Polygon3D(OCP.Standard.Standard_Transient):
         """
         Returns the deflection of this polygon
 
-        Sets the deflection of this polygon to D. See more on deflection in Poly_Polygon2D
+        Sets the deflection of this polygon. See more on deflection in Poly_Polygon2D
         """
     @overload
-    def Deflection(self,D : float) -> None: ...
+    def Deflection(self,theDefl : float) -> None: ...
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1226,8 +1248,6 @@ class Poly_Polygon3D(OCP.Standard.Standard_Transient):
     def NbNodes(self) -> int: 
         """
         Returns the number of nodes in this polygon. Note: If the polygon is closed, the point of closure is repeated at the end of its table of nodes. Thus, on a closed triangle the function NbNodes returns 4.
-
-        Returns the number of nodes in this polygon. Note: If the polygon is closed, the point of closure is repeated at the end of its table of nodes. Thus, on a closed triangle the function NbNodes returns 4.
         """
     def Nodes(self) -> OCP.TColgp.TColgp_Array1OfPnt: 
         """
@@ -1241,6 +1261,8 @@ class Poly_Polygon3D(OCP.Standard.Standard_Transient):
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    @overload
+    def __init__(self,theNbNodes : int,theHasParams : bool) -> None: ...
     @overload
     def __init__(self,Nodes : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
@@ -1258,8 +1280,16 @@ class Poly_Polygon3D(OCP.Standard.Standard_Transient):
     pass
 class Poly_PolygonOnTriangulation(OCP.Standard.Standard_Transient):
     """
-    This class provides a polygon in 3D space, based on the triangulation of a surface. It may be the approximate representation of a curve on the surface, or more generally the shape. A PolygonOnTriangulation is defined by a table of nodes. Each node is an index in the table of nodes specific to a triangulation, and represents a point on the surface. If the polygon is closed, the index of the point of closure is repeated at the end of the table of nodes. If the polygon is an approximate representation of a curve on a surface, you can associate with each of its nodes the value of the parameter of the corresponding point on the curve.represents a 3d PolygonThis class provides a polygon in 3D space, based on the triangulation of a surface. It may be the approximate representation of a curve on the surface, or more generally the shape. A PolygonOnTriangulation is defined by a table of nodes. Each node is an index in the table of nodes specific to a triangulation, and represents a point on the surface. If the polygon is closed, the index of the point of closure is repeated at the end of the table of nodes. If the polygon is an approximate representation of a curve on a surface, you can associate with each of its nodes the value of the parameter of the corresponding point on the curve.represents a 3d PolygonThis class provides a polygon in 3D space, based on the triangulation of a surface. It may be the approximate representation of a curve on the surface, or more generally the shape. A PolygonOnTriangulation is defined by a table of nodes. Each node is an index in the table of nodes specific to a triangulation, and represents a point on the surface. If the polygon is closed, the index of the point of closure is repeated at the end of the table of nodes. If the polygon is an approximate representation of a curve on a surface, you can associate with each of its nodes the value of the parameter of the corresponding point on the curve.represents a 3d Polygon
+    This class provides a polygon in 3D space, based on the triangulation of a surface. It may be the approximate representation of a curve on the surface, or more generally the shape. A PolygonOnTriangulation is defined by a table of nodes. Each node is an index in the table of nodes specific to a triangulation, and represents a point on the surface. If the polygon is closed, the index of the point of closure is repeated at the end of the table of nodes. If the polygon is an approximate representation of a curve on a surface, you can associate with each of its nodes the value of the parameter of the corresponding point on the curve.represents a 3d PolygonThis class provides a polygon in 3D space, based on the triangulation of a surface. It may be the approximate representation of a curve on the surface, or more generally the shape. A PolygonOnTriangulation is defined by a table of nodes. Each node is an index in the table of nodes specific to a triangulation, and represents a point on the surface. If the polygon is closed, the index of the point of closure is repeated at the end of the table of nodes. If the polygon is an approximate representation of a curve on a surface, you can associate with each of its nodes the value of the parameter of the corresponding point on the curve.represents a 3d Polygon
     """
+    def ChangeNodes(self) -> OCP.TColStd.TColStd_Array1OfInteger: 
+        """
+        Returns the table of nodes for this polygon for modification.
+        """
+    def ChangeParameters(self) -> OCP.TColStd.TColStd_Array1OfReal: 
+        """
+        Returns the table of the parameters associated with each node in this polygon. Warning! HasParameters() should be called beforehand to check if parameters array is allocated.
+        """
     def Copy(self) -> Poly_PolygonOnTriangulation: 
         """
         Creates a copy of current polygon
@@ -1273,13 +1303,17 @@ class Poly_PolygonOnTriangulation(OCP.Standard.Standard_Transient):
         """
         Returns the deflection of this polygon
 
-        Sets the deflection of this polygon to D. See more on deflection in Poly_Polygones2D.
+        Sets the deflection of this polygon. See more on deflection in Poly_Polygones2D.
         """
     @overload
-    def Deflection(self,D : float) -> None: ...
+    def Deflection(self,theDefl : float) -> None: ...
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1318,8 +1352,6 @@ class Poly_PolygonOnTriangulation(OCP.Standard.Standard_Transient):
     def NbNodes(self) -> int: 
         """
         Returns the number of nodes for this polygon. Note: If the polygon is closed, the point of closure is repeated at the end of its table of nodes. Thus, on a closed triangle, the function NbNodes returns 4.
-
-        Returns the number of nodes for this polygon. Note: If the polygon is closed, the point of closure is repeated at the end of its table of nodes. Thus, on a closed triangle, the function NbNodes returns 4.
         """
     def Nodes(self) -> OCP.TColStd.TColStd_Array1OfInteger: 
         """
@@ -1329,12 +1361,18 @@ class Poly_PolygonOnTriangulation(OCP.Standard.Standard_Transient):
         """
         Returns the table of the parameters associated with each node in this polygon. Warning Use the function HasParameters to check if parameters are associated with the nodes in this polygon.
         """
+    def SetParameters(self,theParameters : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
+        """
+        Sets the table of the parameters associated with each node in this polygon. Raises exception if array size doesn't much number of polygon nodes.
+        """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
     def __init__(self,Nodes : OCP.TColStd.TColStd_Array1OfInteger,Parameters : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
+    def __init__(self,theNbNodes : int,theHasParams : bool) -> None: ...
     @overload
     def __init__(self,Nodes : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
     @staticmethod
@@ -1352,37 +1390,31 @@ class Poly_Triangle():
     """
     Describes a component triangle of a triangulation (Poly_Triangulation object). A Triangle is defined by a triplet of nodes. Each node is an index in the table of nodes specific to an existing triangulation of a shape, and represents a point on the surface.
     """
-    def ChangeValue(self,Index : int) -> int: 
+    def ChangeValue(self,theIndex : int) -> int: 
         """
-        Get the node of given Index. Raises OutOfRange if Index is not in 1,2,3
-
         Get the node of given Index. Raises OutOfRange if Index is not in 1,2,3
         """
     def Get(self) -> Tuple[int, int, int]: 
         """
-        Returns the node indices of this triangle in N1, N2 and N3.
+        Returns the node indices of this triangle.
         """
     @overload
-    def Set(self,N1 : int,N2 : int,N3 : int) -> None: 
+    def Set(self,theN1 : int,theN2 : int,theN3 : int) -> None: 
         """
-        Sets the value of the three nodes of this triangle to N1, N2 and N3 respectively.
+        Sets the value of the three nodes of this triangle.
 
-        Sets the value of the Indexth node of this triangle to Node. Raises OutOfRange if Index is not in 1,2,3
-
-        Sets the value of the Indexth node of this triangle to Node. Raises OutOfRange if Index is not in 1,2,3
+        Sets the value of node with specified index of this triangle. Raises Standard_OutOfRange if index is not in 1,2,3
         """
     @overload
-    def Set(self,Index : int,Node : int) -> None: ...
-    def Value(self,Index : int) -> int: 
+    def Set(self,theIndex : int,theNode : int) -> None: ...
+    def Value(self,theIndex : int) -> int: 
         """
         Get the node of given Index. Raises OutOfRange from Standard if Index is not in 1,2,3
-
-        Get the node of given Index. Raises OutOfRange from Standard if Index is not in 1,2,3
         """
+    @overload
+    def __init__(self,theN1 : int,theN2 : int,theN3 : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,N1 : int,N2 : int,N3 : int) -> None: ...
     pass
 class Poly_Triangulation(OCP.Standard.Standard_Transient):
     """
@@ -1425,17 +1457,21 @@ class Poly_Triangulation(OCP.Standard.Standard_Transient):
         Decrements the reference counter of this object; returns the decremented value
         """
     @overload
-    def Deflection(self) -> float: 
+    def Deflection(self,theDeflection : float) -> None: 
         """
         Returns the deflection of this triangulation.
 
         Sets the deflection of this triangulation to theDeflection. See more on deflection in Polygon2D
         """
     @overload
-    def Deflection(self,theDeflection : float) -> None: ...
+    def Deflection(self) -> float: ...
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1534,11 +1570,11 @@ class Poly_Triangulation(OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,nbNodes : int,nbTriangles : int,UVNodes : bool) -> None: ...
     @overload
-    def __init__(self,Nodes : OCP.TColgp.TColgp_Array1OfPnt,UVNodes : OCP.TColgp.TColgp_Array1OfPnt2d,Triangles : Poly_Array1OfTriangle) -> None: ...
-    @overload
     def __init__(self,theTriangulation : Poly_Triangulation) -> None: ...
     @overload
     def __init__(self,Nodes : OCP.TColgp.TColgp_Array1OfPnt,Triangles : Poly_Array1OfTriangle) -> None: ...
+    @overload
+    def __init__(self,Nodes : OCP.TColgp.TColgp_Array1OfPnt,UVNodes : OCP.TColgp.TColgp_Array1OfPnt2d,Triangles : Poly_Array1OfTriangle) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

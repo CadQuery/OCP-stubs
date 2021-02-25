@@ -4,19 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.TopTools
+import OCP.Message
+import OCP.BRepTools
 import OCP.GeomAbs
+import OCP.Geom
+import OCP.TColgp
+import OCP.TopoDS
+import OCP.gp
+import OCP.TopLoc
+import OCP.Geom2d
+import OCP.Standard
 import OCP.ShapeExtend
 import OCP.Poly
-import OCP.Geom2d
-import OCP.Message
-import OCP.TopTools
-import OCP.TColgp
-import OCP.TopLoc
-import OCP.Standard
-import OCP.TopoDS
-import OCP.Geom
-import OCP.BRepTools
-import OCP.gp
 __all__  = [
 "ShapeCustom",
 "ShapeCustom_Modification",
@@ -36,7 +36,7 @@ class ShapeCustom():
     This package is intended to convert geometrical objects and topological. The modifications of one geometrical object to another (one) geometrical object are provided. The supported modifications are the following: conversion of BSpline and Bezier surfaces to analytical form, conversion of indirect elementary surfaces (with left-handed coordinate systems) into direct ones, conversion of elementary surfaces to surfaces of revolution, conversion of surface of linear extrusion, revolution, offset surface to bspline, modification of parameterization, degree, number of segments of bspline surfaces, scale the shape.
     """
     @staticmethod
-    def ApplyModifier_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.BRepTools.BRepTools_Modification,context : OCP.TopTools.TopTools_DataMapOfShapeShape,MD : OCP.BRepTools.BRepTools_Modifier,aProgress : OCP.Message.Message_ProgressIndicator=None,aReShape : OCP.ShapeBuild.ShapeBuild_ReShape=None) -> OCP.TopoDS.TopoDS_Shape: 
+    def ApplyModifier_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.BRepTools.BRepTools_Modification,context : OCP.TopTools.TopTools_DataMapOfShapeShape,MD : OCP.BRepTools.BRepTools_Modifier,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange,aReShape : OCP.ShapeBuild.ShapeBuild_ReShape=None) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Applies modifier to shape and checks sharing in the case assemblies.
         """
@@ -418,9 +418,9 @@ class ShapeCustom_Curve():
         None
         """
     @overload
-    def __init__(self,C : OCP.Geom.Geom_Curve) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Geom.Geom_Curve) -> None: ...
     pass
 class ShapeCustom_Curve2d():
     """
@@ -742,9 +742,9 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool,aModes : ShapeCustom_RestrictionParameters) -> None: ...
-    @overload
     def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool) -> None: ...
+    @overload
+    def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool,aModes : ShapeCustom_RestrictionParameters) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @staticmethod
@@ -1039,9 +1039,9 @@ class ShapeCustom_Surface():
         None
         """
     @overload
-    def __init__(self,S : OCP.Geom.Geom_Surface) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.Geom.Geom_Surface) -> None: ...
     pass
 class ShapeCustom_SweptToElementary(ShapeCustom_Modification, OCP.BRepTools.BRepTools_Modification, OCP.Standard.Standard_Transient):
     """

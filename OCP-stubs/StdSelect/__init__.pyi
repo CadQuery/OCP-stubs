@@ -4,58 +4,42 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.TCollection
-import OCP.TColgp
+import OCP.Prs3d
 import OCP.TopoDS
-import OCP.PrsMgr
-import OCP.gp
-import OCP.TColStd
-import OCP.Select3D
-import OCP.SelectMgr
 import OCP.Bnd
+import OCP.PrsMgr
+import OCP.V3d
+import OCP.Standard
+import OCP.SelectMgr
+import OCP.TopAbs
 import OCP.Quantity
+import OCP.Select3D
+import OCP.TColStd
+import io
+import OCP.gp
 import OCP.Graphic3d
 import OCP.Aspect
-import OCP.Prs3d
-import OCP.Image
-import OCP.Standard
-import OCP.Geom
-import OCP.AIS
-import OCP.V3d
 import OCP.TopLoc
 __all__  = [
 "StdSelect",
 "StdSelect_BRepOwner",
 "StdSelect_BRepSelectionTool",
-"StdSelect_DisplayMode",
 "StdSelect_EdgeFilter",
 "StdSelect_FaceFilter",
-"StdSelect_Prs",
-"StdSelect_SensitivityMode",
 "StdSelect_Shape",
 "StdSelect_ShapeTypeFilter",
 "StdSelect_TypeOfEdge",
 "StdSelect_TypeOfFace",
-"StdSelect_TypeOfResult",
 "StdSelect_TypeOfSelectionImage",
-"StdSelect_ViewerSelector3d",
 "StdSelect_AnyEdge",
 "StdSelect_AnyFace",
 "StdSelect_Circle",
 "StdSelect_Cone",
 "StdSelect_Cylinder",
-"StdSelect_DM_HLR",
-"StdSelect_DM_Shading",
-"StdSelect_DM_Wireframe",
 "StdSelect_Line",
 "StdSelect_Plane",
 "StdSelect_Revol",
-"StdSelect_SM_VIEW",
-"StdSelect_SM_WINDOW",
 "StdSelect_Sphere",
-"StdSelect_TOR_MULTIPLE",
-"StdSelect_TOR_SIMPLE",
 "StdSelect_Torus",
 "StdSelect_TypeOfSelectionImage_ColoredDetectedObject",
 "StdSelect_TypeOfSelectionImage_ColoredEntity",
@@ -96,7 +80,7 @@ class StdSelect_BRepOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -236,14 +220,14 @@ class StdSelect_BRepOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Returns the shape.
         """
     @overload
-    def State(self,theStatus : int) -> None: 
+    def State(self) -> int: 
         """
         Returns selection state.
 
         Set the state of the owner. The method is deprecated. Use SetSelected() instead.
         """
     @overload
-    def State(self) -> int: ...
+    def State(self,theStatus : int) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -257,11 +241,11 @@ class StdSelect_BRepOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Implements immediate application of location transformation of parent object to dynamic highlight structure
         """
     @overload
+    def __init__(self,aPriority : int) -> None: ...
+    @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,theOrigin : OCP.SelectMgr.SelectMgr_SelectableObject,aPriority : int=0,FromDecomposition : bool=False) -> None: ...
     @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,aPriority : int=0,ComesFromDecomposition : bool=False) -> None: ...
-    @overload
-    def __init__(self,aPriority : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -299,7 +283,7 @@ class StdSelect_BRepSelectionTool():
         """
     @staticmethod
     @overload
-    def Load_s(aSelection : OCP.SelectMgr.SelectMgr_Selection,aShape : OCP.TopoDS.TopoDS_Shape,aType : OCP.TopAbs.TopAbs_ShapeEnum,theDeflection : float,theDeviationAngle : float,AutoTriangulation : bool=True,aPriority : int=-1,NbPOnEdge : int=9,MaximalParameter : float=500.0) -> None: 
+    def Load_s(aSelection : OCP.SelectMgr.SelectMgr_Selection,Origin : OCP.SelectMgr.SelectMgr_SelectableObject,aShape : OCP.TopoDS.TopoDS_Shape,aType : OCP.TopAbs.TopAbs_ShapeEnum,theDeflection : float,theDeviationAngle : float,AutoTriangulation : bool=True,aPriority : int=-1,NbPOnEdge : int=9,MaximalParameter : float=500.0) -> None: 
         """
         Decomposition of <aShape> into sensitive entities following a mode of decomposition <aType>. These entities are stored in <aSelection>. BrepOwners are created to store the identity of the picked shapes during the selection process. In those BRepOwners is also stored the original shape. But One can't get the selectable object which was decomposed to give the sensitive entities. maximal parameter is used for infinite objects, to limit the sensitive Domain.... If AutoTriangulation = True, a Triangulation will be computed for faces which have no existing one. if AutoTriangulation = False the old algorithm will be called to compute sensitive entities on faces.
 
@@ -307,41 +291,13 @@ class StdSelect_BRepSelectionTool():
         """
     @staticmethod
     @overload
-    def Load_s(aSelection : OCP.SelectMgr.SelectMgr_Selection,Origin : OCP.SelectMgr.SelectMgr_SelectableObject,aShape : OCP.TopoDS.TopoDS_Shape,aType : OCP.TopAbs.TopAbs_ShapeEnum,theDeflection : float,theDeviationAngle : float,AutoTriangulation : bool=True,aPriority : int=-1,NbPOnEdge : int=9,MaximalParameter : float=500.0) -> None: ...
+    def Load_s(aSelection : OCP.SelectMgr.SelectMgr_Selection,aShape : OCP.TopoDS.TopoDS_Shape,aType : OCP.TopAbs.TopAbs_ShapeEnum,theDeflection : float,theDeviationAngle : float,AutoTriangulation : bool=True,aPriority : int=-1,NbPOnEdge : int=9,MaximalParameter : float=500.0) -> None: ...
     @staticmethod
     def PreBuildBVH_s(theSelection : OCP.SelectMgr.SelectMgr_Selection) -> None: 
         """
         Traverses the selection given and pre-builds BVH trees for heavyweight sensitive entities containing more than BVH_PRIMITIVE_LIMIT (defined in .cxx file) sub-elements.
         """
     def __init__(self) -> None: ...
-    pass
-class StdSelect_DisplayMode():
-    """
-    None
-
-    Members:
-
-      StdSelect_DM_Wireframe
-
-      StdSelect_DM_Shading
-
-      StdSelect_DM_HLR
-    """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
-    def __int__(self) -> int: ...
-    @property
-    def name(self) -> str:
-        """
-        (self: handle) -> str
-
-        :type: str
-        """
-    StdSelect_DM_HLR: OCP.StdSelect.StdSelect_DisplayMode # value = StdSelect_DisplayMode.StdSelect_DM_HLR
-    StdSelect_DM_Shading: OCP.StdSelect.StdSelect_DisplayMode # value = StdSelect_DisplayMode.StdSelect_DM_Shading
-    StdSelect_DM_Wireframe: OCP.StdSelect.StdSelect_DisplayMode # value = StdSelect_DisplayMode.StdSelect_DM_Wireframe
-    __entries: dict # value = {'StdSelect_DM_Wireframe': (StdSelect_DisplayMode.StdSelect_DM_Wireframe, None), 'StdSelect_DM_Shading': (StdSelect_DisplayMode.StdSelect_DM_Shading, None), 'StdSelect_DM_HLR': (StdSelect_DisplayMode.StdSelect_DM_HLR, None)}
-    __members__: dict # value = {'StdSelect_DM_Wireframe': StdSelect_DisplayMode.StdSelect_DM_Wireframe, 'StdSelect_DM_Shading': StdSelect_DisplayMode.StdSelect_DM_Shading, 'StdSelect_DM_HLR': StdSelect_DisplayMode.StdSelect_DM_HLR}
     pass
 class StdSelect_EdgeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_Transient):
     """
@@ -491,57 +447,6 @@ class StdSelect_FaceFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard
         None
         """
     pass
-class StdSelect_Prs():
-    """
-    allows entities owners to be hilighted independantly from PresentableObjectsallows entities owners to be hilighted independantly from PresentableObjectsallows entities owners to be hilighted independantly from PresentableObjects
-    """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def Manager(self) -> OCP.Graphic3d.Graphic3d_StructureManager: 
-        """
-        None
-
-        None
-        """
-    def __init__(self,aStructureManager : OCP.Graphic3d.Graphic3d_StructureManager) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-class StdSelect_SensitivityMode():
-    """
-    Selection sensitivity mode. SM_WINDOW mode uses the specified pixel tolerance to compute the sensitivity value, SM_VIEW mode allows to define the sensitivity manually.
-
-    Members:
-
-      StdSelect_SM_WINDOW
-
-      StdSelect_SM_VIEW
-    """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
-    def __int__(self) -> int: ...
-    @property
-    def name(self) -> str:
-        """
-        (self: handle) -> str
-
-        :type: str
-        """
-    StdSelect_SM_VIEW: OCP.StdSelect.StdSelect_SensitivityMode # value = StdSelect_SensitivityMode.StdSelect_SM_VIEW
-    StdSelect_SM_WINDOW: OCP.StdSelect.StdSelect_SensitivityMode # value = StdSelect_SensitivityMode.StdSelect_SM_WINDOW
-    __entries: dict # value = {'StdSelect_SM_WINDOW': (StdSelect_SensitivityMode.StdSelect_SM_WINDOW, None), 'StdSelect_SM_VIEW': (StdSelect_SensitivityMode.StdSelect_SM_VIEW, None)}
-    __members__: dict # value = {'StdSelect_SM_WINDOW': StdSelect_SensitivityMode.StdSelect_SM_WINDOW, 'StdSelect_SM_VIEW': StdSelect_SensitivityMode.StdSelect_SM_VIEW}
-    pass
 class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard_Transient):
     """
     Presentable shape only for purpose of display for BRepOwner...Presentable shape only for purpose of display for BRepOwner...
@@ -582,19 +487,14 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         """
         Returns the color setting of the Interactive Object.
         """
-    def CombinedParentTransformation(self) -> OCP.Geom.Geom_Transformation: 
+    def CombinedParentTransformation(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return combined parent transformation.
         """
-    @overload
-    def Compute(self,aProjector : OCP.Prs3d.Prs3d_Projector,aTrsf : OCP.Geom.Geom_Transformation,aPresentation : OCP.Graphic3d.Graphic3d_Structure) -> None: 
+    def Compute(self,aPresentationManager : OCP.PrsMgr.PrsMgr_PresentationManager,aPresentation : OCP.Graphic3d.Graphic3d_Structure,aMode : int=0) -> None: 
         """
         None
-
-        computes the presentation according to a point of view given by <aProjector>. To be Used when the associated degenerated Presentations have been transformed by <aTrsf> which is not a Pure Translation. The HLR Prs can't be deducted automatically WARNING :<aTrsf> must be applied to the object to display before computation !!!
         """
-    @overload
-    def Compute(self,aPresentationManager : OCP.PrsMgr.PrsMgr_PresentationManager,aPresentation : OCP.Graphic3d.Graphic3d_Structure,aMode : int=0) -> None: ...
     def CurrentFacingModel(self) -> OCP.Aspect.Aspect_TypeOfFacingModel: 
         """
         Returns the current facing model which is in effect.
@@ -615,7 +515,7 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         """
         Returns the display mode setting of the Interactive Object. The range of supported display mode indexes should be specified within object definition and filtered by AccepDisplayMode().
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -721,7 +621,7 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         """
         Return the local transformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
-    def LocalTransformationGeom(self) -> OCP.Geom.Geom_Transformation: 
+    def LocalTransformationGeom(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return the local transformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
@@ -807,7 +707,7 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -859,14 +759,14 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         Set Z layer ID and update all presentations of the presentable object. The layers mechanism allows drawing objects in higher layers in overlay of objects in lower layers.
         """
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def Shape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Shape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def SynchronizeAspects(self) -> None: 
         """
         Synchronize presentation aspects after their modification.
@@ -896,7 +796,7 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         """
         Return the transformation taking into account transformation of parent object(s). Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
-    def TransformationGeom(self) -> OCP.Geom.Geom_Transformation: 
+    def TransformationGeom(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return the transformation taking into account transformation of parent object(s). Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
@@ -966,7 +866,7 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
     pass
 class StdSelect_ShapeTypeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_Transient):
     """
-    A filter framework which allows you to define a filter for a specific shape type. The types available include: - compound - compsolid - solid - shell - face - wire - edge - vertex.A filter framework which allows you to define a filter for a specific shape type. The types available include: - compound - compsolid - solid - shell - face - wire - edge - vertex.A filter framework which allows you to define a filter for a specific shape type. The types available include: - compound - compsolid - solid - shell - face - wire - edge - vertex.
+    A filter framework which allows you to define a filter for a specific shape type.A filter framework which allows you to define a filter for a specific shape type.
     """
     def ActsOn(self,aStandardMode : OCP.TopAbs.TopAbs_ShapeEnum) -> bool: 
         """
@@ -1021,8 +921,6 @@ class StdSelect_ShapeTypeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Sta
     def Type(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns the type of shape selected by the filter.
-
-        Returns the type of shape selected by the filter.
         """
     def __init__(self,aType : OCP.TopAbs.TopAbs_ShapeEnum) -> None: ...
     @staticmethod
@@ -1048,21 +946,29 @@ class StdSelect_TypeOfEdge():
 
       StdSelect_Circle
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StdSelect_AnyEdge: OCP.StdSelect.StdSelect_TypeOfEdge # value = StdSelect_TypeOfEdge.StdSelect_AnyEdge
-    StdSelect_Circle: OCP.StdSelect.StdSelect_TypeOfEdge # value = StdSelect_TypeOfEdge.StdSelect_Circle
-    StdSelect_Line: OCP.StdSelect.StdSelect_TypeOfEdge # value = StdSelect_TypeOfEdge.StdSelect_Line
-    __entries: dict # value = {'StdSelect_AnyEdge': (StdSelect_TypeOfEdge.StdSelect_AnyEdge, None), 'StdSelect_Line': (StdSelect_TypeOfEdge.StdSelect_Line, None), 'StdSelect_Circle': (StdSelect_TypeOfEdge.StdSelect_Circle, None)}
-    __members__: dict # value = {'StdSelect_AnyEdge': StdSelect_TypeOfEdge.StdSelect_AnyEdge, 'StdSelect_Line': StdSelect_TypeOfEdge.StdSelect_Line, 'StdSelect_Circle': StdSelect_TypeOfEdge.StdSelect_Circle}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StdSelect_AnyEdge: OCP.StdSelect.StdSelect_TypeOfEdge # value = <StdSelect_TypeOfEdge.StdSelect_AnyEdge: 0>
+    StdSelect_Circle: OCP.StdSelect.StdSelect_TypeOfEdge # value = <StdSelect_TypeOfEdge.StdSelect_Circle: 2>
+    StdSelect_Line: OCP.StdSelect.StdSelect_TypeOfEdge # value = <StdSelect_TypeOfEdge.StdSelect_Line: 1>
+    __entries: dict # value = {'StdSelect_AnyEdge': (<StdSelect_TypeOfEdge.StdSelect_AnyEdge: 0>, None), 'StdSelect_Line': (<StdSelect_TypeOfEdge.StdSelect_Line: 1>, None), 'StdSelect_Circle': (<StdSelect_TypeOfEdge.StdSelect_Circle: 2>, None)}
+    __members__: dict # value = {'StdSelect_AnyEdge': <StdSelect_TypeOfEdge.StdSelect_AnyEdge: 0>, 'StdSelect_Line': <StdSelect_TypeOfEdge.StdSelect_Line: 1>, 'StdSelect_Circle': <StdSelect_TypeOfEdge.StdSelect_Circle: 2>}
     pass
 class StdSelect_TypeOfFace():
     """
@@ -1084,50 +990,33 @@ class StdSelect_TypeOfFace():
 
       StdSelect_Cone
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StdSelect_AnyFace: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_AnyFace
-    StdSelect_Cone: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Cone
-    StdSelect_Cylinder: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Cylinder
-    StdSelect_Plane: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Plane
-    StdSelect_Revol: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Revol
-    StdSelect_Sphere: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Sphere
-    StdSelect_Torus: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Torus
-    __entries: dict # value = {'StdSelect_AnyFace': (StdSelect_TypeOfFace.StdSelect_AnyFace, None), 'StdSelect_Plane': (StdSelect_TypeOfFace.StdSelect_Plane, None), 'StdSelect_Cylinder': (StdSelect_TypeOfFace.StdSelect_Cylinder, None), 'StdSelect_Sphere': (StdSelect_TypeOfFace.StdSelect_Sphere, None), 'StdSelect_Torus': (StdSelect_TypeOfFace.StdSelect_Torus, None), 'StdSelect_Revol': (StdSelect_TypeOfFace.StdSelect_Revol, None), 'StdSelect_Cone': (StdSelect_TypeOfFace.StdSelect_Cone, None)}
-    __members__: dict # value = {'StdSelect_AnyFace': StdSelect_TypeOfFace.StdSelect_AnyFace, 'StdSelect_Plane': StdSelect_TypeOfFace.StdSelect_Plane, 'StdSelect_Cylinder': StdSelect_TypeOfFace.StdSelect_Cylinder, 'StdSelect_Sphere': StdSelect_TypeOfFace.StdSelect_Sphere, 'StdSelect_Torus': StdSelect_TypeOfFace.StdSelect_Torus, 'StdSelect_Revol': StdSelect_TypeOfFace.StdSelect_Revol, 'StdSelect_Cone': StdSelect_TypeOfFace.StdSelect_Cone}
-    pass
-class StdSelect_TypeOfResult():
-    """
-    Provides values for type of result. These are used to specify whether the result is to be simple or whether it may be multiple.
-
-    Members:
-
-      StdSelect_TOR_SIMPLE
-
-      StdSelect_TOR_MULTIPLE
-    """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
-    def __int__(self) -> int: ...
     @property
-    def name(self) -> str:
+    def value(self) -> int:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: int
         """
-    StdSelect_TOR_MULTIPLE: OCP.StdSelect.StdSelect_TypeOfResult # value = StdSelect_TypeOfResult.StdSelect_TOR_MULTIPLE
-    StdSelect_TOR_SIMPLE: OCP.StdSelect.StdSelect_TypeOfResult # value = StdSelect_TypeOfResult.StdSelect_TOR_SIMPLE
-    __entries: dict # value = {'StdSelect_TOR_SIMPLE': (StdSelect_TypeOfResult.StdSelect_TOR_SIMPLE, None), 'StdSelect_TOR_MULTIPLE': (StdSelect_TypeOfResult.StdSelect_TOR_MULTIPLE, None)}
-    __members__: dict # value = {'StdSelect_TOR_SIMPLE': StdSelect_TypeOfResult.StdSelect_TOR_SIMPLE, 'StdSelect_TOR_MULTIPLE': StdSelect_TypeOfResult.StdSelect_TOR_MULTIPLE}
+    StdSelect_AnyFace: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_AnyFace: 0>
+    StdSelect_Cone: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Cone: 6>
+    StdSelect_Cylinder: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Cylinder: 2>
+    StdSelect_Plane: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Plane: 1>
+    StdSelect_Revol: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Revol: 5>
+    StdSelect_Sphere: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Sphere: 3>
+    StdSelect_Torus: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Torus: 4>
+    __entries: dict # value = {'StdSelect_AnyFace': (<StdSelect_TypeOfFace.StdSelect_AnyFace: 0>, None), 'StdSelect_Plane': (<StdSelect_TypeOfFace.StdSelect_Plane: 1>, None), 'StdSelect_Cylinder': (<StdSelect_TypeOfFace.StdSelect_Cylinder: 2>, None), 'StdSelect_Sphere': (<StdSelect_TypeOfFace.StdSelect_Sphere: 3>, None), 'StdSelect_Torus': (<StdSelect_TypeOfFace.StdSelect_Torus: 4>, None), 'StdSelect_Revol': (<StdSelect_TypeOfFace.StdSelect_Revol: 5>, None), 'StdSelect_Cone': (<StdSelect_TypeOfFace.StdSelect_Cone: 6>, None)}
+    __members__: dict # value = {'StdSelect_AnyFace': <StdSelect_TypeOfFace.StdSelect_AnyFace: 0>, 'StdSelect_Plane': <StdSelect_TypeOfFace.StdSelect_Plane: 1>, 'StdSelect_Cylinder': <StdSelect_TypeOfFace.StdSelect_Cylinder: 2>, 'StdSelect_Sphere': <StdSelect_TypeOfFace.StdSelect_Sphere: 3>, 'StdSelect_Torus': <StdSelect_TypeOfFace.StdSelect_Torus: 4>, 'StdSelect_Revol': <StdSelect_TypeOfFace.StdSelect_Revol: 5>, 'StdSelect_Cone': <StdSelect_TypeOfFace.StdSelect_Cone: 6>}
     pass
 class StdSelect_TypeOfSelectionImage():
     """
@@ -1149,301 +1038,48 @@ class StdSelect_TypeOfSelectionImage():
 
       StdSelect_TypeOfSelectionImage_ColoredSelectionMode
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StdSelect_TypeOfSelectionImage_ColoredDetectedObject: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredDetectedObject
-    StdSelect_TypeOfSelectionImage_ColoredEntity: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredEntity
-    StdSelect_TypeOfSelectionImage_ColoredOwner: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredOwner
-    StdSelect_TypeOfSelectionImage_ColoredSelectionMode: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredSelectionMode
-    StdSelect_TypeOfSelectionImage_NormalizedDepth: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepth
-    StdSelect_TypeOfSelectionImage_NormalizedDepthInverted: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepthInverted
-    StdSelect_TypeOfSelectionImage_UnnormalizedDepth: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_UnnormalizedDepth
-    __entries: dict # value = {'StdSelect_TypeOfSelectionImage_NormalizedDepth': (StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepth, None), 'StdSelect_TypeOfSelectionImage_NormalizedDepthInverted': (StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepthInverted, None), 'StdSelect_TypeOfSelectionImage_UnnormalizedDepth': (StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_UnnormalizedDepth, None), 'StdSelect_TypeOfSelectionImage_ColoredDetectedObject': (StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredDetectedObject, None), 'StdSelect_TypeOfSelectionImage_ColoredEntity': (StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredEntity, None), 'StdSelect_TypeOfSelectionImage_ColoredOwner': (StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredOwner, None), 'StdSelect_TypeOfSelectionImage_ColoredSelectionMode': (StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredSelectionMode, None)}
-    __members__: dict # value = {'StdSelect_TypeOfSelectionImage_NormalizedDepth': StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepth, 'StdSelect_TypeOfSelectionImage_NormalizedDepthInverted': StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepthInverted, 'StdSelect_TypeOfSelectionImage_UnnormalizedDepth': StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_UnnormalizedDepth, 'StdSelect_TypeOfSelectionImage_ColoredDetectedObject': StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredDetectedObject, 'StdSelect_TypeOfSelectionImage_ColoredEntity': StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredEntity, 'StdSelect_TypeOfSelectionImage_ColoredOwner': StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredOwner, 'StdSelect_TypeOfSelectionImage_ColoredSelectionMode': StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredSelectionMode}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StdSelect_TypeOfSelectionImage_ColoredDetectedObject: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredDetectedObject: 3>
+    StdSelect_TypeOfSelectionImage_ColoredEntity: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredEntity: 4>
+    StdSelect_TypeOfSelectionImage_ColoredOwner: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredOwner: 5>
+    StdSelect_TypeOfSelectionImage_ColoredSelectionMode: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredSelectionMode: 6>
+    StdSelect_TypeOfSelectionImage_NormalizedDepth: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepth: 0>
+    StdSelect_TypeOfSelectionImage_NormalizedDepthInverted: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepthInverted: 1>
+    StdSelect_TypeOfSelectionImage_UnnormalizedDepth: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_UnnormalizedDepth: 2>
+    __entries: dict # value = {'StdSelect_TypeOfSelectionImage_NormalizedDepth': (<StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepth: 0>, None), 'StdSelect_TypeOfSelectionImage_NormalizedDepthInverted': (<StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepthInverted: 1>, None), 'StdSelect_TypeOfSelectionImage_UnnormalizedDepth': (<StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_UnnormalizedDepth: 2>, None), 'StdSelect_TypeOfSelectionImage_ColoredDetectedObject': (<StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredDetectedObject: 3>, None), 'StdSelect_TypeOfSelectionImage_ColoredEntity': (<StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredEntity: 4>, None), 'StdSelect_TypeOfSelectionImage_ColoredOwner': (<StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredOwner: 5>, None), 'StdSelect_TypeOfSelectionImage_ColoredSelectionMode': (<StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredSelectionMode: 6>, None)}
+    __members__: dict # value = {'StdSelect_TypeOfSelectionImage_NormalizedDepth': <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepth: 0>, 'StdSelect_TypeOfSelectionImage_NormalizedDepthInverted': <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepthInverted: 1>, 'StdSelect_TypeOfSelectionImage_UnnormalizedDepth': <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_UnnormalizedDepth: 2>, 'StdSelect_TypeOfSelectionImage_ColoredDetectedObject': <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredDetectedObject: 3>, 'StdSelect_TypeOfSelectionImage_ColoredEntity': <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredEntity: 4>, 'StdSelect_TypeOfSelectionImage_ColoredOwner': <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredOwner: 5>, 'StdSelect_TypeOfSelectionImage_ColoredSelectionMode': <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredSelectionMode: 6>}
     pass
-class StdSelect_ViewerSelector3d(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standard.Standard_Transient):
-    """
-    Selector Usable by Viewers from V3dSelector Usable by Viewers from V3d
-    """
-    def ActiveOwners(self,theOwners : OCP.AIS.AIS_NListOfEntityOwner) -> None: 
-        """
-        Returns the list of active entity owners
-        """
-    def AddSelectableObject(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
-        """
-        Adds new object to the map of selectable objects
-        """
-    def AddSelectionToObject(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject,theSelection : OCP.SelectMgr.SelectMgr_Selection) -> None: 
-        """
-        Adds new selection to the object and builds its BVH tree
-        """
-    def AllowOverlapDetection(self,theIsToAllow : bool) -> None: 
-        """
-        Is used for rectangular selection only If theIsToAllow is false, only fully included sensitives will be detected, otherwise the algorithm will mark both included and overlapped entities as matched
-        """
-    def Clear(self) -> None: 
-        """
-        Empties all the tables, removes all selections...
-        """
-    def ClearPicked(self) -> None: 
-        """
-        Clears picking results.
-        """
-    def ClearSensitive(self,theView : OCP.V3d.V3d_View) -> None: 
-        """
-        None
-        """
-    def Contains(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> bool: 
-        """
-        None
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DetectedEntity(self) -> OCP.Select3D.Select3D_SensitiveEntity: 
-        """
-        Returns sensitive entity that was detected during the previous run of selection algorithm
-        """
-    @overload
-    def DisplaySensitive(self,theSel : OCP.SelectMgr.SelectMgr_Selection,theTrsf : OCP.gp.gp_Trsf,theView : OCP.V3d.V3d_View,theToClearOthers : bool=True) -> None: 
-        """
-        Displays sensitives in view <theView>.
-
-        None
-        """
-    @overload
-    def DisplaySensitive(self,theView : OCP.V3d.V3d_View) -> None: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
-        """
-        Dumps the content of me into the stream
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def EntitySetBuilder(self) -> OCP.Select3D.Select3D_BVHBuilder3d: 
-        """
-        Returns the default builder used to construct BVH of entity set.
-        """
-    def GetManager(self) -> OCP.SelectMgr.SelectMgr_SelectingVolumeManager: 
-        """
-        Returns instance of selecting volume manager of the viewer selector
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    def Init(self) -> None: 
-        """
-        Begins an iteration scanning for the owners detected at a position in the view.
-        """
-    def InitDetected(self) -> None: 
-        """
-        Initializes internal iterator for stored detected sensitive entities
-        """
-    def IsActive(self,theSelectableObject : OCP.SelectMgr.SelectMgr_SelectableObject,theMode : int) -> bool: 
-        """
-        Returns true if the selectable object aSelectableObject having the selection mode aMode is active in this selector.
-        """
-    def IsInside(self,theSelectableObject : OCP.SelectMgr.SelectMgr_SelectableObject,theMode : int) -> bool: 
-        """
-        Returns true if the selectable object aSelectableObject having the selection mode aMode is in this selector.
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def Modes(self,theSelectableObject : OCP.SelectMgr.SelectMgr_SelectableObject,theModeList : OCP.TColStd.TColStd_ListOfInteger,theWantedState : OCP.SelectMgr.SelectMgr_StateOfSelection=SelectMgr_StateOfSelection.SelectMgr_SOS_Any) -> bool: 
-        """
-        Returns the list of selection modes ModeList found in this selector for the selectable object aSelectableObject. Returns true if aSelectableObject is referenced inside this selector; returns false if the object is not present in this selector.
-        """
-    def More(self) -> bool: 
-        """
-        Continues the interation scanning for the owners detected at a position in the view, or continues the iteration scanning for the owner closest to the position in the view.
-        """
-    def MoreDetected(self) -> bool: 
-        """
-        Returns true if iterator of map of detected sensitive entities has reached its end
-        """
-    def MoveSelectableObject(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
-        """
-        Moves existing object from set of not transform persistence objects to set of transform persistence objects (or vice versa).
-        """
-    def NbPicked(self) -> int: 
-        """
-        Returns the number of detected owners.
-        """
-    def Next(self) -> None: 
-        """
-        Returns the next owner found in the iteration. This is a scan for the owners detected at a position in the view.
-        """
-    def NextDetected(self) -> None: 
-        """
-        Makes a step along the map of detected sensitive entities and their owners
-        """
-    def OnePicked(self) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
-        """
-        Returns the picked element with the highest priority, and which is the closest to the last successful mouse position.
-        """
-    @overload
-    def Pick(self,thePolyline : OCP.TColgp.TColgp_Array1OfPnt2d,theView : OCP.V3d.V3d_View) -> None: 
-        """
-        Picks the sensitive entity at the pixel coordinates of the mouse <theXPix> and <theYPix>. The selector looks for touched areas and owners.
-
-        Picks the sensitive entity according to the minimum and maximum pixel values <theXPMin>, <theYPMin>, <theXPMax> and <theYPMax> defining a 2D area for selection in the 3D view aView.
-
-        pick action - input pixel values for polyline selection for selection.
-        """
-    @overload
-    def Pick(self,theXPMin : int,theYPMin : int,theXPMax : int,theYPMax : int,theView : OCP.V3d.V3d_View) -> None: ...
-    @overload
-    def Pick(self,theXPix : int,theYPix : int,theView : OCP.V3d.V3d_View) -> None: ...
-    @overload
-    def Picked(self,theRank : int) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
-        """
-        Returns the entity Owner for the object picked at specified position.
-
-        Returns the current selected entity detected by the selector;
-        """
-    @overload
-    def Picked(self) -> OCP.SelectMgr.SelectMgr_EntityOwner: ...
-    def PickedData(self,theRank : int) -> OCP.SelectMgr.SelectMgr_SortCriterion: 
-        """
-        Returns the Entity for the object picked at specified position.
-        """
-    def PickedEntity(self,theRank : int) -> OCP.Select3D.Select3D_SensitiveEntity: 
-        """
-        Returns the Entity for the object picked at specified position.
-        """
-    def PickedPoint(self,theRank : int) -> OCP.gp.gp_Pnt: 
-        """
-        Returns the 3D point (intersection of picking axis with the object nearest to eye) for the object picked at specified position.
-        """
-    def PixelTolerance(self) -> int: 
-        """
-        Returns the pixel tolerance.
-        """
-    def RebuildObjectsTree(self,theIsForce : bool=False) -> None: 
-        """
-        Marks BVH of selectable objects for rebuild. Parameter theIsForce set as true guarantees that 1st level BVH for the viewer selector will be rebuilt during this call
-        """
-    def RebuildSensitivesTree(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject,theIsForce : bool=False) -> None: 
-        """
-        Marks BVH of sensitive entities of particular selectable object for rebuild. Parameter theIsForce set as true guarantees that 2nd level BVH for the object given will be rebuilt during this call
-        """
-    def RemoveSelectableObject(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
-        """
-        Removes selectable object from map of selectable ones
-        """
-    def RemoveSelectionOfObject(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject,theSelection : OCP.SelectMgr.SelectMgr_Selection) -> None: 
-        """
-        Removes selection of the object and marks its BVH tree for rebuild
-        """
-    def ResetSelectionActivationStatus(self) -> None: 
-        """
-        Marks all added sensitive entities of all objects as non-selectable
-        """
-    def Sensitivity(self) -> float: 
-        """
-        returns the Sensitivity of picking
-        """
-    def SetEntitySetBuilder(self,theBuilder : OCP.Select3D.Select3D_BVHBuilder3d) -> None: 
-        """
-        Sets the default builder used to construct BVH of entity set. The new builder will be also assigned for already defined objects, but computed BVH trees will not be invalidated.
-        """
-    def SetPickClosest(self,theToPreferClosest : bool) -> None: 
-        """
-        Set preference of selecting one object for OnePicked() method: - If True, objects with less depth (distance fron the view plane) are preferred regardless of priority (priority is used then to choose among objects with similar depth), - If False, objects with higher priority are preferred regardless of the depth which is used to choose among objects of the same priority.
-        """
-    def SetPixelTolerance(self,theTolerance : int) -> None: 
-        """
-        Sets the pixel tolerance <theTolerance>.
-        """
-    def SortResult(self) -> None: 
-        """
-        Sorts the detected entites by priority and distance. to be redefined if other criterion are used...
-        """
-    @overload
-    def Status(self,theSelection : OCP.SelectMgr.SelectMgr_Selection) -> OCP.SelectMgr.SelectMgr_StateOfSelection: 
-        """
-        Returns the selection status Status of the selection aSelection.
-
-        None
-        """
-    @overload
-    def Status(self,theSelectableObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> OCP.TCollection.TCollection_AsciiString: ...
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def ToPixMap(self,theImage : OCP.Image.Image_PixMap,theView : OCP.V3d.V3d_View,theType : StdSelect_TypeOfSelectionImage,thePickedIndex : int=1) -> bool: 
-        """
-        Dump of detection results into image. This method performs axis picking for each pixel in the image and generates a color depending on picking results and selection image type.
-        """
-    def __init__(self) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-StdSelect_AnyEdge: OCP.StdSelect.StdSelect_TypeOfEdge # value = StdSelect_TypeOfEdge.StdSelect_AnyEdge
-StdSelect_AnyFace: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_AnyFace
-StdSelect_Circle: OCP.StdSelect.StdSelect_TypeOfEdge # value = StdSelect_TypeOfEdge.StdSelect_Circle
-StdSelect_Cone: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Cone
-StdSelect_Cylinder: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Cylinder
-StdSelect_DM_HLR: OCP.StdSelect.StdSelect_DisplayMode # value = StdSelect_DisplayMode.StdSelect_DM_HLR
-StdSelect_DM_Shading: OCP.StdSelect.StdSelect_DisplayMode # value = StdSelect_DisplayMode.StdSelect_DM_Shading
-StdSelect_DM_Wireframe: OCP.StdSelect.StdSelect_DisplayMode # value = StdSelect_DisplayMode.StdSelect_DM_Wireframe
-StdSelect_Line: OCP.StdSelect.StdSelect_TypeOfEdge # value = StdSelect_TypeOfEdge.StdSelect_Line
-StdSelect_Plane: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Plane
-StdSelect_Revol: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Revol
-StdSelect_SM_VIEW: OCP.StdSelect.StdSelect_SensitivityMode # value = StdSelect_SensitivityMode.StdSelect_SM_VIEW
-StdSelect_SM_WINDOW: OCP.StdSelect.StdSelect_SensitivityMode # value = StdSelect_SensitivityMode.StdSelect_SM_WINDOW
-StdSelect_Sphere: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Sphere
-StdSelect_TOR_MULTIPLE: OCP.StdSelect.StdSelect_TypeOfResult # value = StdSelect_TypeOfResult.StdSelect_TOR_MULTIPLE
-StdSelect_TOR_SIMPLE: OCP.StdSelect.StdSelect_TypeOfResult # value = StdSelect_TypeOfResult.StdSelect_TOR_SIMPLE
-StdSelect_Torus: OCP.StdSelect.StdSelect_TypeOfFace # value = StdSelect_TypeOfFace.StdSelect_Torus
-StdSelect_TypeOfSelectionImage_ColoredDetectedObject: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredDetectedObject
-StdSelect_TypeOfSelectionImage_ColoredEntity: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredEntity
-StdSelect_TypeOfSelectionImage_ColoredOwner: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredOwner
-StdSelect_TypeOfSelectionImage_ColoredSelectionMode: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredSelectionMode
-StdSelect_TypeOfSelectionImage_NormalizedDepth: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepth
-StdSelect_TypeOfSelectionImage_NormalizedDepthInverted: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepthInverted
-StdSelect_TypeOfSelectionImage_UnnormalizedDepth: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_UnnormalizedDepth
+StdSelect_AnyEdge: OCP.StdSelect.StdSelect_TypeOfEdge # value = <StdSelect_TypeOfEdge.StdSelect_AnyEdge: 0>
+StdSelect_AnyFace: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_AnyFace: 0>
+StdSelect_Circle: OCP.StdSelect.StdSelect_TypeOfEdge # value = <StdSelect_TypeOfEdge.StdSelect_Circle: 2>
+StdSelect_Cone: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Cone: 6>
+StdSelect_Cylinder: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Cylinder: 2>
+StdSelect_Line: OCP.StdSelect.StdSelect_TypeOfEdge # value = <StdSelect_TypeOfEdge.StdSelect_Line: 1>
+StdSelect_Plane: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Plane: 1>
+StdSelect_Revol: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Revol: 5>
+StdSelect_Sphere: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Sphere: 3>
+StdSelect_Torus: OCP.StdSelect.StdSelect_TypeOfFace # value = <StdSelect_TypeOfFace.StdSelect_Torus: 4>
+StdSelect_TypeOfSelectionImage_ColoredDetectedObject: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredDetectedObject: 3>
+StdSelect_TypeOfSelectionImage_ColoredEntity: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredEntity: 4>
+StdSelect_TypeOfSelectionImage_ColoredOwner: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredOwner: 5>
+StdSelect_TypeOfSelectionImage_ColoredSelectionMode: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_ColoredSelectionMode: 6>
+StdSelect_TypeOfSelectionImage_NormalizedDepth: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepth: 0>
+StdSelect_TypeOfSelectionImage_NormalizedDepthInverted: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_NormalizedDepthInverted: 1>
+StdSelect_TypeOfSelectionImage_UnnormalizedDepth: OCP.StdSelect.StdSelect_TypeOfSelectionImage # value = <StdSelect_TypeOfSelectionImage.StdSelect_TypeOfSelectionImage_UnnormalizedDepth: 2>

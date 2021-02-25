@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Resource
-import OCP.TCollection
-import OCP.CDF
-import OCP.TColStd
-import OCP.PCDM
-import OCP.Message
-import OCP.Standard
 import OCP.TDocStd
+import OCP.TColStd
+import OCP.CDF
+import io
+import OCP.TCollection
+import OCP.Message
+import OCP.PCDM
 import OCP.CDM
+import OCP.Resource
+import OCP.Standard
 __all__  = [
 "XCAFApp_Application"
 ]
@@ -56,6 +57,10 @@ class XCAFApp_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicati
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -124,7 +129,15 @@ class XCAFApp_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicati
         """
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
-        Redefines message driver, by default outputs to std::cout.
+        Returns default messenger;
+        """
+    def MetaDataDriver(self) -> OCP.CDF.CDF_MetaDataDriver: 
+        """
+        returns MetaDatdDriver of this application
+        """
+    def MetaDataLookUpTable(self) -> Any: 
+        """
+        Returns MetaData LookUpTable
         """
     def Name(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
@@ -151,15 +164,15 @@ class XCAFApp_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicati
         Notification that is fired at each OpenTransaction event.
         """
     @overload
-    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: 
+    def Open(self,theIStream : io.BytesIO,theDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
         Retrieves the document aDoc stored under the name aName in the directory directory. In order not to override a version of aDoc which is already in memory, this method can be made to depend on the value returned by IsInSession.
 
         Retrieves aDoc from standard SEEKABLE stream theIStream. the stream should support SEEK fuctionality
         """
     @overload
-    def Open(self,theIStream : Any,theDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: ...
-    def Read(self,theIStream : Any) -> OCP.CDM.CDM_Document: 
+    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    def Read(self,theIStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
         """
         Reads aDoc from standard SEEKABLE stream theIStream, the stream should support SEEK fuctionality
         """
@@ -180,25 +193,25 @@ class XCAFApp_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicati
         methods from TDocStd_Application ================================
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True) -> OCP.CDM.CDM_Document: 
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
         """
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. The content of {aFolder}, {aName} and {aVersion} depends on the Database Manager system. If the DBMS is only based on the OS, {aFolder} is a directory and {aName} is the name of a file. In this case the use of the syntax with {aVersion} has no sense. For example:
 
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. -- If the DBMS is only based on the OS, this syntax should not be used.
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True) -> OCP.CDM.CDM_Document: ...
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: ...
     @overload
-    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: 
+    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save aDoc active document. Exceptions: Standard_NotImplemented if the document was not retrieved in the applicative session by using Open.
 
         Save the document overwriting the previous file
         """
     @overload
-    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: 
+    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : io.BytesIO,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save the active document in the file <name> in the path <path> ; o verwrites the file if it already exists.
 
@@ -209,11 +222,11 @@ class XCAFApp_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicati
         Save theDoc TO standard SEEKABLE stream theOStream. the stream should support SEEK fuctionality
         """
     @overload
-    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : Any,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : Any) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     def SetDefaultFolder(self,aFolder : str) -> bool: 
         """
         None

@@ -4,17 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.Bnd
-import OCP.Aspect
-import OCP.Graphic3d
 import OCP.Quantity
+import OCP.TColStd
 import OCP.Prs3d
-import OCP.Standard
-import OCP.Geom
+import io
 import OCP.NCollection
-import OCP.V3d
 import OCP.gp
+import OCP.Bnd
+import OCP.V3d
+import OCP.Graphic3d
+import OCP.Standard
+import OCP.Aspect
+import OCP.TopLoc
 __all__  = [
 "PrsMgr_ListOfPresentableObjects",
 "PrsMgr_ListOfPresentations",
@@ -44,9 +45,9 @@ class PrsMgr_ListOfPresentableObjects(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : PrsMgr_PresentableObject) -> PrsMgr_PresentableObject: ...
-    @overload
     def Append(self,theOther : PrsMgr_ListOfPresentableObjects) -> None: ...
+    @overload
+    def Append(self,theItem : PrsMgr_PresentableObject) -> PrsMgr_PresentableObject: ...
     def Assign(self,theOther : PrsMgr_ListOfPresentableObjects) -> PrsMgr_ListOfPresentableObjects: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -94,14 +95,14 @@ class PrsMgr_ListOfPresentableObjects(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : PrsMgr_PresentableObject) -> PrsMgr_PresentableObject: 
+    def Prepend(self,theOther : PrsMgr_ListOfPresentableObjects) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : PrsMgr_ListOfPresentableObjects) -> None: ...
+    def Prepend(self,theItem : PrsMgr_PresentableObject) -> PrsMgr_PresentableObject: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -119,12 +120,12 @@ class PrsMgr_ListOfPresentableObjects(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : PrsMgr_ListOfPresentableObjects) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class PrsMgr_ListOfPresentations(OCP.NCollection.NCollection_BaseList):
     """
@@ -144,9 +145,9 @@ class PrsMgr_ListOfPresentations(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : PrsMgr_ListOfPresentations) -> None: ...
-    @overload
     def Append(self,theItem : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Structure: ...
+    @overload
+    def Append(self,theOther : PrsMgr_ListOfPresentations) -> None: ...
     def Assign(self,theOther : PrsMgr_ListOfPresentations) -> PrsMgr_ListOfPresentations: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -166,23 +167,23 @@ class PrsMgr_ListOfPresentations(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : OCP.Graphic3d.Graphic3d_Structure,theIter : Any) -> OCP.Graphic3d.Graphic3d_Structure: 
+    def InsertAfter(self,theOther : PrsMgr_ListOfPresentations,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : PrsMgr_ListOfPresentations,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : OCP.Graphic3d.Graphic3d_Structure,theIter : Any) -> OCP.Graphic3d.Graphic3d_Structure: ...
     @overload
-    def InsertBefore(self,theOther : PrsMgr_ListOfPresentations,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : OCP.Graphic3d.Graphic3d_Structure,theIter : Any) -> OCP.Graphic3d.Graphic3d_Structure: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : OCP.Graphic3d.Graphic3d_Structure,theIter : Any) -> OCP.Graphic3d.Graphic3d_Structure: ...
+    def InsertBefore(self,theOther : PrsMgr_ListOfPresentations,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -194,14 +195,14 @@ class PrsMgr_ListOfPresentations(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Structure: 
+    def Prepend(self,theOther : PrsMgr_ListOfPresentations) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : PrsMgr_ListOfPresentations) -> None: ...
+    def Prepend(self,theItem : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Structure: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -219,12 +220,12 @@ class PrsMgr_ListOfPresentations(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : PrsMgr_ListOfPresentations) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theOther : PrsMgr_ListOfPresentations) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
     """
@@ -266,7 +267,7 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
         """
         Returns the color setting of the Interactive Object.
         """
-    def CombinedParentTransformation(self) -> OCP.Geom.Geom_Transformation: 
+    def CombinedParentTransformation(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return combined parent transformation.
         """
@@ -290,7 +291,7 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
         """
         Returns the display mode setting of the Interactive Object. The range of supported display mode indexes should be specified within object definition and filtered by AccepDisplayMode().
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -396,7 +397,7 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
         """
         Return the local transformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
-    def LocalTransformationGeom(self) -> OCP.Geom.Geom_Transformation: 
+    def LocalTransformationGeom(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return the local transformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
@@ -475,7 +476,7 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
@@ -509,14 +510,14 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
     @overload
     def SetToUpdate(self,theMode : int) -> None: ...
     @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
 
         Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
     @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -562,7 +563,7 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
         """
         Return the transformation taking into account transformation of parent object(s). Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
-    def TransformationGeom(self) -> OCP.Geom.Geom_Transformation: 
+    def TransformationGeom(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return the transformation taking into account transformation of parent object(s). Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
@@ -708,6 +709,10 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
         """
         Returns the current display priority for this structure.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -736,7 +741,7 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
         """
         None
         """
-    def GraphicTransform(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def GraphicTransform(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Internal method which sets new transformation without calling graphic manager callbacks.
         """
@@ -875,9 +880,9 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
         Suppress the structure in the list of descendants or in the list of ancestors.
         """
     @overload
-    def Remove(self) -> None: ...
-    @overload
     def Remove(self,thePtr : OCP.Graphic3d.Graphic3d_Structure,theType : OCP.Graphic3d.Graphic3d_TypeOfConnection) -> None: ...
+    @overload
+    def Remove(self) -> None: ...
     def RemoveAll(self) -> None: 
         """
         None
@@ -922,7 +927,7 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
         """
         Modifies the current transform persistence (pan, zoom or rotate)
         """
-    def SetTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Modifies the current local transformation
         """
@@ -950,7 +955,7 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Transform(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def Transform(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         None
         """
@@ -958,7 +963,7 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
         """
         Returns transform persistence of the presentable object.
         """
-    def Transformation(self) -> OCP.Geom.Geom_Transformation: 
+    def Transformation(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return local transformation.
         """
@@ -978,6 +983,10 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
     def Visual(self) -> OCP.Graphic3d.Graphic3d_TypeOfStructure: 
         """
         Returns the visualisation mode for the structure <me>.
+        """
+    def computeHLR(self,theProjector : OCP.Graphic3d.Graphic3d_Camera,theStructure : OCP.Graphic3d.Graphic3d_Structure) -> Any: 
+        """
+        Returns the new Structure defined for the new visualization
         """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1120,7 +1129,7 @@ class PrsMgr_PresentationManager(OCP.Standard.Standard_Transient):
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Transform(self,thePrsObject : PrsMgr_PresentableObject,theTransformation : OCP.Geom.Geom_Transformation,theMode : int=0) -> None: 
+    def Transform(self,thePrsObject : PrsMgr_PresentableObject,theTransformation : OCP.TopLoc.TopLoc_Datum3D,theMode : int=0) -> None: 
         """
         Sets the transformation theTransformation for the presentable object thePrsObject. thePrsObject has the display mode theMode; this has the default value of 0, that is, the wireframe display mode.
         """
@@ -1277,10 +1286,10 @@ class PrsMgr_Presentations(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : PrsMgr_Presentations) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : PrsMgr_Presentations) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1297,20 +1306,28 @@ class PrsMgr_TypeOfPresentation3d():
 
       PrsMgr_TOP_ProjectorDependant
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    PrsMgr_TOP_AllView: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView
-    PrsMgr_TOP_ProjectorDependant: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant
-    __entries: dict # value = {'PrsMgr_TOP_AllView': (PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView, None), 'PrsMgr_TOP_ProjectorDependant': (PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant, None)}
-    __members__: dict # value = {'PrsMgr_TOP_AllView': PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView, 'PrsMgr_TOP_ProjectorDependant': PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    PrsMgr_TOP_AllView: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView: 0>
+    PrsMgr_TOP_ProjectorDependant: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant: 1>
+    __entries: dict # value = {'PrsMgr_TOP_AllView': (<PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView: 0>, None), 'PrsMgr_TOP_ProjectorDependant': (<PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant: 1>, None)}
+    __members__: dict # value = {'PrsMgr_TOP_AllView': <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView: 0>, 'PrsMgr_TOP_ProjectorDependant': <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant: 1>}
     pass
-PrsMgr_TOP_AllView: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView
-PrsMgr_TOP_ProjectorDependant: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant
+PrsMgr_TOP_AllView: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView: 0>
+PrsMgr_TOP_ProjectorDependant: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant: 1>

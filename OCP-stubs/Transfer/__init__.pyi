@@ -5,10 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
-import OCP.Message
-import OCP.Standard
+import io
 import OCP.NCollection
+import OCP.Message
 import OCP.Interface
+import OCP.Standard
 __all__  = [
 "Transfer_ActorOfProcessForTransient",
 "Transfer_ActorOfProcessForFinder",
@@ -128,7 +129,7 @@ class Transfer_ActorOfProcessForTransient(OCP.Standard.Standard_Transient):
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Transferring(self,start : OCP.Standard.Standard_Transient,TP : Transfer_ProcessForTransient) -> Transfer_Binder: 
+    def Transferring(self,start : OCP.Standard.Standard_Transient,TP : Transfer_ProcessForTransient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         Specific action of Transfer. The Result is stored in the returned Binder, or a Null Handle for "No result" (Default defined as doing nothing; should be deffered) "mutable" allows the Actor to record intermediate information, in addition to those of TransferProcess
         """
@@ -215,7 +216,7 @@ class Transfer_ActorOfProcessForFinder(OCP.Standard.Standard_Transient):
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Transferring(self,start : Transfer_Finder,TP : Transfer_ProcessForFinder) -> Transfer_Binder: 
+    def Transferring(self,start : Transfer_Finder,TP : Transfer_ProcessForFinder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         Specific action of Transfer. The Result is stored in the returned Binder, or a Null Handle for "No result" (Default defined as doing nothing; should be deffered) "mutable" allows the Actor to record intermediate information, in addition to those of TransferProcess
         """
@@ -305,15 +306,15 @@ class Transfer_ActorOfFinderProcess(Transfer_ActorOfProcessForFinder, OCP.Standa
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Transfer(self,start : Transfer_Finder,TP : Transfer_FinderProcess) -> Transfer_Binder: 
+    def Transfer(self,start : Transfer_Finder,TP : Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         None
         """
-    def TransferTransient(self,start : OCP.Standard.Standard_Transient,TP : Transfer_FinderProcess) -> OCP.Standard.Standard_Transient: 
+    def TransferTransient(self,start : OCP.Standard.Standard_Transient,TP : Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Standard.Standard_Transient: 
         """
         None
         """
-    def Transferring(self,start : Transfer_Finder,TP : Transfer_ProcessForFinder) -> Transfer_Binder: 
+    def Transferring(self,start : Transfer_Finder,TP : Transfer_ProcessForFinder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         None
         """
@@ -415,15 +416,15 @@ class Transfer_ActorOfTransientProcess(Transfer_ActorOfProcessForTransient, OCP.
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Transfer(self,start : OCP.Standard.Standard_Transient,TP : Transfer_TransientProcess) -> Transfer_Binder: 
+    def Transfer(self,start : OCP.Standard.Standard_Transient,TP : Transfer_TransientProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         None
         """
-    def TransferTransient(self,start : OCP.Standard.Standard_Transient,TP : Transfer_TransientProcess) -> OCP.Standard.Standard_Transient: 
+    def TransferTransient(self,start : OCP.Standard.Standard_Transient,TP : Transfer_TransientProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Standard.Standard_Transient: 
         """
         None
         """
-    def Transferring(self,start : OCP.Standard.Standard_Transient,TP : Transfer_ProcessForTransient) -> Transfer_Binder: 
+    def Transferring(self,start : OCP.Standard.Standard_Transient,TP : Transfer_ProcessForTransient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         None
         """
@@ -517,7 +518,7 @@ class Transfer_ActorDispatch(Transfer_ActorOfTransientProcess, Transfer_ActorOfP
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Transfer(self,start : OCP.Standard.Standard_Transient,TP : Transfer_TransientProcess) -> Transfer_Binder: 
+    def Transfer(self,start : OCP.Standard.Standard_Transient,TP : Transfer_TransientProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         Specific action : it calls the method Transfer from CopyTool i.e. the general service Copy, then returns the Binder produced by the TransientProcess
         """
@@ -525,11 +526,11 @@ class Transfer_ActorDispatch(Transfer_ActorOfTransientProcess, Transfer_ActorOfP
         """
         Returns the TransferDispatch, which does the work, records the intermediate data, etc... See TransferDispatch & CopyTool, to see the available methods
         """
-    def TransferTransient(self,start : OCP.Standard.Standard_Transient,TP : Transfer_TransientProcess) -> OCP.Standard.Standard_Transient: 
+    def TransferTransient(self,start : OCP.Standard.Standard_Transient,TP : Transfer_TransientProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Standard.Standard_Transient: 
         """
         None
         """
-    def Transferring(self,start : OCP.Standard.Standard_Transient,TP : Transfer_ProcessForTransient) -> Transfer_Binder: 
+    def Transferring(self,start : OCP.Standard.Standard_Transient,TP : Transfer_ProcessForTransient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         None
         """
@@ -540,9 +541,9 @@ class Transfer_ActorDispatch(Transfer_ActorOfTransientProcess, Transfer_ActorOfP
     @overload
     def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel,lib : OCP.Interface.Interface_GeneralLib) -> None: ...
     @overload
-    def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol) -> None: ...
-    @overload
     def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel) -> None: ...
+    @overload
+    def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1076,14 +1077,14 @@ class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
         Adds an item to a list of results bound to a starting object. Considers a category number, by default 0, for all results
         """
     @overload
-    def AddWarning(self,start : Transfer_Finder,mess : str,orig : str='') -> None: 
+    def AddWarning(self,start : Transfer_Finder,amsg : OCP.Message.Message_Msg) -> None: 
         """
         Adds a Warning message to a starting entity (to the check of its Binder of category 0)
 
         Adds a Warning Message to a starting entity from the definition of a Msg (Original+Value)
         """
     @overload
-    def AddWarning(self,start : Transfer_Finder,amsg : OCP.Message.Message_Msg) -> None: ...
+    def AddWarning(self,start : Transfer_Finder,mess : str,orig : str='') -> None: ...
     def Bind(self,start : Transfer_Finder,binder : Transfer_Binder) -> None: 
         """
         Creates a Link a starting Object with a Binder. This Binder can either bring a Result (effective Binding) or none (it can be set later : pre-binding). Considers a category number, by default 0
@@ -1155,10 +1156,6 @@ class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
     def FindTypedTransient(self,start : Transfer_Finder,atype : OCP.Standard.Standard_Type,val : OCP.Standard.Standard_Transient) -> bool: 
         """
         Searches for a transient result attached to a starting object, according to its type, by criterium IsKind(atype)
-        """
-    def GetProgress(self) -> OCP.Message.Message_ProgressIndicator: 
-        """
-        Gets Progress indicator
         """
     def GetRefCount(self) -> int: 
         """
@@ -1238,7 +1235,7 @@ class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
         """
         Returns Nesting Level of Transfers (managed by methods TranscriptWith & Co). Starts to zero. If no automatic Transfer is used, it remains to zero. Zero means Root Level.
         """
-    def PrintTrace(self,start : Transfer_Finder,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintTrace(self,start : Transfer_Finder,S : io.BytesIO) -> None: 
         """
         Prints a short information on a starting object. By default prints its Dynamic Type. Can be redefined
         """
@@ -1306,10 +1303,6 @@ class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
         """
         Sets Messenger used for outputting messages.
         """
-    def SetProgress(self,theProgress : OCP.Message.Message_ProgressIndicator) -> None: 
-        """
-        Sets Progress indicator
-        """
     def SetRoot(self,start : Transfer_Finder) -> None: 
         """
         Declares <obj> (and its Result) as Root. This status will be later exploited by RootResult, see below (Result can be produced at any time)
@@ -1331,11 +1324,11 @@ class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
         """
         Returns trace level used for outputting messages.
         """
-    def Transfer(self,start : Transfer_Finder) -> bool: 
+    def Transfer(self,start : Transfer_Finder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Same as Transferring but does not return the Binder. Simply returns True in case of success (for user call)
         """
-    def Transferring(self,start : Transfer_Finder) -> Transfer_Binder: 
+    def Transferring(self,start : Transfer_Finder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         Performs the Transfer of a Starting Object, by calling the method TransferProduct (see below). Mapping and Roots are managed : nothing is done if a Result is already Bound, an exception is raised in case of error.
         """
@@ -1344,9 +1337,9 @@ class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
         Removes the Binder linked with a starting object If this Binder brings a non-empty Check, it is replaced by a VoidBinder. Also removes from the list of Roots as required. Returns True if done, False if <start> was not bound Considers a category number, by default 0
         """
     @overload
-    def __init__(self,nb : int=10000) -> None: ...
-    @overload
     def __init__(self,printer : OCP.Message.Message_Messenger,nb : int=10000) -> None: ...
+    @overload
+    def __init__(self,nb : int=10000) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1367,14 +1360,14 @@ class Transfer_SequenceOfBinder(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Transfer_SequenceOfBinder) -> None: 
+    def Append(self,theItem : Transfer_Binder) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Transfer_Binder) -> None: ...
+    def Append(self,theSeq : Transfer_SequenceOfBinder) -> None: ...
     def Assign(self,theOther : Transfer_SequenceOfBinder) -> Transfer_SequenceOfBinder: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1404,23 +1397,23 @@ class Transfer_SequenceOfBinder(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Transfer_Binder) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Transfer_Binder) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Transfer_Binder) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Transfer_Binder) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1447,14 +1440,14 @@ class Transfer_SequenceOfBinder(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : Transfer_Binder) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1480,12 +1473,12 @@ class Transfer_SequenceOfBinder(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Transfer_SequenceOfBinder) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : Transfer_SequenceOfBinder) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1501,14 +1494,14 @@ class Transfer_SequenceOfFinder(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Transfer_Finder) -> None: 
+    def Append(self,theSeq : Transfer_SequenceOfFinder) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Transfer_SequenceOfFinder) -> None: ...
+    def Append(self,theItem : Transfer_Finder) -> None: ...
     def Assign(self,theOther : Transfer_SequenceOfFinder) -> Transfer_SequenceOfFinder: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1538,14 +1531,14 @@ class Transfer_SequenceOfFinder(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Transfer_Finder) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Transfer_Finder) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: 
         """
@@ -1619,7 +1612,7 @@ class Transfer_SequenceOfFinder(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self,theOther : Transfer_SequenceOfFinder) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2038,14 +2031,14 @@ class Transfer_FinderProcess(Transfer_ProcessForFinder, OCP.Standard.Standard_Tr
         Adds an item to a list of results bound to a starting object. Considers a category number, by default 0, for all results
         """
     @overload
-    def AddWarning(self,start : Transfer_Finder,mess : str,orig : str='') -> None: 
+    def AddWarning(self,start : Transfer_Finder,amsg : OCP.Message.Message_Msg) -> None: 
         """
         Adds a Warning message to a starting entity (to the check of its Binder of category 0)
 
         Adds a Warning Message to a starting entity from the definition of a Msg (Original+Value)
         """
     @overload
-    def AddWarning(self,start : Transfer_Finder,amsg : OCP.Message.Message_Msg) -> None: ...
+    def AddWarning(self,start : Transfer_Finder,mess : str,orig : str='') -> None: ...
     def Bind(self,start : Transfer_Finder,binder : Transfer_Binder) -> None: 
         """
         Creates a Link a starting Object with a Binder. This Binder can either bring a Result (effective Binding) or none (it can be set later : pre-binding). Considers a category number, by default 0
@@ -2117,10 +2110,6 @@ class Transfer_FinderProcess(Transfer_ProcessForFinder, OCP.Standard.Standard_Tr
     def FindTypedTransient(self,start : Transfer_Finder,atype : OCP.Standard.Standard_Type,val : OCP.Standard.Standard_Transient) -> bool: 
         """
         Searches for a transient result attached to a starting object, according to its type, by criterium IsKind(atype)
-        """
-    def GetProgress(self) -> OCP.Message.Message_ProgressIndicator: 
-        """
-        Gets Progress indicator
         """
     def GetRefCount(self) -> int: 
         """
@@ -2208,11 +2197,11 @@ class Transfer_FinderProcess(Transfer_ProcessForFinder, OCP.Standard.Standard_Tr
         """
         In the list of mapped items (between 1 and NbMapped), searches for the first mapped item which follows <num0> (not included) and which has an attribute named <name> The considered Attributes are those brought by Finders,i.e. by Input data. While NextItemWithAttribute works on Result data (Binders)
         """
-    def PrintStats(self,mode : int,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintStats(self,mode : int,S : io.BytesIO) -> None: 
         """
         Prints statistics on a given output, according mode
         """
-    def PrintTrace(self,start : Transfer_Finder,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintTrace(self,start : Transfer_Finder,S : io.BytesIO) -> None: 
         """
         Specific printing to trace a Finder (by its method ValueType)
         """
@@ -2284,10 +2273,6 @@ class Transfer_FinderProcess(Transfer_ProcessForFinder, OCP.Standard.Standard_Tr
         """
         Sets an InterfaceModel, which can be used during transfer for instance if a context must be managed, it is in the Model
         """
-    def SetProgress(self,theProgress : OCP.Message.Message_ProgressIndicator) -> None: 
-        """
-        Sets Progress indicator
-        """
     def SetRoot(self,start : Transfer_Finder) -> None: 
         """
         Declares <obj> (and its Result) as Root. This status will be later exploited by RootResult, see below (Result can be produced at any time)
@@ -2309,11 +2294,11 @@ class Transfer_FinderProcess(Transfer_ProcessForFinder, OCP.Standard.Standard_Tr
         """
         Returns trace level used for outputting messages.
         """
-    def Transfer(self,start : Transfer_Finder) -> bool: 
+    def Transfer(self,start : Transfer_Finder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Same as Transferring but does not return the Binder. Simply returns True in case of success (for user call)
         """
-    def Transferring(self,start : Transfer_Finder) -> Transfer_Binder: 
+    def Transferring(self,start : Transfer_Finder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         Performs the Transfer of a Starting Object, by calling the method TransferProduct (see below). Mapping and Roots are managed : nothing is done if a Result is already Bound, an exception is raised in case of error.
         """
@@ -2447,10 +2432,6 @@ class Transfer_ProcessForTransient(OCP.Standard.Standard_Transient):
         """
         Searches for a transient result attached to a starting object, according to its type, by criterium IsKind(atype)
         """
-    def GetProgress(self) -> OCP.Message.Message_ProgressIndicator: 
-        """
-        Gets Progress indicator
-        """
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -2529,7 +2510,7 @@ class Transfer_ProcessForTransient(OCP.Standard.Standard_Transient):
         """
         Returns Nesting Level of Transfers (managed by methods TranscriptWith & Co). Starts to zero. If no automatic Transfer is used, it remains to zero. Zero means Root Level.
         """
-    def PrintTrace(self,start : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintTrace(self,start : OCP.Standard.Standard_Transient,S : io.BytesIO) -> None: 
         """
         Prints a short information on a starting object. By default prints its Dynamic Type. Can be redefined
         """
@@ -2597,10 +2578,6 @@ class Transfer_ProcessForTransient(OCP.Standard.Standard_Transient):
         """
         Sets Messenger used for outputting messages.
         """
-    def SetProgress(self,theProgress : OCP.Message.Message_ProgressIndicator) -> None: 
-        """
-        Sets Progress indicator
-        """
     def SetRoot(self,start : OCP.Standard.Standard_Transient) -> None: 
         """
         Declares <obj> (and its Result) as Root. This status will be later exploited by RootResult, see below (Result can be produced at any time)
@@ -2622,11 +2599,11 @@ class Transfer_ProcessForTransient(OCP.Standard.Standard_Transient):
         """
         Returns trace level used for outputting messages.
         """
-    def Transfer(self,start : OCP.Standard.Standard_Transient) -> bool: 
+    def Transfer(self,start : OCP.Standard.Standard_Transient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Same as Transferring but does not return the Binder. Simply returns True in case of success (for user call)
         """
-    def Transferring(self,start : OCP.Standard.Standard_Transient) -> Transfer_Binder: 
+    def Transferring(self,start : OCP.Standard.Standard_Transient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         Performs the Transfer of a Starting Object, by calling the method TransferProduct (see below). Mapping and Roots are managed : nothing is done if a Result is already Bound, an exception is raised in case of error.
         """
@@ -2911,14 +2888,14 @@ class Transfer_HSequenceOfBinder(Transfer_SequenceOfBinder, OCP.NCollection.NCol
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : Transfer_SequenceOfBinder) -> None: 
+    def Append(self,theItem : Transfer_Binder) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : Transfer_Binder) -> None: ...
+    def Append(self,theSequence : Transfer_SequenceOfBinder) -> None: ...
     def Assign(self,theOther : Transfer_SequenceOfBinder) -> Transfer_SequenceOfBinder: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2972,23 +2949,23 @@ class Transfer_HSequenceOfBinder(Transfer_SequenceOfBinder, OCP.NCollection.NCol
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Transfer_Binder) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Transfer_Binder) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Transfer_Binder) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Transfer_Binder) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -3033,14 +3010,14 @@ class Transfer_HSequenceOfBinder(Transfer_SequenceOfBinder, OCP.NCollection.NCol
     @overload
     def Prepend(self,theItem : Transfer_Binder) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -3074,10 +3051,10 @@ class Transfer_HSequenceOfBinder(Transfer_SequenceOfBinder, OCP.NCollection.NCol
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Transfer_SequenceOfBinder) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : Transfer_SequenceOfBinder) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -3161,14 +3138,14 @@ class Transfer_HSequenceOfFinder(Transfer_SequenceOfFinder, OCP.NCollection.NCol
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Transfer_Finder) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Transfer_Finder) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: 
         """
@@ -3263,10 +3240,10 @@ class Transfer_HSequenceOfFinder(Transfer_SequenceOfFinder, OCP.NCollection.NCol
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Transfer_SequenceOfFinder) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -3438,23 +3415,31 @@ class Transfer_StatusExec():
 
       Transfer_StatusLoop
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Transfer_StatusDone: OCP.Transfer.Transfer_StatusExec # value = Transfer_StatusExec.Transfer_StatusDone
-    Transfer_StatusError: OCP.Transfer.Transfer_StatusExec # value = Transfer_StatusExec.Transfer_StatusError
-    Transfer_StatusInitial: OCP.Transfer.Transfer_StatusExec # value = Transfer_StatusExec.Transfer_StatusInitial
-    Transfer_StatusLoop: OCP.Transfer.Transfer_StatusExec # value = Transfer_StatusExec.Transfer_StatusLoop
-    Transfer_StatusRun: OCP.Transfer.Transfer_StatusExec # value = Transfer_StatusExec.Transfer_StatusRun
-    __entries: dict # value = {'Transfer_StatusInitial': (Transfer_StatusExec.Transfer_StatusInitial, None), 'Transfer_StatusRun': (Transfer_StatusExec.Transfer_StatusRun, None), 'Transfer_StatusDone': (Transfer_StatusExec.Transfer_StatusDone, None), 'Transfer_StatusError': (Transfer_StatusExec.Transfer_StatusError, None), 'Transfer_StatusLoop': (Transfer_StatusExec.Transfer_StatusLoop, None)}
-    __members__: dict # value = {'Transfer_StatusInitial': Transfer_StatusExec.Transfer_StatusInitial, 'Transfer_StatusRun': Transfer_StatusExec.Transfer_StatusRun, 'Transfer_StatusDone': Transfer_StatusExec.Transfer_StatusDone, 'Transfer_StatusError': Transfer_StatusExec.Transfer_StatusError, 'Transfer_StatusLoop': Transfer_StatusExec.Transfer_StatusLoop}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Transfer_StatusDone: OCP.Transfer.Transfer_StatusExec # value = <Transfer_StatusExec.Transfer_StatusDone: 2>
+    Transfer_StatusError: OCP.Transfer.Transfer_StatusExec # value = <Transfer_StatusExec.Transfer_StatusError: 3>
+    Transfer_StatusInitial: OCP.Transfer.Transfer_StatusExec # value = <Transfer_StatusExec.Transfer_StatusInitial: 0>
+    Transfer_StatusLoop: OCP.Transfer.Transfer_StatusExec # value = <Transfer_StatusExec.Transfer_StatusLoop: 4>
+    Transfer_StatusRun: OCP.Transfer.Transfer_StatusExec # value = <Transfer_StatusExec.Transfer_StatusRun: 1>
+    __entries: dict # value = {'Transfer_StatusInitial': (<Transfer_StatusExec.Transfer_StatusInitial: 0>, None), 'Transfer_StatusRun': (<Transfer_StatusExec.Transfer_StatusRun: 1>, None), 'Transfer_StatusDone': (<Transfer_StatusExec.Transfer_StatusDone: 2>, None), 'Transfer_StatusError': (<Transfer_StatusExec.Transfer_StatusError: 3>, None), 'Transfer_StatusLoop': (<Transfer_StatusExec.Transfer_StatusLoop: 4>, None)}
+    __members__: dict # value = {'Transfer_StatusInitial': <Transfer_StatusExec.Transfer_StatusInitial: 0>, 'Transfer_StatusRun': <Transfer_StatusExec.Transfer_StatusRun: 1>, 'Transfer_StatusDone': <Transfer_StatusExec.Transfer_StatusDone: 2>, 'Transfer_StatusError': <Transfer_StatusExec.Transfer_StatusError: 3>, 'Transfer_StatusLoop': <Transfer_StatusExec.Transfer_StatusLoop: 4>}
     pass
 class Transfer_StatusResult():
     """
@@ -3468,21 +3453,29 @@ class Transfer_StatusResult():
 
       Transfer_StatusUsed
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Transfer_StatusDefined: OCP.Transfer.Transfer_StatusResult # value = Transfer_StatusResult.Transfer_StatusDefined
-    Transfer_StatusUsed: OCP.Transfer.Transfer_StatusResult # value = Transfer_StatusResult.Transfer_StatusUsed
-    Transfer_StatusVoid: OCP.Transfer.Transfer_StatusResult # value = Transfer_StatusResult.Transfer_StatusVoid
-    __entries: dict # value = {'Transfer_StatusVoid': (Transfer_StatusResult.Transfer_StatusVoid, None), 'Transfer_StatusDefined': (Transfer_StatusResult.Transfer_StatusDefined, None), 'Transfer_StatusUsed': (Transfer_StatusResult.Transfer_StatusUsed, None)}
-    __members__: dict # value = {'Transfer_StatusVoid': Transfer_StatusResult.Transfer_StatusVoid, 'Transfer_StatusDefined': Transfer_StatusResult.Transfer_StatusDefined, 'Transfer_StatusUsed': Transfer_StatusResult.Transfer_StatusUsed}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Transfer_StatusDefined: OCP.Transfer.Transfer_StatusResult # value = <Transfer_StatusResult.Transfer_StatusDefined: 1>
+    Transfer_StatusUsed: OCP.Transfer.Transfer_StatusResult # value = <Transfer_StatusResult.Transfer_StatusUsed: 2>
+    Transfer_StatusVoid: OCP.Transfer.Transfer_StatusResult # value = <Transfer_StatusResult.Transfer_StatusVoid: 0>
+    __entries: dict # value = {'Transfer_StatusVoid': (<Transfer_StatusResult.Transfer_StatusVoid: 0>, None), 'Transfer_StatusDefined': (<Transfer_StatusResult.Transfer_StatusDefined: 1>, None), 'Transfer_StatusUsed': (<Transfer_StatusResult.Transfer_StatusUsed: 2>, None)}
+    __members__: dict # value = {'Transfer_StatusVoid': <Transfer_StatusResult.Transfer_StatusVoid: 0>, 'Transfer_StatusDefined': <Transfer_StatusResult.Transfer_StatusDefined: 1>, 'Transfer_StatusUsed': <Transfer_StatusResult.Transfer_StatusUsed: 2>}
     pass
 class Transfer_TransferDeadLoop(Exception, BaseException):
     class type():
@@ -3566,9 +3559,9 @@ class Transfer_TransferDispatch(OCP.Interface.Interface_CopyTool):
     @overload
     def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel,lib : OCP.Interface.Interface_GeneralLib) -> None: ...
     @overload
-    def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel) -> None: ...
-    @overload
     def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol) -> None: ...
+    @overload
+    def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel) -> None: ...
     pass
 class Transfer_TransferFailure(Exception, BaseException):
     class type():
@@ -3590,7 +3583,7 @@ class Transfer_TransferInput():
         Takes the transient items stored in a TransferIterator
         """
     @overload
-    def FillModel(self,proc : Transfer_TransientProcess,amodel : OCP.Interface.Interface_InterfaceModel,proto : OCP.Interface.Interface_Protocol,roots : bool=True) -> None: 
+    def FillModel(self,proc : Transfer_TransientProcess,amodel : OCP.Interface.Interface_InterfaceModel) -> None: 
         """
         Fills an InterfaceModel with the Complete Result of a Transfer stored in a TransientProcess (Starting Objects are Transient) The complete result is exactly added to the model
 
@@ -3600,12 +3593,12 @@ class Transfer_TransferInput():
 
         Fills an InterfaceModel with results of the Transfer recorded in a TransientProcess (Starting Objects are Transient) : Root Result if <roots> is True (Default), Complete Result else The entities added to the model are determined from the result by by adding the referenced entities
         """
-    @overload
-    def FillModel(self,proc : Transfer_FinderProcess,amodel : OCP.Interface.Interface_InterfaceModel) -> None: ...
-    @overload
-    def FillModel(self,proc : Transfer_TransientProcess,amodel : OCP.Interface.Interface_InterfaceModel) -> None: ...
     @overload
     def FillModel(self,proc : Transfer_FinderProcess,amodel : OCP.Interface.Interface_InterfaceModel,proto : OCP.Interface.Interface_Protocol,roots : bool=True) -> None: ...
+    @overload
+    def FillModel(self,proc : Transfer_TransientProcess,amodel : OCP.Interface.Interface_InterfaceModel,proto : OCP.Interface.Interface_Protocol,roots : bool=True) -> None: ...
+    @overload
+    def FillModel(self,proc : Transfer_FinderProcess,amodel : OCP.Interface.Interface_InterfaceModel) -> None: ...
     def __init__(self) -> None: ...
     pass
 class Transfer_IteratorOfProcessForFinder(Transfer_TransferIterator):
@@ -3727,12 +3720,12 @@ class Transfer_TransferOutput():
         """
         Fills a Model with the list determined by ListForStatus This model starts from scratch (made by NewEmptyModel from the current Model), then is filled by AddWithRefs
         """
-    def Transfer(self,obj : OCP.Standard.Standard_Transient) -> None: 
+    def Transfer(self,obj : OCP.Standard.Standard_Transient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Transfer checks that all taken Entities come from the same Model, then calls Transfer from TransientProcess
         """
     @overload
-    def TransferRoots(self) -> None: 
+    def TransferRoots(self,G : OCP.Interface.Interface_Graph,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Runs transfer on the roots of the Interface Model The Roots are computed with a ShareFlags created from a Protocol given as Argument
 
@@ -3741,9 +3734,9 @@ class Transfer_TransferOutput():
         Runs transfer on the roots of the Interface Model Remark : the Roots are computed with a ShareFlags created from the Active Protocol
         """
     @overload
-    def TransferRoots(self,protocol : OCP.Interface.Interface_Protocol) -> None: ...
+    def TransferRoots(self,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
-    def TransferRoots(self,G : OCP.Interface.Interface_Graph) -> None: ...
+    def TransferRoots(self,protocol : OCP.Interface.Interface_Protocol,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     def TransientProcess(self) -> Transfer_TransientProcess: 
         """
         Returns the TransientProcess used to work
@@ -3876,9 +3869,9 @@ class Transfer_TransientListBinder(Transfer_Binder, OCP.Standard.Standard_Transi
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,list : OCP.TColStd.TColStd_HSequenceOfTransient) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4144,10 +4137,6 @@ class Transfer_TransientProcess(Transfer_ProcessForTransient, OCP.Standard.Stand
         """
         Returns the Context attached to a name, if set and if it is Kind of the type, else a Null Handle Returns True if OK, False if no Context
         """
-    def GetProgress(self) -> OCP.Message.Message_ProgressIndicator: 
-        """
-        Gets Progress indicator
-        """
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -4250,11 +4239,11 @@ class Transfer_TransientProcess(Transfer_ProcessForTransient, OCP.Standard.Stand
         """
         Returns Nesting Level of Transfers (managed by methods TranscriptWith & Co). Starts to zero. If no automatic Transfer is used, it remains to zero. Zero means Root Level.
         """
-    def PrintStats(self,mode : int,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintStats(self,mode : int,S : io.BytesIO) -> None: 
         """
         Prints statistics on a given output, according mode
         """
-    def PrintTrace(self,start : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintTrace(self,start : OCP.Standard.Standard_Transient,S : io.BytesIO) -> None: 
         """
         Specific printing to trace an entity : prints label and type (if model is set)
         """
@@ -4338,10 +4327,6 @@ class Transfer_TransientProcess(Transfer_ProcessForTransient, OCP.Standard.Stand
         """
         Sets an InterfaceModel, used by StartTrace, CheckList, queries on Integrity, to give informations significant for each norm.
         """
-    def SetProgress(self,theProgress : OCP.Message.Message_ProgressIndicator) -> None: 
-        """
-        Sets Progress indicator
-        """
     def SetRoot(self,start : OCP.Standard.Standard_Transient) -> None: 
         """
         Declares <obj> (and its Result) as Root. This status will be later exploited by RootResult, see below (Result can be produced at any time)
@@ -4363,11 +4348,11 @@ class Transfer_TransientProcess(Transfer_ProcessForTransient, OCP.Standard.Stand
         """
         Returns trace level used for outputting messages.
         """
-    def Transfer(self,start : OCP.Standard.Standard_Transient) -> bool: 
+    def Transfer(self,start : OCP.Standard.Standard_Transient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Same as Transferring but does not return the Binder. Simply returns True in case of success (for user call)
         """
-    def Transferring(self,start : OCP.Standard.Standard_Transient) -> Transfer_Binder: 
+    def Transferring(self,start : OCP.Standard.Standard_Transient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
         Performs the Transfer of a Starting Object, by calling the method TransferProduct (see below). Mapping and Roots are managed : nothing is done if a Result is already Bound, an exception is raised in case of error.
         """
@@ -4405,22 +4390,30 @@ class Transfer_UndefMode():
 
       Transfer_UndefUser
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Transfer_UndefContent: OCP.Transfer.Transfer_UndefMode # value = Transfer_UndefMode.Transfer_UndefContent
-    Transfer_UndefFailure: OCP.Transfer.Transfer_UndefMode # value = Transfer_UndefMode.Transfer_UndefFailure
-    Transfer_UndefIgnore: OCP.Transfer.Transfer_UndefMode # value = Transfer_UndefMode.Transfer_UndefIgnore
-    Transfer_UndefUser: OCP.Transfer.Transfer_UndefMode # value = Transfer_UndefMode.Transfer_UndefUser
-    __entries: dict # value = {'Transfer_UndefIgnore': (Transfer_UndefMode.Transfer_UndefIgnore, None), 'Transfer_UndefFailure': (Transfer_UndefMode.Transfer_UndefFailure, None), 'Transfer_UndefContent': (Transfer_UndefMode.Transfer_UndefContent, None), 'Transfer_UndefUser': (Transfer_UndefMode.Transfer_UndefUser, None)}
-    __members__: dict # value = {'Transfer_UndefIgnore': Transfer_UndefMode.Transfer_UndefIgnore, 'Transfer_UndefFailure': Transfer_UndefMode.Transfer_UndefFailure, 'Transfer_UndefContent': Transfer_UndefMode.Transfer_UndefContent, 'Transfer_UndefUser': Transfer_UndefMode.Transfer_UndefUser}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Transfer_UndefContent: OCP.Transfer.Transfer_UndefMode # value = <Transfer_UndefMode.Transfer_UndefContent: 2>
+    Transfer_UndefFailure: OCP.Transfer.Transfer_UndefMode # value = <Transfer_UndefMode.Transfer_UndefFailure: 1>
+    Transfer_UndefIgnore: OCP.Transfer.Transfer_UndefMode # value = <Transfer_UndefMode.Transfer_UndefIgnore: 0>
+    Transfer_UndefUser: OCP.Transfer.Transfer_UndefMode # value = <Transfer_UndefMode.Transfer_UndefUser: 3>
+    __entries: dict # value = {'Transfer_UndefIgnore': (<Transfer_UndefMode.Transfer_UndefIgnore: 0>, None), 'Transfer_UndefFailure': (<Transfer_UndefMode.Transfer_UndefFailure: 1>, None), 'Transfer_UndefContent': (<Transfer_UndefMode.Transfer_UndefContent: 2>, None), 'Transfer_UndefUser': (<Transfer_UndefMode.Transfer_UndefUser: 3>, None)}
+    __members__: dict # value = {'Transfer_UndefIgnore': <Transfer_UndefMode.Transfer_UndefIgnore: 0>, 'Transfer_UndefFailure': <Transfer_UndefMode.Transfer_UndefFailure: 1>, 'Transfer_UndefContent': <Transfer_UndefMode.Transfer_UndefContent: 2>, 'Transfer_UndefUser': <Transfer_UndefMode.Transfer_UndefUser: 3>}
     pass
 class Transfer_VoidBinder(Transfer_Binder, OCP.Standard.Standard_Transient):
     """
@@ -4540,15 +4533,15 @@ class Transfer_VoidBinder(Transfer_Binder, OCP.Standard.Standard_Transient):
         None
         """
     pass
-Transfer_StatusDefined: OCP.Transfer.Transfer_StatusResult # value = Transfer_StatusResult.Transfer_StatusDefined
-Transfer_StatusDone: OCP.Transfer.Transfer_StatusExec # value = Transfer_StatusExec.Transfer_StatusDone
-Transfer_StatusError: OCP.Transfer.Transfer_StatusExec # value = Transfer_StatusExec.Transfer_StatusError
-Transfer_StatusInitial: OCP.Transfer.Transfer_StatusExec # value = Transfer_StatusExec.Transfer_StatusInitial
-Transfer_StatusLoop: OCP.Transfer.Transfer_StatusExec # value = Transfer_StatusExec.Transfer_StatusLoop
-Transfer_StatusRun: OCP.Transfer.Transfer_StatusExec # value = Transfer_StatusExec.Transfer_StatusRun
-Transfer_StatusUsed: OCP.Transfer.Transfer_StatusResult # value = Transfer_StatusResult.Transfer_StatusUsed
-Transfer_StatusVoid: OCP.Transfer.Transfer_StatusResult # value = Transfer_StatusResult.Transfer_StatusVoid
-Transfer_UndefContent: OCP.Transfer.Transfer_UndefMode # value = Transfer_UndefMode.Transfer_UndefContent
-Transfer_UndefFailure: OCP.Transfer.Transfer_UndefMode # value = Transfer_UndefMode.Transfer_UndefFailure
-Transfer_UndefIgnore: OCP.Transfer.Transfer_UndefMode # value = Transfer_UndefMode.Transfer_UndefIgnore
-Transfer_UndefUser: OCP.Transfer.Transfer_UndefMode # value = Transfer_UndefMode.Transfer_UndefUser
+Transfer_StatusDefined: OCP.Transfer.Transfer_StatusResult # value = <Transfer_StatusResult.Transfer_StatusDefined: 1>
+Transfer_StatusDone: OCP.Transfer.Transfer_StatusExec # value = <Transfer_StatusExec.Transfer_StatusDone: 2>
+Transfer_StatusError: OCP.Transfer.Transfer_StatusExec # value = <Transfer_StatusExec.Transfer_StatusError: 3>
+Transfer_StatusInitial: OCP.Transfer.Transfer_StatusExec # value = <Transfer_StatusExec.Transfer_StatusInitial: 0>
+Transfer_StatusLoop: OCP.Transfer.Transfer_StatusExec # value = <Transfer_StatusExec.Transfer_StatusLoop: 4>
+Transfer_StatusRun: OCP.Transfer.Transfer_StatusExec # value = <Transfer_StatusExec.Transfer_StatusRun: 1>
+Transfer_StatusUsed: OCP.Transfer.Transfer_StatusResult # value = <Transfer_StatusResult.Transfer_StatusUsed: 2>
+Transfer_StatusVoid: OCP.Transfer.Transfer_StatusResult # value = <Transfer_StatusResult.Transfer_StatusVoid: 0>
+Transfer_UndefContent: OCP.Transfer.Transfer_UndefMode # value = <Transfer_UndefMode.Transfer_UndefContent: 2>
+Transfer_UndefFailure: OCP.Transfer.Transfer_UndefMode # value = <Transfer_UndefMode.Transfer_UndefFailure: 1>
+Transfer_UndefIgnore: OCP.Transfer.Transfer_UndefMode # value = <Transfer_UndefMode.Transfer_UndefIgnore: 0>
+Transfer_UndefUser: OCP.Transfer.Transfer_UndefMode # value = <Transfer_UndefMode.Transfer_UndefUser: 3>

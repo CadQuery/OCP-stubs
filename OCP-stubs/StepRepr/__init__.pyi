@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
+import OCP.NCollection
 import OCP.StepBasic
 import OCP.StepShape
 import OCP.Standard
 import OCP.StepData
-import OCP.NCollection
 __all__  = [
 "StepRepr_ShapeAspect",
 "StepRepr_DerivedShapeAspect",
@@ -365,14 +365,14 @@ class StepRepr_Array1OfMaterialPropertyRepresentation():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepRepr_MaterialPropertyRepresentation,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepRepr_Array1OfMaterialPropertyRepresentation) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : StepRepr_MaterialPropertyRepresentation,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepRepr_Array1OfPropertyDefinitionRepresentation():
     """
@@ -451,14 +451,14 @@ class StepRepr_Array1OfPropertyDefinitionRepresentation():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepRepr_Array1OfPropertyDefinitionRepresentation) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : StepRepr_PropertyDefinitionRepresentation,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepRepr_Array1OfRepresentationItem():
     """
@@ -537,14 +537,14 @@ class StepRepr_Array1OfRepresentationItem():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepRepr_Array1OfRepresentationItem) -> None: ...
     @overload
     def __init__(self,theBegin : StepRepr_RepresentationItem,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepRepr_Array1OfRepresentationItem) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepRepr_Array1OfShapeAspect():
     """
@@ -623,14 +623,14 @@ class StepRepr_Array1OfShapeAspect():
         Constant value access
         """
     @overload
+    def __init__(self,theBegin : StepRepr_ShapeAspect,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : StepRepr_ShapeAspect,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepRepr_Array1OfShapeAspect) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepRepr_ProductDefinitionUsage(OCP.StepBasic.StepBasic_ProductDefinitionRelationship, OCP.Standard.Standard_Transient):
     """
@@ -737,14 +737,14 @@ class StepRepr_ProductDefinitionUsage(OCP.StepBasic.StepBasic_ProductDefinitionR
     @overload
     def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatingProductDefinition
 
         Set field RelatingProductDefinition in AP242
         """
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3452,14 +3452,14 @@ class StepRepr_HArray1OfMaterialPropertyRepresentation(StepRepr_Array1OfMaterial
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepRepr_Array1OfMaterialPropertyRepresentation) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_MaterialPropertyRepresentation) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_MaterialPropertyRepresentation) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3595,14 +3595,14 @@ class StepRepr_HArray1OfPropertyDefinitionRepresentation(StepRepr_Array1OfProper
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepRepr_Array1OfPropertyDefinitionRepresentation) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_PropertyDefinitionRepresentation) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepRepr_Array1OfPropertyDefinitionRepresentation) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3738,14 +3738,14 @@ class StepRepr_HArray1OfRepresentationItem(StepRepr_Array1OfRepresentationItem, 
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepRepr_Array1OfRepresentationItem) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_RepresentationItem) -> None: ...
+    def __init__(self,theOther : StepRepr_Array1OfRepresentationItem) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_RepresentationItem) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3883,12 +3883,12 @@ class StepRepr_HArray1OfShapeAspect(StepRepr_Array1OfShapeAspect, OCP.Standard.S
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_ShapeAspect) -> None: ...
     @overload
     def __init__(self,theOther : StepRepr_Array1OfShapeAspect) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepRepr_ShapeAspect) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3909,14 +3909,14 @@ class StepRepr_SequenceOfMaterialPropertyRepresentation(OCP.NCollection.NCollect
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : StepRepr_MaterialPropertyRepresentation) -> None: 
+    def Append(self,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
+    def Append(self,theItem : StepRepr_MaterialPropertyRepresentation) -> None: ...
     def Assign(self,theOther : StepRepr_SequenceOfMaterialPropertyRepresentation) -> StepRepr_SequenceOfMaterialPropertyRepresentation: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -3989,14 +3989,14 @@ class StepRepr_SequenceOfMaterialPropertyRepresentation(OCP.NCollection.NCollect
     @overload
     def Prepend(self,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4022,12 +4022,12 @@ class StepRepr_SequenceOfMaterialPropertyRepresentation(OCP.NCollection.NCollect
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theOther : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4043,14 +4043,14 @@ class StepRepr_SequenceOfRepresentationItem(OCP.NCollection.NCollection_BaseSequ
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : StepRepr_RepresentationItem) -> None: 
+    def Append(self,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: ...
+    def Append(self,theItem : StepRepr_RepresentationItem) -> None: ...
     def Assign(self,theOther : StepRepr_SequenceOfRepresentationItem) -> StepRepr_SequenceOfRepresentationItem: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4089,14 +4089,14 @@ class StepRepr_SequenceOfRepresentationItem(OCP.NCollection.NCollection_BaseSequ
     @overload
     def InsertAfter(self,theIndex : int,theItem : StepRepr_RepresentationItem) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : StepRepr_RepresentationItem) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepRepr_RepresentationItem) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4123,14 +4123,14 @@ class StepRepr_SequenceOfRepresentationItem(OCP.NCollection.NCollection_BaseSequ
     @overload
     def Prepend(self,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4156,12 +4156,12 @@ class StepRepr_SequenceOfRepresentationItem(OCP.NCollection.NCollection_BaseSequ
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : StepRepr_SequenceOfRepresentationItem) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepRepr_SequenceOfRepresentationItem) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4466,14 +4466,14 @@ class StepRepr_MakeFromUsageOption(StepRepr_ProductDefinitionUsage, OCP.StepBasi
     @overload
     def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatingProductDefinition
 
         Set field RelatingProductDefinition in AP242
         """
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -5011,14 +5011,14 @@ class StepRepr_AssemblyComponentUsage(StepRepr_ProductDefinitionUsage, OCP.StepB
     @overload
     def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatingProductDefinition
 
         Set field RelatingProductDefinition in AP242
         """
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -5611,14 +5611,14 @@ class StepRepr_NextAssemblyUsageOccurrence(StepRepr_AssemblyComponentUsage, Step
     @overload
     def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatingProductDefinition
 
         Set field RelatingProductDefinition in AP242
         """
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -5749,14 +5749,14 @@ class StepRepr_PromissoryUsageOccurrence(StepRepr_AssemblyComponentUsage, StepRe
     @overload
     def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatingProductDefinition
 
         Set field RelatingProductDefinition in AP242
         """
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6084,14 +6084,14 @@ class StepRepr_QuantifiedAssemblyComponentUsage(StepRepr_AssemblyComponentUsage,
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: 
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: 
         """
         Initialize all fields (own and inherited)
 
         Initialize all fields (own and inherited)
         """
     @overload
-    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: ...
+    def Init(self,aProductDefinitionRelationship_Id : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_Name : OCP.TCollection.TCollection_HAsciiString,hasProductDefinitionRelationship_Description : bool,aProductDefinitionRelationship_Description : OCP.TCollection.TCollection_HAsciiString,aProductDefinitionRelationship_RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,aProductDefinitionRelationship_RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition,hasAssemblyComponentUsage_ReferenceDesignator : bool,aAssemblyComponentUsage_ReferenceDesignator : OCP.TCollection.TCollection_HAsciiString,aQuantity : OCP.StepBasic.StepBasic_MeasureWithUnit) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6168,14 +6168,14 @@ class StepRepr_QuantifiedAssemblyComponentUsage(StepRepr_AssemblyComponentUsage,
     @overload
     def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatingProductDefinition
 
         Set field RelatingProductDefinition in AP242
         """
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -7539,14 +7539,14 @@ class StepRepr_HSequenceOfMaterialPropertyRepresentation(StepRepr_SequenceOfMate
     @overload
     def Prepend(self,theSeq : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7583,7 +7583,7 @@ class StepRepr_HSequenceOfMaterialPropertyRepresentation(StepRepr_SequenceOfMate
     def __init__(self,theOther : StepRepr_SequenceOfMaterialPropertyRepresentation) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7676,14 +7676,14 @@ class StepRepr_HSequenceOfRepresentationItem(StepRepr_SequenceOfRepresentationIt
     @overload
     def InsertAfter(self,theIndex : int,theItem : StepRepr_RepresentationItem) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : StepRepr_RepresentationItem) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepRepr_RepresentationItem) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -7728,14 +7728,14 @@ class StepRepr_HSequenceOfRepresentationItem(StepRepr_SequenceOfRepresentationIt
     @overload
     def Prepend(self,theSeq : StepRepr_SequenceOfRepresentationItem) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7769,10 +7769,10 @@ class StepRepr_HSequenceOfRepresentationItem(StepRepr_SequenceOfRepresentationIt
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : StepRepr_SequenceOfRepresentationItem) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepRepr_SequenceOfRepresentationItem) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -8614,14 +8614,14 @@ class StepRepr_SpecifiedHigherUsageOccurrence(StepRepr_AssemblyComponentUsage, S
     @overload
     def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatingProductDefinition
 
         Set field RelatingProductDefinition in AP242
         """
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     def SetUpperUsage(self,UpperUsage : StepRepr_AssemblyComponentUsage) -> None: 
         """
         Set field UpperUsage
@@ -8916,14 +8916,14 @@ class StepRepr_SuppliedPartRelationship(OCP.StepBasic.StepBasic_ProductDefinitio
     @overload
     def SetRelatedProductDefinition(self,RelatedProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: 
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: 
         """
         Set field RelatingProductDefinition
 
         Set field RelatingProductDefinition in AP242
         """
     @overload
-    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinitionOrReference) -> None: ...
+    def SetRelatingProductDefinition(self,RelatingProductDefinition : OCP.StepBasic.StepBasic_ProductDefinition) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

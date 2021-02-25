@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
 import OCP.gp
+import OCP.NCollection
 __all__  = [
 "Hatch_Hatcher",
 "Hatch_Line",
@@ -22,14 +22,14 @@ class Hatch_Hatcher():
     The Hatcher is an algorithm to compute cross hatchings in a 2d plane. It is mainly dedicated to display purpose.
     """
     @overload
-    def AddLine(self,L : OCP.gp.gp_Lin2d,T : Hatch_LineForm=Hatch_LineForm.Hatch_ANYLINE) -> None: 
+    def AddLine(self,D : OCP.gp.gp_Dir2d,Dist : float) -> None: 
         """
         Add a line <L> to be trimmed. <T> the type is only kept from information. It is not used in the computation.
 
         Add an infinite line on direction <D> at distance <Dist> from the origin to be trimmed. <Dist> may be negative.
         """
     @overload
-    def AddLine(self,D : OCP.gp.gp_Dir2d,Dist : float) -> None: ...
+    def AddLine(self,L : OCP.gp.gp_Lin2d,T : Hatch_LineForm=Hatch_LineForm.Hatch_ANYLINE) -> None: ...
     def AddXLine(self,X : float) -> None: 
         """
         Add an infinite line parallel to the Y-axis at abciss <X>.
@@ -71,14 +71,14 @@ class Hatch_Hatcher():
         Returns the type of the line of index <I>.
         """
     @overload
-    def NbIntervals(self,I : int) -> int: 
+    def NbIntervals(self) -> int: 
         """
         Returns the total number of intervals on all the lines.
 
         Returns the number of intervals on line of index <I>.
         """
     @overload
-    def NbIntervals(self) -> int: ...
+    def NbIntervals(self,I : int) -> int: ...
     def NbLines(self) -> int: 
         """
         Returns the number of lines.
@@ -105,7 +105,7 @@ class Hatch_Hatcher():
     @overload
     def Tolerance(self,Tol : float) -> None: ...
     @overload
-    def Trim(self,L : OCP.gp.gp_Lin2d,Start : float,End : float,Index : int=0) -> None: 
+    def Trim(self,L : OCP.gp.gp_Lin2d,Index : int=0) -> None: 
         """
         Trims the lines at intersections with <L>.
 
@@ -114,9 +114,9 @@ class Hatch_Hatcher():
         Trims the line at intersection with the oriented segment P1,P2.
         """
     @overload
-    def Trim(self,L : OCP.gp.gp_Lin2d,Index : int=0) -> None: ...
-    @overload
     def Trim(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d,Index : int=0) -> None: ...
+    @overload
+    def Trim(self,L : OCP.gp.gp_Lin2d,Start : float,End : float,Index : int=0) -> None: ...
     def __init__(self,Tol : float,Oriented : bool=True) -> None: ...
     pass
 class Hatch_Line():
@@ -128,9 +128,9 @@ class Hatch_Line():
         Insert a new intersection in the sorted list.
         """
     @overload
-    def __init__(self,L : OCP.gp.gp_Lin2d,T : Hatch_LineForm) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Lin2d,T : Hatch_LineForm) -> None: ...
     pass
 class Hatch_LineForm():
     """
@@ -144,21 +144,29 @@ class Hatch_LineForm():
 
       Hatch_ANYLINE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Hatch_ANYLINE: OCP.Hatch.Hatch_LineForm # value = Hatch_LineForm.Hatch_ANYLINE
-    Hatch_XLINE: OCP.Hatch.Hatch_LineForm # value = Hatch_LineForm.Hatch_XLINE
-    Hatch_YLINE: OCP.Hatch.Hatch_LineForm # value = Hatch_LineForm.Hatch_YLINE
-    __entries: dict # value = {'Hatch_XLINE': (Hatch_LineForm.Hatch_XLINE, None), 'Hatch_YLINE': (Hatch_LineForm.Hatch_YLINE, None), 'Hatch_ANYLINE': (Hatch_LineForm.Hatch_ANYLINE, None)}
-    __members__: dict # value = {'Hatch_XLINE': Hatch_LineForm.Hatch_XLINE, 'Hatch_YLINE': Hatch_LineForm.Hatch_YLINE, 'Hatch_ANYLINE': Hatch_LineForm.Hatch_ANYLINE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Hatch_ANYLINE: OCP.Hatch.Hatch_LineForm # value = <Hatch_LineForm.Hatch_ANYLINE: 2>
+    Hatch_XLINE: OCP.Hatch.Hatch_LineForm # value = <Hatch_LineForm.Hatch_XLINE: 0>
+    Hatch_YLINE: OCP.Hatch.Hatch_LineForm # value = <Hatch_LineForm.Hatch_YLINE: 1>
+    __entries: dict # value = {'Hatch_XLINE': (<Hatch_LineForm.Hatch_XLINE: 0>, None), 'Hatch_YLINE': (<Hatch_LineForm.Hatch_YLINE: 1>, None), 'Hatch_ANYLINE': (<Hatch_LineForm.Hatch_ANYLINE: 2>, None)}
+    __members__: dict # value = {'Hatch_XLINE': <Hatch_LineForm.Hatch_XLINE: 0>, 'Hatch_YLINE': <Hatch_LineForm.Hatch_YLINE: 1>, 'Hatch_ANYLINE': <Hatch_LineForm.Hatch_ANYLINE: 2>}
     pass
 class Hatch_Parameter():
     """
@@ -178,14 +186,14 @@ class Hatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Hatch_SequenceOfLine) -> None: 
+    def Append(self,theItem : Hatch_Line) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Hatch_Line) -> None: ...
+    def Append(self,theSeq : Hatch_SequenceOfLine) -> None: ...
     def Assign(self,theOther : Hatch_SequenceOfLine) -> Hatch_SequenceOfLine: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -258,14 +266,14 @@ class Hatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : Hatch_Line) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -291,12 +299,12 @@ class Hatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Hatch_SequenceOfLine) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : Hatch_SequenceOfLine) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -349,14 +357,14 @@ class Hatch_SequenceOfParameter(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Hatch_Parameter) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Hatch_SequenceOfParameter) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Hatch_SequenceOfParameter) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : Hatch_Parameter) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : Hatch_SequenceOfParameter) -> None: 
         """
@@ -392,14 +400,14 @@ class Hatch_SequenceOfParameter(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : Hatch_SequenceOfParameter) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -425,18 +433,18 @@ class Hatch_SequenceOfParameter(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Hatch_SequenceOfParameter) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : Hatch_SequenceOfParameter) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Static deleter to be passed to BaseSequence
         """
     pass
-Hatch_ANYLINE: OCP.Hatch.Hatch_LineForm # value = Hatch_LineForm.Hatch_ANYLINE
-Hatch_XLINE: OCP.Hatch.Hatch_LineForm # value = Hatch_LineForm.Hatch_XLINE
-Hatch_YLINE: OCP.Hatch.Hatch_LineForm # value = Hatch_LineForm.Hatch_YLINE
+Hatch_ANYLINE: OCP.Hatch.Hatch_LineForm # value = <Hatch_LineForm.Hatch_ANYLINE: 2>
+Hatch_XLINE: OCP.Hatch.Hatch_LineForm # value = <Hatch_LineForm.Hatch_XLINE: 0>
+Hatch_YLINE: OCP.Hatch.Hatch_LineForm # value = <Hatch_LineForm.Hatch_YLINE: 1>

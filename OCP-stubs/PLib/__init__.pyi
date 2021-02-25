@@ -5,10 +5,10 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
+import OCP.math
 import OCP.GeomAbs
 import OCP.TColgp
 import OCP.Standard
-import OCP.math
 __all__  = [
 "PLib",
 "PLib_Base",
@@ -27,7 +27,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def CoefficientsPoles_s(Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array2OfPnt,WCoefs : OCP.TColStd.TColStd_Array2OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,WPoles : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
         None
 
@@ -39,18 +39,18 @@ class PLib():
 
         None
         """
-    @staticmethod
-    @overload
-    def CoefficientsPoles_s(dim : int,Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
-    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array2OfPnt,WCoefs : OCP.TColStd.TColStd_Array2OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,WPoles : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
+    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def CoefficientsPoles_s(Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def CoefficientsPoles_s(dim : int,Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     def ConstraintOrder_s(NivConstr : int) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
@@ -89,7 +89,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
         """
         Get from FP the coordinates of the poles.
 
@@ -99,12 +99,12 @@ class PLib():
 
         Get from FP the coordinates of the poles.
         """
+    @staticmethod
+    @overload
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @staticmethod
     @overload
     def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
@@ -155,7 +155,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Copy in FP the coordinates of the poles.
 
@@ -165,6 +165,9 @@ class PLib():
 
         Copy in FP the coordinates of the poles.
         """
+    @staticmethod
+    @overload
+    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
@@ -173,10 +176,7 @@ class PLib():
     def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
-    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Trimming_s(U1 : float,U2 : float,dim : int,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         None
 
@@ -188,13 +188,13 @@ class PLib():
         """
     @staticmethod
     @overload
-    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
-    def Trimming_s(U1 : float,U2 : float,dim : int,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     def UTrimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array2OfPnt,WCoeffs : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
@@ -345,9 +345,9 @@ class PLib_DoubleJacobiPolynomial():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,JacPolU : PLib_JacobiPolynomial,JacPolV : PLib_JacobiPolynomial) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class PLib_HermitJacobi(PLib_Base, OCP.Standard.Standard_Transient):
     """

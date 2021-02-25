@@ -184,11 +184,11 @@ class Intrv_Interval():
         None
         """
     @overload
+    def __init__(self,Start : float,TolStart : float,End : float,TolEnd : float) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Start : float,End : float) -> None: ...
-    @overload
-    def __init__(self,Start : float,TolStart : float,End : float,TolEnd : float) -> None: ...
     pass
 class Intrv_Intervals():
     """
@@ -210,14 +210,14 @@ class Intrv_Intervals():
         None
         """
     @overload
-    def Subtract(self,Tool : Intrv_Interval) -> None: 
+    def Subtract(self,Tool : Intrv_Intervals) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Subtract(self,Tool : Intrv_Intervals) -> None: ...
+    def Subtract(self,Tool : Intrv_Interval) -> None: ...
     @overload
     def Unite(self,Tool : Intrv_Interval) -> None: 
         """
@@ -243,11 +243,9 @@ class Intrv_Intervals():
     @overload
     def XUnite(self,Tool : Intrv_Interval) -> None: ...
     @overload
-    def __init__(self,Int : Intrv_Intervals) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,Int : Intrv_Interval) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class Intrv_Position():
     """
@@ -281,31 +279,39 @@ class Intrv_Position():
 
       Intrv_After
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Intrv_After: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_After
-    Intrv_Before: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_Before
-    Intrv_Enclosing: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_Enclosing
-    Intrv_Inside: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_Inside
-    Intrv_JustAfter: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustAfter
-    Intrv_JustBefore: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustBefore
-    Intrv_JustEnclosingAtEnd: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustEnclosingAtEnd
-    Intrv_JustEnclosingAtStart: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustEnclosingAtStart
-    Intrv_JustOverlappingAtEnd: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustOverlappingAtEnd
-    Intrv_JustOverlappingAtStart: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustOverlappingAtStart
-    Intrv_OverlappingAtEnd: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_OverlappingAtEnd
-    Intrv_OverlappingAtStart: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_OverlappingAtStart
-    Intrv_Similar: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_Similar
-    __entries: dict # value = {'Intrv_Before': (Intrv_Position.Intrv_Before, None), 'Intrv_JustBefore': (Intrv_Position.Intrv_JustBefore, None), 'Intrv_OverlappingAtStart': (Intrv_Position.Intrv_OverlappingAtStart, None), 'Intrv_JustEnclosingAtEnd': (Intrv_Position.Intrv_JustEnclosingAtEnd, None), 'Intrv_Enclosing': (Intrv_Position.Intrv_Enclosing, None), 'Intrv_JustOverlappingAtStart': (Intrv_Position.Intrv_JustOverlappingAtStart, None), 'Intrv_Similar': (Intrv_Position.Intrv_Similar, None), 'Intrv_JustEnclosingAtStart': (Intrv_Position.Intrv_JustEnclosingAtStart, None), 'Intrv_Inside': (Intrv_Position.Intrv_Inside, None), 'Intrv_JustOverlappingAtEnd': (Intrv_Position.Intrv_JustOverlappingAtEnd, None), 'Intrv_OverlappingAtEnd': (Intrv_Position.Intrv_OverlappingAtEnd, None), 'Intrv_JustAfter': (Intrv_Position.Intrv_JustAfter, None), 'Intrv_After': (Intrv_Position.Intrv_After, None)}
-    __members__: dict # value = {'Intrv_Before': Intrv_Position.Intrv_Before, 'Intrv_JustBefore': Intrv_Position.Intrv_JustBefore, 'Intrv_OverlappingAtStart': Intrv_Position.Intrv_OverlappingAtStart, 'Intrv_JustEnclosingAtEnd': Intrv_Position.Intrv_JustEnclosingAtEnd, 'Intrv_Enclosing': Intrv_Position.Intrv_Enclosing, 'Intrv_JustOverlappingAtStart': Intrv_Position.Intrv_JustOverlappingAtStart, 'Intrv_Similar': Intrv_Position.Intrv_Similar, 'Intrv_JustEnclosingAtStart': Intrv_Position.Intrv_JustEnclosingAtStart, 'Intrv_Inside': Intrv_Position.Intrv_Inside, 'Intrv_JustOverlappingAtEnd': Intrv_Position.Intrv_JustOverlappingAtEnd, 'Intrv_OverlappingAtEnd': Intrv_Position.Intrv_OverlappingAtEnd, 'Intrv_JustAfter': Intrv_Position.Intrv_JustAfter, 'Intrv_After': Intrv_Position.Intrv_After}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Intrv_After: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_After: 12>
+    Intrv_Before: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_Before: 0>
+    Intrv_Enclosing: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_Enclosing: 4>
+    Intrv_Inside: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_Inside: 8>
+    Intrv_JustAfter: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustAfter: 11>
+    Intrv_JustBefore: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustBefore: 1>
+    Intrv_JustEnclosingAtEnd: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustEnclosingAtEnd: 3>
+    Intrv_JustEnclosingAtStart: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustEnclosingAtStart: 7>
+    Intrv_JustOverlappingAtEnd: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustOverlappingAtEnd: 9>
+    Intrv_JustOverlappingAtStart: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustOverlappingAtStart: 5>
+    Intrv_OverlappingAtEnd: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_OverlappingAtEnd: 10>
+    Intrv_OverlappingAtStart: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_OverlappingAtStart: 2>
+    Intrv_Similar: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_Similar: 6>
+    __entries: dict # value = {'Intrv_Before': (<Intrv_Position.Intrv_Before: 0>, None), 'Intrv_JustBefore': (<Intrv_Position.Intrv_JustBefore: 1>, None), 'Intrv_OverlappingAtStart': (<Intrv_Position.Intrv_OverlappingAtStart: 2>, None), 'Intrv_JustEnclosingAtEnd': (<Intrv_Position.Intrv_JustEnclosingAtEnd: 3>, None), 'Intrv_Enclosing': (<Intrv_Position.Intrv_Enclosing: 4>, None), 'Intrv_JustOverlappingAtStart': (<Intrv_Position.Intrv_JustOverlappingAtStart: 5>, None), 'Intrv_Similar': (<Intrv_Position.Intrv_Similar: 6>, None), 'Intrv_JustEnclosingAtStart': (<Intrv_Position.Intrv_JustEnclosingAtStart: 7>, None), 'Intrv_Inside': (<Intrv_Position.Intrv_Inside: 8>, None), 'Intrv_JustOverlappingAtEnd': (<Intrv_Position.Intrv_JustOverlappingAtEnd: 9>, None), 'Intrv_OverlappingAtEnd': (<Intrv_Position.Intrv_OverlappingAtEnd: 10>, None), 'Intrv_JustAfter': (<Intrv_Position.Intrv_JustAfter: 11>, None), 'Intrv_After': (<Intrv_Position.Intrv_After: 12>, None)}
+    __members__: dict # value = {'Intrv_Before': <Intrv_Position.Intrv_Before: 0>, 'Intrv_JustBefore': <Intrv_Position.Intrv_JustBefore: 1>, 'Intrv_OverlappingAtStart': <Intrv_Position.Intrv_OverlappingAtStart: 2>, 'Intrv_JustEnclosingAtEnd': <Intrv_Position.Intrv_JustEnclosingAtEnd: 3>, 'Intrv_Enclosing': <Intrv_Position.Intrv_Enclosing: 4>, 'Intrv_JustOverlappingAtStart': <Intrv_Position.Intrv_JustOverlappingAtStart: 5>, 'Intrv_Similar': <Intrv_Position.Intrv_Similar: 6>, 'Intrv_JustEnclosingAtStart': <Intrv_Position.Intrv_JustEnclosingAtStart: 7>, 'Intrv_Inside': <Intrv_Position.Intrv_Inside: 8>, 'Intrv_JustOverlappingAtEnd': <Intrv_Position.Intrv_JustOverlappingAtEnd: 9>, 'Intrv_OverlappingAtEnd': <Intrv_Position.Intrv_OverlappingAtEnd: 10>, 'Intrv_JustAfter': <Intrv_Position.Intrv_JustAfter: 11>, 'Intrv_After': <Intrv_Position.Intrv_After: 12>}
     pass
 class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -316,14 +322,14 @@ class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Intrv_SequenceOfInterval) -> None: 
+    def Append(self,theItem : Intrv_Interval) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Intrv_Interval) -> None: ...
+    def Append(self,theSeq : Intrv_SequenceOfInterval) -> None: ...
     def Assign(self,theOther : Intrv_SequenceOfInterval) -> Intrv_SequenceOfInterval: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -353,14 +359,14 @@ class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Intrv_SequenceOfInterval) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Intrv_Interval) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Intrv_Interval) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Intrv_SequenceOfInterval) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Intrv_Interval) -> None: 
         """
@@ -387,14 +393,14 @@ class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Intrv_SequenceOfInterval) -> None: 
+    def Prepend(self,theItem : Intrv_Interval) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Intrv_Interval) -> None: ...
+    def Prepend(self,theSeq : Intrv_SequenceOfInterval) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -431,10 +437,10 @@ class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Intrv_SequenceOfInterval) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : Intrv_SequenceOfInterval) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -445,16 +451,16 @@ def AreFused(c1 : float,t1 : float,c2 : float,t2 : float) -> bool:
     """
     None
     """
-Intrv_After: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_After
-Intrv_Before: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_Before
-Intrv_Enclosing: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_Enclosing
-Intrv_Inside: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_Inside
-Intrv_JustAfter: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustAfter
-Intrv_JustBefore: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustBefore
-Intrv_JustEnclosingAtEnd: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustEnclosingAtEnd
-Intrv_JustEnclosingAtStart: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustEnclosingAtStart
-Intrv_JustOverlappingAtEnd: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustOverlappingAtEnd
-Intrv_JustOverlappingAtStart: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_JustOverlappingAtStart
-Intrv_OverlappingAtEnd: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_OverlappingAtEnd
-Intrv_OverlappingAtStart: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_OverlappingAtStart
-Intrv_Similar: OCP.Intrv.Intrv_Position # value = Intrv_Position.Intrv_Similar
+Intrv_After: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_After: 12>
+Intrv_Before: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_Before: 0>
+Intrv_Enclosing: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_Enclosing: 4>
+Intrv_Inside: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_Inside: 8>
+Intrv_JustAfter: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustAfter: 11>
+Intrv_JustBefore: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustBefore: 1>
+Intrv_JustEnclosingAtEnd: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustEnclosingAtEnd: 3>
+Intrv_JustEnclosingAtStart: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustEnclosingAtStart: 7>
+Intrv_JustOverlappingAtEnd: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustOverlappingAtEnd: 9>
+Intrv_JustOverlappingAtStart: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_JustOverlappingAtStart: 5>
+Intrv_OverlappingAtEnd: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_OverlappingAtEnd: 10>
+Intrv_OverlappingAtStart: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_OverlappingAtStart: 2>
+Intrv_Similar: OCP.Intrv.Intrv_Position # value = <Intrv_Position.Intrv_Similar: 6>

@@ -4,14 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Adaptor3d
 import OCP.TColStd
 import OCP.math
-import OCP.Geom2d
-import OCP.TColgp
-import OCP.Adaptor3d
-import OCP.Geom
 import OCP.AdvApprox
+import OCP.Adaptor2d
 import OCP.gp
+import OCP.Geom
+import OCP.TColgp
+import OCP.Geom2d
 __all__  = [
 "GeomLib",
 "GeomLib_Array1OfMat",
@@ -141,6 +142,16 @@ class GeomLib():
         Computes the curve 3d from package Geom corresponding to curve 2d from package Geom2d, on the plan defined with the local coordinate system Position.
         """
     def __init__(self) -> None: ...
+    @staticmethod
+    def buildC3dOnIsoLine_s(theC2D : OCP.Adaptor2d.Adaptor2d_HCurve2d,theSurf : OCP.Adaptor3d.Adaptor3d_HSurface,theFirst : float,theLast : float,theTolerance : float,theIsU : bool,theParam : float,theIsForward : bool) -> OCP.Geom.Geom_Curve: 
+        """
+        Builds 3D curve for a isoline. This method takes corresponding isoline from the input surface.
+        """
+    @staticmethod
+    def isIsoLine_s(theC2D : OCP.Adaptor2d.Adaptor2d_HCurve2d,theIsU : bool,theParam : float,theIsForward : bool) -> bool: 
+        """
+        Checks whether the 2d curve is a isoline. It can be represented by b-spline, bezier, or geometric line. This line should have natural parameterization.
+        """
     pass
 class GeomLib_Array1OfMat():
     """
@@ -219,14 +230,14 @@ class GeomLib_Array1OfMat():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_Mat,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : GeomLib_Array1OfMat) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : OCP.gp.gp_Mat,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : GeomLib_Array1OfMat) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class GeomLib_Check2dBSplineCurve():
     """
@@ -289,14 +300,14 @@ class GeomLib_CheckCurveOnSurface():
         Returns error status The possible values are: 0 - OK; 1 - null curve or surface or 2d curve; 2 - invalid parametric range; 3 - error in calculations.
         """
     @overload
-    def Init(self,theCurve : OCP.Geom.Geom_Curve,theSurface : OCP.Geom.Geom_Surface,theFirst : float,theLast : float,theTolRange : float=9.999999999999999e-10) -> None: 
+    def Init(self) -> None: 
         """
         Sets the data for the algorithm
 
         Initializes all members by dafault values
         """
     @overload
-    def Init(self) -> None: ...
+    def Init(self,theCurve : OCP.Geom.Geom_Curve,theSurface : OCP.Geom.Geom_Surface,theFirst : float,theLast : float,theTolRange : float=9.999999999999999e-10) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns true if the max distance has been found
@@ -322,9 +333,9 @@ class GeomLib_CheckCurveOnSurface():
         Returns mySurface
         """
     @overload
-    def __init__(self,theCurve : OCP.Geom.Geom_Curve,theSurface : OCP.Geom.Geom_Surface,theFirst : float,theLast : float,theTolRange : float=9.999999999999999e-10) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theCurve : OCP.Geom.Geom_Curve,theSurface : OCP.Geom.Geom_Surface,theFirst : float,theLast : float,theTolRange : float=9.999999999999999e-10) -> None: ...
     pass
 class GeomLib_DenominatorMultiplier():
     """
@@ -372,22 +383,30 @@ class GeomLib_InterpolationErrors():
 
       GeomLib_InversionProblem
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    GeomLib_DegreeSmallerThan3: OCP.GeomLib.GeomLib_InterpolationErrors # value = GeomLib_InterpolationErrors.GeomLib_DegreeSmallerThan3
-    GeomLib_InversionProblem: OCP.GeomLib.GeomLib_InterpolationErrors # value = GeomLib_InterpolationErrors.GeomLib_InversionProblem
-    GeomLib_NoError: OCP.GeomLib.GeomLib_InterpolationErrors # value = GeomLib_InterpolationErrors.GeomLib_NoError
-    GeomLib_NotEnoughtPoints: OCP.GeomLib.GeomLib_InterpolationErrors # value = GeomLib_InterpolationErrors.GeomLib_NotEnoughtPoints
-    __entries: dict # value = {'GeomLib_NoError': (GeomLib_InterpolationErrors.GeomLib_NoError, None), 'GeomLib_NotEnoughtPoints': (GeomLib_InterpolationErrors.GeomLib_NotEnoughtPoints, None), 'GeomLib_DegreeSmallerThan3': (GeomLib_InterpolationErrors.GeomLib_DegreeSmallerThan3, None), 'GeomLib_InversionProblem': (GeomLib_InterpolationErrors.GeomLib_InversionProblem, None)}
-    __members__: dict # value = {'GeomLib_NoError': GeomLib_InterpolationErrors.GeomLib_NoError, 'GeomLib_NotEnoughtPoints': GeomLib_InterpolationErrors.GeomLib_NotEnoughtPoints, 'GeomLib_DegreeSmallerThan3': GeomLib_InterpolationErrors.GeomLib_DegreeSmallerThan3, 'GeomLib_InversionProblem': GeomLib_InterpolationErrors.GeomLib_InversionProblem}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    GeomLib_DegreeSmallerThan3: OCP.GeomLib.GeomLib_InterpolationErrors # value = <GeomLib_InterpolationErrors.GeomLib_DegreeSmallerThan3: 2>
+    GeomLib_InversionProblem: OCP.GeomLib.GeomLib_InterpolationErrors # value = <GeomLib_InterpolationErrors.GeomLib_InversionProblem: 3>
+    GeomLib_NoError: OCP.GeomLib.GeomLib_InterpolationErrors # value = <GeomLib_InterpolationErrors.GeomLib_NoError: 0>
+    GeomLib_NotEnoughtPoints: OCP.GeomLib.GeomLib_InterpolationErrors # value = <GeomLib_InterpolationErrors.GeomLib_NotEnoughtPoints: 1>
+    __entries: dict # value = {'GeomLib_NoError': (<GeomLib_InterpolationErrors.GeomLib_NoError: 0>, None), 'GeomLib_NotEnoughtPoints': (<GeomLib_InterpolationErrors.GeomLib_NotEnoughtPoints: 1>, None), 'GeomLib_DegreeSmallerThan3': (<GeomLib_InterpolationErrors.GeomLib_DegreeSmallerThan3: 2>, None), 'GeomLib_InversionProblem': (<GeomLib_InterpolationErrors.GeomLib_InversionProblem: 3>, None)}
+    __members__: dict # value = {'GeomLib_NoError': <GeomLib_InterpolationErrors.GeomLib_NoError: 0>, 'GeomLib_NotEnoughtPoints': <GeomLib_InterpolationErrors.GeomLib_NotEnoughtPoints: 1>, 'GeomLib_DegreeSmallerThan3': <GeomLib_InterpolationErrors.GeomLib_DegreeSmallerThan3: 2>, 'GeomLib_InversionProblem': <GeomLib_InterpolationErrors.GeomLib_InversionProblem: 3>}
     pass
 class GeomLib_IsPlanarSurface():
     """
@@ -511,7 +530,7 @@ class GeomLib_Tool():
         """
     def __init__(self) -> None: ...
     pass
-GeomLib_DegreeSmallerThan3: OCP.GeomLib.GeomLib_InterpolationErrors # value = GeomLib_InterpolationErrors.GeomLib_DegreeSmallerThan3
-GeomLib_InversionProblem: OCP.GeomLib.GeomLib_InterpolationErrors # value = GeomLib_InterpolationErrors.GeomLib_InversionProblem
-GeomLib_NoError: OCP.GeomLib.GeomLib_InterpolationErrors # value = GeomLib_InterpolationErrors.GeomLib_NoError
-GeomLib_NotEnoughtPoints: OCP.GeomLib.GeomLib_InterpolationErrors # value = GeomLib_InterpolationErrors.GeomLib_NotEnoughtPoints
+GeomLib_DegreeSmallerThan3: OCP.GeomLib.GeomLib_InterpolationErrors # value = <GeomLib_InterpolationErrors.GeomLib_DegreeSmallerThan3: 2>
+GeomLib_InversionProblem: OCP.GeomLib.GeomLib_InterpolationErrors # value = <GeomLib_InterpolationErrors.GeomLib_InversionProblem: 3>
+GeomLib_NoError: OCP.GeomLib.GeomLib_InterpolationErrors # value = <GeomLib_InterpolationErrors.GeomLib_NoError: 0>
+GeomLib_NotEnoughtPoints: OCP.GeomLib.GeomLib_InterpolationErrors # value = <GeomLib_InterpolationErrors.GeomLib_NotEnoughtPoints: 1>

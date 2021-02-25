@@ -5,8 +5,8 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.GeomAbs
-import OCP.BRepAdaptor
 import OCP.gp
+import OCP.BRepAdaptor
 __all__  = [
 "BRepLProp",
 "BRepLProp_CLProps",
@@ -80,9 +80,9 @@ class BRepLProp_CLProps():
         Returns the Point.
         """
     @overload
-    def __init__(self,C : OCP.BRepAdaptor.BRepAdaptor_Curve,U : float,N : int,Resolution : float) -> None: ...
-    @overload
     def __init__(self,C : OCP.BRepAdaptor.BRepAdaptor_Curve,N : int,Resolution : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.BRepAdaptor.BRepAdaptor_Curve,U : float,N : int,Resolution : float) -> None: ...
     @overload
     def __init__(self,N : int,Resolution : float) -> None: ...
     pass

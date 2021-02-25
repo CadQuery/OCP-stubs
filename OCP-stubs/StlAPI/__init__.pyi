@@ -40,7 +40,7 @@ class StlAPI_Writer():
     """
     This class creates and writes STL files from Open CASCADE shapes. An STL file can be written to an existing STL file or to a new one.
     """
-    def Write(self,theShape : OCP.TopoDS.TopoDS_Shape,theFileName : str) -> bool: 
+    def Write(self,theShape : OCP.TopoDS.TopoDS_Shape,theFileName : str,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Converts a given shape to STL format and writes it to file with a given filename.
         """

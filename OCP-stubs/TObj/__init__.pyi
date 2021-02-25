@@ -4,18 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Resource
-import OCP.TCollection
-import OCP.CDF
-import OCP.TColStd
-import OCP.PCDM
-import OCP.TDF
-import OCP.Message
-import OCP.Standard
 import OCP.TDocStd
-import OCP.CDM
+import OCP.TDF
+import OCP.CDF
+import OCP.TCollection
+import io
+import OCP.TColStd
 import OCP.NCollection
+import OCP.Message
+import OCP.PCDM
+import OCP.CDM
 import OCP.gp
+import OCP.Resource
+import OCP.Standard
 __all__  = [
 "TObj_Application",
 "TObj_Assistant",
@@ -94,6 +95,10 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -182,11 +187,19 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
         """
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
-        Redefines message driver, by default outputs to std::cout.
+        Returns default messenger;
         """
     def Messenger(self) -> OCP.Message.Message_Messenger: 
         """
         Returns reference to associated messenger handle
+        """
+    def MetaDataDriver(self) -> OCP.CDF.CDF_MetaDataDriver: 
+        """
+        returns MetaDatdDriver of this application
+        """
+    def MetaDataLookUpTable(self) -> Any: 
+        """
+        Returns MetaData LookUpTable
         """
     def Name(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
@@ -213,15 +226,15 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
         Notification that is fired at each OpenTransaction event.
         """
     @overload
-    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: 
+    def Open(self,theIStream : io.BytesIO,theDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
         Retrieves the document aDoc stored under the name aName in the directory directory. In order not to override a version of aDoc which is already in memory, this method can be made to depend on the value returned by IsInSession.
 
         Retrieves aDoc from standard SEEKABLE stream theIStream. the stream should support SEEK fuctionality
         """
     @overload
-    def Open(self,theIStream : Any,theDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_ReaderStatus: ...
-    def Read(self,theIStream : Any) -> OCP.CDM.CDM_Document: 
+    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    def Read(self,theIStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
         """
         Reads aDoc from standard SEEKABLE stream theIStream, the stream should support SEEK fuctionality
         """
@@ -242,25 +255,25 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
         Return name of resource (i.e. "TObj")
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True) -> OCP.CDM.CDM_Document: 
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
         """
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. The content of {aFolder}, {aName} and {aVersion} depends on the Database Manager system. If the DBMS is only based on the OS, {aFolder} is a directory and {aName} is the name of a file. In this case the use of the syntax with {aVersion} has no sense. For example:
 
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. -- If the DBMS is only based on the OS, this syntax should not be used.
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True) -> OCP.CDM.CDM_Document: ...
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: ...
     @overload
-    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: 
+    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save aDoc active document. Exceptions: Standard_NotImplemented if the document was not retrieved in the applicative session by using Open.
 
         Save the document overwriting the previous file
         """
     @overload
-    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: 
+    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : io.BytesIO,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save the active document in the file <name> in the path <path> ; o verwrites the file if it already exists.
 
@@ -271,11 +284,11 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
         Save theDoc TO standard SEEKABLE stream theOStream. the stream should support SEEK fuctionality
         """
     @overload
-    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : Any,theStatusMessage : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : Any) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     def SaveDocument(self,theSourceDoc : OCP.TDocStd.TDocStd_Document,theTargetFile : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         Saving the OCAF document to a file
@@ -475,7 +488,7 @@ class TObj_CheckModel(OCP.Message.Message_Algorithm, OCP.Standard.Standard_Trans
         """
     @staticmethod
     @overload
-    def PrepareReport_s(theError : OCP.TColStd.TColStd_HPackedMapOfInteger,theMaxCount : int) -> OCP.TCollection.TCollection_ExtendedString: 
+    def PrepareReport_s(theReportSeq : OCP.TColStd.TColStd_SequenceOfHExtendedString,theMaxCount : int) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         Prepares a string containing a list of integers contained in theError map, but not more than theMaxCount
 
@@ -483,7 +496,7 @@ class TObj_CheckModel(OCP.Message.Message_Algorithm, OCP.Standard.Standard_Trans
         """
     @staticmethod
     @overload
-    def PrepareReport_s(theReportSeq : OCP.TColStd.TColStd_SequenceOfHExtendedString,theMaxCount : int) -> OCP.TCollection.TCollection_ExtendedString: ...
+    def PrepareReport_s(theError : OCP.TColStd.TColStd_HPackedMapOfInteger,theMaxCount : int) -> OCP.TCollection.TCollection_ExtendedString: ...
     def SendMessages(self,theTraceLevel : OCP.Message.Message_Gravity=Message_Gravity.Message_Warning,theMaxCount : int=20) -> None: 
         """
         Convenient variant of SendStatusMessages() with theFilter having defined all WARN, ALARM, and FAIL (but not DONE) status flags
@@ -497,7 +510,7 @@ class TObj_CheckModel(OCP.Message.Message_Algorithm, OCP.Standard.Standard_Trans
         Sets messenger to algorithm
         """
     @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theMsg : OCP.Message.Message_Msg) -> None: 
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool=True) -> None: 
         """
         Sets status with no parameter
 
@@ -524,27 +537,27 @@ class TObj_CheckModel(OCP.Message.Message_Algorithm, OCP.Standard.Standard_Trans
         Sets status with string parameter If noRepetitions is True, the parameter will be added only if it has not been yet recorded for the same status flag
         """
     @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_HExtendedString,noRepetitions : bool=True) -> None: ...
-    @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool=True) -> None: ...
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool) -> None: ...
     @overload
     def SetStatus(self,theStat : OCP.Message.Message_Status) -> None: ...
+    @overload
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theMsg : OCP.Message.Message_Msg) -> None: ...
+    @overload
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_HExtendedString,noRepetitions : bool=True) -> None: ...
+    @overload
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : str,noRepetitions : bool=True) -> None: ...
+    @overload
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : str,noRepetitions : bool) -> None: ...
+    @overload
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool=True) -> None: ...
     @overload
     def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool=True) -> None: ...
     @overload
     def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool) -> None: ...
     @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : str,noRepetitions : bool) -> None: ...
-    @overload
     def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool) -> None: ...
     @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool=True) -> None: ...
-    @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool) -> None: ...
-    @overload
     def SetStatus(self,theStat : OCP.Message.Message_Status,theInt : int) -> None: ...
-    @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : str,noRepetitions : bool=True) -> None: ...
     def SetToFix(self,theToFix : bool) -> None: 
         """
         Sets flag allowing fixing inconsistencies
@@ -611,14 +624,14 @@ class TObj_DataMapOfNameLabel(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_HExtendedString) -> OCP.TDF.TDF_Label: 
+    def Find(self,theKey : OCP.TCollection.TCollection_HExtendedString,theValue : OCP.TDF.TDF_Label) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_HExtendedString,theValue : OCP.TDF.TDF_Label) -> bool: ...
+    def Find(self,theKey : OCP.TCollection.TCollection_HExtendedString) -> OCP.TDF.TDF_Label: ...
     def IsBound(self,theKey : OCP.TCollection.TCollection_HExtendedString) -> bool: 
         """
         IsBound
@@ -643,7 +656,7 @@ class TObj_DataMapOfNameLabel(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -652,12 +665,12 @@ class TObj_DataMapOfNameLabel(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : TObj_DataMapOfNameLabel) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TObj_DataMapOfStringPointer(OCP.NCollection.NCollection_BaseMap):
     """
@@ -688,14 +701,14 @@ class TObj_DataMapOfStringPointer(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TObj_DataMapOfStringPointer) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -737,7 +750,7 @@ class TObj_DataMapOfStringPointer(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -748,10 +761,10 @@ class TObj_DataMapOfStringPointer(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TObj_DataMapOfStringPointer) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TObj_DataMapOfStringPointer) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TObj_DeletingMode():
     """
@@ -765,21 +778,29 @@ class TObj_DeletingMode():
 
       TObj_Forced
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TObj_Forced: OCP.TObj.TObj_DeletingMode # value = TObj_DeletingMode.TObj_Forced
-    TObj_FreeOnly: OCP.TObj.TObj_DeletingMode # value = TObj_DeletingMode.TObj_FreeOnly
-    TObj_KeepDepending: OCP.TObj.TObj_DeletingMode # value = TObj_DeletingMode.TObj_KeepDepending
-    __entries: dict # value = {'TObj_FreeOnly': (TObj_DeletingMode.TObj_FreeOnly, None), 'TObj_KeepDepending': (TObj_DeletingMode.TObj_KeepDepending, None), 'TObj_Forced': (TObj_DeletingMode.TObj_Forced, None)}
-    __members__: dict # value = {'TObj_FreeOnly': TObj_DeletingMode.TObj_FreeOnly, 'TObj_KeepDepending': TObj_DeletingMode.TObj_KeepDepending, 'TObj_Forced': TObj_DeletingMode.TObj_Forced}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TObj_Forced: OCP.TObj.TObj_DeletingMode # value = <TObj_DeletingMode.TObj_Forced: 2>
+    TObj_FreeOnly: OCP.TObj.TObj_DeletingMode # value = <TObj_DeletingMode.TObj_FreeOnly: 0>
+    TObj_KeepDepending: OCP.TObj.TObj_DeletingMode # value = <TObj_DeletingMode.TObj_KeepDepending: 1>
+    __entries: dict # value = {'TObj_FreeOnly': (<TObj_DeletingMode.TObj_FreeOnly: 0>, None), 'TObj_KeepDepending': (<TObj_DeletingMode.TObj_KeepDepending: 1>, None), 'TObj_Forced': (<TObj_DeletingMode.TObj_Forced: 2>, None)}
+    __members__: dict # value = {'TObj_FreeOnly': <TObj_DeletingMode.TObj_FreeOnly: 0>, 'TObj_KeepDepending': <TObj_DeletingMode.TObj_KeepDepending: 1>, 'TObj_Forced': <TObj_DeletingMode.TObj_Forced: 2>}
     pass
 class TObj_SequenceOfObject(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -827,23 +848,23 @@ class TObj_SequenceOfObject(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : TObj_Object) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : TObj_Object) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : TObj_Object) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : TObj_Object) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -861,14 +882,14 @@ class TObj_SequenceOfObject(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : TObj_Object) -> None: 
+    def Prepend(self,theSeq : TObj_SequenceOfObject) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TObj_SequenceOfObject) -> None: ...
+    def Prepend(self,theItem : TObj_Object) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -903,12 +924,12 @@ class TObj_SequenceOfObject(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : TObj_SequenceOfObject) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -919,6 +940,10 @@ class TObj_Object(OCP.Standard.Standard_Transient):
     """
     Basis class for transient objects in OCAF-based modelsBasis class for transient objects in OCAF-based modelsBasis class for transient objects in OCAF-based models
     """
+    class ObjectState_e():
+        pass
+    class TypeFlags_e():
+        pass
     def AddBackReference(self,theObject : TObj_Object) -> None: 
         """
         Registers another object as being dependent on this one. Stores back references under sublabel 2 (purely transient data, not subject to persistency).
@@ -1025,7 +1050,7 @@ class TObj_Object(OCP.Standard.Standard_Transient):
         Returns the model to which the object belongs
         """
     @overload
-    def GetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> bool: 
+    def GetName(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         Returns the name of the object (empty string if object has no name)
 
@@ -1036,7 +1061,7 @@ class TObj_Object(OCP.Standard.Standard_Transient):
     @overload
     def GetName(self) -> OCP.TCollection.TCollection_HExtendedString: ...
     @overload
-    def GetName(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def GetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> bool: ...
     def GetNameForClone(self,arg1 : TObj_Object) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         Returns name for copy default implementation returns the same name
@@ -1069,6 +1094,10 @@ class TObj_Object(OCP.Standard.Standard_Transient):
     def HasBackReferences(self) -> bool: 
         """
         Returns TRUE if obejct has 1 or more back references
+        """
+    def HasModifications(self) -> bool: 
+        """
+        Public methods to check modifications of the object since last commit
         """
     def HasReference(self,theObject : TObj_Object) -> bool: 
         """
@@ -1129,7 +1158,7 @@ class TObj_Object(OCP.Standard.Standard_Transient):
         Sets flags with defined mask.
         """
     @overload
-    def SetName(self,name : str) -> bool: 
+    def SetName(self,theName : OCP.TCollection.TCollection_HExtendedString) -> bool: 
         """
         Sets name of the object. Returns False if theName is not unique.
 
@@ -1140,7 +1169,7 @@ class TObj_Object(OCP.Standard.Standard_Transient):
     @overload
     def SetName(self,theName : OCP.TCollection.TCollection_HAsciiString) -> bool: ...
     @overload
-    def SetName(self,theName : OCP.TCollection.TCollection_HExtendedString) -> bool: ...
+    def SetName(self,name : str) -> bool: ...
     def SetOrder(self,theIndx : int) -> bool: 
         """
         sets order of object
@@ -1167,6 +1196,12 @@ class TObj_Object(OCP.Standard.Standard_Transient):
         """
         None
         """
+    ObjectState_Hidden: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Hidden: 1>
+    ObjectState_Imported: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Imported: 4>
+    ObjectState_ImportedByFile: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_ImportedByFile: 8>
+    ObjectState_Ordered: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Ordered: 16>
+    ObjectState_Saved: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Saved: 2>
+    Visible: OCP.TObj.TypeFlags_e # value = <TypeFlags_e.Visible: 1>
     pass
 class TObj_ObjectIterator(OCP.Standard.Standard_Transient):
     """
@@ -1523,6 +1558,10 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
     """
     This class privides tool handling one of partitions (the set of homogenious elements) in the OCAF based model`s data structureThis class privides tool handling one of partitions (the set of homogenious elements) in the OCAF based model`s data structure
     """
+    class ObjectState_e():
+        pass
+    class TypeFlags_e():
+        pass
     def AddBackReference(self,theObject : TObj_Object) -> None: 
         """
         Registers another object as being dependent on this one. Stores back references under sublabel 2 (purely transient data, not subject to persistency).
@@ -1568,7 +1607,7 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
         Coping the references. return Standard_False is Target object is different type
         """
     @staticmethod
-    def Create_s(theLabel : OCP.TDF.TDF_Label) -> TObj_Partition: 
+    def Create_s(theLabel : OCP.TDF.TDF_Label,theSetName : bool=True) -> TObj_Partition: 
         """
         Creates a new partition on given label.
         """
@@ -1638,7 +1677,7 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
         Returns the model to which the object belongs
         """
     @overload
-    def GetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> bool: 
+    def GetName(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         Returns the name of the object (empty string if object has no name)
 
@@ -1649,7 +1688,7 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
     @overload
     def GetName(self) -> OCP.TCollection.TCollection_HExtendedString: ...
     @overload
-    def GetName(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def GetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> bool: ...
     def GetNameForClone(self,arg1 : TObj_Object) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         Returns name for copy default implementation returns the same name
@@ -1695,6 +1734,10 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
     def HasBackReferences(self) -> bool: 
         """
         Returns TRUE if obejct has 1 or more back references
+        """
+    def HasModifications(self) -> bool: 
+        """
+        Public methods to check modifications of the object since last commit
         """
     def HasReference(self,theObject : TObj_Object) -> bool: 
         """
@@ -1800,6 +1843,12 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
         """
         None
         """
+    ObjectState_Hidden: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Hidden: 1>
+    ObjectState_Imported: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Imported: 4>
+    ObjectState_ImportedByFile: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_ImportedByFile: 8>
+    ObjectState_Ordered: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Ordered: 16>
+    ObjectState_Saved: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Saved: 2>
+    Visible: OCP.TObj.TypeFlags_e # value = <TypeFlags_e.Visible: 1>
     pass
 class TObj_LabelIterator(TObj_ObjectIterator, OCP.Standard.Standard_Transient):
     """
@@ -1937,7 +1986,7 @@ class TObj_OcafObjectIterator(TObj_LabelIterator, TObj_ObjectIterator, OCP.Stand
         """
         Returns the current item
         """
-    def __init__(self,theLabel : OCP.TDF.TDF_Label,theType : OCP.Standard.Standard_Type=None,theRecursive : bool=False) -> None: ...
+    def __init__(self,theLabel : OCP.TDF.TDF_Label,theType : OCP.Standard.Standard_Type=None,theRecursive : bool=False,theAllSubChildren : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1953,6 +2002,78 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
     """
     This class is partition is predefined hidden flagThis class is partition is predefined hidden flag
     """
+    class ObjectState_e():
+        """
+        enumeration describing various object state bit flags (see Set/GetFlags())
+
+        Members:
+
+          ObjectState_Hidden
+
+          ObjectState_Saved
+
+          ObjectState_Imported
+
+          ObjectState_ImportedByFile
+
+          ObjectState_Ordered
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        ObjectState_Hidden: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Hidden: 1>
+        ObjectState_Imported: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Imported: 4>
+        ObjectState_ImportedByFile: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_ImportedByFile: 8>
+        ObjectState_Ordered: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Ordered: 16>
+        ObjectState_Saved: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Saved: 2>
+        __entries: dict # value = {'ObjectState_Hidden': (<ObjectState_e.ObjectState_Hidden: 1>, None), 'ObjectState_Saved': (<ObjectState_e.ObjectState_Saved: 2>, None), 'ObjectState_Imported': (<ObjectState_e.ObjectState_Imported: 4>, None), 'ObjectState_ImportedByFile': (<ObjectState_e.ObjectState_ImportedByFile: 8>, None), 'ObjectState_Ordered': (<ObjectState_e.ObjectState_Ordered: 16>, None)}
+        __members__: dict # value = {'ObjectState_Hidden': <ObjectState_e.ObjectState_Hidden: 1>, 'ObjectState_Saved': <ObjectState_e.ObjectState_Saved: 2>, 'ObjectState_Imported': <ObjectState_e.ObjectState_Imported: 4>, 'ObjectState_ImportedByFile': <ObjectState_e.ObjectState_ImportedByFile: 8>, 'ObjectState_Ordered': <ObjectState_e.ObjectState_Ordered: 16>}
+        pass
+    class TypeFlags_e():
+        """
+        None
+
+        Members:
+
+          Visible
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        Visible: OCP.TObj.TypeFlags_e # value = <TypeFlags_e.Visible: 1>
+        __entries: dict # value = {'Visible': (<TypeFlags_e.Visible: 1>, None)}
+        __members__: dict # value = {'Visible': <TypeFlags_e.Visible: 1>}
+        pass
     def AddBackReference(self,theObject : TObj_Object) -> None: 
         """
         Registers another object as being dependent on this one. Stores back references under sublabel 2 (purely transient data, not subject to persistency).
@@ -1998,7 +2119,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         Coping the references. return Standard_False is Target object is different type
         """
     @staticmethod
-    def Create_s(theLabel : OCP.TDF.TDF_Label) -> TObj_Partition: 
+    def Create_s(theLabel : OCP.TDF.TDF_Label,theSetName : bool=True) -> TObj_Partition: 
         """
         Creates a new partition on given label.
         """
@@ -2068,7 +2189,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         Returns the model to which the object belongs
         """
     @overload
-    def GetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> bool: 
+    def GetName(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         Returns the name of the object (empty string if object has no name)
 
@@ -2079,7 +2200,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
     @overload
     def GetName(self) -> OCP.TCollection.TCollection_HExtendedString: ...
     @overload
-    def GetName(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def GetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> bool: ...
     def GetNameForClone(self,arg1 : TObj_Object) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         Returns name for copy default implementation returns the same name
@@ -2125,6 +2246,10 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
     def HasBackReferences(self) -> bool: 
         """
         Returns TRUE if obejct has 1 or more back references
+        """
+    def HasModifications(self) -> bool: 
+        """
+        Public methods to check modifications of the object since last commit
         """
     def HasReference(self,theObject : TObj_Object) -> bool: 
         """
@@ -2231,6 +2356,12 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         """
         None
         """
+    ObjectState_Hidden: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Hidden: 1>
+    ObjectState_Imported: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Imported: 4>
+    ObjectState_ImportedByFile: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_ImportedByFile: 8>
+    ObjectState_Ordered: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Ordered: 16>
+    ObjectState_Saved: OCP.TObj.ObjectState_e # value = <ObjectState_e.ObjectState_Saved: 2>
+    Visible: OCP.TObj.TypeFlags_e # value = <TypeFlags_e.Visible: 1>
     pass
 class TObj_Persistence():
     """
@@ -2242,7 +2373,7 @@ class TObj_Persistence():
         Creates and returns a new object of the registered type If the type is not registered, returns Null handle
         """
     @staticmethod
-    def DumpTypes_s(theOs : Any) -> None: 
+    def DumpTypes_s(theOs : io.BytesIO) -> None: 
         """
         Dumps names of all the types registered for persistence to the specified stream
         """
@@ -2400,14 +2531,14 @@ class TObj_SequenceOfIterator(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : TObj_SequenceOfIterator) -> None: 
+    def Append(self,theItem : TObj_ObjectIterator) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : TObj_ObjectIterator) -> None: ...
+    def Append(self,theSeq : TObj_SequenceOfIterator) -> None: ...
     def Assign(self,theOther : TObj_SequenceOfIterator) -> TObj_SequenceOfIterator: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2446,14 +2577,14 @@ class TObj_SequenceOfIterator(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : TObj_ObjectIterator) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TObj_SequenceOfIterator) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : TObj_ObjectIterator) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : TObj_ObjectIterator) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TObj_SequenceOfIterator) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2480,14 +2611,14 @@ class TObj_SequenceOfIterator(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : TObj_ObjectIterator) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2515,10 +2646,10 @@ class TObj_SequenceOfIterator(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : TObj_SequenceOfIterator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TObj_SequenceOfIterator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2531,14 +2662,14 @@ class TObj_HSequenceOfObject(TObj_SequenceOfObject, OCP.NCollection.NCollection_
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : TObj_SequenceOfObject) -> None: 
+    def Append(self,theItem : TObj_Object) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : TObj_Object) -> None: ...
+    def Append(self,theSequence : TObj_SequenceOfObject) -> None: ...
     def Assign(self,theOther : TObj_SequenceOfObject) -> TObj_SequenceOfObject: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2592,23 +2723,23 @@ class TObj_HSequenceOfObject(TObj_SequenceOfObject, OCP.NCollection.NCollection_
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : TObj_Object) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : TObj_Object) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : TObj_Object) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : TObj_Object) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2644,14 +2775,14 @@ class TObj_HSequenceOfObject(TObj_SequenceOfObject, OCP.NCollection.NCollection_
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : TObj_Object) -> None: 
+    def Prepend(self,theSeq : TObj_SequenceOfObject) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TObj_SequenceOfObject) -> None: ...
+    def Prepend(self,theItem : TObj_Object) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -2694,10 +2825,10 @@ class TObj_HSequenceOfObject(TObj_SequenceOfObject, OCP.NCollection.NCollection_
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TObj_SequenceOfObject) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TObj_SequenceOfObject) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2798,15 +2929,19 @@ class TObj_TIntSparseArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3112,14 +3247,14 @@ class TObj_TModel(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3128,15 +3263,19 @@ class TObj_TModel(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3351,14 +3490,14 @@ class TObj_TNameContainer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3367,15 +3506,19 @@ class TObj_TNameContainer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3603,14 +3746,14 @@ class TObj_TObject(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3619,15 +3762,19 @@ class TObj_TObject(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3843,14 +3990,14 @@ class TObj_TReference(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3859,15 +4006,19 @@ class TObj_TReference(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -4093,14 +4244,14 @@ class TObj_TXYZ(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -4109,15 +4260,19 @@ class TObj_TXYZ(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,theOS : Any) -> Any: 
+    def Dump(self,theOS : io.BytesIO) -> io.BytesIO: 
         """
         This method dumps the attribute value into the stream
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -4276,6 +4431,6 @@ def IsEqual(theStr1 : OCP.TCollection.TCollection_HExtendedString,theStr2 : OCP.
     """
     None
     """
-TObj_Forced: OCP.TObj.TObj_DeletingMode # value = TObj_DeletingMode.TObj_Forced
-TObj_FreeOnly: OCP.TObj.TObj_DeletingMode # value = TObj_DeletingMode.TObj_FreeOnly
-TObj_KeepDepending: OCP.TObj.TObj_DeletingMode # value = TObj_DeletingMode.TObj_KeepDepending
+TObj_Forced: OCP.TObj.TObj_DeletingMode # value = <TObj_DeletingMode.TObj_Forced: 2>
+TObj_FreeOnly: OCP.TObj.TObj_DeletingMode # value = <TObj_DeletingMode.TObj_FreeOnly: 0>
+TObj_KeepDepending: OCP.TObj.TObj_DeletingMode # value = <TObj_DeletingMode.TObj_KeepDepending: 1>

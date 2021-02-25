@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Geom2d
-import OCP.Geom
 import OCP.gp
+import OCP.Geom
+import OCP.Geom2d
 __all__  = [
 "GeomProjLib"
 ]
@@ -16,7 +16,7 @@ class GeomProjLib():
     """
     @staticmethod
     @overload
-    def Curve2d_s(C : OCP.Geom.Geom_Curve,First : float,Last : float,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,Tolerance : float) -> OCP.Geom2d.Geom2d_Curve: 
+    def Curve2d_s(C : OCP.Geom.Geom_Curve,S : OCP.Geom.Geom_Surface) -> OCP.Geom2d.Geom2d_Curve: 
         """
         gives the 2d-curve of a 3d-curve lying on a surface ( uses GeomProjLib_ProjectedCurve ) The 3dCurve is taken between the parametrization range [First, Last] <Tolerance> is used as input if the projection needs an approximation. In this case, the reached tolerance is set in <Tolerance> as output. WARNING : if the projection has failed, this method returns a null Handle.
 
@@ -32,19 +32,19 @@ class GeomProjLib():
         """
     @staticmethod
     @overload
-    def Curve2d_s(C : OCP.Geom.Geom_Curve,First : float,Last : float,S : OCP.Geom.Geom_Surface) -> OCP.Geom2d.Geom2d_Curve: ...
-    @staticmethod
-    @overload
     def Curve2d_s(C : OCP.Geom.Geom_Curve,S : OCP.Geom.Geom_Surface,UDeb : float,UFin : float,VDeb : float,VFin : float) -> OCP.Geom2d.Geom2d_Curve: ...
-    @staticmethod
-    @overload
-    def Curve2d_s(C : OCP.Geom.Geom_Curve,S : OCP.Geom.Geom_Surface) -> OCP.Geom2d.Geom2d_Curve: ...
     @staticmethod
     @overload
     def Curve2d_s(C : OCP.Geom.Geom_Curve,First : float,Last : float,S : OCP.Geom.Geom_Surface,Tolerance : float) -> OCP.Geom2d.Geom2d_Curve: ...
     @staticmethod
     @overload
+    def Curve2d_s(C : OCP.Geom.Geom_Curve,First : float,Last : float,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,Tolerance : float) -> OCP.Geom2d.Geom2d_Curve: ...
+    @staticmethod
+    @overload
     def Curve2d_s(C : OCP.Geom.Geom_Curve,S : OCP.Geom.Geom_Surface,UDeb : float,UFin : float,VDeb : float,VFin : float,Tolerance : float) -> OCP.Geom2d.Geom2d_Curve: ...
+    @staticmethod
+    @overload
+    def Curve2d_s(C : OCP.Geom.Geom_Curve,First : float,Last : float,S : OCP.Geom.Geom_Surface) -> OCP.Geom2d.Geom2d_Curve: ...
     @staticmethod
     def ProjectOnPlane_s(Curve : OCP.Geom.Geom_Curve,Plane : OCP.Geom.Geom_Plane,Dir : OCP.gp.gp_Dir,KeepParametrization : bool) -> OCP.Geom.Geom_Curve: 
         """

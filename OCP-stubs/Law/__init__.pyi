@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Adaptor3d
 import OCP.TColStd
+import OCP.NCollection
 import OCP.GeomAbs
 import OCP.TColgp
-import OCP.Adaptor3d
 import OCP.Standard
-import OCP.NCollection
 __all__  = [
 "Law",
 "Law_Function",
@@ -30,7 +30,7 @@ class Law():
     """
     @staticmethod
     @overload
-    def MixBnd_s(Lin : Law_Linear) -> Law_BSpFunc: 
+    def MixBnd_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Lin : Law_Linear) -> OCP.TColStd.TColStd_HArray1OfReal: 
         """
         This algorithm searches the knot values corresponding to the splitting of a given B-spline law into several arcs with the same continuity. The continuity order is given at the construction time. Builds a 1d bspline that is near from Lin with null derivatives at the extremities.
 
@@ -38,7 +38,7 @@ class Law():
         """
     @staticmethod
     @overload
-    def MixBnd_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Lin : Law_Linear) -> OCP.TColStd.TColStd_HArray1OfReal: ...
+    def MixBnd_s(Lin : Law_Linear) -> Law_BSpFunc: ...
     @staticmethod
     def MixTgt_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NulOnTheRight : bool,Index : int) -> OCP.TColStd.TColStd_HArray1OfReal: 
         """
@@ -387,14 +387,14 @@ class Law_BSpline(OCP.Standard.Standard_Transient):
         Segments the curve between U1 and U2. The control points are modified, the first and the last point are not the same. Warnings : Even if <me> is not closed it can become closed after the segmentation for example if U1 or U2 are out of the bounds of the curve <me> or if the curve makes loop. After the segmentation the length of a curve can be null. raises if U2 < U1.
         """
     @overload
-    def SetKnot(self,Index : int,K : float) -> None: 
+    def SetKnot(self,Index : int,K : float,M : int) -> None: 
         """
         Changes the knot of range Index. The multiplicity of the knot is not modified. Raised if K >= Knots(Index+1) or K <= Knots(Index-1). Raised if Index < 1 || Index > NbKnots
 
         Changes the knot of range Index with its multiplicity. You can increase the multiplicity of a knot but it is not allowed to decrease the multiplicity of an existing knot.
         """
     @overload
-    def SetKnot(self,Index : int,K : float,M : int) -> None: ...
+    def SetKnot(self,Index : int,K : float) -> None: ...
     def SetKnots(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Changes all the knots of the curve The multiplicity of the knots are not modified.
@@ -572,9 +572,9 @@ class Law_Composite(Law_Function, OCP.Standard.Standard_Transient):
         Returns the value at parameter X.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,First : float,Last : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -767,9 +767,9 @@ class Law_BSpFunc(Law_Function, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : Law_BSpline,First : float,Last : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -923,9 +923,9 @@ class Law_Interpolate():
         Makes the interpolation
         """
     @overload
-    def __init__(self,Points : OCP.TColStd.TColStd_HArray1OfReal,Parameters : OCP.TColStd.TColStd_HArray1OfReal,PeriodicFlag : bool,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,Points : OCP.TColStd.TColStd_HArray1OfReal,PeriodicFlag : bool,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Points : OCP.TColStd.TColStd_HArray1OfReal,Parameters : OCP.TColStd.TColStd_HArray1OfReal,PeriodicFlag : bool,Tolerance : float) -> None: ...
     pass
 class Law_Laws(OCP.NCollection.NCollection_BaseList):
     """
@@ -976,14 +976,14 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : Law_Function,theIter : Any) -> Law_Function: ...
     @overload
-    def InsertBefore(self,theOther : Law_Laws,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : Law_Function,theIter : Any) -> Law_Function: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : Law_Function,theIter : Any) -> Law_Function: ...
+    def InsertBefore(self,theOther : Law_Laws,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -995,14 +995,14 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : Law_Function) -> Law_Function: 
+    def Prepend(self,theOther : Law_Laws) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : Law_Laws) -> None: ...
+    def Prepend(self,theItem : Law_Function) -> Law_Function: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1020,12 +1020,12 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : Law_Laws) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Law_Linear(Law_Function, OCP.Standard.Standard_Transient):
     """
@@ -1192,14 +1192,14 @@ class Law_S(Law_BSpFunc, Law_Function, OCP.Standard.Standard_Transient):
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
         """
     @overload
-    def Set(self,Pdeb : float,Valdeb : float,Pfin : float,Valfin : float) -> None: 
+    def Set(self,Pdeb : float,Valdeb : float,Ddeb : float,Pfin : float,Valfin : float,Dfin : float) -> None: 
         """
         Defines this S evolution law by assigning both: - the bounds Pdeb and Pfin of the parameter, and - the values Valdeb and Valfin of the function at these two parametric bounds. The function is assumed to have the first derivatives equal to 0 at the two parameter points Pdeb and Pfin.
 
         Defines this S evolution law by assigning - the bounds Pdeb and Pfin of the parameter, - the values Valdeb and Valfin of the function at these two parametric bounds, and - the values Ddeb and Dfin of the first derivative of the function at these two parametric bounds.
         """
     @overload
-    def Set(self,Pdeb : float,Valdeb : float,Ddeb : float,Pfin : float,Valfin : float,Dfin : float) -> None: ...
+    def Set(self,Pdeb : float,Valdeb : float,Pfin : float,Valfin : float) -> None: ...
     def SetCurve(self,C : Law_BSpline) -> None: 
         """
         None

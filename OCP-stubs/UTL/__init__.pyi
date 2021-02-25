@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Resource
-import OCP.TCollection
 import OCP.OSD
+import OCP.TCollection
+import OCP.Resource
 import OCP.Storage
 import OCP.Standard
 __all__  = [
@@ -38,7 +38,7 @@ class UTL():
         """
     @staticmethod
     @overload
-    def Extension_s(aPath : OCP.OSD.OSD_Path) -> OCP.TCollection.TCollection_ExtendedString: 
+    def Extension_s(aFileName : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         None
 
@@ -46,7 +46,7 @@ class UTL():
         """
     @staticmethod
     @overload
-    def Extension_s(aFileName : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: ...
+    def Extension_s(aPath : OCP.OSD.OSD_Path) -> OCP.TCollection.TCollection_ExtendedString: ...
     @staticmethod
     def FileIterator_s(aPath : OCP.OSD.OSD_Path,aMask : OCP.TCollection.TCollection_ExtendedString) -> OCP.OSD.OSD_FileIterator: 
         """

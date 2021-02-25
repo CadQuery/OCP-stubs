@@ -5,18 +5,19 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
-import OCP.Poly
-import OCP.SelectBasics
-import OCP.SelectMgr
-import OCP.BVH
-import OCP.Bnd
-import OCP.TColgp
-import OCP.Graphic3d
-import OCP.Standard
-import OCP.Geom
+import io
 import OCP.NCollection
-import OCP.TopLoc
+import OCP.Standard
+import OCP.BVH
 import OCP.gp
+import OCP.TColgp
+import OCP.SelectBasics
+import OCP.Bnd
+import OCP.Geom
+import OCP.Graphic3d
+import OCP.SelectMgr
+import OCP.TopLoc
+import OCP.Poly
 __all__  = [
 "Select3D_BVHBuilder3d",
 "Select3D_BVHIndexBuffer",
@@ -47,7 +48,7 @@ class Select3D_BVHBuilder3d(OCP.BVH.BVH_BuilderTransient, OCP.Standard.Standard_
     """
     Performs construction of BVH tree using bounding boxes (AABBs) of abstract objects.
     """
-    def Build(self,theSet : Any,theBVH : Any,theBox : OCP.Graphic3d.Graphic3d_BndBox3d) -> None: 
+    def Build(self,theSet : Any,theBVH : Any,theBox : Any) -> None: 
         """
         Builds BVH using specific algorithm.
         """
@@ -171,6 +172,10 @@ class Select3D_BVHIndexBuffer(OCP.Graphic3d.Graphic3d_Buffer, OCP.NCollection.NC
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -450,7 +455,7 @@ class Select3D_EntitySequence(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Select3D_EntitySequence) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -465,7 +470,7 @@ class Select3D_SensitiveEntity(OCP.Standard.Standard_Transient):
         """
         Builds BVH tree for a sensitive if needed
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of a sensitive with transformation applied
         """
@@ -484,6 +489,10 @@ class Select3D_SensitiveEntity(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -554,6 +563,10 @@ class Select3D_SensitiveEntity(OCP.Standard.Standard_Transient):
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
         """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -631,7 +644,7 @@ class Select3D_SensitiveBox(Select3D_SensitiveEntity, OCP.Standard.Standard_Tran
         """
         Builds BVH tree for a sensitive if needed
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns coordinates of the box. If location transformation is set, it will be applied
         """
@@ -654,6 +667,10 @@ class Select3D_SensitiveBox(Select3D_SensitiveEntity, OCP.Standard.Standard_Tran
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -725,6 +742,10 @@ class Select3D_SensitiveBox(Select3D_SensitiveEntity, OCP.Standard.Standard_Tran
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theBox : OCP.Bnd.Bnd_Box) -> None: ...
     @overload
@@ -748,11 +769,11 @@ class Select3D_SensitiveSet(Select3D_SensitiveEntity, OCP.Standard.Standard_Tran
         """
         Builds BVH tree for sensitive set. Must be called manually to build BVH tree for any sensitive set in case if its content was initialized not in a constructor, but element by element
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the whole set. This method should be redefined in Select3D_SensitiveSet descendants
         """
-    def Box(self,theIdx : int) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def Box(self,theIdx : int) -> Any: 
         """
         Returns bounding box of sub-entity with index theIdx in sub-entity list
         """
@@ -780,6 +801,10 @@ class Select3D_SensitiveSet(Select3D_SensitiveEntity, OCP.Standard.Standard_Tran
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -876,6 +901,10 @@ class Select3D_SensitiveSet(Select3D_SensitiveEntity, OCP.Standard.Standard_Tran
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -892,15 +921,19 @@ class Select3D_SensitivePoly(Select3D_SensitiveSet, Select3D_SensitiveEntity, OC
     """
     Sensitive Entity to make a face selectable. In some cases this class can raise Standard_ConstructionError and Standard_OutOfRange exceptions from its member Select3D_PointData myPolyg.Sensitive Entity to make a face selectable. In some cases this class can raise Standard_ConstructionError and Standard_OutOfRange exceptions from its member Select3D_PointData myPolyg.
     """
+    def ArrayBounds(self) -> Tuple[int, int]: 
+        """
+        Return array bounds.
+        """
     def BVH(self) -> None: 
         """
         Builds BVH tree for sensitive set. Must be called manually to build BVH tree for any sensitive set in case if its content was initialized not in a constructor, but element by element
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of a polygon. If location transformation is set, it will be applied
         """
-    def Box(self,theIdx : int) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def Box(self,theIdx : int) -> Any: 
         """
         Returns bounding box of segment with index theIdx
         """
@@ -929,6 +962,10 @@ class Select3D_SensitivePoly(Select3D_SensitiveSet, Select3D_SensitiveEntity, OC
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -940,6 +977,10 @@ class Select3D_SensitivePoly(Select3D_SensitiveSet, Select3D_SensitiveEntity, OC
     def GetLeafNodeSize(self) -> int: 
         """
         Returns a number of nodes in 1 BVH leaf
+        """
+    def GetPoint3d(self,thePntIdx : int) -> OCP.gp.gp_Pnt: 
+        """
+        Return point.
         """
     def GetRefCount(self) -> int: 
         """
@@ -1028,12 +1069,16 @@ class Select3D_SensitivePoly(Select3D_SensitiveSet, Select3D_SensitiveEntity, OC
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theIsBVHEnabled : bool,theNbPnts : int=6) -> None: ...
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_HArray1OfPnt,theIsBVHEnabled : bool) -> None: ...
     @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_Array1OfPnt,theIsBVHEnabled : bool) -> None: ...
+    @overload
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theIsBVHEnabled : bool,theNbPnts : int=6) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1053,11 +1098,11 @@ class Select3D_InteriorSensitivePointSet(Select3D_SensitiveSet, Select3D_Sensiti
         """
         Builds BVH tree for sensitive set. Must be called manually to build BVH tree for any sensitive set in case if its content was initialized not in a constructor, but element by element
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the point set. If location transformation is set, it will be applied
         """
-    def Box(self,theIdx : int) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def Box(self,theIdx : int) -> Any: 
         """
         Returns bounding box of planar convex polygon with index theIdx
         """
@@ -1085,6 +1130,10 @@ class Select3D_InteriorSensitivePointSet(Select3D_SensitiveSet, Select3D_Sensiti
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1185,6 +1234,10 @@ class Select3D_InteriorSensitivePointSet(Select3D_SensitiveSet, Select3D_Sensiti
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1205,7 +1258,7 @@ class Select3D_SensitiveFace(Select3D_SensitiveEntity, OCP.Standard.Standard_Tra
         """
         Builds BVH tree for the face
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the face. If location transformation is set, it will be applied
         """
@@ -1224,6 +1277,10 @@ class Select3D_SensitiveFace(Select3D_SensitiveEntity, OCP.Standard.Standard_Tra
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1299,6 +1356,10 @@ class Select3D_SensitiveFace(Select3D_SensitiveEntity, OCP.Standard.Standard_Tra
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_Array1OfPnt,theType : Select3D_TypeOfSensitivity) -> None: ...
     @overload
@@ -1331,11 +1392,11 @@ class Select3D_SensitiveGroup(Select3D_SensitiveSet, Select3D_SensitiveEntity, O
         """
         Builds BVH tree for sensitive set. Must be called manually to build BVH tree for any sensitive set in case if its content was initialized not in a constructor, but element by element
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the group. If location transformation is set, it will be applied
         """
-    def Box(self,theIdx : int) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def Box(self,theIdx : int) -> Any: 
         """
         Returns bounding box of sensitive entity with index theIdx
         """
@@ -1363,6 +1424,10 @@ class Select3D_SensitiveGroup(Select3D_SensitiveSet, Select3D_SensitiveEntity, O
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1495,6 +1560,10 @@ class Select3D_SensitiveGroup(Select3D_SensitiveSet, Select3D_SensitiveEntity, O
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def ToCheckOverlapAll(self) -> bool: 
         """
         Returns TRUE if all sensitive entities should be checked within rectangular/polygonal selection, FALSE by default. Can be useful for sensitive entities holding detection results as class property.
@@ -1522,7 +1591,7 @@ class Select3D_SensitivePoint(Select3D_SensitiveEntity, OCP.Standard.Standard_Tr
         """
         Builds BVH tree for a sensitive if needed
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the point. If location transformation is set, it will be applied
         """
@@ -1541,6 +1610,10 @@ class Select3D_SensitivePoint(Select3D_SensitiveEntity, OCP.Standard.Standard_Tr
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1616,6 +1689,10 @@ class Select3D_SensitivePoint(Select3D_SensitiveEntity, OCP.Standard.Standard_Tr
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoint : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1634,17 +1711,17 @@ class Select3D_SensitiveCircle(Select3D_SensitivePoly, Select3D_SensitiveSet, Se
     """
     def ArrayBounds(self) -> Tuple[int, int]: 
         """
-        None
+        Return array bounds.
         """
     def BVH(self) -> None: 
         """
         Builds BVH tree for a circle's edge segments if needed
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of a polygon. If location transformation is set, it will be applied
         """
-    def Box(self,theIdx : int) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def Box(self,theIdx : int) -> Any: 
         """
         Returns bounding box of segment with index theIdx
         """
@@ -1673,6 +1750,10 @@ class Select3D_SensitiveCircle(Select3D_SensitivePoly, Select3D_SensitiveSet, Se
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1687,7 +1768,7 @@ class Select3D_SensitiveCircle(Select3D_SensitivePoly, Select3D_SensitiveSet, Se
         """
     def GetPoint3d(self,thePntIdx : int) -> OCP.gp.gp_Pnt: 
         """
-        None
+        Return point.
         """
     def GetRefCount(self) -> int: 
         """
@@ -1776,14 +1857,18 @@ class Select3D_SensitiveCircle(Select3D_SensitivePoly, Select3D_SensitiveSet, Se
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePnts3d : OCP.TColgp.TColgp_HArray1OfPnt,theIsFilled : bool=False) -> None: ...
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theCircle : OCP.gp.gp_Circ,theIsFilled : bool=False,theNbPnts : int=12) -> None: ...
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theCircle : OCP.Geom.Geom_Circle,theU1 : float,theU2 : float,theIsFilled : bool=False,theNbPnts : int=12) -> None: ...
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theCircle : OCP.gp.gp_Circ,theU1 : float,theU2 : float,theIsFilled : bool=False,theNbPnts : int=12) -> None: ...
     @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePnts3d : OCP.TColgp.TColgp_Array1OfPnt,theIsFilled : bool=False) -> None: ...
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theCircle : OCP.Geom.Geom_Circle,theIsFilled : bool=False,theNbPnts : int=12) -> None: ...
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePnts3d : OCP.TColgp.TColgp_HArray1OfPnt,theIsFilled : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1803,11 +1888,11 @@ class Select3D_SensitivePrimitiveArray(Select3D_SensitiveSet, Select3D_Sensitive
         """
         Builds BVH tree for sensitive set.
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the triangulation. If location transformation is set, it will be applied
         """
-    def Box(self,theIdx : int) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def Box(self,theIdx : int) -> Any: 
         """
         Returns bounding box of triangle/edge with index theIdx
         """
@@ -1835,6 +1920,10 @@ class Select3D_SensitivePrimitiveArray(Select3D_SensitiveSet, Select3D_Sensitive
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1870,18 +1959,18 @@ class Select3D_SensitivePrimitiveArray(Select3D_SensitiveSet, Select3D_Sensitive
         Initialize the sensitive object from point set.
         """
     @overload
-    def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: ...
-    @overload
     def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theIndexLower : int,theIndexUpper : int,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: ...
     @overload
-    def InitTriangulation(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: 
+    def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: ...
+    @overload
+    def InitTriangulation(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theIndexLower : int,theIndexUpper : int,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: 
         """
         Initialize the sensitive object from triangualtion. The sub-triangulation can be specified by arguments theIndexLower and theIndexUpper (these are for iterating theIndices, not to restrict the actual index values!).
 
         Initialize the sensitive object from triangualtion.
         """
     @overload
-    def InitTriangulation(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theIndexLower : int,theIndexUpper : int,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: ...
+    def InitTriangulation(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: ...
     def InvInitLocation(self) -> OCP.gp.gp_GTrsf: 
         """
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
@@ -2017,6 +2106,10 @@ class Select3D_SensitivePrimitiveArray(Select3D_SensitiveSet, Select3D_Sensitive
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def ToDetectEdges(self) -> bool: 
         """
         Return flag to keep index of last topmost detected edge, FALSE by default.
@@ -2057,7 +2150,7 @@ class Select3D_SensitiveSegment(Select3D_SensitiveEntity, OCP.Standard.Standard_
         """
         Builds BVH tree for a sensitive if needed
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the segment. If location transformation is set, it will be applied
         """
@@ -2077,19 +2170,23 @@ class Select3D_SensitiveSegment(Select3D_SensitiveEntity, OCP.Standard.Standard_
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @overload
-    def EndPoint(self) -> OCP.gp.gp_Pnt: 
+    def EndPoint(self,thePnt : OCP.gp.gp_Pnt) -> None: 
         """
         changes the end point of the segment
 
         gives the 3D End Point of the Segment
         """
     @overload
-    def EndPoint(self,thePnt : OCP.gp.gp_Pnt) -> None: ...
+    def EndPoint(self) -> OCP.gp.gp_Pnt: ...
     def GetConnected(self) -> Select3D_SensitiveEntity: 
         """
         None
@@ -2173,6 +2270,10 @@ class Select3D_SensitiveSegment(Select3D_SensitiveEntity, OCP.Standard.Standard_
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theFirstPnt : OCP.gp.gp_Pnt,theLastPnt : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2189,15 +2290,19 @@ class Select3D_SensitiveCurve(Select3D_SensitivePoly, Select3D_SensitiveSet, Sel
     """
     A framework to define a sensitive 3D curve. In some cases this class can raise Standard_ConstructionError and Standard_OutOfRange exceptions. For more details see Select3D_SensitivePoly.A framework to define a sensitive 3D curve. In some cases this class can raise Standard_ConstructionError and Standard_OutOfRange exceptions. For more details see Select3D_SensitivePoly.
     """
+    def ArrayBounds(self) -> Tuple[int, int]: 
+        """
+        Return array bounds.
+        """
     def BVH(self) -> None: 
         """
         Builds BVH tree for sensitive set. Must be called manually to build BVH tree for any sensitive set in case if its content was initialized not in a constructor, but element by element
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of a polygon. If location transformation is set, it will be applied
         """
-    def Box(self,theIdx : int) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def Box(self,theIdx : int) -> Any: 
         """
         Returns bounding box of segment with index theIdx
         """
@@ -2226,6 +2331,10 @@ class Select3D_SensitiveCurve(Select3D_SensitivePoly, Select3D_SensitiveSet, Sel
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2237,6 +2346,10 @@ class Select3D_SensitiveCurve(Select3D_SensitivePoly, Select3D_SensitiveSet, Sel
     def GetLeafNodeSize(self) -> int: 
         """
         Returns a number of nodes in 1 BVH leaf
+        """
+    def GetPoint3d(self,thePntIdx : int) -> OCP.gp.gp_Pnt: 
+        """
+        Return point.
         """
     def GetRefCount(self) -> int: 
         """
@@ -2325,12 +2438,16 @@ class Select3D_SensitiveCurve(Select3D_SensitivePoly, Select3D_SensitiveSet, Sel
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_HArray1OfPnt) -> None: ...
     @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theCurve : OCP.Geom.Geom_Curve,theNbPnts : int=17) -> None: ...
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_HArray1OfPnt) -> None: ...
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2350,7 +2467,7 @@ class Select3D_SensitiveTriangle(Select3D_SensitiveEntity, OCP.Standard.Standard
         """
         Builds BVH tree for a sensitive if needed
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the triangle. If location transformation is set, it will be applied
         """
@@ -2373,6 +2490,10 @@ class Select3D_SensitiveTriangle(Select3D_SensitiveEntity, OCP.Standard.Standard
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2448,6 +2569,10 @@ class Select3D_SensitiveTriangle(Select3D_SensitiveEntity, OCP.Standard.Standard
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePnt0 : OCP.gp.gp_Pnt,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,theType : Select3D_TypeOfSensitivity=Select3D_TypeOfSensitivity.Select3D_TOS_INTERIOR) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2468,11 +2593,11 @@ class Select3D_SensitiveTriangulation(Select3D_SensitiveSet, Select3D_SensitiveE
         """
         Builds BVH tree for sensitive set. Must be called manually to build BVH tree for any sensitive set in case if its content was initialized not in a constructor, but element by element
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the triangulation. If location transformation is set, it will be applied
         """
-    def Box(self,theIdx : int) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def Box(self,theIdx : int) -> Any: 
         """
         Returns bounding box of triangle/edge with index theIdx
         """
@@ -2500,6 +2625,10 @@ class Select3D_SensitiveTriangulation(Select3D_SensitiveSet, Select3D_SensitiveE
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2600,14 +2729,18 @@ class Select3D_SensitiveTriangulation(Select3D_SensitiveSet, Select3D_SensitiveE
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def Triangulation(self) -> OCP.Poly.Poly_Triangulation: 
         """
         None
         """
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theTrg : OCP.Poly.Poly_Triangulation,theInitLoc : OCP.TopLoc.TopLoc_Location,theFreeEdges : OCP.TColStd.TColStd_HArray1OfInteger,theCOG : OCP.gp.gp_Pnt,theIsInterior : bool) -> None: ...
-    @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theTrg : OCP.Poly.Poly_Triangulation,theInitLoc : OCP.TopLoc.TopLoc_Location,theIsInterior : bool=True) -> None: ...
+    @overload
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theTrg : OCP.Poly.Poly_Triangulation,theInitLoc : OCP.TopLoc.TopLoc_Location,theFreeEdges : OCP.TColStd.TColStd_HArray1OfInteger,theCOG : OCP.gp.gp_Pnt,theIsInterior : bool) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2631,11 +2764,11 @@ class Select3D_SensitiveWire(Select3D_SensitiveSet, Select3D_SensitiveEntity, OC
         """
         Builds BVH tree for sensitive set. Must be called manually to build BVH tree for any sensitive set in case if its content was initialized not in a constructor, but element by element
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the wire. If location transformation is set, it will be applied
         """
-    def Box(self,theIdx : int) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def Box(self,theIdx : int) -> Any: 
         """
         Returns bounding box of sensitive entity with index theIdx
         """
@@ -2663,6 +2796,10 @@ class Select3D_SensitiveWire(Select3D_SensitiveSet, Select3D_SensitiveEntity, OC
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2767,6 +2904,10 @@ class Select3D_SensitiveWire(Select3D_SensitiveSet, Select3D_SensitiveEntity, OC
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2789,20 +2930,28 @@ class Select3D_TypeOfSensitivity():
 
       Select3D_TOS_BOUNDARY
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Select3D_TOS_BOUNDARY: OCP.Select3D.Select3D_TypeOfSensitivity # value = Select3D_TypeOfSensitivity.Select3D_TOS_BOUNDARY
-    Select3D_TOS_INTERIOR: OCP.Select3D.Select3D_TypeOfSensitivity # value = Select3D_TypeOfSensitivity.Select3D_TOS_INTERIOR
-    __entries: dict # value = {'Select3D_TOS_INTERIOR': (Select3D_TypeOfSensitivity.Select3D_TOS_INTERIOR, None), 'Select3D_TOS_BOUNDARY': (Select3D_TypeOfSensitivity.Select3D_TOS_BOUNDARY, None)}
-    __members__: dict # value = {'Select3D_TOS_INTERIOR': Select3D_TypeOfSensitivity.Select3D_TOS_INTERIOR, 'Select3D_TOS_BOUNDARY': Select3D_TypeOfSensitivity.Select3D_TOS_BOUNDARY}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Select3D_TOS_BOUNDARY: OCP.Select3D.Select3D_TypeOfSensitivity # value = <Select3D_TypeOfSensitivity.Select3D_TOS_BOUNDARY: 1>
+    Select3D_TOS_INTERIOR: OCP.Select3D.Select3D_TypeOfSensitivity # value = <Select3D_TypeOfSensitivity.Select3D_TOS_INTERIOR: 0>
+    __entries: dict # value = {'Select3D_TOS_INTERIOR': (<Select3D_TypeOfSensitivity.Select3D_TOS_INTERIOR: 0>, None), 'Select3D_TOS_BOUNDARY': (<Select3D_TypeOfSensitivity.Select3D_TOS_BOUNDARY: 1>, None)}
+    __members__: dict # value = {'Select3D_TOS_INTERIOR': <Select3D_TypeOfSensitivity.Select3D_TOS_INTERIOR: 0>, 'Select3D_TOS_BOUNDARY': <Select3D_TypeOfSensitivity.Select3D_TOS_BOUNDARY: 1>}
     pass
 class Select3D_VectorOfHPoly(OCP.NCollection.NCollection_BaseVector):
     """
@@ -2878,10 +3027,10 @@ class Select3D_VectorOfHPoly(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : Select3D_VectorOfHPoly) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
-Select3D_TOS_BOUNDARY: OCP.Select3D.Select3D_TypeOfSensitivity # value = Select3D_TypeOfSensitivity.Select3D_TOS_BOUNDARY
-Select3D_TOS_INTERIOR: OCP.Select3D.Select3D_TypeOfSensitivity # value = Select3D_TypeOfSensitivity.Select3D_TOS_INTERIOR
+Select3D_TOS_BOUNDARY: OCP.Select3D.Select3D_TypeOfSensitivity # value = <Select3D_TypeOfSensitivity.Select3D_TOS_BOUNDARY: 1>
+Select3D_TOS_INTERIOR: OCP.Select3D.Select3D_TypeOfSensitivity # value = <Select3D_TypeOfSensitivity.Select3D_TOS_INTERIOR: 0>

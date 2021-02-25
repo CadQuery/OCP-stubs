@@ -4,12 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
+import OCP.TCollection
+import io
 import OCP.Message
-import OCP.TopLoc
+import OCP.TopAbs
 import OCP.Standard
+import OCP.TopLoc
 __all__  = [
 "TopoDS",
+"TopoDS_AlertAttribute",
 "TopoDS_AlertWithShape",
 "TopoDS_Builder",
 "TopoDS_Shape",
@@ -40,11 +43,11 @@ __all__  = [
 ]
 class TopoDS():
     """
-    Provides methods to cast objects of class TopoDS_Shape to be onjects of more specialized sub-classes. Types are verified, thus in the example below, the first two blocks are correct but the third is rejected by the compiler.
+    Provides methods to cast objects of class TopoDS_Shape to be objects of more specialized sub-classes. Types are verified, thus in the example below, the first two blocks are correct but the third is rejected by the compiler.
     """
     @staticmethod
     @overload
-    def CompSolid_s(arg0 : TopoDS_Shape) -> TopoDS_CompSolid: 
+    def CompSolid_s(S : TopoDS_Shape) -> TopoDS_CompSolid: 
         """
         Casts shape S to the more specialized return type, CompSolid. Exceptions Standard_TypeMismatch if S cannot be cast to this return type.
 
@@ -52,7 +55,7 @@ class TopoDS():
         """
     @staticmethod
     @overload
-    def CompSolid_s(S : TopoDS_Shape) -> TopoDS_CompSolid: ...
+    def CompSolid_s(arg0 : TopoDS_Shape) -> TopoDS_CompSolid: ...
     @staticmethod
     @overload
     def Compound_s(S : TopoDS_Shape) -> TopoDS_Compound: 
@@ -66,7 +69,7 @@ class TopoDS():
     def Compound_s(arg0 : TopoDS_Shape) -> TopoDS_Compound: ...
     @staticmethod
     @overload
-    def Edge_s(arg0 : TopoDS_Shape) -> TopoDS_Edge: 
+    def Edge_s(S : TopoDS_Shape) -> TopoDS_Edge: 
         """
         Casts shape S to the more specialized return type, Edge Exceptions Standard_TypeMismatch if S cannot be cast to this return type.
 
@@ -74,10 +77,10 @@ class TopoDS():
         """
     @staticmethod
     @overload
-    def Edge_s(S : TopoDS_Shape) -> TopoDS_Edge: ...
+    def Edge_s(arg0 : TopoDS_Shape) -> TopoDS_Edge: ...
     @staticmethod
     @overload
-    def Face_s(S : TopoDS_Shape) -> TopoDS_Face: 
+    def Face_s(arg0 : TopoDS_Shape) -> TopoDS_Face: 
         """
         Casts shape S to the more specialized return type, Face. Exceptions Standard_TypeMismatch if S cannot be cast to this return type.
 
@@ -85,10 +88,10 @@ class TopoDS():
         """
     @staticmethod
     @overload
-    def Face_s(arg0 : TopoDS_Shape) -> TopoDS_Face: ...
+    def Face_s(S : TopoDS_Shape) -> TopoDS_Face: ...
     @staticmethod
     @overload
-    def Shell_s(S : TopoDS_Shape) -> TopoDS_Shell: 
+    def Shell_s(arg0 : TopoDS_Shape) -> TopoDS_Shell: 
         """
         Casts shape S to the more specialized return type, Shell. Exceptions Standard_TypeMismatch if S cannot be cast to this return type.
 
@@ -96,10 +99,10 @@ class TopoDS():
         """
     @staticmethod
     @overload
-    def Shell_s(arg0 : TopoDS_Shape) -> TopoDS_Shell: ...
+    def Shell_s(S : TopoDS_Shape) -> TopoDS_Shell: ...
     @staticmethod
     @overload
-    def Solid_s(S : TopoDS_Shape) -> TopoDS_Solid: 
+    def Solid_s(arg0 : TopoDS_Shape) -> TopoDS_Solid: 
         """
         Casts shape S to the more specialized return type, Solid. Exceptions Standard_TypeMismatch if S cannot be cast to this return type.
 
@@ -107,7 +110,7 @@ class TopoDS():
         """
     @staticmethod
     @overload
-    def Solid_s(arg0 : TopoDS_Shape) -> TopoDS_Solid: ...
+    def Solid_s(S : TopoDS_Shape) -> TopoDS_Solid: ...
     @staticmethod
     @overload
     def Vertex_s(S : TopoDS_Shape) -> TopoDS_Vertex: 
@@ -132,6 +135,97 @@ class TopoDS():
     def Wire_s(S : TopoDS_Shape) -> TopoDS_Wire: ...
     def __init__(self) -> None: ...
     pass
+class TopoDS_AlertAttribute(OCP.Message.Message_AttributeStream, OCP.Message.Message_Attribute, OCP.Standard.Standard_Transient):
+    """
+    Alert attribute object storing TopoDS shape in its field
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetMessageKey(self) -> str: 
+        """
+        Return a C string to be used as a key for generating text user messages describing this alert. The messages are generated with help of Message_Msg class, in Message_Report::Dump(). Base implementation returns dynamic type name of the instance.
+        """
+    def GetName(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns custom name of alert if it is set
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def GetShape(self) -> TopoDS_Shape: 
+        """
+        Returns contained shape
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    @staticmethod
+    def Send_s(theMessenger : OCP.Message.Message_Messenger,theShape : TopoDS_Shape) -> None: 
+        """
+        Push shape information into messenger
+        """
+    def SetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> None: 
+        """
+        Sets the custom name of alert
+        """
+    def SetStream(self,theStream : Any) -> None: 
+        """
+        Sets stream value
+        """
+    def Stream(self) -> Any: 
+        """
+        Returns stream value
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self,theShape : TopoDS_Shape,theName : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
 class TopoDS_AlertWithShape(OCP.Message.Message_Alert, OCP.Standard.Standard_Transient):
     """
     Alert object storing TopoDS shape in its field
@@ -143,6 +237,10 @@ class TopoDS_AlertWithShape(OCP.Message.Message_Alert, OCP.Standard.Standard_Tra
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -268,14 +366,14 @@ class TopoDS_Shape():
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self,theIsClosed : bool) -> None: 
+    def Closed(self) -> bool: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self) -> bool: ...
+    def Closed(self,theIsClosed : bool) -> None: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -301,7 +399,7 @@ class TopoDS_Shape():
         """
     @overload
     def Convex(self,theIsConvex : bool) -> None: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -403,14 +501,14 @@ class TopoDS_Shape():
         Destroys the reference to the underlying shape stored in this shape. As a result, this shape becomes null.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -461,14 +559,14 @@ class TopoDS_Compound(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self,theIsClosed : bool) -> None: 
+    def Closed(self) -> bool: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self) -> bool: ...
+    def Closed(self,theIsClosed : bool) -> None: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -494,7 +592,7 @@ class TopoDS_Compound(TopoDS_Shape):
         """
     @overload
     def Convex(self,theIsConvex : bool) -> None: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -596,14 +694,14 @@ class TopoDS_Compound(TopoDS_Shape):
         Destroys the reference to the underlying shape stored in this shape. As a result, this shape becomes null.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -654,14 +752,14 @@ class TopoDS_Edge(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self,theIsClosed : bool) -> None: 
+    def Closed(self) -> bool: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self) -> bool: ...
+    def Closed(self,theIsClosed : bool) -> None: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -687,7 +785,7 @@ class TopoDS_Edge(TopoDS_Shape):
         """
     @overload
     def Convex(self,theIsConvex : bool) -> None: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -789,14 +887,14 @@ class TopoDS_Edge(TopoDS_Shape):
         Destroys the reference to the underlying shape stored in this shape. As a result, this shape becomes null.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -847,14 +945,14 @@ class TopoDS_Face(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self,theIsClosed : bool) -> None: 
+    def Closed(self) -> bool: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self) -> bool: ...
+    def Closed(self,theIsClosed : bool) -> None: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -880,7 +978,7 @@ class TopoDS_Face(TopoDS_Shape):
         """
     @overload
     def Convex(self,theIsConvex : bool) -> None: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -982,14 +1080,14 @@ class TopoDS_Face(TopoDS_Shape):
         Destroys the reference to the underlying shape stored in this shape. As a result, this shape becomes null.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -1142,9 +1240,9 @@ class TopoDS_Iterator():
         Returns the current sub-shape in the shape which this iterator is scanning. Exceptions Standard_NoSuchObject if there is no current sub-shape.
         """
     @overload
-    def __init__(self,S : TopoDS_Shape,cumOri : bool=True,cumLoc : bool=True) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : TopoDS_Shape,cumOri : bool=True,cumLoc : bool=True) -> None: ...
     pass
 class TopoDS_LockedShape(Exception, BaseException):
     class type():
@@ -1171,14 +1269,14 @@ class TopoDS_CompSolid(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self,theIsClosed : bool) -> None: 
+    def Closed(self) -> bool: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self) -> bool: ...
+    def Closed(self,theIsClosed : bool) -> None: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -1204,7 +1302,7 @@ class TopoDS_CompSolid(TopoDS_Shape):
         """
     @overload
     def Convex(self,theIsConvex : bool) -> None: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -1306,14 +1404,14 @@ class TopoDS_CompSolid(TopoDS_Shape):
         Destroys the reference to the underlying shape stored in this shape. As a result, this shape becomes null.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -1364,14 +1462,14 @@ class TopoDS_Shell(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self,theIsClosed : bool) -> None: 
+    def Closed(self) -> bool: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self) -> bool: ...
+    def Closed(self,theIsClosed : bool) -> None: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -1397,7 +1495,7 @@ class TopoDS_Shell(TopoDS_Shape):
         """
     @overload
     def Convex(self,theIsConvex : bool) -> None: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -1499,14 +1597,14 @@ class TopoDS_Shell(TopoDS_Shape):
         Destroys the reference to the underlying shape stored in this shape. As a result, this shape becomes null.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -1557,14 +1655,14 @@ class TopoDS_Solid(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self,theIsClosed : bool) -> None: 
+    def Closed(self) -> bool: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self) -> bool: ...
+    def Closed(self,theIsClosed : bool) -> None: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -1590,7 +1688,7 @@ class TopoDS_Solid(TopoDS_Shape):
         """
     @overload
     def Convex(self,theIsConvex : bool) -> None: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -1692,14 +1790,14 @@ class TopoDS_Solid(TopoDS_Shape):
         Destroys the reference to the underlying shape stored in this shape. As a result, this shape becomes null.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -1759,14 +1857,14 @@ class TopoDS_TShape(OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self) -> bool: 
+    def Convex(self,theIsConvex : bool) -> None: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: ...
+    def Convex(self) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1775,7 +1873,7 @@ class TopoDS_TShape(OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -1832,36 +1930,36 @@ class TopoDS_TShape(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self,theIsLocked : bool) -> None: 
+    def Locked(self) -> bool: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self) -> bool: ...
+    def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self,theIsModified : bool) -> None: 
+    def Modified(self) -> bool: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self) -> bool: ...
+    def Modified(self,theIsModified : bool) -> None: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns the type as a term of the ShapeEnum enum : VERTEX, EDGE, WIRE, FACE, ....
@@ -1904,14 +2002,14 @@ class TopoDS_TCompound(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self) -> bool: 
+    def Convex(self,theIsConvex : bool) -> None: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: ...
+    def Convex(self) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1920,7 +2018,7 @@ class TopoDS_TCompound(TopoDS_TShape, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -1977,36 +2075,36 @@ class TopoDS_TCompound(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self,theIsLocked : bool) -> None: 
+    def Locked(self) -> bool: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self) -> bool: ...
+    def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self,theIsModified : bool) -> None: 
+    def Modified(self) -> bool: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self) -> bool: ...
+    def Modified(self,theIsModified : bool) -> None: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns COMPOUND.
@@ -2050,14 +2148,14 @@ class TopoDS_TEdge(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self) -> bool: 
+    def Convex(self,theIsConvex : bool) -> None: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: ...
+    def Convex(self) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2066,7 +2164,7 @@ class TopoDS_TEdge(TopoDS_TShape, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -2123,36 +2221,36 @@ class TopoDS_TEdge(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self,theIsLocked : bool) -> None: 
+    def Locked(self) -> bool: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self) -> bool: ...
+    def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self,theIsModified : bool) -> None: 
+    def Modified(self) -> bool: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self) -> bool: ...
+    def Modified(self,theIsModified : bool) -> None: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns EDGE.
@@ -2195,14 +2293,14 @@ class TopoDS_TFace(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self) -> bool: 
+    def Convex(self,theIsConvex : bool) -> None: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: ...
+    def Convex(self) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2211,7 +2309,7 @@ class TopoDS_TFace(TopoDS_TShape, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -2268,36 +2366,36 @@ class TopoDS_TFace(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self,theIsLocked : bool) -> None: 
+    def Locked(self) -> bool: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self) -> bool: ...
+    def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self,theIsModified : bool) -> None: 
+    def Modified(self) -> bool: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self) -> bool: ...
+    def Modified(self,theIsModified : bool) -> None: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         returns FACE.
@@ -2341,14 +2439,14 @@ class TopoDS_TCompSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self) -> bool: 
+    def Convex(self,theIsConvex : bool) -> None: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: ...
+    def Convex(self) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2357,7 +2455,7 @@ class TopoDS_TCompSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -2414,36 +2512,36 @@ class TopoDS_TCompSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self,theIsLocked : bool) -> None: 
+    def Locked(self) -> bool: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self) -> bool: ...
+    def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self,theIsModified : bool) -> None: 
+    def Modified(self) -> bool: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self) -> bool: ...
+    def Modified(self,theIsModified : bool) -> None: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         returns COMPSOLID
@@ -2487,14 +2585,14 @@ class TopoDS_TShell(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self) -> bool: 
+    def Convex(self,theIsConvex : bool) -> None: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: ...
+    def Convex(self) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2503,7 +2601,7 @@ class TopoDS_TShell(TopoDS_TShape, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -2560,36 +2658,36 @@ class TopoDS_TShell(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self,theIsLocked : bool) -> None: 
+    def Locked(self) -> bool: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self) -> bool: ...
+    def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self,theIsModified : bool) -> None: 
+    def Modified(self) -> bool: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self) -> bool: ...
+    def Modified(self,theIsModified : bool) -> None: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns SHELL.
@@ -2633,14 +2731,14 @@ class TopoDS_TSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self) -> bool: 
+    def Convex(self,theIsConvex : bool) -> None: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: ...
+    def Convex(self) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2649,7 +2747,7 @@ class TopoDS_TSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -2706,36 +2804,36 @@ class TopoDS_TSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self,theIsLocked : bool) -> None: 
+    def Locked(self) -> bool: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self) -> bool: ...
+    def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self,theIsModified : bool) -> None: 
+    def Modified(self) -> bool: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self) -> bool: ...
+    def Modified(self,theIsModified : bool) -> None: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         returns SOLID.
@@ -2779,14 +2877,14 @@ class TopoDS_TVertex(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self) -> bool: 
+    def Convex(self,theIsConvex : bool) -> None: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: ...
+    def Convex(self) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2795,7 +2893,7 @@ class TopoDS_TVertex(TopoDS_TShape, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -2852,36 +2950,36 @@ class TopoDS_TVertex(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self,theIsLocked : bool) -> None: 
+    def Locked(self) -> bool: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self) -> bool: ...
+    def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self,theIsModified : bool) -> None: 
+    def Modified(self) -> bool: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self) -> bool: ...
+    def Modified(self,theIsModified : bool) -> None: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns VERTEX.
@@ -2924,14 +3022,14 @@ class TopoDS_TWire(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self) -> bool: 
+    def Convex(self,theIsConvex : bool) -> None: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: ...
+    def Convex(self) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2940,7 +3038,7 @@ class TopoDS_TWire(TopoDS_TShape, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -2997,36 +3095,36 @@ class TopoDS_TWire(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Locked(self,theIsLocked : bool) -> None: 
+    def Locked(self) -> bool: 
         """
         Returns the locked flag.
 
         Sets the locked flag.
         """
     @overload
-    def Locked(self) -> bool: ...
+    def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self,theIsModified : bool) -> None: 
+    def Modified(self) -> bool: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self) -> bool: ...
+    def Modified(self,theIsModified : bool) -> None: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns WIRE.
@@ -3072,14 +3170,14 @@ class TopoDS_Vertex(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self,theIsClosed : bool) -> None: 
+    def Closed(self) -> bool: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self) -> bool: ...
+    def Closed(self,theIsClosed : bool) -> None: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -3105,7 +3203,7 @@ class TopoDS_Vertex(TopoDS_Shape):
         """
     @overload
     def Convex(self,theIsConvex : bool) -> None: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -3207,14 +3305,14 @@ class TopoDS_Vertex(TopoDS_Shape):
         Destroys the reference to the underlying shape stored in this shape. As a result, this shape becomes null.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -3265,14 +3363,14 @@ class TopoDS_Wire(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self,theIsClosed : bool) -> None: 
+    def Closed(self) -> bool: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self) -> bool: ...
+    def Closed(self,theIsClosed : bool) -> None: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -3298,7 +3396,7 @@ class TopoDS_Wire(TopoDS_Shape):
         """
     @overload
     def Convex(self,theIsConvex : bool) -> None: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -3400,14 +3498,14 @@ class TopoDS_Wire(TopoDS_Shape):
         Destroys the reference to the underlying shape stored in this shape. As a result, this shape becomes null.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: 
+    def Orientable(self) -> bool: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self) -> bool: ...
+    def Orientable(self,theIsOrientable : bool) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """

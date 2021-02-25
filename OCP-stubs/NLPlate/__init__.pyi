@@ -5,10 +5,10 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Plate
-import OCP.Standard
-import OCP.Geom
 import OCP.NCollection
 import OCP.gp
+import OCP.Geom
+import OCP.Standard
 __all__  = [
 "NLPlate_HGPPConstraint",
 "NLPlate_HPG0Constraint",
@@ -160,6 +160,7 @@ class NLPlate_HGPPConstraint(OCP.Standard.Standard_Transient):
         """
         None
         """
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1355,23 +1356,23 @@ class NLPlate_SequenceOfHGPPConstraint(OCP.NCollection.NCollection_BaseSequence)
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : NLPlate_HGPPConstraint) -> None: 
+    def Prepend(self,theSeq : NLPlate_SequenceOfHGPPConstraint) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : NLPlate_SequenceOfHGPPConstraint) -> None: ...
+    def Prepend(self,theItem : NLPlate_HGPPConstraint) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1397,12 +1398,12 @@ class NLPlate_SequenceOfHGPPConstraint(OCP.NCollection.NCollection_BaseSequence)
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : NLPlate_SequenceOfHGPPConstraint) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1418,7 +1419,7 @@ class NLPlate_StackOfPlate(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.Plate.Plate_Plate,theIter : Any) -> None: 
+    def Append(self,theItem : OCP.Plate.Plate_Plate) -> OCP.Plate.Plate_Plate: 
         """
         Append one item at the end
 
@@ -1427,7 +1428,7 @@ class NLPlate_StackOfPlate(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.Plate.Plate_Plate) -> OCP.Plate.Plate_Plate: ...
+    def Append(self,theItem : OCP.Plate.Plate_Plate,theIter : Any) -> None: ...
     @overload
     def Append(self,theOther : NLPlate_StackOfPlate) -> None: ...
     def Assign(self,theOther : NLPlate_StackOfPlate) -> NLPlate_StackOfPlate: 
@@ -1449,14 +1450,14 @@ class NLPlate_StackOfPlate(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : NLPlate_StackOfPlate,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : OCP.Plate.Plate_Plate,theIter : Any) -> OCP.Plate.Plate_Plate: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : OCP.Plate.Plate_Plate,theIter : Any) -> OCP.Plate.Plate_Plate: ...
+    def InsertAfter(self,theOther : NLPlate_StackOfPlate,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theOther : NLPlate_StackOfPlate,theIter : Any) -> None: 
         """
@@ -1502,10 +1503,10 @@ class NLPlate_StackOfPlate(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : NLPlate_StackOfPlate) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass

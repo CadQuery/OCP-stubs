@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.TColGeom
 import OCP.TopTools
-import OCP.TColgp
-import OCP.Standard
-import OCP.TopoDS
-import OCP.Geom
+import OCP.TColGeom
+import io
 import OCP.NCollection
 import OCP.gp
+import OCP.TColgp
+import OCP.Geom
+import OCP.TopoDS
+import OCP.Standard
+import OCP.TopAbs
 __all__  = [
 "LocOpe",
 "LocOpe_BuildShape",
@@ -51,7 +52,7 @@ class LocOpe():
     """
     @staticmethod
     @overload
-    def Closed_s(W : OCP.TopoDS.TopoDS_Wire,OnF : OCP.TopoDS.TopoDS_Face) -> bool: 
+    def Closed_s(E : OCP.TopoDS.TopoDS_Edge,OnF : OCP.TopoDS.TopoDS_Face) -> bool: 
         """
         Returns Standard_True when the wire <W> is closed on the face <OnF>.
 
@@ -59,7 +60,7 @@ class LocOpe():
         """
     @staticmethod
     @overload
-    def Closed_s(E : OCP.TopoDS.TopoDS_Edge,OnF : OCP.TopoDS.TopoDS_Face) -> bool: ...
+    def Closed_s(W : OCP.TopoDS.TopoDS_Wire,OnF : OCP.TopoDS.TopoDS_Face) -> bool: ...
     @staticmethod
     def SampleEdges_s(S : OCP.TopoDS.TopoDS_Shape,Pt : OCP.TColgp.TColgp_SequenceOfPnt) -> None: 
         """
@@ -87,9 +88,9 @@ class LocOpe_BuildShape():
         None
         """
     @overload
-    def __init__(self,L : OCP.TopTools.TopTools_ListOfShape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,L : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     pass
 class LocOpe_BuildWires():
     """
@@ -108,9 +109,9 @@ class LocOpe_BuildWires():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Ledges : OCP.TopTools.TopTools_ListOfShape,PW : LocOpe_WiresOnShape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class LocOpe_CSIntersector():
     """
@@ -131,23 +132,23 @@ class LocOpe_CSIntersector():
         Returns <Standard_True> if the intersection has been done.
         """
     @overload
-    def LocalizeAfter(self,I : int,FromInd : int,Tol : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: 
+    def LocalizeAfter(self,I : int,From : float,Tol : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: 
         """
         On the element of range <I>, searches the first intersection point located after the parameter <From>, wich orientation is not TopAbs_EXTERNAL. If found, returns <Standard_True>. <Or> contains the orientation of the point, <IndFrom> and <IndTo> represents the interval of index in the sequence of intersection point corresponding to the point. (IndFrom <= IndTo). <Tol> is used to determine if 2 parameters are equal.
 
         On the element of range <I>, searches the first intersection point located after the index <FromInd> ( >= FromInd + 1), wich orientation is not TopAbs_EXTERNAL. If found, returns <Standard_True>. <Or> contains the orientation of the point, <IndFrom> and <IndTo> represents the interval of index in the sequence of intersection point corresponding to the point. (IndFrom <= IndTo). <Tol> is used to determine if 2 parameters are equal.
         """
     @overload
-    def LocalizeAfter(self,I : int,From : float,Tol : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: ...
+    def LocalizeAfter(self,I : int,FromInd : int,Tol : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: ...
     @overload
-    def LocalizeBefore(self,I : int,From : float,Tol : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: 
+    def LocalizeBefore(self,I : int,FromInd : int,Tol : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: 
         """
         On the element of range <I>, searches the first intersection point located before the parameter <From>, wich orientation is not TopAbs_EXTERNAL. If found, returns <Standard_True>. <Or> contains the orientation of the point, <IndFrom> and <IndTo> represents the interval of index in the sequence of intersection point corresponding to the point (IndFrom <= IndTo). <Tol> is used to determine if 2 parameters are equal.
 
         On the element of range <I>, searches the first intersection point located before the index <FromInd> ( <= FromInd -1), wich orientation is not TopAbs_EXTERNAL. If found, returns <Standard_True>. <Or> contains the orientation of the point, <IndFrom> and <IndTo> represents the interval of index in the sequence of intersection point corresponding to the point (IndFrom <= IndTo). <Tol> is used to determine if 2 parameters are equal.
         """
     @overload
-    def LocalizeBefore(self,I : int,FromInd : int,Tol : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: ...
+    def LocalizeBefore(self,I : int,From : float,Tol : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: ...
     def NbPoints(self,I : int) -> int: 
         """
         Returns the number of intersection point on the element of range <I>.
@@ -162,31 +163,31 @@ class LocOpe_CSIntersector():
         None
         """
     @overload
-    def Perform(self,Slin : LocOpe_SequenceOfLin) -> None: ...
-    @overload
     def Perform(self,Scur : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: ...
+    @overload
+    def Perform(self,Slin : LocOpe_SequenceOfLin) -> None: ...
     def Point(self,I : int,Index : int) -> LocOpe_PntFace: 
         """
         Returns the intersection point of range <Index> on element of range <I>. The points are sorted in increasing order of parameter along the axis.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class LocOpe_CurveShapeIntersector():
     """
     This class provides the intersection between an axis or a circle and the faces of a shape. The intersection points are sorted in increasing parameter along the axis.
     """
     @overload
-    def Init(self,Axis : OCP.gp.gp_Ax1,S : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Init(self,C : OCP.gp.gp_Circ,S : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Performs the intersection between <Ax1 and <S>.
 
         Performs the intersection between <Ax1 and <S>.
         """
     @overload
-    def Init(self,C : OCP.gp.gp_Circ,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Init(self,Axis : OCP.gp.gp_Ax1,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns <Standard_True> if the intersection has been done.
@@ -194,23 +195,23 @@ class LocOpe_CurveShapeIntersector():
         Returns <Standard_True> if the intersection has been done.
         """
     @overload
-    def LocalizeAfter(self,FromInd : int,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: 
+    def LocalizeAfter(self,From : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: 
         """
         Searches the first intersection point located after the parameter <From>, wich orientation is not TopAbs_EXTERNAL. If found, returns <Standard_True>. <Or> contains the orientation of the point, <IndFrom> and <IndTo> represents the interval of index in the sequence of intersection point corresponding to the point. (IndFrom <= IndTo).
 
         Searches the first intersection point located after the index <FromInd> ( >= FromInd + 1), wich orientation is not TopAbs_EXTERNAL. If found, returns <Standard_True>. <Or> contains the orientation of the point, <IndFrom> and <IndTo> represents the interval of index in the sequence of intersection point corresponding to the point. (IndFrom <= IndTo).
         """
     @overload
-    def LocalizeAfter(self,From : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: ...
+    def LocalizeAfter(self,FromInd : int,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: ...
     @overload
-    def LocalizeBefore(self,From : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: 
+    def LocalizeBefore(self,FromInd : int,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: 
         """
         Searches the first intersection point located before the parameter <From>, wich orientation is not TopAbs_EXTERNAL. If found, returns <Standard_True>. <Or> contains the orientation of the point, <IndFrom> and <IndTo> represents the interval of index in the sequence of intersection point corresponding to the point (IndFrom <= IndTo).
 
         Searches the first intersection point located before the index <FromInd> ( <= FromInd -1), wich orientation is not TopAbs_EXTERNAL. If found, returns <Standard_True>. <Or> contains the orientation of the point, <IndFrom> and <IndTo> represents the interval of index in the sequence of intersection point corresponding to the point (IndFrom <= IndTo).
         """
     @overload
-    def LocalizeBefore(self,FromInd : int,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: ...
+    def LocalizeBefore(self,From : float,Or : OCP.TopAbs.TopAbs_Orientation,IndFrom : int,IndTo : int) -> bool: ...
     def NbPoints(self) -> int: 
         """
         Returns the number of intersection point.
@@ -218,18 +219,18 @@ class LocOpe_CurveShapeIntersector():
         Returns the number of intersection point.
         """
     @overload
-    def Point(self,Index : int) -> LocOpe_PntFace: 
+    def Point(self,I : int) -> LocOpe_PntFace: 
         """
         Returns the intersection point of range <Index>. The points are sorted in increasing order of parameter along the axis.
 
         Returns the intersection point of range <Index>. The points are sorted in increasing order of parameter along the axis.
         """
     @overload
-    def Point(self,I : int) -> LocOpe_PntFace: ...
-    @overload
-    def __init__(self) -> None: ...
+    def Point(self,Index : int) -> LocOpe_PntFace: ...
     @overload
     def __init__(self,Axis : OCP.gp.gp_Ax1,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Circ,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     pass
@@ -274,9 +275,9 @@ class LocOpe_DPrism():
         None
         """
     @overload
-    def __init__(self,Spine : OCP.TopoDS.TopoDS_Face,Height1 : float,Height2 : float,Angle : float) -> None: ...
-    @overload
     def __init__(self,Spine : OCP.TopoDS.TopoDS_Face,Height : float,Angle : float) -> None: ...
+    @overload
+    def __init__(self,Spine : OCP.TopoDS.TopoDS_Face,Height1 : float,Height2 : float,Angle : float) -> None: ...
     pass
 class LocOpe_DataMapOfShapePnt(OCP.NCollection.NCollection_BaseMap):
     """
@@ -307,14 +308,14 @@ class LocOpe_DataMapOfShapePnt(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : LocOpe_DataMapOfShapePnt) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -324,14 +325,14 @@ class LocOpe_DataMapOfShapePnt(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.gp.gp_Pnt: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.gp.gp_Pnt) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.gp.gp_Pnt) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.gp.gp_Pnt: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -356,7 +357,7 @@ class LocOpe_DataMapOfShapePnt(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -365,12 +366,12 @@ class LocOpe_DataMapOfShapePnt(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : LocOpe_DataMapOfShapePnt) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class LocOpe_FindEdges():
     """
@@ -633,9 +634,9 @@ class LocOpe_GluedShape(LocOpe_GeneratedShape, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -658,14 +659,14 @@ class LocOpe_Gluer():
         None
         """
     @overload
-    def Bind(self,Enew : OCP.TopoDS.TopoDS_Edge,Ebase : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def Bind(self,Fnew : OCP.TopoDS.TopoDS_Face,Fbase : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Bind(self,Fnew : OCP.TopoDS.TopoDS_Face,Fbase : OCP.TopoDS.TopoDS_Face) -> None: ...
+    def Bind(self,Enew : OCP.TopoDS.TopoDS_Edge,Ebase : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def DescendantFaces(self,F : OCP.TopoDS.TopoDS_Face) -> OCP.TopTools.TopTools_ListOfShape: 
         """
         None
@@ -715,9 +716,9 @@ class LocOpe_Gluer():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Sbase : OCP.TopoDS.TopoDS_Shape,Snew : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class LocOpe_LinearForm():
     """
@@ -749,11 +750,11 @@ class LocOpe_LinearForm():
         None
         """
     @overload
-    def __init__(self,Base : OCP.TopoDS.TopoDS_Shape,V : OCP.gp.gp_Vec,Vectra : OCP.gp.gp_Vec,Pnt1 : OCP.gp.gp_Pnt,Pnt2 : OCP.gp.gp_Pnt) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,Base : OCP.TopoDS.TopoDS_Shape,V : OCP.gp.gp_Vec,Pnt1 : OCP.gp.gp_Pnt,Pnt2 : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,Base : OCP.TopoDS.TopoDS_Shape,V : OCP.gp.gp_Vec,Vectra : OCP.gp.gp_Vec,Pnt1 : OCP.gp.gp_Pnt,Pnt2 : OCP.gp.gp_Pnt) -> None: ...
     pass
 class LocOpe_Operation():
     """
@@ -767,21 +768,29 @@ class LocOpe_Operation():
 
       LocOpe_INVALID
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    LocOpe_CUT: OCP.LocOpe.LocOpe_Operation # value = LocOpe_Operation.LocOpe_CUT
-    LocOpe_FUSE: OCP.LocOpe.LocOpe_Operation # value = LocOpe_Operation.LocOpe_FUSE
-    LocOpe_INVALID: OCP.LocOpe.LocOpe_Operation # value = LocOpe_Operation.LocOpe_INVALID
-    __entries: dict # value = {'LocOpe_FUSE': (LocOpe_Operation.LocOpe_FUSE, None), 'LocOpe_CUT': (LocOpe_Operation.LocOpe_CUT, None), 'LocOpe_INVALID': (LocOpe_Operation.LocOpe_INVALID, None)}
-    __members__: dict # value = {'LocOpe_FUSE': LocOpe_Operation.LocOpe_FUSE, 'LocOpe_CUT': LocOpe_Operation.LocOpe_CUT, 'LocOpe_INVALID': LocOpe_Operation.LocOpe_INVALID}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    LocOpe_CUT: OCP.LocOpe.LocOpe_Operation # value = <LocOpe_Operation.LocOpe_CUT: 1>
+    LocOpe_FUSE: OCP.LocOpe.LocOpe_Operation # value = <LocOpe_Operation.LocOpe_FUSE: 0>
+    LocOpe_INVALID: OCP.LocOpe.LocOpe_Operation # value = <LocOpe_Operation.LocOpe_INVALID: 2>
+    __entries: dict # value = {'LocOpe_FUSE': (<LocOpe_Operation.LocOpe_FUSE: 0>, None), 'LocOpe_CUT': (<LocOpe_Operation.LocOpe_CUT: 1>, None), 'LocOpe_INVALID': (<LocOpe_Operation.LocOpe_INVALID: 2>, None)}
+    __members__: dict # value = {'LocOpe_FUSE': <LocOpe_Operation.LocOpe_FUSE: 0>, 'LocOpe_CUT': <LocOpe_Operation.LocOpe_CUT: 1>, 'LocOpe_INVALID': <LocOpe_Operation.LocOpe_INVALID: 2>}
     pass
 class LocOpe_Pipe():
     """
@@ -904,9 +913,9 @@ class LocOpe_Prism():
         None
         """
     @overload
-    def __init__(self,Base : OCP.TopoDS.TopoDS_Shape,V : OCP.gp.gp_Vec) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Base : OCP.TopoDS.TopoDS_Shape,V : OCP.gp.gp_Vec) -> None: ...
     @overload
     def __init__(self,Base : OCP.TopoDS.TopoDS_Shape,V : OCP.gp.gp_Vec,Vectra : OCP.gp.gp_Vec) -> None: ...
     pass
@@ -931,14 +940,14 @@ class LocOpe_Revol():
         None
         """
     @overload
-    def Perform(self,Base : OCP.TopoDS.TopoDS_Shape,Axis : OCP.gp.gp_Ax1,Angle : float,angledec : float) -> None: 
+    def Perform(self,Base : OCP.TopoDS.TopoDS_Shape,Axis : OCP.gp.gp_Ax1,Angle : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Perform(self,Base : OCP.TopoDS.TopoDS_Shape,Axis : OCP.gp.gp_Ax1,Angle : float) -> None: ...
+    def Perform(self,Base : OCP.TopoDS.TopoDS_Shape,Axis : OCP.gp.gp_Ax1,Angle : float,angledec : float) -> None: ...
     def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
@@ -984,14 +993,14 @@ class LocOpe_SequenceOfCirc(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : LocOpe_SequenceOfCirc) -> None: 
+    def Append(self,theItem : OCP.gp.gp_Circ) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_Circ) -> None: ...
+    def Append(self,theSeq : LocOpe_SequenceOfCirc) -> None: ...
     def Assign(self,theOther : LocOpe_SequenceOfCirc) -> LocOpe_SequenceOfCirc: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1055,14 +1064,14 @@ class LocOpe_SequenceOfCirc(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : LocOpe_SequenceOfCirc) -> None: 
+    def Prepend(self,theItem : OCP.gp.gp_Circ) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.gp.gp_Circ) -> None: ...
+    def Prepend(self,theSeq : LocOpe_SequenceOfCirc) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -1097,12 +1106,12 @@ class LocOpe_SequenceOfCirc(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : LocOpe_SequenceOfCirc) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1164,14 +1173,14 @@ class LocOpe_SequenceOfLin(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : LocOpe_SequenceOfLin) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Lin) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : LocOpe_SequenceOfLin) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : LocOpe_SequenceOfLin) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Lin) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1233,10 +1242,10 @@ class LocOpe_SequenceOfLin(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : LocOpe_SequenceOfLin) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1323,14 +1332,14 @@ class LocOpe_SequenceOfPntFace(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : LocOpe_SequenceOfPntFace) -> None: 
+    def Prepend(self,theItem : LocOpe_PntFace) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : LocOpe_PntFace) -> None: ...
+    def Prepend(self,theSeq : LocOpe_SequenceOfPntFace) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1365,12 +1374,12 @@ class LocOpe_SequenceOfPntFace(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : LocOpe_SequenceOfPntFace) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1424,7 +1433,7 @@ class LocOpe_SplitShape():
     Provides a tool to cut : - edges with a vertices, - faces with wires, and rebuilds the shape containing the edges and the faces.
     """
     @overload
-    def Add(self,V : OCP.TopoDS.TopoDS_Vertex,P : float,E : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def Add(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> bool: 
         """
         Adds the vertex <V> on the edge <E>, at parameter <P>.
 
@@ -1433,9 +1442,9 @@ class LocOpe_SplitShape():
         Adds the list of wires <Lwires> on the face <F>.
         """
     @overload
-    def Add(self,Lwires : OCP.TopTools.TopTools_ListOfShape,F : OCP.TopoDS.TopoDS_Face) -> bool: ...
+    def Add(self,V : OCP.TopoDS.TopoDS_Vertex,P : float,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
-    def Add(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> bool: ...
+    def Add(self,Lwires : OCP.TopTools.TopTools_ListOfShape,F : OCP.TopoDS.TopoDS_Face) -> bool: ...
     def CanSplit(self,E : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
         Tests if it is possible to split the edge <E>.
@@ -1459,9 +1468,9 @@ class LocOpe_SplitShape():
         Returns the "original" shape.
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     pass
 class LocOpe_Spliter():
     """
@@ -1529,11 +1538,11 @@ class LocOpe_WiresOnShape(OCP.Standard.Standard_Transient):
         None
         """
     @overload
+    def Bind(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
     def Bind(self,Comp : OCP.TopoDS.TopoDS_Compound,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
     def Bind(self,EfromW : OCP.TopoDS.TopoDS_Edge,EonFace : OCP.TopoDS.TopoDS_Edge) -> None: ...
-    @overload
-    def Bind(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     def BindAll(self) -> None: 
         """
         None
@@ -1609,7 +1618,7 @@ class LocOpe_WiresOnShape(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def OnEdge(self,V : OCP.TopoDS.TopoDS_Vertex,EdgeFrom : OCP.TopoDS.TopoDS_Edge,E : OCP.TopoDS.TopoDS_Edge,P : float) -> bool: 
+    def OnEdge(self,V : OCP.TopoDS.TopoDS_Vertex,E : OCP.TopoDS.TopoDS_Edge,P : float) -> bool: 
         """
         If the current edge is projected on an edge, returns <Standard_True> and sets the value of <E>. Otherwise, returns <Standard_False>.
 
@@ -1620,7 +1629,7 @@ class LocOpe_WiresOnShape(OCP.Standard.Standard_Transient):
     @overload
     def OnEdge(self,E : OCP.TopoDS.TopoDS_Edge) -> bool: ...
     @overload
-    def OnEdge(self,V : OCP.TopoDS.TopoDS_Vertex,E : OCP.TopoDS.TopoDS_Edge,P : float) -> bool: ...
+    def OnEdge(self,V : OCP.TopoDS.TopoDS_Vertex,EdgeFrom : OCP.TopoDS.TopoDS_Edge,E : OCP.TopoDS.TopoDS_Edge,P : float) -> bool: ...
     def OnFace(self) -> OCP.TopoDS.TopoDS_Face: 
         """
         Returns the face of the shape on which the current edge is projected.
@@ -1651,6 +1660,6 @@ class LocOpe_WiresOnShape(OCP.Standard.Standard_Transient):
         None
         """
     pass
-LocOpe_CUT: OCP.LocOpe.LocOpe_Operation # value = LocOpe_Operation.LocOpe_CUT
-LocOpe_FUSE: OCP.LocOpe.LocOpe_Operation # value = LocOpe_Operation.LocOpe_FUSE
-LocOpe_INVALID: OCP.LocOpe.LocOpe_Operation # value = LocOpe_Operation.LocOpe_INVALID
+LocOpe_CUT: OCP.LocOpe.LocOpe_Operation # value = <LocOpe_Operation.LocOpe_CUT: 1>
+LocOpe_FUSE: OCP.LocOpe.LocOpe_Operation # value = <LocOpe_Operation.LocOpe_FUSE: 0>
+LocOpe_INVALID: OCP.LocOpe.LocOpe_Operation # value = <LocOpe_Operation.LocOpe_INVALID: 2>

@@ -5,11 +5,12 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
+import io
+import OCP.math
+import OCP.NCollection
+import OCP.gp
 import OCP.TColgp
 import OCP.Standard
-import OCP.NCollection
-import OCP.math
-import OCP.gp
 __all__  = [
 "AppParCurves",
 "AppParCurves_Array1OfConstraintCouple",
@@ -135,14 +136,14 @@ class AppParCurves_Array1OfConstraintCouple():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : AppParCurves_ConstraintCouple,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : AppParCurves_Array1OfConstraintCouple) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class AppParCurves_Array1OfMultiBSpCurve():
     """
@@ -223,12 +224,12 @@ class AppParCurves_Array1OfMultiBSpCurve():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : AppParCurves_MultiBSpCurve,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : AppParCurves_Array1OfMultiBSpCurve) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : AppParCurves_Array1OfMultiBSpCurve) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theBegin : AppParCurves_MultiBSpCurve,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class AppParCurves_Array1OfMultiCurve():
     """
@@ -307,14 +308,14 @@ class AppParCurves_Array1OfMultiCurve():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : AppParCurves_Array1OfMultiCurve) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : AppParCurves_MultiCurve,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : AppParCurves_Array1OfMultiCurve) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class AppParCurves_Array1OfMultiPoint():
     """
@@ -393,14 +394,14 @@ class AppParCurves_Array1OfMultiPoint():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : AppParCurves_MultiPoint,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : AppParCurves_Array1OfMultiPoint) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theBegin : AppParCurves_MultiPoint,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : AppParCurves_Array1OfMultiPoint) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class AppParCurves_Constraint():
     """
@@ -416,22 +417,30 @@ class AppParCurves_Constraint():
 
       AppParCurves_CurvaturePoint
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    AppParCurves_CurvaturePoint: OCP.AppParCurves.AppParCurves_Constraint # value = AppParCurves_Constraint.AppParCurves_CurvaturePoint
-    AppParCurves_NoConstraint: OCP.AppParCurves.AppParCurves_Constraint # value = AppParCurves_Constraint.AppParCurves_NoConstraint
-    AppParCurves_PassPoint: OCP.AppParCurves.AppParCurves_Constraint # value = AppParCurves_Constraint.AppParCurves_PassPoint
-    AppParCurves_TangencyPoint: OCP.AppParCurves.AppParCurves_Constraint # value = AppParCurves_Constraint.AppParCurves_TangencyPoint
-    __entries: dict # value = {'AppParCurves_NoConstraint': (AppParCurves_Constraint.AppParCurves_NoConstraint, None), 'AppParCurves_PassPoint': (AppParCurves_Constraint.AppParCurves_PassPoint, None), 'AppParCurves_TangencyPoint': (AppParCurves_Constraint.AppParCurves_TangencyPoint, None), 'AppParCurves_CurvaturePoint': (AppParCurves_Constraint.AppParCurves_CurvaturePoint, None)}
-    __members__: dict # value = {'AppParCurves_NoConstraint': AppParCurves_Constraint.AppParCurves_NoConstraint, 'AppParCurves_PassPoint': AppParCurves_Constraint.AppParCurves_PassPoint, 'AppParCurves_TangencyPoint': AppParCurves_Constraint.AppParCurves_TangencyPoint, 'AppParCurves_CurvaturePoint': AppParCurves_Constraint.AppParCurves_CurvaturePoint}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    AppParCurves_CurvaturePoint: OCP.AppParCurves.AppParCurves_Constraint # value = <AppParCurves_Constraint.AppParCurves_CurvaturePoint: 3>
+    AppParCurves_NoConstraint: OCP.AppParCurves.AppParCurves_Constraint # value = <AppParCurves_Constraint.AppParCurves_NoConstraint: 0>
+    AppParCurves_PassPoint: OCP.AppParCurves.AppParCurves_Constraint # value = <AppParCurves_Constraint.AppParCurves_PassPoint: 1>
+    AppParCurves_TangencyPoint: OCP.AppParCurves.AppParCurves_Constraint # value = <AppParCurves_Constraint.AppParCurves_TangencyPoint: 2>
+    __entries: dict # value = {'AppParCurves_NoConstraint': (<AppParCurves_Constraint.AppParCurves_NoConstraint: 0>, None), 'AppParCurves_PassPoint': (<AppParCurves_Constraint.AppParCurves_PassPoint: 1>, None), 'AppParCurves_TangencyPoint': (<AppParCurves_Constraint.AppParCurves_TangencyPoint: 2>, None), 'AppParCurves_CurvaturePoint': (<AppParCurves_Constraint.AppParCurves_CurvaturePoint: 3>, None)}
+    __members__: dict # value = {'AppParCurves_NoConstraint': <AppParCurves_Constraint.AppParCurves_NoConstraint: 0>, 'AppParCurves_PassPoint': <AppParCurves_Constraint.AppParCurves_PassPoint: 1>, 'AppParCurves_TangencyPoint': <AppParCurves_Constraint.AppParCurves_TangencyPoint: 2>, 'AppParCurves_CurvaturePoint': <AppParCurves_Constraint.AppParCurves_CurvaturePoint: 3>}
     pass
 class AppParCurves_ConstraintCouple():
     """
@@ -582,14 +591,14 @@ class AppParCurves_HArray1OfConstraintCouple(AppParCurves_Array1OfConstraintCoup
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : AppParCurves_Array1OfConstraintCouple) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : AppParCurves_ConstraintCouple) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -725,14 +734,14 @@ class AppParCurves_HArray1OfMultiBSpCurve(AppParCurves_Array1OfMultiBSpCurve, OC
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : AppParCurves_MultiBSpCurve) -> None: ...
     @overload
     def __init__(self,theOther : AppParCurves_Array1OfMultiBSpCurve) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -870,12 +879,12 @@ class AppParCurves_HArray1OfMultiCurve(AppParCurves_Array1OfMultiCurve, OCP.Stan
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : AppParCurves_MultiCurve) -> None: ...
     @overload
+    def __init__(self,theOther : AppParCurves_Array1OfMultiCurve) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : AppParCurves_Array1OfMultiCurve) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1011,14 +1020,14 @@ class AppParCurves_HArray1OfMultiPoint(AppParCurves_Array1OfMultiPoint, OCP.Stan
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : AppParCurves_MultiPoint) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : AppParCurves_Array1OfMultiPoint) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1044,23 +1053,23 @@ class AppParCurves_MultiCurve():
     @overload
     def Curve(self,CuIndex : int,TabPnt : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
-    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d) -> None: 
+    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec) -> None: 
         """
         returns the value of the point with a parameter U on the Bezier curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 3d.
 
         returns the value of the point with a parameter U on the Bezier curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 2d.
         """
     @overload
-    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec) -> None: ...
+    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d) -> None: ...
     @overload
-    def D2(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d) -> None: 
+    def D2(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
         """
         returns the value of the point with a parameter U on the Bezier curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 3d.
 
         returns the value of the point with a parameter U on the Bezier curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 2d.
         """
     @overload
-    def D2(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: ...
+    def D2(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d) -> None: ...
     def Degree(self) -> int: 
         """
         returns the degree of the curves.
@@ -1069,7 +1078,7 @@ class AppParCurves_MultiCurve():
         """
         returns the dimension of the CuIndex curve. An exception is raised if CuIndex<0 or CuIndex>NbCurves.
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints on the stream o information on the current state of the object. Is used to redefine the operator <<.
         """
@@ -1106,7 +1115,7 @@ class AppParCurves_MultiCurve():
         Applies a transformation to the Curve of range <CuIndex>. newx = x + dx*oldx newy = y + dy*oldy for all points of the curve.
         """
     @overload
-    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt) -> None: 
+    def Value(self,Index : int) -> AppParCurves_MultiPoint: 
         """
         returns the Index MultiPoint. An exception is raised if Index <0 or Index >Degree+1.
 
@@ -1115,9 +1124,9 @@ class AppParCurves_MultiCurve():
         returns the value of the point with a parameter U on the Bezier curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 3d.
         """
     @overload
-    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d) -> None: ...
+    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def Value(self,Index : int) -> AppParCurves_MultiPoint: ...
+    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def __init__(self,tabMU : AppParCurves_Array1OfMultiPoint) -> None: ...
     @overload
@@ -1139,14 +1148,14 @@ class AppParCurves_MultiBSpCurve(AppParCurves_MultiCurve):
     @overload
     def Curve(self,CuIndex : int,TabPnt : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
-    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d) -> None: 
+    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec) -> None: 
         """
         returns the value of the point with a parameter U on the BSpline curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 3d.
 
         returns the value of the point with a parameter U on the BSpline curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 2d.
         """
     @overload
-    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec) -> None: ...
+    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d) -> None: ...
     @overload
     def D2(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
         """
@@ -1164,7 +1173,7 @@ class AppParCurves_MultiBSpCurve(AppParCurves_MultiCurve):
         """
         returns the dimension of the CuIndex curve. An exception is raised if CuIndex<0 or CuIndex>NbCurves.
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints on the stream o information on the current state of the object. Is used to redefine the operator <<.
         """
@@ -1217,20 +1226,20 @@ class AppParCurves_MultiBSpCurve(AppParCurves_MultiCurve):
         Applies a transformation to the Curve of range <CuIndex>. newx = x + dx*oldx newy = y + dy*oldy for all points of the curve.
         """
     @overload
-    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d) -> None: 
+    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt) -> None: 
         """
         returns the value of the point with a parameter U on the BSpline curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 2d.
 
         returns the value of the point with a parameter U on the BSpline curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 3d.
         """
     @overload
-    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt) -> None: ...
+    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def __init__(self,NbPol : int) -> None: ...
     @overload
     def __init__(self,tabMU : AppParCurves_Array1OfMultiPoint,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
     @overload
     def __init__(self,SC : AppParCurves_MultiCurve,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
-    @overload
-    def __init__(self,NbPol : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -1244,7 +1253,7 @@ class AppParCurves_MultiPoint():
 
         returns the dimension of the point of range Index. An exception is raised if Index <0 or Index > NbCurves.
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints on the stream o information on the current state of the object. Is used to redefine the operator <<.
         """
@@ -1285,6 +1294,8 @@ class AppParCurves_MultiPoint():
         Applies a transformation to the Curve of range <CuIndex>. newx = x + dx*oldx newy = y + dy*oldy for all points of the curve.
         """
     @overload
+    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    @overload
     def __init__(self,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @overload
     def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
@@ -1292,8 +1303,6 @@ class AppParCurves_MultiPoint():
     def __init__(self,NbPoints : int,NbPoints2d : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     pass
 class AppParCurves_SequenceOfMultiBSpCurve(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -1304,14 +1313,14 @@ class AppParCurves_SequenceOfMultiBSpCurve(OCP.NCollection.NCollection_BaseSeque
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : AppParCurves_SequenceOfMultiBSpCurve) -> None: 
+    def Append(self,theItem : AppParCurves_MultiBSpCurve) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : AppParCurves_MultiBSpCurve) -> None: ...
+    def Append(self,theSeq : AppParCurves_SequenceOfMultiBSpCurve) -> None: ...
     def Assign(self,theOther : AppParCurves_SequenceOfMultiBSpCurve) -> AppParCurves_SequenceOfMultiBSpCurve: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1341,14 +1350,14 @@ class AppParCurves_SequenceOfMultiBSpCurve(OCP.NCollection.NCollection_BaseSeque
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : AppParCurves_MultiBSpCurve) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : AppParCurves_SequenceOfMultiBSpCurve) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : AppParCurves_SequenceOfMultiBSpCurve) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : AppParCurves_MultiBSpCurve) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : AppParCurves_MultiBSpCurve) -> None: 
         """
@@ -1422,7 +1431,7 @@ class AppParCurves_SequenceOfMultiBSpCurve(OCP.NCollection.NCollection_BaseSeque
     def __init__(self,theOther : AppParCurves_SequenceOfMultiBSpCurve) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1475,14 +1484,14 @@ class AppParCurves_SequenceOfMultiCurve(OCP.NCollection.NCollection_BaseSequence
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : AppParCurves_MultiCurve) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : AppParCurves_SequenceOfMultiCurve) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : AppParCurves_SequenceOfMultiCurve) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : AppParCurves_MultiCurve) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : AppParCurves_MultiCurve) -> None: 
         """
@@ -1509,14 +1518,14 @@ class AppParCurves_SequenceOfMultiCurve(OCP.NCollection.NCollection_BaseSequence
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : AppParCurves_MultiCurve) -> None: 
+    def Prepend(self,theSeq : AppParCurves_SequenceOfMultiCurve) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : AppParCurves_SequenceOfMultiCurve) -> None: ...
+    def Prepend(self,theItem : AppParCurves_MultiCurve) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -1551,19 +1560,19 @@ class AppParCurves_SequenceOfMultiCurve(OCP.NCollection.NCollection_BaseSequence
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : AppParCurves_SequenceOfMultiCurve) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Static deleter to be passed to BaseSequence
         """
     pass
-AppParCurves_CurvaturePoint: OCP.AppParCurves.AppParCurves_Constraint # value = AppParCurves_Constraint.AppParCurves_CurvaturePoint
-AppParCurves_NoConstraint: OCP.AppParCurves.AppParCurves_Constraint # value = AppParCurves_Constraint.AppParCurves_NoConstraint
-AppParCurves_PassPoint: OCP.AppParCurves.AppParCurves_Constraint # value = AppParCurves_Constraint.AppParCurves_PassPoint
-AppParCurves_TangencyPoint: OCP.AppParCurves.AppParCurves_Constraint # value = AppParCurves_Constraint.AppParCurves_TangencyPoint
+AppParCurves_CurvaturePoint: OCP.AppParCurves.AppParCurves_Constraint # value = <AppParCurves_Constraint.AppParCurves_CurvaturePoint: 3>
+AppParCurves_NoConstraint: OCP.AppParCurves.AppParCurves_Constraint # value = <AppParCurves_Constraint.AppParCurves_NoConstraint: 0>
+AppParCurves_PassPoint: OCP.AppParCurves.AppParCurves_Constraint # value = <AppParCurves_Constraint.AppParCurves_PassPoint: 1>
+AppParCurves_TangencyPoint: OCP.AppParCurves.AppParCurves_Constraint # value = <AppParCurves_Constraint.AppParCurves_TangencyPoint: 2>

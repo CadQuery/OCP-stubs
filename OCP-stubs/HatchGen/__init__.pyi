@@ -5,8 +5,8 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
-import OCP.TopAbs
 import OCP.IntRes2d
+import OCP.TopAbs
 __all__  = [
 "HatchGen_Domain",
 "HatchGen_Domains",
@@ -86,7 +86,7 @@ class HatchGen_Domain():
     @overload
     def SetPoints(self,P1 : HatchGen_PointOnHatching,P2 : HatchGen_PointOnHatching) -> None: ...
     @overload
-    def SetSecondPoint(self,P : HatchGen_PointOnHatching) -> None: 
+    def SetSecondPoint(self) -> None: 
         """
         Sets the second point of the domain.
 
@@ -97,13 +97,13 @@ class HatchGen_Domain():
         Sets the second point of the domain at the infinite.
         """
     @overload
-    def SetSecondPoint(self) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def SetSecondPoint(self,P : HatchGen_PointOnHatching) -> None: ...
     @overload
     def __init__(self,P : HatchGen_PointOnHatching,First : bool) -> None: ...
     @overload
     def __init__(self,P1 : HatchGen_PointOnHatching,P2 : HatchGen_PointOnHatching) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class HatchGen_Domains(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -151,14 +151,14 @@ class HatchGen_Domains(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : HatchGen_Domain) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : HatchGen_Domains) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : HatchGen_Domains) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : HatchGen_Domain) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : HatchGen_Domains) -> None: 
         """
@@ -185,23 +185,23 @@ class HatchGen_Domains(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : HatchGen_Domain) -> None: 
+    def Prepend(self,theSeq : HatchGen_Domains) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : HatchGen_Domains) -> None: ...
+    def Prepend(self,theItem : HatchGen_Domain) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -227,12 +227,12 @@ class HatchGen_Domains(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : HatchGen_Domains) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -255,23 +255,31 @@ class HatchGen_ErrorStatus():
 
       HatchGen_IncompatibleStates
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    HatchGen_IncoherentParity: OCP.HatchGen.HatchGen_ErrorStatus # value = HatchGen_ErrorStatus.HatchGen_IncoherentParity
-    HatchGen_IncompatibleStates: OCP.HatchGen.HatchGen_ErrorStatus # value = HatchGen_ErrorStatus.HatchGen_IncompatibleStates
-    HatchGen_NoProblem: OCP.HatchGen.HatchGen_ErrorStatus # value = HatchGen_ErrorStatus.HatchGen_NoProblem
-    HatchGen_TransitionFailure: OCP.HatchGen.HatchGen_ErrorStatus # value = HatchGen_ErrorStatus.HatchGen_TransitionFailure
-    HatchGen_TrimFailure: OCP.HatchGen.HatchGen_ErrorStatus # value = HatchGen_ErrorStatus.HatchGen_TrimFailure
-    __entries: dict # value = {'HatchGen_NoProblem': (HatchGen_ErrorStatus.HatchGen_NoProblem, None), 'HatchGen_TrimFailure': (HatchGen_ErrorStatus.HatchGen_TrimFailure, None), 'HatchGen_TransitionFailure': (HatchGen_ErrorStatus.HatchGen_TransitionFailure, None), 'HatchGen_IncoherentParity': (HatchGen_ErrorStatus.HatchGen_IncoherentParity, None), 'HatchGen_IncompatibleStates': (HatchGen_ErrorStatus.HatchGen_IncompatibleStates, None)}
-    __members__: dict # value = {'HatchGen_NoProblem': HatchGen_ErrorStatus.HatchGen_NoProblem, 'HatchGen_TrimFailure': HatchGen_ErrorStatus.HatchGen_TrimFailure, 'HatchGen_TransitionFailure': HatchGen_ErrorStatus.HatchGen_TransitionFailure, 'HatchGen_IncoherentParity': HatchGen_ErrorStatus.HatchGen_IncoherentParity, 'HatchGen_IncompatibleStates': HatchGen_ErrorStatus.HatchGen_IncompatibleStates}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    HatchGen_IncoherentParity: OCP.HatchGen.HatchGen_ErrorStatus # value = <HatchGen_ErrorStatus.HatchGen_IncoherentParity: 3>
+    HatchGen_IncompatibleStates: OCP.HatchGen.HatchGen_ErrorStatus # value = <HatchGen_ErrorStatus.HatchGen_IncompatibleStates: 4>
+    HatchGen_NoProblem: OCP.HatchGen.HatchGen_ErrorStatus # value = <HatchGen_ErrorStatus.HatchGen_NoProblem: 0>
+    HatchGen_TransitionFailure: OCP.HatchGen.HatchGen_ErrorStatus # value = <HatchGen_ErrorStatus.HatchGen_TransitionFailure: 2>
+    HatchGen_TrimFailure: OCP.HatchGen.HatchGen_ErrorStatus # value = <HatchGen_ErrorStatus.HatchGen_TrimFailure: 1>
+    __entries: dict # value = {'HatchGen_NoProblem': (<HatchGen_ErrorStatus.HatchGen_NoProblem: 0>, None), 'HatchGen_TrimFailure': (<HatchGen_ErrorStatus.HatchGen_TrimFailure: 1>, None), 'HatchGen_TransitionFailure': (<HatchGen_ErrorStatus.HatchGen_TransitionFailure: 2>, None), 'HatchGen_IncoherentParity': (<HatchGen_ErrorStatus.HatchGen_IncoherentParity: 3>, None), 'HatchGen_IncompatibleStates': (<HatchGen_ErrorStatus.HatchGen_IncompatibleStates: 4>, None)}
+    __members__: dict # value = {'HatchGen_NoProblem': <HatchGen_ErrorStatus.HatchGen_NoProblem: 0>, 'HatchGen_TrimFailure': <HatchGen_ErrorStatus.HatchGen_TrimFailure: 1>, 'HatchGen_TransitionFailure': <HatchGen_ErrorStatus.HatchGen_TransitionFailure: 2>, 'HatchGen_IncoherentParity': <HatchGen_ErrorStatus.HatchGen_IncoherentParity: 3>, 'HatchGen_IncompatibleStates': <HatchGen_ErrorStatus.HatchGen_IncompatibleStates: 4>}
     pass
 class HatchGen_IntersectionPoint():
     """
@@ -352,22 +360,30 @@ class HatchGen_IntersectionType():
 
       HatchGen_UNDETERMINED
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    HatchGen_TANGENT: OCP.HatchGen.HatchGen_IntersectionType # value = HatchGen_IntersectionType.HatchGen_TANGENT
-    HatchGen_TOUCH: OCP.HatchGen.HatchGen_IntersectionType # value = HatchGen_IntersectionType.HatchGen_TOUCH
-    HatchGen_TRUE: OCP.HatchGen.HatchGen_IntersectionType # value = HatchGen_IntersectionType.HatchGen_TRUE
-    HatchGen_UNDETERMINED: OCP.HatchGen.HatchGen_IntersectionType # value = HatchGen_IntersectionType.HatchGen_UNDETERMINED
-    __entries: dict # value = {'HatchGen_TRUE': (HatchGen_IntersectionType.HatchGen_TRUE, None), 'HatchGen_TOUCH': (HatchGen_IntersectionType.HatchGen_TOUCH, None), 'HatchGen_TANGENT': (HatchGen_IntersectionType.HatchGen_TANGENT, None), 'HatchGen_UNDETERMINED': (HatchGen_IntersectionType.HatchGen_UNDETERMINED, None)}
-    __members__: dict # value = {'HatchGen_TRUE': HatchGen_IntersectionType.HatchGen_TRUE, 'HatchGen_TOUCH': HatchGen_IntersectionType.HatchGen_TOUCH, 'HatchGen_TANGENT': HatchGen_IntersectionType.HatchGen_TANGENT, 'HatchGen_UNDETERMINED': HatchGen_IntersectionType.HatchGen_UNDETERMINED}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    HatchGen_TANGENT: OCP.HatchGen.HatchGen_IntersectionType # value = <HatchGen_IntersectionType.HatchGen_TANGENT: 2>
+    HatchGen_TOUCH: OCP.HatchGen.HatchGen_IntersectionType # value = <HatchGen_IntersectionType.HatchGen_TOUCH: 1>
+    HatchGen_TRUE: OCP.HatchGen.HatchGen_IntersectionType # value = <HatchGen_IntersectionType.HatchGen_TRUE: 0>
+    HatchGen_UNDETERMINED: OCP.HatchGen.HatchGen_IntersectionType # value = <HatchGen_IntersectionType.HatchGen_UNDETERMINED: 3>
+    __entries: dict # value = {'HatchGen_TRUE': (<HatchGen_IntersectionType.HatchGen_TRUE: 0>, None), 'HatchGen_TOUCH': (<HatchGen_IntersectionType.HatchGen_TOUCH: 1>, None), 'HatchGen_TANGENT': (<HatchGen_IntersectionType.HatchGen_TANGENT: 2>, None), 'HatchGen_UNDETERMINED': (<HatchGen_IntersectionType.HatchGen_UNDETERMINED: 3>, None)}
+    __members__: dict # value = {'HatchGen_TRUE': <HatchGen_IntersectionType.HatchGen_TRUE: 0>, 'HatchGen_TOUCH': <HatchGen_IntersectionType.HatchGen_TOUCH: 1>, 'HatchGen_TANGENT': <HatchGen_IntersectionType.HatchGen_TANGENT: 2>, 'HatchGen_UNDETERMINED': <HatchGen_IntersectionType.HatchGen_UNDETERMINED: 3>}
     pass
 class HatchGen_PointOnElement(HatchGen_IntersectionPoint):
     """
@@ -454,11 +470,9 @@ class HatchGen_PointOnElement(HatchGen_IntersectionPoint):
         Returns the transition state before the intersection.
         """
     @overload
-    def __init__(self,Point : OCP.IntRes2d.IntRes2d_IntersectionPoint) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,Point : HatchGen_PointOnElement) -> None: ...
+    def __init__(self,Point : OCP.IntRes2d.IntRes2d_IntersectionPoint) -> None: ...
     pass
 class HatchGen_PointOnHatching(HatchGen_IntersectionPoint):
     """
@@ -557,11 +571,9 @@ class HatchGen_PointOnHatching(HatchGen_IntersectionPoint):
         Returns the transition state before the intersection.
         """
     @overload
-    def __init__(self,Point : OCP.IntRes2d.IntRes2d_IntersectionPoint) -> None: ...
-    @overload
-    def __init__(self,Point : HatchGen_PointOnHatching) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Point : OCP.IntRes2d.IntRes2d_IntersectionPoint) -> None: ...
     pass
 class HatchGen_PointsOnElement(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -572,14 +584,14 @@ class HatchGen_PointsOnElement(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : HatchGen_PointsOnElement) -> None: 
+    def Append(self,theItem : HatchGen_PointOnElement) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : HatchGen_PointOnElement) -> None: ...
+    def Append(self,theSeq : HatchGen_PointsOnElement) -> None: ...
     def Assign(self,theOther : HatchGen_PointsOnElement) -> HatchGen_PointsOnElement: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -609,14 +621,14 @@ class HatchGen_PointsOnElement(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : HatchGen_PointOnElement) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : HatchGen_PointsOnElement) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : HatchGen_PointsOnElement) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : HatchGen_PointOnElement) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : HatchGen_PointOnElement) -> None: 
         """
@@ -685,12 +697,12 @@ class HatchGen_PointsOnElement(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : HatchGen_PointsOnElement) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : HatchGen_PointsOnElement) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -743,23 +755,23 @@ class HatchGen_PointsOnHatching(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : HatchGen_PointOnHatching) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : HatchGen_PointsOnHatching) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : HatchGen_PointsOnHatching) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : HatchGen_PointOnHatching) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : HatchGen_PointsOnHatching) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : HatchGen_PointOnHatching) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : HatchGen_PointOnHatching) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : HatchGen_PointsOnHatching) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -777,23 +789,23 @@ class HatchGen_PointsOnHatching(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : HatchGen_PointOnHatching) -> None: 
+    def Prepend(self,theSeq : HatchGen_PointsOnHatching) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : HatchGen_PointsOnHatching) -> None: ...
+    def Prepend(self,theItem : HatchGen_PointOnHatching) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -819,24 +831,24 @@ class HatchGen_PointsOnHatching(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : HatchGen_PointsOnHatching) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Static deleter to be passed to BaseSequence
         """
     pass
-HatchGen_IncoherentParity: OCP.HatchGen.HatchGen_ErrorStatus # value = HatchGen_ErrorStatus.HatchGen_IncoherentParity
-HatchGen_IncompatibleStates: OCP.HatchGen.HatchGen_ErrorStatus # value = HatchGen_ErrorStatus.HatchGen_IncompatibleStates
-HatchGen_NoProblem: OCP.HatchGen.HatchGen_ErrorStatus # value = HatchGen_ErrorStatus.HatchGen_NoProblem
-HatchGen_TANGENT: OCP.HatchGen.HatchGen_IntersectionType # value = HatchGen_IntersectionType.HatchGen_TANGENT
-HatchGen_TOUCH: OCP.HatchGen.HatchGen_IntersectionType # value = HatchGen_IntersectionType.HatchGen_TOUCH
-HatchGen_TRUE: OCP.HatchGen.HatchGen_IntersectionType # value = HatchGen_IntersectionType.HatchGen_TRUE
-HatchGen_TransitionFailure: OCP.HatchGen.HatchGen_ErrorStatus # value = HatchGen_ErrorStatus.HatchGen_TransitionFailure
-HatchGen_TrimFailure: OCP.HatchGen.HatchGen_ErrorStatus # value = HatchGen_ErrorStatus.HatchGen_TrimFailure
-HatchGen_UNDETERMINED: OCP.HatchGen.HatchGen_IntersectionType # value = HatchGen_IntersectionType.HatchGen_UNDETERMINED
+HatchGen_IncoherentParity: OCP.HatchGen.HatchGen_ErrorStatus # value = <HatchGen_ErrorStatus.HatchGen_IncoherentParity: 3>
+HatchGen_IncompatibleStates: OCP.HatchGen.HatchGen_ErrorStatus # value = <HatchGen_ErrorStatus.HatchGen_IncompatibleStates: 4>
+HatchGen_NoProblem: OCP.HatchGen.HatchGen_ErrorStatus # value = <HatchGen_ErrorStatus.HatchGen_NoProblem: 0>
+HatchGen_TANGENT: OCP.HatchGen.HatchGen_IntersectionType # value = <HatchGen_IntersectionType.HatchGen_TANGENT: 2>
+HatchGen_TOUCH: OCP.HatchGen.HatchGen_IntersectionType # value = <HatchGen_IntersectionType.HatchGen_TOUCH: 1>
+HatchGen_TRUE: OCP.HatchGen.HatchGen_IntersectionType # value = <HatchGen_IntersectionType.HatchGen_TRUE: 0>
+HatchGen_TransitionFailure: OCP.HatchGen.HatchGen_ErrorStatus # value = <HatchGen_ErrorStatus.HatchGen_TransitionFailure: 2>
+HatchGen_TrimFailure: OCP.HatchGen.HatchGen_ErrorStatus # value = <HatchGen_ErrorStatus.HatchGen_TrimFailure: 1>
+HatchGen_UNDETERMINED: OCP.HatchGen.HatchGen_IntersectionType # value = <HatchGen_IntersectionType.HatchGen_UNDETERMINED: 3>

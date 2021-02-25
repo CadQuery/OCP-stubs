@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
 import OCP.GeomAbs
+import OCP.NCollection
 __all__  = [
 "LProp_AnalyticCurInf",
 "LProp_BadContinuity",
@@ -55,21 +55,29 @@ class LProp_CIType():
 
       LProp_MaxCur
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    LProp_Inflection: OCP.LProp.LProp_CIType # value = LProp_CIType.LProp_Inflection
-    LProp_MaxCur: OCP.LProp.LProp_CIType # value = LProp_CIType.LProp_MaxCur
-    LProp_MinCur: OCP.LProp.LProp_CIType # value = LProp_CIType.LProp_MinCur
-    __entries: dict # value = {'LProp_Inflection': (LProp_CIType.LProp_Inflection, None), 'LProp_MinCur': (LProp_CIType.LProp_MinCur, None), 'LProp_MaxCur': (LProp_CIType.LProp_MaxCur, None)}
-    __members__: dict # value = {'LProp_Inflection': LProp_CIType.LProp_Inflection, 'LProp_MinCur': LProp_CIType.LProp_MinCur, 'LProp_MaxCur': LProp_CIType.LProp_MaxCur}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    LProp_Inflection: OCP.LProp.LProp_CIType # value = <LProp_CIType.LProp_Inflection: 0>
+    LProp_MaxCur: OCP.LProp.LProp_CIType # value = <LProp_CIType.LProp_MaxCur: 2>
+    LProp_MinCur: OCP.LProp.LProp_CIType # value = <LProp_CIType.LProp_MinCur: 1>
+    __entries: dict # value = {'LProp_Inflection': (<LProp_CIType.LProp_Inflection: 0>, None), 'LProp_MinCur': (<LProp_CIType.LProp_MinCur: 1>, None), 'LProp_MaxCur': (<LProp_CIType.LProp_MaxCur: 2>, None)}
+    __members__: dict # value = {'LProp_Inflection': <LProp_CIType.LProp_Inflection: 0>, 'LProp_MinCur': <LProp_CIType.LProp_MinCur: 1>, 'LProp_MaxCur': <LProp_CIType.LProp_MaxCur: 2>}
     pass
 class LProp_CurAndInf():
     """
@@ -162,14 +170,14 @@ class LProp_SequenceOfCIType(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : LProp_SequenceOfCIType) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : LProp_CIType) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : LProp_CIType) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : LProp_SequenceOfCIType) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : LProp_SequenceOfCIType) -> None: 
         """
@@ -205,14 +213,14 @@ class LProp_SequenceOfCIType(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : LProp_SequenceOfCIType) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -243,7 +251,7 @@ class LProp_SequenceOfCIType(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : LProp_SequenceOfCIType) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -264,27 +272,35 @@ class LProp_Status():
 
       LProp_Computed
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    LProp_Computed: OCP.LProp.LProp_Status # value = LProp_Status.LProp_Computed
-    LProp_Defined: OCP.LProp.LProp_Status # value = LProp_Status.LProp_Defined
-    LProp_Undecided: OCP.LProp.LProp_Status # value = LProp_Status.LProp_Undecided
-    LProp_Undefined: OCP.LProp.LProp_Status # value = LProp_Status.LProp_Undefined
-    __entries: dict # value = {'LProp_Undecided': (LProp_Status.LProp_Undecided, None), 'LProp_Undefined': (LProp_Status.LProp_Undefined, None), 'LProp_Defined': (LProp_Status.LProp_Defined, None), 'LProp_Computed': (LProp_Status.LProp_Computed, None)}
-    __members__: dict # value = {'LProp_Undecided': LProp_Status.LProp_Undecided, 'LProp_Undefined': LProp_Status.LProp_Undefined, 'LProp_Defined': LProp_Status.LProp_Defined, 'LProp_Computed': LProp_Status.LProp_Computed}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    LProp_Computed: OCP.LProp.LProp_Status # value = <LProp_Status.LProp_Computed: 3>
+    LProp_Defined: OCP.LProp.LProp_Status # value = <LProp_Status.LProp_Defined: 2>
+    LProp_Undecided: OCP.LProp.LProp_Status # value = <LProp_Status.LProp_Undecided: 0>
+    LProp_Undefined: OCP.LProp.LProp_Status # value = <LProp_Status.LProp_Undefined: 1>
+    __entries: dict # value = {'LProp_Undecided': (<LProp_Status.LProp_Undecided: 0>, None), 'LProp_Undefined': (<LProp_Status.LProp_Undefined: 1>, None), 'LProp_Defined': (<LProp_Status.LProp_Defined: 2>, None), 'LProp_Computed': (<LProp_Status.LProp_Computed: 3>, None)}
+    __members__: dict # value = {'LProp_Undecided': <LProp_Status.LProp_Undecided: 0>, 'LProp_Undefined': <LProp_Status.LProp_Undefined: 1>, 'LProp_Defined': <LProp_Status.LProp_Defined: 2>, 'LProp_Computed': <LProp_Status.LProp_Computed: 3>}
     pass
-LProp_Computed: OCP.LProp.LProp_Status # value = LProp_Status.LProp_Computed
-LProp_Defined: OCP.LProp.LProp_Status # value = LProp_Status.LProp_Defined
-LProp_Inflection: OCP.LProp.LProp_CIType # value = LProp_CIType.LProp_Inflection
-LProp_MaxCur: OCP.LProp.LProp_CIType # value = LProp_CIType.LProp_MaxCur
-LProp_MinCur: OCP.LProp.LProp_CIType # value = LProp_CIType.LProp_MinCur
-LProp_Undecided: OCP.LProp.LProp_Status # value = LProp_Status.LProp_Undecided
-LProp_Undefined: OCP.LProp.LProp_Status # value = LProp_Status.LProp_Undefined
+LProp_Computed: OCP.LProp.LProp_Status # value = <LProp_Status.LProp_Computed: 3>
+LProp_Defined: OCP.LProp.LProp_Status # value = <LProp_Status.LProp_Defined: 2>
+LProp_Inflection: OCP.LProp.LProp_CIType # value = <LProp_CIType.LProp_Inflection: 0>
+LProp_MaxCur: OCP.LProp.LProp_CIType # value = <LProp_CIType.LProp_MaxCur: 2>
+LProp_MinCur: OCP.LProp.LProp_CIType # value = <LProp_CIType.LProp_MinCur: 1>
+LProp_Undecided: OCP.LProp.LProp_Status # value = <LProp_Status.LProp_Undecided: 0>
+LProp_Undefined: OCP.LProp.LProp_Status # value = <LProp_Status.LProp_Undefined: 1>

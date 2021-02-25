@@ -4,20 +4,21 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.GeomAbs
-import OCP.math
-import OCP.Geom2d
-import OCP.Approx
-import OCP.TColgp
-import OCP.IntSurf
 import OCP.Adaptor3d
+import OCP.Approx
+import OCP.TColStd
+import io
+import OCP.math
 import OCP.IntImp
-import OCP.Standard
-import OCP.BRepAdaptor
-import OCP.Geom
 import OCP.AppParCurves
 import OCP.gp
+import OCP.GeomAbs
+import OCP.Geom
+import OCP.IntSurf
+import OCP.TColgp
+import OCP.BRepAdaptor
+import OCP.Geom2d
+import OCP.Standard
 __all__  = [
 "BRepApprox_Approx",
 "BRepApprox_ApproxLine",
@@ -155,7 +156,7 @@ class BRepApprox_BSpGradient_BFGSOfMyBSplGradientOfTheComputeLineOfApprox(OCP.ma
     """
     None
     """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints on the stream o information on the current state of the object. Is used to redefine the operator <<.
         """
@@ -183,7 +184,7 @@ class BRepApprox_BSpGradient_BFGSOfMyBSplGradientOfTheComputeLineOfApprox(OCP.ma
         None
         """
     @overload
-    def Location(self) -> OCP.math.math_Vector: 
+    def Location(self,Loc : OCP.math.math_Vector) -> None: 
         """
         outputs the location vector of the minimum in Loc. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
 
@@ -194,7 +195,7 @@ class BRepApprox_BSpGradient_BFGSOfMyBSplGradientOfTheComputeLineOfApprox(OCP.ma
         returns the location vector of the minimum. Exception NotDone is raised if the minimum was not found.
         """
     @overload
-    def Location(self,Loc : OCP.math.math_Vector) -> None: ...
+    def Location(self) -> OCP.math.math_Vector: ...
     def Minimum(self) -> float: 
         """
         returns the value of the minimum. Exception NotDone is raised if the minimum was not found.
@@ -351,11 +352,11 @@ class BRepApprox_BSpParLeastSquareOfMyBSplGradientOfTheComputeLineOfApprox():
         Is used after having initialized the fields. <V1t> is the tangent vector at the first point. <V2t> is the tangent vector at the last point. <V1c> is the tangent vector at the first point. <V2c> is the tangent vector at the last point.
         """
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
+    def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
     @overload
     def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
+    def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     def Points(self) -> OCP.math.math_Matrix: 
         """
         returns the matrix of points value.
@@ -365,19 +366,19 @@ class BRepApprox_BSpParLeastSquareOfMyBSplGradientOfTheComputeLineOfApprox():
         returns the matrix of resulting control points value.
         """
     @overload
-    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
-    @overload
     def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     @overload
     def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
     def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
+    @overload
+    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     pass
 class BRepApprox_Gradient_BFGSOfMyGradientOfTheComputeLineBezierOfApprox(OCP.math.math_BFGS):
     """
     None
     """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints on the stream o information on the current state of the object. Is used to redefine the operator <<.
         """
@@ -405,7 +406,7 @@ class BRepApprox_Gradient_BFGSOfMyGradientOfTheComputeLineBezierOfApprox(OCP.mat
         None
         """
     @overload
-    def Location(self) -> OCP.math.math_Vector: 
+    def Location(self,Loc : OCP.math.math_Vector) -> None: 
         """
         outputs the location vector of the minimum in Loc. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
 
@@ -416,7 +417,7 @@ class BRepApprox_Gradient_BFGSOfMyGradientOfTheComputeLineBezierOfApprox(OCP.mat
         returns the location vector of the minimum. Exception NotDone is raised if the minimum was not found.
         """
     @overload
-    def Location(self,Loc : OCP.math.math_Vector) -> None: ...
+    def Location(self) -> OCP.math.math_Vector: ...
     def Minimum(self) -> float: 
         """
         returns the value of the minimum. Exception NotDone is raised if the minimum was not found.
@@ -443,7 +444,7 @@ class BRepApprox_Gradient_BFGSOfMyGradientbisOfTheComputeLineOfApprox(OCP.math.m
     """
     None
     """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints on the stream o information on the current state of the object. Is used to redefine the operator <<.
         """
@@ -471,7 +472,7 @@ class BRepApprox_Gradient_BFGSOfMyGradientbisOfTheComputeLineOfApprox(OCP.math.m
         None
         """
     @overload
-    def Location(self) -> OCP.math.math_Vector: 
+    def Location(self,Loc : OCP.math.math_Vector) -> None: 
         """
         outputs the location vector of the minimum in Loc. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
 
@@ -482,7 +483,7 @@ class BRepApprox_Gradient_BFGSOfMyGradientbisOfTheComputeLineOfApprox(OCP.math.m
         returns the location vector of the minimum. Exception NotDone is raised if the minimum was not found.
         """
     @overload
-    def Location(self,Loc : OCP.math.math_Vector) -> None: ...
+    def Location(self) -> OCP.math.math_Vector: ...
     def Minimum(self) -> float: 
         """
         returns the value of the minimum. Exception NotDone is raised if the minimum was not found.
@@ -534,9 +535,9 @@ class BRepApprox_MyBSplGradientOfTheComputeLineOfApprox():
         returns all the BSpline curves approximating the MultiLine SSP after minimization of the parameter.
         """
     @overload
-    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,FirstPoint : int,LastPoint : int,TheConstraints : OCP.AppParCurves.AppParCurves_HArray1OfConstraintCouple,Parameters : OCP.math.math_Vector,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Deg : int,Tol3d : float,Tol2d : float,NbIterations : int,lambda1 : float,lambda2 : float) -> None: ...
-    @overload
     def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,FirstPoint : int,LastPoint : int,TheConstraints : OCP.AppParCurves.AppParCurves_HArray1OfConstraintCouple,Parameters : OCP.math.math_Vector,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Deg : int,Tol3d : float,Tol2d : float,NbIterations : int=1) -> None: ...
+    @overload
+    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,FirstPoint : int,LastPoint : int,TheConstraints : OCP.AppParCurves.AppParCurves_HArray1OfConstraintCouple,Parameters : OCP.math.math_Vector,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Deg : int,Tol3d : float,Tol2d : float,NbIterations : int,lambda1 : float,lambda2 : float) -> None: ...
     pass
 class BRepApprox_MyGradientOfTheComputeLineBezierOfApprox():
     """
@@ -766,11 +767,11 @@ class BRepApprox_ParLeastSquareOfMyGradientOfTheComputeLineBezierOfApprox():
         Is used after having initialized the fields. <V1t> is the tangent vector at the first point. <V2t> is the tangent vector at the last point. <V1c> is the tangent vector at the first point. <V2c> is the tangent vector at the last point.
         """
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
+    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     @overload
     def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
+    def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
     def Points(self) -> OCP.math.math_Matrix: 
         """
         returns the matrix of points value.
@@ -780,13 +781,13 @@ class BRepApprox_ParLeastSquareOfMyGradientOfTheComputeLineBezierOfApprox():
         returns the matrix of resulting control points value.
         """
     @overload
-    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
+    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
-    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
     def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     @overload
-    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
+    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     pass
 class BRepApprox_ParLeastSquareOfMyGradientbisOfTheComputeLineOfApprox():
     """
@@ -837,7 +838,7 @@ class BRepApprox_ParLeastSquareOfMyGradientbisOfTheComputeLineOfApprox():
         returns the value (PN - PN-1)/ VN if the last point was a tangency point.
         """
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: 
+    def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: 
         """
         Is used after having initialized the fields. The case "CurvaturePoint" is not treated in this method.
 
@@ -852,7 +853,7 @@ class BRepApprox_ParLeastSquareOfMyGradientbisOfTheComputeLineOfApprox():
     @overload
     def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
+    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     def Points(self) -> OCP.math.math_Matrix: 
         """
         returns the matrix of points value.
@@ -862,13 +863,13 @@ class BRepApprox_ParLeastSquareOfMyGradientbisOfTheComputeLineOfApprox():
         returns the matrix of resulting control points value.
         """
     @overload
-    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
-    @overload
     def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
-    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
-    @overload
     def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    @overload
+    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    @overload
+    def __init__(self,SSP : BRepApprox_TheMultiLineOfApprox,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     pass
 class BRepApprox_ResConstraintOfMyGradientOfTheComputeLineBezierOfApprox():
     """
@@ -1033,7 +1034,7 @@ class BRepApprox_SurfaceTool():
         """
     @staticmethod
     @overload
-    def NbSamplesU_s(S : OCP.BRepAdaptor.BRepAdaptor_Surface) -> int: 
+    def NbSamplesU_s(S : OCP.BRepAdaptor.BRepAdaptor_Surface,u1 : float,u2 : float) -> int: 
         """
         None
 
@@ -1041,7 +1042,7 @@ class BRepApprox_SurfaceTool():
         """
     @staticmethod
     @overload
-    def NbSamplesU_s(S : OCP.BRepAdaptor.BRepAdaptor_Surface,u1 : float,u2 : float) -> int: ...
+    def NbSamplesU_s(S : OCP.BRepAdaptor.BRepAdaptor_Surface) -> int: ...
     @staticmethod
     @overload
     def NbSamplesV_s(S : OCP.BRepAdaptor.BRepAdaptor_Surface,v1 : float,v2 : float) -> int: 
@@ -1188,11 +1189,11 @@ class BRepApprox_TheComputeLineBezierOfApprox():
     @overload
     def __init__(self,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
     @overload
-    def __init__(self,Line : BRepApprox_TheMultiLineOfApprox,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
-    @overload
     def __init__(self,Line : BRepApprox_TheMultiLineOfApprox,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
     @overload
     def __init__(self,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
+    @overload
+    def __init__(self,Line : BRepApprox_TheMultiLineOfApprox,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
     pass
 class BRepApprox_TheComputeLineOfApprox():
     """
@@ -1267,13 +1268,13 @@ class BRepApprox_TheComputeLineOfApprox():
         returns the result of the approximation.
         """
     @overload
-    def __init__(self,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
-    @overload
-    def __init__(self,Line : BRepApprox_TheMultiLineOfApprox,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
+    def __init__(self,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
     @overload
     def __init__(self,Line : BRepApprox_TheMultiLineOfApprox,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
     @overload
-    def __init__(self,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
+    def __init__(self,Line : BRepApprox_TheMultiLineOfApprox,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
+    @overload
+    def __init__(self,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
     pass
 class BRepApprox_TheFunctionOfTheInt2SOfThePrmPrmSvSurfacesOfApprox(OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1374,9 +1375,9 @@ class BRepApprox_TheImpPrmSvSurfacesOfApprox():
         None
         """
     @overload
-    def __init__(self,Surf1 : OCP.BRepAdaptor.BRepAdaptor_Surface,Surf2 : OCP.IntSurf.IntSurf_Quadric) -> None: ...
-    @overload
     def __init__(self,Surf1 : OCP.IntSurf.IntSurf_Quadric,Surf2 : OCP.BRepAdaptor.BRepAdaptor_Surface) -> None: ...
+    @overload
+    def __init__(self,Surf1 : OCP.BRepAdaptor.BRepAdaptor_Surface,Surf2 : OCP.IntSurf.IntSurf_Quadric) -> None: ...
     pass
 class BRepApprox_TheInt2SOfThePrmPrmSvSurfacesOfApprox():
     """
@@ -1415,14 +1416,14 @@ class BRepApprox_TheInt2SOfThePrmPrmSvSurfacesOfApprox():
         Returns True if the surfaces are tangent at the intersection point.
         """
     @overload
-    def Perform(self,Param : OCP.TColStd.TColStd_Array1OfReal,Rsnld : OCP.math.math_FunctionSetRoot) -> OCP.IntImp.IntImp_ConstIsoparametric: 
+    def Perform(self,Param : OCP.TColStd.TColStd_Array1OfReal,Rsnld : OCP.math.math_FunctionSetRoot,ChoixIso : OCP.IntImp.IntImp_ConstIsoparametric) -> OCP.IntImp.IntImp_ConstIsoparametric: 
         """
         returns the best constant isoparametric to find the next intersection's point +stores the solution point (the solution point is found with the close point to intersect the isoparametric with the other patch; the choice of the isoparametic is calculated)
 
         returns the best constant isoparametric to find the next intersection's point +stores the solution point (the solution point is found with the close point to intersect the isoparametric with the other patch; the choice of the isoparametic is given by ChoixIso)
         """
     @overload
-    def Perform(self,Param : OCP.TColStd.TColStd_Array1OfReal,Rsnld : OCP.math.math_FunctionSetRoot,ChoixIso : OCP.IntImp.IntImp_ConstIsoparametric) -> OCP.IntImp.IntImp_ConstIsoparametric: ...
+    def Perform(self,Param : OCP.TColStd.TColStd_Array1OfReal,Rsnld : OCP.math.math_FunctionSetRoot) -> OCP.IntImp.IntImp_ConstIsoparametric: ...
     def Point(self) -> OCP.IntSurf.IntSurf_PntOn2S: 
         """
         Returns the intersection point.
@@ -1465,7 +1466,7 @@ class BRepApprox_TheMultiLineOfApprox():
         Returns the number of 3d points of a TheLine.
         """
     @overload
-    def Tangency(self,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
+    def Tangency(self,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: 
         """
         Returns the 3d tangency points of the multipoint <MPointIndex> only when 3d points exist.
 
@@ -1476,7 +1477,7 @@ class BRepApprox_TheMultiLineOfApprox():
     @overload
     def Tangency(self,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
     @overload
-    def Tangency(self,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: ...
+    def Tangency(self,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
     @overload
     def Value(self,MPointIndex : int,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
         """
@@ -1487,19 +1488,19 @@ class BRepApprox_TheMultiLineOfApprox():
         Returns the 3d and 2d points of the multipoint <MPointIndex>.
         """
     @overload
-    def Value(self,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
-    @overload
     def Value(self,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    @overload
+    def Value(self,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     def WhatStatus(self) -> OCP.Approx.Approx_Status: 
         """
         None
         """
     @overload
+    def __init__(self,line : BRepApprox_ApproxLine,PtrSvSurfaces : capsule,NbP3d : int,NbP2d : int,ApproxU1V1 : bool,ApproxU2V2 : bool,xo : float,yo : float,zo : float,u1o : float,v1o : float,u2o : float,v2o : float,P2DOnFirst : bool,IndMin : int=0,IndMax : int=0) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,line : BRepApprox_ApproxLine,NbP3d : int,NbP2d : int,ApproxU1V1 : bool,ApproxU2V2 : bool,xo : float,yo : float,zo : float,u1o : float,v1o : float,u2o : float,v2o : float,P2DOnFirst : bool,IndMin : int=0,IndMax : int=0) -> None: ...
-    @overload
-    def __init__(self,line : BRepApprox_ApproxLine,PtrSvSurfaces : capsule,NbP3d : int,NbP2d : int,ApproxU1V1 : bool,ApproxU2V2 : bool,xo : float,yo : float,zo : float,u1o : float,v1o : float,u2o : float,v2o : float,P2DOnFirst : bool,IndMin : int=0,IndMax : int=0) -> None: ...
     pass
 class BRepApprox_TheMultiLineToolOfApprox():
     """
@@ -1517,10 +1518,10 @@ class BRepApprox_TheMultiLineToolOfApprox():
         """
     @staticmethod
     @overload
-    def Curvature_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: ...
+    def Curvature_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
     @staticmethod
     @overload
-    def Curvature_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
+    def Curvature_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: ...
     @staticmethod
     def Dump_s(ML : BRepApprox_TheMultiLineOfApprox) -> None: 
         """
@@ -1558,7 +1559,7 @@ class BRepApprox_TheMultiLineToolOfApprox():
         """
     @staticmethod
     @overload
-    def Tangency_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
+    def Tangency_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
         returns the 3d points of the multipoint <MPointIndex> when only 3d points exist.
 
@@ -1568,13 +1569,13 @@ class BRepApprox_TheMultiLineToolOfApprox():
         """
     @staticmethod
     @overload
+    def Tangency_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
+    @staticmethod
+    @overload
     def Tangency_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: ...
     @staticmethod
     @overload
-    def Tangency_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
-    @staticmethod
-    @overload
-    def Value_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
+    def Value_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
         """
         returns the 3d points of the multipoint <MPointIndex> when only 3d points exist.
 
@@ -1584,10 +1585,10 @@ class BRepApprox_TheMultiLineToolOfApprox():
         """
     @staticmethod
     @overload
-    def Value_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def Value_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @staticmethod
     @overload
-    def Value_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    def Value_s(ML : BRepApprox_TheMultiLineOfApprox,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @staticmethod
     def WhatStatus_s(ML : BRepApprox_TheMultiLineOfApprox,I1 : int,I2 : int) -> OCP.Approx.Approx_Status: 
         """
@@ -1674,14 +1675,14 @@ class BRepApprox_TheZerImpFuncOfTheImpPrmSvSurfacesOfApprox(OCP.math.math_Functi
         None
         """
     @overload
-    def Set(self,Tolerance : float) -> None: 
+    def Set(self,PS : OCP.BRepAdaptor.BRepAdaptor_Surface) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Set(self,PS : OCP.BRepAdaptor.BRepAdaptor_Surface) -> None: ...
+    def Set(self,Tolerance : float) -> None: ...
     def SetImplicitSurface(self,IS : OCP.IntSurf.IntSurf_Quadric) -> None: 
         """
         None
@@ -1699,9 +1700,9 @@ class BRepApprox_TheZerImpFuncOfTheImpPrmSvSurfacesOfApprox(OCP.math.math_Functi
         None
         """
     @overload
+    def __init__(self,PS : OCP.BRepAdaptor.BRepAdaptor_Surface,IS : OCP.IntSurf.IntSurf_Quadric) -> None: ...
+    @overload
     def __init__(self,IS : OCP.IntSurf.IntSurf_Quadric) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,PS : OCP.BRepAdaptor.BRepAdaptor_Surface,IS : OCP.IntSurf.IntSurf_Quadric) -> None: ...
     pass

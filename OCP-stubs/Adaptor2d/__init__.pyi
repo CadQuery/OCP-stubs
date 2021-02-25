@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
 import OCP.TColStd
+import OCP.gp
+import OCP.GeomAbs
 import OCP.Geom2d
 import OCP.Standard
-import OCP.gp
 __all__  = [
 "Adaptor2d_Curve2d",
 "Adaptor2d_HCurve2d",
@@ -592,9 +592,9 @@ class Adaptor2d_HLine2d(Adaptor2d_HCurve2d, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : Adaptor2d_Line2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -830,9 +830,9 @@ class Adaptor2d_HOffsetCurve(Adaptor2d_HCurve2d, OCP.Standard.Standard_Transient
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : Adaptor2d_OffsetCurve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -974,9 +974,9 @@ class Adaptor2d_Line2d(Adaptor2d_Curve2d):
         None
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,D : OCP.gp.gp_Dir2d,UFirst : float,ULast : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,D : OCP.gp.gp_Dir2d,UFirst : float,ULast : float) -> None: ...
     pass
 class Adaptor2d_OffsetCurve(Adaptor2d_Curve2d):
     """
@@ -1073,7 +1073,7 @@ class Adaptor2d_OffsetCurve(Adaptor2d_Curve2d):
         None
         """
     @overload
-    def Load(self,Offset : float) -> None: 
+    def Load(self,Offset : float,WFirst : float,WLast : float) -> None: 
         """
         Changes the curve. The Offset is reset to 0.
 
@@ -1082,7 +1082,7 @@ class Adaptor2d_OffsetCurve(Adaptor2d_Curve2d):
         Changes the Offset Curve on the current Curve.
         """
     @overload
-    def Load(self,Offset : float,WFirst : float,WLast : float) -> None: ...
+    def Load(self,Offset : float) -> None: ...
     @overload
     def Load(self,S : Adaptor2d_HCurve2d) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
@@ -1130,9 +1130,9 @@ class Adaptor2d_OffsetCurve(Adaptor2d_Curve2d):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,C : Adaptor2d_HCurve2d) -> None: ...
-    @overload
     def __init__(self,C : Adaptor2d_HCurve2d,Offset : float) -> None: ...
+    @overload
+    def __init__(self,C : Adaptor2d_HCurve2d) -> None: ...
     @overload
     def __init__(self,C : Adaptor2d_HCurve2d,Offset : float,WFirst : float,WLast : float) -> None: ...
     pass

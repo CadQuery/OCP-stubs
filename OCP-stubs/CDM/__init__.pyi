@@ -4,12 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Resource
-import OCP.TCollection
 import OCP.TColStd
-import OCP.Message
-import OCP.Standard
+import OCP.TCollection
+import io
 import OCP.NCollection
+import OCP.Message
+import OCP.Resource
+import OCP.Standard
 __all__  = [
 "CDM_Application",
 "CDM_CanCloseStatus",
@@ -39,6 +40,10 @@ class CDM_Application(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -77,6 +82,10 @@ class CDM_Application(OCP.Standard.Standard_Transient):
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns default messenger;
+        """
+    def MetaDataLookUpTable(self) -> Any: 
+        """
+        Returns MetaData LookUpTable
         """
     def Name(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
@@ -125,23 +134,31 @@ class CDM_CanCloseStatus():
 
       CDM_CCS_ReferenceRejection
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    CDM_CCS_ModifiedReferenced: OCP.CDM.CDM_CanCloseStatus # value = CDM_CanCloseStatus.CDM_CCS_ModifiedReferenced
-    CDM_CCS_NotOpen: OCP.CDM.CDM_CanCloseStatus # value = CDM_CanCloseStatus.CDM_CCS_NotOpen
-    CDM_CCS_OK: OCP.CDM.CDM_CanCloseStatus # value = CDM_CanCloseStatus.CDM_CCS_OK
-    CDM_CCS_ReferenceRejection: OCP.CDM.CDM_CanCloseStatus # value = CDM_CanCloseStatus.CDM_CCS_ReferenceRejection
-    CDM_CCS_UnstoredReferenced: OCP.CDM.CDM_CanCloseStatus # value = CDM_CanCloseStatus.CDM_CCS_UnstoredReferenced
-    __entries: dict # value = {'CDM_CCS_OK': (CDM_CanCloseStatus.CDM_CCS_OK, None), 'CDM_CCS_NotOpen': (CDM_CanCloseStatus.CDM_CCS_NotOpen, None), 'CDM_CCS_UnstoredReferenced': (CDM_CanCloseStatus.CDM_CCS_UnstoredReferenced, None), 'CDM_CCS_ModifiedReferenced': (CDM_CanCloseStatus.CDM_CCS_ModifiedReferenced, None), 'CDM_CCS_ReferenceRejection': (CDM_CanCloseStatus.CDM_CCS_ReferenceRejection, None)}
-    __members__: dict # value = {'CDM_CCS_OK': CDM_CanCloseStatus.CDM_CCS_OK, 'CDM_CCS_NotOpen': CDM_CanCloseStatus.CDM_CCS_NotOpen, 'CDM_CCS_UnstoredReferenced': CDM_CanCloseStatus.CDM_CCS_UnstoredReferenced, 'CDM_CCS_ModifiedReferenced': CDM_CanCloseStatus.CDM_CCS_ModifiedReferenced, 'CDM_CCS_ReferenceRejection': CDM_CanCloseStatus.CDM_CCS_ReferenceRejection}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    CDM_CCS_ModifiedReferenced: OCP.CDM.CDM_CanCloseStatus # value = <CDM_CanCloseStatus.CDM_CCS_ModifiedReferenced: 3>
+    CDM_CCS_NotOpen: OCP.CDM.CDM_CanCloseStatus # value = <CDM_CanCloseStatus.CDM_CCS_NotOpen: 1>
+    CDM_CCS_OK: OCP.CDM.CDM_CanCloseStatus # value = <CDM_CanCloseStatus.CDM_CCS_OK: 0>
+    CDM_CCS_ReferenceRejection: OCP.CDM.CDM_CanCloseStatus # value = <CDM_CanCloseStatus.CDM_CCS_ReferenceRejection: 4>
+    CDM_CCS_UnstoredReferenced: OCP.CDM.CDM_CanCloseStatus # value = <CDM_CanCloseStatus.CDM_CCS_UnstoredReferenced: 2>
+    __entries: dict # value = {'CDM_CCS_OK': (<CDM_CanCloseStatus.CDM_CCS_OK: 0>, None), 'CDM_CCS_NotOpen': (<CDM_CanCloseStatus.CDM_CCS_NotOpen: 1>, None), 'CDM_CCS_UnstoredReferenced': (<CDM_CanCloseStatus.CDM_CCS_UnstoredReferenced: 2>, None), 'CDM_CCS_ModifiedReferenced': (<CDM_CanCloseStatus.CDM_CCS_ModifiedReferenced: 3>, None), 'CDM_CCS_ReferenceRejection': (<CDM_CanCloseStatus.CDM_CCS_ReferenceRejection: 4>, None)}
+    __members__: dict # value = {'CDM_CCS_OK': <CDM_CanCloseStatus.CDM_CCS_OK: 0>, 'CDM_CCS_NotOpen': <CDM_CanCloseStatus.CDM_CCS_NotOpen: 1>, 'CDM_CCS_UnstoredReferenced': <CDM_CanCloseStatus.CDM_CCS_UnstoredReferenced: 2>, 'CDM_CCS_ModifiedReferenced': <CDM_CanCloseStatus.CDM_CCS_ModifiedReferenced: 3>, 'CDM_CCS_ReferenceRejection': <CDM_CanCloseStatus.CDM_CCS_ReferenceRejection: 4>}
     pass
 class CDM_Document(OCP.Standard.Standard_Transient):
     """
@@ -161,7 +178,7 @@ class CDM_Document(OCP.Standard.Standard_Transient):
         """
     def CanCloseReference(self,aDocument : CDM_Document,aReferenceIdentifier : int) -> bool: 
         """
-        A referenced document may indicate through this virtual method that it does not allow the closing of aDocument which it references through the reference aReferenceIdentifier. By default returns Standard_True;;
+        A referenced document may indicate through this virtual method that it does not allow the closing of aDocument which it references through the reference aReferenceIdentifier. By default returns Standard_True.
         """
     def ChangeStorageFormatVersion(self,theVersion : int) -> None: 
         """
@@ -188,7 +205,7 @@ class CDM_Document(OCP.Standard.Standard_Transient):
         Copies a reference to this document. This method avoid retrieval of referenced document. The arguments are the original document and a valid reference identifier Returns the local identifier.
         """
     @overload
-    def CreateReference(self,aMetaData : CDM_MetaData,anApplication : CDM_Application,aDocumentVersion : int,UseStorageConfiguration : bool) -> int: 
+    def CreateReference(self,aMetaData : CDM_MetaData,aReferenceIdentifier : int,anApplication : CDM_Application,aToDocumentVersion : int,UseStorageConfiguration : bool) -> None: 
         """
         Creates a reference from this document to {anOtherDocument}. Returns a reference identifier. This reference identifier is unique in the document and will not be used for the next references, even after the storing of the document. If there is already a reference between the two documents, the reference is not created, but its reference identifier is returned.
 
@@ -197,9 +214,9 @@ class CDM_Document(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def CreateReference(self,anOtherDocument : CDM_Document) -> int: ...
+    def CreateReference(self,aMetaData : CDM_MetaData,anApplication : CDM_Application,aDocumentVersion : int,UseStorageConfiguration : bool) -> int: ...
     @overload
-    def CreateReference(self,aMetaData : CDM_MetaData,aReferenceIdentifier : int,anApplication : CDM_Application,aToDocumentVersion : int,UseStorageConfiguration : bool) -> None: ...
+    def CreateReference(self,anOtherDocument : CDM_Document) -> int: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -220,6 +237,10 @@ class CDM_Document(OCP.Standard.Standard_Transient):
         """
         Returns the To Document of the reference identified by aReferenceIdentifier. If the ToDocument is stored and has not yet been retrieved, this method will retrieve it.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -239,16 +260,6 @@ class CDM_Document(OCP.Standard.Standard_Transient):
     def FindFileExtension(self) -> bool: 
         """
         None
-        """
-    @staticmethod
-    def FindFromPresentation_s(aPresentation : OCP.TCollection.TCollection_ExtendedString) -> CDM_Document: 
-        """
-        returns the document having the given alphanumeric presentation.
-        """
-    @staticmethod
-    def FindPresentation_s(aPresentation : OCP.TCollection.TCollection_ExtendedString) -> bool: 
-        """
-        indicates whether a document having the given presentation does exist.
         """
     def Folder(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
@@ -314,14 +325,14 @@ class CDM_Document(OCP.Standard.Standard_Transient):
     @overload
     def IsOpened(self,aReferenceIdentifier : int) -> bool: ...
     @overload
-    def IsReadOnly(self) -> bool: 
+    def IsReadOnly(self,aReferenceIdentifier : int) -> bool: 
         """
         indicates that this document cannot be modified.
 
         indicates that the referenced document cannot be modified,
         """
     @overload
-    def IsReadOnly(self,aReferenceIdentifier : int) -> bool: ...
+    def IsReadOnly(self) -> bool: ...
     @overload
     def IsStored(self) -> bool: 
         """
@@ -356,11 +367,7 @@ class CDM_Document(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Presentation(self) -> str: 
-        """
-        Returns an alphanumeric string identifying this document in a unique manner in the current process. The presentation may change when the document is stored. Tries to get the 'FileFormat`.Presentation resource This item is used to give a default presentation to the document.
-        """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -481,7 +488,7 @@ class CDM_Document(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Update(self,aToDocument : CDM_Document,aReferenceIdentifier : int,aModifContext : capsule) -> None: 
+    def Update(self,ErrorString : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         The Update method will be called once for each reference, but it should not perform any computation, to avoid multiple computation of a same document.
 
@@ -490,7 +497,7 @@ class CDM_Document(OCP.Standard.Standard_Transient):
         the following method should be used instead:
         """
     @overload
-    def Update(self,ErrorString : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def Update(self,aToDocument : CDM_Document,aReferenceIdentifier : int,aModifContext : capsule) -> None: ...
     @overload
     def Update(self) -> None: ...
     def UpdateFromDocuments(self,aModifContext : capsule) -> None: 
@@ -532,7 +539,7 @@ class CDM_ListOfDocument(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : CDM_Document) -> CDM_Document: 
+    def Append(self,theOther : CDM_ListOfDocument) -> None: 
         """
         Append one item at the end
 
@@ -541,7 +548,7 @@ class CDM_ListOfDocument(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : CDM_ListOfDocument) -> None: ...
+    def Append(self,theItem : CDM_Document) -> CDM_Document: ...
     @overload
     def Append(self,theItem : CDM_Document,theIter : Any) -> None: ...
     def Assign(self,theOther : CDM_ListOfDocument) -> CDM_ListOfDocument: 
@@ -572,14 +579,14 @@ class CDM_ListOfDocument(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theOther : CDM_ListOfDocument,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theOther : CDM_ListOfDocument,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : CDM_Document,theIter : Any) -> CDM_Document: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : CDM_Document,theIter : Any) -> CDM_Document: ...
+    def InsertBefore(self,theOther : CDM_ListOfDocument,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -591,14 +598,14 @@ class CDM_ListOfDocument(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : CDM_Document) -> CDM_Document: 
+    def Prepend(self,theOther : CDM_ListOfDocument) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : CDM_ListOfDocument) -> None: ...
+    def Prepend(self,theItem : CDM_Document) -> CDM_Document: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -616,12 +623,12 @@ class CDM_ListOfDocument(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : CDM_ListOfDocument) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class CDM_ListOfReferences(OCP.NCollection.NCollection_BaseList):
     """
@@ -632,7 +639,7 @@ class CDM_ListOfReferences(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : CDM_ListOfReferences) -> None: 
+    def Append(self,theItem : CDM_Reference,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -641,9 +648,9 @@ class CDM_ListOfReferences(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : CDM_Reference,theIter : Any) -> None: ...
-    @overload
     def Append(self,theItem : CDM_Reference) -> CDM_Reference: ...
+    @overload
+    def Append(self,theOther : CDM_ListOfReferences) -> None: ...
     def Assign(self,theOther : CDM_ListOfReferences) -> CDM_ListOfReferences: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -663,14 +670,14 @@ class CDM_ListOfReferences(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : CDM_ListOfReferences,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : CDM_Reference,theIter : Any) -> CDM_Reference: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : CDM_Reference,theIter : Any) -> CDM_Reference: ...
+    def InsertAfter(self,theOther : CDM_ListOfReferences,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theItem : CDM_Reference,theIter : Any) -> CDM_Reference: 
         """
@@ -691,14 +698,14 @@ class CDM_ListOfReferences(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : CDM_Reference) -> CDM_Reference: 
+    def Prepend(self,theOther : CDM_ListOfReferences) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : CDM_ListOfReferences) -> None: ...
+    def Prepend(self,theItem : CDM_Reference) -> CDM_Reference: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -716,12 +723,12 @@ class CDM_ListOfReferences(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : CDM_ListOfReferences) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class CDM_MapOfDocument(OCP.NCollection.NCollection_BaseMap):
     """
@@ -744,23 +751,23 @@ class CDM_MapOfDocument(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def Contains(self,K : CDM_Document) -> bool: 
+    def Contains(self,theOther : CDM_MapOfDocument) -> bool: 
         """
         Contains
 
         Returns true if this map contains ALL keys of another map.
         """
     @overload
-    def Contains(self,theOther : CDM_MapOfDocument) -> bool: ...
+    def Contains(self,K : CDM_Document) -> bool: ...
     def Differ(self,theOther : CDM_MapOfDocument) -> bool: 
         """
         Apply to this Map the symmetric difference (aka exclusive disjunction, boolean XOR) operation with another (given) Map. The result contains the values that are contained only in this or the operand map, but not in both. This algorithm is similar to method Difference(). Returns True if contents of this map is changed.
@@ -813,7 +820,7 @@ class CDM_MapOfDocument(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -834,11 +841,11 @@ class CDM_MapOfDocument(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : CDM_MapOfDocument) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class CDM_MetaData(OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -852,6 +859,10 @@ class CDM_MetaData(OCP.Standard.Standard_Transient):
     def Document(self) -> CDM_Document: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -905,7 +916,7 @@ class CDM_MetaData(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def LookUp_s(aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aPath : OCP.TCollection.TCollection_ExtendedString,aFileName : OCP.TCollection.TCollection_ExtendedString,ReadOnly : bool) -> CDM_MetaData: 
+    def LookUp_s(theLookUpTable : Any,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aPath : OCP.TCollection.TCollection_ExtendedString,aFileName : OCP.TCollection.TCollection_ExtendedString,ReadOnly : bool) -> CDM_MetaData: 
         """
         None
 
@@ -913,7 +924,7 @@ class CDM_MetaData(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def LookUp_s(aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aPath : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,aFileName : OCP.TCollection.TCollection_ExtendedString,ReadOnly : bool) -> CDM_MetaData: ...
+    def LookUp_s(theLookUpTable : Any,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aPath : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,aFileName : OCP.TCollection.TCollection_ExtendedString,ReadOnly : bool) -> CDM_MetaData: ...
     def Name(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         returns the name under which the meta-data has to be created or has to be found.
@@ -922,7 +933,7 @@ class CDM_MetaData(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -969,6 +980,10 @@ class CDM_Reference(OCP.Standard.Standard_Transient):
     def DocumentVersion(self) -> int: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1057,8 +1072,8 @@ class CDM_ReferenceIterator():
         """
     def __init__(self,aDocument : CDM_Document) -> None: ...
     pass
-CDM_CCS_ModifiedReferenced: OCP.CDM.CDM_CanCloseStatus # value = CDM_CanCloseStatus.CDM_CCS_ModifiedReferenced
-CDM_CCS_NotOpen: OCP.CDM.CDM_CanCloseStatus # value = CDM_CanCloseStatus.CDM_CCS_NotOpen
-CDM_CCS_OK: OCP.CDM.CDM_CanCloseStatus # value = CDM_CanCloseStatus.CDM_CCS_OK
-CDM_CCS_ReferenceRejection: OCP.CDM.CDM_CanCloseStatus # value = CDM_CanCloseStatus.CDM_CCS_ReferenceRejection
-CDM_CCS_UnstoredReferenced: OCP.CDM.CDM_CanCloseStatus # value = CDM_CanCloseStatus.CDM_CCS_UnstoredReferenced
+CDM_CCS_ModifiedReferenced: OCP.CDM.CDM_CanCloseStatus # value = <CDM_CanCloseStatus.CDM_CCS_ModifiedReferenced: 3>
+CDM_CCS_NotOpen: OCP.CDM.CDM_CanCloseStatus # value = <CDM_CanCloseStatus.CDM_CCS_NotOpen: 1>
+CDM_CCS_OK: OCP.CDM.CDM_CanCloseStatus # value = <CDM_CanCloseStatus.CDM_CCS_OK: 0>
+CDM_CCS_ReferenceRejection: OCP.CDM.CDM_CanCloseStatus # value = <CDM_CanCloseStatus.CDM_CCS_ReferenceRejection: 4>
+CDM_CCS_UnstoredReferenced: OCP.CDM.CDM_CanCloseStatus # value = <CDM_CanCloseStatus.CDM_CCS_UnstoredReferenced: 2>

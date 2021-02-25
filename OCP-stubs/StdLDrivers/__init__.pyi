@@ -4,14 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.PCDM
-import OCP.Message
-import OCP.Storage
-import OCP.StdObjMgt
-import OCP.Standard
 import OCP.TDocStd
+import OCP.TCollection
+import OCP.StdObjMgt
+import io
+import OCP.Message
+import OCP.PCDM
 import OCP.CDM
+import OCP.Storage
+import OCP.Standard
 __all__  = [
 "StdLDrivers",
 "StdLDrivers_DocumentRetrievalDriver"
@@ -99,14 +100,14 @@ class StdLDrivers_DocumentRetrievalDriver(OCP.PCDM.PCDM_RetrievalDriver, OCP.PCD
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: 
+    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Retrieve the content of a file into a new document.
 
         Override pure virtual method (raises exception Standard_NotImplemented)
         """
     @overload
-    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: ...
+    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @staticmethod
     def ReferenceCounter_s(theFileName : OCP.TCollection.TCollection_ExtendedString,theMsgDriver : OCP.Message.Message_Messenger) -> int: 
         """

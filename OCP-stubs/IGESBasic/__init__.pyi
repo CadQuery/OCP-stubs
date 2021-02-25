@@ -6,12 +6,12 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
 import OCP.TCollection
+import io
 import OCP.IGESData
-import OCP.Message
-import OCP.TColgp
-import OCP.Standard
-import OCP.Interface
 import OCP.gp
+import OCP.TColgp
+import OCP.Interface
+import OCP.Standard
 __all__  = [
 "IGESBasic",
 "IGESBasic_Array1OfLineFontEntity",
@@ -153,14 +153,14 @@ class IGESBasic_Array1OfLineFontEntity():
         Constant value access
         """
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.IGESData.IGESData_LineFontEntity,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : IGESBasic_Array1OfLineFontEntity) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESBasic_Array2OfHArray1OfReal():
     """
@@ -233,9 +233,9 @@ class IGESBasic_Array2OfHArray1OfReal():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.TColStd.TColStd_HArray1OfReal,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : IGESBasic_Array2OfHArray1OfReal) -> None: ...
+    @overload
+    def __init__(self,theBegin : OCP.TColStd.TColStd_HArray1OfReal,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
@@ -3049,9 +3049,9 @@ class IGESBasic_Group(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Standard_Tr
         Returns the view of this IGES entity as a list. Warning A null handle is returned if the definition status does not have the value DefSeveral.
         """
     @overload
-    def __init__(self,nb : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,nb : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3926,12 +3926,12 @@ class IGESBasic_HArray1OfLineFontEntity(IGESBasic_Array1OfLineFontEntity, OCP.St
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : IGESBasic_Array1OfLineFontEntity) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.IGESData.IGESData_LineFontEntity) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.IGESData.IGESData_LineFontEntity) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : IGESBasic_Array1OfLineFontEntity) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6410,7 +6410,7 @@ class IGESBasic_SpecificModule(OCP.IGESData.IGESData_SpecificModule, OCP.Standar
         """
         Performs non-ambiguous Corrections on Entities which support them (AssocGroupType,Hierarchy,Name,SingleParent)
         """
-    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Specific Dump (own parameters) for IGESBasic
         """
@@ -6792,7 +6792,7 @@ class IGESBasic_ToolAssocGroupType():
         """
         Sets automatic unambiguous Correction on a AssocGroupType (NbData forced to 2)
         """
-    def OwnDump(self,ent : IGESBasic_AssocGroupType,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_AssocGroupType,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -6826,7 +6826,7 @@ class IGESBasic_ToolExternalRefFile():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESBasic_ExternalRefFile,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_ExternalRefFile,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -6860,7 +6860,7 @@ class IGESBasic_ToolExternalRefFileIndex():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESBasic_ExternalRefFileIndex,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_ExternalRefFileIndex,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -6894,7 +6894,7 @@ class IGESBasic_ToolExternalRefFileName():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESBasic_ExternalRefFileName,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_ExternalRefFileName,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -6928,7 +6928,7 @@ class IGESBasic_ToolExternalRefLibName():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESBasic_ExternalRefLibName,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_ExternalRefLibName,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -6962,7 +6962,7 @@ class IGESBasic_ToolExternalRefName():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESBasic_ExternalRefName,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_ExternalRefName,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -6996,7 +6996,7 @@ class IGESBasic_ToolExternalReferenceFile():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESBasic_ExternalReferenceFile,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_ExternalReferenceFile,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7034,7 +7034,7 @@ class IGESBasic_ToolGroup():
         """
         Sets automatic unambiguous Correction on a Group (Null Elements are removed from list)
         """
-    def OwnDump(self,ent : IGESBasic_Group,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_Group,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7072,7 +7072,7 @@ class IGESBasic_ToolGroupWithoutBackP():
         """
         Sets automatic unambiguous Correction on a GroupWithoutBackP (Null Elements are removed from list)
         """
-    def OwnDump(self,ent : IGESBasic_GroupWithoutBackP,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_GroupWithoutBackP,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7110,7 +7110,7 @@ class IGESBasic_ToolHierarchy():
         """
         Sets automatic unambiguous Correction on a Hierarchy (NbPropertyValues forced to 6)
         """
-    def OwnDump(self,ent : IGESBasic_Hierarchy,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_Hierarchy,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7148,7 +7148,7 @@ class IGESBasic_ToolName():
         """
         Sets automatic unambiguous Correction on a Name (NbPropertyValues forced to 1)
         """
-    def OwnDump(self,ent : IGESBasic_Name,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_Name,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7186,7 +7186,7 @@ class IGESBasic_ToolOrderedGroup():
         """
         Sets automatic unambiguous Correction on an OrderedGroup (Null Elements are removed from list)
         """
-    def OwnDump(self,ent : IGESBasic_OrderedGroup,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_OrderedGroup,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7224,7 +7224,7 @@ class IGESBasic_ToolOrderedGroupWithoutBackP():
         """
         Sets automatic unambiguous Correction on an OrderedGroupWithoutBackP (Null Elements are removed from list)
         """
-    def OwnDump(self,ent : IGESBasic_OrderedGroupWithoutBackP,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_OrderedGroupWithoutBackP,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7262,7 +7262,7 @@ class IGESBasic_ToolSingleParent():
         """
         Sets automatic unambiguous Correction on a SingleParent (NbParents forced to 1)
         """
-    def OwnDump(self,ent : IGESBasic_SingleParent,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_SingleParent,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7296,7 +7296,7 @@ class IGESBasic_ToolSingularSubfigure():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESBasic_SingularSubfigure,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_SingularSubfigure,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7330,7 +7330,7 @@ class IGESBasic_ToolSubfigureDef():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESBasic_SubfigureDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESBasic_SubfigureDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """

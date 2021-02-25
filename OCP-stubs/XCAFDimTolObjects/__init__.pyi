@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.TColStd
-import OCP.Standard
-import OCP.TopoDS
 import OCP.TDocStd
+import OCP.TColStd
+import OCP.TCollection
 import OCP.NCollection
 import OCP.gp
+import OCP.TopoDS
+import OCP.Standard
 __all__  = [
 "XCAFDimTolObjects_DatumModifWithValue",
 "XCAFDimTolObjects_DatumModifiersSequence",
@@ -240,23 +240,31 @@ class XCAFDimTolObjects_DatumModifWithValue():
 
       XCAFDimTolObjects_DatumModifWithValue_Spherical
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical
-    XCAFDimTolObjects_DatumModifWithValue_Distance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Distance
-    XCAFDimTolObjects_DatumModifWithValue_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_None
-    XCAFDimTolObjects_DatumModifWithValue_Projected: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Projected
-    XCAFDimTolObjects_DatumModifWithValue_Spherical: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Spherical
-    __entries: dict # value = {'XCAFDimTolObjects_DatumModifWithValue_None': (XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_None, None), 'XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical': (XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical, None), 'XCAFDimTolObjects_DatumModifWithValue_Distance': (XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Distance, None), 'XCAFDimTolObjects_DatumModifWithValue_Projected': (XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Projected, None), 'XCAFDimTolObjects_DatumModifWithValue_Spherical': (XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Spherical, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_DatumModifWithValue_None': XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_None, 'XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical': XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical, 'XCAFDimTolObjects_DatumModifWithValue_Distance': XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Distance, 'XCAFDimTolObjects_DatumModifWithValue_Projected': XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Projected, 'XCAFDimTolObjects_DatumModifWithValue_Spherical': XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Spherical}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical: 1>
+    XCAFDimTolObjects_DatumModifWithValue_Distance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Distance: 2>
+    XCAFDimTolObjects_DatumModifWithValue_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_None: 0>
+    XCAFDimTolObjects_DatumModifWithValue_Projected: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Projected: 3>
+    XCAFDimTolObjects_DatumModifWithValue_Spherical: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Spherical: 4>
+    __entries: dict # value = {'XCAFDimTolObjects_DatumModifWithValue_None': (<XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_None: 0>, None), 'XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical': (<XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical: 1>, None), 'XCAFDimTolObjects_DatumModifWithValue_Distance': (<XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Distance: 2>, None), 'XCAFDimTolObjects_DatumModifWithValue_Projected': (<XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Projected: 3>, None), 'XCAFDimTolObjects_DatumModifWithValue_Spherical': (<XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Spherical: 4>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_DatumModifWithValue_None': <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_None: 0>, 'XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical': <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical: 1>, 'XCAFDimTolObjects_DatumModifWithValue_Distance': <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Distance: 2>, 'XCAFDimTolObjects_DatumModifWithValue_Projected': <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Projected: 3>, 'XCAFDimTolObjects_DatumModifWithValue_Spherical': <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Spherical: 4>}
     pass
 class XCAFDimTolObjects_DatumModifiersSequence(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -267,14 +275,14 @@ class XCAFDimTolObjects_DatumModifiersSequence(OCP.NCollection.NCollection_BaseS
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : XCAFDimTolObjects_DatumSingleModif) -> None: 
+    def Append(self,theSeq : XCAFDimTolObjects_DatumModifiersSequence) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : XCAFDimTolObjects_DatumModifiersSequence) -> None: ...
+    def Append(self,theItem : XCAFDimTolObjects_DatumSingleModif) -> None: ...
     def Assign(self,theOther : XCAFDimTolObjects_DatumModifiersSequence) -> XCAFDimTolObjects_DatumModifiersSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -338,14 +346,14 @@ class XCAFDimTolObjects_DatumModifiersSequence(OCP.NCollection.NCollection_BaseS
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : XCAFDimTolObjects_DatumSingleModif) -> None: 
+    def Prepend(self,theSeq : XCAFDimTolObjects_DatumModifiersSequence) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : XCAFDimTolObjects_DatumModifiersSequence) -> None: ...
+    def Prepend(self,theItem : XCAFDimTolObjects_DatumSingleModif) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -380,12 +388,12 @@ class XCAFDimTolObjects_DatumModifiersSequence(OCP.NCollection.NCollection_BaseS
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : XCAFDimTolObjects_DatumModifiersSequence) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : XCAFDimTolObjects_DatumModifiersSequence) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -592,9 +600,9 @@ class XCAFDimTolObjects_DatumObject(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theObj : XCAFDimTolObjects_DatumObject) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -615,14 +623,14 @@ class XCAFDimTolObjects_DatumObjectSequence(OCP.NCollection.NCollection_BaseSequ
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : XCAFDimTolObjects_DatumObject) -> None: 
+    def Append(self,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: ...
+    def Append(self,theItem : XCAFDimTolObjects_DatumObject) -> None: ...
     def Assign(self,theOther : XCAFDimTolObjects_DatumObjectSequence) -> XCAFDimTolObjects_DatumObjectSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -652,14 +660,14 @@ class XCAFDimTolObjects_DatumObjectSequence(OCP.NCollection.NCollection_BaseSequ
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DatumObject) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DatumObject) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: 
         """
@@ -686,14 +694,14 @@ class XCAFDimTolObjects_DatumObjectSequence(OCP.NCollection.NCollection_BaseSequ
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : XCAFDimTolObjects_DatumObject) -> None: 
+    def Prepend(self,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: ...
+    def Prepend(self,theItem : XCAFDimTolObjects_DatumObject) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -730,10 +738,10 @@ class XCAFDimTolObjects_DatumObjectSequence(OCP.NCollection.NCollection_BaseSequ
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : XCAFDimTolObjects_DatumObjectSequence) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : XCAFDimTolObjects_DatumObjectSequence) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -790,40 +798,48 @@ class XCAFDimTolObjects_DatumSingleModif():
 
       XCAFDimTolObjects_DatumSingleModif_Translation
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_DatumSingleModif_AnyCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_AnyCrossSection
-    XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection
-    XCAFDimTolObjects_DatumSingleModif_Basic: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Basic
-    XCAFDimTolObjects_DatumSingleModif_ContactingFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_ContactingFeature
-    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU
-    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV
-    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW
-    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX
-    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY
-    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ
-    XCAFDimTolObjects_DatumSingleModif_DistanceVariable: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DistanceVariable
-    XCAFDimTolObjects_DatumSingleModif_FreeState: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_FreeState
-    XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement
-    XCAFDimTolObjects_DatumSingleModif_Line: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Line
-    XCAFDimTolObjects_DatumSingleModif_MajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MajorDiameter
-    XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement
-    XCAFDimTolObjects_DatumSingleModif_MinorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MinorDiameter
-    XCAFDimTolObjects_DatumSingleModif_Orientation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Orientation
-    XCAFDimTolObjects_DatumSingleModif_PitchDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_PitchDiameter
-    XCAFDimTolObjects_DatumSingleModif_Plane: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Plane
-    XCAFDimTolObjects_DatumSingleModif_Point: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Point
-    XCAFDimTolObjects_DatumSingleModif_Translation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Translation
-    __entries: dict # value = {'XCAFDimTolObjects_DatumSingleModif_AnyCrossSection': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_AnyCrossSection, None), 'XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection, None), 'XCAFDimTolObjects_DatumSingleModif_Basic': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Basic, None), 'XCAFDimTolObjects_DatumSingleModif_ContactingFeature': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_ContactingFeature, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ, None), 'XCAFDimTolObjects_DatumSingleModif_DistanceVariable': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DistanceVariable, None), 'XCAFDimTolObjects_DatumSingleModif_FreeState': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_FreeState, None), 'XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement, None), 'XCAFDimTolObjects_DatumSingleModif_Line': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Line, None), 'XCAFDimTolObjects_DatumSingleModif_MajorDiameter': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MajorDiameter, None), 'XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement, None), 'XCAFDimTolObjects_DatumSingleModif_MinorDiameter': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MinorDiameter, None), 'XCAFDimTolObjects_DatumSingleModif_Orientation': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Orientation, None), 'XCAFDimTolObjects_DatumSingleModif_PitchDiameter': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_PitchDiameter, None), 'XCAFDimTolObjects_DatumSingleModif_Plane': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Plane, None), 'XCAFDimTolObjects_DatumSingleModif_Point': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Point, None), 'XCAFDimTolObjects_DatumSingleModif_Translation': (XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Translation, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_DatumSingleModif_AnyCrossSection': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_AnyCrossSection, 'XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection, 'XCAFDimTolObjects_DatumSingleModif_Basic': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Basic, 'XCAFDimTolObjects_DatumSingleModif_ContactingFeature': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_ContactingFeature, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ, 'XCAFDimTolObjects_DatumSingleModif_DistanceVariable': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DistanceVariable, 'XCAFDimTolObjects_DatumSingleModif_FreeState': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_FreeState, 'XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement, 'XCAFDimTolObjects_DatumSingleModif_Line': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Line, 'XCAFDimTolObjects_DatumSingleModif_MajorDiameter': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MajorDiameter, 'XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement, 'XCAFDimTolObjects_DatumSingleModif_MinorDiameter': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MinorDiameter, 'XCAFDimTolObjects_DatumSingleModif_Orientation': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Orientation, 'XCAFDimTolObjects_DatumSingleModif_PitchDiameter': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_PitchDiameter, 'XCAFDimTolObjects_DatumSingleModif_Plane': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Plane, 'XCAFDimTolObjects_DatumSingleModif_Point': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Point, 'XCAFDimTolObjects_DatumSingleModif_Translation': XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Translation}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_DatumSingleModif_AnyCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_AnyCrossSection: 0>
+    XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection: 1>
+    XCAFDimTolObjects_DatumSingleModif_Basic: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Basic: 2>
+    XCAFDimTolObjects_DatumSingleModif_ContactingFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_ContactingFeature: 3>
+    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU: 4>
+    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV: 5>
+    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW: 6>
+    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX: 7>
+    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY: 8>
+    XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ: 9>
+    XCAFDimTolObjects_DatumSingleModif_DistanceVariable: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DistanceVariable: 10>
+    XCAFDimTolObjects_DatumSingleModif_FreeState: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_FreeState: 11>
+    XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement: 12>
+    XCAFDimTolObjects_DatumSingleModif_Line: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Line: 13>
+    XCAFDimTolObjects_DatumSingleModif_MajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MajorDiameter: 14>
+    XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement: 15>
+    XCAFDimTolObjects_DatumSingleModif_MinorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MinorDiameter: 16>
+    XCAFDimTolObjects_DatumSingleModif_Orientation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Orientation: 17>
+    XCAFDimTolObjects_DatumSingleModif_PitchDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_PitchDiameter: 18>
+    XCAFDimTolObjects_DatumSingleModif_Plane: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Plane: 19>
+    XCAFDimTolObjects_DatumSingleModif_Point: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Point: 20>
+    XCAFDimTolObjects_DatumSingleModif_Translation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Translation: 21>
+    __entries: dict # value = {'XCAFDimTolObjects_DatumSingleModif_AnyCrossSection': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_AnyCrossSection: 0>, None), 'XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection: 1>, None), 'XCAFDimTolObjects_DatumSingleModif_Basic': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Basic: 2>, None), 'XCAFDimTolObjects_DatumSingleModif_ContactingFeature': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_ContactingFeature: 3>, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU: 4>, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV: 5>, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW: 6>, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX: 7>, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY: 8>, None), 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ: 9>, None), 'XCAFDimTolObjects_DatumSingleModif_DistanceVariable': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DistanceVariable: 10>, None), 'XCAFDimTolObjects_DatumSingleModif_FreeState': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_FreeState: 11>, None), 'XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement: 12>, None), 'XCAFDimTolObjects_DatumSingleModif_Line': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Line: 13>, None), 'XCAFDimTolObjects_DatumSingleModif_MajorDiameter': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MajorDiameter: 14>, None), 'XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement: 15>, None), 'XCAFDimTolObjects_DatumSingleModif_MinorDiameter': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MinorDiameter: 16>, None), 'XCAFDimTolObjects_DatumSingleModif_Orientation': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Orientation: 17>, None), 'XCAFDimTolObjects_DatumSingleModif_PitchDiameter': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_PitchDiameter: 18>, None), 'XCAFDimTolObjects_DatumSingleModif_Plane': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Plane: 19>, None), 'XCAFDimTolObjects_DatumSingleModif_Point': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Point: 20>, None), 'XCAFDimTolObjects_DatumSingleModif_Translation': (<XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Translation: 21>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_DatumSingleModif_AnyCrossSection': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_AnyCrossSection: 0>, 'XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection: 1>, 'XCAFDimTolObjects_DatumSingleModif_Basic': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Basic: 2>, 'XCAFDimTolObjects_DatumSingleModif_ContactingFeature': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_ContactingFeature: 3>, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU: 4>, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV: 5>, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW: 6>, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX: 7>, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY: 8>, 'XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ: 9>, 'XCAFDimTolObjects_DatumSingleModif_DistanceVariable': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DistanceVariable: 10>, 'XCAFDimTolObjects_DatumSingleModif_FreeState': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_FreeState: 11>, 'XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement: 12>, 'XCAFDimTolObjects_DatumSingleModif_Line': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Line: 13>, 'XCAFDimTolObjects_DatumSingleModif_MajorDiameter': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MajorDiameter: 14>, 'XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement: 15>, 'XCAFDimTolObjects_DatumSingleModif_MinorDiameter': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MinorDiameter: 16>, 'XCAFDimTolObjects_DatumSingleModif_Orientation': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Orientation: 17>, 'XCAFDimTolObjects_DatumSingleModif_PitchDiameter': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_PitchDiameter: 18>, 'XCAFDimTolObjects_DatumSingleModif_Plane': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Plane: 19>, 'XCAFDimTolObjects_DatumSingleModif_Point': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Point: 20>, 'XCAFDimTolObjects_DatumSingleModif_Translation': <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Translation: 21>}
     pass
 class XCAFDimTolObjects_DatumTargetType():
     """
@@ -841,23 +857,31 @@ class XCAFDimTolObjects_DatumTargetType():
 
       XCAFDimTolObjects_DatumTargetType_Area
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_DatumTargetType_Area: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Area
-    XCAFDimTolObjects_DatumTargetType_Circle: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Circle
-    XCAFDimTolObjects_DatumTargetType_Line: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Line
-    XCAFDimTolObjects_DatumTargetType_Point: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Point
-    XCAFDimTolObjects_DatumTargetType_Rectangle: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Rectangle
-    __entries: dict # value = {'XCAFDimTolObjects_DatumTargetType_Point': (XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Point, None), 'XCAFDimTolObjects_DatumTargetType_Line': (XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Line, None), 'XCAFDimTolObjects_DatumTargetType_Rectangle': (XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Rectangle, None), 'XCAFDimTolObjects_DatumTargetType_Circle': (XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Circle, None), 'XCAFDimTolObjects_DatumTargetType_Area': (XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Area, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_DatumTargetType_Point': XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Point, 'XCAFDimTolObjects_DatumTargetType_Line': XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Line, 'XCAFDimTolObjects_DatumTargetType_Rectangle': XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Rectangle, 'XCAFDimTolObjects_DatumTargetType_Circle': XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Circle, 'XCAFDimTolObjects_DatumTargetType_Area': XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Area}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_DatumTargetType_Area: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Area: 4>
+    XCAFDimTolObjects_DatumTargetType_Circle: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Circle: 3>
+    XCAFDimTolObjects_DatumTargetType_Line: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Line: 1>
+    XCAFDimTolObjects_DatumTargetType_Point: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Point: 0>
+    XCAFDimTolObjects_DatumTargetType_Rectangle: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Rectangle: 2>
+    __entries: dict # value = {'XCAFDimTolObjects_DatumTargetType_Point': (<XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Point: 0>, None), 'XCAFDimTolObjects_DatumTargetType_Line': (<XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Line: 1>, None), 'XCAFDimTolObjects_DatumTargetType_Rectangle': (<XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Rectangle: 2>, None), 'XCAFDimTolObjects_DatumTargetType_Circle': (<XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Circle: 3>, None), 'XCAFDimTolObjects_DatumTargetType_Area': (<XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Area: 4>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_DatumTargetType_Point': <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Point: 0>, 'XCAFDimTolObjects_DatumTargetType_Line': <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Line: 1>, 'XCAFDimTolObjects_DatumTargetType_Rectangle': <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Rectangle: 2>, 'XCAFDimTolObjects_DatumTargetType_Circle': <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Circle: 3>, 'XCAFDimTolObjects_DatumTargetType_Area': <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Area: 4>}
     pass
 class XCAFDimTolObjects_DimensionFormVariance():
     """
@@ -923,47 +947,55 @@ class XCAFDimTolObjects_DimensionFormVariance():
 
       XCAFDimTolObjects_DimensionFormVariance_ZC
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_DimensionFormVariance_A: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_A
-    XCAFDimTolObjects_DimensionFormVariance_B: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_B
-    XCAFDimTolObjects_DimensionFormVariance_C: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_C
-    XCAFDimTolObjects_DimensionFormVariance_CD: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_CD
-    XCAFDimTolObjects_DimensionFormVariance_D: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_D
-    XCAFDimTolObjects_DimensionFormVariance_E: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_E
-    XCAFDimTolObjects_DimensionFormVariance_EF: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_EF
-    XCAFDimTolObjects_DimensionFormVariance_F: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_F
-    XCAFDimTolObjects_DimensionFormVariance_FG: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_FG
-    XCAFDimTolObjects_DimensionFormVariance_G: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_G
-    XCAFDimTolObjects_DimensionFormVariance_H: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_H
-    XCAFDimTolObjects_DimensionFormVariance_J: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_J
-    XCAFDimTolObjects_DimensionFormVariance_JS: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_JS
-    XCAFDimTolObjects_DimensionFormVariance_K: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_K
-    XCAFDimTolObjects_DimensionFormVariance_M: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_M
-    XCAFDimTolObjects_DimensionFormVariance_N: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_N
-    XCAFDimTolObjects_DimensionFormVariance_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_None
-    XCAFDimTolObjects_DimensionFormVariance_P: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_P
-    XCAFDimTolObjects_DimensionFormVariance_R: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_R
-    XCAFDimTolObjects_DimensionFormVariance_S: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_S
-    XCAFDimTolObjects_DimensionFormVariance_T: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_T
-    XCAFDimTolObjects_DimensionFormVariance_U: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_U
-    XCAFDimTolObjects_DimensionFormVariance_V: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_V
-    XCAFDimTolObjects_DimensionFormVariance_X: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_X
-    XCAFDimTolObjects_DimensionFormVariance_Y: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Y
-    XCAFDimTolObjects_DimensionFormVariance_Z: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Z
-    XCAFDimTolObjects_DimensionFormVariance_ZA: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZA
-    XCAFDimTolObjects_DimensionFormVariance_ZB: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZB
-    XCAFDimTolObjects_DimensionFormVariance_ZC: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZC
-    __entries: dict # value = {'XCAFDimTolObjects_DimensionFormVariance_None': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_None, None), 'XCAFDimTolObjects_DimensionFormVariance_A': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_A, None), 'XCAFDimTolObjects_DimensionFormVariance_B': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_B, None), 'XCAFDimTolObjects_DimensionFormVariance_C': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_C, None), 'XCAFDimTolObjects_DimensionFormVariance_CD': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_CD, None), 'XCAFDimTolObjects_DimensionFormVariance_D': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_D, None), 'XCAFDimTolObjects_DimensionFormVariance_E': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_E, None), 'XCAFDimTolObjects_DimensionFormVariance_EF': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_EF, None), 'XCAFDimTolObjects_DimensionFormVariance_F': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_F, None), 'XCAFDimTolObjects_DimensionFormVariance_FG': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_FG, None), 'XCAFDimTolObjects_DimensionFormVariance_G': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_G, None), 'XCAFDimTolObjects_DimensionFormVariance_H': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_H, None), 'XCAFDimTolObjects_DimensionFormVariance_JS': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_JS, None), 'XCAFDimTolObjects_DimensionFormVariance_J': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_J, None), 'XCAFDimTolObjects_DimensionFormVariance_K': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_K, None), 'XCAFDimTolObjects_DimensionFormVariance_M': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_M, None), 'XCAFDimTolObjects_DimensionFormVariance_N': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_N, None), 'XCAFDimTolObjects_DimensionFormVariance_P': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_P, None), 'XCAFDimTolObjects_DimensionFormVariance_R': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_R, None), 'XCAFDimTolObjects_DimensionFormVariance_S': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_S, None), 'XCAFDimTolObjects_DimensionFormVariance_T': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_T, None), 'XCAFDimTolObjects_DimensionFormVariance_U': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_U, None), 'XCAFDimTolObjects_DimensionFormVariance_V': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_V, None), 'XCAFDimTolObjects_DimensionFormVariance_X': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_X, None), 'XCAFDimTolObjects_DimensionFormVariance_Y': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Y, None), 'XCAFDimTolObjects_DimensionFormVariance_Z': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Z, None), 'XCAFDimTolObjects_DimensionFormVariance_ZA': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZA, None), 'XCAFDimTolObjects_DimensionFormVariance_ZB': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZB, None), 'XCAFDimTolObjects_DimensionFormVariance_ZC': (XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZC, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_DimensionFormVariance_None': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_None, 'XCAFDimTolObjects_DimensionFormVariance_A': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_A, 'XCAFDimTolObjects_DimensionFormVariance_B': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_B, 'XCAFDimTolObjects_DimensionFormVariance_C': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_C, 'XCAFDimTolObjects_DimensionFormVariance_CD': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_CD, 'XCAFDimTolObjects_DimensionFormVariance_D': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_D, 'XCAFDimTolObjects_DimensionFormVariance_E': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_E, 'XCAFDimTolObjects_DimensionFormVariance_EF': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_EF, 'XCAFDimTolObjects_DimensionFormVariance_F': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_F, 'XCAFDimTolObjects_DimensionFormVariance_FG': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_FG, 'XCAFDimTolObjects_DimensionFormVariance_G': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_G, 'XCAFDimTolObjects_DimensionFormVariance_H': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_H, 'XCAFDimTolObjects_DimensionFormVariance_JS': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_JS, 'XCAFDimTolObjects_DimensionFormVariance_J': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_J, 'XCAFDimTolObjects_DimensionFormVariance_K': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_K, 'XCAFDimTolObjects_DimensionFormVariance_M': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_M, 'XCAFDimTolObjects_DimensionFormVariance_N': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_N, 'XCAFDimTolObjects_DimensionFormVariance_P': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_P, 'XCAFDimTolObjects_DimensionFormVariance_R': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_R, 'XCAFDimTolObjects_DimensionFormVariance_S': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_S, 'XCAFDimTolObjects_DimensionFormVariance_T': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_T, 'XCAFDimTolObjects_DimensionFormVariance_U': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_U, 'XCAFDimTolObjects_DimensionFormVariance_V': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_V, 'XCAFDimTolObjects_DimensionFormVariance_X': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_X, 'XCAFDimTolObjects_DimensionFormVariance_Y': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Y, 'XCAFDimTolObjects_DimensionFormVariance_Z': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Z, 'XCAFDimTolObjects_DimensionFormVariance_ZA': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZA, 'XCAFDimTolObjects_DimensionFormVariance_ZB': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZB, 'XCAFDimTolObjects_DimensionFormVariance_ZC': XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZC}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_DimensionFormVariance_A: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_A: 1>
+    XCAFDimTolObjects_DimensionFormVariance_B: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_B: 2>
+    XCAFDimTolObjects_DimensionFormVariance_C: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_C: 3>
+    XCAFDimTolObjects_DimensionFormVariance_CD: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_CD: 4>
+    XCAFDimTolObjects_DimensionFormVariance_D: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_D: 5>
+    XCAFDimTolObjects_DimensionFormVariance_E: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_E: 6>
+    XCAFDimTolObjects_DimensionFormVariance_EF: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_EF: 7>
+    XCAFDimTolObjects_DimensionFormVariance_F: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_F: 8>
+    XCAFDimTolObjects_DimensionFormVariance_FG: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_FG: 9>
+    XCAFDimTolObjects_DimensionFormVariance_G: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_G: 10>
+    XCAFDimTolObjects_DimensionFormVariance_H: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_H: 11>
+    XCAFDimTolObjects_DimensionFormVariance_J: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_J: 13>
+    XCAFDimTolObjects_DimensionFormVariance_JS: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_JS: 12>
+    XCAFDimTolObjects_DimensionFormVariance_K: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_K: 14>
+    XCAFDimTolObjects_DimensionFormVariance_M: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_M: 15>
+    XCAFDimTolObjects_DimensionFormVariance_N: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_N: 16>
+    XCAFDimTolObjects_DimensionFormVariance_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_None: 0>
+    XCAFDimTolObjects_DimensionFormVariance_P: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_P: 17>
+    XCAFDimTolObjects_DimensionFormVariance_R: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_R: 18>
+    XCAFDimTolObjects_DimensionFormVariance_S: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_S: 19>
+    XCAFDimTolObjects_DimensionFormVariance_T: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_T: 20>
+    XCAFDimTolObjects_DimensionFormVariance_U: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_U: 21>
+    XCAFDimTolObjects_DimensionFormVariance_V: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_V: 22>
+    XCAFDimTolObjects_DimensionFormVariance_X: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_X: 23>
+    XCAFDimTolObjects_DimensionFormVariance_Y: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Y: 24>
+    XCAFDimTolObjects_DimensionFormVariance_Z: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Z: 25>
+    XCAFDimTolObjects_DimensionFormVariance_ZA: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZA: 26>
+    XCAFDimTolObjects_DimensionFormVariance_ZB: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZB: 27>
+    XCAFDimTolObjects_DimensionFormVariance_ZC: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZC: 28>
+    __entries: dict # value = {'XCAFDimTolObjects_DimensionFormVariance_None': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_None: 0>, None), 'XCAFDimTolObjects_DimensionFormVariance_A': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_A: 1>, None), 'XCAFDimTolObjects_DimensionFormVariance_B': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_B: 2>, None), 'XCAFDimTolObjects_DimensionFormVariance_C': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_C: 3>, None), 'XCAFDimTolObjects_DimensionFormVariance_CD': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_CD: 4>, None), 'XCAFDimTolObjects_DimensionFormVariance_D': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_D: 5>, None), 'XCAFDimTolObjects_DimensionFormVariance_E': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_E: 6>, None), 'XCAFDimTolObjects_DimensionFormVariance_EF': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_EF: 7>, None), 'XCAFDimTolObjects_DimensionFormVariance_F': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_F: 8>, None), 'XCAFDimTolObjects_DimensionFormVariance_FG': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_FG: 9>, None), 'XCAFDimTolObjects_DimensionFormVariance_G': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_G: 10>, None), 'XCAFDimTolObjects_DimensionFormVariance_H': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_H: 11>, None), 'XCAFDimTolObjects_DimensionFormVariance_JS': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_JS: 12>, None), 'XCAFDimTolObjects_DimensionFormVariance_J': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_J: 13>, None), 'XCAFDimTolObjects_DimensionFormVariance_K': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_K: 14>, None), 'XCAFDimTolObjects_DimensionFormVariance_M': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_M: 15>, None), 'XCAFDimTolObjects_DimensionFormVariance_N': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_N: 16>, None), 'XCAFDimTolObjects_DimensionFormVariance_P': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_P: 17>, None), 'XCAFDimTolObjects_DimensionFormVariance_R': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_R: 18>, None), 'XCAFDimTolObjects_DimensionFormVariance_S': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_S: 19>, None), 'XCAFDimTolObjects_DimensionFormVariance_T': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_T: 20>, None), 'XCAFDimTolObjects_DimensionFormVariance_U': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_U: 21>, None), 'XCAFDimTolObjects_DimensionFormVariance_V': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_V: 22>, None), 'XCAFDimTolObjects_DimensionFormVariance_X': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_X: 23>, None), 'XCAFDimTolObjects_DimensionFormVariance_Y': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Y: 24>, None), 'XCAFDimTolObjects_DimensionFormVariance_Z': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Z: 25>, None), 'XCAFDimTolObjects_DimensionFormVariance_ZA': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZA: 26>, None), 'XCAFDimTolObjects_DimensionFormVariance_ZB': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZB: 27>, None), 'XCAFDimTolObjects_DimensionFormVariance_ZC': (<XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZC: 28>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_DimensionFormVariance_None': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_None: 0>, 'XCAFDimTolObjects_DimensionFormVariance_A': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_A: 1>, 'XCAFDimTolObjects_DimensionFormVariance_B': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_B: 2>, 'XCAFDimTolObjects_DimensionFormVariance_C': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_C: 3>, 'XCAFDimTolObjects_DimensionFormVariance_CD': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_CD: 4>, 'XCAFDimTolObjects_DimensionFormVariance_D': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_D: 5>, 'XCAFDimTolObjects_DimensionFormVariance_E': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_E: 6>, 'XCAFDimTolObjects_DimensionFormVariance_EF': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_EF: 7>, 'XCAFDimTolObjects_DimensionFormVariance_F': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_F: 8>, 'XCAFDimTolObjects_DimensionFormVariance_FG': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_FG: 9>, 'XCAFDimTolObjects_DimensionFormVariance_G': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_G: 10>, 'XCAFDimTolObjects_DimensionFormVariance_H': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_H: 11>, 'XCAFDimTolObjects_DimensionFormVariance_JS': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_JS: 12>, 'XCAFDimTolObjects_DimensionFormVariance_J': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_J: 13>, 'XCAFDimTolObjects_DimensionFormVariance_K': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_K: 14>, 'XCAFDimTolObjects_DimensionFormVariance_M': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_M: 15>, 'XCAFDimTolObjects_DimensionFormVariance_N': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_N: 16>, 'XCAFDimTolObjects_DimensionFormVariance_P': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_P: 17>, 'XCAFDimTolObjects_DimensionFormVariance_R': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_R: 18>, 'XCAFDimTolObjects_DimensionFormVariance_S': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_S: 19>, 'XCAFDimTolObjects_DimensionFormVariance_T': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_T: 20>, 'XCAFDimTolObjects_DimensionFormVariance_U': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_U: 21>, 'XCAFDimTolObjects_DimensionFormVariance_V': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_V: 22>, 'XCAFDimTolObjects_DimensionFormVariance_X': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_X: 23>, 'XCAFDimTolObjects_DimensionFormVariance_Y': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Y: 24>, 'XCAFDimTolObjects_DimensionFormVariance_Z': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Z: 25>, 'XCAFDimTolObjects_DimensionFormVariance_ZA': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZA: 26>, 'XCAFDimTolObjects_DimensionFormVariance_ZB': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZB: 27>, 'XCAFDimTolObjects_DimensionFormVariance_ZC': <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZC: 28>}
     pass
 class XCAFDimTolObjects_DimensionGrade():
     """
@@ -1011,38 +1043,46 @@ class XCAFDimTolObjects_DimensionGrade():
 
       XCAFDimTolObjects_DimensionGrade_IT18
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_DimensionGrade_IT0: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT0
-    XCAFDimTolObjects_DimensionGrade_IT01: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT01
-    XCAFDimTolObjects_DimensionGrade_IT1: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT1
-    XCAFDimTolObjects_DimensionGrade_IT10: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT10
-    XCAFDimTolObjects_DimensionGrade_IT11: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT11
-    XCAFDimTolObjects_DimensionGrade_IT12: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT12
-    XCAFDimTolObjects_DimensionGrade_IT13: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT13
-    XCAFDimTolObjects_DimensionGrade_IT14: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT14
-    XCAFDimTolObjects_DimensionGrade_IT15: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT15
-    XCAFDimTolObjects_DimensionGrade_IT16: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT16
-    XCAFDimTolObjects_DimensionGrade_IT17: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT17
-    XCAFDimTolObjects_DimensionGrade_IT18: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT18
-    XCAFDimTolObjects_DimensionGrade_IT2: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT2
-    XCAFDimTolObjects_DimensionGrade_IT3: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT3
-    XCAFDimTolObjects_DimensionGrade_IT4: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT4
-    XCAFDimTolObjects_DimensionGrade_IT5: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT5
-    XCAFDimTolObjects_DimensionGrade_IT6: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT6
-    XCAFDimTolObjects_DimensionGrade_IT7: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT7
-    XCAFDimTolObjects_DimensionGrade_IT8: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT8
-    XCAFDimTolObjects_DimensionGrade_IT9: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT9
-    __entries: dict # value = {'XCAFDimTolObjects_DimensionGrade_IT01': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT01, None), 'XCAFDimTolObjects_DimensionGrade_IT0': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT0, None), 'XCAFDimTolObjects_DimensionGrade_IT1': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT1, None), 'XCAFDimTolObjects_DimensionGrade_IT2': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT2, None), 'XCAFDimTolObjects_DimensionGrade_IT3': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT3, None), 'XCAFDimTolObjects_DimensionGrade_IT4': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT4, None), 'XCAFDimTolObjects_DimensionGrade_IT5': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT5, None), 'XCAFDimTolObjects_DimensionGrade_IT6': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT6, None), 'XCAFDimTolObjects_DimensionGrade_IT7': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT7, None), 'XCAFDimTolObjects_DimensionGrade_IT8': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT8, None), 'XCAFDimTolObjects_DimensionGrade_IT9': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT9, None), 'XCAFDimTolObjects_DimensionGrade_IT10': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT10, None), 'XCAFDimTolObjects_DimensionGrade_IT11': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT11, None), 'XCAFDimTolObjects_DimensionGrade_IT12': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT12, None), 'XCAFDimTolObjects_DimensionGrade_IT13': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT13, None), 'XCAFDimTolObjects_DimensionGrade_IT14': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT14, None), 'XCAFDimTolObjects_DimensionGrade_IT15': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT15, None), 'XCAFDimTolObjects_DimensionGrade_IT16': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT16, None), 'XCAFDimTolObjects_DimensionGrade_IT17': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT17, None), 'XCAFDimTolObjects_DimensionGrade_IT18': (XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT18, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_DimensionGrade_IT01': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT01, 'XCAFDimTolObjects_DimensionGrade_IT0': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT0, 'XCAFDimTolObjects_DimensionGrade_IT1': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT1, 'XCAFDimTolObjects_DimensionGrade_IT2': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT2, 'XCAFDimTolObjects_DimensionGrade_IT3': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT3, 'XCAFDimTolObjects_DimensionGrade_IT4': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT4, 'XCAFDimTolObjects_DimensionGrade_IT5': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT5, 'XCAFDimTolObjects_DimensionGrade_IT6': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT6, 'XCAFDimTolObjects_DimensionGrade_IT7': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT7, 'XCAFDimTolObjects_DimensionGrade_IT8': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT8, 'XCAFDimTolObjects_DimensionGrade_IT9': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT9, 'XCAFDimTolObjects_DimensionGrade_IT10': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT10, 'XCAFDimTolObjects_DimensionGrade_IT11': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT11, 'XCAFDimTolObjects_DimensionGrade_IT12': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT12, 'XCAFDimTolObjects_DimensionGrade_IT13': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT13, 'XCAFDimTolObjects_DimensionGrade_IT14': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT14, 'XCAFDimTolObjects_DimensionGrade_IT15': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT15, 'XCAFDimTolObjects_DimensionGrade_IT16': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT16, 'XCAFDimTolObjects_DimensionGrade_IT17': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT17, 'XCAFDimTolObjects_DimensionGrade_IT18': XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT18}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_DimensionGrade_IT0: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT0: 1>
+    XCAFDimTolObjects_DimensionGrade_IT01: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT01: 0>
+    XCAFDimTolObjects_DimensionGrade_IT1: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT1: 2>
+    XCAFDimTolObjects_DimensionGrade_IT10: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT10: 11>
+    XCAFDimTolObjects_DimensionGrade_IT11: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT11: 12>
+    XCAFDimTolObjects_DimensionGrade_IT12: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT12: 13>
+    XCAFDimTolObjects_DimensionGrade_IT13: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT13: 14>
+    XCAFDimTolObjects_DimensionGrade_IT14: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT14: 15>
+    XCAFDimTolObjects_DimensionGrade_IT15: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT15: 16>
+    XCAFDimTolObjects_DimensionGrade_IT16: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT16: 17>
+    XCAFDimTolObjects_DimensionGrade_IT17: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT17: 18>
+    XCAFDimTolObjects_DimensionGrade_IT18: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT18: 19>
+    XCAFDimTolObjects_DimensionGrade_IT2: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT2: 3>
+    XCAFDimTolObjects_DimensionGrade_IT3: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT3: 4>
+    XCAFDimTolObjects_DimensionGrade_IT4: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT4: 5>
+    XCAFDimTolObjects_DimensionGrade_IT5: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT5: 6>
+    XCAFDimTolObjects_DimensionGrade_IT6: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT6: 7>
+    XCAFDimTolObjects_DimensionGrade_IT7: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT7: 8>
+    XCAFDimTolObjects_DimensionGrade_IT8: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT8: 9>
+    XCAFDimTolObjects_DimensionGrade_IT9: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT9: 10>
+    __entries: dict # value = {'XCAFDimTolObjects_DimensionGrade_IT01': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT01: 0>, None), 'XCAFDimTolObjects_DimensionGrade_IT0': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT0: 1>, None), 'XCAFDimTolObjects_DimensionGrade_IT1': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT1: 2>, None), 'XCAFDimTolObjects_DimensionGrade_IT2': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT2: 3>, None), 'XCAFDimTolObjects_DimensionGrade_IT3': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT3: 4>, None), 'XCAFDimTolObjects_DimensionGrade_IT4': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT4: 5>, None), 'XCAFDimTolObjects_DimensionGrade_IT5': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT5: 6>, None), 'XCAFDimTolObjects_DimensionGrade_IT6': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT6: 7>, None), 'XCAFDimTolObjects_DimensionGrade_IT7': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT7: 8>, None), 'XCAFDimTolObjects_DimensionGrade_IT8': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT8: 9>, None), 'XCAFDimTolObjects_DimensionGrade_IT9': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT9: 10>, None), 'XCAFDimTolObjects_DimensionGrade_IT10': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT10: 11>, None), 'XCAFDimTolObjects_DimensionGrade_IT11': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT11: 12>, None), 'XCAFDimTolObjects_DimensionGrade_IT12': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT12: 13>, None), 'XCAFDimTolObjects_DimensionGrade_IT13': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT13: 14>, None), 'XCAFDimTolObjects_DimensionGrade_IT14': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT14: 15>, None), 'XCAFDimTolObjects_DimensionGrade_IT15': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT15: 16>, None), 'XCAFDimTolObjects_DimensionGrade_IT16': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT16: 17>, None), 'XCAFDimTolObjects_DimensionGrade_IT17': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT17: 18>, None), 'XCAFDimTolObjects_DimensionGrade_IT18': (<XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT18: 19>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_DimensionGrade_IT01': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT01: 0>, 'XCAFDimTolObjects_DimensionGrade_IT0': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT0: 1>, 'XCAFDimTolObjects_DimensionGrade_IT1': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT1: 2>, 'XCAFDimTolObjects_DimensionGrade_IT2': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT2: 3>, 'XCAFDimTolObjects_DimensionGrade_IT3': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT3: 4>, 'XCAFDimTolObjects_DimensionGrade_IT4': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT4: 5>, 'XCAFDimTolObjects_DimensionGrade_IT5': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT5: 6>, 'XCAFDimTolObjects_DimensionGrade_IT6': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT6: 7>, 'XCAFDimTolObjects_DimensionGrade_IT7': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT7: 8>, 'XCAFDimTolObjects_DimensionGrade_IT8': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT8: 9>, 'XCAFDimTolObjects_DimensionGrade_IT9': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT9: 10>, 'XCAFDimTolObjects_DimensionGrade_IT10': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT10: 11>, 'XCAFDimTolObjects_DimensionGrade_IT11': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT11: 12>, 'XCAFDimTolObjects_DimensionGrade_IT12': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT12: 13>, 'XCAFDimTolObjects_DimensionGrade_IT13': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT13: 14>, 'XCAFDimTolObjects_DimensionGrade_IT14': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT14: 15>, 'XCAFDimTolObjects_DimensionGrade_IT15': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT15: 16>, 'XCAFDimTolObjects_DimensionGrade_IT16': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT16: 17>, 'XCAFDimTolObjects_DimensionGrade_IT17': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT17: 18>, 'XCAFDimTolObjects_DimensionGrade_IT18': <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT18: 19>}
     pass
 class XCAFDimTolObjects_DimensionModif():
     """
@@ -1098,42 +1138,50 @@ class XCAFDimTolObjects_DimensionModif():
 
       XCAFDimTolObjects_DimensionModif_Between
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_DimensionModif_AnyCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyCrossSection
-    XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature
-    XCAFDimTolObjects_DimensionModif_AreaDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AreaDiameter
-    XCAFDimTolObjects_DimensionModif_AverageSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AverageSize
-    XCAFDimTolObjects_DimensionModif_Between: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Between
-    XCAFDimTolObjects_DimensionModif_CircumferenceDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CircumferenceDiameter
-    XCAFDimTolObjects_DimensionModif_CommonTolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CommonTolerance
-    XCAFDimTolObjects_DimensionModif_ContinuousFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ContinuousFeature
-    XCAFDimTolObjects_DimensionModif_ControlledRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ControlledRadius
-    XCAFDimTolObjects_DimensionModif_FreeStateCondition: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_FreeStateCondition
-    XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion
-    XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere
-    XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation
-    XCAFDimTolObjects_DimensionModif_MaximumSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumSize
-    XCAFDimTolObjects_DimensionModif_MedianSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MedianSize
-    XCAFDimTolObjects_DimensionModif_MidRangeSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MidRangeSize
-    XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation
-    XCAFDimTolObjects_DimensionModif_MinimumSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumSize
-    XCAFDimTolObjects_DimensionModif_RangeOfSizes: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_RangeOfSizes
-    XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection
-    XCAFDimTolObjects_DimensionModif_Square: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Square
-    XCAFDimTolObjects_DimensionModif_StatisticalTolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_StatisticalTolerance
-    XCAFDimTolObjects_DimensionModif_TwoPointSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_TwoPointSize
-    XCAFDimTolObjects_DimensionModif_VolumeDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_VolumeDiameter
-    __entries: dict # value = {'XCAFDimTolObjects_DimensionModif_ControlledRadius': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ControlledRadius, None), 'XCAFDimTolObjects_DimensionModif_Square': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Square, None), 'XCAFDimTolObjects_DimensionModif_StatisticalTolerance': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_StatisticalTolerance, None), 'XCAFDimTolObjects_DimensionModif_ContinuousFeature': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ContinuousFeature, None), 'XCAFDimTolObjects_DimensionModif_TwoPointSize': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_TwoPointSize, None), 'XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere, None), 'XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion, None), 'XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation, None), 'XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation, None), 'XCAFDimTolObjects_DimensionModif_CircumferenceDiameter': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CircumferenceDiameter, None), 'XCAFDimTolObjects_DimensionModif_AreaDiameter': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AreaDiameter, None), 'XCAFDimTolObjects_DimensionModif_VolumeDiameter': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_VolumeDiameter, None), 'XCAFDimTolObjects_DimensionModif_MaximumSize': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumSize, None), 'XCAFDimTolObjects_DimensionModif_MinimumSize': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumSize, None), 'XCAFDimTolObjects_DimensionModif_AverageSize': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AverageSize, None), 'XCAFDimTolObjects_DimensionModif_MedianSize': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MedianSize, None), 'XCAFDimTolObjects_DimensionModif_MidRangeSize': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MidRangeSize, None), 'XCAFDimTolObjects_DimensionModif_RangeOfSizes': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_RangeOfSizes, None), 'XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature, None), 'XCAFDimTolObjects_DimensionModif_AnyCrossSection': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyCrossSection, None), 'XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection, None), 'XCAFDimTolObjects_DimensionModif_CommonTolerance': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CommonTolerance, None), 'XCAFDimTolObjects_DimensionModif_FreeStateCondition': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_FreeStateCondition, None), 'XCAFDimTolObjects_DimensionModif_Between': (XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Between, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_DimensionModif_ControlledRadius': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ControlledRadius, 'XCAFDimTolObjects_DimensionModif_Square': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Square, 'XCAFDimTolObjects_DimensionModif_StatisticalTolerance': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_StatisticalTolerance, 'XCAFDimTolObjects_DimensionModif_ContinuousFeature': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ContinuousFeature, 'XCAFDimTolObjects_DimensionModif_TwoPointSize': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_TwoPointSize, 'XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere, 'XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion, 'XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation, 'XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation, 'XCAFDimTolObjects_DimensionModif_CircumferenceDiameter': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CircumferenceDiameter, 'XCAFDimTolObjects_DimensionModif_AreaDiameter': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AreaDiameter, 'XCAFDimTolObjects_DimensionModif_VolumeDiameter': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_VolumeDiameter, 'XCAFDimTolObjects_DimensionModif_MaximumSize': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumSize, 'XCAFDimTolObjects_DimensionModif_MinimumSize': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumSize, 'XCAFDimTolObjects_DimensionModif_AverageSize': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AverageSize, 'XCAFDimTolObjects_DimensionModif_MedianSize': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MedianSize, 'XCAFDimTolObjects_DimensionModif_MidRangeSize': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MidRangeSize, 'XCAFDimTolObjects_DimensionModif_RangeOfSizes': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_RangeOfSizes, 'XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature, 'XCAFDimTolObjects_DimensionModif_AnyCrossSection': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyCrossSection, 'XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection, 'XCAFDimTolObjects_DimensionModif_CommonTolerance': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CommonTolerance, 'XCAFDimTolObjects_DimensionModif_FreeStateCondition': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_FreeStateCondition, 'XCAFDimTolObjects_DimensionModif_Between': XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Between}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_DimensionModif_AnyCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyCrossSection: 19>
+    XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature: 18>
+    XCAFDimTolObjects_DimensionModif_AreaDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AreaDiameter: 10>
+    XCAFDimTolObjects_DimensionModif_AverageSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AverageSize: 14>
+    XCAFDimTolObjects_DimensionModif_Between: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Between: 23>
+    XCAFDimTolObjects_DimensionModif_CircumferenceDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CircumferenceDiameter: 9>
+    XCAFDimTolObjects_DimensionModif_CommonTolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CommonTolerance: 21>
+    XCAFDimTolObjects_DimensionModif_ContinuousFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ContinuousFeature: 3>
+    XCAFDimTolObjects_DimensionModif_ControlledRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ControlledRadius: 0>
+    XCAFDimTolObjects_DimensionModif_FreeStateCondition: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_FreeStateCondition: 22>
+    XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion: 6>
+    XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere: 5>
+    XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation: 7>
+    XCAFDimTolObjects_DimensionModif_MaximumSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumSize: 12>
+    XCAFDimTolObjects_DimensionModif_MedianSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MedianSize: 15>
+    XCAFDimTolObjects_DimensionModif_MidRangeSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MidRangeSize: 16>
+    XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation: 8>
+    XCAFDimTolObjects_DimensionModif_MinimumSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumSize: 13>
+    XCAFDimTolObjects_DimensionModif_RangeOfSizes: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_RangeOfSizes: 17>
+    XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection: 20>
+    XCAFDimTolObjects_DimensionModif_Square: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Square: 1>
+    XCAFDimTolObjects_DimensionModif_StatisticalTolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_StatisticalTolerance: 2>
+    XCAFDimTolObjects_DimensionModif_TwoPointSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_TwoPointSize: 4>
+    XCAFDimTolObjects_DimensionModif_VolumeDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_VolumeDiameter: 11>
+    __entries: dict # value = {'XCAFDimTolObjects_DimensionModif_ControlledRadius': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ControlledRadius: 0>, None), 'XCAFDimTolObjects_DimensionModif_Square': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Square: 1>, None), 'XCAFDimTolObjects_DimensionModif_StatisticalTolerance': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_StatisticalTolerance: 2>, None), 'XCAFDimTolObjects_DimensionModif_ContinuousFeature': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ContinuousFeature: 3>, None), 'XCAFDimTolObjects_DimensionModif_TwoPointSize': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_TwoPointSize: 4>, None), 'XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere: 5>, None), 'XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion: 6>, None), 'XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation: 7>, None), 'XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation: 8>, None), 'XCAFDimTolObjects_DimensionModif_CircumferenceDiameter': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CircumferenceDiameter: 9>, None), 'XCAFDimTolObjects_DimensionModif_AreaDiameter': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AreaDiameter: 10>, None), 'XCAFDimTolObjects_DimensionModif_VolumeDiameter': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_VolumeDiameter: 11>, None), 'XCAFDimTolObjects_DimensionModif_MaximumSize': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumSize: 12>, None), 'XCAFDimTolObjects_DimensionModif_MinimumSize': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumSize: 13>, None), 'XCAFDimTolObjects_DimensionModif_AverageSize': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AverageSize: 14>, None), 'XCAFDimTolObjects_DimensionModif_MedianSize': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MedianSize: 15>, None), 'XCAFDimTolObjects_DimensionModif_MidRangeSize': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MidRangeSize: 16>, None), 'XCAFDimTolObjects_DimensionModif_RangeOfSizes': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_RangeOfSizes: 17>, None), 'XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature: 18>, None), 'XCAFDimTolObjects_DimensionModif_AnyCrossSection': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyCrossSection: 19>, None), 'XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection: 20>, None), 'XCAFDimTolObjects_DimensionModif_CommonTolerance': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CommonTolerance: 21>, None), 'XCAFDimTolObjects_DimensionModif_FreeStateCondition': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_FreeStateCondition: 22>, None), 'XCAFDimTolObjects_DimensionModif_Between': (<XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Between: 23>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_DimensionModif_ControlledRadius': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ControlledRadius: 0>, 'XCAFDimTolObjects_DimensionModif_Square': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Square: 1>, 'XCAFDimTolObjects_DimensionModif_StatisticalTolerance': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_StatisticalTolerance: 2>, 'XCAFDimTolObjects_DimensionModif_ContinuousFeature': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ContinuousFeature: 3>, 'XCAFDimTolObjects_DimensionModif_TwoPointSize': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_TwoPointSize: 4>, 'XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere: 5>, 'XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion: 6>, 'XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation: 7>, 'XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation: 8>, 'XCAFDimTolObjects_DimensionModif_CircumferenceDiameter': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CircumferenceDiameter: 9>, 'XCAFDimTolObjects_DimensionModif_AreaDiameter': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AreaDiameter: 10>, 'XCAFDimTolObjects_DimensionModif_VolumeDiameter': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_VolumeDiameter: 11>, 'XCAFDimTolObjects_DimensionModif_MaximumSize': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumSize: 12>, 'XCAFDimTolObjects_DimensionModif_MinimumSize': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumSize: 13>, 'XCAFDimTolObjects_DimensionModif_AverageSize': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AverageSize: 14>, 'XCAFDimTolObjects_DimensionModif_MedianSize': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MedianSize: 15>, 'XCAFDimTolObjects_DimensionModif_MidRangeSize': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MidRangeSize: 16>, 'XCAFDimTolObjects_DimensionModif_RangeOfSizes': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_RangeOfSizes: 17>, 'XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature: 18>, 'XCAFDimTolObjects_DimensionModif_AnyCrossSection': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyCrossSection: 19>, 'XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection: 20>, 'XCAFDimTolObjects_DimensionModif_CommonTolerance': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CommonTolerance: 21>, 'XCAFDimTolObjects_DimensionModif_FreeStateCondition': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_FreeStateCondition: 22>, 'XCAFDimTolObjects_DimensionModif_Between': <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Between: 23>}
     pass
 class XCAFDimTolObjects_DimensionModifiersSequence(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -1181,14 +1229,14 @@ class XCAFDimTolObjects_DimensionModifiersSequence(OCP.NCollection.NCollection_B
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DimensionModif) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DimensionModifiersSequence) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DimensionModifiersSequence) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DimensionModif) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : XCAFDimTolObjects_DimensionModif) -> None: 
         """
@@ -1215,23 +1263,23 @@ class XCAFDimTolObjects_DimensionModifiersSequence(OCP.NCollection.NCollection_B
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : XCAFDimTolObjects_DimensionModifiersSequence) -> None: 
+    def Prepend(self,theItem : XCAFDimTolObjects_DimensionModif) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : XCAFDimTolObjects_DimensionModif) -> None: ...
+    def Prepend(self,theSeq : XCAFDimTolObjects_DimensionModifiersSequence) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1257,12 +1305,12 @@ class XCAFDimTolObjects_DimensionModifiersSequence(OCP.NCollection.NCollection_B
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : XCAFDimTolObjects_DimensionModifiersSequence) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1532,9 +1580,9 @@ class XCAFDimTolObjects_DimensionObject(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theObj : XCAFDimTolObjects_DimensionObject) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theObj : XCAFDimTolObjects_DimensionObject) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1592,14 +1640,14 @@ class XCAFDimTolObjects_DimensionObjectSequence(OCP.NCollection.NCollection_Base
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DimensionObjectSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DimensionObject) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DimensionObject) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DimensionObjectSequence) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : XCAFDimTolObjects_DimensionObjectSequence) -> None: 
         """
@@ -1626,14 +1674,14 @@ class XCAFDimTolObjects_DimensionObjectSequence(OCP.NCollection.NCollection_Base
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : XCAFDimTolObjects_DimensionObjectSequence) -> None: 
+    def Prepend(self,theItem : XCAFDimTolObjects_DimensionObject) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : XCAFDimTolObjects_DimensionObject) -> None: ...
+    def Prepend(self,theSeq : XCAFDimTolObjects_DimensionObjectSequence) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -1668,12 +1716,12 @@ class XCAFDimTolObjects_DimensionObjectSequence(OCP.NCollection.NCollection_Base
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : XCAFDimTolObjects_DimensionObjectSequence) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1694,22 +1742,30 @@ class XCAFDimTolObjects_DimensionQualifier():
 
       XCAFDimTolObjects_DimensionQualifier_Avg
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_DimensionQualifier_Avg: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Avg
-    XCAFDimTolObjects_DimensionQualifier_Max: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Max
-    XCAFDimTolObjects_DimensionQualifier_Min: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Min
-    XCAFDimTolObjects_DimensionQualifier_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_None
-    __entries: dict # value = {'XCAFDimTolObjects_DimensionQualifier_None': (XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_None, None), 'XCAFDimTolObjects_DimensionQualifier_Min': (XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Min, None), 'XCAFDimTolObjects_DimensionQualifier_Max': (XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Max, None), 'XCAFDimTolObjects_DimensionQualifier_Avg': (XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Avg, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_DimensionQualifier_None': XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_None, 'XCAFDimTolObjects_DimensionQualifier_Min': XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Min, 'XCAFDimTolObjects_DimensionQualifier_Max': XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Max, 'XCAFDimTolObjects_DimensionQualifier_Avg': XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Avg}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_DimensionQualifier_Avg: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Avg: 3>
+    XCAFDimTolObjects_DimensionQualifier_Max: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Max: 2>
+    XCAFDimTolObjects_DimensionQualifier_Min: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Min: 1>
+    XCAFDimTolObjects_DimensionQualifier_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_None: 0>
+    __entries: dict # value = {'XCAFDimTolObjects_DimensionQualifier_None': (<XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_None: 0>, None), 'XCAFDimTolObjects_DimensionQualifier_Min': (<XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Min: 1>, None), 'XCAFDimTolObjects_DimensionQualifier_Max': (<XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Max: 2>, None), 'XCAFDimTolObjects_DimensionQualifier_Avg': (<XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Avg: 3>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_DimensionQualifier_None': <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_None: 0>, 'XCAFDimTolObjects_DimensionQualifier_Min': <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Min: 1>, 'XCAFDimTolObjects_DimensionQualifier_Max': <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Max: 2>, 'XCAFDimTolObjects_DimensionQualifier_Avg': <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Avg: 3>}
     pass
 class XCAFDimTolObjects_DimensionType():
     """
@@ -1781,50 +1837,58 @@ class XCAFDimTolObjects_DimensionType():
 
       XCAFDimTolObjects_DimensionType_DimensionPresentation
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_DimensionType_CommonLabel: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_CommonLabel
-    XCAFDimTolObjects_DimensionType_DimensionPresentation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_DimensionPresentation
-    XCAFDimTolObjects_DimensionType_Location_Angular: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Angular
-    XCAFDimTolObjects_DimensionType_Location_CurvedDistance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_CurvedDistance
-    XCAFDimTolObjects_DimensionType_Location_LinearDistance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance
-    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner
-    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter
-    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter
-    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner
-    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter
-    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter
-    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner
-    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter
-    XCAFDimTolObjects_DimensionType_Location_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_None
-    XCAFDimTolObjects_DimensionType_Location_Oriented: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Oriented
-    XCAFDimTolObjects_DimensionType_Location_WithPath: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_WithPath
-    XCAFDimTolObjects_DimensionType_Size_Angular: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Angular
-    XCAFDimTolObjects_DimensionType_Size_CurveLength: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_CurveLength
-    XCAFDimTolObjects_DimensionType_Size_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Diameter
-    XCAFDimTolObjects_DimensionType_Size_Radius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Radius
-    XCAFDimTolObjects_DimensionType_Size_SphericalDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalDiameter
-    XCAFDimTolObjects_DimensionType_Size_SphericalRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalRadius
-    XCAFDimTolObjects_DimensionType_Size_Thickness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Thickness
-    XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter
-    XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius
-    XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter
-    XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius
-    XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter
-    XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius
-    XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter
-    XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius
-    XCAFDimTolObjects_DimensionType_Size_WithPath: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_WithPath
-    __entries: dict # value = {'XCAFDimTolObjects_DimensionType_Location_None': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_None, None), 'XCAFDimTolObjects_DimensionType_Location_CurvedDistance': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_CurvedDistance, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner, None), 'XCAFDimTolObjects_DimensionType_Location_Angular': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Angular, None), 'XCAFDimTolObjects_DimensionType_Location_Oriented': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Oriented, None), 'XCAFDimTolObjects_DimensionType_Location_WithPath': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_WithPath, None), 'XCAFDimTolObjects_DimensionType_Size_CurveLength': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_CurveLength, None), 'XCAFDimTolObjects_DimensionType_Size_Diameter': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Diameter, None), 'XCAFDimTolObjects_DimensionType_Size_SphericalDiameter': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalDiameter, None), 'XCAFDimTolObjects_DimensionType_Size_Radius': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Radius, None), 'XCAFDimTolObjects_DimensionType_Size_SphericalRadius': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalRadius, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius, None), 'XCAFDimTolObjects_DimensionType_Size_Thickness': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Thickness, None), 'XCAFDimTolObjects_DimensionType_Size_Angular': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Angular, None), 'XCAFDimTolObjects_DimensionType_Size_WithPath': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_WithPath, None), 'XCAFDimTolObjects_DimensionType_CommonLabel': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_CommonLabel, None), 'XCAFDimTolObjects_DimensionType_DimensionPresentation': (XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_DimensionPresentation, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_DimensionType_Location_None': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_None, 'XCAFDimTolObjects_DimensionType_Location_CurvedDistance': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_CurvedDistance, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner, 'XCAFDimTolObjects_DimensionType_Location_Angular': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Angular, 'XCAFDimTolObjects_DimensionType_Location_Oriented': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Oriented, 'XCAFDimTolObjects_DimensionType_Location_WithPath': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_WithPath, 'XCAFDimTolObjects_DimensionType_Size_CurveLength': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_CurveLength, 'XCAFDimTolObjects_DimensionType_Size_Diameter': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Diameter, 'XCAFDimTolObjects_DimensionType_Size_SphericalDiameter': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalDiameter, 'XCAFDimTolObjects_DimensionType_Size_Radius': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Radius, 'XCAFDimTolObjects_DimensionType_Size_SphericalRadius': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalRadius, 'XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter, 'XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter, 'XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius, 'XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius, 'XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter, 'XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter, 'XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius, 'XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius, 'XCAFDimTolObjects_DimensionType_Size_Thickness': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Thickness, 'XCAFDimTolObjects_DimensionType_Size_Angular': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Angular, 'XCAFDimTolObjects_DimensionType_Size_WithPath': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_WithPath, 'XCAFDimTolObjects_DimensionType_CommonLabel': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_CommonLabel, 'XCAFDimTolObjects_DimensionType_DimensionPresentation': XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_DimensionPresentation}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_DimensionType_CommonLabel: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_CommonLabel: 30>
+    XCAFDimTolObjects_DimensionType_DimensionPresentation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_DimensionPresentation: 31>
+    XCAFDimTolObjects_DimensionType_Location_Angular: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Angular: 11>
+    XCAFDimTolObjects_DimensionType_Location_CurvedDistance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_CurvedDistance: 1>
+    XCAFDimTolObjects_DimensionType_Location_LinearDistance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance: 2>
+    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner: 4>
+    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter: 3>
+    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter: 8>
+    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner: 10>
+    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter: 9>
+    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter: 5>
+    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner: 7>
+    XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter: 6>
+    XCAFDimTolObjects_DimensionType_Location_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_None: 0>
+    XCAFDimTolObjects_DimensionType_Location_Oriented: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Oriented: 12>
+    XCAFDimTolObjects_DimensionType_Location_WithPath: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_WithPath: 13>
+    XCAFDimTolObjects_DimensionType_Size_Angular: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Angular: 28>
+    XCAFDimTolObjects_DimensionType_Size_CurveLength: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_CurveLength: 14>
+    XCAFDimTolObjects_DimensionType_Size_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Diameter: 15>
+    XCAFDimTolObjects_DimensionType_Size_Radius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Radius: 17>
+    XCAFDimTolObjects_DimensionType_Size_SphericalDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalDiameter: 16>
+    XCAFDimTolObjects_DimensionType_Size_SphericalRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalRadius: 18>
+    XCAFDimTolObjects_DimensionType_Size_Thickness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Thickness: 27>
+    XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter: 23>
+    XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius: 25>
+    XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter: 24>
+    XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius: 26>
+    XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter: 20>
+    XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius: 22>
+    XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter: 19>
+    XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius: 21>
+    XCAFDimTolObjects_DimensionType_Size_WithPath: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_WithPath: 29>
+    __entries: dict # value = {'XCAFDimTolObjects_DimensionType_Location_None': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_None: 0>, None), 'XCAFDimTolObjects_DimensionType_Location_CurvedDistance': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_CurvedDistance: 1>, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance: 2>, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter: 3>, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner: 4>, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter: 5>, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter: 6>, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner: 7>, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter: 8>, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter: 9>, None), 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner: 10>, None), 'XCAFDimTolObjects_DimensionType_Location_Angular': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Angular: 11>, None), 'XCAFDimTolObjects_DimensionType_Location_Oriented': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Oriented: 12>, None), 'XCAFDimTolObjects_DimensionType_Location_WithPath': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_WithPath: 13>, None), 'XCAFDimTolObjects_DimensionType_Size_CurveLength': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_CurveLength: 14>, None), 'XCAFDimTolObjects_DimensionType_Size_Diameter': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Diameter: 15>, None), 'XCAFDimTolObjects_DimensionType_Size_SphericalDiameter': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalDiameter: 16>, None), 'XCAFDimTolObjects_DimensionType_Size_Radius': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Radius: 17>, None), 'XCAFDimTolObjects_DimensionType_Size_SphericalRadius': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalRadius: 18>, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter: 19>, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter: 20>, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius: 21>, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius: 22>, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter: 23>, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter: 24>, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius: 25>, None), 'XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius: 26>, None), 'XCAFDimTolObjects_DimensionType_Size_Thickness': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Thickness: 27>, None), 'XCAFDimTolObjects_DimensionType_Size_Angular': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Angular: 28>, None), 'XCAFDimTolObjects_DimensionType_Size_WithPath': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_WithPath: 29>, None), 'XCAFDimTolObjects_DimensionType_CommonLabel': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_CommonLabel: 30>, None), 'XCAFDimTolObjects_DimensionType_DimensionPresentation': (<XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_DimensionPresentation: 31>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_DimensionType_Location_None': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_None: 0>, 'XCAFDimTolObjects_DimensionType_Location_CurvedDistance': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_CurvedDistance: 1>, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance: 2>, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter: 3>, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner: 4>, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter: 5>, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter: 6>, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner: 7>, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter: 8>, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter: 9>, 'XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner: 10>, 'XCAFDimTolObjects_DimensionType_Location_Angular': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Angular: 11>, 'XCAFDimTolObjects_DimensionType_Location_Oriented': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Oriented: 12>, 'XCAFDimTolObjects_DimensionType_Location_WithPath': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_WithPath: 13>, 'XCAFDimTolObjects_DimensionType_Size_CurveLength': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_CurveLength: 14>, 'XCAFDimTolObjects_DimensionType_Size_Diameter': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Diameter: 15>, 'XCAFDimTolObjects_DimensionType_Size_SphericalDiameter': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalDiameter: 16>, 'XCAFDimTolObjects_DimensionType_Size_Radius': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Radius: 17>, 'XCAFDimTolObjects_DimensionType_Size_SphericalRadius': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalRadius: 18>, 'XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter: 19>, 'XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter: 20>, 'XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius: 21>, 'XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius: 22>, 'XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter: 23>, 'XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter: 24>, 'XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius: 25>, 'XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius: 26>, 'XCAFDimTolObjects_DimensionType_Size_Thickness': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Thickness: 27>, 'XCAFDimTolObjects_DimensionType_Size_Angular': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Angular: 28>, 'XCAFDimTolObjects_DimensionType_Size_WithPath': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_WithPath: 29>, 'XCAFDimTolObjects_DimensionType_CommonLabel': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_CommonLabel: 30>, 'XCAFDimTolObjects_DimensionType_DimensionPresentation': <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_DimensionPresentation: 31>}
     pass
 class XCAFDimTolObjects_GeomToleranceMatReqModif():
     """
@@ -1838,21 +1902,29 @@ class XCAFDimTolObjects_GeomToleranceMatReqModif():
 
       XCAFDimTolObjects_GeomToleranceMatReqModif_L
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_GeomToleranceMatReqModif_L: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_L
-    XCAFDimTolObjects_GeomToleranceMatReqModif_M: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_M
-    XCAFDimTolObjects_GeomToleranceMatReqModif_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_None
-    __entries: dict # value = {'XCAFDimTolObjects_GeomToleranceMatReqModif_None': (XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_None, None), 'XCAFDimTolObjects_GeomToleranceMatReqModif_M': (XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_M, None), 'XCAFDimTolObjects_GeomToleranceMatReqModif_L': (XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_L, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_GeomToleranceMatReqModif_None': XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_None, 'XCAFDimTolObjects_GeomToleranceMatReqModif_M': XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_M, 'XCAFDimTolObjects_GeomToleranceMatReqModif_L': XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_L}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_GeomToleranceMatReqModif_L: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = <XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_L: 2>
+    XCAFDimTolObjects_GeomToleranceMatReqModif_M: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = <XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_M: 1>
+    XCAFDimTolObjects_GeomToleranceMatReqModif_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = <XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_None: 0>
+    __entries: dict # value = {'XCAFDimTolObjects_GeomToleranceMatReqModif_None': (<XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_None: 0>, None), 'XCAFDimTolObjects_GeomToleranceMatReqModif_M': (<XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_M: 1>, None), 'XCAFDimTolObjects_GeomToleranceMatReqModif_L': (<XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_L: 2>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_GeomToleranceMatReqModif_None': <XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_None: 0>, 'XCAFDimTolObjects_GeomToleranceMatReqModif_M': <XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_M: 1>, 'XCAFDimTolObjects_GeomToleranceMatReqModif_L': <XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_L: 2>}
     pass
 class XCAFDimTolObjects_GeomToleranceModif():
     """
@@ -1894,35 +1966,43 @@ class XCAFDimTolObjects_GeomToleranceModif():
 
       XCAFDimTolObjects_GeomToleranceModif_All_Over
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_GeomToleranceModif_All_Around: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Around
-    XCAFDimTolObjects_GeomToleranceModif_All_Over: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Over
-    XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section
-    XCAFDimTolObjects_GeomToleranceModif_Common_Zone: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Common_Zone
-    XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element
-    XCAFDimTolObjects_GeomToleranceModif_Free_State: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Free_State
-    XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement
-    XCAFDimTolObjects_GeomToleranceModif_Line_Element: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Line_Element
-    XCAFDimTolObjects_GeomToleranceModif_Major_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Major_Diameter
-    XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement
-    XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter
-    XCAFDimTolObjects_GeomToleranceModif_Not_Convex: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Not_Convex
-    XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter
-    XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement
-    XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement
-    XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance
-    XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane
-    __entries: dict # value = {'XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section, None), 'XCAFDimTolObjects_GeomToleranceModif_Common_Zone': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Common_Zone, None), 'XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element, None), 'XCAFDimTolObjects_GeomToleranceModif_Free_State': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Free_State, None), 'XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement, None), 'XCAFDimTolObjects_GeomToleranceModif_Line_Element': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Line_Element, None), 'XCAFDimTolObjects_GeomToleranceModif_Major_Diameter': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Major_Diameter, None), 'XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement, None), 'XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter, None), 'XCAFDimTolObjects_GeomToleranceModif_Not_Convex': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Not_Convex, None), 'XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter, None), 'XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement, None), 'XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement, None), 'XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance, None), 'XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane, None), 'XCAFDimTolObjects_GeomToleranceModif_All_Around': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Around, None), 'XCAFDimTolObjects_GeomToleranceModif_All_Over': (XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Over, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section, 'XCAFDimTolObjects_GeomToleranceModif_Common_Zone': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Common_Zone, 'XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element, 'XCAFDimTolObjects_GeomToleranceModif_Free_State': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Free_State, 'XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement, 'XCAFDimTolObjects_GeomToleranceModif_Line_Element': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Line_Element, 'XCAFDimTolObjects_GeomToleranceModif_Major_Diameter': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Major_Diameter, 'XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement, 'XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter, 'XCAFDimTolObjects_GeomToleranceModif_Not_Convex': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Not_Convex, 'XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter, 'XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement, 'XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement, 'XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance, 'XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane, 'XCAFDimTolObjects_GeomToleranceModif_All_Around': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Around, 'XCAFDimTolObjects_GeomToleranceModif_All_Over': XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Over}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_GeomToleranceModif_All_Around: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Around: 15>
+    XCAFDimTolObjects_GeomToleranceModif_All_Over: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Over: 16>
+    XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section: 0>
+    XCAFDimTolObjects_GeomToleranceModif_Common_Zone: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Common_Zone: 1>
+    XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element: 2>
+    XCAFDimTolObjects_GeomToleranceModif_Free_State: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Free_State: 3>
+    XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement: 4>
+    XCAFDimTolObjects_GeomToleranceModif_Line_Element: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Line_Element: 5>
+    XCAFDimTolObjects_GeomToleranceModif_Major_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Major_Diameter: 6>
+    XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement: 7>
+    XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter: 8>
+    XCAFDimTolObjects_GeomToleranceModif_Not_Convex: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Not_Convex: 9>
+    XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter: 10>
+    XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement: 11>
+    XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement: 12>
+    XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance: 13>
+    XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane: 14>
+    __entries: dict # value = {'XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section: 0>, None), 'XCAFDimTolObjects_GeomToleranceModif_Common_Zone': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Common_Zone: 1>, None), 'XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element: 2>, None), 'XCAFDimTolObjects_GeomToleranceModif_Free_State': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Free_State: 3>, None), 'XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement: 4>, None), 'XCAFDimTolObjects_GeomToleranceModif_Line_Element': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Line_Element: 5>, None), 'XCAFDimTolObjects_GeomToleranceModif_Major_Diameter': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Major_Diameter: 6>, None), 'XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement: 7>, None), 'XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter: 8>, None), 'XCAFDimTolObjects_GeomToleranceModif_Not_Convex': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Not_Convex: 9>, None), 'XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter: 10>, None), 'XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement: 11>, None), 'XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement: 12>, None), 'XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance: 13>, None), 'XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane: 14>, None), 'XCAFDimTolObjects_GeomToleranceModif_All_Around': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Around: 15>, None), 'XCAFDimTolObjects_GeomToleranceModif_All_Over': (<XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Over: 16>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section: 0>, 'XCAFDimTolObjects_GeomToleranceModif_Common_Zone': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Common_Zone: 1>, 'XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element: 2>, 'XCAFDimTolObjects_GeomToleranceModif_Free_State': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Free_State: 3>, 'XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement: 4>, 'XCAFDimTolObjects_GeomToleranceModif_Line_Element': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Line_Element: 5>, 'XCAFDimTolObjects_GeomToleranceModif_Major_Diameter': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Major_Diameter: 6>, 'XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement: 7>, 'XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter: 8>, 'XCAFDimTolObjects_GeomToleranceModif_Not_Convex': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Not_Convex: 9>, 'XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter: 10>, 'XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement: 11>, 'XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement: 12>, 'XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance: 13>, 'XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane: 14>, 'XCAFDimTolObjects_GeomToleranceModif_All_Around': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Around: 15>, 'XCAFDimTolObjects_GeomToleranceModif_All_Over': <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Over: 16>}
     pass
 class XCAFDimTolObjects_GeomToleranceModifiersSequence(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -1933,14 +2013,14 @@ class XCAFDimTolObjects_GeomToleranceModifiersSequence(OCP.NCollection.NCollecti
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : XCAFDimTolObjects_GeomToleranceModifiersSequence) -> None: 
+    def Append(self,theItem : XCAFDimTolObjects_GeomToleranceModif) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : XCAFDimTolObjects_GeomToleranceModif) -> None: ...
+    def Append(self,theSeq : XCAFDimTolObjects_GeomToleranceModifiersSequence) -> None: ...
     def Assign(self,theOther : XCAFDimTolObjects_GeomToleranceModifiersSequence) -> XCAFDimTolObjects_GeomToleranceModifiersSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2004,14 +2084,14 @@ class XCAFDimTolObjects_GeomToleranceModifiersSequence(OCP.NCollection.NCollecti
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : XCAFDimTolObjects_GeomToleranceModifiersSequence) -> None: 
+    def Prepend(self,theItem : XCAFDimTolObjects_GeomToleranceModif) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : XCAFDimTolObjects_GeomToleranceModif) -> None: ...
+    def Prepend(self,theSeq : XCAFDimTolObjects_GeomToleranceModifiersSequence) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -2046,12 +2126,12 @@ class XCAFDimTolObjects_GeomToleranceModifiersSequence(OCP.NCollection.NCollecti
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : XCAFDimTolObjects_GeomToleranceModifiersSequence) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2360,23 +2440,23 @@ class XCAFDimTolObjects_GeomToleranceObjectSequence(OCP.NCollection.NCollection_
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : XCAFDimTolObjects_GeomToleranceObject) -> None: 
+    def Prepend(self,theSeq : XCAFDimTolObjects_GeomToleranceObjectSequence) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : XCAFDimTolObjects_GeomToleranceObjectSequence) -> None: ...
+    def Prepend(self,theItem : XCAFDimTolObjects_GeomToleranceObject) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2402,12 +2482,12 @@ class XCAFDimTolObjects_GeomToleranceObjectSequence(OCP.NCollection.NCollection_
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : XCAFDimTolObjects_GeomToleranceObjectSequence) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2452,34 +2532,42 @@ class XCAFDimTolObjects_GeomToleranceType():
 
       XCAFDimTolObjects_GeomToleranceType_TotalRunout
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_GeomToleranceType_Angularity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Angularity
-    XCAFDimTolObjects_GeomToleranceType_CircularRunout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularRunout
-    XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness
-    XCAFDimTolObjects_GeomToleranceType_Coaxiality: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Coaxiality
-    XCAFDimTolObjects_GeomToleranceType_Concentricity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Concentricity
-    XCAFDimTolObjects_GeomToleranceType_Cylindricity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Cylindricity
-    XCAFDimTolObjects_GeomToleranceType_Flatness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Flatness
-    XCAFDimTolObjects_GeomToleranceType_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_None
-    XCAFDimTolObjects_GeomToleranceType_Parallelism: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Parallelism
-    XCAFDimTolObjects_GeomToleranceType_Perpendicularity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Perpendicularity
-    XCAFDimTolObjects_GeomToleranceType_Position: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Position
-    XCAFDimTolObjects_GeomToleranceType_ProfileOfLine: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfLine
-    XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface
-    XCAFDimTolObjects_GeomToleranceType_Straightness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Straightness
-    XCAFDimTolObjects_GeomToleranceType_Symmetry: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Symmetry
-    XCAFDimTolObjects_GeomToleranceType_TotalRunout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_TotalRunout
-    __entries: dict # value = {'XCAFDimTolObjects_GeomToleranceType_None': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_None, None), 'XCAFDimTolObjects_GeomToleranceType_Angularity': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Angularity, None), 'XCAFDimTolObjects_GeomToleranceType_CircularRunout': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularRunout, None), 'XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness, None), 'XCAFDimTolObjects_GeomToleranceType_Coaxiality': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Coaxiality, None), 'XCAFDimTolObjects_GeomToleranceType_Concentricity': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Concentricity, None), 'XCAFDimTolObjects_GeomToleranceType_Cylindricity': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Cylindricity, None), 'XCAFDimTolObjects_GeomToleranceType_Flatness': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Flatness, None), 'XCAFDimTolObjects_GeomToleranceType_Parallelism': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Parallelism, None), 'XCAFDimTolObjects_GeomToleranceType_Perpendicularity': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Perpendicularity, None), 'XCAFDimTolObjects_GeomToleranceType_Position': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Position, None), 'XCAFDimTolObjects_GeomToleranceType_ProfileOfLine': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfLine, None), 'XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface, None), 'XCAFDimTolObjects_GeomToleranceType_Straightness': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Straightness, None), 'XCAFDimTolObjects_GeomToleranceType_Symmetry': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Symmetry, None), 'XCAFDimTolObjects_GeomToleranceType_TotalRunout': (XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_TotalRunout, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_GeomToleranceType_None': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_None, 'XCAFDimTolObjects_GeomToleranceType_Angularity': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Angularity, 'XCAFDimTolObjects_GeomToleranceType_CircularRunout': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularRunout, 'XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness, 'XCAFDimTolObjects_GeomToleranceType_Coaxiality': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Coaxiality, 'XCAFDimTolObjects_GeomToleranceType_Concentricity': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Concentricity, 'XCAFDimTolObjects_GeomToleranceType_Cylindricity': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Cylindricity, 'XCAFDimTolObjects_GeomToleranceType_Flatness': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Flatness, 'XCAFDimTolObjects_GeomToleranceType_Parallelism': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Parallelism, 'XCAFDimTolObjects_GeomToleranceType_Perpendicularity': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Perpendicularity, 'XCAFDimTolObjects_GeomToleranceType_Position': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Position, 'XCAFDimTolObjects_GeomToleranceType_ProfileOfLine': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfLine, 'XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface, 'XCAFDimTolObjects_GeomToleranceType_Straightness': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Straightness, 'XCAFDimTolObjects_GeomToleranceType_Symmetry': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Symmetry, 'XCAFDimTolObjects_GeomToleranceType_TotalRunout': XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_TotalRunout}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_GeomToleranceType_Angularity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Angularity: 1>
+    XCAFDimTolObjects_GeomToleranceType_CircularRunout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularRunout: 2>
+    XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness: 3>
+    XCAFDimTolObjects_GeomToleranceType_Coaxiality: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Coaxiality: 4>
+    XCAFDimTolObjects_GeomToleranceType_Concentricity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Concentricity: 5>
+    XCAFDimTolObjects_GeomToleranceType_Cylindricity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Cylindricity: 6>
+    XCAFDimTolObjects_GeomToleranceType_Flatness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Flatness: 7>
+    XCAFDimTolObjects_GeomToleranceType_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_None: 0>
+    XCAFDimTolObjects_GeomToleranceType_Parallelism: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Parallelism: 8>
+    XCAFDimTolObjects_GeomToleranceType_Perpendicularity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Perpendicularity: 9>
+    XCAFDimTolObjects_GeomToleranceType_Position: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Position: 10>
+    XCAFDimTolObjects_GeomToleranceType_ProfileOfLine: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfLine: 11>
+    XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface: 12>
+    XCAFDimTolObjects_GeomToleranceType_Straightness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Straightness: 13>
+    XCAFDimTolObjects_GeomToleranceType_Symmetry: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Symmetry: 14>
+    XCAFDimTolObjects_GeomToleranceType_TotalRunout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_TotalRunout: 15>
+    __entries: dict # value = {'XCAFDimTolObjects_GeomToleranceType_None': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_None: 0>, None), 'XCAFDimTolObjects_GeomToleranceType_Angularity': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Angularity: 1>, None), 'XCAFDimTolObjects_GeomToleranceType_CircularRunout': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularRunout: 2>, None), 'XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness: 3>, None), 'XCAFDimTolObjects_GeomToleranceType_Coaxiality': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Coaxiality: 4>, None), 'XCAFDimTolObjects_GeomToleranceType_Concentricity': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Concentricity: 5>, None), 'XCAFDimTolObjects_GeomToleranceType_Cylindricity': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Cylindricity: 6>, None), 'XCAFDimTolObjects_GeomToleranceType_Flatness': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Flatness: 7>, None), 'XCAFDimTolObjects_GeomToleranceType_Parallelism': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Parallelism: 8>, None), 'XCAFDimTolObjects_GeomToleranceType_Perpendicularity': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Perpendicularity: 9>, None), 'XCAFDimTolObjects_GeomToleranceType_Position': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Position: 10>, None), 'XCAFDimTolObjects_GeomToleranceType_ProfileOfLine': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfLine: 11>, None), 'XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface: 12>, None), 'XCAFDimTolObjects_GeomToleranceType_Straightness': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Straightness: 13>, None), 'XCAFDimTolObjects_GeomToleranceType_Symmetry': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Symmetry: 14>, None), 'XCAFDimTolObjects_GeomToleranceType_TotalRunout': (<XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_TotalRunout: 15>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_GeomToleranceType_None': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_None: 0>, 'XCAFDimTolObjects_GeomToleranceType_Angularity': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Angularity: 1>, 'XCAFDimTolObjects_GeomToleranceType_CircularRunout': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularRunout: 2>, 'XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness: 3>, 'XCAFDimTolObjects_GeomToleranceType_Coaxiality': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Coaxiality: 4>, 'XCAFDimTolObjects_GeomToleranceType_Concentricity': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Concentricity: 5>, 'XCAFDimTolObjects_GeomToleranceType_Cylindricity': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Cylindricity: 6>, 'XCAFDimTolObjects_GeomToleranceType_Flatness': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Flatness: 7>, 'XCAFDimTolObjects_GeomToleranceType_Parallelism': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Parallelism: 8>, 'XCAFDimTolObjects_GeomToleranceType_Perpendicularity': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Perpendicularity: 9>, 'XCAFDimTolObjects_GeomToleranceType_Position': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Position: 10>, 'XCAFDimTolObjects_GeomToleranceType_ProfileOfLine': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfLine: 11>, 'XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface: 12>, 'XCAFDimTolObjects_GeomToleranceType_Straightness': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Straightness: 13>, 'XCAFDimTolObjects_GeomToleranceType_Symmetry': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Symmetry: 14>, 'XCAFDimTolObjects_GeomToleranceType_TotalRunout': <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_TotalRunout: 15>}
     pass
 class XCAFDimTolObjects_GeomToleranceTypeValue():
     """
@@ -2493,21 +2581,29 @@ class XCAFDimTolObjects_GeomToleranceTypeValue():
 
       XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_GeomToleranceTypeValue_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_Diameter
-    XCAFDimTolObjects_GeomToleranceTypeValue_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_None
-    XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter
-    __entries: dict # value = {'XCAFDimTolObjects_GeomToleranceTypeValue_None': (XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_None, None), 'XCAFDimTolObjects_GeomToleranceTypeValue_Diameter': (XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_Diameter, None), 'XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter': (XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_GeomToleranceTypeValue_None': XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_None, 'XCAFDimTolObjects_GeomToleranceTypeValue_Diameter': XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_Diameter, 'XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter': XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_GeomToleranceTypeValue_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = <XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_Diameter: 1>
+    XCAFDimTolObjects_GeomToleranceTypeValue_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = <XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_None: 0>
+    XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = <XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter: 2>
+    __entries: dict # value = {'XCAFDimTolObjects_GeomToleranceTypeValue_None': (<XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_None: 0>, None), 'XCAFDimTolObjects_GeomToleranceTypeValue_Diameter': (<XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_Diameter: 1>, None), 'XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter': (<XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter: 2>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_GeomToleranceTypeValue_None': <XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_None: 0>, 'XCAFDimTolObjects_GeomToleranceTypeValue_Diameter': <XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_Diameter: 1>, 'XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter': <XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter: 2>}
     pass
 class XCAFDimTolObjects_GeomToleranceZoneModif():
     """
@@ -2523,22 +2619,30 @@ class XCAFDimTolObjects_GeomToleranceZoneModif():
 
       XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform
-    XCAFDimTolObjects_GeomToleranceZoneModif_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_None
-    XCAFDimTolObjects_GeomToleranceZoneModif_Projected: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Projected
-    XCAFDimTolObjects_GeomToleranceZoneModif_Runout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Runout
-    __entries: dict # value = {'XCAFDimTolObjects_GeomToleranceZoneModif_None': (XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_None, None), 'XCAFDimTolObjects_GeomToleranceZoneModif_Projected': (XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Projected, None), 'XCAFDimTolObjects_GeomToleranceZoneModif_Runout': (XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Runout, None), 'XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform': (XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_GeomToleranceZoneModif_None': XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_None, 'XCAFDimTolObjects_GeomToleranceZoneModif_Projected': XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Projected, 'XCAFDimTolObjects_GeomToleranceZoneModif_Runout': XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Runout, 'XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform': XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform: 3>
+    XCAFDimTolObjects_GeomToleranceZoneModif_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_None: 0>
+    XCAFDimTolObjects_GeomToleranceZoneModif_Projected: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Projected: 1>
+    XCAFDimTolObjects_GeomToleranceZoneModif_Runout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Runout: 2>
+    __entries: dict # value = {'XCAFDimTolObjects_GeomToleranceZoneModif_None': (<XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_None: 0>, None), 'XCAFDimTolObjects_GeomToleranceZoneModif_Projected': (<XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Projected: 1>, None), 'XCAFDimTolObjects_GeomToleranceZoneModif_Runout': (<XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Runout: 2>, None), 'XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform': (<XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform: 3>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_GeomToleranceZoneModif_None': <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_None: 0>, 'XCAFDimTolObjects_GeomToleranceZoneModif_Projected': <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Projected: 1>, 'XCAFDimTolObjects_GeomToleranceZoneModif_Runout': <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Runout: 2>, 'XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform': <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform: 3>}
     pass
 class XCAFDimTolObjects_ToleranceZoneAffectedPlane():
     """
@@ -2552,21 +2656,29 @@ class XCAFDimTolObjects_ToleranceZoneAffectedPlane():
 
       XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection
-    XCAFDimTolObjects_ToleranceZoneAffectedPlane_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_None
-    XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation
-    __entries: dict # value = {'XCAFDimTolObjects_ToleranceZoneAffectedPlane_None': (XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_None, None), 'XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection': (XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection, None), 'XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation': (XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation, None)}
-    __members__: dict # value = {'XCAFDimTolObjects_ToleranceZoneAffectedPlane_None': XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_None, 'XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection': XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection, 'XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation': XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = <XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection: 1>
+    XCAFDimTolObjects_ToleranceZoneAffectedPlane_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = <XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_None: 0>
+    XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = <XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation: 2>
+    __entries: dict # value = {'XCAFDimTolObjects_ToleranceZoneAffectedPlane_None': (<XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_None: 0>, None), 'XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection': (<XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection: 1>, None), 'XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation': (<XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation: 2>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_ToleranceZoneAffectedPlane_None': <XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_None: 0>, 'XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection': <XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection: 1>, 'XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation': <XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation: 2>}
     pass
 class XCAFDimTolObjects_Tool():
     """
@@ -2594,190 +2706,190 @@ class XCAFDimTolObjects_Tool():
         """
     def __init__(self,theDoc : OCP.TDocStd.TDocStd_Document) -> None: ...
     pass
-XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical
-XCAFDimTolObjects_DatumModifWithValue_Distance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Distance
-XCAFDimTolObjects_DatumModifWithValue_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_None
-XCAFDimTolObjects_DatumModifWithValue_Projected: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Projected
-XCAFDimTolObjects_DatumModifWithValue_Spherical: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Spherical
-XCAFDimTolObjects_DatumSingleModif_AnyCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_AnyCrossSection
-XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection
-XCAFDimTolObjects_DatumSingleModif_Basic: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Basic
-XCAFDimTolObjects_DatumSingleModif_ContactingFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_ContactingFeature
-XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU
-XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV
-XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW
-XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX
-XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY
-XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ
-XCAFDimTolObjects_DatumSingleModif_DistanceVariable: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DistanceVariable
-XCAFDimTolObjects_DatumSingleModif_FreeState: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_FreeState
-XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement
-XCAFDimTolObjects_DatumSingleModif_Line: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Line
-XCAFDimTolObjects_DatumSingleModif_MajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MajorDiameter
-XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement
-XCAFDimTolObjects_DatumSingleModif_MinorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MinorDiameter
-XCAFDimTolObjects_DatumSingleModif_Orientation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Orientation
-XCAFDimTolObjects_DatumSingleModif_PitchDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_PitchDiameter
-XCAFDimTolObjects_DatumSingleModif_Plane: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Plane
-XCAFDimTolObjects_DatumSingleModif_Point: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Point
-XCAFDimTolObjects_DatumSingleModif_Translation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Translation
-XCAFDimTolObjects_DatumTargetType_Area: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Area
-XCAFDimTolObjects_DatumTargetType_Circle: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Circle
-XCAFDimTolObjects_DatumTargetType_Line: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Line
-XCAFDimTolObjects_DatumTargetType_Point: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Point
-XCAFDimTolObjects_DatumTargetType_Rectangle: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Rectangle
-XCAFDimTolObjects_DimensionFormVariance_A: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_A
-XCAFDimTolObjects_DimensionFormVariance_B: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_B
-XCAFDimTolObjects_DimensionFormVariance_C: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_C
-XCAFDimTolObjects_DimensionFormVariance_CD: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_CD
-XCAFDimTolObjects_DimensionFormVariance_D: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_D
-XCAFDimTolObjects_DimensionFormVariance_E: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_E
-XCAFDimTolObjects_DimensionFormVariance_EF: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_EF
-XCAFDimTolObjects_DimensionFormVariance_F: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_F
-XCAFDimTolObjects_DimensionFormVariance_FG: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_FG
-XCAFDimTolObjects_DimensionFormVariance_G: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_G
-XCAFDimTolObjects_DimensionFormVariance_H: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_H
-XCAFDimTolObjects_DimensionFormVariance_J: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_J
-XCAFDimTolObjects_DimensionFormVariance_JS: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_JS
-XCAFDimTolObjects_DimensionFormVariance_K: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_K
-XCAFDimTolObjects_DimensionFormVariance_M: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_M
-XCAFDimTolObjects_DimensionFormVariance_N: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_N
-XCAFDimTolObjects_DimensionFormVariance_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_None
-XCAFDimTolObjects_DimensionFormVariance_P: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_P
-XCAFDimTolObjects_DimensionFormVariance_R: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_R
-XCAFDimTolObjects_DimensionFormVariance_S: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_S
-XCAFDimTolObjects_DimensionFormVariance_T: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_T
-XCAFDimTolObjects_DimensionFormVariance_U: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_U
-XCAFDimTolObjects_DimensionFormVariance_V: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_V
-XCAFDimTolObjects_DimensionFormVariance_X: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_X
-XCAFDimTolObjects_DimensionFormVariance_Y: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Y
-XCAFDimTolObjects_DimensionFormVariance_Z: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Z
-XCAFDimTolObjects_DimensionFormVariance_ZA: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZA
-XCAFDimTolObjects_DimensionFormVariance_ZB: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZB
-XCAFDimTolObjects_DimensionFormVariance_ZC: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZC
-XCAFDimTolObjects_DimensionGrade_IT0: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT0
-XCAFDimTolObjects_DimensionGrade_IT01: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT01
-XCAFDimTolObjects_DimensionGrade_IT1: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT1
-XCAFDimTolObjects_DimensionGrade_IT10: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT10
-XCAFDimTolObjects_DimensionGrade_IT11: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT11
-XCAFDimTolObjects_DimensionGrade_IT12: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT12
-XCAFDimTolObjects_DimensionGrade_IT13: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT13
-XCAFDimTolObjects_DimensionGrade_IT14: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT14
-XCAFDimTolObjects_DimensionGrade_IT15: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT15
-XCAFDimTolObjects_DimensionGrade_IT16: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT16
-XCAFDimTolObjects_DimensionGrade_IT17: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT17
-XCAFDimTolObjects_DimensionGrade_IT18: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT18
-XCAFDimTolObjects_DimensionGrade_IT2: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT2
-XCAFDimTolObjects_DimensionGrade_IT3: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT3
-XCAFDimTolObjects_DimensionGrade_IT4: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT4
-XCAFDimTolObjects_DimensionGrade_IT5: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT5
-XCAFDimTolObjects_DimensionGrade_IT6: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT6
-XCAFDimTolObjects_DimensionGrade_IT7: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT7
-XCAFDimTolObjects_DimensionGrade_IT8: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT8
-XCAFDimTolObjects_DimensionGrade_IT9: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT9
-XCAFDimTolObjects_DimensionModif_AnyCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyCrossSection
-XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature
-XCAFDimTolObjects_DimensionModif_AreaDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AreaDiameter
-XCAFDimTolObjects_DimensionModif_AverageSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AverageSize
-XCAFDimTolObjects_DimensionModif_Between: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Between
-XCAFDimTolObjects_DimensionModif_CircumferenceDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CircumferenceDiameter
-XCAFDimTolObjects_DimensionModif_CommonTolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CommonTolerance
-XCAFDimTolObjects_DimensionModif_ContinuousFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ContinuousFeature
-XCAFDimTolObjects_DimensionModif_ControlledRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ControlledRadius
-XCAFDimTolObjects_DimensionModif_FreeStateCondition: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_FreeStateCondition
-XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion
-XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere
-XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation
-XCAFDimTolObjects_DimensionModif_MaximumSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumSize
-XCAFDimTolObjects_DimensionModif_MedianSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MedianSize
-XCAFDimTolObjects_DimensionModif_MidRangeSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MidRangeSize
-XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation
-XCAFDimTolObjects_DimensionModif_MinimumSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumSize
-XCAFDimTolObjects_DimensionModif_RangeOfSizes: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_RangeOfSizes
-XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection
-XCAFDimTolObjects_DimensionModif_Square: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Square
-XCAFDimTolObjects_DimensionModif_StatisticalTolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_StatisticalTolerance
-XCAFDimTolObjects_DimensionModif_TwoPointSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_TwoPointSize
-XCAFDimTolObjects_DimensionModif_VolumeDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_VolumeDiameter
-XCAFDimTolObjects_DimensionQualifier_Avg: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Avg
-XCAFDimTolObjects_DimensionQualifier_Max: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Max
-XCAFDimTolObjects_DimensionQualifier_Min: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Min
-XCAFDimTolObjects_DimensionQualifier_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_None
-XCAFDimTolObjects_DimensionType_CommonLabel: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_CommonLabel
-XCAFDimTolObjects_DimensionType_DimensionPresentation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_DimensionPresentation
-XCAFDimTolObjects_DimensionType_Location_Angular: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Angular
-XCAFDimTolObjects_DimensionType_Location_CurvedDistance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_CurvedDistance
-XCAFDimTolObjects_DimensionType_Location_LinearDistance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance
-XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner
-XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter
-XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter
-XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner
-XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter
-XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter
-XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner
-XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter
-XCAFDimTolObjects_DimensionType_Location_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_None
-XCAFDimTolObjects_DimensionType_Location_Oriented: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Oriented
-XCAFDimTolObjects_DimensionType_Location_WithPath: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_WithPath
-XCAFDimTolObjects_DimensionType_Size_Angular: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Angular
-XCAFDimTolObjects_DimensionType_Size_CurveLength: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_CurveLength
-XCAFDimTolObjects_DimensionType_Size_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Diameter
-XCAFDimTolObjects_DimensionType_Size_Radius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Radius
-XCAFDimTolObjects_DimensionType_Size_SphericalDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalDiameter
-XCAFDimTolObjects_DimensionType_Size_SphericalRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalRadius
-XCAFDimTolObjects_DimensionType_Size_Thickness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Thickness
-XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter
-XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius
-XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter
-XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius
-XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter
-XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius
-XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter
-XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius
-XCAFDimTolObjects_DimensionType_Size_WithPath: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_WithPath
-XCAFDimTolObjects_GeomToleranceMatReqModif_L: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_L
-XCAFDimTolObjects_GeomToleranceMatReqModif_M: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_M
-XCAFDimTolObjects_GeomToleranceMatReqModif_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_None
-XCAFDimTolObjects_GeomToleranceModif_All_Around: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Around
-XCAFDimTolObjects_GeomToleranceModif_All_Over: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Over
-XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section
-XCAFDimTolObjects_GeomToleranceModif_Common_Zone: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Common_Zone
-XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element
-XCAFDimTolObjects_GeomToleranceModif_Free_State: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Free_State
-XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement
-XCAFDimTolObjects_GeomToleranceModif_Line_Element: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Line_Element
-XCAFDimTolObjects_GeomToleranceModif_Major_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Major_Diameter
-XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement
-XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter
-XCAFDimTolObjects_GeomToleranceModif_Not_Convex: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Not_Convex
-XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter
-XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement
-XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement
-XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance
-XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane
-XCAFDimTolObjects_GeomToleranceTypeValue_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_Diameter
-XCAFDimTolObjects_GeomToleranceTypeValue_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_None
-XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter
-XCAFDimTolObjects_GeomToleranceType_Angularity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Angularity
-XCAFDimTolObjects_GeomToleranceType_CircularRunout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularRunout
-XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness
-XCAFDimTolObjects_GeomToleranceType_Coaxiality: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Coaxiality
-XCAFDimTolObjects_GeomToleranceType_Concentricity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Concentricity
-XCAFDimTolObjects_GeomToleranceType_Cylindricity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Cylindricity
-XCAFDimTolObjects_GeomToleranceType_Flatness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Flatness
-XCAFDimTolObjects_GeomToleranceType_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_None
-XCAFDimTolObjects_GeomToleranceType_Parallelism: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Parallelism
-XCAFDimTolObjects_GeomToleranceType_Perpendicularity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Perpendicularity
-XCAFDimTolObjects_GeomToleranceType_Position: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Position
-XCAFDimTolObjects_GeomToleranceType_ProfileOfLine: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfLine
-XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface
-XCAFDimTolObjects_GeomToleranceType_Straightness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Straightness
-XCAFDimTolObjects_GeomToleranceType_Symmetry: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Symmetry
-XCAFDimTolObjects_GeomToleranceType_TotalRunout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_TotalRunout
-XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform
-XCAFDimTolObjects_GeomToleranceZoneModif_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_None
-XCAFDimTolObjects_GeomToleranceZoneModif_Projected: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Projected
-XCAFDimTolObjects_GeomToleranceZoneModif_Runout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Runout
-XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection
-XCAFDimTolObjects_ToleranceZoneAffectedPlane_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_None
-XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation
+XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical: 1>
+XCAFDimTolObjects_DatumModifWithValue_Distance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Distance: 2>
+XCAFDimTolObjects_DatumModifWithValue_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_None: 0>
+XCAFDimTolObjects_DatumModifWithValue_Projected: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Projected: 3>
+XCAFDimTolObjects_DatumModifWithValue_Spherical: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Spherical: 4>
+XCAFDimTolObjects_DatumSingleModif_AnyCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_AnyCrossSection: 0>
+XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Any_LongitudinalSection: 1>
+XCAFDimTolObjects_DatumSingleModif_Basic: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Basic: 2>
+XCAFDimTolObjects_DatumSingleModif_ContactingFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_ContactingFeature: 3>
+XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintU: 4>
+XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintV: 5>
+XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintW: 6>
+XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintX: 7>
+XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintY: 8>
+XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DegreeOfFreedomConstraintZ: 9>
+XCAFDimTolObjects_DatumSingleModif_DistanceVariable: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_DistanceVariable: 10>
+XCAFDimTolObjects_DatumSingleModif_FreeState: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_FreeState: 11>
+XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_LeastMaterialRequirement: 12>
+XCAFDimTolObjects_DatumSingleModif_Line: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Line: 13>
+XCAFDimTolObjects_DatumSingleModif_MajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MajorDiameter: 14>
+XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MaximumMaterialRequirement: 15>
+XCAFDimTolObjects_DatumSingleModif_MinorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_MinorDiameter: 16>
+XCAFDimTolObjects_DatumSingleModif_Orientation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Orientation: 17>
+XCAFDimTolObjects_DatumSingleModif_PitchDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_PitchDiameter: 18>
+XCAFDimTolObjects_DatumSingleModif_Plane: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Plane: 19>
+XCAFDimTolObjects_DatumSingleModif_Point: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Point: 20>
+XCAFDimTolObjects_DatumSingleModif_Translation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumSingleModif # value = <XCAFDimTolObjects_DatumSingleModif.XCAFDimTolObjects_DatumSingleModif_Translation: 21>
+XCAFDimTolObjects_DatumTargetType_Area: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Area: 4>
+XCAFDimTolObjects_DatumTargetType_Circle: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Circle: 3>
+XCAFDimTolObjects_DatumTargetType_Line: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Line: 1>
+XCAFDimTolObjects_DatumTargetType_Point: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Point: 0>
+XCAFDimTolObjects_DatumTargetType_Rectangle: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumTargetType # value = <XCAFDimTolObjects_DatumTargetType.XCAFDimTolObjects_DatumTargetType_Rectangle: 2>
+XCAFDimTolObjects_DimensionFormVariance_A: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_A: 1>
+XCAFDimTolObjects_DimensionFormVariance_B: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_B: 2>
+XCAFDimTolObjects_DimensionFormVariance_C: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_C: 3>
+XCAFDimTolObjects_DimensionFormVariance_CD: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_CD: 4>
+XCAFDimTolObjects_DimensionFormVariance_D: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_D: 5>
+XCAFDimTolObjects_DimensionFormVariance_E: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_E: 6>
+XCAFDimTolObjects_DimensionFormVariance_EF: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_EF: 7>
+XCAFDimTolObjects_DimensionFormVariance_F: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_F: 8>
+XCAFDimTolObjects_DimensionFormVariance_FG: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_FG: 9>
+XCAFDimTolObjects_DimensionFormVariance_G: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_G: 10>
+XCAFDimTolObjects_DimensionFormVariance_H: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_H: 11>
+XCAFDimTolObjects_DimensionFormVariance_J: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_J: 13>
+XCAFDimTolObjects_DimensionFormVariance_JS: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_JS: 12>
+XCAFDimTolObjects_DimensionFormVariance_K: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_K: 14>
+XCAFDimTolObjects_DimensionFormVariance_M: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_M: 15>
+XCAFDimTolObjects_DimensionFormVariance_N: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_N: 16>
+XCAFDimTolObjects_DimensionFormVariance_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_None: 0>
+XCAFDimTolObjects_DimensionFormVariance_P: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_P: 17>
+XCAFDimTolObjects_DimensionFormVariance_R: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_R: 18>
+XCAFDimTolObjects_DimensionFormVariance_S: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_S: 19>
+XCAFDimTolObjects_DimensionFormVariance_T: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_T: 20>
+XCAFDimTolObjects_DimensionFormVariance_U: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_U: 21>
+XCAFDimTolObjects_DimensionFormVariance_V: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_V: 22>
+XCAFDimTolObjects_DimensionFormVariance_X: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_X: 23>
+XCAFDimTolObjects_DimensionFormVariance_Y: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Y: 24>
+XCAFDimTolObjects_DimensionFormVariance_Z: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_Z: 25>
+XCAFDimTolObjects_DimensionFormVariance_ZA: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZA: 26>
+XCAFDimTolObjects_DimensionFormVariance_ZB: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZB: 27>
+XCAFDimTolObjects_DimensionFormVariance_ZC: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionFormVariance # value = <XCAFDimTolObjects_DimensionFormVariance.XCAFDimTolObjects_DimensionFormVariance_ZC: 28>
+XCAFDimTolObjects_DimensionGrade_IT0: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT0: 1>
+XCAFDimTolObjects_DimensionGrade_IT01: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT01: 0>
+XCAFDimTolObjects_DimensionGrade_IT1: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT1: 2>
+XCAFDimTolObjects_DimensionGrade_IT10: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT10: 11>
+XCAFDimTolObjects_DimensionGrade_IT11: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT11: 12>
+XCAFDimTolObjects_DimensionGrade_IT12: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT12: 13>
+XCAFDimTolObjects_DimensionGrade_IT13: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT13: 14>
+XCAFDimTolObjects_DimensionGrade_IT14: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT14: 15>
+XCAFDimTolObjects_DimensionGrade_IT15: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT15: 16>
+XCAFDimTolObjects_DimensionGrade_IT16: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT16: 17>
+XCAFDimTolObjects_DimensionGrade_IT17: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT17: 18>
+XCAFDimTolObjects_DimensionGrade_IT18: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT18: 19>
+XCAFDimTolObjects_DimensionGrade_IT2: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT2: 3>
+XCAFDimTolObjects_DimensionGrade_IT3: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT3: 4>
+XCAFDimTolObjects_DimensionGrade_IT4: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT4: 5>
+XCAFDimTolObjects_DimensionGrade_IT5: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT5: 6>
+XCAFDimTolObjects_DimensionGrade_IT6: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT6: 7>
+XCAFDimTolObjects_DimensionGrade_IT7: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT7: 8>
+XCAFDimTolObjects_DimensionGrade_IT8: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT8: 9>
+XCAFDimTolObjects_DimensionGrade_IT9: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionGrade # value = <XCAFDimTolObjects_DimensionGrade.XCAFDimTolObjects_DimensionGrade_IT9: 10>
+XCAFDimTolObjects_DimensionModif_AnyCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyCrossSection: 19>
+XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AnyRestrictedPortionOfFeature: 18>
+XCAFDimTolObjects_DimensionModif_AreaDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AreaDiameter: 10>
+XCAFDimTolObjects_DimensionModif_AverageSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_AverageSize: 14>
+XCAFDimTolObjects_DimensionModif_Between: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Between: 23>
+XCAFDimTolObjects_DimensionModif_CircumferenceDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CircumferenceDiameter: 9>
+XCAFDimTolObjects_DimensionModif_CommonTolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_CommonTolerance: 21>
+XCAFDimTolObjects_DimensionModif_ContinuousFeature: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ContinuousFeature: 3>
+XCAFDimTolObjects_DimensionModif_ControlledRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_ControlledRadius: 0>
+XCAFDimTolObjects_DimensionModif_FreeStateCondition: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_FreeStateCondition: 22>
+XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LeastSquaresAssociationCriterion: 6>
+XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_LocalSizeDefinedBySphere: 5>
+XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumInscribedAssociation: 7>
+XCAFDimTolObjects_DimensionModif_MaximumSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MaximumSize: 12>
+XCAFDimTolObjects_DimensionModif_MedianSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MedianSize: 15>
+XCAFDimTolObjects_DimensionModif_MidRangeSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MidRangeSize: 16>
+XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumCircumscribedAssociation: 8>
+XCAFDimTolObjects_DimensionModif_MinimumSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_MinimumSize: 13>
+XCAFDimTolObjects_DimensionModif_RangeOfSizes: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_RangeOfSizes: 17>
+XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_SpecificFixedCrossSection: 20>
+XCAFDimTolObjects_DimensionModif_Square: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_Square: 1>
+XCAFDimTolObjects_DimensionModif_StatisticalTolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_StatisticalTolerance: 2>
+XCAFDimTolObjects_DimensionModif_TwoPointSize: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_TwoPointSize: 4>
+XCAFDimTolObjects_DimensionModif_VolumeDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionModif # value = <XCAFDimTolObjects_DimensionModif.XCAFDimTolObjects_DimensionModif_VolumeDiameter: 11>
+XCAFDimTolObjects_DimensionQualifier_Avg: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Avg: 3>
+XCAFDimTolObjects_DimensionQualifier_Max: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Max: 2>
+XCAFDimTolObjects_DimensionQualifier_Min: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_Min: 1>
+XCAFDimTolObjects_DimensionQualifier_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionQualifier # value = <XCAFDimTolObjects_DimensionQualifier.XCAFDimTolObjects_DimensionQualifier_None: 0>
+XCAFDimTolObjects_DimensionType_CommonLabel: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_CommonLabel: 30>
+XCAFDimTolObjects_DimensionType_DimensionPresentation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_DimensionPresentation: 31>
+XCAFDimTolObjects_DimensionType_Location_Angular: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Angular: 11>
+XCAFDimTolObjects_DimensionType_Location_CurvedDistance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_CurvedDistance: 1>
+XCAFDimTolObjects_DimensionType_Location_LinearDistance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance: 2>
+XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToInner: 4>
+XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromCenterToOuter: 3>
+XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToCenter: 8>
+XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToInner: 10>
+XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromInnerToOuter: 9>
+XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToCenter: 5>
+XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToInner: 7>
+XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_LinearDistance_FromOuterToOuter: 6>
+XCAFDimTolObjects_DimensionType_Location_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_None: 0>
+XCAFDimTolObjects_DimensionType_Location_Oriented: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_Oriented: 12>
+XCAFDimTolObjects_DimensionType_Location_WithPath: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Location_WithPath: 13>
+XCAFDimTolObjects_DimensionType_Size_Angular: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Angular: 28>
+XCAFDimTolObjects_DimensionType_Size_CurveLength: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_CurveLength: 14>
+XCAFDimTolObjects_DimensionType_Size_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Diameter: 15>
+XCAFDimTolObjects_DimensionType_Size_Radius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Radius: 17>
+XCAFDimTolObjects_DimensionType_Size_SphericalDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalDiameter: 16>
+XCAFDimTolObjects_DimensionType_Size_SphericalRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_SphericalRadius: 18>
+XCAFDimTolObjects_DimensionType_Size_Thickness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_Thickness: 27>
+XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorDiameter: 23>
+XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalHighMajorRadius: 25>
+XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorDiameter: 24>
+XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalLowMajorRadius: 26>
+XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorDiameter: 20>
+XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMajorRadius: 22>
+XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorDiameter: 19>
+XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_ToroidalMinorRadius: 21>
+XCAFDimTolObjects_DimensionType_Size_WithPath: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType # value = <XCAFDimTolObjects_DimensionType.XCAFDimTolObjects_DimensionType_Size_WithPath: 29>
+XCAFDimTolObjects_GeomToleranceMatReqModif_L: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = <XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_L: 2>
+XCAFDimTolObjects_GeomToleranceMatReqModif_M: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = <XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_M: 1>
+XCAFDimTolObjects_GeomToleranceMatReqModif_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceMatReqModif # value = <XCAFDimTolObjects_GeomToleranceMatReqModif.XCAFDimTolObjects_GeomToleranceMatReqModif_None: 0>
+XCAFDimTolObjects_GeomToleranceModif_All_Around: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Around: 15>
+XCAFDimTolObjects_GeomToleranceModif_All_Over: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_All_Over: 16>
+XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Any_Cross_Section: 0>
+XCAFDimTolObjects_GeomToleranceModif_Common_Zone: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Common_Zone: 1>
+XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Each_Radial_Element: 2>
+XCAFDimTolObjects_GeomToleranceModif_Free_State: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Free_State: 3>
+XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Least_Material_Requirement: 4>
+XCAFDimTolObjects_GeomToleranceModif_Line_Element: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Line_Element: 5>
+XCAFDimTolObjects_GeomToleranceModif_Major_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Major_Diameter: 6>
+XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Maximum_Material_Requirement: 7>
+XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Minor_Diameter: 8>
+XCAFDimTolObjects_GeomToleranceModif_Not_Convex: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Not_Convex: 9>
+XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Pitch_Diameter: 10>
+XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Reciprocity_Requirement: 11>
+XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Separate_Requirement: 12>
+XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Statistical_Tolerance: 13>
+XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceModif # value = <XCAFDimTolObjects_GeomToleranceModif.XCAFDimTolObjects_GeomToleranceModif_Tangent_Plane: 14>
+XCAFDimTolObjects_GeomToleranceTypeValue_Diameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = <XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_Diameter: 1>
+XCAFDimTolObjects_GeomToleranceTypeValue_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = <XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_None: 0>
+XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue # value = <XCAFDimTolObjects_GeomToleranceTypeValue.XCAFDimTolObjects_GeomToleranceTypeValue_SphericalDiameter: 2>
+XCAFDimTolObjects_GeomToleranceType_Angularity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Angularity: 1>
+XCAFDimTolObjects_GeomToleranceType_CircularRunout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularRunout: 2>
+XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_CircularityOrRoundness: 3>
+XCAFDimTolObjects_GeomToleranceType_Coaxiality: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Coaxiality: 4>
+XCAFDimTolObjects_GeomToleranceType_Concentricity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Concentricity: 5>
+XCAFDimTolObjects_GeomToleranceType_Cylindricity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Cylindricity: 6>
+XCAFDimTolObjects_GeomToleranceType_Flatness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Flatness: 7>
+XCAFDimTolObjects_GeomToleranceType_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_None: 0>
+XCAFDimTolObjects_GeomToleranceType_Parallelism: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Parallelism: 8>
+XCAFDimTolObjects_GeomToleranceType_Perpendicularity: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Perpendicularity: 9>
+XCAFDimTolObjects_GeomToleranceType_Position: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Position: 10>
+XCAFDimTolObjects_GeomToleranceType_ProfileOfLine: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfLine: 11>
+XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_ProfileOfSurface: 12>
+XCAFDimTolObjects_GeomToleranceType_Straightness: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Straightness: 13>
+XCAFDimTolObjects_GeomToleranceType_Symmetry: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_Symmetry: 14>
+XCAFDimTolObjects_GeomToleranceType_TotalRunout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType # value = <XCAFDimTolObjects_GeomToleranceType.XCAFDimTolObjects_GeomToleranceType_TotalRunout: 15>
+XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_NonUniform: 3>
+XCAFDimTolObjects_GeomToleranceZoneModif_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_None: 0>
+XCAFDimTolObjects_GeomToleranceZoneModif_Projected: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Projected: 1>
+XCAFDimTolObjects_GeomToleranceZoneModif_Runout: OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceZoneModif # value = <XCAFDimTolObjects_GeomToleranceZoneModif.XCAFDimTolObjects_GeomToleranceZoneModif_Runout: 2>
+XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = <XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Intersection: 1>
+XCAFDimTolObjects_ToleranceZoneAffectedPlane_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = <XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_None: 0>
+XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation: OCP.XCAFDimTolObjects.XCAFDimTolObjects_ToleranceZoneAffectedPlane # value = <XCAFDimTolObjects_ToleranceZoneAffectedPlane.XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation: 2>

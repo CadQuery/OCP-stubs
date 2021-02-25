@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TColStd
-import OCP.IGESData
-import OCP.IGESGraph
-import OCP.Message
-import OCP.TColgp
-import OCP.Standard
+import OCP.TCollection
+import io
 import OCP.IGESGeom
-import OCP.Interface
+import OCP.IGESData
 import OCP.gp
+import OCP.TColgp
+import OCP.Interface
+import OCP.IGESGraph
+import OCP.Standard
 __all__  = [
 "IGESDimen",
 "IGESDimen_AngularDimension",
@@ -526,14 +526,14 @@ class IGESDimen_Array1OfGeneralNote():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : IGESDimen_Array1OfGeneralNote) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : IGESDimen_GeneralNote,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : IGESDimen_Array1OfGeneralNote) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESDimen_Array1OfLeaderArrow():
     """
@@ -612,14 +612,14 @@ class IGESDimen_Array1OfLeaderArrow():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : IGESDimen_Array1OfLeaderArrow) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : IGESDimen_LeaderArrow,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : IGESDimen_Array1OfLeaderArrow) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESDimen_BasicDimension(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Standard_Transient):
     """
@@ -5156,14 +5156,14 @@ class IGESDimen_HArray1OfGeneralNote(IGESDimen_Array1OfGeneralNote, OCP.Standard
         Constant value access
         """
     @overload
-    def __init__(self,theOther : IGESDimen_Array1OfGeneralNote) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : IGESDimen_GeneralNote) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : IGESDimen_Array1OfGeneralNote) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5301,12 +5301,12 @@ class IGESDimen_HArray1OfLeaderArrow(IGESDimen_Array1OfLeaderArrow, OCP.Standard
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : IGESDimen_Array1OfLeaderArrow) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : IGESDimen_Array1OfLeaderArrow) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : IGESDimen_LeaderArrow) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -8853,7 +8853,7 @@ class IGESDimen_SpecificModule(OCP.IGESData.IGESData_SpecificModule, OCP.Standar
         """
         Performs non-ambiguous Corrections on Entities which support them (BasicDimension,CenterLine,DimensionDisplayData, DimensionTolerance,DimensionUnits,DimensionedGeometry, NewDimensionedGeometry,Section,WitnessLine)
         """
-    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Specific Dump (own parameters) for IGESDimen
         """
@@ -8889,7 +8889,7 @@ class IGESDimen_ToolAngularDimension():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_AngularDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_AngularDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8927,7 +8927,7 @@ class IGESDimen_ToolBasicDimension():
         """
         Sets automatic unambiguous Correction on a BasicDimension (NbPropertyValues forced to 8)
         """
-    def OwnDump(self,ent : IGESDimen_BasicDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_BasicDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8965,7 +8965,7 @@ class IGESDimen_ToolCenterLine():
         """
         Sets automatic unambiguous Correction on a CenterLine (LineFont forced to Rank = 1, DataType forced to 1)
         """
-    def OwnDump(self,ent : IGESDimen_CenterLine,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_CenterLine,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8999,7 +8999,7 @@ class IGESDimen_ToolCurveDimension():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_CurveDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_CurveDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9033,7 +9033,7 @@ class IGESDimen_ToolDiameterDimension():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_DiameterDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_DiameterDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9071,7 +9071,7 @@ class IGESDimen_ToolDimensionDisplayData():
         """
         Sets automatic unambiguous Correction on a DimensionDisplayData (NbPropertyValues forced to 14)
         """
-    def OwnDump(self,ent : IGESDimen_DimensionDisplayData,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_DimensionDisplayData,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9109,7 +9109,7 @@ class IGESDimen_ToolDimensionTolerance():
         """
         Sets automatic unambiguous Correction on a DimensionTolerance (NbPropertyValues forced to 8)
         """
-    def OwnDump(self,ent : IGESDimen_DimensionTolerance,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_DimensionTolerance,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9147,7 +9147,7 @@ class IGESDimen_ToolDimensionUnits():
         """
         Sets automatic unambiguous Correction on a DimensionUnits (NbPropertyValues forced to 6)
         """
-    def OwnDump(self,ent : IGESDimen_DimensionUnits,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_DimensionUnits,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9185,7 +9185,7 @@ class IGESDimen_ToolDimensionedGeometry():
         """
         Sets automatic unambiguous Correction on a DimensionedGeometry (NbDimensions forced to 1)
         """
-    def OwnDump(self,ent : IGESDimen_DimensionedGeometry,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_DimensionedGeometry,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9219,7 +9219,7 @@ class IGESDimen_ToolFlagNote():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_FlagNote,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_FlagNote,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9253,7 +9253,7 @@ class IGESDimen_ToolGeneralLabel():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_GeneralLabel,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_GeneralLabel,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9287,7 +9287,7 @@ class IGESDimen_ToolGeneralNote():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_GeneralNote,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_GeneralNote,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9321,7 +9321,7 @@ class IGESDimen_ToolGeneralSymbol():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_GeneralSymbol,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_GeneralSymbol,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9355,7 +9355,7 @@ class IGESDimen_ToolLeaderArrow():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_LeaderArrow,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_LeaderArrow,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9389,7 +9389,7 @@ class IGESDimen_ToolLinearDimension():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_LinearDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_LinearDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9427,7 +9427,7 @@ class IGESDimen_ToolNewDimensionedGeometry():
         """
         Sets automatic unambiguous Correction on a NewDimensionedGeometry (NbDimensions forced to 1, Transf Nullified in D.E.)
         """
-    def OwnDump(self,ent : IGESDimen_NewDimensionedGeometry,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_NewDimensionedGeometry,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9461,7 +9461,7 @@ class IGESDimen_ToolNewGeneralNote():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_NewGeneralNote,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_NewGeneralNote,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9495,7 +9495,7 @@ class IGESDimen_ToolOrdinateDimension():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_OrdinateDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_OrdinateDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9529,7 +9529,7 @@ class IGESDimen_ToolPointDimension():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_PointDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_PointDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9563,7 +9563,7 @@ class IGESDimen_ToolRadiusDimension():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_RadiusDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_RadiusDimension,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9601,7 +9601,7 @@ class IGESDimen_ToolSection():
         """
         Sets automatic unambiguous Correction on a Section (LineFont forced to Rank = 1, DataType forced to 1)
         """
-    def OwnDump(self,ent : IGESDimen_Section,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_Section,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9635,7 +9635,7 @@ class IGESDimen_ToolSectionedArea():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDimen_SectionedArea,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_SectionedArea,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9673,7 +9673,7 @@ class IGESDimen_ToolWitnessLine():
         """
         Sets automatic unambiguous Correction on a WitnessLine (LineFont forced to Rank = 1, DataType forced to 1)
         """
-    def OwnDump(self,ent : IGESDimen_WitnessLine,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDimen_WitnessLine,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """

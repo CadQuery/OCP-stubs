@@ -4,22 +4,22 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.TColGeom
+import OCP.TColGeom2d
+import OCP.BRepTools
+import OCP.Geom
+import OCP.TopoDS
+import OCP.Standard
 import OCP.TopAbs
 import OCP.ShapeExtend
+import OCP.TopTools
+import OCP.TColStd
+import OCP.Message
+import OCP.GeomAbs
 import OCP.Geom2d
 import OCP.ShapeAnalysis
-import OCP.Message
-import OCP.TopoDS
-import OCP.TColGeom2d
-import OCP.TColStd
-import OCP.GeomAbs
-import OCP.TColGeom
-import OCP.TopTools
 import OCP.TopLoc
-import OCP.Standard
-import OCP.Geom
 import OCP.ShapeBuild
-import OCP.BRepTools
 __all__  = [
 "ShapeUpgrade",
 "ShapeUpgrade_Tool",
@@ -474,14 +474,14 @@ class ShapeUpgrade_SplitCurve3d(ShapeUpgrade_SplitCurve, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: 
+    def Init(self,C : OCP.Geom.Geom_Curve) -> None: 
         """
         Initializes with curve with its first and last parameters.
 
         Initializes with curve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -565,14 +565,14 @@ class ShapeUpgrade_SplitSurface(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1745,9 +1745,9 @@ class ShapeUpgrade_ShapeDivide():
         Queries the status of last call to Perform OK : no splitting was done (or no call to Perform) DONE1: some edges were splitted DONE2: surface was splitted FAIL1: some errors occured
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     pass
 class ShapeUpgrade_ShapeConvertToBezier(ShapeUpgrade_ShapeDivide):
     """
@@ -2084,9 +2084,9 @@ class ShapeUpgrade_ShapeDivideArea(ShapeUpgrade_ShapeDivide):
         Queries the status of last call to Perform OK : no splitting was done (or no call to Perform) DONE1: some edges were splitted DONE2: surface was splitted FAIL1: some errors occured
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @property
     def MaxArea(self) -> float:
         """
@@ -2691,14 +2691,14 @@ class ShapeUpgrade_ConvertCurve3dToBezier(ShapeUpgrade_SplitCurve3d, ShapeUpgrad
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: 
+    def Init(self,C : OCP.Geom.Geom_Curve) -> None: 
         """
         Initializes with curve with its first and last parameters.
 
         Initializes with curve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2812,14 +2812,14 @@ class ShapeUpgrade_SplitCurve3dContinuity(ShapeUpgrade_SplitCurve3d, ShapeUpgrad
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: 
+    def Init(self,C : OCP.Geom.Geom_Curve) -> None: 
         """
         Initializes with curve with its first and last parameters.
 
         Initializes with curve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2935,14 +2935,14 @@ class ShapeUpgrade_ConvertSurfaceToBezierBasis(ShapeUpgrade_SplitSurface, OCP.St
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3066,14 +3066,14 @@ class ShapeUpgrade_SplitSurfaceAngle(ShapeUpgrade_SplitSurface, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3177,14 +3177,14 @@ class ShapeUpgrade_SplitSurfaceArea(ShapeUpgrade_SplitSurface, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3292,14 +3292,14 @@ class ShapeUpgrade_SplitSurfaceContinuity(ShapeUpgrade_SplitSurface, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3626,9 +3626,9 @@ class ShapeUpgrade_UnifySameDomain(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,UnifyEdges : bool=True,UnifyFaces : bool=True,ConcatBSplines : bool=False) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3683,14 +3683,14 @@ class ShapeUpgrade_WireDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> None: 
+    def Init(self,W : OCP.TopoDS.TopoDS_Wire,S : OCP.Geom.Geom_Surface) -> None: 
         """
         Initializes by wire and face
 
         Initializes by wire and surface
         """
     @overload
-    def Init(self,W : OCP.TopoDS.TopoDS_Wire,S : OCP.Geom.Geom_Surface) -> None: ...
+    def Init(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3799,14 +3799,14 @@ class ShapeUpgrade_WireDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
         Sets the tool for splitting 3D curves.
         """
     @overload
-    def SetSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: 
+    def SetSurface(self,S : OCP.Geom.Geom_Surface) -> None: 
         """
         Sets supporting surface
 
         Sets supporting surface with location
         """
     @overload
-    def SetSurface(self,S : OCP.Geom.Geom_Surface) -> None: ...
+    def SetSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     def SetTransferParamTool(self,TransferParam : OCP.ShapeAnalysis.ShapeAnalysis_TransferParameters) -> None: 
         """
         Sets the tool for Transfer parameters between curves and pcurves.

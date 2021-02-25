@@ -91,14 +91,14 @@ class TShort_Array1OfShortReal():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : float,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : TShort_Array1OfShortReal) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theBegin : float,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TShort_Array2OfShortReal():
     """
@@ -171,13 +171,13 @@ class TShort_Array2OfShortReal():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : float,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TShort_Array2OfShortReal) -> None: ...
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TShort_Array2OfShortReal) -> None: ...
+    def __init__(self,theBegin : float,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class TShort_HArray1OfShortReal(TShort_Array1OfShortReal, OCP.Standard.Standard_Transient):
     def Array1(self) -> TShort_Array1OfShortReal: 
@@ -303,14 +303,14 @@ class TShort_HArray1OfShortReal(TShort_Array1OfShortReal, OCP.Standard.Standard_
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : float) -> None: ...
     @overload
     def __init__(self,theOther : TShort_Array1OfShortReal) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -440,11 +440,11 @@ class TShort_HArray2OfShortReal(TShort_Array2OfShortReal, OCP.Standard.Standard_
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : float) -> None: ...
-    @overload
     def __init__(self,theOther : TShort_Array2OfShortReal) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -502,23 +502,23 @@ class TShort_SequenceOfShortReal(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : float) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : float) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : float) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : float) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -536,14 +536,14 @@ class TShort_SequenceOfShortReal(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : float) -> None: 
+    def Prepend(self,theSeq : TShort_SequenceOfShortReal) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TShort_SequenceOfShortReal) -> None: ...
+    def Prepend(self,theItem : float) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -583,7 +583,7 @@ class TShort_SequenceOfShortReal(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -596,14 +596,14 @@ class TShort_HSequenceOfShortReal(TShort_SequenceOfShortReal, OCP.NCollection.NC
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : float) -> None: 
+    def Append(self,theSequence : TShort_SequenceOfShortReal) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : TShort_SequenceOfShortReal) -> None: ...
+    def Append(self,theItem : float) -> None: ...
     def Assign(self,theOther : TShort_SequenceOfShortReal) -> TShort_SequenceOfShortReal: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -657,23 +657,23 @@ class TShort_HSequenceOfShortReal(TShort_SequenceOfShortReal, OCP.NCollection.NC
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : float) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : float) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : float) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : float) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -709,14 +709,14 @@ class TShort_HSequenceOfShortReal(TShort_SequenceOfShortReal, OCP.NCollection.NC
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : float) -> None: 
+    def Prepend(self,theSeq : TShort_SequenceOfShortReal) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TShort_SequenceOfShortReal) -> None: ...
+    def Prepend(self,theItem : float) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -762,7 +762,7 @@ class TShort_HSequenceOfShortReal(TShort_SequenceOfShortReal, OCP.NCollection.NC
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TShort_SequenceOfShortReal) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """

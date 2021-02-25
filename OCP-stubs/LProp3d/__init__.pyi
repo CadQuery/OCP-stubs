@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor3d
 import OCP.gp
+import OCP.Adaptor3d
 __all__  = [
 "LProp3d_CLProps",
 "LProp3d_CurveTool",
@@ -63,9 +63,9 @@ class LProp3d_CLProps():
     @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve,N : int,Resolution : float) -> None: ...
     @overload
-    def __init__(self,N : int,Resolution : float) -> None: ...
-    @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,N : int,Resolution : float) -> None: ...
+    @overload
+    def __init__(self,N : int,Resolution : float) -> None: ...
     pass
 class LProp3d_CurveTool():
     """

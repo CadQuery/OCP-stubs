@@ -4,25 +4,25 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.V3d
-import OCP.TColgp
+import OCP.Prs3d
 import OCP.NCollection
+import OCP.TColgp
+import OCP.SelectBasics
+import OCP.Bnd
 import OCP.PrsMgr
-import OCP.gp
+import OCP.V3d
+import OCP.SelectMgr
+import OCP.Standard
+import OCP.Quantity
 import OCP.TColStd
 import OCP.Select3D
-import OCP.SelectBasics
-import OCP.SelectMgr
-import OCP.Bnd
-import OCP.Quantity
+import io
+import OCP.TCollection
+import OCP.gp
+import OCP.AIS
 import OCP.Graphic3d
 import OCP.Aspect
-import OCP.Prs3d
 import OCP.TopLoc
-import OCP.Standard
-import OCP.Geom
-import OCP.AIS
 __all__  = [
 "MeshVS_Array1OfSequenceOfInteger",
 "MeshVS_Buffer",
@@ -234,14 +234,14 @@ class MeshVS_Array1OfSequenceOfInteger():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.TColStd.TColStd_SequenceOfInteger,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : MeshVS_Array1OfSequenceOfInteger) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theBegin : OCP.TColStd.TColStd_SequenceOfInteger,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MeshVS_Buffer():
     """
@@ -257,11 +257,11 @@ class MeshVS_CommonSensitiveEntity(OCP.Select3D.Select3D_SensitiveSet, OCP.Selec
         """
         Builds BVH tree for sensitive set. Must be called manually to build BVH tree for any sensitive set in case if its content was initialized not in a constructor, but element by element
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the triangulation. If location transformation is set, it will be applied
         """
-    def Box(self,theIdx : int) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def Box(self,theIdx : int) -> Any: 
         """
         Returns bounding box of sub-entity with index theIdx in sub-entity list
         """
@@ -289,6 +289,10 @@ class MeshVS_CommonSensitiveEntity(OCP.Select3D.Select3D_SensitiveSet, OCP.Selec
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -385,6 +389,10 @@ class MeshVS_CommonSensitiveEntity(OCP.Select3D.Select3D_SensitiveSet, OCP.Selec
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def __init__(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theParentMesh : MeshVS_Mesh,theSelMethod : MeshVS_MeshSelectionMethod) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -426,14 +434,14 @@ class MeshVS_DataMapOfColorMapOfInteger(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : MeshVS_DataMapOfColorMapOfInteger) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -443,14 +451,14 @@ class MeshVS_DataMapOfColorMapOfInteger(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.Quantity.Quantity_Color) -> OCP.TColStd.TColStd_MapOfInteger: 
+    def Find(self,theKey : OCP.Quantity.Quantity_Color,theValue : OCP.TColStd.TColStd_MapOfInteger) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.Quantity.Quantity_Color,theValue : OCP.TColStd.TColStd_MapOfInteger) -> bool: ...
+    def Find(self,theKey : OCP.Quantity.Quantity_Color) -> OCP.TColStd.TColStd_MapOfInteger: ...
     def IsBound(self,theKey : OCP.Quantity.Quantity_Color) -> bool: 
         """
         IsBound
@@ -475,7 +483,7 @@ class MeshVS_DataMapOfColorMapOfInteger(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -484,12 +492,12 @@ class MeshVS_DataMapOfColorMapOfInteger(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : MeshVS_DataMapOfColorMapOfInteger) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : MeshVS_DataMapOfColorMapOfInteger) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MeshVS_DataMapOfIntegerAsciiString(OCP.NCollection.NCollection_BaseMap):
     """
@@ -537,14 +545,14 @@ class MeshVS_DataMapOfIntegerAsciiString(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: 
+    def Find(self,theKey : int) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int) -> OCP.TCollection.TCollection_AsciiString: ...
+    def Find(self,theKey : int,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -569,7 +577,7 @@ class MeshVS_DataMapOfIntegerAsciiString(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -578,12 +586,12 @@ class MeshVS_DataMapOfIntegerAsciiString(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theOther : MeshVS_DataMapOfIntegerAsciiString) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self,theOther : MeshVS_DataMapOfIntegerAsciiString) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MeshVS_DataMapOfIntegerBoolean(OCP.NCollection.NCollection_BaseMap):
     """
@@ -614,14 +622,14 @@ class MeshVS_DataMapOfIntegerBoolean(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : MeshVS_DataMapOfIntegerBoolean) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -631,14 +639,14 @@ class MeshVS_DataMapOfIntegerBoolean(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int) -> bool: 
+    def Find(self,theKey : int,theValue : bool) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int,theValue : bool) -> bool: ...
+    def Find(self,theKey : int) -> bool: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -663,7 +671,7 @@ class MeshVS_DataMapOfIntegerBoolean(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -672,12 +680,12 @@ class MeshVS_DataMapOfIntegerBoolean(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : MeshVS_DataMapOfIntegerBoolean) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MeshVS_DataMapOfIntegerColor(OCP.NCollection.NCollection_BaseMap):
     """
@@ -725,14 +733,14 @@ class MeshVS_DataMapOfIntegerColor(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int,theValue : OCP.Quantity.Quantity_Color) -> bool: 
+    def Find(self,theKey : int) -> OCP.Quantity.Quantity_Color: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int) -> OCP.Quantity.Quantity_Color: ...
+    def Find(self,theKey : int,theValue : OCP.Quantity.Quantity_Color) -> bool: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -757,7 +765,7 @@ class MeshVS_DataMapOfIntegerColor(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -766,12 +774,12 @@ class MeshVS_DataMapOfIntegerColor(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : MeshVS_DataMapOfIntegerColor) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : MeshVS_DataMapOfIntegerColor) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MeshVS_DataMapOfIntegerMaterial(OCP.NCollection.NCollection_BaseMap):
     """
@@ -851,7 +859,7 @@ class MeshVS_DataMapOfIntegerMaterial(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -860,12 +868,12 @@ class MeshVS_DataMapOfIntegerMaterial(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : MeshVS_DataMapOfIntegerMaterial) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MeshVS_DataMapOfIntegerTwoColors(OCP.NCollection.NCollection_BaseMap):
     """
@@ -896,14 +904,14 @@ class MeshVS_DataMapOfIntegerTwoColors(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : MeshVS_DataMapOfIntegerTwoColors) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -913,14 +921,14 @@ class MeshVS_DataMapOfIntegerTwoColors(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int,theValue : MeshVS_TwoColors) -> bool: 
+    def Find(self,theKey : int) -> MeshVS_TwoColors: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int) -> MeshVS_TwoColors: ...
+    def Find(self,theKey : int,theValue : MeshVS_TwoColors) -> bool: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -945,7 +953,7 @@ class MeshVS_DataMapOfIntegerTwoColors(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -954,12 +962,12 @@ class MeshVS_DataMapOfIntegerTwoColors(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : MeshVS_DataMapOfIntegerTwoColors) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MeshVS_DataMapOfIntegerVector(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1039,7 +1047,7 @@ class MeshVS_DataMapOfIntegerVector(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1050,10 +1058,10 @@ class MeshVS_DataMapOfIntegerVector(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : MeshVS_DataMapOfIntegerVector) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : MeshVS_DataMapOfIntegerVector) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MeshVS_DataMapOfTwoColorsMapOfInteger(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1084,14 +1092,14 @@ class MeshVS_DataMapOfTwoColorsMapOfInteger(OCP.NCollection.NCollection_BaseMap)
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : MeshVS_DataMapOfTwoColorsMapOfInteger) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1133,7 +1141,7 @@ class MeshVS_DataMapOfTwoColorsMapOfInteger(OCP.NCollection.NCollection_BaseMap)
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1144,10 +1152,10 @@ class MeshVS_DataMapOfTwoColorsMapOfInteger(OCP.NCollection.NCollection_BaseMap)
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : MeshVS_DataMapOfTwoColorsMapOfInteger) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : MeshVS_DataMapOfTwoColorsMapOfInteger) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MeshVS_DataSource(OCP.Standard.Standard_Transient):
     """
@@ -1201,9 +1209,9 @@ class MeshVS_DataSource(OCP.Standard.Standard_Transient):
         Filter out the maps of mesh entities so as to keep only the entities that are allowed to be selected according to the current context. Returns True if any of the maps has been changed. It should be redefined if the advanced mesh selection is activated. Default implementation returns False.
         """
     @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,XMin : float,YMin : float,XMax : float,YMax : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
-    @overload
     def GetDetectedEntities(self,Prs : MeshVS_Mesh,Polyline : OCP.TColgp.TColgp_Array1OfPnt2d,aBox : OCP.Bnd.Bnd_Box2d,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
+    @overload
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,XMin : float,YMin : float,XMax : float,YMax : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
     @overload
     def GetDetectedEntities(self,Prs : MeshVS_Mesh,X : float,Y : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger,DMin : float) -> bool: ...
     def GetGeom(self,ID : int,IsElement : bool,Coords : OCP.TColStd.TColStd_Array1OfReal,NbNodes : int,Type : MeshVS_EntityType) -> bool: 
@@ -1342,9 +1350,9 @@ class MeshVS_DataSource3D(MeshVS_DataSource, OCP.Standard.Standard_Transient):
         Filter out the maps of mesh entities so as to keep only the entities that are allowed to be selected according to the current context. Returns True if any of the maps has been changed. It should be redefined if the advanced mesh selection is activated. Default implementation returns False.
         """
     @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,XMin : float,YMin : float,XMax : float,YMax : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
-    @overload
     def GetDetectedEntities(self,Prs : MeshVS_Mesh,Polyline : OCP.TColgp.TColgp_Array1OfPnt2d,aBox : OCP.Bnd.Bnd_Box2d,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
+    @overload
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,XMin : float,YMin : float,XMax : float,YMax : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
     @overload
     def GetDetectedEntities(self,Prs : MeshVS_Mesh,X : float,Y : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger,DMin : float) -> bool: ...
     def GetGeom(self,ID : int,IsElement : bool,Coords : OCP.TColStd.TColStd_Array1OfReal,NbNodes : int,Type : MeshVS_EntityType) -> bool: 
@@ -1484,9 +1492,9 @@ class MeshVS_DeformedDataSource(MeshVS_DataSource, OCP.Standard.Standard_Transie
         Filter out the maps of mesh entities so as to keep only the entities that are allowed to be selected according to the current context. Returns True if any of the maps has been changed. It should be redefined if the advanced mesh selection is activated. Default implementation returns False.
         """
     @overload
-    def GetDetectedEntities(self,Prs : MeshVS_Mesh,XMin : float,YMin : float,XMax : float,YMax : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
-    @overload
     def GetDetectedEntities(self,Prs : MeshVS_Mesh,Polyline : OCP.TColgp.TColgp_Array1OfPnt2d,aBox : OCP.Bnd.Bnd_Box2d,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
+    @overload
+    def GetDetectedEntities(self,Prs : MeshVS_Mesh,XMin : float,YMin : float,XMax : float,YMax : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
     @overload
     def GetDetectedEntities(self,Prs : MeshVS_Mesh,X : float,Y : float,aTol : float,Nodes : OCP.TColStd.TColStd_HPackedMapOfInteger,Elements : OCP.TColStd.TColStd_HPackedMapOfInteger,DMin : float) -> bool: ...
     def GetGeom(self,ID : int,IsElement : bool,Coords : OCP.TColStd.TColStd_Array1OfReal,NbNodes : int,Type : MeshVS_EntityType) -> bool: 
@@ -1819,58 +1827,66 @@ class MeshVS_DrawerAttribute():
 
       MeshVS_DA_User
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    MeshVS_DA_BackInteriorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_BackInteriorColor
-    MeshVS_DA_BackMaterial: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_BackMaterial
-    MeshVS_DA_BeamColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_BeamColor
-    MeshVS_DA_BeamType: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_BeamType
-    MeshVS_DA_BeamWidth: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_BeamWidth
-    MeshVS_DA_ColorReflection: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_ColorReflection
-    MeshVS_DA_ComputeSelectionTime: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_ComputeSelectionTime
-    MeshVS_DA_ComputeTime: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_ComputeTime
-    MeshVS_DA_DisplayNodes: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_DisplayNodes
-    MeshVS_DA_EdgeColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_EdgeColor
-    MeshVS_DA_EdgeType: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_EdgeType
-    MeshVS_DA_EdgeWidth: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_EdgeWidth
-    MeshVS_DA_FrontMaterial: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_FrontMaterial
-    MeshVS_DA_HatchStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_HatchStyle
-    MeshVS_DA_InteriorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_InteriorColor
-    MeshVS_DA_InteriorStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_InteriorStyle
-    MeshVS_DA_IsAllowOverlapped: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_IsAllowOverlapped
-    MeshVS_DA_MarkerColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_MarkerColor
-    MeshVS_DA_MarkerScale: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_MarkerScale
-    MeshVS_DA_MarkerType: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_MarkerType
-    MeshVS_DA_MaxFaceNodes: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_MaxFaceNodes
-    MeshVS_DA_Reflection: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_Reflection
-    MeshVS_DA_SelectableAuto: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_SelectableAuto
-    MeshVS_DA_ShowEdges: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_ShowEdges
-    MeshVS_DA_ShrinkCoeff: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_ShrinkCoeff
-    MeshVS_DA_SmoothShading: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_SmoothShading
-    MeshVS_DA_SupressBackFaces: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_SupressBackFaces
-    MeshVS_DA_TextColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextColor
-    MeshVS_DA_TextDisplayType: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextDisplayType
-    MeshVS_DA_TextExpansionFactor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextExpansionFactor
-    MeshVS_DA_TextFont: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextFont
-    MeshVS_DA_TextFontAspect: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextFontAspect
-    MeshVS_DA_TextHeight: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextHeight
-    MeshVS_DA_TextSpace: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextSpace
-    MeshVS_DA_TextStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextStyle
-    MeshVS_DA_TextTexFont: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextTexFont
-    MeshVS_DA_User: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_User
-    MeshVS_DA_VectorArrowPart: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_VectorArrowPart
-    MeshVS_DA_VectorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_VectorColor
-    MeshVS_DA_VectorMaxLength: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_VectorMaxLength
-    __entries: dict # value = {'MeshVS_DA_InteriorStyle': (MeshVS_DrawerAttribute.MeshVS_DA_InteriorStyle, None), 'MeshVS_DA_InteriorColor': (MeshVS_DrawerAttribute.MeshVS_DA_InteriorColor, None), 'MeshVS_DA_BackInteriorColor': (MeshVS_DrawerAttribute.MeshVS_DA_BackInteriorColor, None), 'MeshVS_DA_EdgeColor': (MeshVS_DrawerAttribute.MeshVS_DA_EdgeColor, None), 'MeshVS_DA_EdgeType': (MeshVS_DrawerAttribute.MeshVS_DA_EdgeType, None), 'MeshVS_DA_EdgeWidth': (MeshVS_DrawerAttribute.MeshVS_DA_EdgeWidth, None), 'MeshVS_DA_HatchStyle': (MeshVS_DrawerAttribute.MeshVS_DA_HatchStyle, None), 'MeshVS_DA_FrontMaterial': (MeshVS_DrawerAttribute.MeshVS_DA_FrontMaterial, None), 'MeshVS_DA_BackMaterial': (MeshVS_DrawerAttribute.MeshVS_DA_BackMaterial, None), 'MeshVS_DA_BeamType': (MeshVS_DrawerAttribute.MeshVS_DA_BeamType, None), 'MeshVS_DA_BeamWidth': (MeshVS_DrawerAttribute.MeshVS_DA_BeamWidth, None), 'MeshVS_DA_BeamColor': (MeshVS_DrawerAttribute.MeshVS_DA_BeamColor, None), 'MeshVS_DA_MarkerType': (MeshVS_DrawerAttribute.MeshVS_DA_MarkerType, None), 'MeshVS_DA_MarkerColor': (MeshVS_DrawerAttribute.MeshVS_DA_MarkerColor, None), 'MeshVS_DA_MarkerScale': (MeshVS_DrawerAttribute.MeshVS_DA_MarkerScale, None), 'MeshVS_DA_TextColor': (MeshVS_DrawerAttribute.MeshVS_DA_TextColor, None), 'MeshVS_DA_TextHeight': (MeshVS_DrawerAttribute.MeshVS_DA_TextHeight, None), 'MeshVS_DA_TextFont': (MeshVS_DrawerAttribute.MeshVS_DA_TextFont, None), 'MeshVS_DA_TextExpansionFactor': (MeshVS_DrawerAttribute.MeshVS_DA_TextExpansionFactor, None), 'MeshVS_DA_TextSpace': (MeshVS_DrawerAttribute.MeshVS_DA_TextSpace, None), 'MeshVS_DA_TextStyle': (MeshVS_DrawerAttribute.MeshVS_DA_TextStyle, None), 'MeshVS_DA_TextDisplayType': (MeshVS_DrawerAttribute.MeshVS_DA_TextDisplayType, None), 'MeshVS_DA_TextTexFont': (MeshVS_DrawerAttribute.MeshVS_DA_TextTexFont, None), 'MeshVS_DA_TextFontAspect': (MeshVS_DrawerAttribute.MeshVS_DA_TextFontAspect, None), 'MeshVS_DA_VectorColor': (MeshVS_DrawerAttribute.MeshVS_DA_VectorColor, None), 'MeshVS_DA_VectorMaxLength': (MeshVS_DrawerAttribute.MeshVS_DA_VectorMaxLength, None), 'MeshVS_DA_VectorArrowPart': (MeshVS_DrawerAttribute.MeshVS_DA_VectorArrowPart, None), 'MeshVS_DA_IsAllowOverlapped': (MeshVS_DrawerAttribute.MeshVS_DA_IsAllowOverlapped, None), 'MeshVS_DA_Reflection': (MeshVS_DrawerAttribute.MeshVS_DA_Reflection, None), 'MeshVS_DA_ColorReflection': (MeshVS_DrawerAttribute.MeshVS_DA_ColorReflection, None), 'MeshVS_DA_ShrinkCoeff': (MeshVS_DrawerAttribute.MeshVS_DA_ShrinkCoeff, None), 'MeshVS_DA_MaxFaceNodes': (MeshVS_DrawerAttribute.MeshVS_DA_MaxFaceNodes, None), 'MeshVS_DA_ComputeTime': (MeshVS_DrawerAttribute.MeshVS_DA_ComputeTime, None), 'MeshVS_DA_ComputeSelectionTime': (MeshVS_DrawerAttribute.MeshVS_DA_ComputeSelectionTime, None), 'MeshVS_DA_DisplayNodes': (MeshVS_DrawerAttribute.MeshVS_DA_DisplayNodes, None), 'MeshVS_DA_SelectableAuto': (MeshVS_DrawerAttribute.MeshVS_DA_SelectableAuto, None), 'MeshVS_DA_ShowEdges': (MeshVS_DrawerAttribute.MeshVS_DA_ShowEdges, None), 'MeshVS_DA_SmoothShading': (MeshVS_DrawerAttribute.MeshVS_DA_SmoothShading, None), 'MeshVS_DA_SupressBackFaces': (MeshVS_DrawerAttribute.MeshVS_DA_SupressBackFaces, None), 'MeshVS_DA_User': (MeshVS_DrawerAttribute.MeshVS_DA_User, None)}
-    __members__: dict # value = {'MeshVS_DA_InteriorStyle': MeshVS_DrawerAttribute.MeshVS_DA_InteriorStyle, 'MeshVS_DA_InteriorColor': MeshVS_DrawerAttribute.MeshVS_DA_InteriorColor, 'MeshVS_DA_BackInteriorColor': MeshVS_DrawerAttribute.MeshVS_DA_BackInteriorColor, 'MeshVS_DA_EdgeColor': MeshVS_DrawerAttribute.MeshVS_DA_EdgeColor, 'MeshVS_DA_EdgeType': MeshVS_DrawerAttribute.MeshVS_DA_EdgeType, 'MeshVS_DA_EdgeWidth': MeshVS_DrawerAttribute.MeshVS_DA_EdgeWidth, 'MeshVS_DA_HatchStyle': MeshVS_DrawerAttribute.MeshVS_DA_HatchStyle, 'MeshVS_DA_FrontMaterial': MeshVS_DrawerAttribute.MeshVS_DA_FrontMaterial, 'MeshVS_DA_BackMaterial': MeshVS_DrawerAttribute.MeshVS_DA_BackMaterial, 'MeshVS_DA_BeamType': MeshVS_DrawerAttribute.MeshVS_DA_BeamType, 'MeshVS_DA_BeamWidth': MeshVS_DrawerAttribute.MeshVS_DA_BeamWidth, 'MeshVS_DA_BeamColor': MeshVS_DrawerAttribute.MeshVS_DA_BeamColor, 'MeshVS_DA_MarkerType': MeshVS_DrawerAttribute.MeshVS_DA_MarkerType, 'MeshVS_DA_MarkerColor': MeshVS_DrawerAttribute.MeshVS_DA_MarkerColor, 'MeshVS_DA_MarkerScale': MeshVS_DrawerAttribute.MeshVS_DA_MarkerScale, 'MeshVS_DA_TextColor': MeshVS_DrawerAttribute.MeshVS_DA_TextColor, 'MeshVS_DA_TextHeight': MeshVS_DrawerAttribute.MeshVS_DA_TextHeight, 'MeshVS_DA_TextFont': MeshVS_DrawerAttribute.MeshVS_DA_TextFont, 'MeshVS_DA_TextExpansionFactor': MeshVS_DrawerAttribute.MeshVS_DA_TextExpansionFactor, 'MeshVS_DA_TextSpace': MeshVS_DrawerAttribute.MeshVS_DA_TextSpace, 'MeshVS_DA_TextStyle': MeshVS_DrawerAttribute.MeshVS_DA_TextStyle, 'MeshVS_DA_TextDisplayType': MeshVS_DrawerAttribute.MeshVS_DA_TextDisplayType, 'MeshVS_DA_TextTexFont': MeshVS_DrawerAttribute.MeshVS_DA_TextTexFont, 'MeshVS_DA_TextFontAspect': MeshVS_DrawerAttribute.MeshVS_DA_TextFontAspect, 'MeshVS_DA_VectorColor': MeshVS_DrawerAttribute.MeshVS_DA_VectorColor, 'MeshVS_DA_VectorMaxLength': MeshVS_DrawerAttribute.MeshVS_DA_VectorMaxLength, 'MeshVS_DA_VectorArrowPart': MeshVS_DrawerAttribute.MeshVS_DA_VectorArrowPart, 'MeshVS_DA_IsAllowOverlapped': MeshVS_DrawerAttribute.MeshVS_DA_IsAllowOverlapped, 'MeshVS_DA_Reflection': MeshVS_DrawerAttribute.MeshVS_DA_Reflection, 'MeshVS_DA_ColorReflection': MeshVS_DrawerAttribute.MeshVS_DA_ColorReflection, 'MeshVS_DA_ShrinkCoeff': MeshVS_DrawerAttribute.MeshVS_DA_ShrinkCoeff, 'MeshVS_DA_MaxFaceNodes': MeshVS_DrawerAttribute.MeshVS_DA_MaxFaceNodes, 'MeshVS_DA_ComputeTime': MeshVS_DrawerAttribute.MeshVS_DA_ComputeTime, 'MeshVS_DA_ComputeSelectionTime': MeshVS_DrawerAttribute.MeshVS_DA_ComputeSelectionTime, 'MeshVS_DA_DisplayNodes': MeshVS_DrawerAttribute.MeshVS_DA_DisplayNodes, 'MeshVS_DA_SelectableAuto': MeshVS_DrawerAttribute.MeshVS_DA_SelectableAuto, 'MeshVS_DA_ShowEdges': MeshVS_DrawerAttribute.MeshVS_DA_ShowEdges, 'MeshVS_DA_SmoothShading': MeshVS_DrawerAttribute.MeshVS_DA_SmoothShading, 'MeshVS_DA_SupressBackFaces': MeshVS_DrawerAttribute.MeshVS_DA_SupressBackFaces, 'MeshVS_DA_User': MeshVS_DrawerAttribute.MeshVS_DA_User}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    MeshVS_DA_BackInteriorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_BackInteriorColor: 2>
+    MeshVS_DA_BackMaterial: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_BackMaterial: 8>
+    MeshVS_DA_BeamColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_BeamColor: 11>
+    MeshVS_DA_BeamType: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_BeamType: 9>
+    MeshVS_DA_BeamWidth: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_BeamWidth: 10>
+    MeshVS_DA_ColorReflection: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_ColorReflection: 29>
+    MeshVS_DA_ComputeSelectionTime: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_ComputeSelectionTime: 33>
+    MeshVS_DA_ComputeTime: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_ComputeTime: 32>
+    MeshVS_DA_DisplayNodes: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_DisplayNodes: 34>
+    MeshVS_DA_EdgeColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_EdgeColor: 3>
+    MeshVS_DA_EdgeType: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_EdgeType: 4>
+    MeshVS_DA_EdgeWidth: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_EdgeWidth: 5>
+    MeshVS_DA_FrontMaterial: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_FrontMaterial: 7>
+    MeshVS_DA_HatchStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_HatchStyle: 6>
+    MeshVS_DA_InteriorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_InteriorColor: 1>
+    MeshVS_DA_InteriorStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_InteriorStyle: 0>
+    MeshVS_DA_IsAllowOverlapped: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_IsAllowOverlapped: 27>
+    MeshVS_DA_MarkerColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_MarkerColor: 13>
+    MeshVS_DA_MarkerScale: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_MarkerScale: 14>
+    MeshVS_DA_MarkerType: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_MarkerType: 12>
+    MeshVS_DA_MaxFaceNodes: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_MaxFaceNodes: 31>
+    MeshVS_DA_Reflection: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_Reflection: 28>
+    MeshVS_DA_SelectableAuto: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_SelectableAuto: 35>
+    MeshVS_DA_ShowEdges: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_ShowEdges: 36>
+    MeshVS_DA_ShrinkCoeff: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_ShrinkCoeff: 30>
+    MeshVS_DA_SmoothShading: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_SmoothShading: 37>
+    MeshVS_DA_SupressBackFaces: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_SupressBackFaces: 38>
+    MeshVS_DA_TextColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextColor: 15>
+    MeshVS_DA_TextDisplayType: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextDisplayType: 21>
+    MeshVS_DA_TextExpansionFactor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextExpansionFactor: 18>
+    MeshVS_DA_TextFont: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextFont: 17>
+    MeshVS_DA_TextFontAspect: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextFontAspect: 23>
+    MeshVS_DA_TextHeight: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextHeight: 16>
+    MeshVS_DA_TextSpace: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextSpace: 19>
+    MeshVS_DA_TextStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextStyle: 20>
+    MeshVS_DA_TextTexFont: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextTexFont: 22>
+    MeshVS_DA_User: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_User: 39>
+    MeshVS_DA_VectorArrowPart: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_VectorArrowPart: 26>
+    MeshVS_DA_VectorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_VectorColor: 24>
+    MeshVS_DA_VectorMaxLength: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_VectorMaxLength: 25>
+    __entries: dict # value = {'MeshVS_DA_InteriorStyle': (<MeshVS_DrawerAttribute.MeshVS_DA_InteriorStyle: 0>, None), 'MeshVS_DA_InteriorColor': (<MeshVS_DrawerAttribute.MeshVS_DA_InteriorColor: 1>, None), 'MeshVS_DA_BackInteriorColor': (<MeshVS_DrawerAttribute.MeshVS_DA_BackInteriorColor: 2>, None), 'MeshVS_DA_EdgeColor': (<MeshVS_DrawerAttribute.MeshVS_DA_EdgeColor: 3>, None), 'MeshVS_DA_EdgeType': (<MeshVS_DrawerAttribute.MeshVS_DA_EdgeType: 4>, None), 'MeshVS_DA_EdgeWidth': (<MeshVS_DrawerAttribute.MeshVS_DA_EdgeWidth: 5>, None), 'MeshVS_DA_HatchStyle': (<MeshVS_DrawerAttribute.MeshVS_DA_HatchStyle: 6>, None), 'MeshVS_DA_FrontMaterial': (<MeshVS_DrawerAttribute.MeshVS_DA_FrontMaterial: 7>, None), 'MeshVS_DA_BackMaterial': (<MeshVS_DrawerAttribute.MeshVS_DA_BackMaterial: 8>, None), 'MeshVS_DA_BeamType': (<MeshVS_DrawerAttribute.MeshVS_DA_BeamType: 9>, None), 'MeshVS_DA_BeamWidth': (<MeshVS_DrawerAttribute.MeshVS_DA_BeamWidth: 10>, None), 'MeshVS_DA_BeamColor': (<MeshVS_DrawerAttribute.MeshVS_DA_BeamColor: 11>, None), 'MeshVS_DA_MarkerType': (<MeshVS_DrawerAttribute.MeshVS_DA_MarkerType: 12>, None), 'MeshVS_DA_MarkerColor': (<MeshVS_DrawerAttribute.MeshVS_DA_MarkerColor: 13>, None), 'MeshVS_DA_MarkerScale': (<MeshVS_DrawerAttribute.MeshVS_DA_MarkerScale: 14>, None), 'MeshVS_DA_TextColor': (<MeshVS_DrawerAttribute.MeshVS_DA_TextColor: 15>, None), 'MeshVS_DA_TextHeight': (<MeshVS_DrawerAttribute.MeshVS_DA_TextHeight: 16>, None), 'MeshVS_DA_TextFont': (<MeshVS_DrawerAttribute.MeshVS_DA_TextFont: 17>, None), 'MeshVS_DA_TextExpansionFactor': (<MeshVS_DrawerAttribute.MeshVS_DA_TextExpansionFactor: 18>, None), 'MeshVS_DA_TextSpace': (<MeshVS_DrawerAttribute.MeshVS_DA_TextSpace: 19>, None), 'MeshVS_DA_TextStyle': (<MeshVS_DrawerAttribute.MeshVS_DA_TextStyle: 20>, None), 'MeshVS_DA_TextDisplayType': (<MeshVS_DrawerAttribute.MeshVS_DA_TextDisplayType: 21>, None), 'MeshVS_DA_TextTexFont': (<MeshVS_DrawerAttribute.MeshVS_DA_TextTexFont: 22>, None), 'MeshVS_DA_TextFontAspect': (<MeshVS_DrawerAttribute.MeshVS_DA_TextFontAspect: 23>, None), 'MeshVS_DA_VectorColor': (<MeshVS_DrawerAttribute.MeshVS_DA_VectorColor: 24>, None), 'MeshVS_DA_VectorMaxLength': (<MeshVS_DrawerAttribute.MeshVS_DA_VectorMaxLength: 25>, None), 'MeshVS_DA_VectorArrowPart': (<MeshVS_DrawerAttribute.MeshVS_DA_VectorArrowPart: 26>, None), 'MeshVS_DA_IsAllowOverlapped': (<MeshVS_DrawerAttribute.MeshVS_DA_IsAllowOverlapped: 27>, None), 'MeshVS_DA_Reflection': (<MeshVS_DrawerAttribute.MeshVS_DA_Reflection: 28>, None), 'MeshVS_DA_ColorReflection': (<MeshVS_DrawerAttribute.MeshVS_DA_ColorReflection: 29>, None), 'MeshVS_DA_ShrinkCoeff': (<MeshVS_DrawerAttribute.MeshVS_DA_ShrinkCoeff: 30>, None), 'MeshVS_DA_MaxFaceNodes': (<MeshVS_DrawerAttribute.MeshVS_DA_MaxFaceNodes: 31>, None), 'MeshVS_DA_ComputeTime': (<MeshVS_DrawerAttribute.MeshVS_DA_ComputeTime: 32>, None), 'MeshVS_DA_ComputeSelectionTime': (<MeshVS_DrawerAttribute.MeshVS_DA_ComputeSelectionTime: 33>, None), 'MeshVS_DA_DisplayNodes': (<MeshVS_DrawerAttribute.MeshVS_DA_DisplayNodes: 34>, None), 'MeshVS_DA_SelectableAuto': (<MeshVS_DrawerAttribute.MeshVS_DA_SelectableAuto: 35>, None), 'MeshVS_DA_ShowEdges': (<MeshVS_DrawerAttribute.MeshVS_DA_ShowEdges: 36>, None), 'MeshVS_DA_SmoothShading': (<MeshVS_DrawerAttribute.MeshVS_DA_SmoothShading: 37>, None), 'MeshVS_DA_SupressBackFaces': (<MeshVS_DrawerAttribute.MeshVS_DA_SupressBackFaces: 38>, None), 'MeshVS_DA_User': (<MeshVS_DrawerAttribute.MeshVS_DA_User: 39>, None)}
+    __members__: dict # value = {'MeshVS_DA_InteriorStyle': <MeshVS_DrawerAttribute.MeshVS_DA_InteriorStyle: 0>, 'MeshVS_DA_InteriorColor': <MeshVS_DrawerAttribute.MeshVS_DA_InteriorColor: 1>, 'MeshVS_DA_BackInteriorColor': <MeshVS_DrawerAttribute.MeshVS_DA_BackInteriorColor: 2>, 'MeshVS_DA_EdgeColor': <MeshVS_DrawerAttribute.MeshVS_DA_EdgeColor: 3>, 'MeshVS_DA_EdgeType': <MeshVS_DrawerAttribute.MeshVS_DA_EdgeType: 4>, 'MeshVS_DA_EdgeWidth': <MeshVS_DrawerAttribute.MeshVS_DA_EdgeWidth: 5>, 'MeshVS_DA_HatchStyle': <MeshVS_DrawerAttribute.MeshVS_DA_HatchStyle: 6>, 'MeshVS_DA_FrontMaterial': <MeshVS_DrawerAttribute.MeshVS_DA_FrontMaterial: 7>, 'MeshVS_DA_BackMaterial': <MeshVS_DrawerAttribute.MeshVS_DA_BackMaterial: 8>, 'MeshVS_DA_BeamType': <MeshVS_DrawerAttribute.MeshVS_DA_BeamType: 9>, 'MeshVS_DA_BeamWidth': <MeshVS_DrawerAttribute.MeshVS_DA_BeamWidth: 10>, 'MeshVS_DA_BeamColor': <MeshVS_DrawerAttribute.MeshVS_DA_BeamColor: 11>, 'MeshVS_DA_MarkerType': <MeshVS_DrawerAttribute.MeshVS_DA_MarkerType: 12>, 'MeshVS_DA_MarkerColor': <MeshVS_DrawerAttribute.MeshVS_DA_MarkerColor: 13>, 'MeshVS_DA_MarkerScale': <MeshVS_DrawerAttribute.MeshVS_DA_MarkerScale: 14>, 'MeshVS_DA_TextColor': <MeshVS_DrawerAttribute.MeshVS_DA_TextColor: 15>, 'MeshVS_DA_TextHeight': <MeshVS_DrawerAttribute.MeshVS_DA_TextHeight: 16>, 'MeshVS_DA_TextFont': <MeshVS_DrawerAttribute.MeshVS_DA_TextFont: 17>, 'MeshVS_DA_TextExpansionFactor': <MeshVS_DrawerAttribute.MeshVS_DA_TextExpansionFactor: 18>, 'MeshVS_DA_TextSpace': <MeshVS_DrawerAttribute.MeshVS_DA_TextSpace: 19>, 'MeshVS_DA_TextStyle': <MeshVS_DrawerAttribute.MeshVS_DA_TextStyle: 20>, 'MeshVS_DA_TextDisplayType': <MeshVS_DrawerAttribute.MeshVS_DA_TextDisplayType: 21>, 'MeshVS_DA_TextTexFont': <MeshVS_DrawerAttribute.MeshVS_DA_TextTexFont: 22>, 'MeshVS_DA_TextFontAspect': <MeshVS_DrawerAttribute.MeshVS_DA_TextFontAspect: 23>, 'MeshVS_DA_VectorColor': <MeshVS_DrawerAttribute.MeshVS_DA_VectorColor: 24>, 'MeshVS_DA_VectorMaxLength': <MeshVS_DrawerAttribute.MeshVS_DA_VectorMaxLength: 25>, 'MeshVS_DA_VectorArrowPart': <MeshVS_DrawerAttribute.MeshVS_DA_VectorArrowPart: 26>, 'MeshVS_DA_IsAllowOverlapped': <MeshVS_DrawerAttribute.MeshVS_DA_IsAllowOverlapped: 27>, 'MeshVS_DA_Reflection': <MeshVS_DrawerAttribute.MeshVS_DA_Reflection: 28>, 'MeshVS_DA_ColorReflection': <MeshVS_DrawerAttribute.MeshVS_DA_ColorReflection: 29>, 'MeshVS_DA_ShrinkCoeff': <MeshVS_DrawerAttribute.MeshVS_DA_ShrinkCoeff: 30>, 'MeshVS_DA_MaxFaceNodes': <MeshVS_DrawerAttribute.MeshVS_DA_MaxFaceNodes: 31>, 'MeshVS_DA_ComputeTime': <MeshVS_DrawerAttribute.MeshVS_DA_ComputeTime: 32>, 'MeshVS_DA_ComputeSelectionTime': <MeshVS_DrawerAttribute.MeshVS_DA_ComputeSelectionTime: 33>, 'MeshVS_DA_DisplayNodes': <MeshVS_DrawerAttribute.MeshVS_DA_DisplayNodes: 34>, 'MeshVS_DA_SelectableAuto': <MeshVS_DrawerAttribute.MeshVS_DA_SelectableAuto: 35>, 'MeshVS_DA_ShowEdges': <MeshVS_DrawerAttribute.MeshVS_DA_ShowEdges: 36>, 'MeshVS_DA_SmoothShading': <MeshVS_DrawerAttribute.MeshVS_DA_SmoothShading: 37>, 'MeshVS_DA_SupressBackFaces': <MeshVS_DrawerAttribute.MeshVS_DA_SupressBackFaces: 38>, 'MeshVS_DA_User': <MeshVS_DrawerAttribute.MeshVS_DA_User: 39>}
     pass
 class MeshVS_DummySensitiveEntity(OCP.Select3D.Select3D_SensitiveEntity, OCP.Standard.Standard_Transient):
     """
@@ -1880,7 +1896,7 @@ class MeshVS_DummySensitiveEntity(OCP.Select3D.Select3D_SensitiveEntity, OCP.Sta
         """
         None
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         None
         """
@@ -1899,6 +1915,10 @@ class MeshVS_DummySensitiveEntity(OCP.Select3D.Select3D_SensitiveEntity, OCP.Sta
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1969,6 +1989,10 @@ class MeshVS_DummySensitiveEntity(OCP.Select3D.Select3D_SensitiveEntity, OCP.Sta
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def ToBuildBVH(self) -> bool: 
+        """
+        None
         """
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner) -> None: ...
     @staticmethod
@@ -2121,26 +2145,34 @@ class MeshVS_EntityType():
 
       MeshVS_ET_All
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    MeshVS_ET_0D: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_0D
-    MeshVS_ET_All: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_All
-    MeshVS_ET_Element: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_Element
-    MeshVS_ET_Face: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_Face
-    MeshVS_ET_Link: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_Link
-    MeshVS_ET_NONE: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_NONE
-    MeshVS_ET_Node: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_Node
-    MeshVS_ET_Volume: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_Volume
-    __entries: dict # value = {'MeshVS_ET_NONE': (MeshVS_EntityType.MeshVS_ET_NONE, None), 'MeshVS_ET_Node': (MeshVS_EntityType.MeshVS_ET_Node, None), 'MeshVS_ET_0D': (MeshVS_EntityType.MeshVS_ET_0D, None), 'MeshVS_ET_Link': (MeshVS_EntityType.MeshVS_ET_Link, None), 'MeshVS_ET_Face': (MeshVS_EntityType.MeshVS_ET_Face, None), 'MeshVS_ET_Volume': (MeshVS_EntityType.MeshVS_ET_Volume, None), 'MeshVS_ET_Element': (MeshVS_EntityType.MeshVS_ET_Element, None), 'MeshVS_ET_All': (MeshVS_EntityType.MeshVS_ET_All, None)}
-    __members__: dict # value = {'MeshVS_ET_NONE': MeshVS_EntityType.MeshVS_ET_NONE, 'MeshVS_ET_Node': MeshVS_EntityType.MeshVS_ET_Node, 'MeshVS_ET_0D': MeshVS_EntityType.MeshVS_ET_0D, 'MeshVS_ET_Link': MeshVS_EntityType.MeshVS_ET_Link, 'MeshVS_ET_Face': MeshVS_EntityType.MeshVS_ET_Face, 'MeshVS_ET_Volume': MeshVS_EntityType.MeshVS_ET_Volume, 'MeshVS_ET_Element': MeshVS_EntityType.MeshVS_ET_Element, 'MeshVS_ET_All': MeshVS_EntityType.MeshVS_ET_All}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    MeshVS_ET_0D: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_0D: 2>
+    MeshVS_ET_All: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_All: 31>
+    MeshVS_ET_Element: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_Element: 30>
+    MeshVS_ET_Face: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_Face: 8>
+    MeshVS_ET_Link: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_Link: 4>
+    MeshVS_ET_NONE: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_NONE: 0>
+    MeshVS_ET_Node: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_Node: 1>
+    MeshVS_ET_Volume: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_Volume: 16>
+    __entries: dict # value = {'MeshVS_ET_NONE': (<MeshVS_EntityType.MeshVS_ET_NONE: 0>, None), 'MeshVS_ET_Node': (<MeshVS_EntityType.MeshVS_ET_Node: 1>, None), 'MeshVS_ET_0D': (<MeshVS_EntityType.MeshVS_ET_0D: 2>, None), 'MeshVS_ET_Link': (<MeshVS_EntityType.MeshVS_ET_Link: 4>, None), 'MeshVS_ET_Face': (<MeshVS_EntityType.MeshVS_ET_Face: 8>, None), 'MeshVS_ET_Volume': (<MeshVS_EntityType.MeshVS_ET_Volume: 16>, None), 'MeshVS_ET_Element': (<MeshVS_EntityType.MeshVS_ET_Element: 30>, None), 'MeshVS_ET_All': (<MeshVS_EntityType.MeshVS_ET_All: 31>, None)}
+    __members__: dict # value = {'MeshVS_ET_NONE': <MeshVS_EntityType.MeshVS_ET_NONE: 0>, 'MeshVS_ET_Node': <MeshVS_EntityType.MeshVS_ET_Node: 1>, 'MeshVS_ET_0D': <MeshVS_EntityType.MeshVS_ET_0D: 2>, 'MeshVS_ET_Link': <MeshVS_EntityType.MeshVS_ET_Link: 4>, 'MeshVS_ET_Face': <MeshVS_EntityType.MeshVS_ET_Face: 8>, 'MeshVS_ET_Volume': <MeshVS_EntityType.MeshVS_ET_Volume: 16>, 'MeshVS_ET_Element': <MeshVS_EntityType.MeshVS_ET_Element: 30>, 'MeshVS_ET_All': <MeshVS_EntityType.MeshVS_ET_All: 31>}
     pass
 class MeshVS_HArray1OfSequenceOfInteger(MeshVS_Array1OfSequenceOfInteger, OCP.Standard.Standard_Transient):
     def Array1(self) -> MeshVS_Array1OfSequenceOfInteger: 
@@ -2266,14 +2298,14 @@ class MeshVS_HArray1OfSequenceOfInteger(MeshVS_Array1OfSequenceOfInteger, OCP.St
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.TColStd.TColStd_SequenceOfInteger) -> None: ...
     @overload
     def __init__(self,theOther : MeshVS_Array1OfSequenceOfInteger) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2375,7 +2407,7 @@ class MeshVS_MapOfTwoNodes(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -2396,11 +2428,11 @@ class MeshVS_MapOfTwoNodes(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theOther : MeshVS_MapOfTwoNodes) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : MeshVS_MapOfTwoNodes) -> None: ...
     pass
 class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard_Transient):
     """
@@ -2474,7 +2506,7 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         """
         Returns the color setting of the Interactive Object.
         """
-    def CombinedParentTransformation(self) -> OCP.Geom.Geom_Transformation: 
+    def CombinedParentTransformation(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return combined parent transformation.
         """
@@ -2489,10 +2521,6 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
     def CurrentFacingModel(self) -> OCP.Aspect.Aspect_TypeOfFacingModel: 
         """
         Returns the current facing model which is in effect.
-        """
-    def CurrentSelection(self) -> OCP.SelectMgr.SelectMgr_Selection: 
-        """
-        Returns the current selection in this framework.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2510,7 +2538,7 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         """
         Returns the display mode setting of the Interactive Object. The range of supported display mode indexes should be specified within object definition and filtered by AccepDisplayMode().
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -2686,10 +2714,6 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         """
         Increments the reference counter of this object
         """
-    def Init(self) -> None: 
-        """
-        Begins the iteration scanning for sensitive primitives.
-        """
     def InteractiveContext(self) -> OCP.AIS.AIS_InteractiveContext: 
         """
         Returns the context pointer to the interactive context.
@@ -2756,21 +2780,13 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         """
         Return the local transformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
-    def LocalTransformationGeom(self) -> OCP.Geom.Geom_Transformation: 
+    def LocalTransformationGeom(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return the local transformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     def Material(self) -> OCP.Graphic3d.Graphic3d_NameOfMaterial: 
         """
         Returns the current material setting as enumeration value.
-        """
-    def More(self) -> bool: 
-        """
-        Continues the iteration scanning for sensitive primitives.
-        """
-    def Next(self) -> None: 
-        """
-        Continues the iteration scanning for sensitive primitives.
         """
     def Parent(self) -> OCP.PrsMgr.PrsMgr_PresentableObject: 
         """
@@ -2787,6 +2803,10 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
     def Presentations(self) -> OCP.PrsMgr.PrsMgr_Presentations: 
         """
         Return presentations.
+        """
+    def ProcessDragging(self,theCtx : OCP.AIS.AIS_InteractiveContext,theView : OCP.V3d.V3d_View,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theDragFrom : OCP.Graphic3d.Graphic3d_Vec2i,theDragTo : OCP.Graphic3d.Graphic3d_Vec2i,theAction : OCP.AIS.AIS_DragAction) -> bool: 
+        """
+        Drag object in the viewer.
         """
     @overload
     def RecomputePrimitives(self,theMode : int) -> None: 
@@ -2900,14 +2920,14 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         Sets highlight display mode. This is obsolete method for backward compatibility - use ::HilightAttributes() and ::DynamicHilightAttributes() instead.
         """
     @overload
-    def SetHilighter(self,Index : int) -> bool: 
+    def SetHilighter(self,Builder : MeshVS_PrsBuilder) -> None: 
         """
         Changes hilighter ( see above )
 
         Sets builder with sequence index "Index" as hilighter
         """
     @overload
-    def SetHilighter(self,Builder : MeshVS_PrsBuilder) -> None: ...
+    def SetHilighter(self,Index : int) -> bool: ...
     def SetHilighterById(self,Id : int) -> bool: 
         """
         Sets builder with identificator "Id" as hilighter
@@ -2928,7 +2948,7 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -3024,7 +3044,7 @@ class MeshVS_Mesh(OCP.AIS.AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         """
         Return the transformation taking into account transformation of parent object(s). Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
-    def TransformationGeom(self) -> OCP.Geom.Geom_Transformation: 
+    def TransformationGeom(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return the transformation taking into account transformation of parent object(s). Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
@@ -3128,7 +3148,7 @@ class MeshVS_MeshEntityOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.S
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -3256,14 +3276,14 @@ class MeshVS_MeshEntityOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.S
         Set Z layer ID and update all presentations.
         """
     @overload
-    def State(self,theStatus : int) -> None: 
+    def State(self) -> int: 
         """
         Returns selection state.
 
         Set the state of the owner. The method is deprecated. Use SetSelected() instead.
         """
     @overload
-    def State(self) -> int: ...
+    def State(self,theStatus : int) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3280,6 +3300,7 @@ class MeshVS_MeshEntityOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.S
         """
         Implements immediate application of location transformation of parent object to dynamic highlight structure
         """
+    def __init__(self,SelObj : OCP.SelectMgr.SelectMgr_SelectableObject,ID : int,MeshEntity : capsule,Type : MeshVS_EntityType,Priority : int=0,IsGroup : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3319,7 +3340,7 @@ class MeshVS_MeshOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Standar
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -3459,14 +3480,14 @@ class MeshVS_MeshOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Standar
         Set Z layer ID and update all presentations.
         """
     @overload
-    def State(self,theStatus : int) -> None: 
+    def State(self) -> int: 
         """
         Returns selection state.
 
         Set the state of the owner. The method is deprecated. Use SetSelected() instead.
         """
     @overload
-    def State(self) -> int: ...
+    def State(self,theStatus : int) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3479,6 +3500,7 @@ class MeshVS_MeshOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Standar
         """
         Implements immediate application of location transformation of parent object to dynamic highlight structure
         """
+    def __init__(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject,theDS : MeshVS_DataSource,thePriority : int=0) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3642,21 +3664,29 @@ class MeshVS_MeshSelectionMethod():
 
       MeshVS_MSM_BOX
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    MeshVS_MSM_BOX: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = MeshVS_MeshSelectionMethod.MeshVS_MSM_BOX
-    MeshVS_MSM_NODES: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = MeshVS_MeshSelectionMethod.MeshVS_MSM_NODES
-    MeshVS_MSM_PRECISE: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = MeshVS_MeshSelectionMethod.MeshVS_MSM_PRECISE
-    __entries: dict # value = {'MeshVS_MSM_PRECISE': (MeshVS_MeshSelectionMethod.MeshVS_MSM_PRECISE, None), 'MeshVS_MSM_NODES': (MeshVS_MeshSelectionMethod.MeshVS_MSM_NODES, None), 'MeshVS_MSM_BOX': (MeshVS_MeshSelectionMethod.MeshVS_MSM_BOX, None)}
-    __members__: dict # value = {'MeshVS_MSM_PRECISE': MeshVS_MeshSelectionMethod.MeshVS_MSM_PRECISE, 'MeshVS_MSM_NODES': MeshVS_MeshSelectionMethod.MeshVS_MSM_NODES, 'MeshVS_MSM_BOX': MeshVS_MeshSelectionMethod.MeshVS_MSM_BOX}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    MeshVS_MSM_BOX: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = <MeshVS_MeshSelectionMethod.MeshVS_MSM_BOX: 2>
+    MeshVS_MSM_NODES: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = <MeshVS_MeshSelectionMethod.MeshVS_MSM_NODES: 1>
+    MeshVS_MSM_PRECISE: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = <MeshVS_MeshSelectionMethod.MeshVS_MSM_PRECISE: 0>
+    __entries: dict # value = {'MeshVS_MSM_PRECISE': (<MeshVS_MeshSelectionMethod.MeshVS_MSM_PRECISE: 0>, None), 'MeshVS_MSM_NODES': (<MeshVS_MeshSelectionMethod.MeshVS_MSM_NODES: 1>, None), 'MeshVS_MSM_BOX': (<MeshVS_MeshSelectionMethod.MeshVS_MSM_BOX: 2>, None)}
+    __members__: dict # value = {'MeshVS_MSM_PRECISE': <MeshVS_MeshSelectionMethod.MeshVS_MSM_PRECISE: 0>, 'MeshVS_MSM_NODES': <MeshVS_MeshSelectionMethod.MeshVS_MSM_NODES: 1>, 'MeshVS_MSM_BOX': <MeshVS_MeshSelectionMethod.MeshVS_MSM_BOX: 2>}
     pass
 class MeshVS_NodalColorPrsBuilder(MeshVS_PrsBuilder, OCP.Standard.Standard_Transient):
     """
@@ -3849,7 +3879,7 @@ class MeshVS_PolyhedronVerts(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : MeshVS_PolyhedronVerts) -> None: 
+    def Append(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> OCP.TColgp.TColgp_HArray1OfPnt: 
         """
         Append one item at the end
 
@@ -3858,7 +3888,7 @@ class MeshVS_PolyhedronVerts(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> OCP.TColgp.TColgp_HArray1OfPnt: ...
+    def Append(self,theOther : MeshVS_PolyhedronVerts) -> None: ...
     @overload
     def Append(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt,theIter : Any) -> None: ...
     def Assign(self,theOther : MeshVS_PolyhedronVerts) -> MeshVS_PolyhedronVerts: 
@@ -3880,23 +3910,23 @@ class MeshVS_PolyhedronVerts(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt,theIter : Any) -> OCP.TColgp.TColgp_HArray1OfPnt: 
+    def InsertAfter(self,theOther : MeshVS_PolyhedronVerts,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : MeshVS_PolyhedronVerts,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt,theIter : Any) -> OCP.TColgp.TColgp_HArray1OfPnt: ...
     @overload
-    def InsertBefore(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt,theIter : Any) -> OCP.TColgp.TColgp_HArray1OfPnt: 
+    def InsertBefore(self,theOther : MeshVS_PolyhedronVerts,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : MeshVS_PolyhedronVerts,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt,theIter : Any) -> OCP.TColgp.TColgp_HArray1OfPnt: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -3935,10 +3965,10 @@ class MeshVS_PolyhedronVerts(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theOther : MeshVS_PolyhedronVerts) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class MeshVS_ElementalColorPrsBuilder(MeshVS_PrsBuilder, OCP.Standard.Standard_Transient):
     """
@@ -3973,14 +4003,14 @@ class MeshVS_ElementalColorPrsBuilder(MeshVS_PrsBuilder, OCP.Standard.Standard_T
         Returns color assigned with element number ID
         """
     @overload
-    def GetColor2(self,ID : int,theColor : MeshVS_TwoColors) -> bool: 
+    def GetColor2(self,ID : int,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color) -> bool: 
         """
         Returns colors assigned with element number ID
 
         Returns colors assigned with element number ID theColor1 is the front element color theColor2 is the back element color
         """
     @overload
-    def GetColor2(self,ID : int,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color) -> bool: ...
+    def GetColor2(self,ID : int,theColor : MeshVS_TwoColors) -> bool: ...
     def GetColors1(self) -> MeshVS_DataMapOfIntegerColor: 
         """
         Returns map of colors same for front and back side of face.
@@ -4132,27 +4162,35 @@ class MeshVS_SelectionModeFlags():
 
       MeshVS_SMF_Group
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    MeshVS_SMF_0D: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_0D
-    MeshVS_SMF_All: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_All
-    MeshVS_SMF_Element: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Element
-    MeshVS_SMF_Face: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Face
-    MeshVS_SMF_Group: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Group
-    MeshVS_SMF_Link: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Link
-    MeshVS_SMF_Mesh: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Mesh
-    MeshVS_SMF_Node: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Node
-    MeshVS_SMF_Volume: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Volume
-    __entries: dict # value = {'MeshVS_SMF_Mesh': (MeshVS_SelectionModeFlags.MeshVS_SMF_Mesh, None), 'MeshVS_SMF_Node': (MeshVS_SelectionModeFlags.MeshVS_SMF_Node, None), 'MeshVS_SMF_0D': (MeshVS_SelectionModeFlags.MeshVS_SMF_0D, None), 'MeshVS_SMF_Link': (MeshVS_SelectionModeFlags.MeshVS_SMF_Link, None), 'MeshVS_SMF_Face': (MeshVS_SelectionModeFlags.MeshVS_SMF_Face, None), 'MeshVS_SMF_Volume': (MeshVS_SelectionModeFlags.MeshVS_SMF_Volume, None), 'MeshVS_SMF_Element': (MeshVS_SelectionModeFlags.MeshVS_SMF_Element, None), 'MeshVS_SMF_All': (MeshVS_SelectionModeFlags.MeshVS_SMF_All, None), 'MeshVS_SMF_Group': (MeshVS_SelectionModeFlags.MeshVS_SMF_Group, None)}
-    __members__: dict # value = {'MeshVS_SMF_Mesh': MeshVS_SelectionModeFlags.MeshVS_SMF_Mesh, 'MeshVS_SMF_Node': MeshVS_SelectionModeFlags.MeshVS_SMF_Node, 'MeshVS_SMF_0D': MeshVS_SelectionModeFlags.MeshVS_SMF_0D, 'MeshVS_SMF_Link': MeshVS_SelectionModeFlags.MeshVS_SMF_Link, 'MeshVS_SMF_Face': MeshVS_SelectionModeFlags.MeshVS_SMF_Face, 'MeshVS_SMF_Volume': MeshVS_SelectionModeFlags.MeshVS_SMF_Volume, 'MeshVS_SMF_Element': MeshVS_SelectionModeFlags.MeshVS_SMF_Element, 'MeshVS_SMF_All': MeshVS_SelectionModeFlags.MeshVS_SMF_All, 'MeshVS_SMF_Group': MeshVS_SelectionModeFlags.MeshVS_SMF_Group}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    MeshVS_SMF_0D: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_0D: 2>
+    MeshVS_SMF_All: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_All: 31>
+    MeshVS_SMF_Element: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Element: 30>
+    MeshVS_SMF_Face: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Face: 8>
+    MeshVS_SMF_Group: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Group: 256>
+    MeshVS_SMF_Link: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Link: 4>
+    MeshVS_SMF_Mesh: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Mesh: 0>
+    MeshVS_SMF_Node: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Node: 1>
+    MeshVS_SMF_Volume: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Volume: 16>
+    __entries: dict # value = {'MeshVS_SMF_Mesh': (<MeshVS_SelectionModeFlags.MeshVS_SMF_Mesh: 0>, None), 'MeshVS_SMF_Node': (<MeshVS_SelectionModeFlags.MeshVS_SMF_Node: 1>, None), 'MeshVS_SMF_0D': (<MeshVS_SelectionModeFlags.MeshVS_SMF_0D: 2>, None), 'MeshVS_SMF_Link': (<MeshVS_SelectionModeFlags.MeshVS_SMF_Link: 4>, None), 'MeshVS_SMF_Face': (<MeshVS_SelectionModeFlags.MeshVS_SMF_Face: 8>, None), 'MeshVS_SMF_Volume': (<MeshVS_SelectionModeFlags.MeshVS_SMF_Volume: 16>, None), 'MeshVS_SMF_Element': (<MeshVS_SelectionModeFlags.MeshVS_SMF_Element: 30>, None), 'MeshVS_SMF_All': (<MeshVS_SelectionModeFlags.MeshVS_SMF_All: 31>, None), 'MeshVS_SMF_Group': (<MeshVS_SelectionModeFlags.MeshVS_SMF_Group: 256>, None)}
+    __members__: dict # value = {'MeshVS_SMF_Mesh': <MeshVS_SelectionModeFlags.MeshVS_SMF_Mesh: 0>, 'MeshVS_SMF_Node': <MeshVS_SelectionModeFlags.MeshVS_SMF_Node: 1>, 'MeshVS_SMF_0D': <MeshVS_SelectionModeFlags.MeshVS_SMF_0D: 2>, 'MeshVS_SMF_Link': <MeshVS_SelectionModeFlags.MeshVS_SMF_Link: 4>, 'MeshVS_SMF_Face': <MeshVS_SelectionModeFlags.MeshVS_SMF_Face: 8>, 'MeshVS_SMF_Volume': <MeshVS_SelectionModeFlags.MeshVS_SMF_Volume: 16>, 'MeshVS_SMF_Element': <MeshVS_SelectionModeFlags.MeshVS_SMF_Element: 30>, 'MeshVS_SMF_All': <MeshVS_SelectionModeFlags.MeshVS_SMF_All: 31>, 'MeshVS_SMF_Group': <MeshVS_SelectionModeFlags.MeshVS_SMF_Group: 256>}
     pass
 class MeshVS_SensitiveFace(OCP.Select3D.Select3D_SensitiveFace, OCP.Select3D.Select3D_SensitiveEntity, OCP.Standard.Standard_Transient):
     """
@@ -4162,7 +4200,7 @@ class MeshVS_SensitiveFace(OCP.Select3D.Select3D_SensitiveFace, OCP.Select3D.Sel
         """
         Builds BVH tree for the face
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the face. If location transformation is set, it will be applied
         """
@@ -4181,6 +4219,10 @@ class MeshVS_SensitiveFace(OCP.Select3D.Select3D_SensitiveFace, OCP.Select3D.Sel
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -4256,6 +4298,10 @@ class MeshVS_SensitiveFace(OCP.Select3D.Select3D_SensitiveFace, OCP.Select3D.Sel
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def __init__(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_Array1OfPnt,theSensType : OCP.Select3D.Select3D_TypeOfSensitivity=Select3D_TypeOfSensitivity.Select3D_TOS_INTERIOR) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -4276,7 +4322,7 @@ class MeshVS_SensitiveMesh(OCP.Select3D.Select3D_SensitiveEntity, OCP.Standard.S
         """
         Builds BVH tree for a sensitive if needed
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of mesh
         """
@@ -4295,6 +4341,10 @@ class MeshVS_SensitiveMesh(OCP.Select3D.Select3D_SensitiveEntity, OCP.Standard.S
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -4370,6 +4420,10 @@ class MeshVS_SensitiveMesh(OCP.Select3D.Select3D_SensitiveEntity, OCP.Standard.S
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def __init__(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theMode : int=0) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -4390,7 +4444,7 @@ class MeshVS_SensitivePolyhedron(OCP.Select3D.Select3D_SensitiveEntity, OCP.Stan
         """
         Builds BVH tree for a sensitive if needed
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         None
         """
@@ -4409,6 +4463,10 @@ class MeshVS_SensitivePolyhedron(OCP.Select3D.Select3D_SensitiveEntity, OCP.Stan
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -4480,6 +4538,10 @@ class MeshVS_SensitivePolyhedron(OCP.Select3D.Select3D_SensitiveEntity, OCP.Stan
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     def __init__(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theNodes : OCP.TColgp.TColgp_Array1OfPnt,theTopo : MeshVS_HArray1OfSequenceOfInteger) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -4500,7 +4562,7 @@ class MeshVS_SensitiveQuad(OCP.Select3D.Select3D_SensitiveEntity, OCP.Standard.S
         """
         Builds BVH tree for a sensitive if needed
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns coordinates of the box
         """
@@ -4519,6 +4581,10 @@ class MeshVS_SensitiveQuad(OCP.Select3D.Select3D_SensitiveEntity, OCP.Standard.S
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -4590,6 +4656,10 @@ class MeshVS_SensitiveQuad(OCP.Select3D.Select3D_SensitiveEntity, OCP.Standard.S
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
+        """
     @overload
     def __init__(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePnt3 : OCP.gp.gp_Pnt,thePnt4 : OCP.gp.gp_Pnt) -> None: ...
     @overload
@@ -4613,7 +4683,7 @@ class MeshVS_SensitiveSegment(OCP.Select3D.Select3D_SensitiveSegment, OCP.Select
         """
         Builds BVH tree for a sensitive if needed
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of the segment. If location transformation is set, it will be applied
         """
@@ -4633,19 +4703,23 @@ class MeshVS_SensitiveSegment(OCP.Select3D.Select3D_SensitiveSegment, OCP.Select
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @overload
-    def EndPoint(self) -> OCP.gp.gp_Pnt: 
+    def EndPoint(self,thePnt : OCP.gp.gp_Pnt) -> None: 
         """
         changes the end point of the segment
 
         gives the 3D End Point of the Segment
         """
     @overload
-    def EndPoint(self,thePnt : OCP.gp.gp_Pnt) -> None: ...
+    def EndPoint(self) -> OCP.gp.gp_Pnt: ...
     def GetConnected(self) -> OCP.Select3D.Select3D_SensitiveEntity: 
         """
         None
@@ -4717,17 +4791,21 @@ class MeshVS_SensitiveSegment(OCP.Select3D.Select3D_SensitiveSegment, OCP.Select
         changes the start Point of the Segment;
         """
     @overload
-    def StartPoint(self) -> OCP.gp.gp_Pnt: 
+    def StartPoint(self,thePnt : OCP.gp.gp_Pnt) -> None: 
         """
         changes the start Point of the Segment;
 
         gives the 3D start Point of the Segment
         """
     @overload
-    def StartPoint(self,thePnt : OCP.gp.gp_Pnt) -> None: ...
+    def StartPoint(self) -> OCP.gp.gp_Pnt: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Returns TRUE if BVH tree is in invalidated state
         """
     def __init__(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theFirstPnt : OCP.gp.gp_Pnt,theLastPnt : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
@@ -4830,14 +4908,14 @@ class MeshVS_SequenceOfPrsBuilder(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : MeshVS_SequenceOfPrsBuilder) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4863,12 +4941,12 @@ class MeshVS_SequenceOfPrsBuilder(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : MeshVS_SequenceOfPrsBuilder) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5035,7 +5113,7 @@ class MeshVS_Tool():
     """
     @staticmethod
     @overload
-    def CreateAspectFillArea3d_s(theDr : MeshVS_Drawer,UseDefaults : bool=True) -> OCP.Graphic3d.Graphic3d_AspectFillArea3d: 
+    def CreateAspectFillArea3d_s(theDr : MeshVS_Drawer,Mat : OCP.Graphic3d.Graphic3d_MaterialAspect,UseDefaults : bool=True) -> OCP.Graphic3d.Graphic3d_AspectFillArea3d: 
         """
         Creates fill area aspect with values from Drawer according to keys from DrawerAttribute
 
@@ -5043,7 +5121,7 @@ class MeshVS_Tool():
         """
     @staticmethod
     @overload
-    def CreateAspectFillArea3d_s(theDr : MeshVS_Drawer,Mat : OCP.Graphic3d.Graphic3d_MaterialAspect,UseDefaults : bool=True) -> OCP.Graphic3d.Graphic3d_AspectFillArea3d: ...
+    def CreateAspectFillArea3d_s(theDr : MeshVS_Drawer,UseDefaults : bool=True) -> OCP.Graphic3d.Graphic3d_AspectFillArea3d: ...
     @staticmethod
     def CreateAspectLine3d_s(theDr : MeshVS_Drawer,UseDefaults : bool=True) -> OCP.Graphic3d.Graphic3d_AspectLine3d: 
         """
@@ -5321,46 +5399,46 @@ MeshVS_BP_NodalColor = 10
 MeshVS_BP_Text = 20
 MeshVS_BP_User = 30
 MeshVS_BP_Vector = 25
-MeshVS_DA_BackInteriorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_BackInteriorColor
-MeshVS_DA_BackMaterial: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_BackMaterial
-MeshVS_DA_BeamColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_BeamColor
-MeshVS_DA_BeamType: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_BeamType
-MeshVS_DA_BeamWidth: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_BeamWidth
-MeshVS_DA_ColorReflection: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_ColorReflection
-MeshVS_DA_ComputeSelectionTime: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_ComputeSelectionTime
-MeshVS_DA_ComputeTime: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_ComputeTime
-MeshVS_DA_DisplayNodes: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_DisplayNodes
-MeshVS_DA_EdgeColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_EdgeColor
-MeshVS_DA_EdgeType: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_EdgeType
-MeshVS_DA_EdgeWidth: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_EdgeWidth
-MeshVS_DA_FrontMaterial: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_FrontMaterial
-MeshVS_DA_HatchStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_HatchStyle
-MeshVS_DA_InteriorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_InteriorColor
-MeshVS_DA_InteriorStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_InteriorStyle
-MeshVS_DA_IsAllowOverlapped: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_IsAllowOverlapped
-MeshVS_DA_MarkerColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_MarkerColor
-MeshVS_DA_MarkerScale: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_MarkerScale
-MeshVS_DA_MarkerType: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_MarkerType
-MeshVS_DA_MaxFaceNodes: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_MaxFaceNodes
-MeshVS_DA_Reflection: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_Reflection
-MeshVS_DA_SelectableAuto: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_SelectableAuto
-MeshVS_DA_ShowEdges: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_ShowEdges
-MeshVS_DA_ShrinkCoeff: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_ShrinkCoeff
-MeshVS_DA_SmoothShading: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_SmoothShading
-MeshVS_DA_SupressBackFaces: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_SupressBackFaces
-MeshVS_DA_TextColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextColor
-MeshVS_DA_TextDisplayType: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextDisplayType
-MeshVS_DA_TextExpansionFactor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextExpansionFactor
-MeshVS_DA_TextFont: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextFont
-MeshVS_DA_TextFontAspect: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextFontAspect
-MeshVS_DA_TextHeight: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextHeight
-MeshVS_DA_TextSpace: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextSpace
-MeshVS_DA_TextStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextStyle
-MeshVS_DA_TextTexFont: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_TextTexFont
-MeshVS_DA_User: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_User
-MeshVS_DA_VectorArrowPart: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_VectorArrowPart
-MeshVS_DA_VectorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_VectorColor
-MeshVS_DA_VectorMaxLength: OCP.MeshVS.MeshVS_DrawerAttribute # value = MeshVS_DrawerAttribute.MeshVS_DA_VectorMaxLength
+MeshVS_DA_BackInteriorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_BackInteriorColor: 2>
+MeshVS_DA_BackMaterial: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_BackMaterial: 8>
+MeshVS_DA_BeamColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_BeamColor: 11>
+MeshVS_DA_BeamType: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_BeamType: 9>
+MeshVS_DA_BeamWidth: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_BeamWidth: 10>
+MeshVS_DA_ColorReflection: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_ColorReflection: 29>
+MeshVS_DA_ComputeSelectionTime: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_ComputeSelectionTime: 33>
+MeshVS_DA_ComputeTime: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_ComputeTime: 32>
+MeshVS_DA_DisplayNodes: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_DisplayNodes: 34>
+MeshVS_DA_EdgeColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_EdgeColor: 3>
+MeshVS_DA_EdgeType: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_EdgeType: 4>
+MeshVS_DA_EdgeWidth: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_EdgeWidth: 5>
+MeshVS_DA_FrontMaterial: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_FrontMaterial: 7>
+MeshVS_DA_HatchStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_HatchStyle: 6>
+MeshVS_DA_InteriorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_InteriorColor: 1>
+MeshVS_DA_InteriorStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_InteriorStyle: 0>
+MeshVS_DA_IsAllowOverlapped: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_IsAllowOverlapped: 27>
+MeshVS_DA_MarkerColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_MarkerColor: 13>
+MeshVS_DA_MarkerScale: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_MarkerScale: 14>
+MeshVS_DA_MarkerType: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_MarkerType: 12>
+MeshVS_DA_MaxFaceNodes: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_MaxFaceNodes: 31>
+MeshVS_DA_Reflection: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_Reflection: 28>
+MeshVS_DA_SelectableAuto: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_SelectableAuto: 35>
+MeshVS_DA_ShowEdges: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_ShowEdges: 36>
+MeshVS_DA_ShrinkCoeff: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_ShrinkCoeff: 30>
+MeshVS_DA_SmoothShading: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_SmoothShading: 37>
+MeshVS_DA_SupressBackFaces: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_SupressBackFaces: 38>
+MeshVS_DA_TextColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextColor: 15>
+MeshVS_DA_TextDisplayType: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextDisplayType: 21>
+MeshVS_DA_TextExpansionFactor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextExpansionFactor: 18>
+MeshVS_DA_TextFont: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextFont: 17>
+MeshVS_DA_TextFontAspect: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextFontAspect: 23>
+MeshVS_DA_TextHeight: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextHeight: 16>
+MeshVS_DA_TextSpace: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextSpace: 19>
+MeshVS_DA_TextStyle: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextStyle: 20>
+MeshVS_DA_TextTexFont: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_TextTexFont: 22>
+MeshVS_DA_User: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_User: 39>
+MeshVS_DA_VectorArrowPart: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_VectorArrowPart: 26>
+MeshVS_DA_VectorColor: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_VectorColor: 24>
+MeshVS_DA_VectorMaxLength: OCP.MeshVS.MeshVS_DrawerAttribute # value = <MeshVS_DrawerAttribute.MeshVS_DA_VectorMaxLength: 25>
 MeshVS_DMF_DeformedMask = 384
 MeshVS_DMF_DeformedPrsShading = 256
 MeshVS_DMF_DeformedPrsShrink = 384
@@ -5377,23 +5455,23 @@ MeshVS_DMF_TextDataPrs = 32
 MeshVS_DMF_User = 2048
 MeshVS_DMF_VectorDataPrs = 4
 MeshVS_DMF_WireFrame = 1
-MeshVS_ET_0D: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_0D
-MeshVS_ET_All: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_All
-MeshVS_ET_Element: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_Element
-MeshVS_ET_Face: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_Face
-MeshVS_ET_Link: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_Link
-MeshVS_ET_NONE: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_NONE
-MeshVS_ET_Node: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_Node
-MeshVS_ET_Volume: OCP.MeshVS.MeshVS_EntityType # value = MeshVS_EntityType.MeshVS_ET_Volume
-MeshVS_MSM_BOX: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = MeshVS_MeshSelectionMethod.MeshVS_MSM_BOX
-MeshVS_MSM_NODES: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = MeshVS_MeshSelectionMethod.MeshVS_MSM_NODES
-MeshVS_MSM_PRECISE: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = MeshVS_MeshSelectionMethod.MeshVS_MSM_PRECISE
-MeshVS_SMF_0D: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_0D
-MeshVS_SMF_All: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_All
-MeshVS_SMF_Element: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Element
-MeshVS_SMF_Face: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Face
-MeshVS_SMF_Group: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Group
-MeshVS_SMF_Link: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Link
-MeshVS_SMF_Mesh: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Mesh
-MeshVS_SMF_Node: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Node
-MeshVS_SMF_Volume: OCP.MeshVS.MeshVS_SelectionModeFlags # value = MeshVS_SelectionModeFlags.MeshVS_SMF_Volume
+MeshVS_ET_0D: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_0D: 2>
+MeshVS_ET_All: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_All: 31>
+MeshVS_ET_Element: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_Element: 30>
+MeshVS_ET_Face: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_Face: 8>
+MeshVS_ET_Link: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_Link: 4>
+MeshVS_ET_NONE: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_NONE: 0>
+MeshVS_ET_Node: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_Node: 1>
+MeshVS_ET_Volume: OCP.MeshVS.MeshVS_EntityType # value = <MeshVS_EntityType.MeshVS_ET_Volume: 16>
+MeshVS_MSM_BOX: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = <MeshVS_MeshSelectionMethod.MeshVS_MSM_BOX: 2>
+MeshVS_MSM_NODES: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = <MeshVS_MeshSelectionMethod.MeshVS_MSM_NODES: 1>
+MeshVS_MSM_PRECISE: OCP.MeshVS.MeshVS_MeshSelectionMethod # value = <MeshVS_MeshSelectionMethod.MeshVS_MSM_PRECISE: 0>
+MeshVS_SMF_0D: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_0D: 2>
+MeshVS_SMF_All: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_All: 31>
+MeshVS_SMF_Element: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Element: 30>
+MeshVS_SMF_Face: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Face: 8>
+MeshVS_SMF_Group: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Group: 256>
+MeshVS_SMF_Link: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Link: 4>
+MeshVS_SMF_Mesh: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Mesh: 0>
+MeshVS_SMF_Node: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Node: 1>
+MeshVS_SMF_Volume: OCP.MeshVS.MeshVS_SelectionModeFlags # value = <MeshVS_SelectionModeFlags.MeshVS_SMF_Volume: 16>

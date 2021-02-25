@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Resource
-import OCP.TCollection
-import OCP.TopAbs
-import OCP.ShapeExtend
-import OCP.GeomAbs
-import OCP.Message
 import OCP.TopTools
-import OCP.Standard
-import OCP.TopoDS
-import OCP.ShapeBuild
+import OCP.TCollection
+import OCP.Message
 import OCP.BRepTools
+import OCP.GeomAbs
+import OCP.Resource
+import OCP.TopoDS
+import OCP.TopAbs
+import OCP.Standard
+import OCP.ShapeExtend
+import OCP.ShapeBuild
 __all__  = [
 "ShapeProcess",
 "ShapeProcess_Context",
@@ -33,7 +33,7 @@ class ShapeProcess():
         Finds operator by its name
         """
     @staticmethod
-    def Perform_s(context : ShapeProcess_Context,seq : str) -> bool: 
+    def Perform_s(context : ShapeProcess_Context,seq : str,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Performs a specified sequence of operators on Context Resource file and other data should be already loaded to Context (including description of sequence seq)
         """
@@ -126,10 +126,6 @@ class ShapeProcess_Context(OCP.Standard.Standard_Transient):
         """
         Returns Messenger used for outputting messages.
         """
-    def Progress(self) -> OCP.Message.Message_ProgressIndicator: 
-        """
-        Returns Progress Indicator.
-        """
     def RealVal(self,param : str,def_ : float) -> float: 
         """
         None
@@ -141,10 +137,6 @@ class ShapeProcess_Context(OCP.Standard.Standard_Transient):
     def SetMessenger(self,messenger : OCP.Message.Message_Messenger) -> None: 
         """
         Sets Messenger used for outputting messages.
-        """
-    def SetProgress(self,theProgress : OCP.Message.Message_ProgressIndicator) -> None: 
-        """
-        Sets Progress Indicator.
         """
     def SetScope(self,scope : str) -> None: 
         """
@@ -171,9 +163,9 @@ class ShapeProcess_Context(OCP.Standard.Standard_Transient):
         Go out of current scope
         """
     @overload
-    def __init__(self,file : str,scope : str='') -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,file : str,scope : str='') -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -243,7 +235,7 @@ class ShapeProcess_Operator(OCP.Standard.Standard_Transient):
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
-    def Perform(self,context : ShapeProcess_Context) -> bool: 
+    def Perform(self,context : ShapeProcess_Context,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Performs operation and eventually records changes in the context
         """
@@ -378,16 +370,12 @@ class ShapeProcess_ShapeContext(ShapeProcess_Context, OCP.Standard.Standard_Tran
         """
         Prints statistics on Shape Processing onto the current Messenger.
         """
-    def Progress(self) -> OCP.Message.Message_ProgressIndicator: 
-        """
-        Returns Progress Indicator.
-        """
     def RealVal(self,param : str,def_ : float) -> float: 
         """
         None
         """
     @overload
-    def RecordModification(self,sh : OCP.TopoDS.TopoDS_Shape,repl : OCP.BRepTools.BRepTools_Modifier,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator=None) -> None: 
+    def RecordModification(self,repl : OCP.ShapeBuild.ShapeBuild_ReShape,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator) -> None: 
         """
         None
 
@@ -398,11 +386,11 @@ class ShapeProcess_ShapeContext(ShapeProcess_Context, OCP.Standard.Standard_Tran
         Records modifications and resets result accordingly NOTE: modification of resulting shape should be explicitly defined in the maps along with modifications of subshapes
         """
     @overload
-    def RecordModification(self,repl : OCP.ShapeBuild.ShapeBuild_ReShape) -> None: ...
-    @overload
-    def RecordModification(self,repl : OCP.ShapeBuild.ShapeBuild_ReShape,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator) -> None: ...
-    @overload
     def RecordModification(self,repl : OCP.TopTools.TopTools_DataMapOfShapeShape,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator=None) -> None: ...
+    @overload
+    def RecordModification(self,sh : OCP.TopoDS.TopoDS_Shape,repl : OCP.BRepTools.BRepTools_Modifier,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator=None) -> None: ...
+    @overload
+    def RecordModification(self,repl : OCP.ShapeBuild.ShapeBuild_ReShape) -> None: ...
     def ResourceManager(self) -> OCP.Resource.Resource_Manager: 
         """
         Returns internal Resource_Manager object
@@ -422,10 +410,6 @@ class ShapeProcess_ShapeContext(ShapeProcess_Context, OCP.Standard.Standard_Tran
     def SetNonManifold(self,theNonManifold : bool) -> None: 
         """
         Set NonManifold flag
-        """
-    def SetProgress(self,theProgress : OCP.Message.Message_ProgressIndicator) -> None: 
-        """
-        Sets Progress Indicator.
         """
     def SetResult(self,S : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
@@ -460,9 +444,9 @@ class ShapeProcess_ShapeContext(ShapeProcess_Context, OCP.Standard.Standard_Tran
         Go out of current scope
         """
     @overload
-    def __init__(self,file : str,seq : str='') -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape,file : str,seq : str='') -> None: ...
+    @overload
+    def __init__(self,file : str,seq : str='') -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -516,7 +500,7 @@ class ShapeProcess_UOperator(ShapeProcess_Operator, OCP.Standard.Standard_Transi
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
-    def Perform(self,context : ShapeProcess_Context) -> bool: 
+    def Perform(self,context : ShapeProcess_Context,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Performs operation and records changes in the context
         """
@@ -526,7 +510,7 @@ class ShapeProcess_UOperator(ShapeProcess_Operator, OCP.Standard.Standard_Transi
         """
     def __init__(self,func : Any) -> None: 
         """
-        __init__(self: OCP.ShapeProcess.ShapeProcess_UOperator, func: bool (opencascade::handle<ShapeProcess_Context> const&)) -> None
+        __init__(self: OCP.ShapeProcess.ShapeProcess_UOperator, func: bool (opencascade::handle<ShapeProcess_Context> const&, Message_ProgressRange const&)) -> None
         """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 

@@ -5,12 +5,12 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
+import OCP.TDocStd
 import OCP.TCollection
 import OCP.StdObjMgt
-import OCP.Standard
 import OCP.TFunction
-import OCP.TDocStd
 import OCP.TDataStd
+import OCP.Standard
 __all__  = [
 "StdLPersistent",
 "StdLPersistent_Collection",
@@ -458,9 +458,9 @@ class StdLPersistent_HArray2OfPersistent(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.StdObjMgt.StdObjMgt_Persistent) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.StdObjMgt.StdObjMgt_Persistent) -> None: ...
     @overload
     def __init__(self,theOther : Any) -> None: ...
     @staticmethod

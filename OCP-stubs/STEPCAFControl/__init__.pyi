@@ -4,27 +4,27 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Resource
-import OCP.TCollection
-import OCP.StepRepr
-import OCP.XCAFDoc
-import OCP.XCAFDimTolObjects
-import OCP.StepBasic
-import OCP.StepGeom
+import OCP.TDF
+import OCP.NCollection
 import OCP.Transfer
-import OCP.StepShape
+import OCP.StepBasic
+import OCP.STEPConstruct
+import OCP.IFSelect
+import OCP.StepRepr
+import OCP.StepVisual
 import OCP.TopoDS
+import OCP.STEPControl
+import OCP.StepGeom
+import OCP.Standard
 import OCP.StepDimTol
 import OCP.TDocStd
-import OCP.NCollection
-import OCP.STEPControl
-import OCP.StepVisual
-import OCP.TDF
-import OCP.XSControl
-import OCP.IFSelect
-import OCP.STEPConstruct
-import OCP.Standard
+import OCP.XCAFDoc
+import OCP.TCollection
+import io
+import OCP.XCAFDimTolObjects
 import OCP.Interface
+import OCP.StepShape
+import OCP.XSControl
 __all__  = [
 "STEPCAFControl_ActorWrite",
 "STEPCAFControl_Controller",
@@ -140,27 +140,27 @@ class STEPCAFControl_ActorWrite(OCP.STEPControl.STEPControl_ActorWrite, OCP.Tran
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Transfer(self,start : OCP.Transfer.Transfer_Finder,FP : OCP.Transfer.Transfer_FinderProcess) -> OCP.Transfer.Transfer_Binder: 
+    def Transfer(self,start : OCP.Transfer.Transfer_Finder,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Transfer.Transfer_Binder: 
         """
         None
         """
-    def TransferCompound(self,start : OCP.Transfer.Transfer_Finder,SDR : OCP.StepShape.StepShape_ShapeDefinitionRepresentation,FP : OCP.Transfer.Transfer_FinderProcess) -> OCP.Transfer.Transfer_Binder: 
+    def TransferCompound(self,start : OCP.Transfer.Transfer_Finder,SDR : OCP.StepShape.StepShape_ShapeDefinitionRepresentation,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Transfer.Transfer_Binder: 
         """
         None
         """
-    def TransferShape(self,start : OCP.Transfer.Transfer_Finder,SDR : OCP.StepShape.StepShape_ShapeDefinitionRepresentation,FP : OCP.Transfer.Transfer_FinderProcess,shapeGroup : OCP.TopTools.TopTools_HSequenceOfShape=None,isManifold : bool=True) -> OCP.Transfer.Transfer_Binder: 
+    def TransferShape(self,start : OCP.Transfer.Transfer_Finder,SDR : OCP.StepShape.StepShape_ShapeDefinitionRepresentation,FP : OCP.Transfer.Transfer_FinderProcess,shapeGroup : OCP.TopTools.TopTools_HSequenceOfShape=None,isManifold : bool=True,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Transfer.Transfer_Binder: 
         """
         None
         """
-    def TransferSubShape(self,start : OCP.Transfer.Transfer_Finder,SDR : OCP.StepShape.StepShape_ShapeDefinitionRepresentation,AX1 : OCP.StepGeom.StepGeom_Axis2Placement3d,FP : OCP.Transfer.Transfer_FinderProcess,shapeGroup : OCP.TopTools.TopTools_HSequenceOfShape=None,isManifold : bool=True) -> OCP.Transfer.Transfer_Binder: 
+    def TransferSubShape(self,start : OCP.Transfer.Transfer_Finder,SDR : OCP.StepShape.StepShape_ShapeDefinitionRepresentation,AX1 : OCP.StepGeom.StepGeom_Axis2Placement3d,FP : OCP.Transfer.Transfer_FinderProcess,shapeGroup : OCP.TopTools.TopTools_HSequenceOfShape=None,isManifold : bool=True,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Transfer.Transfer_Binder: 
         """
         None
         """
-    def TransferTransient(self,start : OCP.Standard.Standard_Transient,TP : OCP.Transfer.Transfer_FinderProcess) -> OCP.Standard.Standard_Transient: 
+    def TransferTransient(self,start : OCP.Standard.Standard_Transient,TP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Standard.Standard_Transient: 
         """
         None
         """
-    def Transferring(self,start : OCP.Transfer.Transfer_Finder,TP : OCP.Transfer.Transfer_ProcessForFinder) -> OCP.Transfer.Transfer_Binder: 
+    def Transferring(self,start : OCP.Transfer.Transfer_Finder,TP : OCP.Transfer.Transfer_ProcessForFinder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Transfer.Transfer_Binder: 
         """
         None
         """
@@ -324,11 +324,11 @@ class STEPCAFControl_Controller(OCP.STEPControl.STEPControl_Controller, OCP.XSCo
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def TransferWriteShape(self,shape : OCP.TopoDS.TopoDS_Shape,FP : OCP.Transfer.Transfer_FinderProcess,model : OCP.Interface.Interface_InterfaceModel,modetrans : int=0) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+    def TransferWriteShape(self,shape : OCP.TopoDS.TopoDS_Shape,FP : OCP.Transfer.Transfer_FinderProcess,model : OCP.Interface.Interface_InterfaceModel,modetrans : int=0,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Takes one Shape and transfers it to the InterfaceModel (already created by NewModel for instance) <modeshape> is to be interpreted by each kind of XstepAdaptor Returns a status : 0 OK 1 No result 2 Fail -1 bad modeshape -2 bad model (requires a StepModel) modeshape : 1 Facetted BRep, 2 Shell, 3 Manifold Solid
         """
-    def TransferWriteTransient(self,obj : OCP.Standard.Standard_Transient,FP : OCP.Transfer.Transfer_FinderProcess,model : OCP.Interface.Interface_InterfaceModel,modetrans : int=0) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+    def TransferWriteTransient(self,obj : OCP.Standard.Standard_Transient,FP : OCP.Transfer.Transfer_FinderProcess,model : OCP.Interface.Interface_InterfaceModel,modetrans : int=0,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Takes one Transient Object and transfers it to an InterfaceModel (already created, e.g. by NewModel) (result is recorded in the model by AddWithRefs) FP records produced results and checks
         """
@@ -394,14 +394,14 @@ class STEPCAFControl_DataMapOfLabelShape(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TDF.TDF_Label) -> OCP.TopoDS.TopoDS_Shape: 
+    def Find(self,theKey : OCP.TDF.TDF_Label,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TDF.TDF_Label,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: ...
+    def Find(self,theKey : OCP.TDF.TDF_Label) -> OCP.TopoDS.TopoDS_Shape: ...
     def IsBound(self,theKey : OCP.TDF.TDF_Label) -> bool: 
         """
         IsBound
@@ -426,7 +426,7 @@ class STEPCAFControl_DataMapOfLabelShape(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -435,12 +435,12 @@ class STEPCAFControl_DataMapOfLabelShape(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : STEPCAFControl_DataMapOfLabelShape) -> None: ...
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class STEPCAFControl_ExternFile(OCP.Standard.Standard_Transient):
     """
@@ -521,14 +521,14 @@ class STEPCAFControl_ExternFile(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def SetLabel(self,L : OCP.TDF.TDF_Label) -> None: 
+    def SetLabel(self,Label : OCP.TDF.TDF_Label) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetLabel(self,Label : OCP.TDF.TDF_Label) -> None: ...
+    def SetLabel(self,L : OCP.TDF.TDF_Label) -> None: ...
     def SetLoadStatus(self,stat : OCP.IFSelect.IFSelect_ReturnStatus) -> None: 
         """
         None
@@ -636,7 +636,7 @@ class STEPCAFControl_GDTProperty():
         """
     @staticmethod
     @overload
-    def GetGeomToleranceType_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType) -> OCP.StepDimTol.StepDimTol_GeometricToleranceType: 
+    def GetGeomToleranceType_s(theType : OCP.StepDimTol.StepDimTol_GeometricToleranceType) -> OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType: 
         """
         None
 
@@ -644,7 +644,7 @@ class STEPCAFControl_GDTProperty():
         """
     @staticmethod
     @overload
-    def GetGeomToleranceType_s(theType : OCP.StepDimTol.StepDimTol_GeometricToleranceType) -> OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType: ...
+    def GetGeomToleranceType_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType) -> OCP.StepDimTol.StepDimTol_GeometricToleranceType: ...
     @staticmethod
     def GetGeomTolerance_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceType) -> OCP.StepDimTol.StepDimTol_GeometricTolerance: 
         """
@@ -662,7 +662,7 @@ class STEPCAFControl_GDTProperty():
         """
     @staticmethod
     @overload
-    def GetTolValueType_s(theDescription : OCP.TCollection.TCollection_HAsciiString,theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue) -> bool: 
+    def GetTolValueType_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
 
@@ -670,7 +670,7 @@ class STEPCAFControl_GDTProperty():
         """
     @staticmethod
     @overload
-    def GetTolValueType_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue) -> OCP.TCollection.TCollection_HAsciiString: ...
+    def GetTolValueType_s(theDescription : OCP.TCollection.TCollection_HAsciiString,theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_GeomToleranceTypeValue) -> bool: ...
     @staticmethod
     def IsDimensionalLocation_s(theType : OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionType) -> bool: 
         """
@@ -745,14 +745,14 @@ class STEPCAFControl_Reader():
         Returns number of roots recognized for transfer Shortcut for Reader().NbRootsForTransfer()
         """
     @overload
-    def Perform(self,filename : str,doc : OCP.TDocStd.TDocStd_Document) -> bool: 
+    def Perform(self,filename : OCP.TCollection.TCollection_AsciiString,doc : OCP.TDocStd.TDocStd_Document,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         None
 
         Translate STEP file given by filename into the document Return True if succeeded, and False in case of fail
         """
     @overload
-    def Perform(self,filename : OCP.TCollection.TCollection_AsciiString,doc : OCP.TDocStd.TDocStd_Document) -> bool: ...
+    def Perform(self,filename : str,doc : OCP.TDocStd.TDocStd_Document,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
     def ReadFile(self,filename : str) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Loads a file and returns the read status Provided for use like single-file reader
@@ -789,23 +789,15 @@ class STEPCAFControl_Reader():
         """
         Set SHUO mode for indicate write SHUO or not.
         """
-    def SetSourceCodePage(self,theCode : OCP.Resource.Resource_FormatType) -> None: 
-        """
-        Return the encoding of STEP file for converting names into UNICODE.
-        """
     def SetViewMode(self,viewmode : bool) -> None: 
         """
         Set View mode
         """
-    def SourceCodePage(self) -> OCP.Resource.Resource_FormatType: 
-        """
-        Return the encoding of STEP file for converting names into UNICODE. Initialized from "read.stepcaf.codepage" variable by constructor, which is Resource_UTF8 by default.
-        """
-    def Transfer(self,doc : OCP.TDocStd.TDocStd_Document) -> bool: 
+    def Transfer(self,doc : OCP.TDocStd.TDocStd_Document,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Translates currently loaded STEP file into the document Returns True if succeeded, and False in case of fail Provided for use like single-file reader
         """
-    def TransferOneRoot(self,num : int,doc : OCP.TDocStd.TDocStd_Document) -> bool: 
+    def TransferOneRoot(self,num : int,doc : OCP.TDocStd.TDocStd_Document,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Translates currently loaded STEP file into the document Returns True if succeeded, and False in case of fail Provided for use like single-file reader
         """
@@ -823,14 +815,14 @@ class STEPCAFControl_Writer():
         Returns basic reader for root file
         """
     @overload
-    def ExternFile(self,L : OCP.TDF.TDF_Label,ef : STEPCAFControl_ExternFile) -> bool: 
+    def ExternFile(self,name : str,ef : STEPCAFControl_ExternFile) -> bool: 
         """
         Returns data on external file by its original label Returns False if no external file with given name is read
 
         Returns data on external file by its name Returns False if no external file with given name is read
         """
     @overload
-    def ExternFile(self,name : str,ef : STEPCAFControl_ExternFile) -> bool: ...
+    def ExternFile(self,L : OCP.TDF.TDF_Label,ef : STEPCAFControl_ExternFile) -> bool: ...
     def ExternFiles(self) -> Any: 
         """
         Returns data on external files Returns Null handle if no external files are read
@@ -868,14 +860,14 @@ class STEPCAFControl_Writer():
         Clears the internal data structures and attaches to a new session Clears the session if it was not yet set for STEP
         """
     @overload
-    def Perform(self,doc : OCP.TDocStd.TDocStd_Document,filename : str) -> bool: 
+    def Perform(self,doc : OCP.TDocStd.TDocStd_Document,filename : str,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         None
 
         Transfers a document and writes it to a STEP file Returns True if translation is OK
         """
     @overload
-    def Perform(self,doc : OCP.TDocStd.TDocStd_Document,filename : OCP.TCollection.TCollection_AsciiString) -> bool: ...
+    def Perform(self,doc : OCP.TDocStd.TDocStd_Document,filename : OCP.TCollection.TCollection_AsciiString,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
     def SetColorMode(self,colormode : bool) -> None: 
         """
         Set ColorMode for indicate write Colors or not.
@@ -905,14 +897,14 @@ class STEPCAFControl_Writer():
         Set SHUO mode for indicate write SHUO or not.
         """
     @overload
-    def Transfer(self,doc : OCP.TDocStd.TDocStd_Document,mode : OCP.STEPControl.STEPControl_StepModelType=STEPControl_StepModelType.STEPControl_AsIs,multi : str=None) -> bool: 
+    def Transfer(self,doc : OCP.TDocStd.TDocStd_Document,mode : OCP.STEPControl.STEPControl_StepModelType=STEPControl_StepModelType.STEPControl_AsIs,multi : str=None,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Transfers a document (or single label) to a STEP model The mode of translation of shape is AsIs If multi is not null pointer, it switches to multifile mode (with external refs), and string pointed by <multi> gives prefix for names of extern files (can be empty string) Returns True if translation is OK
 
         Method to transfer part of the document specified by label
         """
     @overload
-    def Transfer(self,L : OCP.TDF.TDF_Label,mode : OCP.STEPControl.STEPControl_StepModelType=STEPControl_StepModelType.STEPControl_AsIs,multi : str=None) -> bool: ...
+    def Transfer(self,L : OCP.TDF.TDF_Label,mode : OCP.STEPControl.STEPControl_StepModelType=STEPControl_StepModelType.STEPControl_AsIs,multi : str=None,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
     def Write(self,filename : str) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Writes all the produced models into file In case of multimodel with extern references, filename will be a name of root file, all other files have names of corresponding parts Provided for use like single-file writer

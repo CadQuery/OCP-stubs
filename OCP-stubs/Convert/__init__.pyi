@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.TColStd
-import OCP.TColgp
 import OCP.gp
+import OCP.NCollection
+import OCP.TColgp
+import OCP.TColStd
 __all__  = [
 "Convert_ConicToBSplineCurve",
 "Convert_CompBezierCurves2dToBSplineCurve2d",
@@ -182,11 +182,11 @@ class Convert_CompPolynomialToPoles():
         returns the poles of the n-dimensional BSpline in the following format : [1..NumPoles][1..Dimension]
         """
     @overload
-    def __init__(self,Dimension : int,MaxDegree : int,Degree : int,Coefficients : OCP.TColStd.TColStd_Array1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_Array1OfReal,TrueIntervals : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def __init__(self,NumCurves : int,Dimension : int,MaxDegree : int,Continuity : OCP.TColStd.TColStd_Array1OfInteger,NumCoeffPerCurve : OCP.TColStd.TColStd_Array1OfInteger,Coefficients : OCP.TColStd.TColStd_Array1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_Array2OfReal,TrueIntervals : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def __init__(self,NumCurves : int,Continuity : int,Dimension : int,MaxDegree : int,NumCoeffPerCurve : OCP.TColStd.TColStd_HArray1OfInteger,Coefficients : OCP.TColStd.TColStd_HArray1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_HArray2OfReal,TrueIntervals : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
     @overload
-    def __init__(self,NumCurves : int,Dimension : int,MaxDegree : int,Continuity : OCP.TColStd.TColStd_Array1OfInteger,NumCoeffPerCurve : OCP.TColStd.TColStd_Array1OfInteger,Coefficients : OCP.TColStd.TColStd_Array1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_Array2OfReal,TrueIntervals : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def __init__(self,Dimension : int,MaxDegree : int,Degree : int,Coefficients : OCP.TColStd.TColStd_Array1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_Array1OfReal,TrueIntervals : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     pass
 class Convert_ElementarySurfaceToBSplineSurface():
     """
@@ -360,9 +360,9 @@ class Convert_CylinderToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface
         Returns the weight of the pole of index (UIndex,VIndex) to the poles table of the BSpline surface whose data is computed in this framework. Exceptions Standard_OutOfRange if, for the BSpline surface whose data is computed in this framework: - UIndex is outside the bounds of the poles table in the u parametric direction, or - VIndex is outside the bounds of the poles table in the v parametric direction.
         """
     @overload
-    def __init__(self,Cyl : OCP.gp.gp_Cylinder,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
-    @overload
     def __init__(self,Cyl : OCP.gp.gp_Cylinder,V1 : float,V2 : float) -> None: ...
+    @overload
+    def __init__(self,Cyl : OCP.gp.gp_Cylinder,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
     pass
 class Convert_ConeToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
     """
@@ -425,9 +425,9 @@ class Convert_ConeToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
         Returns the weight of the pole of index (UIndex,VIndex) to the poles table of the BSpline surface whose data is computed in this framework. Exceptions Standard_OutOfRange if, for the BSpline surface whose data is computed in this framework: - UIndex is outside the bounds of the poles table in the u parametric direction, or - VIndex is outside the bounds of the poles table in the v parametric direction.
         """
     @overload
-    def __init__(self,C : OCP.gp.gp_Cone,V1 : float,V2 : float) -> None: ...
-    @overload
     def __init__(self,C : OCP.gp.gp_Cone,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Cone,V1 : float,V2 : float) -> None: ...
     pass
 class Convert_EllipseToBSplineCurve(Convert_ConicToBSplineCurve):
     """
@@ -656,26 +656,34 @@ class Convert_ParameterisationType():
 
       Convert_Polynomial
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Convert_Polynomial: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_Polynomial
-    Convert_QuasiAngular: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_QuasiAngular
-    Convert_RationalC1: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_RationalC1
-    Convert_TgtThetaOver2: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_TgtThetaOver2
-    Convert_TgtThetaOver2_1: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_TgtThetaOver2_1
-    Convert_TgtThetaOver2_2: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_TgtThetaOver2_2
-    Convert_TgtThetaOver2_3: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_TgtThetaOver2_3
-    Convert_TgtThetaOver2_4: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_TgtThetaOver2_4
-    __entries: dict # value = {'Convert_TgtThetaOver2': (Convert_ParameterisationType.Convert_TgtThetaOver2, None), 'Convert_TgtThetaOver2_1': (Convert_ParameterisationType.Convert_TgtThetaOver2_1, None), 'Convert_TgtThetaOver2_2': (Convert_ParameterisationType.Convert_TgtThetaOver2_2, None), 'Convert_TgtThetaOver2_3': (Convert_ParameterisationType.Convert_TgtThetaOver2_3, None), 'Convert_TgtThetaOver2_4': (Convert_ParameterisationType.Convert_TgtThetaOver2_4, None), 'Convert_QuasiAngular': (Convert_ParameterisationType.Convert_QuasiAngular, None), 'Convert_RationalC1': (Convert_ParameterisationType.Convert_RationalC1, None), 'Convert_Polynomial': (Convert_ParameterisationType.Convert_Polynomial, None)}
-    __members__: dict # value = {'Convert_TgtThetaOver2': Convert_ParameterisationType.Convert_TgtThetaOver2, 'Convert_TgtThetaOver2_1': Convert_ParameterisationType.Convert_TgtThetaOver2_1, 'Convert_TgtThetaOver2_2': Convert_ParameterisationType.Convert_TgtThetaOver2_2, 'Convert_TgtThetaOver2_3': Convert_ParameterisationType.Convert_TgtThetaOver2_3, 'Convert_TgtThetaOver2_4': Convert_ParameterisationType.Convert_TgtThetaOver2_4, 'Convert_QuasiAngular': Convert_ParameterisationType.Convert_QuasiAngular, 'Convert_RationalC1': Convert_ParameterisationType.Convert_RationalC1, 'Convert_Polynomial': Convert_ParameterisationType.Convert_Polynomial}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Convert_Polynomial: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_Polynomial: 7>
+    Convert_QuasiAngular: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_QuasiAngular: 5>
+    Convert_RationalC1: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_RationalC1: 6>
+    Convert_TgtThetaOver2: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_TgtThetaOver2: 0>
+    Convert_TgtThetaOver2_1: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_TgtThetaOver2_1: 1>
+    Convert_TgtThetaOver2_2: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_TgtThetaOver2_2: 2>
+    Convert_TgtThetaOver2_3: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_TgtThetaOver2_3: 3>
+    Convert_TgtThetaOver2_4: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_TgtThetaOver2_4: 4>
+    __entries: dict # value = {'Convert_TgtThetaOver2': (<Convert_ParameterisationType.Convert_TgtThetaOver2: 0>, None), 'Convert_TgtThetaOver2_1': (<Convert_ParameterisationType.Convert_TgtThetaOver2_1: 1>, None), 'Convert_TgtThetaOver2_2': (<Convert_ParameterisationType.Convert_TgtThetaOver2_2: 2>, None), 'Convert_TgtThetaOver2_3': (<Convert_ParameterisationType.Convert_TgtThetaOver2_3: 3>, None), 'Convert_TgtThetaOver2_4': (<Convert_ParameterisationType.Convert_TgtThetaOver2_4: 4>, None), 'Convert_QuasiAngular': (<Convert_ParameterisationType.Convert_QuasiAngular: 5>, None), 'Convert_RationalC1': (<Convert_ParameterisationType.Convert_RationalC1: 6>, None), 'Convert_Polynomial': (<Convert_ParameterisationType.Convert_Polynomial: 7>, None)}
+    __members__: dict # value = {'Convert_TgtThetaOver2': <Convert_ParameterisationType.Convert_TgtThetaOver2: 0>, 'Convert_TgtThetaOver2_1': <Convert_ParameterisationType.Convert_TgtThetaOver2_1: 1>, 'Convert_TgtThetaOver2_2': <Convert_ParameterisationType.Convert_TgtThetaOver2_2: 2>, 'Convert_TgtThetaOver2_3': <Convert_ParameterisationType.Convert_TgtThetaOver2_3: 3>, 'Convert_TgtThetaOver2_4': <Convert_ParameterisationType.Convert_TgtThetaOver2_4: 4>, 'Convert_QuasiAngular': <Convert_ParameterisationType.Convert_QuasiAngular: 5>, 'Convert_RationalC1': <Convert_ParameterisationType.Convert_RationalC1: 6>, 'Convert_Polynomial': <Convert_ParameterisationType.Convert_Polynomial: 7>}
     pass
 class Convert_SequenceOfArray1OfPoles(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -686,14 +694,14 @@ class Convert_SequenceOfArray1OfPoles(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Convert_SequenceOfArray1OfPoles) -> None: 
+    def Append(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: ...
+    def Append(self,theSeq : Convert_SequenceOfArray1OfPoles) -> None: ...
     def Assign(self,theOther : Convert_SequenceOfArray1OfPoles) -> Convert_SequenceOfArray1OfPoles: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -723,14 +731,14 @@ class Convert_SequenceOfArray1OfPoles(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Convert_SequenceOfArray1OfPoles) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Convert_SequenceOfArray1OfPoles) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: 
         """
@@ -766,14 +774,14 @@ class Convert_SequenceOfArray1OfPoles(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -799,12 +807,12 @@ class Convert_SequenceOfArray1OfPoles(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Convert_SequenceOfArray1OfPoles) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : Convert_SequenceOfArray1OfPoles) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -872,11 +880,11 @@ class Convert_SphereToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
         Returns the weight of the pole of index (UIndex,VIndex) to the poles table of the BSpline surface whose data is computed in this framework. Exceptions Standard_OutOfRange if, for the BSpline surface whose data is computed in this framework: - UIndex is outside the bounds of the poles table in the u parametric direction, or - VIndex is outside the bounds of the poles table in the v parametric direction.
         """
     @overload
+    def __init__(self,Sph : OCP.gp.gp_Sphere,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
+    @overload
     def __init__(self,Sph : OCP.gp.gp_Sphere) -> None: ...
     @overload
     def __init__(self,Sph : OCP.gp.gp_Sphere,Param1 : float,Param2 : float,UTrim : bool=True) -> None: ...
-    @overload
-    def __init__(self,Sph : OCP.gp.gp_Sphere,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
     pass
 class Convert_TorusToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
     """
@@ -939,21 +947,21 @@ class Convert_TorusToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
         Returns the weight of the pole of index (UIndex,VIndex) to the poles table of the BSpline surface whose data is computed in this framework. Exceptions Standard_OutOfRange if, for the BSpline surface whose data is computed in this framework: - UIndex is outside the bounds of the poles table in the u parametric direction, or - VIndex is outside the bounds of the poles table in the v parametric direction.
         """
     @overload
+    def __init__(self,T : OCP.gp.gp_Torus,Param1 : float,Param2 : float,UTrim : bool=True) -> None: ...
+    @overload
     def __init__(self,T : OCP.gp.gp_Torus) -> None: ...
     @overload
     def __init__(self,T : OCP.gp.gp_Torus,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
-    @overload
-    def __init__(self,T : OCP.gp.gp_Torus,Param1 : float,Param2 : float,UTrim : bool=True) -> None: ...
     pass
 def BuildPolynomialCosAndSin(arg0 : float,arg1 : float,arg2 : int,arg3 : OCP.TColStd.TColStd_HArray1OfReal,arg4 : OCP.TColStd.TColStd_HArray1OfReal,arg5 : OCP.TColStd.TColStd_HArray1OfReal) -> None:
     """
     None
     """
-Convert_Polynomial: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_Polynomial
-Convert_QuasiAngular: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_QuasiAngular
-Convert_RationalC1: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_RationalC1
-Convert_TgtThetaOver2: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_TgtThetaOver2
-Convert_TgtThetaOver2_1: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_TgtThetaOver2_1
-Convert_TgtThetaOver2_2: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_TgtThetaOver2_2
-Convert_TgtThetaOver2_3: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_TgtThetaOver2_3
-Convert_TgtThetaOver2_4: OCP.Convert.Convert_ParameterisationType # value = Convert_ParameterisationType.Convert_TgtThetaOver2_4
+Convert_Polynomial: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_Polynomial: 7>
+Convert_QuasiAngular: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_QuasiAngular: 5>
+Convert_RationalC1: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_RationalC1: 6>
+Convert_TgtThetaOver2: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_TgtThetaOver2: 0>
+Convert_TgtThetaOver2_1: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_TgtThetaOver2_1: 1>
+Convert_TgtThetaOver2_2: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_TgtThetaOver2_2: 2>
+Convert_TgtThetaOver2_3: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_TgtThetaOver2_3: 3>
+Convert_TgtThetaOver2_4: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_TgtThetaOver2_4: 4>

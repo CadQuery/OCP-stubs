@@ -4,18 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.TColStd
 import OCP.IGESDimen
-import OCP.IGESBasic
-import OCP.IGESData
-import OCP.IGESGraph
-import OCP.Message
-import OCP.TColgp
-import OCP.Standard
+import OCP.TColStd
+import OCP.TCollection
+import io
 import OCP.IGESGeom
-import OCP.Interface
+import OCP.IGESData
 import OCP.gp
+import OCP.TColgp
+import OCP.Interface
+import OCP.IGESGraph
+import OCP.Standard
+import OCP.IGESBasic
 __all__  = [
 "IGESDraw",
 "IGESDraw_Array1OfConnectPoint",
@@ -148,14 +148,14 @@ class IGESDraw_Array1OfConnectPoint():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : IGESDraw_Array1OfConnectPoint) -> None: ...
-    @overload
     def __init__(self,theBegin : IGESDraw_ConnectPoint,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : IGESDraw_Array1OfConnectPoint) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESDraw_Array1OfViewKindEntity():
     """
@@ -238,10 +238,10 @@ class IGESDraw_Array1OfViewKindEntity():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : IGESDraw_Array1OfViewKindEntity) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESDraw_CircArraySubfigure(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Standard_Transient):
     """
@@ -1982,14 +1982,14 @@ class IGESDraw_HArray1OfConnectPoint(IGESDraw_Array1OfConnectPoint, OCP.Standard
         Constant value access
         """
     @overload
-    def __init__(self,theOther : IGESDraw_Array1OfConnectPoint) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESDraw_ConnectPoint) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : IGESDraw_Array1OfConnectPoint) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESDraw_ConnectPoint) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2127,12 +2127,12 @@ class IGESDraw_HArray1OfViewKindEntity(IGESDraw_Array1OfViewKindEntity, OCP.Stan
     @overload
     def __init__(self,theOther : IGESDraw_Array1OfViewKindEntity) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.IGESData.IGESData_ViewKindEntity) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.IGESData.IGESData_ViewKindEntity) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4955,7 +4955,7 @@ class IGESDraw_SpecificModule(OCP.IGESData.IGESData_SpecificModule, OCP.Standard
         """
         Performs non-ambiguous Corrections on Entities which support them (Planar)
         """
-    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Specific Dump (own parameters) for IGESDraw
         """
@@ -4991,7 +4991,7 @@ class IGESDraw_ToolCircArraySubfigure():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDraw_CircArraySubfigure,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_CircArraySubfigure,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5025,7 +5025,7 @@ class IGESDraw_ToolConnectPoint():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDraw_ConnectPoint,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_ConnectPoint,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5063,7 +5063,7 @@ class IGESDraw_ToolDrawing():
         """
         Sets automatic unambiguous Correction on a Drawing (Null Views are removed from list)
         """
-    def OwnDump(self,ent : IGESDraw_Drawing,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_Drawing,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5101,7 +5101,7 @@ class IGESDraw_ToolDrawingWithRotation():
         """
         Sets automatic unambiguous Correction on a DrawingWithRotation (Null Views are removed from list)
         """
-    def OwnDump(self,ent : IGESDraw_DrawingWithRotation,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_DrawingWithRotation,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5135,7 +5135,7 @@ class IGESDraw_ToolLabelDisplay():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDraw_LabelDisplay,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_LabelDisplay,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5169,7 +5169,7 @@ class IGESDraw_ToolNetworkSubfigure():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDraw_NetworkSubfigure,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_NetworkSubfigure,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5203,7 +5203,7 @@ class IGESDraw_ToolNetworkSubfigureDef():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDraw_NetworkSubfigureDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_NetworkSubfigureDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5237,7 +5237,7 @@ class IGESDraw_ToolPerspectiveView():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDraw_PerspectiveView,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_PerspectiveView,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5275,7 +5275,7 @@ class IGESDraw_ToolPlanar():
         """
         Sets automatic unambiguous Correction on a Planar (NbMatrices forced to 1)
         """
-    def OwnDump(self,ent : IGESDraw_Planar,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_Planar,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5309,7 +5309,7 @@ class IGESDraw_ToolRectArraySubfigure():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDraw_RectArraySubfigure,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_RectArraySubfigure,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5343,7 +5343,7 @@ class IGESDraw_ToolSegmentedViewsVisible():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDraw_SegmentedViewsVisible,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_SegmentedViewsVisible,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5377,7 +5377,7 @@ class IGESDraw_ToolView():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDraw_View,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_View,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5415,7 +5415,7 @@ class IGESDraw_ToolViewsVisible():
         """
         Sets automatic unambiguous Correction on a ViewsVisible (all displayed entities must refer to <ent> in directory part, else the list is cleared)
         """
-    def OwnDump(self,ent : IGESDraw_ViewsVisible,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_ViewsVisible,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5465,7 +5465,7 @@ class IGESDraw_ToolViewsVisibleWithAttr():
         """
         Sets automatic unambiguous Correction on a ViewsVisibleWithAttr (all displayed entities must refer to <ent> in directory part, else the list is cleared)
         """
-    def OwnDump(self,ent : IGESDraw_ViewsVisibleWithAttr,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDraw_ViewsVisibleWithAttr,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """

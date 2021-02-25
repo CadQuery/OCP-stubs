@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Standard
 import OCP.gp
+import OCP.Standard
 __all__  = [
 "GccInt_Bisec",
 "GccInt_BElips",
@@ -641,28 +641,36 @@ class GccInt_IType():
 
       GccInt_Pnt
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    GccInt_Cir: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Cir
-    GccInt_Ell: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Ell
-    GccInt_Hpr: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Hpr
-    GccInt_Lin: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Lin
-    GccInt_Par: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Par
-    GccInt_Pnt: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Pnt
-    __entries: dict # value = {'GccInt_Lin': (GccInt_IType.GccInt_Lin, None), 'GccInt_Cir': (GccInt_IType.GccInt_Cir, None), 'GccInt_Ell': (GccInt_IType.GccInt_Ell, None), 'GccInt_Par': (GccInt_IType.GccInt_Par, None), 'GccInt_Hpr': (GccInt_IType.GccInt_Hpr, None), 'GccInt_Pnt': (GccInt_IType.GccInt_Pnt, None)}
-    __members__: dict # value = {'GccInt_Lin': GccInt_IType.GccInt_Lin, 'GccInt_Cir': GccInt_IType.GccInt_Cir, 'GccInt_Ell': GccInt_IType.GccInt_Ell, 'GccInt_Par': GccInt_IType.GccInt_Par, 'GccInt_Hpr': GccInt_IType.GccInt_Hpr, 'GccInt_Pnt': GccInt_IType.GccInt_Pnt}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    GccInt_Cir: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Cir: 1>
+    GccInt_Ell: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Ell: 2>
+    GccInt_Hpr: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Hpr: 4>
+    GccInt_Lin: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Lin: 0>
+    GccInt_Par: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Par: 3>
+    GccInt_Pnt: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Pnt: 5>
+    __entries: dict # value = {'GccInt_Lin': (<GccInt_IType.GccInt_Lin: 0>, None), 'GccInt_Cir': (<GccInt_IType.GccInt_Cir: 1>, None), 'GccInt_Ell': (<GccInt_IType.GccInt_Ell: 2>, None), 'GccInt_Par': (<GccInt_IType.GccInt_Par: 3>, None), 'GccInt_Hpr': (<GccInt_IType.GccInt_Hpr: 4>, None), 'GccInt_Pnt': (<GccInt_IType.GccInt_Pnt: 5>, None)}
+    __members__: dict # value = {'GccInt_Lin': <GccInt_IType.GccInt_Lin: 0>, 'GccInt_Cir': <GccInt_IType.GccInt_Cir: 1>, 'GccInt_Ell': <GccInt_IType.GccInt_Ell: 2>, 'GccInt_Par': <GccInt_IType.GccInt_Par: 3>, 'GccInt_Hpr': <GccInt_IType.GccInt_Hpr: 4>, 'GccInt_Pnt': <GccInt_IType.GccInt_Pnt: 5>}
     pass
-GccInt_Cir: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Cir
-GccInt_Ell: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Ell
-GccInt_Hpr: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Hpr
-GccInt_Lin: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Lin
-GccInt_Par: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Par
-GccInt_Pnt: OCP.GccInt.GccInt_IType # value = GccInt_IType.GccInt_Pnt
+GccInt_Cir: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Cir: 1>
+GccInt_Ell: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Ell: 2>
+GccInt_Hpr: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Hpr: 4>
+GccInt_Lin: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Lin: 0>
+GccInt_Par: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Par: 3>
+GccInt_Pnt: OCP.GccInt.GccInt_IType # value = <GccInt_IType.GccInt_Pnt: 5>

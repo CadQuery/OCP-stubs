@@ -4,14 +4,41 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Standard
+import OCP.gp
 import OCP.Geom2dAdaptor
 import OCP.Geom2d
-import OCP.gp
+import OCP.Standard
 __all__  = [
+"Geom2dEvaluator",
 "Geom2dEvaluator_Curve",
 "Geom2dEvaluator_OffsetCurve"
 ]
+class Geom2dEvaluator():
+    """
+    The Geom2dEvaluator package provides utilities for . calculating value and derivatives of offset curve using corresponding values of base curve
+    """
+    @staticmethod
+    def CalculateD0_s(theValue : OCP.gp.gp_Pnt2d,theD1 : OCP.gp.gp_Vec2d,theOffset : float) -> None: 
+        """
+        Recalculate D1 values of base curve into D0 value of offset curve
+        """
+    @staticmethod
+    def CalculateD1_s(theValue : OCP.gp.gp_Pnt2d,theD1 : OCP.gp.gp_Vec2d,theD2 : OCP.gp.gp_Vec2d,theOffset : float) -> None: 
+        """
+        Recalculate D2 values of base curve into D1 values of offset curve
+        """
+    @staticmethod
+    def CalculateD2_s(theValue : OCP.gp.gp_Pnt2d,theD1 : OCP.gp.gp_Vec2d,theD2 : OCP.gp.gp_Vec2d,theD3 : OCP.gp.gp_Vec2d,theIsDirChange : bool,theOffset : float) -> None: 
+        """
+        Recalculate D3 values of base curve into D2 values of offset curve
+        """
+    @staticmethod
+    def CalculateD3_s(theValue : OCP.gp.gp_Pnt2d,theD1 : OCP.gp.gp_Vec2d,theD2 : OCP.gp.gp_Vec2d,theD3 : OCP.gp.gp_Vec2d,theD4 : OCP.gp.gp_Vec2d,theIsDirChange : bool,theOffset : float) -> None: 
+        """
+        Recalculate D3 values of base curve into D3 values of offset curve
+        """
+    def __init__(self) -> None: ...
+    pass
 class Geom2dEvaluator_Curve(OCP.Standard.Standard_Transient):
     """
     Interface for calculation of values and derivatives for different kinds of curves in 2D. Works both with adaptors and curves.Interface for calculation of values and derivatives for different kinds of curves in 2D. Works both with adaptors and curves.

@@ -5,10 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
-import OCP.TCollection
 import OCP.TColStd
-import OCP.Standard
+import OCP.TCollection
+import io
 import OCP.NCollection
+import OCP.Standard
 __all__  = [
 "TDataStd",
 "TDataStd_AsciiString",
@@ -16,7 +17,7 @@ __all__  = [
 "TDataStd_BooleanList",
 "TDataStd_ByteArray",
 "TDataStd_ChildNodeIterator",
-"TDataStd_Comment",
+"TDataStd_GenericExtString",
 "TDataStd_Current",
 "TDataStd_DataMapOfStringByte",
 "TDataStd_DataMapOfStringReal",
@@ -26,10 +27,12 @@ __all__  = [
 "TDataStd_DeltaOnModificationOfIntArray",
 "TDataStd_DeltaOnModificationOfIntPackedMap",
 "TDataStd_DeltaOnModificationOfRealArray",
-"TDataStd_Directory",
+"TDataStd_GenericEmpty",
 "TDataStd_Expression",
 "TDataStd_ExtStringArray",
 "TDataStd_ExtStringList",
+"TDataStd_Directory",
+"TDataStd_Comment",
 "TDataStd_HDataMapOfStringByte",
 "TDataStd_HDataMapOfStringHArray1OfInteger",
 "TDataStd_HDataMapOfStringHArray1OfReal",
@@ -72,7 +75,7 @@ class TDataStd():
         Appends to <anIDList> the list of the attributes IDs of this package. CAUTION: <anIDList> is NOT cleared before use.
         """
     @staticmethod
-    def Print_s(DIM : TDataStd_RealEnum,S : Any) -> Any: 
+    def Print_s(DIM : TDataStd_RealEnum,S : io.BytesIO) -> io.BytesIO: 
         """
         Prints the name of the real dimension <DIM> as a String on the Stream <S> and returns <S>.
         """
@@ -143,14 +146,14 @@ class TDataStd_AsciiString(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -159,15 +162,19 @@ class TDataStd_AsciiString(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -283,14 +290,14 @@ class TDataStd_AsciiString(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         None
         """
     @overload
-    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets the explicit user defined GUID to the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
     def Set_s(label : OCP.TDF.TDF_Label,string : OCP.TCollection.TCollection_AsciiString) -> TDataStd_AsciiString: 
@@ -393,14 +400,14 @@ class TDataStd_BooleanArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -409,15 +416,19 @@ class TDataStd_BooleanArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,OS : Any) -> Any: 
+    def Dump(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -671,14 +682,14 @@ class TDataStd_BooleanList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -687,15 +698,19 @@ class TDataStd_BooleanList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -835,17 +850,17 @@ class TDataStd_BooleanList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         None
         """
     @overload
-    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets the explicit GUID (user defined) for the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_BooleanList: 
+    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_BooleanList: 
         """
         Finds or creates a list of boolean values attribute.
 
@@ -853,7 +868,7 @@ class TDataStd_BooleanList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_BooleanList: ...
+    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_BooleanList: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -960,15 +975,19 @@ class TDataStd_ByteArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,OS : Any) -> Any: 
+    def Dump(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1110,7 +1129,7 @@ class TDataStd_ByteArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID,lower : int,upper : int,isDelta : bool=False) -> TDataStd_ByteArray: 
+    def Set_s(label : OCP.TDF.TDF_Label,lower : int,upper : int,isDelta : bool=False) -> TDataStd_ByteArray: 
         """
         Finds or creates an attribute with the array on the specified label. If <isDelta> == False, DefaultDeltaOnModification is used. If <isDelta> == True, DeltaOnModification of the current attribute is used. If attribute is already set, all input parameters are refused and the found attribute is returned.
 
@@ -1118,7 +1137,7 @@ class TDataStd_ByteArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,lower : int,upper : int,isDelta : bool=False) -> TDataStd_ByteArray: ...
+    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID,lower : int,upper : int,isDelta : bool=False) -> TDataStd_ByteArray: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1182,9 +1201,9 @@ class TDataStd_ChildNodeIterator():
     @overload
     def __init__(self) -> None: ...
     pass
-class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class TDataStd_GenericExtString(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
-    Comment attribute. may be associated to any label to store user comment.Comment attribute. may be associated to any label to store user comment.Comment attribute. may be associated to any label to store user comment.
+    An ancestor attibute for all attributes which have TCollection_ExtendedString field. If an attribute inherits this one it should not have drivers for persistence. Also this attribute provides functionality to have on the same label same attributes with different IDs.An ancestor attibute for all attributes which have TCollection_ExtendedString field. If an attribute inherits this one it should not have drivers for persistence. Also this attribute provides functionality to have on the same label same attributes with different IDs.An ancestor attibute for all attributes which have TCollection_ExtendedString field. If an attribute inherits this one it should not have drivers for persistence. Also this attribute provides functionality to have on the same label same attributes with different IDs.
     """
     def AddAttribute(self,other : OCP.TDF.TDF_Attribute) -> None: 
         """
@@ -1200,7 +1219,7 @@ class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def AfterRetrieval(self,forceIt : bool=False) -> bool: 
         """
-        None
+        Something to do AFTER creation of an attribute by persistent-transient translation. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
         """
     def AfterUndo(self,anAttDelta : OCP.TDF.TDF_AttributeDelta,forceIt : bool=False) -> bool: 
         """
@@ -1247,14 +1266,14 @@ class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1263,15 +1282,19 @@ class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
-        None
+        Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1293,12 +1316,7 @@ class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def Get(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
-        Returns the comment attribute.
-        """
-    @staticmethod
-    def GetID_s() -> OCP.Standard.Standard_GUID: 
-        """
-        class methods ============= Returns the GUID for comments.
+        Returns the name contained in this name attribute.
         """
     def GetRefCount(self) -> int: 
         """
@@ -1306,7 +1324,7 @@ class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ID(self) -> OCP.Standard.Standard_GUID: 
         """
-        None
+        Returns the ID of the attribute.
         """
     def IncrementRefCounter(self) -> None: 
         """
@@ -1364,7 +1382,7 @@ class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
-        None
+        Returns an new empty attribute from the good end type. It is used by the copy algorithm.
         """
     def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
         """
@@ -1380,28 +1398,12 @@ class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def Set(self,S : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
-        None
+        Sets <S> as name. Raises if <S> is not a valid name.
         """
-    @overload
-    def SetID(self) -> None: 
+    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: 
         """
-        Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
-
-        Sets default ID defined in nested class (to be used for attributes having User ID feature).
+        Sets the explicit user defined GUID to the attribute.
         """
-    @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
-    @staticmethod
-    @overload
-    def Set_s(label : OCP.TDF.TDF_Label,string : OCP.TCollection.TCollection_ExtendedString) -> TDataStd_Comment: 
-        """
-        Find, or create a Comment attribute. the Comment attribute is returned.
-
-        Finds, or creates a Comment attribute and sets the string. the Comment attribute is returned. Comment methods ============
-        """
-    @staticmethod
-    @overload
-    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_Comment: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1416,7 +1418,6 @@ class TDataStd_Comment(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
         """
-    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1493,14 +1494,14 @@ class TDataStd_Current(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1509,15 +1510,19 @@ class TDataStd_Current(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1707,14 +1712,14 @@ class TDataStd_DataMapOfStringByte(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TDataStd_DataMapOfStringByte) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1724,14 +1729,14 @@ class TDataStd_DataMapOfStringByte(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString,theValue : int) -> bool: 
+    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> int: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> int: ...
+    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString,theValue : int) -> bool: ...
     def IsBound(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         IsBound
@@ -1756,7 +1761,7 @@ class TDataStd_DataMapOfStringByte(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1765,12 +1770,12 @@ class TDataStd_DataMapOfStringByte(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self,theOther : TDataStd_DataMapOfStringByte) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TDataStd_DataMapOfStringByte) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TDataStd_DataMapOfStringReal(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1818,14 +1823,14 @@ class TDataStd_DataMapOfStringReal(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> float: 
+    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString,theValue : float) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString,theValue : float) -> bool: ...
+    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> float: ...
     def IsBound(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         IsBound
@@ -1850,7 +1855,7 @@ class TDataStd_DataMapOfStringReal(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1859,12 +1864,12 @@ class TDataStd_DataMapOfStringReal(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self,theOther : TDataStd_DataMapOfStringReal) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TDataStd_DataMapOfStringString(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1912,14 +1917,14 @@ class TDataStd_DataMapOfStringString(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString,theValue : OCP.TCollection.TCollection_ExtendedString) -> bool: 
+    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: ...
+    def Find(self,theKey : OCP.TCollection.TCollection_ExtendedString,theValue : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     def IsBound(self,theKey : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         IsBound
@@ -1944,7 +1949,7 @@ class TDataStd_DataMapOfStringString(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1958,7 +1963,7 @@ class TDataStd_DataMapOfStringString(OCP.NCollection.NCollection_BaseMap):
     def __init__(self,theOther : TDataStd_DataMapOfStringString) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TDataStd_DeltaOnModificationOfByteArray(OCP.TDF.TDF_DeltaOnModification, OCP.TDF.TDF_AttributeDelta, OCP.Standard.Standard_Transient):
     """
@@ -1980,9 +1985,13 @@ class TDataStd_DeltaOnModificationOfByteArray(OCP.TDF.TDF_DeltaOnModification, O
         """
         Memory deallocator for transient classes
         """
-    def Dump(self,OS : Any) -> Any: 
+    def Dump(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the contents.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2058,9 +2067,13 @@ class TDataStd_DeltaOnModificationOfExtStringArray(OCP.TDF.TDF_DeltaOnModificati
         """
         Memory deallocator for transient classes
         """
-    def Dump(self,OS : Any) -> Any: 
+    def Dump(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the contents.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2136,9 +2149,13 @@ class TDataStd_DeltaOnModificationOfIntArray(OCP.TDF.TDF_DeltaOnModification, OC
         """
         Memory deallocator for transient classes
         """
-    def Dump(self,OS : Any) -> Any: 
+    def Dump(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the contents.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2214,9 +2231,13 @@ class TDataStd_DeltaOnModificationOfIntPackedMap(OCP.TDF.TDF_DeltaOnModification
         """
         Memory deallocator for transient classes
         """
-    def Dump(self,OS : Any) -> Any: 
+    def Dump(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the contents.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2292,9 +2313,13 @@ class TDataStd_DeltaOnModificationOfRealArray(OCP.TDF.TDF_DeltaOnModification, O
         """
         Memory deallocator for transient classes
         """
-    def Dump(self,OS : Any) -> Any: 
+    def Dump(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the contents.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2350,18 +2375,13 @@ class TDataStd_DeltaOnModificationOfRealArray(OCP.TDF.TDF_DeltaOnModification, O
         None
         """
     pass
-class TDataStd_Directory(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class TDataStd_GenericEmpty(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
-    Associates a directory in the data framework with a TDataStd_TagSource attribute. You can create a new directory label and add sub-directory or object labels to it,Associates a directory in the data framework with a TDataStd_TagSource attribute. You can create a new directory label and add sub-directory or object labels to it,Associates a directory in the data framework with a TDataStd_TagSource attribute. You can create a new directory label and add sub-directory or object labels to it,
+    An ancestor attibute for all attributes which have no fields. If an attribute inherits this one it should not have drivers for persistence.An ancestor attibute for all attributes which have no fields. If an attribute inherits this one it should not have drivers for persistence.An ancestor attibute for all attributes which have no fields. If an attribute inherits this one it should not have drivers for persistence.
     """
     def AddAttribute(self,other : OCP.TDF.TDF_Attribute) -> None: 
         """
         Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
-        """
-    @staticmethod
-    def AddDirectory_s(dir : TDataStd_Directory) -> TDataStd_Directory: 
-        """
-        Creates a new sub-label and sets the sub-directory dir on that label.
         """
     def AfterAddition(self) -> None: 
         """
@@ -2420,14 +2440,14 @@ class TDataStd_Directory(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2436,26 +2456,25 @@ class TDataStd_Directory(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
-        None
+        Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
     def FindAttribute(self,anID : OCP.Standard.Standard_GUID,anAttribute : OCP.TDF.TDF_Attribute) -> bool: 
         """
         Finds an associated attribute of <me>, according to <anID>. the returned <anAttribute> is a valid one. The method returns True if found, False otherwise. A removed attribute cannot be found using this method.
-        """
-    @staticmethod
-    def Find_s(current : OCP.TDF.TDF_Label,D : TDataStd_Directory) -> bool: 
-        """
-        class methods ============= Searches for a directory attribute on the label current, or on one of the father labels of current. If a directory attribute is found, true is returned, and the attribute found is set as D.
         """
     def Forget(self,aTransaction : int) -> None: 
         """
@@ -2469,18 +2488,13 @@ class TDataStd_Directory(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
-    @staticmethod
-    def GetID_s() -> OCP.Standard.Standard_GUID: 
-        """
-        Directory methods ===============
-        """
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
         """
     def ID(self) -> OCP.Standard.Standard_GUID: 
         """
-        None
+        Returns the ID of the attribute.
         """
     def IncrementRefCounter(self) -> None: 
         """
@@ -2536,29 +2550,19 @@ class TDataStd_Directory(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
         """
-    @staticmethod
-    def MakeObjectLabel_s(dir : TDataStd_Directory) -> OCP.TDF.TDF_Label: 
-        """
-        Makes new label and returns it to insert other object attributes (sketch,part...etc...)
-        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
-        None
+        Returns an new empty attribute from the good end type. It is used by the copy algorithm.
         """
-    @staticmethod
-    def New_s(label : OCP.TDF.TDF_Label) -> TDataStd_Directory: 
-        """
-        Creates an enpty Directory attribute, located at <label>. Raises if <label> has attribute
-        """
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
-    def References(self,DS : OCP.TDF.TDF_DataSet) -> None: 
+    def References(self,aDataSet : OCP.TDF.TDF_DataSet) -> None: 
         """
-        None
+        Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -2585,7 +2589,6 @@ class TDataStd_Directory(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
         """
-    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2662,14 +2665,14 @@ class TDataStd_Expression(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2678,15 +2681,19 @@ class TDataStd_Expression(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -2929,15 +2936,19 @@ class TDataStd_ExtStringArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3191,14 +3202,14 @@ class TDataStd_ExtStringList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3207,15 +3218,19 @@ class TDataStd_ExtStringList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3357,27 +3372,27 @@ class TDataStd_ExtStringList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
     @overload
-    def Remove(self,value : OCP.TCollection.TCollection_ExtendedString) -> bool: 
+    def Remove(self,index : int) -> bool: 
         """
         Removes the first meet of the <value>.
 
         Removes a value at <index> position.
         """
     @overload
-    def Remove(self,index : int) -> bool: ...
+    def Remove(self,value : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     def Restore(self,With : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
     @overload
-    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets the explicit GUID (user defined) for the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
     def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_ExtStringList: 
@@ -3389,6 +3404,507 @@ class TDataStd_ExtStringList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
     @staticmethod
     @overload
     def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_ExtStringList: ...
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Transaction(self) -> int: 
+        """
+        Returns the transaction index in which the attribute has been created or modified.
+
+        Returns the transaction index in which the attribute has been created or modified.
+        """
+    def UntilTransaction(self) -> int: 
+        """
+        Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class TDataStd_Directory(TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+    """
+    Associates a directory in the data framework with a TDataStd_TagSource attribute. You can create a new directory label and add sub-directory or object labels to it,Associates a directory in the data framework with a TDataStd_TagSource attribute. You can create a new directory label and add sub-directory or object labels to it,Associates a directory in the data framework with a TDataStd_TagSource attribute. You can create a new directory label and add sub-directory or object labels to it,
+    """
+    def AddAttribute(self,other : OCP.TDF.TDF_Attribute) -> None: 
+        """
+        Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
+        """
+    @staticmethod
+    def AddDirectory_s(dir : TDataStd_Directory) -> TDataStd_Directory: 
+        """
+        Creates a new sub-label and sets the sub-directory dir on that label.
+        """
+    def AfterAddition(self) -> None: 
+        """
+        Something to do after adding an Attribute to a label.
+        """
+    def AfterResume(self) -> None: 
+        """
+        Something to do after resuming an Attribute from a label.
+        """
+    def AfterRetrieval(self,forceIt : bool=False) -> bool: 
+        """
+        Something to do AFTER creation of an attribute by persistent-transient translation. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def AfterUndo(self,anAttDelta : OCP.TDF.TDF_AttributeDelta,forceIt : bool=False) -> bool: 
+        """
+        Something to do after applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def Backup(self) -> None: 
+        """
+        Backups the attribute. The backuped attribute is flagged "Backuped" and not "Valid".
+        """
+    def BackupCopy(self) -> OCP.TDF.TDF_Attribute: 
+        """
+        Copies the attribute contents into a new other attribute. It is used by Backup().
+        """
+    def BeforeCommitTransaction(self) -> None: 
+        """
+        A callback. By default does nothing. It is called by TDF_Data::CommitTransaction() method.
+        """
+    def BeforeForget(self) -> None: 
+        """
+        Something to do before forgetting an Attribute to a label.
+        """
+    def BeforeRemoval(self) -> None: 
+        """
+        Something to do before removing an Attribute from a label.
+        """
+    def BeforeUndo(self,anAttDelta : OCP.TDF.TDF_AttributeDelta,forceIt : bool=False) -> bool: 
+        """
+        Something to do before applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DeltaOnAddition(self) -> OCP.TDF.TDF_DeltaOnAddition: 
+        """
+        Makes an AttributeDelta because <me> appeared. The only known use of a redefinition of this method is to return a null handle (no delta).
+        """
+    def DeltaOnForget(self) -> OCP.TDF.TDF_DeltaOnForget: 
+        """
+        Makes an AttributeDelta because <me> has been forgotten.
+        """
+    @overload
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
+        """
+        Makes a DeltaOnModification between <me> and <anOldAttribute.
+
+        Applies a DeltaOnModification to <me>.
+        """
+    @overload
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
+    def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
+        """
+        Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
+        """
+    def DeltaOnResume(self) -> OCP.TDF.TDF_DeltaOnResume: 
+        """
+        Makes an AttributeDelta because <me> has been resumed.
+        """
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
+        """
+        None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+        """
+        Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
+        """
+    def FindAttribute(self,anID : OCP.Standard.Standard_GUID,anAttribute : OCP.TDF.TDF_Attribute) -> bool: 
+        """
+        Finds an associated attribute of <me>, according to <anID>. the returned <anAttribute> is a valid one. The method returns True if found, False otherwise. A removed attribute cannot be found using this method.
+        """
+    @staticmethod
+    def Find_s(current : OCP.TDF.TDF_Label,D : TDataStd_Directory) -> bool: 
+        """
+        class methods ============= Searches for a directory attribute on the label current, or on one of the father labels of current. If a directory attribute is found, true is returned, and the attribute found is set as D.
+        """
+    def Forget(self,aTransaction : int) -> None: 
+        """
+        Forgets the attribute. <aTransaction> is the current transaction in which the forget is done. A forgotten attribute is also flagged not "Valid".
+        """
+    def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
+        """
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        """
+    def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
+        """
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        """
+    @staticmethod
+    def GetID_s() -> OCP.Standard.Standard_GUID: 
+        """
+        Directory methods ===============
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def ID(self) -> OCP.Standard.Standard_GUID: 
+        """
+        None
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def IsAttribute(self,anID : OCP.Standard.Standard_GUID) -> bool: 
+        """
+        Returns true if it exists an associated attribute of <me> with <anID> as ID.
+        """
+    def IsBackuped(self) -> bool: 
+        """
+        Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
+
+        Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
+        """
+    def IsForgotten(self) -> bool: 
+        """
+        Returns true if the attribute forgotten status is set.
+
+        Returns true if the attribute forgotten status is set.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsNew(self) -> bool: 
+        """
+        Returns true if the attribute has no backup
+
+        Returns true if the attribute has no backup
+        """
+    def IsValid(self) -> bool: 
+        """
+        Returns true if the attribute is valid; i.e. not a backuped or removed one.
+
+        Returns true if the attribute is valid; i.e. not a backuped or removed one.
+        """
+    def Label(self) -> OCP.TDF.TDF_Label: 
+        """
+        Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
+        """
+    @staticmethod
+    def MakeObjectLabel_s(dir : TDataStd_Directory) -> OCP.TDF.TDF_Label: 
+        """
+        Makes new label and returns it to insert other object attributes (sketch,part...etc...)
+        """
+    def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
+        """
+        None
+        """
+    @staticmethod
+    def New_s(label : OCP.TDF.TDF_Label) -> TDataStd_Directory: 
+        """
+        Creates an empty Directory attribute, located at <label>. Raises if <label> has attribute
+        """
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
+        """
+        None
+        """
+    def References(self,aDataSet : OCP.TDF.TDF_DataSet) -> None: 
+        """
+        Adds the first level referenced attributes and labels to <aDataSet>.
+        """
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
+        """
+        None
+        """
+    @overload
+    def SetID(self) -> None: 
+        """
+        Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
+
+        Sets default ID defined in nested class (to be used for attributes having User ID feature).
+        """
+    @overload
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Transaction(self) -> int: 
+        """
+        Returns the transaction index in which the attribute has been created or modified.
+
+        Returns the transaction index in which the attribute has been created or modified.
+        """
+    def UntilTransaction(self) -> int: 
+        """
+        Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class TDataStd_Comment(TDataStd_GenericExtString, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+    """
+    Comment attribute. may be associated to any label to store user comment.Comment attribute. may be associated to any label to store user comment.Comment attribute. may be associated to any label to store user comment.
+    """
+    def AddAttribute(self,other : OCP.TDF.TDF_Attribute) -> None: 
+        """
+        Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
+        """
+    def AfterAddition(self) -> None: 
+        """
+        Something to do after adding an Attribute to a label.
+        """
+    def AfterResume(self) -> None: 
+        """
+        Something to do after resuming an Attribute from a label.
+        """
+    def AfterRetrieval(self,forceIt : bool=False) -> bool: 
+        """
+        Something to do AFTER creation of an attribute by persistent-transient translation. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def AfterUndo(self,anAttDelta : OCP.TDF.TDF_AttributeDelta,forceIt : bool=False) -> bool: 
+        """
+        Something to do after applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def Backup(self) -> None: 
+        """
+        Backups the attribute. The backuped attribute is flagged "Backuped" and not "Valid".
+        """
+    def BackupCopy(self) -> OCP.TDF.TDF_Attribute: 
+        """
+        Copies the attribute contents into a new other attribute. It is used by Backup().
+        """
+    def BeforeCommitTransaction(self) -> None: 
+        """
+        A callback. By default does nothing. It is called by TDF_Data::CommitTransaction() method.
+        """
+    def BeforeForget(self) -> None: 
+        """
+        Something to do before forgetting an Attribute to a label.
+        """
+    def BeforeRemoval(self) -> None: 
+        """
+        Something to do before removing an Attribute from a label.
+        """
+    def BeforeUndo(self,anAttDelta : OCP.TDF.TDF_AttributeDelta,forceIt : bool=False) -> bool: 
+        """
+        Something to do before applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DeltaOnAddition(self) -> OCP.TDF.TDF_DeltaOnAddition: 
+        """
+        Makes an AttributeDelta because <me> appeared. The only known use of a redefinition of this method is to return a null handle (no delta).
+        """
+    def DeltaOnForget(self) -> OCP.TDF.TDF_DeltaOnForget: 
+        """
+        Makes an AttributeDelta because <me> has been forgotten.
+        """
+    @overload
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
+        """
+        Makes a DeltaOnModification between <me> and <anOldAttribute.
+
+        Applies a DeltaOnModification to <me>.
+        """
+    @overload
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
+    def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
+        """
+        Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
+        """
+    def DeltaOnResume(self) -> OCP.TDF.TDF_DeltaOnResume: 
+        """
+        Makes an AttributeDelta because <me> has been resumed.
+        """
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
+        """
+        None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+        """
+        Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
+        """
+    def FindAttribute(self,anID : OCP.Standard.Standard_GUID,anAttribute : OCP.TDF.TDF_Attribute) -> bool: 
+        """
+        Finds an associated attribute of <me>, according to <anID>. the returned <anAttribute> is a valid one. The method returns True if found, False otherwise. A removed attribute cannot be found using this method.
+        """
+    def Forget(self,aTransaction : int) -> None: 
+        """
+        Forgets the attribute. <aTransaction> is the current transaction in which the forget is done. A forgotten attribute is also flagged not "Valid".
+        """
+    def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
+        """
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        """
+    def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
+        """
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        """
+    def Get(self) -> OCP.TCollection.TCollection_ExtendedString: 
+        """
+        Returns the name contained in this name attribute.
+        """
+    @staticmethod
+    def GetID_s() -> OCP.Standard.Standard_GUID: 
+        """
+        class methods ============= Returns the GUID for comments.
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def ID(self) -> OCP.Standard.Standard_GUID: 
+        """
+        Returns the ID of the attribute.
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def IsAttribute(self,anID : OCP.Standard.Standard_GUID) -> bool: 
+        """
+        Returns true if it exists an associated attribute of <me> with <anID> as ID.
+        """
+    def IsBackuped(self) -> bool: 
+        """
+        Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
+
+        Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
+        """
+    def IsForgotten(self) -> bool: 
+        """
+        Returns true if the attribute forgotten status is set.
+
+        Returns true if the attribute forgotten status is set.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsNew(self) -> bool: 
+        """
+        Returns true if the attribute has no backup
+
+        Returns true if the attribute has no backup
+        """
+    def IsValid(self) -> bool: 
+        """
+        Returns true if the attribute is valid; i.e. not a backuped or removed one.
+
+        Returns true if the attribute is valid; i.e. not a backuped or removed one.
+        """
+    def Label(self) -> OCP.TDF.TDF_Label: 
+        """
+        Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
+        """
+    def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
+        """
+        None
+        """
+    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+        """
+        None
+        """
+    def References(self,aDataSet : OCP.TDF.TDF_DataSet) -> None: 
+        """
+        Adds the first level referenced attributes and labels to <aDataSet>.
+        """
+    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+        """
+        None
+        """
+    def Set(self,S : OCP.TCollection.TCollection_ExtendedString) -> None: 
+        """
+        None
+        """
+    @overload
+    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: 
+        """
+        Sets the explicit user defined GUID to the attribute.
+
+        Sets default GUID for the attribute.
+        """
+    @overload
+    def SetID(self) -> None: ...
+    @staticmethod
+    @overload
+    def Set_s(label : OCP.TDF.TDF_Label,string : OCP.TCollection.TCollection_ExtendedString) -> TDataStd_Comment: 
+        """
+        Find, or create a Comment attribute. the Comment attribute is returned.
+
+        Finds, or creates a Comment attribute and sets the string. the Comment attribute is returned. Comment methods ============
+        """
+    @staticmethod
+    @overload
+    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_Comment: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3608,9 +4124,9 @@ class TDataStd_HDataMapOfStringHArray1OfReal(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theOther : Any) -> None: ...
-    @overload
     def __init__(self,NbBuckets : int=1) -> None: ...
+    @overload
+    def __init__(self,theOther : Any) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3677,9 +4193,9 @@ class TDataStd_HDataMapOfStringInteger(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,NbBuckets : int=1) -> None: ...
-    @overload
     def __init__(self,theOther : OCP.TColStd.TColStd_DataMapOfStringInteger) -> None: ...
+    @overload
+    def __init__(self,NbBuckets : int=1) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3815,9 +4331,9 @@ class TDataStd_HDataMapOfStringString(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,NbBuckets : int=1) -> None: ...
-    @overload
     def __init__(self,theOther : TDataStd_DataMapOfStringString) -> None: ...
+    @overload
+    def __init__(self,NbBuckets : int=1) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3906,14 +4422,14 @@ class TDataStd_LabelArray1():
         Constant value access
         """
     @overload
+    def __init__(self,theOther : TDataStd_LabelArray1) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.TDF.TDF_Label,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : TDataStd_LabelArray1) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TDataStd_IntPackedMap(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
@@ -3968,14 +4484,14 @@ class TDataStd_IntPackedMap(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Something to do before applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
         """
     @overload
-    def ChangeMap(self,theMap : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: 
+    def ChangeMap(self,theMap : OCP.TColStd.TColStd_PackedMapOfInteger) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def ChangeMap(self,theMap : OCP.TColStd.TColStd_PackedMapOfInteger) -> bool: ...
+    def ChangeMap(self,theMap : OCP.TColStd.TColStd_HPackedMapOfInteger) -> bool: ...
     def Clear(self) -> bool: 
         """
         None
@@ -4012,15 +4528,19 @@ class TDataStd_IntPackedMap(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -4256,14 +4776,14 @@ class TDataStd_Integer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -4272,15 +4792,19 @@ class TDataStd_Integer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -4525,15 +5049,19 @@ class TDataStd_IntegerArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -4787,14 +5315,14 @@ class TDataStd_IntegerList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -4803,15 +5331,19 @@ class TDataStd_IntegerList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -4963,17 +5495,17 @@ class TDataStd_IntegerList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         None
         """
     @overload
-    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets the explicit GUID (user defined) for the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_IntegerList: 
+    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_IntegerList: 
         """
         Finds or creates a list of integer values attribute.
 
@@ -4981,7 +5513,7 @@ class TDataStd_IntegerList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label) -> TDataStd_IntegerList: ...
+    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID) -> TDataStd_IntegerList: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -5134,12 +5666,12 @@ class TDataStd_HLabelArray1(TDataStd_LabelArray1, OCP.Standard.Standard_Transien
     @overload
     def __init__(self,theOther : TDataStd_LabelArray1) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.TDF.TDF_Label) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5160,7 +5692,7 @@ class TDataStd_ListOfByte(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : TDataStd_ListOfByte) -> None: 
+    def Append(self,theItem : int) -> int: 
         """
         Append one item at the end
 
@@ -5171,7 +5703,7 @@ class TDataStd_ListOfByte(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : int,theIter : Any) -> None: ...
     @overload
-    def Append(self,theItem : int) -> int: ...
+    def Append(self,theOther : TDataStd_ListOfByte) -> None: ...
     def Assign(self,theOther : TDataStd_ListOfByte) -> TDataStd_ListOfByte: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -5191,23 +5723,23 @@ class TDataStd_ListOfByte(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : int,theIter : Any) -> int: 
+    def InsertAfter(self,theOther : TDataStd_ListOfByte,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : TDataStd_ListOfByte,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : int,theIter : Any) -> int: ...
     @overload
-    def InsertBefore(self,theOther : TDataStd_ListOfByte,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : int,theIter : Any) -> int: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : int,theIter : Any) -> int: ...
+    def InsertBefore(self,theOther : TDataStd_ListOfByte,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -5244,12 +5776,12 @@ class TDataStd_ListOfByte(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TDataStd_ListOfByte) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TDataStd_ListOfExtendedString(OCP.NCollection.NCollection_BaseList):
     """
@@ -5260,7 +5792,7 @@ class TDataStd_ListOfExtendedString(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: 
+    def Append(self,theOther : TDataStd_ListOfExtendedString) -> None: 
         """
         Append one item at the end
 
@@ -5269,9 +5801,9 @@ class TDataStd_ListOfExtendedString(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : TDataStd_ListOfExtendedString) -> None: ...
-    @overload
     def Append(self,theItem : OCP.TCollection.TCollection_ExtendedString,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: ...
     def Assign(self,theOther : TDataStd_ListOfExtendedString) -> TDataStd_ListOfExtendedString: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -5319,14 +5851,14 @@ class TDataStd_ListOfExtendedString(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: 
+    def Prepend(self,theOther : TDataStd_ListOfExtendedString) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : TDataStd_ListOfExtendedString) -> None: ...
+    def Prepend(self,theItem : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -5349,9 +5881,9 @@ class TDataStd_ListOfExtendedString(OCP.NCollection.NCollection_BaseList):
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TDataStd_ListOfExtendedString) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
-class TDataStd_Name(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class TDataStd_Name(TDataStd_GenericExtString, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Used to define a name attribute containing a string which specifies the name.Used to define a name attribute containing a string which specifies the name.Used to define a name attribute containing a string which specifies the name.
     """
@@ -5416,14 +5948,14 @@ class TDataStd_Name(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -5432,15 +5964,19 @@ class TDataStd_Name(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -5475,7 +6011,7 @@ class TDataStd_Name(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ID(self) -> OCP.Standard.Standard_GUID: 
         """
-        None
+        Returns the ID of the attribute.
         """
     def IncrementRefCounter(self) -> None: 
         """
@@ -5552,14 +6088,14 @@ class TDataStd_Name(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Sets <S> as name. Raises if <S> is not a valid name.
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets the explicit user defined GUID to the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     @overload
     def Set_s(label : OCP.TDF.TDF_Label,guid : OCP.Standard.Standard_GUID,string : OCP.TCollection.TCollection_ExtendedString) -> TDataStd_Name: 
@@ -5667,6 +6203,10 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Replace the container content by new content of the <theStrings>.
         """
+    def Clear(self) -> None: 
+        """
+        Clear data.
+        """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -5684,14 +6224,14 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -5700,15 +6240,19 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -5755,7 +6299,7 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
         """
-        Static methods ============== Returns the ID of the named data attribute.
+        Returns the ID of the named data attribute.
         """
     def GetInteger(self,theName : OCP.TCollection.TCollection_ExtendedString) -> int: 
         """
@@ -5796,13 +6340,9 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
     def HasArraysOfIntegers(self) -> bool: 
         """
         Returns true if there are some named arrays of integer values in the attribute.
-
-        Returns true if there are some named arrays of integer values in the attribute.
         """
     def HasArraysOfReals(self) -> bool: 
         """
-        Returns true if there are some named arrays of real values in the attribute.
-
         Returns true if there are some named arrays of real values in the attribute.
         """
     def HasByte(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: 
@@ -5812,8 +6352,10 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
     def HasBytes(self) -> bool: 
         """
         Returns true if there are some named bytes in the attribute.
-
-        Returns true if there are some named bytes in the attribute.
+        """
+    def HasDeferredData(self) -> bool: 
+        """
+        Returns TRUE if some data is not loaded from deferred storage and can be loaded using LoadDeferredData().
         """
     def HasInteger(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
@@ -5821,8 +6363,6 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
     def HasIntegers(self) -> bool: 
         """
-        Returns true if at least one named integer value is kept in the attribute.
-
         Returns true if at least one named integer value is kept in the attribute.
         """
     def HasReal(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: 
@@ -5832,8 +6372,6 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
     def HasReals(self) -> bool: 
         """
         Returns true if at least one named real value is kept in the attribute.
-
-        Returns true if at least one named real value is kept in the attribute.
         """
     def HasString(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
@@ -5842,13 +6380,8 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
     def HasStrings(self) -> bool: 
         """
         Returns true if there are some named strings in the attribute.
-
-        Returns true if there are some named strings in the attribute.
         """
-    def ID(self) -> OCP.Standard.Standard_GUID: 
-        """
-        None
-        """
+    def ID(self) -> OCP.Standard.Standard_GUID: ...
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -5903,6 +6436,10 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
         """
+    def LoadDeferredData(self,theToKeepDeferred : bool=False) -> bool: 
+        """
+        Load data from deferred storage, without calling Backup(). As result, the content of the object will be overidden by data from deferred storage (which is normally read-only).
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -5921,11 +6458,11 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
     def SetArrayOfIntegers(self,theName : OCP.TCollection.TCollection_ExtendedString,theArrayOfIntegers : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
         """
-        Defines a named array of integer values. If the array already exists, it changes its value to <theArrayOfIntegers>.
+        Defines a named array of integer values.
         """
     def SetArrayOfReals(self,theName : OCP.TCollection.TCollection_ExtendedString,theArrayOfReals : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
-        Defines a named array of real values. If the array already exists, it changes its value to <theArrayOfReals>.
+        Defines a named array of real values.
         """
     def SetByte(self,theName : OCP.TCollection.TCollection_ExtendedString,theByte : int) -> None: 
         """
@@ -5967,11 +6504,19 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
 
         Returns the transaction index in which the attribute has been created or modified.
         """
+    def UnloadDeferredData(self) -> bool: 
+        """
+        Releases data if object has connected deferred storage, without calling Backup(). WARNING! This operation does not unload modifications to deferred storage (normally it is read-only), so that modifications will be discarded (if any).
+        """
     def UntilTransaction(self) -> int: 
         """
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
         """
     def __init__(self) -> None: ...
+    def clear(self) -> None: 
+        """
+        Clear data without calling Backup().
+        """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5982,8 +6527,32 @@ class TDataStd_NamedData(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         None
         """
+    def setArrayOfIntegers(self,theName : OCP.TCollection.TCollection_ExtendedString,theArrayOfIntegers : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Defines a named array of integer values (without calling Backup).
+        """
+    def setArrayOfReals(self,theName : OCP.TCollection.TCollection_ExtendedString,theArrayOfReals : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
+        """
+        Defines a named array of real values (without calling Backup).
+        """
+    def setByte(self,theName : OCP.TCollection.TCollection_ExtendedString,theByte : int) -> None: 
+        """
+        Defines a named byte (without calling Backup).
+        """
+    def setInteger(self,theName : OCP.TCollection.TCollection_ExtendedString,theInteger : int) -> None: 
+        """
+        Defines a named integer (without calling Backup).
+        """
+    def setReal(self,theName : OCP.TCollection.TCollection_ExtendedString,theReal : float) -> None: 
+        """
+        Defines a named real (without calling Backup).
+        """
+    def setString(self,theName : OCP.TCollection.TCollection_ExtendedString,theString : OCP.TCollection.TCollection_ExtendedString) -> None: 
+        """
+        Defines a named string (without calling Backup).
+        """
     pass
-class TDataStd_NoteBook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class TDataStd_NoteBook(TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     NoteBook Object attributeNoteBook Object attributeNoteBook Object attribute
     """
@@ -6057,14 +6626,14 @@ class TDataStd_NoteBook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -6073,15 +6642,19 @@ class TDataStd_NoteBook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -6182,7 +6755,7 @@ class TDataStd_NoteBook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Create an enpty NoteBook attribute, located at <label>. Raises if <label> has attribute
         """
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -6190,7 +6763,7 @@ class TDataStd_NoteBook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -6294,14 +6867,14 @@ class TDataStd_Real(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -6310,15 +6883,19 @@ class TDataStd_Real(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -6571,15 +7148,19 @@ class TDataStd_RealArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -6703,14 +7284,14 @@ class TDataStd_RealArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         for internal use only!
         """
     @overload
-    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets the explicit GUID (user defined) for the attribute.
 
         Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,theGuid : OCP.Standard.Standard_GUID) -> None: ...
     def SetValue(self,Index : int,Value : float) -> None: 
         """
         Sets the <Index>th element of the array to <Value> OutOfRange exception is raised if <Index> doesn't respect Lower and Upper bounds of the internal array.
@@ -6772,21 +7353,29 @@ class TDataStd_RealEnum():
 
       TDataStd_ANGULAR
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TDataStd_ANGULAR: OCP.TDataStd.TDataStd_RealEnum # value = TDataStd_RealEnum.TDataStd_ANGULAR
-    TDataStd_LENGTH: OCP.TDataStd.TDataStd_RealEnum # value = TDataStd_RealEnum.TDataStd_LENGTH
-    TDataStd_SCALAR: OCP.TDataStd.TDataStd_RealEnum # value = TDataStd_RealEnum.TDataStd_SCALAR
-    __entries: dict # value = {'TDataStd_SCALAR': (TDataStd_RealEnum.TDataStd_SCALAR, None), 'TDataStd_LENGTH': (TDataStd_RealEnum.TDataStd_LENGTH, None), 'TDataStd_ANGULAR': (TDataStd_RealEnum.TDataStd_ANGULAR, None)}
-    __members__: dict # value = {'TDataStd_SCALAR': TDataStd_RealEnum.TDataStd_SCALAR, 'TDataStd_LENGTH': TDataStd_RealEnum.TDataStd_LENGTH, 'TDataStd_ANGULAR': TDataStd_RealEnum.TDataStd_ANGULAR}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TDataStd_ANGULAR: OCP.TDataStd.TDataStd_RealEnum # value = <TDataStd_RealEnum.TDataStd_ANGULAR: 2>
+    TDataStd_LENGTH: OCP.TDataStd.TDataStd_RealEnum # value = <TDataStd_RealEnum.TDataStd_LENGTH: 1>
+    TDataStd_SCALAR: OCP.TDataStd.TDataStd_RealEnum # value = <TDataStd_RealEnum.TDataStd_SCALAR: 0>
+    __entries: dict # value = {'TDataStd_SCALAR': (<TDataStd_RealEnum.TDataStd_SCALAR: 0>, None), 'TDataStd_LENGTH': (<TDataStd_RealEnum.TDataStd_LENGTH: 1>, None), 'TDataStd_ANGULAR': (<TDataStd_RealEnum.TDataStd_ANGULAR: 2>, None)}
+    __members__: dict # value = {'TDataStd_SCALAR': <TDataStd_RealEnum.TDataStd_SCALAR: 0>, 'TDataStd_LENGTH': <TDataStd_RealEnum.TDataStd_LENGTH: 1>, 'TDataStd_ANGULAR': <TDataStd_RealEnum.TDataStd_ANGULAR: 2>}
     pass
 class TDataStd_RealList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
@@ -6861,14 +7450,14 @@ class TDataStd_RealList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -6877,15 +7466,19 @@ class TDataStd_RealList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -7147,14 +7740,14 @@ class TDataStd_ReferenceArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -7163,15 +7756,19 @@ class TDataStd_ReferenceArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -7309,7 +7906,7 @@ class TDataStd_ReferenceArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,lower : int,upper : int) -> TDataStd_ReferenceArray: 
+    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID,lower : int,upper : int) -> TDataStd_ReferenceArray: 
         """
         Finds or creates an array of reference values (labels) attribute.
 
@@ -7317,7 +7914,7 @@ class TDataStd_ReferenceArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,theGuid : OCP.Standard.Standard_GUID,lower : int,upper : int) -> TDataStd_ReferenceArray: ...
+    def Set_s(label : OCP.TDF.TDF_Label,lower : int,upper : int) -> TDataStd_ReferenceArray: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -7425,14 +8022,14 @@ class TDataStd_ReferenceList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -7441,15 +8038,19 @@ class TDataStd_ReferenceList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -7591,14 +8192,14 @@ class TDataStd_ReferenceList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         None
         """
     @overload
-    def Remove(self,value : OCP.TDF.TDF_Label) -> bool: 
+    def Remove(self,index : int) -> bool: 
         """
         Removes the first meet of the <value>.
 
         Removes a label at "index" position.
         """
     @overload
-    def Remove(self,index : int) -> bool: ...
+    def Remove(self,value : OCP.TDF.TDF_Label) -> bool: ...
     def Restore(self,With : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
@@ -7649,7 +8250,7 @@ class TDataStd_ReferenceList(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         None
         """
     pass
-class TDataStd_Relation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class TDataStd_Relation(TDataStd_Expression, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Relation attribute. ==================Relation attribute. ==================Relation attribute. ==================
     """
@@ -7714,14 +8315,14 @@ class TDataStd_Relation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -7730,15 +8331,19 @@ class TDataStd_Relation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -7757,6 +8362,10 @@ class TDataStd_Relation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
         Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        """
+    def GetExpression(self) -> OCP.TCollection.TCollection_ExtendedString: 
+        """
+        None
         """
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
@@ -7835,7 +8444,7 @@ class TDataStd_Relation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def Name(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
-        build and return the relation name
+        build and return the expression name
         """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
@@ -7850,6 +8459,10 @@ class TDataStd_Relation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
     def Restore(self,With : OCP.TDF.TDF_Attribute) -> None: 
+        """
+        None
+        """
+    def SetExpression(self,E : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
         """
@@ -7897,7 +8510,7 @@ class TDataStd_Relation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class TDataStd_Tick(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class TDataStd_Tick(TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Defines a boolean attribute. If it exists at a label - true, Otherwise - false.Defines a boolean attribute. If it exists at a label - true, Otherwise - false.Defines a boolean attribute. If it exists at a label - true, Otherwise - false.
     """
@@ -7962,14 +8575,14 @@ class TDataStd_Tick(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -7978,15 +8591,19 @@ class TDataStd_Tick(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -8077,7 +8694,7 @@ class TDataStd_Tick(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Paste(self,Into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -8085,7 +8702,7 @@ class TDataStd_Tick(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,With : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -8198,14 +8815,14 @@ class TDataStd_TreeNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -8218,15 +8835,19 @@ class TDataStd_TreeNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Returns the depth of this tree node in the overall tree node structure. In other words, the number of father tree nodes of this one is returned.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -8467,7 +9088,7 @@ class TDataStd_TreeNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Set_s(L : OCP.TDF.TDF_Label,ExplicitTreeID : OCP.Standard.Standard_GUID) -> TDataStd_TreeNode: 
+    def Set_s(L : OCP.TDF.TDF_Label) -> TDataStd_TreeNode: 
         """
         Finds or Creates a TreeNode attribute on the label <L> with the default tree ID, returned by the method <GetDefaultTreeID>. Returns the created/found TreeNode attribute.
 
@@ -8475,7 +9096,7 @@ class TDataStd_TreeNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Set_s(L : OCP.TDF.TDF_Label) -> TDataStd_TreeNode: ...
+    def Set_s(L : OCP.TDF.TDF_Label,ExplicitTreeID : OCP.Standard.Standard_GUID) -> TDataStd_TreeNode: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -8564,14 +9185,14 @@ class TDataStd_UAttribute(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -8580,15 +9201,19 @@ class TDataStd_UAttribute(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -8791,14 +9416,14 @@ class TDataStd_Variable(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -8811,9 +9436,13 @@ class TDataStd_Variable(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         if <me> is assigned delete the associated expression attribute.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -8823,7 +9452,7 @@ class TDataStd_Variable(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         if <me> is assigned, returns associated Expression attribute.
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -8993,14 +9622,14 @@ class TDataStd_Variable(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the transaction index in which the attribute has been created or modified.
         """
     @overload
-    def Unit(self,unit : OCP.TCollection.TCollection_AsciiString) -> None: 
+    def Unit(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
 
         to read/write fields ===================
         """
     @overload
-    def Unit(self) -> OCP.TCollection.TCollection_AsciiString: ...
+    def Unit(self,unit : OCP.TCollection.TCollection_AsciiString) -> None: ...
     def UntilTransaction(self) -> int: 
         """
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
@@ -9017,6 +9646,6 @@ class TDataStd_Variable(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-TDataStd_ANGULAR: OCP.TDataStd.TDataStd_RealEnum # value = TDataStd_RealEnum.TDataStd_ANGULAR
-TDataStd_LENGTH: OCP.TDataStd.TDataStd_RealEnum # value = TDataStd_RealEnum.TDataStd_LENGTH
-TDataStd_SCALAR: OCP.TDataStd.TDataStd_RealEnum # value = TDataStd_RealEnum.TDataStd_SCALAR
+TDataStd_ANGULAR: OCP.TDataStd.TDataStd_RealEnum # value = <TDataStd_RealEnum.TDataStd_ANGULAR: 2>
+TDataStd_LENGTH: OCP.TDataStd.TDataStd_RealEnum # value = <TDataStd_RealEnum.TDataStd_LENGTH: 1>
+TDataStd_SCALAR: OCP.TDataStd.TDataStd_RealEnum # value = <TDataStd_RealEnum.TDataStd_SCALAR: 0>

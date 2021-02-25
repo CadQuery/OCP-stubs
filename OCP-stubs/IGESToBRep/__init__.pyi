@@ -5,19 +5,19 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
-import OCP.ShapeExtend
-import OCP.IGESBasic
-import OCP.Geom2d
 import OCP.IGESSolid
-import OCP.IGESData
-import OCP.Message
-import OCP.Transfer
-import OCP.Standard
-import OCP.TopoDS
 import OCP.IGESGeom
-import OCP.Geom
-import OCP.Interface
+import OCP.Transfer
+import OCP.Message
+import OCP.IGESData
 import OCP.gp
+import OCP.Geom
+import OCP.IGESBasic
+import OCP.TopoDS
+import OCP.Interface
+import OCP.Geom2d
+import OCP.Standard
+import OCP.ShapeExtend
 __all__  = [
 "IGESToBRep",
 "IGESToBRep_Actor",
@@ -175,15 +175,15 @@ class IGESToBRep_Actor(OCP.Transfer.Transfer_ActorOfTransientProcess, OCP.Transf
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Transfer(self,start : OCP.Standard.Standard_Transient,TP : OCP.Transfer.Transfer_TransientProcess) -> OCP.Transfer.Transfer_Binder: 
+    def Transfer(self,start : OCP.Standard.Standard_Transient,TP : OCP.Transfer.Transfer_TransientProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Transfer.Transfer_Binder: 
         """
         None
         """
-    def TransferTransient(self,start : OCP.Standard.Standard_Transient,TP : OCP.Transfer.Transfer_TransientProcess) -> OCP.Standard.Standard_Transient: 
+    def TransferTransient(self,start : OCP.Standard.Standard_Transient,TP : OCP.Transfer.Transfer_TransientProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Standard.Standard_Transient: 
         """
         None
         """
-    def Transferring(self,start : OCP.Standard.Standard_Transient,TP : OCP.Transfer.Transfer_ProcessForTransient) -> OCP.Transfer.Transfer_Binder: 
+    def Transferring(self,start : OCP.Standard.Standard_Transient,TP : OCP.Transfer.Transfer_ProcessForTransient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Transfer.Transfer_Binder: 
         """
         None
         """
@@ -343,14 +343,14 @@ class IGESToBRep_CurveAndSurface():
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -483,11 +483,11 @@ class IGESToBRep_CurveAndSurface():
         """
         None
         """
-    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert of any IGES Curve or Surface Entity. If the transfer has failed, this member return a NullEntity.
         """
-    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert the geometry of any IGESEntity. If the transfer has failed, this member return a NullEntity.
         """
@@ -495,8 +495,6 @@ class IGESToBRep_CurveAndSurface():
         """
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
-    @overload
-    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     @overload
     def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     @overload
@@ -571,14 +569,14 @@ class IGESToBRep_BasicCurve(IGESToBRep_CurveAndSurface):
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -759,11 +757,11 @@ class IGESToBRep_BasicCurve(IGESToBRep_CurveAndSurface):
         """
         None
         """
-    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert of any IGES Curve or Surface Entity. If the transfer has failed, this member return a NullEntity.
         """
-    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert the geometry of any IGESEntity. If the transfer has failed, this member return a NullEntity.
         """
@@ -859,14 +857,14 @@ class IGESToBRep_BasicSurface(IGESToBRep_CurveAndSurface):
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -1007,11 +1005,11 @@ class IGESToBRep_BasicSurface(IGESToBRep_CurveAndSurface):
         """
         Returns Surface from Geom if the last transfer has succeded.
         """
-    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert of any IGES Curve or Surface Entity. If the transfer has failed, this member return a NullEntity.
         """
-    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert the geometry of any IGESEntity. If the transfer has failed, this member return a NullEntity.
         """
@@ -1119,14 +1117,14 @@ class IGESToBRep_BRepEntity(IGESToBRep_CurveAndSurface):
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -1259,11 +1257,11 @@ class IGESToBRep_BRepEntity(IGESToBRep_CurveAndSurface):
         """
         None
         """
-    def TransferBRepEntity(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferBRepEntity(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Transfer the BRepEntity" : Face, Shell or ManifoldSolid.
         """
-    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert of any IGES Curve or Surface Entity. If the transfer has failed, this member return a NullEntity.
         """
@@ -1275,7 +1273,7 @@ class IGESToBRep_BRepEntity(IGESToBRep_CurveAndSurface):
         """
         Transfer the Face Entity
         """
-    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert the geometry of any IGESEntity. If the transfer has failed, this member return a NullEntity.
         """
@@ -1283,11 +1281,11 @@ class IGESToBRep_BRepEntity(IGESToBRep_CurveAndSurface):
         """
         Transfer the Loop Entity
         """
-    def TransferManifoldSolid(self,start : OCP.IGESSolid.IGESSolid_ManifoldSolid) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferManifoldSolid(self,start : OCP.IGESSolid.IGESSolid_ManifoldSolid,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Transfer the ManifoldSolid Entity
         """
-    def TransferShell(self,start : OCP.IGESSolid.IGESSolid_Shell) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferShell(self,start : OCP.IGESSolid.IGESSolid_Shell,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Transfer the Shell Entity
         """
@@ -1300,11 +1298,11 @@ class IGESToBRep_BRepEntity(IGESToBRep_CurveAndSurface):
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
-    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
+    @overload
+    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     pass
 class IGESToBRep_IGESBoundary(OCP.Standard.Standard_Transient):
     """
@@ -1450,11 +1448,11 @@ class IGESToBRep_Reader():
         """
         Returns the num the resulting shape in a translation operation.
         """
-    def Transfer(self,num : int) -> bool: 
+    def Transfer(self,num : int,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Transfers an Entity given its rank in the Model (Root or not) Returns True if it is recognized as Geom-Topol. (But it can have failed : see IsDone)
         """
-    def TransferRoots(self,onlyvisible : bool=True) -> None: 
+    def TransferRoots(self,onlyvisible : bool=True,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Translates root entities in an IGES file. Standard_True is the default value and means that only visible root entities are translated. Standard_False translates all of the roots (visible and invisible).
         """
@@ -1616,14 +1614,14 @@ class IGESToBRep_TopoCurve(IGESToBRep_CurveAndSurface):
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -1800,7 +1798,7 @@ class IGESToBRep_TopoCurve(IGESToBRep_CurveAndSurface):
         """
         None
         """
-    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert of any IGES Curve or Surface Entity. If the transfer has failed, this member return a NullEntity.
         """
@@ -1812,7 +1810,7 @@ class IGESToBRep_TopoCurve(IGESToBRep_CurveAndSurface):
         """
         None
         """
-    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert the geometry of any IGESEntity. If the transfer has failed, this member return a NullEntity.
         """
@@ -1837,13 +1835,13 @@ class IGESToBRep_TopoCurve(IGESToBRep_CurveAndSurface):
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
+    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
+    @overload
     def __init__(self,CS : IGESToBRep_TopoCurve) -> None: ...
     @overload
     def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     pass
 class IGESToBRep_TopoSurface(IGESToBRep_CurveAndSurface):
     """
@@ -1914,14 +1912,14 @@ class IGESToBRep_TopoSurface(IGESToBRep_CurveAndSurface):
         Returns the value of "myContIsOpti"
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfer of the IGESEntity "start" contained in "myMap" . (if HasShapeResult is True).
 
         Returns the numth result of the IGESEntity start (type VertexList or EdgeList) in "myMap". (if NbShapeResult is not null).
         """
     @overload
-    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShapeResult(self,start : OCP.IGESData.IGESData_IGESEntity,num : int) -> OCP.TopoDS.TopoDS_Shape: ...
     def GetSurfaceCurve(self) -> int: 
         """
         Returns the value of " mySurfaceCurve" 0 = value in file , 2 = kepp 2d and compute 3d 3 = keep 3d and compute 2d
@@ -2062,11 +2060,11 @@ class IGESToBRep_TopoSurface(IGESToBRep_CurveAndSurface):
         """
         None
         """
-    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert of any IGES Curve or Surface Entity. If the transfer has failed, this member return a NullEntity.
         """
-    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.TopoDS.TopoDS_Shape: 
+    def TransferGeometry(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the result of the transfert the geometry of any IGESEntity. If the transfer has failed, this member return a NullEntity.
         """

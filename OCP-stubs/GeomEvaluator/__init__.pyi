@@ -5,10 +5,10 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.Standard
 import OCP.GeomAdaptor
-import OCP.Geom
 import OCP.gp
+import OCP.Geom
+import OCP.Standard
 __all__  = [
 "GeomEvaluator_Curve",
 "GeomEvaluator_OffsetCurve",
@@ -418,9 +418,9 @@ class GeomEvaluator_SurfaceOfExtrusion(GeomEvaluator_Surface, OCP.Standard.Stand
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theBase : OCP.Adaptor3d.Adaptor3d_HCurve,theExtrusionDir : OCP.gp.gp_Dir) -> None: ...
-    @overload
     def __init__(self,theBase : OCP.Geom.Geom_Curve,theExtrusionDir : OCP.gp.gp_Dir) -> None: ...
+    @overload
+    def __init__(self,theBase : OCP.Adaptor3d.Adaptor3d_HCurve,theExtrusionDir : OCP.gp.gp_Dir) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

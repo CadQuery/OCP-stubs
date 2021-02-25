@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.TColStd
-import OCP.Geom2dAdaptor
-import OCP.Geom2d
 import OCP.Adaptor3d
+import OCP.TColStd
 import OCP.GeomAdaptor
-import OCP.TopoDS
-import OCP.Standard
-import OCP.Geom
 import OCP.Adaptor2d
 import OCP.gp
+import OCP.GeomAbs
+import OCP.Geom
+import OCP.TopoDS
+import OCP.Geom2dAdaptor
+import OCP.Geom2d
+import OCP.Standard
 __all__  = [
 "BRepAdaptor_Array1OfCurve",
 "BRepAdaptor_CompCurve",
@@ -104,14 +104,14 @@ class BRepAdaptor_Array1OfCurve():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : BRepAdaptor_Array1OfCurve) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : BRepAdaptor_Curve,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : BRepAdaptor_Array1OfCurve) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve):
     """
@@ -253,9 +253,9 @@ class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,KnotByCurvilinearAbcissa : bool=False) -> None: ...
-    @overload
     def __init__(self,W : OCP.TopoDS.TopoDS_Wire,KnotByCurvilinearAbcissa : bool,First : float,Last : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,KnotByCurvilinearAbcissa : bool=False) -> None: ...
     pass
 class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
     """
@@ -330,14 +330,14 @@ class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
         None
         """
     @overload
-    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: 
+    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Sets the Curve <me> to acces to the geometry of edge <E>.
 
         Sets the Curve <me> to acces to the geometry of edge <E>. The geometry will be computed using the parametric curve of <E> on the face <F>. An Error is raised if the edge does not have a pcurve on the face.
         """
     @overload
-    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
@@ -534,7 +534,7 @@ class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.A
         None
         """
     @overload
-    def Load(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def Load(self,C : OCP.Geom2d.Geom2d_Curve,UFirst : float,ULast : float) -> None: 
         """
         None
 
@@ -545,7 +545,7 @@ class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.A
         ConstructionError is raised if Ufirst>Ulast
         """
     @overload
-    def Load(self,C : OCP.Geom2d.Geom2d_Curve,UFirst : float,ULast : float) -> None: ...
+    def Load(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <S>. And returns the number of intervals.
@@ -715,14 +715,14 @@ class BRepAdaptor_HArray1OfCurve(BRepAdaptor_Array1OfCurve, OCP.Standard.Standar
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : BRepAdaptor_Curve) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : BRepAdaptor_Array1OfCurve) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1806,9 +1806,9 @@ class BRepAdaptor_HSurface(OCP.Adaptor3d.Adaptor3d_HSurface, OCP.Standard.Standa
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : BRepAdaptor_Surface) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

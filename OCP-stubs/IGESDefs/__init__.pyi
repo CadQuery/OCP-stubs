@@ -6,13 +6,13 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
 import OCP.TCollection
-import OCP.IGESGraph
+import io
 import OCP.IGESData
-import OCP.IGESBasic
-import OCP.Message
-import OCP.Standard
-import OCP.Interface
 import OCP.gp
+import OCP.Interface
+import OCP.IGESGraph
+import OCP.Standard
+import OCP.IGESBasic
 __all__  = [
 "IGESDefs",
 "IGESDefs_Array1OfTabularData",
@@ -130,14 +130,14 @@ class IGESDefs_Array1OfTabularData():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : IGESDefs_TabularData,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : IGESDefs_Array1OfTabularData) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : IGESDefs_TabularData,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESDefs_AssociativityDef(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Standard_Transient):
     """
@@ -1950,14 +1950,14 @@ class IGESDefs_HArray1OfTabularData(IGESDefs_Array1OfTabularData, OCP.Standard.S
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESDefs_TabularData) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESDefs_TabularData) -> None: ...
     @overload
     def __init__(self,theOther : IGESDefs_Array1OfTabularData) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2560,7 +2560,7 @@ class IGESDefs_SpecificModule(OCP.IGESData.IGESData_SpecificModule, OCP.Standard
         """
         Specific Automatic Correction on own Parameters of an Entity. It works by setting in accordance redundant data, if there are when there is no ambiguity (else, it does nothing). Remark that classic Corrections on Directory Entry (to set void data) are taken into account alsewhere.
         """
-    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Specific Dump (own parameters) for IGESDefs
         """
@@ -2962,7 +2962,7 @@ class IGESDefs_ToolAssociativityDef():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDefs_AssociativityDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDefs_AssociativityDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -2996,7 +2996,7 @@ class IGESDefs_ToolAttributeDef():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDefs_AttributeDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDefs_AttributeDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -3030,7 +3030,7 @@ class IGESDefs_ToolAttributeTable():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDefs_AttributeTable,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDefs_AttributeTable,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -3064,7 +3064,7 @@ class IGESDefs_ToolGenericData():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDefs_GenericData,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDefs_GenericData,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -3098,7 +3098,7 @@ class IGESDefs_ToolMacroDef():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDefs_MacroDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDefs_MacroDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -3132,7 +3132,7 @@ class IGESDefs_ToolTabularData():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDefs_TabularData,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDefs_TabularData,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -3166,7 +3166,7 @@ class IGESDefs_ToolUnitsData():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESDefs_UnitsData,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESDefs_UnitsData,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """

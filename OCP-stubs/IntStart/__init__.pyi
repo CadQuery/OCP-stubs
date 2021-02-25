@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.gp
 import OCP.Standard
 import OCP.TopAbs
-import OCP.gp
 __all__  = [
 "IntStart_SITopolTool"
 ]

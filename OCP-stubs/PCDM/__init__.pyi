@@ -4,13 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TColStd
+import OCP.TCollection
+import io
+import OCP.NCollection
 import OCP.Message
+import OCP.CDM
 import OCP.Storage
 import OCP.Standard
-import OCP.CDM
-import OCP.NCollection
 __all__  = [
 "PCDM",
 "PCDM_Document",
@@ -48,6 +49,7 @@ __all__  = [
 "PCDM_RS_UnknownDocument",
 "PCDM_RS_UnknownFileDriver",
 "PCDM_RS_UnrecognizedFileFormat",
+"PCDM_RS_UserBreak",
 "PCDM_RS_WrongResource",
 "PCDM_RS_WrongStreamMode",
 "PCDM_SS_Doc_IsNull",
@@ -56,6 +58,7 @@ __all__  = [
 "PCDM_SS_Info_Section_Error",
 "PCDM_SS_No_Obj",
 "PCDM_SS_OK",
+"PCDM_SS_UserBreak",
 "PCDM_SS_WriteFailure",
 "PCDM_TOFD_CmpFile",
 "PCDM_TOFD_File",
@@ -66,6 +69,17 @@ class PCDM():
     """
     None
     """
+    @staticmethod
+    @overload
+    def FileDriverType_s(theIStream : io.BytesIO,theBaseDriver : OCP.Storage.Storage_BaseDriver) -> PCDM_TypeOfFileDriver: 
+        """
+        None
+
+        None
+        """
+    @staticmethod
+    @overload
+    def FileDriverType_s(aFileName : OCP.TCollection.TCollection_AsciiString,aBaseDriver : OCP.Storage.Storage_BaseDriver) -> PCDM_TypeOfFileDriver: ...
     def __init__(self) -> None: ...
     pass
 class PCDM_Document(OCP.Standard.Standard_Persistent, OCP.Standard.Standard_Transient):
@@ -160,10 +174,16 @@ class PCDM_ReadWriter(OCP.Standard.Standard_Transient):
         None
         """
     @staticmethod
+    @overload
     def FileFormat_s(aFileName : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         tries to get a format in the file. returns an empty string if the file could not be read or does not have a FileFormat information.
+
+        tries to get a format from the stream. returns an empty string if the file could not be read or does not have a FileFormat information.
         """
+    @staticmethod
+    @overload
+    def FileFormat_s(theIStream : io.BytesIO,theData : OCP.Storage.Storage_Data) -> OCP.TCollection.TCollection_ExtendedString: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -275,10 +295,16 @@ class PCDM_ReadWriter_1(PCDM_ReadWriter, OCP.Standard.Standard_Transient):
         None
         """
     @staticmethod
+    @overload
     def FileFormat_s(aFileName : OCP.TCollection.TCollection_ExtendedString) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         tries to get a format in the file. returns an empty string if the file could not be read or does not have a FileFormat information.
+
+        tries to get a format from the stream. returns an empty string if the file could not be read or does not have a FileFormat information.
         """
+    @staticmethod
+    @overload
+    def FileFormat_s(theIStream : io.BytesIO,theData : OCP.Storage.Storage_Data) -> OCP.TCollection.TCollection_ExtendedString: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -427,14 +453,14 @@ class PCDM_Reader(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Read(self,aFileName : OCP.TCollection.TCollection_ExtendedString,aNewDocument : OCP.CDM.CDM_Document,anApplication : OCP.CDM.CDM_Application) -> None: 
+    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         retrieves the content of the file into a new Document.
 
         None
         """
     @overload
-    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: ...
+    def Read(self,aFileName : OCP.TCollection.TCollection_ExtendedString,aNewDocument : OCP.CDM.CDM_Document,anApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -499,41 +525,52 @@ class PCDM_ReaderStatus():
       PCDM_RS_ReaderException
 
       PCDM_RS_NoModel
-    """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
-    def __int__(self) -> int: ...
-    @property
-    def name(self) -> str:
-        """
-        (self: handle) -> str
 
-        :type: str
+      PCDM_RS_UserBreak
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
         """
-    PCDM_RS_AlreadyRetrieved: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_AlreadyRetrieved
-    PCDM_RS_AlreadyRetrievedAndModified: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_AlreadyRetrievedAndModified
-    PCDM_RS_DriverFailure: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_DriverFailure
-    PCDM_RS_ExtensionFailure: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_ExtensionFailure
-    PCDM_RS_FormatFailure: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_FormatFailure
-    PCDM_RS_MakeFailure: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_MakeFailure
-    PCDM_RS_NoDocument: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_NoDocument
-    PCDM_RS_NoDriver: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_NoDriver
-    PCDM_RS_NoModel: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_NoModel
-    PCDM_RS_NoSchema: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_NoSchema
-    PCDM_RS_NoVersion: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_NoVersion
-    PCDM_RS_OK: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_OK
-    PCDM_RS_OpenError: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_OpenError
-    PCDM_RS_PermissionDenied: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_PermissionDenied
-    PCDM_RS_ReaderException: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_ReaderException
-    PCDM_RS_TypeFailure: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_TypeFailure
-    PCDM_RS_TypeNotFoundInSchema: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_TypeNotFoundInSchema
-    PCDM_RS_UnknownDocument: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_UnknownDocument
-    PCDM_RS_UnknownFileDriver: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_UnknownFileDriver
-    PCDM_RS_UnrecognizedFileFormat: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_UnrecognizedFileFormat
-    PCDM_RS_WrongResource: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_WrongResource
-    PCDM_RS_WrongStreamMode: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_WrongStreamMode
-    __entries: dict # value = {'PCDM_RS_OK': (PCDM_ReaderStatus.PCDM_RS_OK, None), 'PCDM_RS_NoDriver': (PCDM_ReaderStatus.PCDM_RS_NoDriver, None), 'PCDM_RS_UnknownFileDriver': (PCDM_ReaderStatus.PCDM_RS_UnknownFileDriver, None), 'PCDM_RS_OpenError': (PCDM_ReaderStatus.PCDM_RS_OpenError, None), 'PCDM_RS_NoVersion': (PCDM_ReaderStatus.PCDM_RS_NoVersion, None), 'PCDM_RS_NoSchema': (PCDM_ReaderStatus.PCDM_RS_NoSchema, None), 'PCDM_RS_NoDocument': (PCDM_ReaderStatus.PCDM_RS_NoDocument, None), 'PCDM_RS_ExtensionFailure': (PCDM_ReaderStatus.PCDM_RS_ExtensionFailure, None), 'PCDM_RS_WrongStreamMode': (PCDM_ReaderStatus.PCDM_RS_WrongStreamMode, None), 'PCDM_RS_FormatFailure': (PCDM_ReaderStatus.PCDM_RS_FormatFailure, None), 'PCDM_RS_TypeFailure': (PCDM_ReaderStatus.PCDM_RS_TypeFailure, None), 'PCDM_RS_TypeNotFoundInSchema': (PCDM_ReaderStatus.PCDM_RS_TypeNotFoundInSchema, None), 'PCDM_RS_UnrecognizedFileFormat': (PCDM_ReaderStatus.PCDM_RS_UnrecognizedFileFormat, None), 'PCDM_RS_MakeFailure': (PCDM_ReaderStatus.PCDM_RS_MakeFailure, None), 'PCDM_RS_PermissionDenied': (PCDM_ReaderStatus.PCDM_RS_PermissionDenied, None), 'PCDM_RS_DriverFailure': (PCDM_ReaderStatus.PCDM_RS_DriverFailure, None), 'PCDM_RS_AlreadyRetrievedAndModified': (PCDM_ReaderStatus.PCDM_RS_AlreadyRetrievedAndModified, None), 'PCDM_RS_AlreadyRetrieved': (PCDM_ReaderStatus.PCDM_RS_AlreadyRetrieved, None), 'PCDM_RS_UnknownDocument': (PCDM_ReaderStatus.PCDM_RS_UnknownDocument, None), 'PCDM_RS_WrongResource': (PCDM_ReaderStatus.PCDM_RS_WrongResource, None), 'PCDM_RS_ReaderException': (PCDM_ReaderStatus.PCDM_RS_ReaderException, None), 'PCDM_RS_NoModel': (PCDM_ReaderStatus.PCDM_RS_NoModel, None)}
-    __members__: dict # value = {'PCDM_RS_OK': PCDM_ReaderStatus.PCDM_RS_OK, 'PCDM_RS_NoDriver': PCDM_ReaderStatus.PCDM_RS_NoDriver, 'PCDM_RS_UnknownFileDriver': PCDM_ReaderStatus.PCDM_RS_UnknownFileDriver, 'PCDM_RS_OpenError': PCDM_ReaderStatus.PCDM_RS_OpenError, 'PCDM_RS_NoVersion': PCDM_ReaderStatus.PCDM_RS_NoVersion, 'PCDM_RS_NoSchema': PCDM_ReaderStatus.PCDM_RS_NoSchema, 'PCDM_RS_NoDocument': PCDM_ReaderStatus.PCDM_RS_NoDocument, 'PCDM_RS_ExtensionFailure': PCDM_ReaderStatus.PCDM_RS_ExtensionFailure, 'PCDM_RS_WrongStreamMode': PCDM_ReaderStatus.PCDM_RS_WrongStreamMode, 'PCDM_RS_FormatFailure': PCDM_ReaderStatus.PCDM_RS_FormatFailure, 'PCDM_RS_TypeFailure': PCDM_ReaderStatus.PCDM_RS_TypeFailure, 'PCDM_RS_TypeNotFoundInSchema': PCDM_ReaderStatus.PCDM_RS_TypeNotFoundInSchema, 'PCDM_RS_UnrecognizedFileFormat': PCDM_ReaderStatus.PCDM_RS_UnrecognizedFileFormat, 'PCDM_RS_MakeFailure': PCDM_ReaderStatus.PCDM_RS_MakeFailure, 'PCDM_RS_PermissionDenied': PCDM_ReaderStatus.PCDM_RS_PermissionDenied, 'PCDM_RS_DriverFailure': PCDM_ReaderStatus.PCDM_RS_DriverFailure, 'PCDM_RS_AlreadyRetrievedAndModified': PCDM_ReaderStatus.PCDM_RS_AlreadyRetrievedAndModified, 'PCDM_RS_AlreadyRetrieved': PCDM_ReaderStatus.PCDM_RS_AlreadyRetrieved, 'PCDM_RS_UnknownDocument': PCDM_ReaderStatus.PCDM_RS_UnknownDocument, 'PCDM_RS_WrongResource': PCDM_ReaderStatus.PCDM_RS_WrongResource, 'PCDM_RS_ReaderException': PCDM_ReaderStatus.PCDM_RS_ReaderException, 'PCDM_RS_NoModel': PCDM_ReaderStatus.PCDM_RS_NoModel}
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    PCDM_RS_AlreadyRetrieved: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_AlreadyRetrieved: 17>
+    PCDM_RS_AlreadyRetrievedAndModified: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_AlreadyRetrievedAndModified: 16>
+    PCDM_RS_DriverFailure: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_DriverFailure: 15>
+    PCDM_RS_ExtensionFailure: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_ExtensionFailure: 7>
+    PCDM_RS_FormatFailure: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_FormatFailure: 9>
+    PCDM_RS_MakeFailure: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_MakeFailure: 13>
+    PCDM_RS_NoDocument: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_NoDocument: 6>
+    PCDM_RS_NoDriver: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_NoDriver: 1>
+    PCDM_RS_NoModel: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_NoModel: 21>
+    PCDM_RS_NoSchema: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_NoSchema: 5>
+    PCDM_RS_NoVersion: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_NoVersion: 4>
+    PCDM_RS_OK: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_OK: 0>
+    PCDM_RS_OpenError: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_OpenError: 3>
+    PCDM_RS_PermissionDenied: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_PermissionDenied: 14>
+    PCDM_RS_ReaderException: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_ReaderException: 20>
+    PCDM_RS_TypeFailure: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_TypeFailure: 10>
+    PCDM_RS_TypeNotFoundInSchema: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_TypeNotFoundInSchema: 11>
+    PCDM_RS_UnknownDocument: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_UnknownDocument: 18>
+    PCDM_RS_UnknownFileDriver: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_UnknownFileDriver: 2>
+    PCDM_RS_UnrecognizedFileFormat: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_UnrecognizedFileFormat: 12>
+    PCDM_RS_UserBreak: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_UserBreak: 22>
+    PCDM_RS_WrongResource: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_WrongResource: 19>
+    PCDM_RS_WrongStreamMode: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_WrongStreamMode: 8>
+    __entries: dict # value = {'PCDM_RS_OK': (<PCDM_ReaderStatus.PCDM_RS_OK: 0>, None), 'PCDM_RS_NoDriver': (<PCDM_ReaderStatus.PCDM_RS_NoDriver: 1>, None), 'PCDM_RS_UnknownFileDriver': (<PCDM_ReaderStatus.PCDM_RS_UnknownFileDriver: 2>, None), 'PCDM_RS_OpenError': (<PCDM_ReaderStatus.PCDM_RS_OpenError: 3>, None), 'PCDM_RS_NoVersion': (<PCDM_ReaderStatus.PCDM_RS_NoVersion: 4>, None), 'PCDM_RS_NoSchema': (<PCDM_ReaderStatus.PCDM_RS_NoSchema: 5>, None), 'PCDM_RS_NoDocument': (<PCDM_ReaderStatus.PCDM_RS_NoDocument: 6>, None), 'PCDM_RS_ExtensionFailure': (<PCDM_ReaderStatus.PCDM_RS_ExtensionFailure: 7>, None), 'PCDM_RS_WrongStreamMode': (<PCDM_ReaderStatus.PCDM_RS_WrongStreamMode: 8>, None), 'PCDM_RS_FormatFailure': (<PCDM_ReaderStatus.PCDM_RS_FormatFailure: 9>, None), 'PCDM_RS_TypeFailure': (<PCDM_ReaderStatus.PCDM_RS_TypeFailure: 10>, None), 'PCDM_RS_TypeNotFoundInSchema': (<PCDM_ReaderStatus.PCDM_RS_TypeNotFoundInSchema: 11>, None), 'PCDM_RS_UnrecognizedFileFormat': (<PCDM_ReaderStatus.PCDM_RS_UnrecognizedFileFormat: 12>, None), 'PCDM_RS_MakeFailure': (<PCDM_ReaderStatus.PCDM_RS_MakeFailure: 13>, None), 'PCDM_RS_PermissionDenied': (<PCDM_ReaderStatus.PCDM_RS_PermissionDenied: 14>, None), 'PCDM_RS_DriverFailure': (<PCDM_ReaderStatus.PCDM_RS_DriverFailure: 15>, None), 'PCDM_RS_AlreadyRetrievedAndModified': (<PCDM_ReaderStatus.PCDM_RS_AlreadyRetrievedAndModified: 16>, None), 'PCDM_RS_AlreadyRetrieved': (<PCDM_ReaderStatus.PCDM_RS_AlreadyRetrieved: 17>, None), 'PCDM_RS_UnknownDocument': (<PCDM_ReaderStatus.PCDM_RS_UnknownDocument: 18>, None), 'PCDM_RS_WrongResource': (<PCDM_ReaderStatus.PCDM_RS_WrongResource: 19>, None), 'PCDM_RS_ReaderException': (<PCDM_ReaderStatus.PCDM_RS_ReaderException: 20>, None), 'PCDM_RS_NoModel': (<PCDM_ReaderStatus.PCDM_RS_NoModel: 21>, None), 'PCDM_RS_UserBreak': (<PCDM_ReaderStatus.PCDM_RS_UserBreak: 22>, None)}
+    __members__: dict # value = {'PCDM_RS_OK': <PCDM_ReaderStatus.PCDM_RS_OK: 0>, 'PCDM_RS_NoDriver': <PCDM_ReaderStatus.PCDM_RS_NoDriver: 1>, 'PCDM_RS_UnknownFileDriver': <PCDM_ReaderStatus.PCDM_RS_UnknownFileDriver: 2>, 'PCDM_RS_OpenError': <PCDM_ReaderStatus.PCDM_RS_OpenError: 3>, 'PCDM_RS_NoVersion': <PCDM_ReaderStatus.PCDM_RS_NoVersion: 4>, 'PCDM_RS_NoSchema': <PCDM_ReaderStatus.PCDM_RS_NoSchema: 5>, 'PCDM_RS_NoDocument': <PCDM_ReaderStatus.PCDM_RS_NoDocument: 6>, 'PCDM_RS_ExtensionFailure': <PCDM_ReaderStatus.PCDM_RS_ExtensionFailure: 7>, 'PCDM_RS_WrongStreamMode': <PCDM_ReaderStatus.PCDM_RS_WrongStreamMode: 8>, 'PCDM_RS_FormatFailure': <PCDM_ReaderStatus.PCDM_RS_FormatFailure: 9>, 'PCDM_RS_TypeFailure': <PCDM_ReaderStatus.PCDM_RS_TypeFailure: 10>, 'PCDM_RS_TypeNotFoundInSchema': <PCDM_ReaderStatus.PCDM_RS_TypeNotFoundInSchema: 11>, 'PCDM_RS_UnrecognizedFileFormat': <PCDM_ReaderStatus.PCDM_RS_UnrecognizedFileFormat: 12>, 'PCDM_RS_MakeFailure': <PCDM_ReaderStatus.PCDM_RS_MakeFailure: 13>, 'PCDM_RS_PermissionDenied': <PCDM_ReaderStatus.PCDM_RS_PermissionDenied: 14>, 'PCDM_RS_DriverFailure': <PCDM_ReaderStatus.PCDM_RS_DriverFailure: 15>, 'PCDM_RS_AlreadyRetrievedAndModified': <PCDM_ReaderStatus.PCDM_RS_AlreadyRetrievedAndModified: 16>, 'PCDM_RS_AlreadyRetrieved': <PCDM_ReaderStatus.PCDM_RS_AlreadyRetrieved: 17>, 'PCDM_RS_UnknownDocument': <PCDM_ReaderStatus.PCDM_RS_UnknownDocument: 18>, 'PCDM_RS_WrongResource': <PCDM_ReaderStatus.PCDM_RS_WrongResource: 19>, 'PCDM_RS_ReaderException': <PCDM_ReaderStatus.PCDM_RS_ReaderException: 20>, 'PCDM_RS_NoModel': <PCDM_ReaderStatus.PCDM_RS_NoModel: 21>, 'PCDM_RS_UserBreak': <PCDM_ReaderStatus.PCDM_RS_UserBreak: 22>}
     pass
 class PCDM_Reference():
     """
@@ -678,14 +715,14 @@ class PCDM_RetrievalDriver(PCDM_Reader, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Read(self,aFileName : OCP.TCollection.TCollection_ExtendedString,aNewDocument : OCP.CDM.CDM_Document,anApplication : OCP.CDM.CDM_Application) -> None: 
+    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         retrieves the content of the file into a new Document.
 
         None
         """
     @overload
-    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: ...
+    def Read(self,aFileName : OCP.TCollection.TCollection_ExtendedString,aNewDocument : OCP.CDM.CDM_Document,anApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @staticmethod
     def ReferenceCounter_s(theFileName : OCP.TCollection.TCollection_ExtendedString,theMsgDriver : OCP.Message.Message_Messenger) -> int: 
         """
@@ -790,23 +827,23 @@ class PCDM_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : PCDM_SequenceOfDocument) -> None: 
+    def Prepend(self,theItem : PCDM_Document) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : PCDM_Document) -> None: ...
+    def Prepend(self,theSeq : PCDM_SequenceOfDocument) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -834,10 +871,10 @@ class PCDM_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : PCDM_SequenceOfDocument) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : PCDM_SequenceOfDocument) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -890,23 +927,23 @@ class PCDM_SequenceOfReference(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : PCDM_Reference) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : PCDM_SequenceOfReference) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : PCDM_SequenceOfReference) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : PCDM_Reference) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : PCDM_SequenceOfReference) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : PCDM_Reference) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : PCDM_Reference) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : PCDM_SequenceOfReference) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -966,12 +1003,12 @@ class PCDM_SequenceOfReference(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : PCDM_SequenceOfReference) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1022,14 +1059,14 @@ class PCDM_Writer(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Write(self,aDocument : OCP.CDM.CDM_Document,aFileName : OCP.TCollection.TCollection_ExtendedString) -> None: 
+    def Write(self,aDocument : OCP.CDM.CDM_Document,aFileName : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
 
         Write <theDocument> to theOStream
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : Any) -> None: ...
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1060,26 +1097,37 @@ class PCDM_StoreStatus():
       PCDM_SS_No_Obj
 
       PCDM_SS_Info_Section_Error
-    """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
-    def __int__(self) -> int: ...
-    @property
-    def name(self) -> str:
-        """
-        (self: handle) -> str
 
-        :type: str
+      PCDM_SS_UserBreak
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
         """
-    PCDM_SS_Doc_IsNull: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_Doc_IsNull
-    PCDM_SS_DriverFailure: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_DriverFailure
-    PCDM_SS_Failure: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_Failure
-    PCDM_SS_Info_Section_Error: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_Info_Section_Error
-    PCDM_SS_No_Obj: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_No_Obj
-    PCDM_SS_OK: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_OK
-    PCDM_SS_WriteFailure: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_WriteFailure
-    __entries: dict # value = {'PCDM_SS_OK': (PCDM_StoreStatus.PCDM_SS_OK, None), 'PCDM_SS_DriverFailure': (PCDM_StoreStatus.PCDM_SS_DriverFailure, None), 'PCDM_SS_WriteFailure': (PCDM_StoreStatus.PCDM_SS_WriteFailure, None), 'PCDM_SS_Failure': (PCDM_StoreStatus.PCDM_SS_Failure, None), 'PCDM_SS_Doc_IsNull': (PCDM_StoreStatus.PCDM_SS_Doc_IsNull, None), 'PCDM_SS_No_Obj': (PCDM_StoreStatus.PCDM_SS_No_Obj, None), 'PCDM_SS_Info_Section_Error': (PCDM_StoreStatus.PCDM_SS_Info_Section_Error, None)}
-    __members__: dict # value = {'PCDM_SS_OK': PCDM_StoreStatus.PCDM_SS_OK, 'PCDM_SS_DriverFailure': PCDM_StoreStatus.PCDM_SS_DriverFailure, 'PCDM_SS_WriteFailure': PCDM_StoreStatus.PCDM_SS_WriteFailure, 'PCDM_SS_Failure': PCDM_StoreStatus.PCDM_SS_Failure, 'PCDM_SS_Doc_IsNull': PCDM_StoreStatus.PCDM_SS_Doc_IsNull, 'PCDM_SS_No_Obj': PCDM_StoreStatus.PCDM_SS_No_Obj, 'PCDM_SS_Info_Section_Error': PCDM_StoreStatus.PCDM_SS_Info_Section_Error}
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    PCDM_SS_Doc_IsNull: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_Doc_IsNull: 4>
+    PCDM_SS_DriverFailure: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_DriverFailure: 1>
+    PCDM_SS_Failure: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_Failure: 3>
+    PCDM_SS_Info_Section_Error: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_Info_Section_Error: 6>
+    PCDM_SS_No_Obj: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_No_Obj: 5>
+    PCDM_SS_OK: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_OK: 0>
+    PCDM_SS_UserBreak: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_UserBreak: 7>
+    PCDM_SS_WriteFailure: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_WriteFailure: 2>
+    __entries: dict # value = {'PCDM_SS_OK': (<PCDM_StoreStatus.PCDM_SS_OK: 0>, None), 'PCDM_SS_DriverFailure': (<PCDM_StoreStatus.PCDM_SS_DriverFailure: 1>, None), 'PCDM_SS_WriteFailure': (<PCDM_StoreStatus.PCDM_SS_WriteFailure: 2>, None), 'PCDM_SS_Failure': (<PCDM_StoreStatus.PCDM_SS_Failure: 3>, None), 'PCDM_SS_Doc_IsNull': (<PCDM_StoreStatus.PCDM_SS_Doc_IsNull: 4>, None), 'PCDM_SS_No_Obj': (<PCDM_StoreStatus.PCDM_SS_No_Obj: 5>, None), 'PCDM_SS_Info_Section_Error': (<PCDM_StoreStatus.PCDM_SS_Info_Section_Error: 6>, None), 'PCDM_SS_UserBreak': (<PCDM_StoreStatus.PCDM_SS_UserBreak: 7>, None)}
+    __members__: dict # value = {'PCDM_SS_OK': <PCDM_StoreStatus.PCDM_SS_OK: 0>, 'PCDM_SS_DriverFailure': <PCDM_StoreStatus.PCDM_SS_DriverFailure: 1>, 'PCDM_SS_WriteFailure': <PCDM_StoreStatus.PCDM_SS_WriteFailure: 2>, 'PCDM_SS_Failure': <PCDM_StoreStatus.PCDM_SS_Failure: 3>, 'PCDM_SS_Doc_IsNull': <PCDM_StoreStatus.PCDM_SS_Doc_IsNull: 4>, 'PCDM_SS_No_Obj': <PCDM_StoreStatus.PCDM_SS_No_Obj: 5>, 'PCDM_SS_Info_Section_Error': <PCDM_StoreStatus.PCDM_SS_Info_Section_Error: 6>, 'PCDM_SS_UserBreak': <PCDM_StoreStatus.PCDM_SS_UserBreak: 7>}
     pass
 class PCDM_TypeOfFileDriver():
     """
@@ -1095,22 +1143,30 @@ class PCDM_TypeOfFileDriver():
 
       PCDM_TOFD_Unknown
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    PCDM_TOFD_CmpFile: OCP.PCDM.PCDM_TypeOfFileDriver # value = PCDM_TypeOfFileDriver.PCDM_TOFD_CmpFile
-    PCDM_TOFD_File: OCP.PCDM.PCDM_TypeOfFileDriver # value = PCDM_TypeOfFileDriver.PCDM_TOFD_File
-    PCDM_TOFD_Unknown: OCP.PCDM.PCDM_TypeOfFileDriver # value = PCDM_TypeOfFileDriver.PCDM_TOFD_Unknown
-    PCDM_TOFD_XmlFile: OCP.PCDM.PCDM_TypeOfFileDriver # value = PCDM_TypeOfFileDriver.PCDM_TOFD_XmlFile
-    __entries: dict # value = {'PCDM_TOFD_File': (PCDM_TypeOfFileDriver.PCDM_TOFD_File, None), 'PCDM_TOFD_CmpFile': (PCDM_TypeOfFileDriver.PCDM_TOFD_CmpFile, None), 'PCDM_TOFD_XmlFile': (PCDM_TypeOfFileDriver.PCDM_TOFD_XmlFile, None), 'PCDM_TOFD_Unknown': (PCDM_TypeOfFileDriver.PCDM_TOFD_Unknown, None)}
-    __members__: dict # value = {'PCDM_TOFD_File': PCDM_TypeOfFileDriver.PCDM_TOFD_File, 'PCDM_TOFD_CmpFile': PCDM_TypeOfFileDriver.PCDM_TOFD_CmpFile, 'PCDM_TOFD_XmlFile': PCDM_TypeOfFileDriver.PCDM_TOFD_XmlFile, 'PCDM_TOFD_Unknown': PCDM_TypeOfFileDriver.PCDM_TOFD_Unknown}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    PCDM_TOFD_CmpFile: OCP.PCDM.PCDM_TypeOfFileDriver # value = <PCDM_TypeOfFileDriver.PCDM_TOFD_CmpFile: 1>
+    PCDM_TOFD_File: OCP.PCDM.PCDM_TypeOfFileDriver # value = <PCDM_TypeOfFileDriver.PCDM_TOFD_File: 0>
+    PCDM_TOFD_Unknown: OCP.PCDM.PCDM_TypeOfFileDriver # value = <PCDM_TypeOfFileDriver.PCDM_TOFD_Unknown: 3>
+    PCDM_TOFD_XmlFile: OCP.PCDM.PCDM_TypeOfFileDriver # value = <PCDM_TypeOfFileDriver.PCDM_TOFD_XmlFile: 2>
+    __entries: dict # value = {'PCDM_TOFD_File': (<PCDM_TypeOfFileDriver.PCDM_TOFD_File: 0>, None), 'PCDM_TOFD_CmpFile': (<PCDM_TypeOfFileDriver.PCDM_TOFD_CmpFile: 1>, None), 'PCDM_TOFD_XmlFile': (<PCDM_TypeOfFileDriver.PCDM_TOFD_XmlFile: 2>, None), 'PCDM_TOFD_Unknown': (<PCDM_TypeOfFileDriver.PCDM_TOFD_Unknown: 3>, None)}
+    __members__: dict # value = {'PCDM_TOFD_File': <PCDM_TypeOfFileDriver.PCDM_TOFD_File: 0>, 'PCDM_TOFD_CmpFile': <PCDM_TypeOfFileDriver.PCDM_TOFD_CmpFile: 1>, 'PCDM_TOFD_XmlFile': <PCDM_TypeOfFileDriver.PCDM_TOFD_XmlFile: 2>, 'PCDM_TOFD_Unknown': <PCDM_TypeOfFileDriver.PCDM_TOFD_Unknown: 3>}
     pass
 class PCDM_StorageDriver(PCDM_Writer, OCP.Standard.Standard_Transient):
     """
@@ -1167,14 +1223,14 @@ class PCDM_StorageDriver(PCDM_Writer, OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> PCDM_Document: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : PCDM_SequenceOfDocument) -> None: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : PCDM_SequenceOfDocument) -> None: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> PCDM_Document: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -1192,14 +1248,14 @@ class PCDM_StorageDriver(PCDM_Writer, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : Any) -> None: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Warning! raises DriverError if an error occurs during inside the Make method. stores the content of the Document into a new file.
 
         Write <theDocument> to theOStream
         """
     @overload
-    def Write(self,aDocument : OCP.CDM.CDM_Document,aFileName : OCP.TCollection.TCollection_ExtendedString) -> None: ...
+    def Write(self,aDocument : OCP.CDM.CDM_Document,aFileName : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1212,36 +1268,38 @@ class PCDM_StorageDriver(PCDM_Writer, OCP.Standard.Standard_Transient):
         None
         """
     pass
-PCDM_RS_AlreadyRetrieved: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_AlreadyRetrieved
-PCDM_RS_AlreadyRetrievedAndModified: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_AlreadyRetrievedAndModified
-PCDM_RS_DriverFailure: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_DriverFailure
-PCDM_RS_ExtensionFailure: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_ExtensionFailure
-PCDM_RS_FormatFailure: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_FormatFailure
-PCDM_RS_MakeFailure: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_MakeFailure
-PCDM_RS_NoDocument: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_NoDocument
-PCDM_RS_NoDriver: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_NoDriver
-PCDM_RS_NoModel: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_NoModel
-PCDM_RS_NoSchema: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_NoSchema
-PCDM_RS_NoVersion: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_NoVersion
-PCDM_RS_OK: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_OK
-PCDM_RS_OpenError: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_OpenError
-PCDM_RS_PermissionDenied: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_PermissionDenied
-PCDM_RS_ReaderException: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_ReaderException
-PCDM_RS_TypeFailure: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_TypeFailure
-PCDM_RS_TypeNotFoundInSchema: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_TypeNotFoundInSchema
-PCDM_RS_UnknownDocument: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_UnknownDocument
-PCDM_RS_UnknownFileDriver: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_UnknownFileDriver
-PCDM_RS_UnrecognizedFileFormat: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_UnrecognizedFileFormat
-PCDM_RS_WrongResource: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_WrongResource
-PCDM_RS_WrongStreamMode: OCP.PCDM.PCDM_ReaderStatus # value = PCDM_ReaderStatus.PCDM_RS_WrongStreamMode
-PCDM_SS_Doc_IsNull: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_Doc_IsNull
-PCDM_SS_DriverFailure: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_DriverFailure
-PCDM_SS_Failure: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_Failure
-PCDM_SS_Info_Section_Error: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_Info_Section_Error
-PCDM_SS_No_Obj: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_No_Obj
-PCDM_SS_OK: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_OK
-PCDM_SS_WriteFailure: OCP.PCDM.PCDM_StoreStatus # value = PCDM_StoreStatus.PCDM_SS_WriteFailure
-PCDM_TOFD_CmpFile: OCP.PCDM.PCDM_TypeOfFileDriver # value = PCDM_TypeOfFileDriver.PCDM_TOFD_CmpFile
-PCDM_TOFD_File: OCP.PCDM.PCDM_TypeOfFileDriver # value = PCDM_TypeOfFileDriver.PCDM_TOFD_File
-PCDM_TOFD_Unknown: OCP.PCDM.PCDM_TypeOfFileDriver # value = PCDM_TypeOfFileDriver.PCDM_TOFD_Unknown
-PCDM_TOFD_XmlFile: OCP.PCDM.PCDM_TypeOfFileDriver # value = PCDM_TypeOfFileDriver.PCDM_TOFD_XmlFile
+PCDM_RS_AlreadyRetrieved: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_AlreadyRetrieved: 17>
+PCDM_RS_AlreadyRetrievedAndModified: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_AlreadyRetrievedAndModified: 16>
+PCDM_RS_DriverFailure: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_DriverFailure: 15>
+PCDM_RS_ExtensionFailure: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_ExtensionFailure: 7>
+PCDM_RS_FormatFailure: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_FormatFailure: 9>
+PCDM_RS_MakeFailure: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_MakeFailure: 13>
+PCDM_RS_NoDocument: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_NoDocument: 6>
+PCDM_RS_NoDriver: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_NoDriver: 1>
+PCDM_RS_NoModel: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_NoModel: 21>
+PCDM_RS_NoSchema: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_NoSchema: 5>
+PCDM_RS_NoVersion: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_NoVersion: 4>
+PCDM_RS_OK: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_OK: 0>
+PCDM_RS_OpenError: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_OpenError: 3>
+PCDM_RS_PermissionDenied: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_PermissionDenied: 14>
+PCDM_RS_ReaderException: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_ReaderException: 20>
+PCDM_RS_TypeFailure: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_TypeFailure: 10>
+PCDM_RS_TypeNotFoundInSchema: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_TypeNotFoundInSchema: 11>
+PCDM_RS_UnknownDocument: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_UnknownDocument: 18>
+PCDM_RS_UnknownFileDriver: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_UnknownFileDriver: 2>
+PCDM_RS_UnrecognizedFileFormat: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_UnrecognizedFileFormat: 12>
+PCDM_RS_UserBreak: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_UserBreak: 22>
+PCDM_RS_WrongResource: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_WrongResource: 19>
+PCDM_RS_WrongStreamMode: OCP.PCDM.PCDM_ReaderStatus # value = <PCDM_ReaderStatus.PCDM_RS_WrongStreamMode: 8>
+PCDM_SS_Doc_IsNull: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_Doc_IsNull: 4>
+PCDM_SS_DriverFailure: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_DriverFailure: 1>
+PCDM_SS_Failure: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_Failure: 3>
+PCDM_SS_Info_Section_Error: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_Info_Section_Error: 6>
+PCDM_SS_No_Obj: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_No_Obj: 5>
+PCDM_SS_OK: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_OK: 0>
+PCDM_SS_UserBreak: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_UserBreak: 7>
+PCDM_SS_WriteFailure: OCP.PCDM.PCDM_StoreStatus # value = <PCDM_StoreStatus.PCDM_SS_WriteFailure: 2>
+PCDM_TOFD_CmpFile: OCP.PCDM.PCDM_TypeOfFileDriver # value = <PCDM_TypeOfFileDriver.PCDM_TOFD_CmpFile: 1>
+PCDM_TOFD_File: OCP.PCDM.PCDM_TypeOfFileDriver # value = <PCDM_TypeOfFileDriver.PCDM_TOFD_File: 0>
+PCDM_TOFD_Unknown: OCP.PCDM.PCDM_TypeOfFileDriver # value = <PCDM_TypeOfFileDriver.PCDM_TOFD_Unknown: 3>
+PCDM_TOFD_XmlFile: OCP.PCDM.PCDM_TypeOfFileDriver # value = <PCDM_TypeOfFileDriver.PCDM_TOFD_XmlFile: 2>

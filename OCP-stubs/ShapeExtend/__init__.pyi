@@ -4,17 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
+import OCP.TopTools
 import OCP.TColStd
 import OCP.TColGeom
-import OCP.TopAbs
-import OCP.Message
-import OCP.TopTools
-import OCP.Standard
-import OCP.TopoDS
-import OCP.Geom
+import io
 import OCP.NCollection
+import OCP.Message
+import OCP.GeomAbs
 import OCP.gp
+import OCP.Geom
+import OCP.TopAbs
+import OCP.TopoDS
+import OCP.Standard
 __all__  = [
 "ShapeExtend",
 "ShapeExtend_BasicMsgRegistrator",
@@ -123,9 +124,9 @@ class ShapeExtend_BasicMsgRegistrator(OCP.Standard.Standard_Transient):
         Calls Send method with Null Transient.
         """
     @overload
-    def Send(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
-    @overload
     def Send(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    @overload
+    def Send(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -191,6 +192,10 @@ class ShapeExtend_ComplexCurve(OCP.Geom.Geom_Curve, OCP.Geom.Geom_Geometry, OCP.
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -265,7 +270,7 @@ class ShapeExtend_ComplexCurve(OCP.Geom.Geom_Curve, OCP.Geom.Geom_Geometry, OCP.
         Returns number of the curve for the given parameter U and local paramete r UOut for the found curve
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
+    def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -274,9 +279,9 @@ class ShapeExtend_ComplexCurve(OCP.Geom.Geom_Curve, OCP.Geom.Geom_Geometry, OCP.
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirrored(self,P : OCP.gp.gp_Pnt) -> OCP.Geom.Geom_Geometry: 
         """
@@ -349,23 +354,23 @@ class ShapeExtend_ComplexCurve(OCP.Geom.Geom_Curve, OCP.Geom.Geom_Geometry, OCP.
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> OCP.Geom.Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> OCP.Geom.Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> OCP.Geom.Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> OCP.Geom.Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -432,6 +437,10 @@ class ShapeExtend_CompositeSurface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -521,7 +530,7 @@ class ShapeExtend_CompositeSurface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry
         Returns number of row that contains given (global) parameter
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
+    def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -530,9 +539,9 @@ class ShapeExtend_CompositeSurface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirrored(self,P : OCP.gp.gp_Pnt) -> OCP.Geom.Geom_Geometry: 
         """
@@ -568,9 +577,9 @@ class ShapeExtend_CompositeSurface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry
         Returns one surface patch that contains given point
         """
     @overload
-    def Patch(self,i : int,j : int) -> OCP.Geom.Geom_Surface: ...
-    @overload
     def Patch(self,U : float,V : float) -> OCP.Geom.Geom_Surface: ...
+    @overload
+    def Patch(self,i : int,j : int) -> OCP.Geom.Geom_Surface: ...
     def Patches(self) -> OCP.TColGeom.TColGeom_HArray2OfSurface: 
         """
         Returns grid of surfaces
@@ -624,23 +633,23 @@ class ShapeExtend_CompositeSurface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> OCP.Geom.Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> OCP.Geom.Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> OCP.Geom.Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> OCP.Geom.Geom_Geometry: ...
     def UGlobalToLocal(self,i : int,j : int,U : float) -> float: 
         """
         Converts global parameter U to local parameter u on patch i,j
@@ -780,14 +789,14 @@ class ShapeExtend_DataMapOfShapeListOfMsg(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.Message.Message_ListOfMsg) -> bool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.Message.Message_ListOfMsg: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.Message.Message_ListOfMsg: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.Message.Message_ListOfMsg) -> bool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -812,7 +821,7 @@ class ShapeExtend_DataMapOfShapeListOfMsg(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -821,12 +830,12 @@ class ShapeExtend_DataMapOfShapeListOfMsg(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : ShapeExtend_DataMapOfShapeListOfMsg) -> None: ...
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class ShapeExtend_DataMapOfTransientListOfMsg(OCP.NCollection.NCollection_BaseMap):
     """
@@ -874,14 +883,14 @@ class ShapeExtend_DataMapOfTransientListOfMsg(OCP.NCollection.NCollection_BaseMa
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.Standard.Standard_Transient) -> OCP.Message.Message_ListOfMsg: 
+    def Find(self,theKey : OCP.Standard.Standard_Transient,theValue : OCP.Message.Message_ListOfMsg) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.Standard.Standard_Transient,theValue : OCP.Message.Message_ListOfMsg) -> bool: ...
+    def Find(self,theKey : OCP.Standard.Standard_Transient) -> OCP.Message.Message_ListOfMsg: ...
     def IsBound(self,theKey : OCP.Standard.Standard_Transient) -> bool: 
         """
         IsBound
@@ -906,7 +915,7 @@ class ShapeExtend_DataMapOfTransientListOfMsg(OCP.NCollection.NCollection_BaseMa
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -920,7 +929,7 @@ class ShapeExtend_DataMapOfTransientListOfMsg(OCP.NCollection.NCollection_BaseMa
     def __init__(self,theOther : ShapeExtend_DataMapOfTransientListOfMsg) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class ShapeExtend_Explorer():
     """
@@ -1047,21 +1056,29 @@ class ShapeExtend_Parametrisation():
 
       ShapeExtend_Unitary
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    ShapeExtend_Natural: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = ShapeExtend_Parametrisation.ShapeExtend_Natural
-    ShapeExtend_Uniform: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = ShapeExtend_Parametrisation.ShapeExtend_Uniform
-    ShapeExtend_Unitary: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = ShapeExtend_Parametrisation.ShapeExtend_Unitary
-    __entries: dict # value = {'ShapeExtend_Natural': (ShapeExtend_Parametrisation.ShapeExtend_Natural, None), 'ShapeExtend_Uniform': (ShapeExtend_Parametrisation.ShapeExtend_Uniform, None), 'ShapeExtend_Unitary': (ShapeExtend_Parametrisation.ShapeExtend_Unitary, None)}
-    __members__: dict # value = {'ShapeExtend_Natural': ShapeExtend_Parametrisation.ShapeExtend_Natural, 'ShapeExtend_Uniform': ShapeExtend_Parametrisation.ShapeExtend_Uniform, 'ShapeExtend_Unitary': ShapeExtend_Parametrisation.ShapeExtend_Unitary}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    ShapeExtend_Natural: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = <ShapeExtend_Parametrisation.ShapeExtend_Natural: 0>
+    ShapeExtend_Uniform: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = <ShapeExtend_Parametrisation.ShapeExtend_Uniform: 1>
+    ShapeExtend_Unitary: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = <ShapeExtend_Parametrisation.ShapeExtend_Unitary: 2>
+    __entries: dict # value = {'ShapeExtend_Natural': (<ShapeExtend_Parametrisation.ShapeExtend_Natural: 0>, None), 'ShapeExtend_Uniform': (<ShapeExtend_Parametrisation.ShapeExtend_Uniform: 1>, None), 'ShapeExtend_Unitary': (<ShapeExtend_Parametrisation.ShapeExtend_Unitary: 2>, None)}
+    __members__: dict # value = {'ShapeExtend_Natural': <ShapeExtend_Parametrisation.ShapeExtend_Natural: 0>, 'ShapeExtend_Uniform': <ShapeExtend_Parametrisation.ShapeExtend_Uniform: 1>, 'ShapeExtend_Unitary': <ShapeExtend_Parametrisation.ShapeExtend_Unitary: 2>}
     pass
 class ShapeExtend_Status():
     """
@@ -1107,44 +1124,52 @@ class ShapeExtend_Status():
 
       ShapeExtend_FAIL
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    ShapeExtend_DONE: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE
-    ShapeExtend_DONE1: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE1
-    ShapeExtend_DONE2: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE2
-    ShapeExtend_DONE3: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE3
-    ShapeExtend_DONE4: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE4
-    ShapeExtend_DONE5: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE5
-    ShapeExtend_DONE6: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE6
-    ShapeExtend_DONE7: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE7
-    ShapeExtend_DONE8: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE8
-    ShapeExtend_FAIL: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL
-    ShapeExtend_FAIL1: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL1
-    ShapeExtend_FAIL2: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL2
-    ShapeExtend_FAIL3: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL3
-    ShapeExtend_FAIL4: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL4
-    ShapeExtend_FAIL5: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL5
-    ShapeExtend_FAIL6: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL6
-    ShapeExtend_FAIL7: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL7
-    ShapeExtend_FAIL8: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL8
-    ShapeExtend_OK: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_OK
-    __entries: dict # value = {'ShapeExtend_OK': (ShapeExtend_Status.ShapeExtend_OK, None), 'ShapeExtend_DONE1': (ShapeExtend_Status.ShapeExtend_DONE1, None), 'ShapeExtend_DONE2': (ShapeExtend_Status.ShapeExtend_DONE2, None), 'ShapeExtend_DONE3': (ShapeExtend_Status.ShapeExtend_DONE3, None), 'ShapeExtend_DONE4': (ShapeExtend_Status.ShapeExtend_DONE4, None), 'ShapeExtend_DONE5': (ShapeExtend_Status.ShapeExtend_DONE5, None), 'ShapeExtend_DONE6': (ShapeExtend_Status.ShapeExtend_DONE6, None), 'ShapeExtend_DONE7': (ShapeExtend_Status.ShapeExtend_DONE7, None), 'ShapeExtend_DONE8': (ShapeExtend_Status.ShapeExtend_DONE8, None), 'ShapeExtend_DONE': (ShapeExtend_Status.ShapeExtend_DONE, None), 'ShapeExtend_FAIL1': (ShapeExtend_Status.ShapeExtend_FAIL1, None), 'ShapeExtend_FAIL2': (ShapeExtend_Status.ShapeExtend_FAIL2, None), 'ShapeExtend_FAIL3': (ShapeExtend_Status.ShapeExtend_FAIL3, None), 'ShapeExtend_FAIL4': (ShapeExtend_Status.ShapeExtend_FAIL4, None), 'ShapeExtend_FAIL5': (ShapeExtend_Status.ShapeExtend_FAIL5, None), 'ShapeExtend_FAIL6': (ShapeExtend_Status.ShapeExtend_FAIL6, None), 'ShapeExtend_FAIL7': (ShapeExtend_Status.ShapeExtend_FAIL7, None), 'ShapeExtend_FAIL8': (ShapeExtend_Status.ShapeExtend_FAIL8, None), 'ShapeExtend_FAIL': (ShapeExtend_Status.ShapeExtend_FAIL, None)}
-    __members__: dict # value = {'ShapeExtend_OK': ShapeExtend_Status.ShapeExtend_OK, 'ShapeExtend_DONE1': ShapeExtend_Status.ShapeExtend_DONE1, 'ShapeExtend_DONE2': ShapeExtend_Status.ShapeExtend_DONE2, 'ShapeExtend_DONE3': ShapeExtend_Status.ShapeExtend_DONE3, 'ShapeExtend_DONE4': ShapeExtend_Status.ShapeExtend_DONE4, 'ShapeExtend_DONE5': ShapeExtend_Status.ShapeExtend_DONE5, 'ShapeExtend_DONE6': ShapeExtend_Status.ShapeExtend_DONE6, 'ShapeExtend_DONE7': ShapeExtend_Status.ShapeExtend_DONE7, 'ShapeExtend_DONE8': ShapeExtend_Status.ShapeExtend_DONE8, 'ShapeExtend_DONE': ShapeExtend_Status.ShapeExtend_DONE, 'ShapeExtend_FAIL1': ShapeExtend_Status.ShapeExtend_FAIL1, 'ShapeExtend_FAIL2': ShapeExtend_Status.ShapeExtend_FAIL2, 'ShapeExtend_FAIL3': ShapeExtend_Status.ShapeExtend_FAIL3, 'ShapeExtend_FAIL4': ShapeExtend_Status.ShapeExtend_FAIL4, 'ShapeExtend_FAIL5': ShapeExtend_Status.ShapeExtend_FAIL5, 'ShapeExtend_FAIL6': ShapeExtend_Status.ShapeExtend_FAIL6, 'ShapeExtend_FAIL7': ShapeExtend_Status.ShapeExtend_FAIL7, 'ShapeExtend_FAIL8': ShapeExtend_Status.ShapeExtend_FAIL8, 'ShapeExtend_FAIL': ShapeExtend_Status.ShapeExtend_FAIL}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    ShapeExtend_DONE: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE: 9>
+    ShapeExtend_DONE1: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE1: 1>
+    ShapeExtend_DONE2: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE2: 2>
+    ShapeExtend_DONE3: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE3: 3>
+    ShapeExtend_DONE4: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE4: 4>
+    ShapeExtend_DONE5: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE5: 5>
+    ShapeExtend_DONE6: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE6: 6>
+    ShapeExtend_DONE7: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE7: 7>
+    ShapeExtend_DONE8: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE8: 8>
+    ShapeExtend_FAIL: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL: 18>
+    ShapeExtend_FAIL1: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL1: 10>
+    ShapeExtend_FAIL2: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL2: 11>
+    ShapeExtend_FAIL3: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL3: 12>
+    ShapeExtend_FAIL4: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL4: 13>
+    ShapeExtend_FAIL5: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL5: 14>
+    ShapeExtend_FAIL6: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL6: 15>
+    ShapeExtend_FAIL7: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL7: 16>
+    ShapeExtend_FAIL8: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL8: 17>
+    ShapeExtend_OK: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_OK: 0>
+    __entries: dict # value = {'ShapeExtend_OK': (<ShapeExtend_Status.ShapeExtend_OK: 0>, None), 'ShapeExtend_DONE1': (<ShapeExtend_Status.ShapeExtend_DONE1: 1>, None), 'ShapeExtend_DONE2': (<ShapeExtend_Status.ShapeExtend_DONE2: 2>, None), 'ShapeExtend_DONE3': (<ShapeExtend_Status.ShapeExtend_DONE3: 3>, None), 'ShapeExtend_DONE4': (<ShapeExtend_Status.ShapeExtend_DONE4: 4>, None), 'ShapeExtend_DONE5': (<ShapeExtend_Status.ShapeExtend_DONE5: 5>, None), 'ShapeExtend_DONE6': (<ShapeExtend_Status.ShapeExtend_DONE6: 6>, None), 'ShapeExtend_DONE7': (<ShapeExtend_Status.ShapeExtend_DONE7: 7>, None), 'ShapeExtend_DONE8': (<ShapeExtend_Status.ShapeExtend_DONE8: 8>, None), 'ShapeExtend_DONE': (<ShapeExtend_Status.ShapeExtend_DONE: 9>, None), 'ShapeExtend_FAIL1': (<ShapeExtend_Status.ShapeExtend_FAIL1: 10>, None), 'ShapeExtend_FAIL2': (<ShapeExtend_Status.ShapeExtend_FAIL2: 11>, None), 'ShapeExtend_FAIL3': (<ShapeExtend_Status.ShapeExtend_FAIL3: 12>, None), 'ShapeExtend_FAIL4': (<ShapeExtend_Status.ShapeExtend_FAIL4: 13>, None), 'ShapeExtend_FAIL5': (<ShapeExtend_Status.ShapeExtend_FAIL5: 14>, None), 'ShapeExtend_FAIL6': (<ShapeExtend_Status.ShapeExtend_FAIL6: 15>, None), 'ShapeExtend_FAIL7': (<ShapeExtend_Status.ShapeExtend_FAIL7: 16>, None), 'ShapeExtend_FAIL8': (<ShapeExtend_Status.ShapeExtend_FAIL8: 17>, None), 'ShapeExtend_FAIL': (<ShapeExtend_Status.ShapeExtend_FAIL: 18>, None)}
+    __members__: dict # value = {'ShapeExtend_OK': <ShapeExtend_Status.ShapeExtend_OK: 0>, 'ShapeExtend_DONE1': <ShapeExtend_Status.ShapeExtend_DONE1: 1>, 'ShapeExtend_DONE2': <ShapeExtend_Status.ShapeExtend_DONE2: 2>, 'ShapeExtend_DONE3': <ShapeExtend_Status.ShapeExtend_DONE3: 3>, 'ShapeExtend_DONE4': <ShapeExtend_Status.ShapeExtend_DONE4: 4>, 'ShapeExtend_DONE5': <ShapeExtend_Status.ShapeExtend_DONE5: 5>, 'ShapeExtend_DONE6': <ShapeExtend_Status.ShapeExtend_DONE6: 6>, 'ShapeExtend_DONE7': <ShapeExtend_Status.ShapeExtend_DONE7: 7>, 'ShapeExtend_DONE8': <ShapeExtend_Status.ShapeExtend_DONE8: 8>, 'ShapeExtend_DONE': <ShapeExtend_Status.ShapeExtend_DONE: 9>, 'ShapeExtend_FAIL1': <ShapeExtend_Status.ShapeExtend_FAIL1: 10>, 'ShapeExtend_FAIL2': <ShapeExtend_Status.ShapeExtend_FAIL2: 11>, 'ShapeExtend_FAIL3': <ShapeExtend_Status.ShapeExtend_FAIL3: 12>, 'ShapeExtend_FAIL4': <ShapeExtend_Status.ShapeExtend_FAIL4: 13>, 'ShapeExtend_FAIL5': <ShapeExtend_Status.ShapeExtend_FAIL5: 14>, 'ShapeExtend_FAIL6': <ShapeExtend_Status.ShapeExtend_FAIL6: 15>, 'ShapeExtend_FAIL7': <ShapeExtend_Status.ShapeExtend_FAIL7: 16>, 'ShapeExtend_FAIL8': <ShapeExtend_Status.ShapeExtend_FAIL8: 17>, 'ShapeExtend_FAIL': <ShapeExtend_Status.ShapeExtend_FAIL: 18>}
     pass
 class ShapeExtend_WireData(OCP.Standard.Standard_Transient):
     """
     This class provides a data structure necessary for work with the wire as with ordered list of edges, what is required for many algorithms. The advantage of this class is that it allows to work with wires which are not correct. The object of the class ShapeExtend_WireData can be initialized by TopoDS_Wire, and converted back to TopoDS_Wire. An edge in the wire is defined by its rank number. Operations of accessing, adding and removing edge at the given rank number are provided. On the whole wire, operations of circular permutation and reversing (both orientations of all edges and order of edges) are provided as well. This class also provides a method to check if the edge in the wire is a seam (if the wire lies on a face). This class is handled by reference. Such an approach gives the following advantages: 1. Sharing the object of this class strongly optimizes the processes of analysis and fixing performed in parallel on the wire stored in the form of this class. Fixing tool (e.g. ShapeFix_Wire) fixes problems one by one using analyzing tool (e.g. ShapeAnalysis_Wire). Sharing allows not to reinitialize each time the analyzing tool with modified ShapeExtend_WireData what consumes certain time. 2. No copying of contents. The object of ShapeExtend_WireData class has quite big size, returning it as a result of the function would cause additional copying of contents if this class were one handled by value. Moreover, this class is stored as a field in other classes which are they returned as results of functions, storing only a handle to ShapeExtend_WireData saves time and memory.This class provides a data structure necessary for work with the wire as with ordered list of edges, what is required for many algorithms. The advantage of this class is that it allows to work with wires which are not correct. The object of the class ShapeExtend_WireData can be initialized by TopoDS_Wire, and converted back to TopoDS_Wire. An edge in the wire is defined by its rank number. Operations of accessing, adding and removing edge at the given rank number are provided. On the whole wire, operations of circular permutation and reversing (both orientations of all edges and order of edges) are provided as well. This class also provides a method to check if the edge in the wire is a seam (if the wire lies on a face). This class is handled by reference. Such an approach gives the following advantages: 1. Sharing the object of this class strongly optimizes the processes of analysis and fixing performed in parallel on the wire stored in the form of this class. Fixing tool (e.g. ShapeFix_Wire) fixes problems one by one using analyzing tool (e.g. ShapeAnalysis_Wire). Sharing allows not to reinitialize each time the analyzing tool with modified ShapeExtend_WireData what consumes certain time. 2. No copying of contents. The object of ShapeExtend_WireData class has quite big size, returning it as a result of the function would cause additional copying of contents if this class were one handled by value. Moreover, this class is stored as a field in other classes which are they returned as results of functions, storing only a handle to ShapeExtend_WireData saves time and memory.This class provides a data structure necessary for work with the wire as with ordered list of edges, what is required for many algorithms. The advantage of this class is that it allows to work with wires which are not correct. The object of the class ShapeExtend_WireData can be initialized by TopoDS_Wire, and converted back to TopoDS_Wire. An edge in the wire is defined by its rank number. Operations of accessing, adding and removing edge at the given rank number are provided. On the whole wire, operations of circular permutation and reversing (both orientations of all edges and order of edges) are provided as well. This class also provides a method to check if the edge in the wire is a seam (if the wire lies on a face). This class is handled by reference. Such an approach gives the following advantages: 1. Sharing the object of this class strongly optimizes the processes of analysis and fixing performed in parallel on the wire stored in the form of this class. Fixing tool (e.g. ShapeFix_Wire) fixes problems one by one using analyzing tool (e.g. ShapeAnalysis_Wire). Sharing allows not to reinitialize each time the analyzing tool with modified ShapeExtend_WireData what consumes certain time. 2. No copying of contents. The object of ShapeExtend_WireData class has quite big size, returning it as a result of the function would cause additional copying of contents if this class were one handled by value. Moreover, this class is stored as a field in other classes which are they returned as results of functions, storing only a handle to ShapeExtend_WireData saves time and memory.
     """
     @overload
-    def Add(self,wire : OCP.TopoDS.TopoDS_Wire,atnum : int=0) -> None: 
+    def Add(self,shape : OCP.TopoDS.TopoDS_Shape,atnum : int=0) -> None: 
         """
         Adds an edge to a wire, being defined (not yet ended) This is the plain, basic, function to add an edge <num> = 0 (D): Appends at end <num> = 1: Preprends at start else, Insert before <num> Remark : Null Edge is simply ignored
 
@@ -1155,13 +1180,13 @@ class ShapeExtend_WireData(OCP.Standard.Standard_Transient):
         Adds an edge or a wire invoking corresponding method Add
         """
     @overload
-    def Add(self,edge : OCP.TopoDS.TopoDS_Edge,atnum : int=0) -> None: ...
-    @overload
-    def Add(self,shape : OCP.TopoDS.TopoDS_Shape,atnum : int=0) -> None: ...
-    @overload
     def Add(self,wire : ShapeExtend_WireData,atnum : int=0) -> None: ...
     @overload
-    def AddOriented(self,wire : OCP.TopoDS.TopoDS_Wire,mode : int) -> None: 
+    def Add(self,edge : OCP.TopoDS.TopoDS_Edge,atnum : int=0) -> None: ...
+    @overload
+    def Add(self,wire : OCP.TopoDS.TopoDS_Wire,atnum : int=0) -> None: ...
+    @overload
+    def AddOriented(self,shape : OCP.TopoDS.TopoDS_Shape,mode : int) -> None: 
         """
         Adds an edge to start or end of <me>, according to <mode> 0: at end, as direct 1: at end, as reversed 2: at start, as direct 3: at start, as reversed < 0: no adding
 
@@ -1170,9 +1195,9 @@ class ShapeExtend_WireData(OCP.Standard.Standard_Transient):
         Adds an edge or a wire invoking corresponding method AddOriented
         """
     @overload
-    def AddOriented(self,edge : OCP.TopoDS.TopoDS_Edge,mode : int) -> None: ...
+    def AddOriented(self,wire : OCP.TopoDS.TopoDS_Wire,mode : int) -> None: ...
     @overload
-    def AddOriented(self,shape : OCP.TopoDS.TopoDS_Shape,mode : int) -> None: ...
+    def AddOriented(self,edge : OCP.TopoDS.TopoDS_Edge,mode : int) -> None: ...
     def Clear(self) -> None: 
         """
         Clears data about Wire.
@@ -1210,14 +1235,14 @@ class ShapeExtend_WireData(OCP.Standard.Standard_Transient):
         Returns the index of the edge If the edge is a seam the orientation is also checked Returns 0 if the edge is not found in the list
         """
     @overload
-    def Init(self,wire : OCP.TopoDS.TopoDS_Wire,chained : bool=True,theManifoldMode : bool=True) -> bool: 
+    def Init(self,other : ShapeExtend_WireData) -> None: 
         """
         Copies data from another WireData
 
         Loads an already existing wire If <chained> is True (default), edges are added in the sequence as they are explored by TopoDS_Iterator Else, if <chained> is False, wire is explored by BRepTools_WireExplorer and it is guaranteed that edges will be sequencially connected. Remark : In the latter case it can happen that not all edges will be found (because of limitations of BRepTools_WireExplorer for disconnected wires and wires with seam edges).
         """
     @overload
-    def Init(self,other : ShapeExtend_WireData) -> None: ...
+    def Init(self,wire : OCP.TopoDS.TopoDS_Wire,chained : bool=True,theManifoldMode : bool=True) -> bool: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1294,9 +1319,9 @@ class ShapeExtend_WireData(OCP.Standard.Standard_Transient):
         Makes TopoDS_Wire using BRepAPI_MakeWire. Class BRepAPI_MakeWire merges geometrically coincided vertices and can disturb correct order of edges in the wire. If this class fails, null shape is returned.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,wire : OCP.TopoDS.TopoDS_Wire,chained : bool=True,theManifoldMode : bool=True) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1320,25 +1345,25 @@ class ShapeExtend_WireData(OCP.Standard.Standard_Transient):
         Returns mode defining manifold wire data or not. If manifold that nonmanifold edges will not be not consider during operations(previous behaviour) and they will be added only in result wire else non-manifold edges will consider during operations
         """
     pass
-ShapeExtend_DONE: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE
-ShapeExtend_DONE1: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE1
-ShapeExtend_DONE2: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE2
-ShapeExtend_DONE3: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE3
-ShapeExtend_DONE4: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE4
-ShapeExtend_DONE5: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE5
-ShapeExtend_DONE6: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE6
-ShapeExtend_DONE7: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE7
-ShapeExtend_DONE8: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_DONE8
-ShapeExtend_FAIL: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL
-ShapeExtend_FAIL1: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL1
-ShapeExtend_FAIL2: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL2
-ShapeExtend_FAIL3: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL3
-ShapeExtend_FAIL4: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL4
-ShapeExtend_FAIL5: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL5
-ShapeExtend_FAIL6: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL6
-ShapeExtend_FAIL7: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL7
-ShapeExtend_FAIL8: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_FAIL8
-ShapeExtend_Natural: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = ShapeExtend_Parametrisation.ShapeExtend_Natural
-ShapeExtend_OK: OCP.ShapeExtend.ShapeExtend_Status # value = ShapeExtend_Status.ShapeExtend_OK
-ShapeExtend_Uniform: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = ShapeExtend_Parametrisation.ShapeExtend_Uniform
-ShapeExtend_Unitary: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = ShapeExtend_Parametrisation.ShapeExtend_Unitary
+ShapeExtend_DONE: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE: 9>
+ShapeExtend_DONE1: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE1: 1>
+ShapeExtend_DONE2: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE2: 2>
+ShapeExtend_DONE3: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE3: 3>
+ShapeExtend_DONE4: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE4: 4>
+ShapeExtend_DONE5: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE5: 5>
+ShapeExtend_DONE6: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE6: 6>
+ShapeExtend_DONE7: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE7: 7>
+ShapeExtend_DONE8: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_DONE8: 8>
+ShapeExtend_FAIL: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL: 18>
+ShapeExtend_FAIL1: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL1: 10>
+ShapeExtend_FAIL2: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL2: 11>
+ShapeExtend_FAIL3: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL3: 12>
+ShapeExtend_FAIL4: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL4: 13>
+ShapeExtend_FAIL5: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL5: 14>
+ShapeExtend_FAIL6: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL6: 15>
+ShapeExtend_FAIL7: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL7: 16>
+ShapeExtend_FAIL8: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_FAIL8: 17>
+ShapeExtend_Natural: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = <ShapeExtend_Parametrisation.ShapeExtend_Natural: 0>
+ShapeExtend_OK: OCP.ShapeExtend.ShapeExtend_Status # value = <ShapeExtend_Status.ShapeExtend_OK: 0>
+ShapeExtend_Uniform: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = <ShapeExtend_Parametrisation.ShapeExtend_Uniform: 1>
+ShapeExtend_Unitary: OCP.ShapeExtend.ShapeExtend_Parametrisation # value = <ShapeExtend_Parametrisation.ShapeExtend_Unitary: 2>

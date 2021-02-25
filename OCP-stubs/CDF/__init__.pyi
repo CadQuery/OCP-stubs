@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Resource
 import OCP.TCollection
-import OCP.PCDM
+import io
 import OCP.Message
-import OCP.Standard
 import OCP.CDM
+import OCP.PCDM
+import OCP.Resource
+import OCP.Standard
 __all__  = [
-"CDF",
 "CDF_Application",
 "CDF_Directory",
 "CDF_DirectoryIterator",
@@ -19,7 +19,6 @@ __all__  = [
 "CDF_FWOSDriver",
 "CDF_MetaDataDriverError",
 "CDF_MetaDataDriverFactory",
-"CDF_Session",
 "CDF_Store",
 "CDF_StoreList",
 "CDF_StoreSetNameStatus",
@@ -41,22 +40,6 @@ __all__  = [
 "CDF_TS_NoSubComponentDriver",
 "CDF_TS_OK"
 ]
-class CDF():
-    """
-    None
-    """
-    @staticmethod
-    def GetLicense_s(anApplicationIdentifier : int) -> None: 
-        """
-        None
-        """
-    @staticmethod
-    def IsAvailable_s(anApplicationIdentifier : int) -> bool: 
-        """
-        None
-        """
-    def __init__(self) -> None: ...
-    pass
 class CDF_Application(OCP.CDM.CDM_Application, OCP.Standard.Standard_Transient):
     def BeginOfUpdate(self,aDocument : OCP.CDM.CDM_Document) -> None: 
         """
@@ -90,6 +73,10 @@ class CDF_Application(OCP.CDM.CDM_Application, OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -142,6 +129,14 @@ class CDF_Application(OCP.CDM.CDM_Application, OCP.Standard.Standard_Transient):
         """
         Returns default messenger;
         """
+    def MetaDataDriver(self) -> CDF_MetaDataDriver: 
+        """
+        returns MetaDatdDriver of this application
+        """
+    def MetaDataLookUpTable(self) -> Any: 
+        """
+        Returns MetaData LookUpTable
+        """
     def Name(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         Returns the application name.
@@ -150,7 +145,7 @@ class CDF_Application(OCP.CDM.CDM_Application, OCP.Standard.Standard_Transient):
         """
         puts the document in the current session directory and calls the virtual method Activate on it.
         """
-    def Read(self,theIStream : Any) -> OCP.CDM.CDM_Document: 
+    def Read(self,theIStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
         """
         Reads aDoc from standard SEEKABLE stream theIStream, the stream should support SEEK fuctionality
         """
@@ -163,14 +158,14 @@ class CDF_Application(OCP.CDM.CDM_Application, OCP.Standard.Standard_Transient):
         The manager returned by this virtual method will be used to search for Format.Retrieval resource items.
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True) -> OCP.CDM.CDM_Document: 
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
         """
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. The content of {aFolder}, {aName} and {aVersion} depends on the Database Manager system. If the DBMS is only based on the OS, {aFolder} is a directory and {aName} is the name of a file. In this case the use of the syntax with {aVersion} has no sense. For example:
 
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. -- If the DBMS is only based on the OS, this syntax should not be used.
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True) -> OCP.CDM.CDM_Document: ...
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: ...
     def SetDefaultFolder(self,aFolder : str) -> bool: 
         """
         None
@@ -300,10 +295,7 @@ class CDF_DirectoryIterator():
         """
         Go to the next entry (if there is not, Value will raise an exception)
         """
-    @overload
     def __init__(self,aDirectory : CDF_Directory) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class CDF_MetaDataDriver(OCP.Standard.Standard_Transient):
     """
@@ -405,7 +397,7 @@ class CDF_MetaDataDriver(OCP.Standard.Standard_Transient):
         """
     @overload
     def MetaData(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString) -> OCP.CDM.CDM_MetaData: ...
-    def ReferenceIterator(self) -> OCP.PCDM.PCDM_ReferenceIterator: 
+    def ReferenceIterator(self,theMessageDriver : OCP.Message.Message_Messenger) -> OCP.PCDM.PCDM_ReferenceIterator: 
         """
         None
         """
@@ -520,7 +512,7 @@ class CDF_FWOSDriver(CDF_MetaDataDriver, OCP.Standard.Standard_Transient):
         """
     @overload
     def MetaData(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString) -> OCP.CDM.CDM_MetaData: ...
-    def ReferenceIterator(self) -> OCP.PCDM.PCDM_ReferenceIterator: 
+    def ReferenceIterator(self,theMessageDriver : OCP.Message.Message_Messenger) -> OCP.PCDM.PCDM_ReferenceIterator: 
         """
         None
         """
@@ -532,7 +524,7 @@ class CDF_FWOSDriver(CDF_MetaDataDriver, OCP.Standard.Standard_Transient):
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def __init__(self) -> None: ...
+    def __init__(self,theLookUpTable : Any) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -613,99 +605,6 @@ class CDF_MetaDataDriverFactory(OCP.Standard.Standard_Transient):
         None
         """
     pass
-class CDF_Session(OCP.Standard.Standard_Transient):
-    def CurrentApplication(self) -> CDF_Application: 
-        """
-        None
-        """
-    @staticmethod
-    def CurrentSession_s() -> CDF_Session: 
-        """
-        returns the only one instance of Session that has been created.
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def Directory(self) -> CDF_Directory: 
-        """
-        returns the directory of the session;
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def Exists_s() -> bool: 
-        """
-        returns true if a session has been created.
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def HasCurrentApplication(self) -> bool: 
-        """
-        None
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def LoadDriver(self) -> None: 
-        """
-        None
-        """
-    def MetaDataDriver(self) -> CDF_MetaDataDriver: 
-        """
-        None
-        """
-    def SetCurrentApplication(self,anApplication : CDF_Application) -> None: 
-        """
-        None
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def UnsetCurrentApplication(self) -> None: 
-        """
-        None
-        """
-    def __init__(self) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
 class CDF_Store():
     """
     None
@@ -714,37 +613,25 @@ class CDF_Store():
         """
         None
         """
-    def Comment(self) -> str: 
+    def Comment(self) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         None
-        """
-    def Component(self) -> str: 
-        """
-        Returns item value of current entry
         """
     def CurrentIsConsistent(self) -> bool: 
         """
         None
         """
-    def Description(self) -> str: 
+    def Description(self) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         returns the description of the format of the main object.
         """
-    def Folder(self) -> str: 
+    def Folder(self) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         returns the folder in which the current document will be stored.
         """
     def HasAPreviousVersion(self) -> bool: 
         """
         None
-        """
-    def HasSubComponents(self) -> bool: 
-        """
-        None
-        """
-    def InitComponent(self) -> None: 
-        """
-        Allows to Start a new Iteration from beginning
         """
     def IsConsistent(self) -> bool: 
         """
@@ -762,31 +649,23 @@ class CDF_Store():
         """
         returns true if the current document is already stored
         """
-    def MetaDataPath(self) -> str: 
+    def MetaDataPath(self) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         returns the path of the previous store is the object is already stored, otherwise an empty string;
         """
-    def MoreComponent(self) -> bool: 
-        """
-        Returns True if there are more entries to return
-        """
-    def Name(self) -> str: 
+    def Name(self) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         returns the name under which the current document will be stored
-        """
-    def NextComponent(self) -> None: 
-        """
-        Go to the next entry (if there is not, Value will raise an exception)
         """
     def Path(self) -> str: 
         """
         returns the complete path of the created meta-data.
         """
-    def PreviousVersion(self) -> str: 
+    def PreviousVersion(self) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         None
         """
-    def Realize(self) -> None: 
+    def Realize(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
         """
@@ -798,46 +677,37 @@ class CDF_Store():
         """
         None
         """
-    @overload
     def SetCurrent(self,aPresentation : str) -> None: 
         """
         None
-
-        None
         """
     @overload
-    def SetCurrent(self) -> None: ...
-    @overload
-    def SetFolder(self,aFolder : str) -> bool: 
+    def SetFolder(self,aFolder : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         defines the folder in which the document should be stored. returns Standard_True if the Folder exists, Standard_False otherwise.
 
         defines the folder in which the document should be stored. returns Standard_True if the Folder exists, Standard_False otherwise.
         """
     @overload
-    def SetFolder(self,aFolder : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def SetFolder(self,aFolder : str) -> bool: ...
     def SetMain(self) -> None: 
         """
         the two following methods can be used just after Realize or Import -- method to know if thes methods worked correctly, and if not why.
         """
     @overload
-    def SetName(self,aName : str) -> CDF_StoreSetNameStatus: 
+    def SetName(self,aName : OCP.TCollection.TCollection_ExtendedString) -> CDF_StoreSetNameStatus: 
         """
         defines the name under which the document should be stored.
 
         defines the name under which the document should be stored.
         """
     @overload
-    def SetName(self,aName : OCP.TCollection.TCollection_ExtendedString) -> CDF_StoreSetNameStatus: ...
+    def SetName(self,aName : str) -> CDF_StoreSetNameStatus: ...
     def SetPreviousVersion(self,aPreviousVersion : str) -> bool: 
         """
         None
         """
     def StoreStatus(self) -> OCP.PCDM.PCDM_StoreStatus: 
-        """
-        None
-        """
-    def SubComponentStatus(self,aPresentation : str) -> CDF_SubComponentStatus: 
         """
         None
         """
@@ -898,7 +768,7 @@ class CDF_StoreList(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Store(self,aMetaData : OCP.CDM.CDM_MetaData,aStatusAssociatedText : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_StoreStatus: 
+    def Store(self,aMetaData : OCP.CDM.CDM_MetaData,aStatusAssociatedText : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         stores each object of the storelist in the reverse order of which they had been added.
         """
@@ -934,21 +804,29 @@ class CDF_StoreSetNameStatus():
 
       CDF_SSNS_OpenDocument
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    CDF_SSNS_OK: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_OK
-    CDF_SSNS_OpenDocument: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument
-    CDF_SSNS_ReplacingAnExistentDocument: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument
-    __entries: dict # value = {'CDF_SSNS_OK': (CDF_StoreSetNameStatus.CDF_SSNS_OK, None), 'CDF_SSNS_ReplacingAnExistentDocument': (CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument, None), 'CDF_SSNS_OpenDocument': (CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument, None)}
-    __members__: dict # value = {'CDF_SSNS_OK': CDF_StoreSetNameStatus.CDF_SSNS_OK, 'CDF_SSNS_ReplacingAnExistentDocument': CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument, 'CDF_SSNS_OpenDocument': CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    CDF_SSNS_OK: OCP.CDF.CDF_StoreSetNameStatus # value = <CDF_StoreSetNameStatus.CDF_SSNS_OK: 0>
+    CDF_SSNS_OpenDocument: OCP.CDF.CDF_StoreSetNameStatus # value = <CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument: 2>
+    CDF_SSNS_ReplacingAnExistentDocument: OCP.CDF.CDF_StoreSetNameStatus # value = <CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument: 1>
+    __entries: dict # value = {'CDF_SSNS_OK': (<CDF_StoreSetNameStatus.CDF_SSNS_OK: 0>, None), 'CDF_SSNS_ReplacingAnExistentDocument': (<CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument: 1>, None), 'CDF_SSNS_OpenDocument': (<CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument: 2>, None)}
+    __members__: dict # value = {'CDF_SSNS_OK': <CDF_StoreSetNameStatus.CDF_SSNS_OK: 0>, 'CDF_SSNS_ReplacingAnExistentDocument': <CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument: 1>, 'CDF_SSNS_OpenDocument': <CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument: 2>}
     pass
 class CDF_SubComponentStatus():
     """
@@ -964,22 +842,30 @@ class CDF_SubComponentStatus():
 
       CDF_SCS_Modified
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    CDF_SCS_Consistent: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Consistent
-    CDF_SCS_Modified: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Modified
-    CDF_SCS_Stored: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Stored
-    CDF_SCS_Unconsistent: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Unconsistent
-    __entries: dict # value = {'CDF_SCS_Consistent': (CDF_SubComponentStatus.CDF_SCS_Consistent, None), 'CDF_SCS_Unconsistent': (CDF_SubComponentStatus.CDF_SCS_Unconsistent, None), 'CDF_SCS_Stored': (CDF_SubComponentStatus.CDF_SCS_Stored, None), 'CDF_SCS_Modified': (CDF_SubComponentStatus.CDF_SCS_Modified, None)}
-    __members__: dict # value = {'CDF_SCS_Consistent': CDF_SubComponentStatus.CDF_SCS_Consistent, 'CDF_SCS_Unconsistent': CDF_SubComponentStatus.CDF_SCS_Unconsistent, 'CDF_SCS_Stored': CDF_SubComponentStatus.CDF_SCS_Stored, 'CDF_SCS_Modified': CDF_SubComponentStatus.CDF_SCS_Modified}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    CDF_SCS_Consistent: OCP.CDF.CDF_SubComponentStatus # value = <CDF_SubComponentStatus.CDF_SCS_Consistent: 0>
+    CDF_SCS_Modified: OCP.CDF.CDF_SubComponentStatus # value = <CDF_SubComponentStatus.CDF_SCS_Modified: 3>
+    CDF_SCS_Stored: OCP.CDF.CDF_SubComponentStatus # value = <CDF_SubComponentStatus.CDF_SCS_Stored: 2>
+    CDF_SCS_Unconsistent: OCP.CDF.CDF_SubComponentStatus # value = <CDF_SubComponentStatus.CDF_SCS_Unconsistent: 1>
+    __entries: dict # value = {'CDF_SCS_Consistent': (<CDF_SubComponentStatus.CDF_SCS_Consistent: 0>, None), 'CDF_SCS_Unconsistent': (<CDF_SubComponentStatus.CDF_SCS_Unconsistent: 1>, None), 'CDF_SCS_Stored': (<CDF_SubComponentStatus.CDF_SCS_Stored: 2>, None), 'CDF_SCS_Modified': (<CDF_SubComponentStatus.CDF_SCS_Modified: 3>, None)}
+    __members__: dict # value = {'CDF_SCS_Consistent': <CDF_SubComponentStatus.CDF_SCS_Consistent: 0>, 'CDF_SCS_Unconsistent': <CDF_SubComponentStatus.CDF_SCS_Unconsistent: 1>, 'CDF_SCS_Stored': <CDF_SubComponentStatus.CDF_SCS_Stored: 2>, 'CDF_SCS_Modified': <CDF_SubComponentStatus.CDF_SCS_Modified: 3>}
     pass
 class CDF_TryStoreStatus():
     """
@@ -995,22 +881,30 @@ class CDF_TryStoreStatus():
 
       CDF_TS_NoSubComponentDriver
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    CDF_TS_NoCurrentDocument: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoCurrentDocument
-    CDF_TS_NoDriver: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoDriver
-    CDF_TS_NoSubComponentDriver: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver
-    CDF_TS_OK: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_OK
-    __entries: dict # value = {'CDF_TS_OK': (CDF_TryStoreStatus.CDF_TS_OK, None), 'CDF_TS_NoCurrentDocument': (CDF_TryStoreStatus.CDF_TS_NoCurrentDocument, None), 'CDF_TS_NoDriver': (CDF_TryStoreStatus.CDF_TS_NoDriver, None), 'CDF_TS_NoSubComponentDriver': (CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver, None)}
-    __members__: dict # value = {'CDF_TS_OK': CDF_TryStoreStatus.CDF_TS_OK, 'CDF_TS_NoCurrentDocument': CDF_TryStoreStatus.CDF_TS_NoCurrentDocument, 'CDF_TS_NoDriver': CDF_TryStoreStatus.CDF_TS_NoDriver, 'CDF_TS_NoSubComponentDriver': CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    CDF_TS_NoCurrentDocument: OCP.CDF.CDF_TryStoreStatus # value = <CDF_TryStoreStatus.CDF_TS_NoCurrentDocument: 1>
+    CDF_TS_NoDriver: OCP.CDF.CDF_TryStoreStatus # value = <CDF_TryStoreStatus.CDF_TS_NoDriver: 2>
+    CDF_TS_NoSubComponentDriver: OCP.CDF.CDF_TryStoreStatus # value = <CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver: 3>
+    CDF_TS_OK: OCP.CDF.CDF_TryStoreStatus # value = <CDF_TryStoreStatus.CDF_TS_OK: 0>
+    __entries: dict # value = {'CDF_TS_OK': (<CDF_TryStoreStatus.CDF_TS_OK: 0>, None), 'CDF_TS_NoCurrentDocument': (<CDF_TryStoreStatus.CDF_TS_NoCurrentDocument: 1>, None), 'CDF_TS_NoDriver': (<CDF_TryStoreStatus.CDF_TS_NoDriver: 2>, None), 'CDF_TS_NoSubComponentDriver': (<CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver: 3>, None)}
+    __members__: dict # value = {'CDF_TS_OK': <CDF_TryStoreStatus.CDF_TS_OK: 0>, 'CDF_TS_NoCurrentDocument': <CDF_TryStoreStatus.CDF_TS_NoCurrentDocument: 1>, 'CDF_TS_NoDriver': <CDF_TryStoreStatus.CDF_TS_NoDriver: 2>, 'CDF_TS_NoSubComponentDriver': <CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver: 3>}
     pass
 class CDF_TypeOfActivation():
     """
@@ -1024,33 +918,41 @@ class CDF_TypeOfActivation():
 
       CDF_TOA_Unchanged
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    CDF_TOA_Modified: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_Modified
-    CDF_TOA_New: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_New
-    CDF_TOA_Unchanged: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_Unchanged
-    __entries: dict # value = {'CDF_TOA_New': (CDF_TypeOfActivation.CDF_TOA_New, None), 'CDF_TOA_Modified': (CDF_TypeOfActivation.CDF_TOA_Modified, None), 'CDF_TOA_Unchanged': (CDF_TypeOfActivation.CDF_TOA_Unchanged, None)}
-    __members__: dict # value = {'CDF_TOA_New': CDF_TypeOfActivation.CDF_TOA_New, 'CDF_TOA_Modified': CDF_TypeOfActivation.CDF_TOA_Modified, 'CDF_TOA_Unchanged': CDF_TypeOfActivation.CDF_TOA_Unchanged}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    CDF_TOA_Modified: OCP.CDF.CDF_TypeOfActivation # value = <CDF_TypeOfActivation.CDF_TOA_Modified: 1>
+    CDF_TOA_New: OCP.CDF.CDF_TypeOfActivation # value = <CDF_TypeOfActivation.CDF_TOA_New: 0>
+    CDF_TOA_Unchanged: OCP.CDF.CDF_TypeOfActivation # value = <CDF_TypeOfActivation.CDF_TOA_Unchanged: 2>
+    __entries: dict # value = {'CDF_TOA_New': (<CDF_TypeOfActivation.CDF_TOA_New: 0>, None), 'CDF_TOA_Modified': (<CDF_TypeOfActivation.CDF_TOA_Modified: 1>, None), 'CDF_TOA_Unchanged': (<CDF_TypeOfActivation.CDF_TOA_Unchanged: 2>, None)}
+    __members__: dict # value = {'CDF_TOA_New': <CDF_TypeOfActivation.CDF_TOA_New: 0>, 'CDF_TOA_Modified': <CDF_TypeOfActivation.CDF_TOA_Modified: 1>, 'CDF_TOA_Unchanged': <CDF_TypeOfActivation.CDF_TOA_Unchanged: 2>}
     pass
-CDF_SCS_Consistent: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Consistent
-CDF_SCS_Modified: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Modified
-CDF_SCS_Stored: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Stored
-CDF_SCS_Unconsistent: OCP.CDF.CDF_SubComponentStatus # value = CDF_SubComponentStatus.CDF_SCS_Unconsistent
-CDF_SSNS_OK: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_OK
-CDF_SSNS_OpenDocument: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument
-CDF_SSNS_ReplacingAnExistentDocument: OCP.CDF.CDF_StoreSetNameStatus # value = CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument
-CDF_TOA_Modified: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_Modified
-CDF_TOA_New: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_New
-CDF_TOA_Unchanged: OCP.CDF.CDF_TypeOfActivation # value = CDF_TypeOfActivation.CDF_TOA_Unchanged
-CDF_TS_NoCurrentDocument: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoCurrentDocument
-CDF_TS_NoDriver: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoDriver
-CDF_TS_NoSubComponentDriver: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver
-CDF_TS_OK: OCP.CDF.CDF_TryStoreStatus # value = CDF_TryStoreStatus.CDF_TS_OK
+CDF_SCS_Consistent: OCP.CDF.CDF_SubComponentStatus # value = <CDF_SubComponentStatus.CDF_SCS_Consistent: 0>
+CDF_SCS_Modified: OCP.CDF.CDF_SubComponentStatus # value = <CDF_SubComponentStatus.CDF_SCS_Modified: 3>
+CDF_SCS_Stored: OCP.CDF.CDF_SubComponentStatus # value = <CDF_SubComponentStatus.CDF_SCS_Stored: 2>
+CDF_SCS_Unconsistent: OCP.CDF.CDF_SubComponentStatus # value = <CDF_SubComponentStatus.CDF_SCS_Unconsistent: 1>
+CDF_SSNS_OK: OCP.CDF.CDF_StoreSetNameStatus # value = <CDF_StoreSetNameStatus.CDF_SSNS_OK: 0>
+CDF_SSNS_OpenDocument: OCP.CDF.CDF_StoreSetNameStatus # value = <CDF_StoreSetNameStatus.CDF_SSNS_OpenDocument: 2>
+CDF_SSNS_ReplacingAnExistentDocument: OCP.CDF.CDF_StoreSetNameStatus # value = <CDF_StoreSetNameStatus.CDF_SSNS_ReplacingAnExistentDocument: 1>
+CDF_TOA_Modified: OCP.CDF.CDF_TypeOfActivation # value = <CDF_TypeOfActivation.CDF_TOA_Modified: 1>
+CDF_TOA_New: OCP.CDF.CDF_TypeOfActivation # value = <CDF_TypeOfActivation.CDF_TOA_New: 0>
+CDF_TOA_Unchanged: OCP.CDF.CDF_TypeOfActivation # value = <CDF_TypeOfActivation.CDF_TOA_Unchanged: 2>
+CDF_TS_NoCurrentDocument: OCP.CDF.CDF_TryStoreStatus # value = <CDF_TryStoreStatus.CDF_TS_NoCurrentDocument: 1>
+CDF_TS_NoDriver: OCP.CDF.CDF_TryStoreStatus # value = <CDF_TryStoreStatus.CDF_TS_NoDriver: 2>
+CDF_TS_NoSubComponentDriver: OCP.CDF.CDF_TryStoreStatus # value = <CDF_TryStoreStatus.CDF_TS_NoSubComponentDriver: 3>
+CDF_TS_OK: OCP.CDF.CDF_TryStoreStatus # value = <CDF_TryStoreStatus.CDF_TS_OK: 0>

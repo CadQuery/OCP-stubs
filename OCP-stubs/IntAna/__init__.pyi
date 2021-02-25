@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.gp
 import OCP.NCollection
 import OCP.TColStd
-import OCP.gp
 __all__  = [
 "IntAna_Curve",
 "IntAna_Int3Pln",
@@ -113,9 +113,9 @@ class IntAna_Int3Pln():
         Returns the intersection point.
         """
     @overload
-    def __init__(self,P1 : OCP.gp.gp_Pln,P2 : OCP.gp.gp_Pln,P3 : OCP.gp.gp_Pln) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P1 : OCP.gp.gp_Pln,P2 : OCP.gp.gp_Pln,P3 : OCP.gp.gp_Pln) -> None: ...
     pass
 class IntAna_IntConicQuad():
     """
@@ -146,16 +146,16 @@ class IntAna_IntConicQuad():
         Returns the number of intersection point.
         """
     @overload
-    def ParamOnConic(self,i : int) -> float: 
+    def ParamOnConic(self,N : int) -> float: 
         """
         Returns the parameter on the line of the intersection point of range N.
 
         Returns the parameter on the line of the intersection point of range N.
         """
     @overload
-    def ParamOnConic(self,N : int) -> float: ...
+    def ParamOnConic(self,i : int) -> float: ...
     @overload
-    def Perform(self,H : OCP.gp.gp_Hypr,Q : IntAna_Quadric) -> None: 
+    def Perform(self,P : OCP.gp.gp_Parab,Q : IntAna_Quadric) -> None: 
         """
         Intersects a line and a quadric.
 
@@ -180,21 +180,21 @@ class IntAna_IntConicQuad():
     @overload
     def Perform(self,E : OCP.gp.gp_Elips,P : OCP.gp.gp_Pln,Tolang : float,Tol : float) -> None: ...
     @overload
-    def Perform(self,P : OCP.gp.gp_Parab,Q : IntAna_Quadric) -> None: ...
-    @overload
-    def Perform(self,C : OCP.gp.gp_Circ,P : OCP.gp.gp_Pln,Tolang : float,Tol : float) -> None: ...
-    @overload
     def Perform(self,E : OCP.gp.gp_Elips,Q : IntAna_Quadric) -> None: ...
-    @overload
-    def Perform(self,L : OCP.gp.gp_Lin,Q : IntAna_Quadric) -> None: ...
-    @overload
-    def Perform(self,H : OCP.gp.gp_Hypr,P : OCP.gp.gp_Pln,Tolang : float) -> None: ...
-    @overload
-    def Perform(self,C : OCP.gp.gp_Circ,Q : IntAna_Quadric) -> None: ...
     @overload
     def Perform(self,Pb : OCP.gp.gp_Parab,P : OCP.gp.gp_Pln,Tolang : float) -> None: ...
     @overload
+    def Perform(self,L : OCP.gp.gp_Lin,Q : IntAna_Quadric) -> None: ...
+    @overload
+    def Perform(self,C : OCP.gp.gp_Circ,Q : IntAna_Quadric) -> None: ...
+    @overload
+    def Perform(self,H : OCP.gp.gp_Hypr,P : OCP.gp.gp_Pln,Tolang : float) -> None: ...
+    @overload
+    def Perform(self,C : OCP.gp.gp_Circ,P : OCP.gp.gp_Pln,Tolang : float,Tol : float) -> None: ...
+    @overload
     def Perform(self,L : OCP.gp.gp_Lin,P : OCP.gp.gp_Pln,Tolang : float,Tol : float=0.0,Len : float=0.0) -> None: ...
+    @overload
+    def Perform(self,H : OCP.gp.gp_Hypr,Q : IntAna_Quadric) -> None: ...
     @overload
     def Point(self,i : int) -> OCP.gp.gp_Pnt: 
         """
@@ -207,21 +207,21 @@ class IntAna_IntConicQuad():
     @overload
     def __init__(self,C : OCP.gp.gp_Circ,P : OCP.gp.gp_Pln,Tolang : float,Tol : float) -> None: ...
     @overload
-    def __init__(self,Pb : OCP.gp.gp_Parab,P : OCP.gp.gp_Pln,Tolang : float) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Lin,Q : IntAna_Quadric) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Circ,Q : IntAna_Quadric) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,H : OCP.gp.gp_Hypr,Q : IntAna_Quadric) -> None: ...
     @overload
     def __init__(self,E : OCP.gp.gp_Elips,Q : IntAna_Quadric) -> None: ...
     @overload
-    def __init__(self,H : OCP.gp.gp_Hypr,Q : IntAna_Quadric) -> None: ...
+    def __init__(self,Pb : OCP.gp.gp_Parab,P : OCP.gp.gp_Pln,Tolang : float) -> None: ...
     @overload
-    def __init__(self,H : OCP.gp.gp_Hypr,P : OCP.gp.gp_Pln,Tolang : float) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Circ,Q : IntAna_Quadric) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Lin,Q : IntAna_Quadric) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Lin,P : OCP.gp.gp_Pln,Tolang : float,Tol : float=0.0,Len : float=0.0) -> None: ...
+    @overload
+    def __init__(self,H : OCP.gp.gp_Hypr,P : OCP.gp.gp_Pln,Tolang : float) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Parab,Q : IntAna_Quadric) -> None: ...
     @overload
@@ -319,14 +319,14 @@ class IntAna_IntQuadQuad():
         Returns the paramaters on the "explicit quadric" (i.e the cylinder or the cone, the first argument given to the constructor) of the point of range N.
         """
     @overload
-    def Perform(self,C : OCP.gp.gp_Cylinder,Q : IntAna_Quadric,Tol : float) -> None: 
+    def Perform(self,C : OCP.gp.gp_Cone,Q : IntAna_Quadric,Tol : float) -> None: 
         """
         Intersects a cylinder and a quadric . Tol est a definir plus precisemment.
 
         Intersects a cone and a quadric. Tol est a definir plus precisemment.
         """
     @overload
-    def Perform(self,C : OCP.gp.gp_Cone,Q : IntAna_Quadric,Tol : float) -> None: ...
+    def Perform(self,C : OCP.gp.gp_Cylinder,Q : IntAna_Quadric,Tol : float) -> None: ...
     def Point(self,N : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the point of range N.
@@ -351,7 +351,7 @@ class IntAna_ListOfCurve(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : IntAna_Curve) -> IntAna_Curve: 
+    def Append(self,theItem : IntAna_Curve,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -360,7 +360,7 @@ class IntAna_ListOfCurve(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : IntAna_Curve,theIter : Any) -> None: ...
+    def Append(self,theItem : IntAna_Curve) -> IntAna_Curve: ...
     @overload
     def Append(self,theOther : IntAna_ListOfCurve) -> None: ...
     def Assign(self,theOther : IntAna_ListOfCurve) -> IntAna_ListOfCurve: 
@@ -382,23 +382,23 @@ class IntAna_ListOfCurve(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : IntAna_ListOfCurve,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : IntAna_Curve,theIter : Any) -> IntAna_Curve: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : IntAna_Curve,theIter : Any) -> IntAna_Curve: ...
+    def InsertAfter(self,theOther : IntAna_ListOfCurve,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theOther : IntAna_ListOfCurve,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : IntAna_Curve,theIter : Any) -> IntAna_Curve: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : IntAna_Curve,theIter : Any) -> IntAna_Curve: ...
+    def InsertBefore(self,theOther : IntAna_ListOfCurve,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -410,14 +410,14 @@ class IntAna_ListOfCurve(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : IntAna_ListOfCurve) -> None: 
+    def Prepend(self,theItem : IntAna_Curve) -> IntAna_Curve: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : IntAna_Curve) -> IntAna_Curve: ...
+    def Prepend(self,theOther : IntAna_ListOfCurve) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -435,12 +435,12 @@ class IntAna_ListOfCurve(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IntAna_ListOfCurve) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IntAna_QuadQuadGeo():
     """
@@ -487,7 +487,7 @@ class IntAna_QuadQuadGeo():
         Returns the parabola solution of range Num.
         """
     @overload
-    def Perform(self,P : OCP.gp.gp_Pln,C : OCP.gp.gp_Cone,Tolang : float,Tol : float) -> None: 
+    def Perform(self,Tor1 : OCP.gp.gp_Torus,Tor2 : OCP.gp.gp_Torus,Tol : float) -> None: 
         """
         Intersects two planes. TolAng is the angular tolerance used to determine if the planes are parallel. Tol is the tolerance used to determine if the planes are identical (only when they are parallel).
 
@@ -520,33 +520,33 @@ class IntAna_QuadQuadGeo():
         Intersects two toruses.
         """
     @overload
-    def Perform(self,P1 : OCP.gp.gp_Pln,P2 : OCP.gp.gp_Pln,TolAng : float,Tol : float) -> None: ...
-    @overload
-    def Perform(self,Sph1 : OCP.gp.gp_Sphere,Sph2 : OCP.gp.gp_Sphere,Tol : float) -> None: ...
+    def Perform(self,P : OCP.gp.gp_Pln,C : OCP.gp.gp_Cone,Tolang : float,Tol : float) -> None: ...
     @overload
     def Perform(self,Con : OCP.gp.gp_Cone,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
     @overload
-    def Perform(self,Tor1 : OCP.gp.gp_Torus,Tor2 : OCP.gp.gp_Torus,Tol : float) -> None: ...
+    def Perform(self,P : OCP.gp.gp_Pln,C : OCP.gp.gp_Cylinder,Tolang : float,Tol : float,H : float=0.0) -> None: ...
     @overload
     def Perform(self,P : OCP.gp.gp_Pln,S : OCP.gp.gp_Sphere) -> None: ...
     @overload
-    def Perform(self,Con1 : OCP.gp.gp_Cone,Con2 : OCP.gp.gp_Cone,Tol : float) -> None: ...
+    def Perform(self,Sph1 : OCP.gp.gp_Sphere,Sph2 : OCP.gp.gp_Sphere,Tol : float) -> None: ...
     @overload
     def Perform(self,Sph : OCP.gp.gp_Sphere,Con : OCP.gp.gp_Cone,Tol : float) -> None: ...
     @overload
-    def Perform(self,P : OCP.gp.gp_Pln,C : OCP.gp.gp_Cylinder,Tolang : float,Tol : float,H : float=0.0) -> None: ...
-    @overload
     def Perform(self,Sph : OCP.gp.gp_Sphere,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
     @overload
+    def Perform(self,P1 : OCP.gp.gp_Pln,P2 : OCP.gp.gp_Pln,TolAng : float,Tol : float) -> None: ...
+    @overload
+    def Perform(self,Pln : OCP.gp.gp_Pln,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
+    @overload
+    def Perform(self,Con1 : OCP.gp.gp_Cone,Con2 : OCP.gp.gp_Cone,Tol : float) -> None: ...
+    @overload
     def Perform(self,Cyl : OCP.gp.gp_Cylinder,Con : OCP.gp.gp_Cone,Tol : float) -> None: ...
+    @overload
+    def Perform(self,Cyl : OCP.gp.gp_Cylinder,Sph : OCP.gp.gp_Sphere,Tol : float) -> None: ...
     @overload
     def Perform(self,Cyl : OCP.gp.gp_Cylinder,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
     @overload
     def Perform(self,Cyl1 : OCP.gp.gp_Cylinder,Cyl2 : OCP.gp.gp_Cylinder,Tol : float) -> None: ...
-    @overload
-    def Perform(self,Pln : OCP.gp.gp_Pln,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
-    @overload
-    def Perform(self,Cyl : OCP.gp.gp_Cylinder,Sph : OCP.gp.gp_Sphere,Tol : float) -> None: ...
     def Point(self,Num : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the point solution of range Num.
@@ -558,37 +558,37 @@ class IntAna_QuadQuadGeo():
         Returns the type of intersection.
         """
     @overload
-    def __init__(self,Sph1 : OCP.gp.gp_Sphere,Sph2 : OCP.gp.gp_Sphere,Tol : float) -> None: ...
-    @overload
     def __init__(self,Con1 : OCP.gp.gp_Cone,Con2 : OCP.gp.gp_Cone,Tol : float) -> None: ...
-    @overload
-    def __init__(self,Con : OCP.gp.gp_Cone,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
-    @overload
-    def __init__(self,Tor1 : OCP.gp.gp_Torus,Tor2 : OCP.gp.gp_Torus,Tol : float) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pln,C : OCP.gp.gp_Cylinder,Tolang : float,Tol : float,H : float=0.0) -> None: ...
-    @overload
-    def __init__(self,Cyl : OCP.gp.gp_Cylinder,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pln,C : OCP.gp.gp_Cone,Tolang : float,Tol : float) -> None: ...
-    @overload
-    def __init__(self,Sph : OCP.gp.gp_Sphere,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,Sph : OCP.gp.gp_Sphere,Con : OCP.gp.gp_Cone,Tol : float) -> None: ...
     @overload
     def __init__(self,Cyl : OCP.gp.gp_Cylinder,Sph : OCP.gp.gp_Sphere,Tol : float) -> None: ...
     @overload
+    def __init__(self,Sph1 : OCP.gp.gp_Sphere,Sph2 : OCP.gp.gp_Sphere,Tol : float) -> None: ...
+    @overload
+    def __init__(self,Sph : OCP.gp.gp_Sphere,Con : OCP.gp.gp_Cone,Tol : float) -> None: ...
+    @overload
+    def __init__(self,Sph : OCP.gp.gp_Sphere,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
+    @overload
+    def __init__(self,Tor1 : OCP.gp.gp_Torus,Tor2 : OCP.gp.gp_Torus,Tol : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pln,C : OCP.gp.gp_Cone,Tolang : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Con : OCP.gp.gp_Cone,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pln,C : OCP.gp.gp_Cylinder,Tolang : float,Tol : float,H : float=0.0) -> None: ...
+    @overload
     def __init__(self,P : OCP.gp.gp_Pln,S : OCP.gp.gp_Sphere) -> None: ...
     @overload
+    def __init__(self,Cyl : OCP.gp.gp_Cylinder,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
+    @overload
     def __init__(self,Cyl1 : OCP.gp.gp_Cylinder,Cyl2 : OCP.gp.gp_Cylinder,Tol : float) -> None: ...
+    @overload
+    def __init__(self,Cyl : OCP.gp.gp_Cylinder,Con : OCP.gp.gp_Cone,Tol : float) -> None: ...
     @overload
     def __init__(self,P1 : OCP.gp.gp_Pln,P2 : OCP.gp.gp_Pln,TolAng : float,Tol : float) -> None: ...
     @overload
     def __init__(self,Pln : OCP.gp.gp_Pln,Tor : OCP.gp.gp_Torus,Tol : float) -> None: ...
-    @overload
-    def __init__(self,Cyl : OCP.gp.gp_Cylinder,Con : OCP.gp.gp_Cone,Tol : float) -> None: ...
     pass
 class IntAna_Quadric():
     """
@@ -598,7 +598,37 @@ class IntAna_Quadric():
         """
         Returns the coefficients of the polynomial equation which define the quadric: xCXX x**2 + xCYY y**2 + xCZZ z**2 + 2 ( xCXY x y + xCXZ x z + xCYZ y z ) + 2 ( xCX x + xCY y + xCZ z ) + xCCte
         """
+    def NewCoefficients(self,Axis : OCP.gp.gp_Ax3) -> Tuple[float, float, float, float, float, float, float, float, float, float]: 
+        """
+        Returns the coefficients of the polynomial equation ( written in the natural coordinates system ) in the local coordinates system defined by Axis
+        """
+    @overload
+    def SetQuadric(self,Con : OCP.gp.gp_Cone) -> None: 
+        """
+        Initializes the quadric with a Pln
+
+        Initialize the quadric with a Sphere
+
+        Initializes the quadric with a Cone
+
+        Initializes the quadric with a Cylinder
+        """
+    @overload
+    def SetQuadric(self,Sph : OCP.gp.gp_Sphere) -> None: ...
+    @overload
+    def SetQuadric(self,P : OCP.gp.gp_Pln) -> None: ...
+    @overload
+    def SetQuadric(self,Cyl : OCP.gp.gp_Cylinder) -> None: ...
+    @overload
+    def __init__(self,Cone : OCP.gp.gp_Cone) -> None: ...
+    @overload
+    def __init__(self,Cyl : OCP.gp.gp_Cylinder) -> None: ...
+    @overload
+    def __init__(self,Sph : OCP.gp.gp_Sphere) -> None: ...
+    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pln) -> None: ...
     pass
 class IntAna_ResultType():
     """
@@ -626,36 +656,44 @@ class IntAna_ResultType():
 
       IntAna_NoGeometricSolution
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IntAna_Circle: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Circle
-    IntAna_Ellipse: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Ellipse
-    IntAna_Empty: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Empty
-    IntAna_Hyperbola: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Hyperbola
-    IntAna_Line: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Line
-    IntAna_NoGeometricSolution: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_NoGeometricSolution
-    IntAna_Parabola: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Parabola
-    IntAna_Point: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Point
-    IntAna_PointAndCircle: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_PointAndCircle
-    IntAna_Same: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Same
-    __entries: dict # value = {'IntAna_Point': (IntAna_ResultType.IntAna_Point, None), 'IntAna_Line': (IntAna_ResultType.IntAna_Line, None), 'IntAna_Circle': (IntAna_ResultType.IntAna_Circle, None), 'IntAna_PointAndCircle': (IntAna_ResultType.IntAna_PointAndCircle, None), 'IntAna_Ellipse': (IntAna_ResultType.IntAna_Ellipse, None), 'IntAna_Parabola': (IntAna_ResultType.IntAna_Parabola, None), 'IntAna_Hyperbola': (IntAna_ResultType.IntAna_Hyperbola, None), 'IntAna_Empty': (IntAna_ResultType.IntAna_Empty, None), 'IntAna_Same': (IntAna_ResultType.IntAna_Same, None), 'IntAna_NoGeometricSolution': (IntAna_ResultType.IntAna_NoGeometricSolution, None)}
-    __members__: dict # value = {'IntAna_Point': IntAna_ResultType.IntAna_Point, 'IntAna_Line': IntAna_ResultType.IntAna_Line, 'IntAna_Circle': IntAna_ResultType.IntAna_Circle, 'IntAna_PointAndCircle': IntAna_ResultType.IntAna_PointAndCircle, 'IntAna_Ellipse': IntAna_ResultType.IntAna_Ellipse, 'IntAna_Parabola': IntAna_ResultType.IntAna_Parabola, 'IntAna_Hyperbola': IntAna_ResultType.IntAna_Hyperbola, 'IntAna_Empty': IntAna_ResultType.IntAna_Empty, 'IntAna_Same': IntAna_ResultType.IntAna_Same, 'IntAna_NoGeometricSolution': IntAna_ResultType.IntAna_NoGeometricSolution}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IntAna_Circle: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Circle: 2>
+    IntAna_Ellipse: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Ellipse: 4>
+    IntAna_Empty: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Empty: 7>
+    IntAna_Hyperbola: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Hyperbola: 6>
+    IntAna_Line: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Line: 1>
+    IntAna_NoGeometricSolution: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_NoGeometricSolution: 9>
+    IntAna_Parabola: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Parabola: 5>
+    IntAna_Point: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Point: 0>
+    IntAna_PointAndCircle: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_PointAndCircle: 3>
+    IntAna_Same: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Same: 8>
+    __entries: dict # value = {'IntAna_Point': (<IntAna_ResultType.IntAna_Point: 0>, None), 'IntAna_Line': (<IntAna_ResultType.IntAna_Line: 1>, None), 'IntAna_Circle': (<IntAna_ResultType.IntAna_Circle: 2>, None), 'IntAna_PointAndCircle': (<IntAna_ResultType.IntAna_PointAndCircle: 3>, None), 'IntAna_Ellipse': (<IntAna_ResultType.IntAna_Ellipse: 4>, None), 'IntAna_Parabola': (<IntAna_ResultType.IntAna_Parabola: 5>, None), 'IntAna_Hyperbola': (<IntAna_ResultType.IntAna_Hyperbola: 6>, None), 'IntAna_Empty': (<IntAna_ResultType.IntAna_Empty: 7>, None), 'IntAna_Same': (<IntAna_ResultType.IntAna_Same: 8>, None), 'IntAna_NoGeometricSolution': (<IntAna_ResultType.IntAna_NoGeometricSolution: 9>, None)}
+    __members__: dict # value = {'IntAna_Point': <IntAna_ResultType.IntAna_Point: 0>, 'IntAna_Line': <IntAna_ResultType.IntAna_Line: 1>, 'IntAna_Circle': <IntAna_ResultType.IntAna_Circle: 2>, 'IntAna_PointAndCircle': <IntAna_ResultType.IntAna_PointAndCircle: 3>, 'IntAna_Ellipse': <IntAna_ResultType.IntAna_Ellipse: 4>, 'IntAna_Parabola': <IntAna_ResultType.IntAna_Parabola: 5>, 'IntAna_Hyperbola': <IntAna_ResultType.IntAna_Hyperbola: 6>, 'IntAna_Empty': <IntAna_ResultType.IntAna_Empty: 7>, 'IntAna_Same': <IntAna_ResultType.IntAna_Same: 8>, 'IntAna_NoGeometricSolution': <IntAna_ResultType.IntAna_NoGeometricSolution: 9>}
     pass
-IntAna_Circle: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Circle
-IntAna_Ellipse: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Ellipse
-IntAna_Empty: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Empty
-IntAna_Hyperbola: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Hyperbola
-IntAna_Line: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Line
-IntAna_NoGeometricSolution: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_NoGeometricSolution
-IntAna_Parabola: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Parabola
-IntAna_Point: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Point
-IntAna_PointAndCircle: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_PointAndCircle
-IntAna_Same: OCP.IntAna.IntAna_ResultType # value = IntAna_ResultType.IntAna_Same
+IntAna_Circle: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Circle: 2>
+IntAna_Ellipse: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Ellipse: 4>
+IntAna_Empty: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Empty: 7>
+IntAna_Hyperbola: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Hyperbola: 6>
+IntAna_Line: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Line: 1>
+IntAna_NoGeometricSolution: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_NoGeometricSolution: 9>
+IntAna_Parabola: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Parabola: 5>
+IntAna_Point: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Point: 0>
+IntAna_PointAndCircle: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_PointAndCircle: 3>
+IntAna_Same: OCP.IntAna.IntAna_ResultType # value = <IntAna_ResultType.IntAna_Same: 8>

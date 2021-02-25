@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.IntRes2d
 import OCP.gp
+import OCP.IntRes2d
 __all__  = [
 "IntImpParGen",
 "IntImpParGen_ImpTool",

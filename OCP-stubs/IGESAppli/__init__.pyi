@@ -4,19 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.IGESDimen
 import OCP.TCollection
 import OCP.TColStd
-import OCP.IGESDimen
-import OCP.IGESBasic
+import io
+import OCP.IGESGeom
+import OCP.IGESDraw
 import OCP.IGESData
+import OCP.gp
+import OCP.Interface
 import OCP.IGESGraph
 import OCP.IGESDefs
-import OCP.Message
-import OCP.IGESDraw
 import OCP.Standard
-import OCP.IGESGeom
-import OCP.Interface
-import OCP.gp
+import OCP.IGESBasic
 __all__  = [
 "IGESAppli",
 "IGESAppli_Array1OfFiniteElement",
@@ -161,14 +161,14 @@ class IGESAppli_Array1OfFiniteElement():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : IGESAppli_FiniteElement,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IGESAppli_Array1OfFiniteElement) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESAppli_Array1OfFlow():
     """
@@ -247,14 +247,14 @@ class IGESAppli_Array1OfFlow():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : IGESAppli_Flow,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : IGESAppli_Array1OfFlow) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : IGESAppli_Flow,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESAppli_Array1OfNode():
     """
@@ -333,14 +333,14 @@ class IGESAppli_Array1OfNode():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : IGESAppli_Node,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : IGESAppli_Array1OfNode) -> None: ...
+    def __init__(self,theBegin : IGESAppli_Node,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : IGESAppli_Array1OfNode) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESAppli_DrilledHole(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Standard_Transient):
     """
@@ -2414,12 +2414,12 @@ class IGESAppli_HArray1OfFiniteElement(IGESAppli_Array1OfFiniteElement, OCP.Stan
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESAppli_FiniteElement) -> None: ...
+    @overload
     def __init__(self,theOther : IGESAppli_Array1OfFiniteElement) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESAppli_FiniteElement) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2555,14 +2555,14 @@ class IGESAppli_HArray1OfFlow(IGESAppli_Array1OfFlow, OCP.Standard.Standard_Tran
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESAppli_Flow) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : IGESAppli_Array1OfFlow) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : IGESAppli_Array1OfFlow) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESAppli_Flow) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2698,14 +2698,14 @@ class IGESAppli_HArray1OfNode(IGESAppli_Array1OfNode, OCP.Standard.Standard_Tran
         Constant value access
         """
     @overload
-    def __init__(self,theOther : IGESAppli_Array1OfNode) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESAppli_Node) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESAppli_Node) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : IGESAppli_Array1OfNode) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7774,7 +7774,7 @@ class IGESAppli_SpecificModule(OCP.IGESData.IGESData_SpecificModule, OCP.Standar
         """
         ---Purpose
         """
-    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Specific Dump (own parameters) for IGESAppli
         """
@@ -7814,7 +7814,7 @@ class IGESAppli_ToolDrilledHole():
         """
         Sets automatic unambiguous Correction on a DrilledHole (NbPropertyValues forced to 5, Level cleared if Subordinate != 0)
         """
-    def OwnDump(self,ent : IGESAppli_DrilledHole,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_DrilledHole,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7848,7 +7848,7 @@ class IGESAppli_ToolElementResults():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESAppli_ElementResults,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_ElementResults,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7882,7 +7882,7 @@ class IGESAppli_ToolFiniteElement():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESAppli_FiniteElement,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_FiniteElement,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7920,7 +7920,7 @@ class IGESAppli_ToolFlow():
         """
         Sets automatic unambiguous Correction on a Flow (NbContextFlags forced to 2)
         """
-    def OwnDump(self,ent : IGESAppli_Flow,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_Flow,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7954,7 +7954,7 @@ class IGESAppli_ToolFlowLineSpec():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESAppli_FlowLineSpec,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_FlowLineSpec,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -7992,7 +7992,7 @@ class IGESAppli_ToolLevelFunction():
         """
         Sets automatic unambiguous Correction on a LevelFunction (NbPropertyValues forced to 2)
         """
-    def OwnDump(self,ent : IGESAppli_LevelFunction,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_LevelFunction,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8026,7 +8026,7 @@ class IGESAppli_ToolLevelToPWBLayerMap():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESAppli_LevelToPWBLayerMap,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_LevelToPWBLayerMap,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8064,7 +8064,7 @@ class IGESAppli_ToolLineWidening():
         """
         Sets automatic unambiguous Correction on a LineWidening (NbPropertyValues forced to 5, Level cleared if Subordinate != 0)
         """
-    def OwnDump(self,ent : IGESAppli_LineWidening,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_LineWidening,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8098,7 +8098,7 @@ class IGESAppli_ToolNodalConstraint():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESAppli_NodalConstraint,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_NodalConstraint,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8132,7 +8132,7 @@ class IGESAppli_ToolNodalDisplAndRot():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESAppli_NodalDisplAndRot,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_NodalDisplAndRot,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8166,7 +8166,7 @@ class IGESAppli_ToolNodalResults():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESAppli_NodalResults,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_NodalResults,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8200,7 +8200,7 @@ class IGESAppli_ToolNode():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESAppli_Node,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_Node,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8234,7 +8234,7 @@ class IGESAppli_ToolPWBArtworkStackup():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESAppli_PWBArtworkStackup,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_PWBArtworkStackup,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8272,7 +8272,7 @@ class IGESAppli_ToolPWBDrilledHole():
         """
         Sets automatic unambiguous Correction on a PWBDrilledHole (NbPropertyValues forced to 3)
         """
-    def OwnDump(self,ent : IGESAppli_PWBDrilledHole,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_PWBDrilledHole,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8310,7 +8310,7 @@ class IGESAppli_ToolPartNumber():
         """
         Sets automatic unambiguous Correction on a PartNumber (NbPropertyValues forced to 4)
         """
-    def OwnDump(self,ent : IGESAppli_PartNumber,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_PartNumber,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8348,7 +8348,7 @@ class IGESAppli_ToolPinNumber():
         """
         Sets automatic unambiguous Correction on a PinNumber (Level cleared in D.E. if Subordinate != 0)
         """
-    def OwnDump(self,ent : IGESAppli_PinNumber,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_PinNumber,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8386,7 +8386,7 @@ class IGESAppli_ToolPipingFlow():
         """
         Sets automatic unambiguous Correction on a PipingFlow (NbContextFlags forced to 1)
         """
-    def OwnDump(self,ent : IGESAppli_PipingFlow,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_PipingFlow,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8424,7 +8424,7 @@ class IGESAppli_ToolReferenceDesignator():
         """
         Sets automatic unambiguous Correction on a ReferenceDesignator (NbPropertyValues forced to 1, Level cleared if Subordinate != 0)
         """
-    def OwnDump(self,ent : IGESAppli_ReferenceDesignator,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_ReferenceDesignator,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8462,7 +8462,7 @@ class IGESAppli_ToolRegionRestriction():
         """
         Sets automatic unambiguous Correction on a RegionRestriction (NbPropertyValues forced to 3, Level cleared if Subordinate != 0)
         """
-    def OwnDump(self,ent : IGESAppli_RegionRestriction,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESAppli_RegionRestriction,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """

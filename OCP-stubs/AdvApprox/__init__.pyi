@@ -5,6 +5,7 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
+import io
 import OCP.GeomAbs
 import OCP.TColgp
 import OCP.PLib
@@ -26,21 +27,21 @@ class AdvApprox_ApproxAFunction():
         None
         """
     @overload
-    def AverageError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: 
+    def AverageError(self,Dimension : int,Index : int) -> float: 
         """
         returns the error as is in the algorithms
 
         None
         """
     @overload
-    def AverageError(self,Dimension : int,Index : int) -> float: ...
+    def AverageError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: ...
     def Degree(self) -> int: 
         """
         None
 
         None
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         diplay information on approximation.
         """
@@ -63,14 +64,14 @@ class AdvApprox_ApproxAFunction():
         None
         """
     @overload
-    def MaxError(self,Dimension : int,Index : int) -> float: 
+    def MaxError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: 
         """
         returns the error as is in the algorithms
 
         None
         """
     @overload
-    def MaxError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: ...
+    def MaxError(self,Dimension : int,Index : int) -> float: ...
     def Multiplicities(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
         """
         None
@@ -94,7 +95,7 @@ class AdvApprox_ApproxAFunction():
         None
         """
     @overload
-    def Poles(self,Index : int,P : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
+    def Poles(self) -> OCP.TColgp.TColgp_HArray2OfPnt: 
         """
         -- returns the poles from the algorithms as is
 
@@ -103,9 +104,9 @@ class AdvApprox_ApproxAFunction():
         -- returns the poles from the algorithms as is
         """
     @overload
-    def Poles(self) -> OCP.TColgp.TColgp_HArray2OfPnt: ...
+    def Poles(self,Index : int,P : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
-    def Poles1d(self) -> OCP.TColStd.TColStd_HArray2OfReal: 
+    def Poles1d(self,Index : int,P : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         returns the poles from the algorithms as is
 
@@ -114,7 +115,7 @@ class AdvApprox_ApproxAFunction():
         returns the poles from the algorithms as is
         """
     @overload
-    def Poles1d(self,Index : int,P : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Poles1d(self) -> OCP.TColStd.TColStd_HArray2OfReal: ...
     @overload
     def Poles2d(self,Index : int,P : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
         """
@@ -190,7 +191,7 @@ class AdvApprox_SimpleApprox():
         """
         None
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         display information on approximation
         """

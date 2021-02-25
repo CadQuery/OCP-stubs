@@ -5,15 +5,16 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
-import OCP.XSControl
-import OCP.IFSelect
-import OCP.StepRepr
-import OCP.StepBasic
-import OCP.Transfer
-import OCP.Standard
-import OCP.StepShape
+import io
 import OCP.NCollection
+import OCP.Transfer
+import OCP.StepBasic
+import OCP.StepRepr
+import OCP.IFSelect
 import OCP.Interface
+import OCP.StepShape
+import OCP.Standard
+import OCP.XSControl
 __all__  = [
 "STEPSelections_AssemblyComponent",
 "STEPSelections_AssemblyExplorer",
@@ -97,9 +98,9 @@ class STEPSelections_AssemblyComponent(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,sdr : OCP.StepShape.StepShape_ShapeDefinitionRepresentation,list : STEPSelections_HSequenceOfAssemblyLink) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -115,7 +116,7 @@ class STEPSelections_AssemblyExplorer():
     """
     None
     """
-    def Dump(self,os : Any) -> None: 
+    def Dump(self,os : io.BytesIO) -> None: 
         """
         None
         """
@@ -329,14 +330,14 @@ class STEPSelections_SequenceOfAssemblyLink(OCP.NCollection.NCollection_BaseSequ
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : STEPSelections_AssemblyLink) -> None: 
+    def Append(self,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: ...
+    def Append(self,theItem : STEPSelections_AssemblyLink) -> None: ...
     def Assign(self,theOther : STEPSelections_SequenceOfAssemblyLink) -> STEPSelections_SequenceOfAssemblyLink: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -366,23 +367,23 @@ class STEPSelections_SequenceOfAssemblyLink(OCP.NCollection.NCollection_BaseSequ
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -447,7 +448,7 @@ class STEPSelections_SequenceOfAssemblyLink(OCP.NCollection.NCollection_BaseSequ
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1072,14 +1073,14 @@ class STEPSelections_SequenceOfAssemblyComponent(OCP.NCollection.NCollection_Bas
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : STEPSelections_SequenceOfAssemblyComponent) -> None: 
+    def Append(self,theItem : STEPSelections_AssemblyComponent) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : STEPSelections_AssemblyComponent) -> None: ...
+    def Append(self,theSeq : STEPSelections_SequenceOfAssemblyComponent) -> None: ...
     def Assign(self,theOther : STEPSelections_SequenceOfAssemblyComponent) -> STEPSelections_SequenceOfAssemblyComponent: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1143,23 +1144,23 @@ class STEPSelections_SequenceOfAssemblyComponent(OCP.NCollection.NCollection_Bas
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : STEPSelections_SequenceOfAssemblyComponent) -> None: 
+    def Prepend(self,theItem : STEPSelections_AssemblyComponent) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : STEPSelections_AssemblyComponent) -> None: ...
+    def Prepend(self,theSeq : STEPSelections_SequenceOfAssemblyComponent) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1185,12 +1186,12 @@ class STEPSelections_SequenceOfAssemblyComponent(OCP.NCollection.NCollection_Bas
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : STEPSelections_SequenceOfAssemblyComponent) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1203,14 +1204,14 @@ class STEPSelections_HSequenceOfAssemblyLink(STEPSelections_SequenceOfAssemblyLi
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : STEPSelections_AssemblyLink) -> None: 
+    def Append(self,theSequence : STEPSelections_SequenceOfAssemblyLink) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : STEPSelections_SequenceOfAssemblyLink) -> None: ...
+    def Append(self,theItem : STEPSelections_AssemblyLink) -> None: ...
     def Assign(self,theOther : STEPSelections_SequenceOfAssemblyLink) -> STEPSelections_SequenceOfAssemblyLink: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1264,23 +1265,23 @@ class STEPSelections_HSequenceOfAssemblyLink(STEPSelections_SequenceOfAssemblyLi
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : STEPSelections_AssemblyLink) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : STEPSelections_SequenceOfAssemblyLink) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1369,7 +1370,7 @@ class STEPSelections_HSequenceOfAssemblyLink(STEPSelections_SequenceOfAssemblyLi
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : STEPSelections_SequenceOfAssemblyLink) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """

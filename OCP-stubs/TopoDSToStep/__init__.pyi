@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TColStd
+import OCP.TCollection
 import OCP.Transfer
-import OCP.StepShape
 import OCP.TopoDS
+import OCP.StepShape
 import OCP.Standard
 __all__  = [
 "TopoDSToStep",
@@ -59,7 +59,7 @@ class TopoDSToStep():
     """
     @staticmethod
     @overload
-    def AddResult_s(FP : OCP.Transfer.Transfer_FinderProcess,Shape : OCP.TopoDS.TopoDS_Shape,entity : OCP.Standard.Standard_Transient) -> None: 
+    def AddResult_s(FP : OCP.Transfer.Transfer_FinderProcess,Tool : TopoDSToStep_Tool) -> None: 
         """
         Adds an entity into the list of results (binders) for shape stored in FinderProcess
 
@@ -67,7 +67,7 @@ class TopoDSToStep():
         """
     @staticmethod
     @overload
-    def AddResult_s(FP : OCP.Transfer.Transfer_FinderProcess,Tool : TopoDSToStep_Tool) -> None: ...
+    def AddResult_s(FP : OCP.Transfer.Transfer_FinderProcess,Shape : OCP.TopoDS.TopoDS_Shape,entity : OCP.Standard.Standard_Transient) -> None: ...
     @staticmethod
     def DecodeBuilderError_s(E : TopoDSToStep_BuilderError) -> OCP.TCollection.TCollection_HAsciiString: 
         """
@@ -124,21 +124,29 @@ class TopoDSToStep_BuilderError():
 
       TopoDSToStep_BuilderOther
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TopoDSToStep_BuilderDone: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = TopoDSToStep_BuilderError.TopoDSToStep_BuilderDone
-    TopoDSToStep_BuilderOther: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = TopoDSToStep_BuilderError.TopoDSToStep_BuilderOther
-    TopoDSToStep_NoFaceMapped: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = TopoDSToStep_BuilderError.TopoDSToStep_NoFaceMapped
-    __entries: dict # value = {'TopoDSToStep_BuilderDone': (TopoDSToStep_BuilderError.TopoDSToStep_BuilderDone, None), 'TopoDSToStep_NoFaceMapped': (TopoDSToStep_BuilderError.TopoDSToStep_NoFaceMapped, None), 'TopoDSToStep_BuilderOther': (TopoDSToStep_BuilderError.TopoDSToStep_BuilderOther, None)}
-    __members__: dict # value = {'TopoDSToStep_BuilderDone': TopoDSToStep_BuilderError.TopoDSToStep_BuilderDone, 'TopoDSToStep_NoFaceMapped': TopoDSToStep_BuilderError.TopoDSToStep_NoFaceMapped, 'TopoDSToStep_BuilderOther': TopoDSToStep_BuilderError.TopoDSToStep_BuilderOther}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TopoDSToStep_BuilderDone: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = <TopoDSToStep_BuilderError.TopoDSToStep_BuilderDone: 0>
+    TopoDSToStep_BuilderOther: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = <TopoDSToStep_BuilderError.TopoDSToStep_BuilderOther: 2>
+    TopoDSToStep_NoFaceMapped: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = <TopoDSToStep_BuilderError.TopoDSToStep_NoFaceMapped: 1>
+    __entries: dict # value = {'TopoDSToStep_BuilderDone': (<TopoDSToStep_BuilderError.TopoDSToStep_BuilderDone: 0>, None), 'TopoDSToStep_NoFaceMapped': (<TopoDSToStep_BuilderError.TopoDSToStep_NoFaceMapped: 1>, None), 'TopoDSToStep_BuilderOther': (<TopoDSToStep_BuilderError.TopoDSToStep_BuilderOther: 2>, None)}
+    __members__: dict # value = {'TopoDSToStep_BuilderDone': <TopoDSToStep_BuilderError.TopoDSToStep_BuilderDone: 0>, 'TopoDSToStep_NoFaceMapped': <TopoDSToStep_BuilderError.TopoDSToStep_NoFaceMapped: 1>, 'TopoDSToStep_BuilderOther': <TopoDSToStep_BuilderError.TopoDSToStep_BuilderOther: 2>}
     pass
 class TopoDSToStep_FacetedError():
     """
@@ -152,21 +160,29 @@ class TopoDSToStep_FacetedError():
 
       TopoDSToStep_PCurveNotLinear
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TopoDSToStep_FacetedDone: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = TopoDSToStep_FacetedError.TopoDSToStep_FacetedDone
-    TopoDSToStep_PCurveNotLinear: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = TopoDSToStep_FacetedError.TopoDSToStep_PCurveNotLinear
-    TopoDSToStep_SurfaceNotPlane: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = TopoDSToStep_FacetedError.TopoDSToStep_SurfaceNotPlane
-    __entries: dict # value = {'TopoDSToStep_FacetedDone': (TopoDSToStep_FacetedError.TopoDSToStep_FacetedDone, None), 'TopoDSToStep_SurfaceNotPlane': (TopoDSToStep_FacetedError.TopoDSToStep_SurfaceNotPlane, None), 'TopoDSToStep_PCurveNotLinear': (TopoDSToStep_FacetedError.TopoDSToStep_PCurveNotLinear, None)}
-    __members__: dict # value = {'TopoDSToStep_FacetedDone': TopoDSToStep_FacetedError.TopoDSToStep_FacetedDone, 'TopoDSToStep_SurfaceNotPlane': TopoDSToStep_FacetedError.TopoDSToStep_SurfaceNotPlane, 'TopoDSToStep_PCurveNotLinear': TopoDSToStep_FacetedError.TopoDSToStep_PCurveNotLinear}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TopoDSToStep_FacetedDone: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = <TopoDSToStep_FacetedError.TopoDSToStep_FacetedDone: 0>
+    TopoDSToStep_PCurveNotLinear: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = <TopoDSToStep_FacetedError.TopoDSToStep_PCurveNotLinear: 2>
+    TopoDSToStep_SurfaceNotPlane: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = <TopoDSToStep_FacetedError.TopoDSToStep_SurfaceNotPlane: 1>
+    __entries: dict # value = {'TopoDSToStep_FacetedDone': (<TopoDSToStep_FacetedError.TopoDSToStep_FacetedDone: 0>, None), 'TopoDSToStep_SurfaceNotPlane': (<TopoDSToStep_FacetedError.TopoDSToStep_SurfaceNotPlane: 1>, None), 'TopoDSToStep_PCurveNotLinear': (<TopoDSToStep_FacetedError.TopoDSToStep_PCurveNotLinear: 2>, None)}
+    __members__: dict # value = {'TopoDSToStep_FacetedDone': <TopoDSToStep_FacetedError.TopoDSToStep_FacetedDone: 0>, 'TopoDSToStep_SurfaceNotPlane': <TopoDSToStep_FacetedError.TopoDSToStep_SurfaceNotPlane: 1>, 'TopoDSToStep_PCurveNotLinear': <TopoDSToStep_FacetedError.TopoDSToStep_PCurveNotLinear: 2>}
     pass
 class TopoDSToStep_FacetedTool():
     """
@@ -191,7 +207,7 @@ class TopoDSToStep_MakeBrepWithVoids(TopoDSToStep_Root):
         """
         None
         """
-    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -213,21 +229,29 @@ class TopoDSToStep_MakeEdgeError():
 
       TopoDSToStep_EdgeOther
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TopoDSToStep_EdgeDone: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeDone
-    TopoDSToStep_EdgeOther: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeOther
-    TopoDSToStep_NonManifoldEdge: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = TopoDSToStep_MakeEdgeError.TopoDSToStep_NonManifoldEdge
-    __entries: dict # value = {'TopoDSToStep_EdgeDone': (TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeDone, None), 'TopoDSToStep_NonManifoldEdge': (TopoDSToStep_MakeEdgeError.TopoDSToStep_NonManifoldEdge, None), 'TopoDSToStep_EdgeOther': (TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeOther, None)}
-    __members__: dict # value = {'TopoDSToStep_EdgeDone': TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeDone, 'TopoDSToStep_NonManifoldEdge': TopoDSToStep_MakeEdgeError.TopoDSToStep_NonManifoldEdge, 'TopoDSToStep_EdgeOther': TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeOther}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TopoDSToStep_EdgeDone: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = <TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeDone: 0>
+    TopoDSToStep_EdgeOther: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = <TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeOther: 2>
+    TopoDSToStep_NonManifoldEdge: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = <TopoDSToStep_MakeEdgeError.TopoDSToStep_NonManifoldEdge: 1>
+    __entries: dict # value = {'TopoDSToStep_EdgeDone': (<TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeDone: 0>, None), 'TopoDSToStep_NonManifoldEdge': (<TopoDSToStep_MakeEdgeError.TopoDSToStep_NonManifoldEdge: 1>, None), 'TopoDSToStep_EdgeOther': (<TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeOther: 2>, None)}
+    __members__: dict # value = {'TopoDSToStep_EdgeDone': <TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeDone: 0>, 'TopoDSToStep_NonManifoldEdge': <TopoDSToStep_MakeEdgeError.TopoDSToStep_NonManifoldEdge: 1>, 'TopoDSToStep_EdgeOther': <TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeOther: 2>}
     pass
 class TopoDSToStep_MakeFaceError():
     """
@@ -245,23 +269,31 @@ class TopoDSToStep_MakeFaceError():
 
       TopoDSToStep_FaceOther
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TopoDSToStep_FaceDone: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = TopoDSToStep_MakeFaceError.TopoDSToStep_FaceDone
-    TopoDSToStep_FaceOther: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = TopoDSToStep_MakeFaceError.TopoDSToStep_FaceOther
-    TopoDSToStep_InfiniteFace: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = TopoDSToStep_MakeFaceError.TopoDSToStep_InfiniteFace
-    TopoDSToStep_NoWireMapped: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = TopoDSToStep_MakeFaceError.TopoDSToStep_NoWireMapped
-    TopoDSToStep_NonManifoldFace: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = TopoDSToStep_MakeFaceError.TopoDSToStep_NonManifoldFace
-    __entries: dict # value = {'TopoDSToStep_FaceDone': (TopoDSToStep_MakeFaceError.TopoDSToStep_FaceDone, None), 'TopoDSToStep_InfiniteFace': (TopoDSToStep_MakeFaceError.TopoDSToStep_InfiniteFace, None), 'TopoDSToStep_NonManifoldFace': (TopoDSToStep_MakeFaceError.TopoDSToStep_NonManifoldFace, None), 'TopoDSToStep_NoWireMapped': (TopoDSToStep_MakeFaceError.TopoDSToStep_NoWireMapped, None), 'TopoDSToStep_FaceOther': (TopoDSToStep_MakeFaceError.TopoDSToStep_FaceOther, None)}
-    __members__: dict # value = {'TopoDSToStep_FaceDone': TopoDSToStep_MakeFaceError.TopoDSToStep_FaceDone, 'TopoDSToStep_InfiniteFace': TopoDSToStep_MakeFaceError.TopoDSToStep_InfiniteFace, 'TopoDSToStep_NonManifoldFace': TopoDSToStep_MakeFaceError.TopoDSToStep_NonManifoldFace, 'TopoDSToStep_NoWireMapped': TopoDSToStep_MakeFaceError.TopoDSToStep_NoWireMapped, 'TopoDSToStep_FaceOther': TopoDSToStep_MakeFaceError.TopoDSToStep_FaceOther}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TopoDSToStep_FaceDone: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = <TopoDSToStep_MakeFaceError.TopoDSToStep_FaceDone: 0>
+    TopoDSToStep_FaceOther: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = <TopoDSToStep_MakeFaceError.TopoDSToStep_FaceOther: 4>
+    TopoDSToStep_InfiniteFace: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = <TopoDSToStep_MakeFaceError.TopoDSToStep_InfiniteFace: 1>
+    TopoDSToStep_NoWireMapped: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = <TopoDSToStep_MakeFaceError.TopoDSToStep_NoWireMapped: 3>
+    TopoDSToStep_NonManifoldFace: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = <TopoDSToStep_MakeFaceError.TopoDSToStep_NonManifoldFace: 2>
+    __entries: dict # value = {'TopoDSToStep_FaceDone': (<TopoDSToStep_MakeFaceError.TopoDSToStep_FaceDone: 0>, None), 'TopoDSToStep_InfiniteFace': (<TopoDSToStep_MakeFaceError.TopoDSToStep_InfiniteFace: 1>, None), 'TopoDSToStep_NonManifoldFace': (<TopoDSToStep_MakeFaceError.TopoDSToStep_NonManifoldFace: 2>, None), 'TopoDSToStep_NoWireMapped': (<TopoDSToStep_MakeFaceError.TopoDSToStep_NoWireMapped: 3>, None), 'TopoDSToStep_FaceOther': (<TopoDSToStep_MakeFaceError.TopoDSToStep_FaceOther: 4>, None)}
+    __members__: dict # value = {'TopoDSToStep_FaceDone': <TopoDSToStep_MakeFaceError.TopoDSToStep_FaceDone: 0>, 'TopoDSToStep_InfiniteFace': <TopoDSToStep_MakeFaceError.TopoDSToStep_InfiniteFace: 1>, 'TopoDSToStep_NonManifoldFace': <TopoDSToStep_MakeFaceError.TopoDSToStep_NonManifoldFace: 2>, 'TopoDSToStep_NoWireMapped': <TopoDSToStep_MakeFaceError.TopoDSToStep_NoWireMapped: 3>, 'TopoDSToStep_FaceOther': <TopoDSToStep_MakeFaceError.TopoDSToStep_FaceOther: 4>}
     pass
 class TopoDSToStep_MakeFacetedBrep(TopoDSToStep_Root):
     """
@@ -276,9 +308,9 @@ class TopoDSToStep_MakeFacetedBrep(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shell,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shell,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -300,7 +332,7 @@ class TopoDSToStep_MakeFacetedBrepAndBrepWithVoids(TopoDSToStep_Root):
         """
         None
         """
-    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -345,9 +377,9 @@ class TopoDSToStep_MakeManifoldSolidBrep(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shell,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shell,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -370,11 +402,11 @@ class TopoDSToStep_MakeShellBasedSurfaceModel(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self,F : OCP.TopoDS.TopoDS_Face,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    def __init__(self,F : OCP.TopoDS.TopoDS_Face,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shell,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shell,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -438,9 +470,9 @@ class TopoDSToStep_MakeStepFace(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self,F : OCP.TopoDS.TopoDS_Face,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,F : OCP.TopoDS.TopoDS_Face,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -504,9 +536,9 @@ class TopoDSToStep_MakeStepWire(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -526,20 +558,28 @@ class TopoDSToStep_MakeVertexError():
 
       TopoDSToStep_VertexOther
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TopoDSToStep_VertexDone: OCP.TopoDSToStep.TopoDSToStep_MakeVertexError # value = TopoDSToStep_MakeVertexError.TopoDSToStep_VertexDone
-    TopoDSToStep_VertexOther: OCP.TopoDSToStep.TopoDSToStep_MakeVertexError # value = TopoDSToStep_MakeVertexError.TopoDSToStep_VertexOther
-    __entries: dict # value = {'TopoDSToStep_VertexDone': (TopoDSToStep_MakeVertexError.TopoDSToStep_VertexDone, None), 'TopoDSToStep_VertexOther': (TopoDSToStep_MakeVertexError.TopoDSToStep_VertexOther, None)}
-    __members__: dict # value = {'TopoDSToStep_VertexDone': TopoDSToStep_MakeVertexError.TopoDSToStep_VertexDone, 'TopoDSToStep_VertexOther': TopoDSToStep_MakeVertexError.TopoDSToStep_VertexOther}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TopoDSToStep_VertexDone: OCP.TopoDSToStep.TopoDSToStep_MakeVertexError # value = <TopoDSToStep_MakeVertexError.TopoDSToStep_VertexDone: 0>
+    TopoDSToStep_VertexOther: OCP.TopoDSToStep.TopoDSToStep_MakeVertexError # value = <TopoDSToStep_MakeVertexError.TopoDSToStep_VertexOther: 1>
+    __entries: dict # value = {'TopoDSToStep_VertexDone': (<TopoDSToStep_MakeVertexError.TopoDSToStep_VertexDone: 0>, None), 'TopoDSToStep_VertexOther': (<TopoDSToStep_MakeVertexError.TopoDSToStep_VertexOther: 1>, None)}
+    __members__: dict # value = {'TopoDSToStep_VertexDone': <TopoDSToStep_MakeVertexError.TopoDSToStep_VertexDone: 0>, 'TopoDSToStep_VertexOther': <TopoDSToStep_MakeVertexError.TopoDSToStep_VertexOther: 1>}
     pass
 class TopoDSToStep_MakeWireError():
     """
@@ -553,21 +593,29 @@ class TopoDSToStep_MakeWireError():
 
       TopoDSToStep_WireOther
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TopoDSToStep_NonManifoldWire: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = TopoDSToStep_MakeWireError.TopoDSToStep_NonManifoldWire
-    TopoDSToStep_WireDone: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = TopoDSToStep_MakeWireError.TopoDSToStep_WireDone
-    TopoDSToStep_WireOther: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = TopoDSToStep_MakeWireError.TopoDSToStep_WireOther
-    __entries: dict # value = {'TopoDSToStep_WireDone': (TopoDSToStep_MakeWireError.TopoDSToStep_WireDone, None), 'TopoDSToStep_NonManifoldWire': (TopoDSToStep_MakeWireError.TopoDSToStep_NonManifoldWire, None), 'TopoDSToStep_WireOther': (TopoDSToStep_MakeWireError.TopoDSToStep_WireOther, None)}
-    __members__: dict # value = {'TopoDSToStep_WireDone': TopoDSToStep_MakeWireError.TopoDSToStep_WireDone, 'TopoDSToStep_NonManifoldWire': TopoDSToStep_MakeWireError.TopoDSToStep_NonManifoldWire, 'TopoDSToStep_WireOther': TopoDSToStep_MakeWireError.TopoDSToStep_WireOther}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TopoDSToStep_NonManifoldWire: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = <TopoDSToStep_MakeWireError.TopoDSToStep_NonManifoldWire: 1>
+    TopoDSToStep_WireDone: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = <TopoDSToStep_MakeWireError.TopoDSToStep_WireDone: 0>
+    TopoDSToStep_WireOther: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = <TopoDSToStep_MakeWireError.TopoDSToStep_WireOther: 2>
+    __entries: dict # value = {'TopoDSToStep_WireDone': (<TopoDSToStep_MakeWireError.TopoDSToStep_WireDone: 0>, None), 'TopoDSToStep_NonManifoldWire': (<TopoDSToStep_MakeWireError.TopoDSToStep_NonManifoldWire: 1>, None), 'TopoDSToStep_WireOther': (<TopoDSToStep_MakeWireError.TopoDSToStep_WireOther: 2>, None)}
+    __members__: dict # value = {'TopoDSToStep_WireDone': <TopoDSToStep_MakeWireError.TopoDSToStep_WireDone: 0>, 'TopoDSToStep_NonManifoldWire': <TopoDSToStep_MakeWireError.TopoDSToStep_NonManifoldWire: 1>, 'TopoDSToStep_WireOther': <TopoDSToStep_MakeWireError.TopoDSToStep_WireOther: 2>}
     pass
 class TopoDSToStep_Builder(TopoDSToStep_Root):
     """
@@ -577,7 +625,7 @@ class TopoDSToStep_Builder(TopoDSToStep_Root):
         """
         None
         """
-    def Init(self,S : OCP.TopoDS.TopoDS_Shape,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: 
+    def Init(self,S : OCP.TopoDS.TopoDS_Shape,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
         """
@@ -590,7 +638,7 @@ class TopoDSToStep_Builder(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @property
@@ -736,22 +784,22 @@ class TopoDSToStep_WireframeBuilder(TopoDSToStep_Root):
     def Tolerance(self, arg1: float) -> None:
         pass
     pass
-TopoDSToStep_BuilderDone: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = TopoDSToStep_BuilderError.TopoDSToStep_BuilderDone
-TopoDSToStep_BuilderOther: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = TopoDSToStep_BuilderError.TopoDSToStep_BuilderOther
-TopoDSToStep_EdgeDone: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeDone
-TopoDSToStep_EdgeOther: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeOther
-TopoDSToStep_FaceDone: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = TopoDSToStep_MakeFaceError.TopoDSToStep_FaceDone
-TopoDSToStep_FaceOther: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = TopoDSToStep_MakeFaceError.TopoDSToStep_FaceOther
-TopoDSToStep_FacetedDone: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = TopoDSToStep_FacetedError.TopoDSToStep_FacetedDone
-TopoDSToStep_InfiniteFace: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = TopoDSToStep_MakeFaceError.TopoDSToStep_InfiniteFace
-TopoDSToStep_NoFaceMapped: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = TopoDSToStep_BuilderError.TopoDSToStep_NoFaceMapped
-TopoDSToStep_NoWireMapped: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = TopoDSToStep_MakeFaceError.TopoDSToStep_NoWireMapped
-TopoDSToStep_NonManifoldEdge: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = TopoDSToStep_MakeEdgeError.TopoDSToStep_NonManifoldEdge
-TopoDSToStep_NonManifoldFace: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = TopoDSToStep_MakeFaceError.TopoDSToStep_NonManifoldFace
-TopoDSToStep_NonManifoldWire: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = TopoDSToStep_MakeWireError.TopoDSToStep_NonManifoldWire
-TopoDSToStep_PCurveNotLinear: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = TopoDSToStep_FacetedError.TopoDSToStep_PCurveNotLinear
-TopoDSToStep_SurfaceNotPlane: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = TopoDSToStep_FacetedError.TopoDSToStep_SurfaceNotPlane
-TopoDSToStep_VertexDone: OCP.TopoDSToStep.TopoDSToStep_MakeVertexError # value = TopoDSToStep_MakeVertexError.TopoDSToStep_VertexDone
-TopoDSToStep_VertexOther: OCP.TopoDSToStep.TopoDSToStep_MakeVertexError # value = TopoDSToStep_MakeVertexError.TopoDSToStep_VertexOther
-TopoDSToStep_WireDone: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = TopoDSToStep_MakeWireError.TopoDSToStep_WireDone
-TopoDSToStep_WireOther: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = TopoDSToStep_MakeWireError.TopoDSToStep_WireOther
+TopoDSToStep_BuilderDone: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = <TopoDSToStep_BuilderError.TopoDSToStep_BuilderDone: 0>
+TopoDSToStep_BuilderOther: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = <TopoDSToStep_BuilderError.TopoDSToStep_BuilderOther: 2>
+TopoDSToStep_EdgeDone: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = <TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeDone: 0>
+TopoDSToStep_EdgeOther: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = <TopoDSToStep_MakeEdgeError.TopoDSToStep_EdgeOther: 2>
+TopoDSToStep_FaceDone: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = <TopoDSToStep_MakeFaceError.TopoDSToStep_FaceDone: 0>
+TopoDSToStep_FaceOther: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = <TopoDSToStep_MakeFaceError.TopoDSToStep_FaceOther: 4>
+TopoDSToStep_FacetedDone: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = <TopoDSToStep_FacetedError.TopoDSToStep_FacetedDone: 0>
+TopoDSToStep_InfiniteFace: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = <TopoDSToStep_MakeFaceError.TopoDSToStep_InfiniteFace: 1>
+TopoDSToStep_NoFaceMapped: OCP.TopoDSToStep.TopoDSToStep_BuilderError # value = <TopoDSToStep_BuilderError.TopoDSToStep_NoFaceMapped: 1>
+TopoDSToStep_NoWireMapped: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = <TopoDSToStep_MakeFaceError.TopoDSToStep_NoWireMapped: 3>
+TopoDSToStep_NonManifoldEdge: OCP.TopoDSToStep.TopoDSToStep_MakeEdgeError # value = <TopoDSToStep_MakeEdgeError.TopoDSToStep_NonManifoldEdge: 1>
+TopoDSToStep_NonManifoldFace: OCP.TopoDSToStep.TopoDSToStep_MakeFaceError # value = <TopoDSToStep_MakeFaceError.TopoDSToStep_NonManifoldFace: 2>
+TopoDSToStep_NonManifoldWire: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = <TopoDSToStep_MakeWireError.TopoDSToStep_NonManifoldWire: 1>
+TopoDSToStep_PCurveNotLinear: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = <TopoDSToStep_FacetedError.TopoDSToStep_PCurveNotLinear: 2>
+TopoDSToStep_SurfaceNotPlane: OCP.TopoDSToStep.TopoDSToStep_FacetedError # value = <TopoDSToStep_FacetedError.TopoDSToStep_SurfaceNotPlane: 1>
+TopoDSToStep_VertexDone: OCP.TopoDSToStep.TopoDSToStep_MakeVertexError # value = <TopoDSToStep_MakeVertexError.TopoDSToStep_VertexDone: 0>
+TopoDSToStep_VertexOther: OCP.TopoDSToStep.TopoDSToStep_MakeVertexError # value = <TopoDSToStep_MakeVertexError.TopoDSToStep_VertexOther: 1>
+TopoDSToStep_WireDone: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = <TopoDSToStep_MakeWireError.TopoDSToStep_WireDone: 0>
+TopoDSToStep_WireOther: OCP.TopoDSToStep.TopoDSToStep_MakeWireError # value = <TopoDSToStep_MakeWireError.TopoDSToStep_WireOther: 2>

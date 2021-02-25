@@ -5,10 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
-import OCP.GeomAbs
-import OCP.Geom2d
+import io
 import OCP.TColGeom2d
 import OCP.Adaptor2d
+import OCP.GeomAbs
+import OCP.Geom2d
 __all__  = [
 "Geom2dConvert",
 "Geom2dConvert_ApproxCurve",
@@ -38,7 +39,7 @@ class Geom2dConvert():
         """
     @staticmethod
     @overload
-    def ConcatC1_s(ArrayOfCurves : OCP.TColGeom2d.TColGeom2d_Array1OfBSplineCurve,ArrayOfToler : OCP.TColStd.TColStd_Array1OfReal,ArrayOfIndices : OCP.TColStd.TColStd_HArray1OfInteger,ArrayOfConcatenated : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,ClosedTolerance : float) -> Tuple[bool]: 
+    def ConcatC1_s(ArrayOfCurves : OCP.TColGeom2d.TColGeom2d_Array1OfBSplineCurve,ArrayOfToler : OCP.TColStd.TColStd_Array1OfReal,ArrayOfIndices : OCP.TColStd.TColStd_HArray1OfInteger,ArrayOfConcatenated : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,ClosedTolerance : float,AngularTolerance : float) -> Tuple[bool]: 
         """
         This Method concatenates C1 the ArrayOfCurves as far as it is possible. ArrayOfCurves[0..N-1] ArrayOfToler contains the biggest tolerance of the two points shared by two consecutives curves. Its dimension: [0..N-2] ClosedFlag indicates if the ArrayOfCurves is closed. In this case ClosedTolerance contains the biggest tolerance of the two points which are at the closure. Otherwise its value is 0.0 ClosedFlag becomes False on the output if it is impossible to build closed curve.
 
@@ -46,7 +47,7 @@ class Geom2dConvert():
         """
     @staticmethod
     @overload
-    def ConcatC1_s(ArrayOfCurves : OCP.TColGeom2d.TColGeom2d_Array1OfBSplineCurve,ArrayOfToler : OCP.TColStd.TColStd_Array1OfReal,ArrayOfIndices : OCP.TColStd.TColStd_HArray1OfInteger,ArrayOfConcatenated : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,ClosedTolerance : float,AngularTolerance : float) -> Tuple[bool]: ...
+    def ConcatC1_s(ArrayOfCurves : OCP.TColGeom2d.TColGeom2d_Array1OfBSplineCurve,ArrayOfToler : OCP.TColStd.TColStd_Array1OfReal,ArrayOfIndices : OCP.TColStd.TColStd_HArray1OfInteger,ArrayOfConcatenated : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,ClosedTolerance : float) -> Tuple[bool]: ...
     @staticmethod
     def ConcatG1_s(ArrayOfCurves : OCP.TColGeom2d.TColGeom2d_Array1OfBSplineCurve,ArrayOfToler : OCP.TColStd.TColStd_Array1OfReal,ArrayOfConcatenated : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,ClosedTolerance : float) -> Tuple[bool]: 
         """
@@ -78,7 +79,7 @@ class Geom2dConvert_ApproxCurve():
         """
         Returns the 2D BSpline curve resulting from the approximation algorithm.
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Print on the stream o information about the object
         """
@@ -138,9 +139,9 @@ class Geom2dConvert_BSplineCurveToBezierCurve():
         Returns the number of BezierCurve arcs. If at the creation time you have decomposed the basis curve between the parametric values UFirst, ULast the number of BezierCurve arcs depends on the number of knots included inside the interval [UFirst, ULast]. If you have decomposed the whole basis B-spline curve the number of BezierCurve arcs NbArcs is equal to the number of knots less one.
         """
     @overload
-    def __init__(self,BasisCurve : OCP.Geom2d.Geom2d_BSplineCurve,U1 : float,U2 : float,ParametricTolerance : float) -> None: ...
-    @overload
     def __init__(self,BasisCurve : OCP.Geom2d.Geom2d_BSplineCurve) -> None: ...
+    @overload
+    def __init__(self,BasisCurve : OCP.Geom2d.Geom2d_BSplineCurve,U1 : float,U2 : float,ParametricTolerance : float) -> None: ...
     pass
 class Geom2dConvert_CompCurveToBSplineCurve():
     """
@@ -159,7 +160,7 @@ class Geom2dConvert_CompCurveToBSplineCurve():
         Clear result curve
         """
     @overload
-    def __init__(self,BasisCurve : OCP.Geom2d.Geom2d_BoundedCurve,Parameterisation : OCP.Convert.Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
-    @overload
     def __init__(self,Parameterisation : OCP.Convert.Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
+    @overload
+    def __init__(self,BasisCurve : OCP.Geom2d.Geom2d_BoundedCurve,Parameterisation : OCP.Convert.Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
     pass

@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.StepVisual
-import OCP.StepData
 import OCP.Interface
+import OCP.StepData
 __all__  = [
 "RWStepVisual_RWAnnotationCurveOccurrence",
-"RWStepVisual_RWAnnotationCurveOccurrenceAndAnnotationOccurrenceAndGeomReprItemAndReprItemAndStyledItem",
+"RWStepVisual_RWAnnotationCurveOccurrenceAndGeomReprItem",
 "RWStepVisual_RWAnnotationFillArea",
 "RWStepVisual_RWAnnotationFillAreaOccurrence",
 "RWStepVisual_RWAnnotationOccurrence",
@@ -24,7 +24,7 @@ __all__  = [
 "RWStepVisual_RWCameraModelD3MultiClippingIntersection",
 "RWStepVisual_RWCameraModelD3MultiClippingUnion",
 "RWStepVisual_RWCameraUsage",
-"RWStepVisual_RWCharacterizedObjectAndCharacterizedRepresentationAndDraughtingModelAndRepresentation",
+"RWStepVisual_RWCharacterizedObjAndRepresentationAndDraughtingModel",
 "RWStepVisual_RWColour",
 "RWStepVisual_RWColourRgb",
 "RWStepVisual_RWColourSpecification",
@@ -69,8 +69,12 @@ __all__  = [
 "RWStepVisual_RWSurfaceStyleControlGrid",
 "RWStepVisual_RWSurfaceStyleFillArea",
 "RWStepVisual_RWSurfaceStyleParameterLine",
+"RWStepVisual_RWSurfaceStyleReflectanceAmbient",
+"RWStepVisual_RWSurfaceStyleRendering",
+"RWStepVisual_RWSurfaceStyleRenderingWithProperties",
 "RWStepVisual_RWSurfaceStyleSegmentationCurve",
 "RWStepVisual_RWSurfaceStyleSilhouette",
+"RWStepVisual_RWSurfaceStyleTransparent",
 "RWStepVisual_RWSurfaceStyleUsage",
 "RWStepVisual_RWTemplate",
 "RWStepVisual_RWTemplateInstance",
@@ -102,19 +106,19 @@ class RWStepVisual_RWAnnotationCurveOccurrence():
         """
     def __init__(self) -> None: ...
     pass
-class RWStepVisual_RWAnnotationCurveOccurrenceAndAnnotationOccurrenceAndGeomReprItemAndReprItemAndStyledItem():
+class RWStepVisual_RWAnnotationCurveOccurrenceAndGeomReprItem():
     """
-    Read & Write Module for AnnotationCurveOccurrenceAndAnnotationOccurrenceAndGeomReprItemAndReprItemAndStyledItem
+    Read & Write Module for StepVisual_AnnotationCurveOccurrenceAndGeomReprItem
     """
-    def ReadStep(self,data : OCP.StepData.StepData_StepReaderData,num : int,ach : OCP.Interface.Interface_Check,ent : OCP.StepVisual.StepVisual_AnnotationCurveOccurrenceAndAnnotationOccurrenceAndGeomReprItemAndReprItemAndStyledItem) -> Any: 
+    def ReadStep(self,data : OCP.StepData.StepData_StepReaderData,num : int,ach : OCP.Interface.Interface_Check,ent : OCP.StepVisual.StepVisual_AnnotationCurveOccurrenceAndGeomReprItem) -> Any: 
         """
         None
         """
-    def Share(self,ent : OCP.StepVisual.StepVisual_AnnotationCurveOccurrenceAndAnnotationOccurrenceAndGeomReprItemAndReprItemAndStyledItem,iter : OCP.Interface.Interface_EntityIterator) -> None: 
+    def Share(self,ent : OCP.StepVisual.StepVisual_AnnotationCurveOccurrenceAndGeomReprItem,iter : OCP.Interface.Interface_EntityIterator) -> None: 
         """
         None
         """
-    def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_AnnotationCurveOccurrenceAndAnnotationOccurrenceAndGeomReprItemAndReprItemAndStyledItem) -> None: 
+    def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_AnnotationCurveOccurrenceAndGeomReprItem) -> None: 
         """
         None
         """
@@ -368,19 +372,19 @@ class RWStepVisual_RWCameraUsage():
         """
     def __init__(self) -> None: ...
     pass
-class RWStepVisual_RWCharacterizedObjectAndCharacterizedRepresentationAndDraughtingModelAndRepresentation():
+class RWStepVisual_RWCharacterizedObjAndRepresentationAndDraughtingModel():
     """
     Read & Write Module for complex STEP entity Characterized_Object & Characterized_Representation & Draughting_Model & Representation
     """
-    def ReadStep(self,data : OCP.StepData.StepData_StepReaderData,num : int,ach : OCP.Interface.Interface_Check,ent : OCP.StepVisual.StepVisual_CharacterizedObjectAndCharacterizedRepresentationAndDraughtingModelAndRepresentation) -> Any: 
+    def ReadStep(self,data : OCP.StepData.StepData_StepReaderData,num : int,ach : OCP.Interface.Interface_Check,ent : OCP.StepVisual.StepVisual_CharacterizedObjAndRepresentationAndDraughtingModel) -> Any: 
         """
         None
         """
-    def Share(self,ent : OCP.StepVisual.StepVisual_CharacterizedObjectAndCharacterizedRepresentationAndDraughtingModelAndRepresentation,iter : OCP.Interface.Interface_EntityIterator) -> None: 
+    def Share(self,ent : OCP.StepVisual.StepVisual_CharacterizedObjAndRepresentationAndDraughtingModel,iter : OCP.Interface.Interface_EntityIterator) -> None: 
         """
         None
         """
-    def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_CharacterizedObjectAndCharacterizedRepresentationAndDraughtingModelAndRepresentation) -> None: 
+    def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_CharacterizedObjAndRepresentationAndDraughtingModel) -> None: 
         """
         None
         """
@@ -1130,6 +1134,60 @@ class RWStepVisual_RWSurfaceStyleParameterLine():
         """
     def __init__(self) -> None: ...
     pass
+class RWStepVisual_RWSurfaceStyleReflectanceAmbient():
+    """
+    Read & Write tool for SurfaceStyleReflectanceAmbient
+    """
+    def ReadStep(self,data : OCP.StepData.StepData_StepReaderData,num : int,ach : OCP.Interface.Interface_Check,ent : OCP.StepVisual.StepVisual_SurfaceStyleReflectanceAmbient) -> Any: 
+        """
+        None
+        """
+    def Share(self,ent : OCP.StepVisual.StepVisual_SurfaceStyleReflectanceAmbient,iter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_SurfaceStyleReflectanceAmbient) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWSurfaceStyleRendering():
+    """
+    Read & Write tool for SurfaceStyleRendering
+    """
+    def ReadStep(self,data : OCP.StepData.StepData_StepReaderData,num : int,ach : OCP.Interface.Interface_Check,ent : OCP.StepVisual.StepVisual_SurfaceStyleRendering) -> Any: 
+        """
+        None
+        """
+    def Share(self,ent : OCP.StepVisual.StepVisual_SurfaceStyleRendering,iter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_SurfaceStyleRendering) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWSurfaceStyleRenderingWithProperties():
+    """
+    Read & Write tool for SurfaceStyleRenderingWithProperties
+    """
+    def ReadStep(self,data : OCP.StepData.StepData_StepReaderData,num : int,ach : OCP.Interface.Interface_Check,ent : OCP.StepVisual.StepVisual_SurfaceStyleRenderingWithProperties) -> Any: 
+        """
+        None
+        """
+    def Share(self,ent : OCP.StepVisual.StepVisual_SurfaceStyleRenderingWithProperties,iter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_SurfaceStyleRenderingWithProperties) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
 class RWStepVisual_RWSurfaceStyleSegmentationCurve():
     """
     Read & Write Module for SurfaceStyleSegmentationCurve
@@ -1161,6 +1219,24 @@ class RWStepVisual_RWSurfaceStyleSilhouette():
         None
         """
     def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_SurfaceStyleSilhouette) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWSurfaceStyleTransparent():
+    """
+    Read & Write tool for SurfaceStyleTransparent
+    """
+    def ReadStep(self,data : OCP.StepData.StepData_StepReaderData,num : int,ach : OCP.Interface.Interface_Check,ent : OCP.StepVisual.StepVisual_SurfaceStyleTransparent) -> Any: 
+        """
+        None
+        """
+    def Share(self,ent : OCP.StepVisual.StepVisual_SurfaceStyleTransparent,iter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_SurfaceStyleTransparent) -> None: 
         """
         None
         """

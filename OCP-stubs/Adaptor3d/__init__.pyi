@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.TopAbs
 import OCP.TColStd
-import OCP.Standard
-import OCP.Geom
 import OCP.math
 import OCP.Adaptor2d
 import OCP.gp
+import OCP.GeomAbs
+import OCP.Geom
+import OCP.Standard
+import OCP.TopAbs
 __all__  = [
 "Adaptor3d_Curve",
 "Adaptor3d_CurveOnSurface",
@@ -249,7 +249,7 @@ class Adaptor3d_CurveOnSurface(Adaptor3d_Curve):
         None
         """
     @overload
-    def Load(self,S : Adaptor3d_HSurface) -> None: 
+    def Load(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d,S : Adaptor3d_HSurface) -> None: 
         """
         Changes the surface.
 
@@ -258,9 +258,9 @@ class Adaptor3d_CurveOnSurface(Adaptor3d_Curve):
         Load both curve and surface.
         """
     @overload
-    def Load(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
+    def Load(self,S : Adaptor3d_HSurface) -> None: ...
     @overload
-    def Load(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d,S : Adaptor3d_HSurface) -> None: ...
+    def Load(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
@@ -298,11 +298,11 @@ class Adaptor3d_CurveOnSurface(Adaptor3d_Curve):
         Computes the point of parameter U on the curve.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,S : Adaptor3d_HSurface) -> None: ...
     @overload
     def __init__(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d,S : Adaptor3d_HSurface) -> None: ...
     @overload
-    def __init__(self,S : Adaptor3d_HSurface) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class Adaptor3d_HCurve(OCP.Standard.Standard_Transient):
     """
@@ -777,9 +777,9 @@ class Adaptor3d_HCurveOnSurface(Adaptor3d_HCurve, OCP.Standard.Standard_Transien
         None
         """
     @overload
-    def __init__(self,C : Adaptor3d_CurveOnSurface) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : Adaptor3d_CurveOnSurface) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1025,9 +1025,9 @@ class Adaptor3d_HIsoCurve(Adaptor3d_HCurve, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self,C : Adaptor3d_IsoCurve) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : Adaptor3d_IsoCurve) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1659,9 +1659,9 @@ class Adaptor3d_HVertex(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,Ori : OCP.TopAbs.TopAbs_Orientation,Resolution : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,Ori : OCP.TopAbs.TopAbs_Orientation,Resolution : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1790,7 +1790,7 @@ class Adaptor3d_IsoCurve(Adaptor3d_Curve):
         None
         """
     @overload
-    def Load(self,S : Adaptor3d_HSurface) -> None: 
+    def Load(self,Iso : OCP.GeomAbs.GeomAbs_IsoType,Param : float,WFirst : float,WLast : float) -> None: 
         """
         Changes the surface. The iso is reset to NoneIso.
 
@@ -1801,7 +1801,7 @@ class Adaptor3d_IsoCurve(Adaptor3d_Curve):
     @overload
     def Load(self,Iso : OCP.GeomAbs.GeomAbs_IsoType,Param : float) -> None: ...
     @overload
-    def Load(self,Iso : OCP.GeomAbs.GeomAbs_IsoType,Param : float,WFirst : float,WLast : float) -> None: ...
+    def Load(self,S : Adaptor3d_HSurface) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
@@ -2114,7 +2114,7 @@ class Adaptor3d_TopolTool(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Initialize(self,Curve : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def Initialize(self) -> None: 
         """
         None
 
@@ -2122,10 +2122,10 @@ class Adaptor3d_TopolTool(OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Initialize(self) -> None: ...
     @overload
     def Initialize(self,S : Adaptor3d_HSurface) -> None: ...
+    @overload
+    def Initialize(self,Curve : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2181,14 +2181,14 @@ class Adaptor3d_TopolTool(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Orientation(self,V : Adaptor3d_HVertex) -> OCP.TopAbs.TopAbs_Orientation: 
+    def Orientation(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         If the function returns the orientation of the arc. If the orientation is FORWARD or REVERSED, the arc is a "real" limit of the surface. If the orientation is INTERNAL or EXTERNAL, the arc is considered as an arc on the surface.
 
         Returns the orientation of the vertex V. The vertex has been found with an exploration on a given arc. The orientation is the orientation of the vertex on this arc.
         """
     @overload
-    def Orientation(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,V : Adaptor3d_HVertex) -> OCP.TopAbs.TopAbs_Orientation: ...
     def Pnt(self,V : Adaptor3d_HVertex) -> OCP.gp.gp_Pnt: 
         """
         returns 3d point of the vertex V
@@ -2206,14 +2206,14 @@ class Adaptor3d_TopolTool(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Tol3d(self,V : Adaptor3d_HVertex) -> float: 
+    def Tol3d(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
         """
         returns 3d tolerance of the arc C
 
         returns 3d tolerance of the vertex V
         """
     @overload
-    def Tol3d(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: ...
+    def Tol3d(self,V : Adaptor3d_HVertex) -> float: ...
     def UParameters(self,theArray : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         return the set of U parameters on the surface obtained by the method SamplePnts

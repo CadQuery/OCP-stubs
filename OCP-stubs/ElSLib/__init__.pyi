@@ -104,7 +104,7 @@ class ElSLib():
         """
     @staticmethod
     @overload
-    def D0_s(U : float,V : float,C : OCP.gp.gp_Cone,P : OCP.gp.gp_Pnt) -> None: 
+    def D0_s(U : float,V : float,Pl : OCP.gp.gp_Pln,P : OCP.gp.gp_Pnt) -> None: 
         """
         For elementary surfaces from the gp package (planes, cones, cylinders, spheres and tori), computes the point P of parameters (U, V).inline
 
@@ -118,7 +118,10 @@ class ElSLib():
         """
     @staticmethod
     @overload
-    def D0_s(U : float,V : float,Pl : OCP.gp.gp_Pln,P : OCP.gp.gp_Pnt) -> None: ...
+    def D0_s(U : float,V : float,C : OCP.gp.gp_Cylinder,P : OCP.gp.gp_Pnt) -> None: ...
+    @staticmethod
+    @overload
+    def D0_s(U : float,V : float,C : OCP.gp.gp_Cone,P : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     @overload
     def D0_s(U : float,V : float,S : OCP.gp.gp_Sphere,P : OCP.gp.gp_Pnt) -> None: ...
@@ -127,10 +130,7 @@ class ElSLib():
     def D0_s(U : float,V : float,T : OCP.gp.gp_Torus,P : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     @overload
-    def D0_s(U : float,V : float,C : OCP.gp.gp_Cylinder,P : OCP.gp.gp_Pnt) -> None: ...
-    @staticmethod
-    @overload
-    def D1_s(U : float,V : float,T : OCP.gp.gp_Torus,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec) -> None: 
+    def D1_s(U : float,V : float,Pl : OCP.gp.gp_Pln,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec) -> None: 
         """
         For elementary surfaces from the gp package (planes, cones, cylinders, spheres and tori), computes: - the point P of parameters (U, V), and - the first derivative vectors Vu and Vv at this point in the u and v parametric directions respectively.
 
@@ -144,16 +144,16 @@ class ElSLib():
         """
     @staticmethod
     @overload
-    def D1_s(U : float,V : float,C : OCP.gp.gp_Cylinder,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec) -> None: ...
+    def D1_s(U : float,V : float,C : OCP.gp.gp_Cone,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec) -> None: ...
+    @staticmethod
+    @overload
+    def D1_s(U : float,V : float,T : OCP.gp.gp_Torus,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
     def D1_s(U : float,V : float,S : OCP.gp.gp_Sphere,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
-    def D1_s(U : float,V : float,Pl : OCP.gp.gp_Pln,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec) -> None: ...
-    @staticmethod
-    @overload
-    def D1_s(U : float,V : float,C : OCP.gp.gp_Cone,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec) -> None: ...
+    def D1_s(U : float,V : float,C : OCP.gp.gp_Cylinder,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
     def D2_s(U : float,V : float,C : OCP.gp.gp_Cylinder,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec) -> None: 
@@ -168,16 +168,16 @@ class ElSLib():
         """
     @staticmethod
     @overload
-    def D2_s(U : float,V : float,T : OCP.gp.gp_Torus,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec) -> None: ...
+    def D2_s(U : float,V : float,S : OCP.gp.gp_Sphere,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
     def D2_s(U : float,V : float,C : OCP.gp.gp_Cone,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
-    def D2_s(U : float,V : float,S : OCP.gp.gp_Sphere,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec) -> None: ...
+    def D2_s(U : float,V : float,T : OCP.gp.gp_Torus,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
-    def D3_s(U : float,V : float,C : OCP.gp.gp_Cone,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec,Vuuu : OCP.gp.gp_Vec,Vvvv : OCP.gp.gp_Vec,Vuuv : OCP.gp.gp_Vec,Vuvv : OCP.gp.gp_Vec) -> None: 
+    def D3_s(U : float,V : float,S : OCP.gp.gp_Sphere,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec,Vuuu : OCP.gp.gp_Vec,Vvvv : OCP.gp.gp_Vec,Vuuv : OCP.gp.gp_Vec,Vuvv : OCP.gp.gp_Vec) -> None: 
         """
         For elementary surfaces from the gp package (cones, cylinders, spheres and tori), computes: - the point P of parameters (U,V), and - the first derivative vectors Vu and Vv at this point in the u and v parametric directions respectively, and - the second derivative vectors Vuu, Vvv and Vuv at this point, and - the third derivative vectors Vuuu, Vvvv, Vuuv and Vuvv at this point.
 
@@ -189,16 +189,16 @@ class ElSLib():
         """
     @staticmethod
     @overload
-    def D3_s(U : float,V : float,T : OCP.gp.gp_Torus,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec,Vuuu : OCP.gp.gp_Vec,Vvvv : OCP.gp.gp_Vec,Vuuv : OCP.gp.gp_Vec,Vuvv : OCP.gp.gp_Vec) -> None: ...
+    def D3_s(U : float,V : float,C : OCP.gp.gp_Cone,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec,Vuuu : OCP.gp.gp_Vec,Vvvv : OCP.gp.gp_Vec,Vuuv : OCP.gp.gp_Vec,Vuvv : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
-    def D3_s(U : float,V : float,S : OCP.gp.gp_Sphere,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec,Vuuu : OCP.gp.gp_Vec,Vvvv : OCP.gp.gp_Vec,Vuuv : OCP.gp.gp_Vec,Vuvv : OCP.gp.gp_Vec) -> None: ...
+    def D3_s(U : float,V : float,T : OCP.gp.gp_Torus,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec,Vuuu : OCP.gp.gp_Vec,Vvvv : OCP.gp.gp_Vec,Vuuv : OCP.gp.gp_Vec,Vuvv : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
     def D3_s(U : float,V : float,C : OCP.gp.gp_Cylinder,P : OCP.gp.gp_Pnt,Vu : OCP.gp.gp_Vec,Vv : OCP.gp.gp_Vec,Vuu : OCP.gp.gp_Vec,Vvv : OCP.gp.gp_Vec,Vuv : OCP.gp.gp_Vec,Vuuu : OCP.gp.gp_Vec,Vvvv : OCP.gp.gp_Vec,Vuuv : OCP.gp.gp_Vec,Vuvv : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
-    def DN_s(U : float,V : float,Pl : OCP.gp.gp_Pln,Nu : int,Nv : int) -> OCP.gp.gp_Vec: 
+    def DN_s(U : float,V : float,S : OCP.gp.gp_Sphere,Nu : int,Nv : int) -> OCP.gp.gp_Vec: 
         """
         For elementary surfaces from the gp package (planes, cones, cylinders, spheres and tori), computes the derivative vector of order Nu and Nv in the u and v parametric directions respectively, at the point of parameters (U, V).
 
@@ -212,16 +212,16 @@ class ElSLib():
         """
     @staticmethod
     @overload
-    def DN_s(U : float,V : float,C : OCP.gp.gp_Cone,Nu : int,Nv : int) -> OCP.gp.gp_Vec: ...
-    @staticmethod
-    @overload
-    def DN_s(U : float,V : float,S : OCP.gp.gp_Sphere,Nu : int,Nv : int) -> OCP.gp.gp_Vec: ...
-    @staticmethod
-    @overload
     def DN_s(U : float,V : float,C : OCP.gp.gp_Cylinder,Nu : int,Nv : int) -> OCP.gp.gp_Vec: ...
     @staticmethod
     @overload
+    def DN_s(U : float,V : float,Pl : OCP.gp.gp_Pln,Nu : int,Nv : int) -> OCP.gp.gp_Vec: ...
+    @staticmethod
+    @overload
     def DN_s(U : float,V : float,T : OCP.gp.gp_Torus,Nu : int,Nv : int) -> OCP.gp.gp_Vec: ...
+    @staticmethod
+    @overload
+    def DN_s(U : float,V : float,C : OCP.gp.gp_Cone,Nu : int,Nv : int) -> OCP.gp.gp_Vec: ...
     @staticmethod
     @overload
     def Parameters_s(C : OCP.gp.gp_Cylinder,P : OCP.gp.gp_Pnt) -> Tuple[float, float]: 
@@ -238,16 +238,16 @@ class ElSLib():
         """
     @staticmethod
     @overload
-    def Parameters_s(Pl : OCP.gp.gp_Pln,P : OCP.gp.gp_Pnt) -> Tuple[float, float]: ...
+    def Parameters_s(T : OCP.gp.gp_Torus,P : OCP.gp.gp_Pnt) -> Tuple[float, float]: ...
     @staticmethod
     @overload
-    def Parameters_s(S : OCP.gp.gp_Sphere,P : OCP.gp.gp_Pnt) -> Tuple[float, float]: ...
+    def Parameters_s(Pl : OCP.gp.gp_Pln,P : OCP.gp.gp_Pnt) -> Tuple[float, float]: ...
     @staticmethod
     @overload
     def Parameters_s(C : OCP.gp.gp_Cone,P : OCP.gp.gp_Pnt) -> Tuple[float, float]: ...
     @staticmethod
     @overload
-    def Parameters_s(T : OCP.gp.gp_Torus,P : OCP.gp.gp_Pnt) -> Tuple[float, float]: ...
+    def Parameters_s(S : OCP.gp.gp_Sphere,P : OCP.gp.gp_Pnt) -> Tuple[float, float]: ...
     @staticmethod
     def PlaneD0_s(U : float,V : float,Pos : OCP.gp.gp_Ax3,P : OCP.gp.gp_Pnt) -> None: 
         """
@@ -375,7 +375,7 @@ class ElSLib():
         """
     @staticmethod
     @overload
-    def Value_s(U : float,V : float,T : OCP.gp.gp_Torus) -> OCP.gp.gp_Pnt: 
+    def Value_s(U : float,V : float,Pl : OCP.gp.gp_Pln) -> OCP.gp.gp_Pnt: 
         """
         For elementary surfaces from the gp package (planes, cones, cylinders, spheres and tori), computes the point of parameters (U, V).
 
@@ -395,7 +395,7 @@ class ElSLib():
     def Value_s(U : float,V : float,C : OCP.gp.gp_Cylinder) -> OCP.gp.gp_Pnt: ...
     @staticmethod
     @overload
-    def Value_s(U : float,V : float,Pl : OCP.gp.gp_Pln) -> OCP.gp.gp_Pnt: ...
+    def Value_s(U : float,V : float,T : OCP.gp.gp_Torus) -> OCP.gp.gp_Pnt: ...
     @staticmethod
     @overload
     def Value_s(U : float,V : float,C : OCP.gp.gp_Cone) -> OCP.gp.gp_Pnt: ...

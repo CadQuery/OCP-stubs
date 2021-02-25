@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.Geom2d
-import OCP.Law
+import OCP.Adaptor3d
 import OCP.TopTools
 import OCP.TopOpeBRepBuild
 import OCP.ChFi3d
-import OCP.Adaptor3d
-import OCP.TopoDS
-import OCP.ChFiDS
-import OCP.Geom
+import OCP.Law
+import OCP.GeomAbs
 import OCP.gp
+import OCP.Geom
+import OCP.TopoDS
+import OCP.Geom2d
+import OCP.ChFiDS
 __all__  = [
 "FilletSurf_Builder",
 "FilletSurf_ErrorTypeStatus",
@@ -142,24 +142,32 @@ class FilletSurf_ErrorTypeStatus():
 
       FilletSurf_PbFilletCompute
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    FilletSurf_EdgeNotG1: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotG1
-    FilletSurf_EdgeNotOnShape: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotOnShape
-    FilletSurf_EmptyList: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_EmptyList
-    FilletSurf_FacesNotG1: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_FacesNotG1
-    FilletSurf_NotSharpEdge: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_NotSharpEdge
-    FilletSurf_PbFilletCompute: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_PbFilletCompute
-    __entries: dict # value = {'FilletSurf_EmptyList': (FilletSurf_ErrorTypeStatus.FilletSurf_EmptyList, None), 'FilletSurf_EdgeNotG1': (FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotG1, None), 'FilletSurf_FacesNotG1': (FilletSurf_ErrorTypeStatus.FilletSurf_FacesNotG1, None), 'FilletSurf_EdgeNotOnShape': (FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotOnShape, None), 'FilletSurf_NotSharpEdge': (FilletSurf_ErrorTypeStatus.FilletSurf_NotSharpEdge, None), 'FilletSurf_PbFilletCompute': (FilletSurf_ErrorTypeStatus.FilletSurf_PbFilletCompute, None)}
-    __members__: dict # value = {'FilletSurf_EmptyList': FilletSurf_ErrorTypeStatus.FilletSurf_EmptyList, 'FilletSurf_EdgeNotG1': FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotG1, 'FilletSurf_FacesNotG1': FilletSurf_ErrorTypeStatus.FilletSurf_FacesNotG1, 'FilletSurf_EdgeNotOnShape': FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotOnShape, 'FilletSurf_NotSharpEdge': FilletSurf_ErrorTypeStatus.FilletSurf_NotSharpEdge, 'FilletSurf_PbFilletCompute': FilletSurf_ErrorTypeStatus.FilletSurf_PbFilletCompute}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    FilletSurf_EdgeNotG1: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotG1: 1>
+    FilletSurf_EdgeNotOnShape: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotOnShape: 3>
+    FilletSurf_EmptyList: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_EmptyList: 0>
+    FilletSurf_FacesNotG1: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_FacesNotG1: 2>
+    FilletSurf_NotSharpEdge: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_NotSharpEdge: 4>
+    FilletSurf_PbFilletCompute: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_PbFilletCompute: 5>
+    __entries: dict # value = {'FilletSurf_EmptyList': (<FilletSurf_ErrorTypeStatus.FilletSurf_EmptyList: 0>, None), 'FilletSurf_EdgeNotG1': (<FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotG1: 1>, None), 'FilletSurf_FacesNotG1': (<FilletSurf_ErrorTypeStatus.FilletSurf_FacesNotG1: 2>, None), 'FilletSurf_EdgeNotOnShape': (<FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotOnShape: 3>, None), 'FilletSurf_NotSharpEdge': (<FilletSurf_ErrorTypeStatus.FilletSurf_NotSharpEdge: 4>, None), 'FilletSurf_PbFilletCompute': (<FilletSurf_ErrorTypeStatus.FilletSurf_PbFilletCompute: 5>, None)}
+    __members__: dict # value = {'FilletSurf_EmptyList': <FilletSurf_ErrorTypeStatus.FilletSurf_EmptyList: 0>, 'FilletSurf_EdgeNotG1': <FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotG1: 1>, 'FilletSurf_FacesNotG1': <FilletSurf_ErrorTypeStatus.FilletSurf_FacesNotG1: 2>, 'FilletSurf_EdgeNotOnShape': <FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotOnShape: 3>, 'FilletSurf_NotSharpEdge': <FilletSurf_ErrorTypeStatus.FilletSurf_NotSharpEdge: 4>, 'FilletSurf_PbFilletCompute': <FilletSurf_ErrorTypeStatus.FilletSurf_PbFilletCompute: 5>}
     pass
 class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d_Builder):
     """
@@ -336,14 +344,14 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         None
         """
     @overload
-    def Radius(self,IC : int) -> float: 
+    def Radius(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> float: 
         """
         Returns the vector if the contour is flagged as edge constant.
 
         Returns the vector if E is flagged as edge constant.
         """
     @overload
-    def Radius(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> float: ...
+    def Radius(self,IC : int) -> float: ...
     def RelativeAbscissa(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> float: 
         """
         returns the relative abscissa([0.,1.]) of the vertex V on the contour of index IC.
@@ -385,7 +393,7 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         None
         """
     @overload
-    def SetRadius(self,C : OCP.Law.Law_Function,IC : int,IinC : int) -> None: 
+    def SetRadius(self,Radius : float,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: 
         """
         Set the radius of the contour of index IC.
 
@@ -396,9 +404,9 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         Set a vertex on the point of parametre U in the edge IinC of the contour of index IC
         """
     @overload
-    def SetRadius(self,Radius : float,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def SetRadius(self,C : OCP.Law.Law_Function,IC : int,IinC : int) -> None: ...
     @overload
-    def SetRadius(self,Radius : float,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def SetRadius(self,Radius : float,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
     def SetRadius(self,UandR : OCP.gp.gp_XY,IC : int,IinC : int) -> None: ...
     def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
@@ -438,14 +446,14 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         gives the 3d tolerance reached during approximation of the surface of index Index
         """
     @overload
-    def UnSet(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def UnSet(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: 
         """
         Extracts the flag constant and the vector of edge E.
 
         Extracts the vector of the vertex V.
         """
     @overload
-    def UnSet(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def UnSet(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def Value(self,I : int) -> OCP.ChFiDS.ChFiDS_Spine: 
         """
         gives the n'th set of edges (contour) if I >NbElements()
@@ -464,21 +472,29 @@ class FilletSurf_StatusDone():
 
       FilletSurf_IsPartial
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    FilletSurf_IsNotOk: OCP.FilletSurf.FilletSurf_StatusDone # value = FilletSurf_StatusDone.FilletSurf_IsNotOk
-    FilletSurf_IsOk: OCP.FilletSurf.FilletSurf_StatusDone # value = FilletSurf_StatusDone.FilletSurf_IsOk
-    FilletSurf_IsPartial: OCP.FilletSurf.FilletSurf_StatusDone # value = FilletSurf_StatusDone.FilletSurf_IsPartial
-    __entries: dict # value = {'FilletSurf_IsOk': (FilletSurf_StatusDone.FilletSurf_IsOk, None), 'FilletSurf_IsNotOk': (FilletSurf_StatusDone.FilletSurf_IsNotOk, None), 'FilletSurf_IsPartial': (FilletSurf_StatusDone.FilletSurf_IsPartial, None)}
-    __members__: dict # value = {'FilletSurf_IsOk': FilletSurf_StatusDone.FilletSurf_IsOk, 'FilletSurf_IsNotOk': FilletSurf_StatusDone.FilletSurf_IsNotOk, 'FilletSurf_IsPartial': FilletSurf_StatusDone.FilletSurf_IsPartial}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    FilletSurf_IsNotOk: OCP.FilletSurf.FilletSurf_StatusDone # value = <FilletSurf_StatusDone.FilletSurf_IsNotOk: 1>
+    FilletSurf_IsOk: OCP.FilletSurf.FilletSurf_StatusDone # value = <FilletSurf_StatusDone.FilletSurf_IsOk: 0>
+    FilletSurf_IsPartial: OCP.FilletSurf.FilletSurf_StatusDone # value = <FilletSurf_StatusDone.FilletSurf_IsPartial: 2>
+    __entries: dict # value = {'FilletSurf_IsOk': (<FilletSurf_StatusDone.FilletSurf_IsOk: 0>, None), 'FilletSurf_IsNotOk': (<FilletSurf_StatusDone.FilletSurf_IsNotOk: 1>, None), 'FilletSurf_IsPartial': (<FilletSurf_StatusDone.FilletSurf_IsPartial: 2>, None)}
+    __members__: dict # value = {'FilletSurf_IsOk': <FilletSurf_StatusDone.FilletSurf_IsOk: 0>, 'FilletSurf_IsNotOk': <FilletSurf_StatusDone.FilletSurf_IsNotOk: 1>, 'FilletSurf_IsPartial': <FilletSurf_StatusDone.FilletSurf_IsPartial: 2>}
     pass
 class FilletSurf_StatusType():
     """
@@ -492,31 +508,39 @@ class FilletSurf_StatusType():
 
       FilletSurf_NoExtremityOnEdge
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    FilletSurf_NoExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = FilletSurf_StatusType.FilletSurf_NoExtremityOnEdge
-    FilletSurf_OneExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = FilletSurf_StatusType.FilletSurf_OneExtremityOnEdge
-    FilletSurf_TwoExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = FilletSurf_StatusType.FilletSurf_TwoExtremityOnEdge
-    __entries: dict # value = {'FilletSurf_TwoExtremityOnEdge': (FilletSurf_StatusType.FilletSurf_TwoExtremityOnEdge, None), 'FilletSurf_OneExtremityOnEdge': (FilletSurf_StatusType.FilletSurf_OneExtremityOnEdge, None), 'FilletSurf_NoExtremityOnEdge': (FilletSurf_StatusType.FilletSurf_NoExtremityOnEdge, None)}
-    __members__: dict # value = {'FilletSurf_TwoExtremityOnEdge': FilletSurf_StatusType.FilletSurf_TwoExtremityOnEdge, 'FilletSurf_OneExtremityOnEdge': FilletSurf_StatusType.FilletSurf_OneExtremityOnEdge, 'FilletSurf_NoExtremityOnEdge': FilletSurf_StatusType.FilletSurf_NoExtremityOnEdge}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    FilletSurf_NoExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = <FilletSurf_StatusType.FilletSurf_NoExtremityOnEdge: 2>
+    FilletSurf_OneExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = <FilletSurf_StatusType.FilletSurf_OneExtremityOnEdge: 1>
+    FilletSurf_TwoExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = <FilletSurf_StatusType.FilletSurf_TwoExtremityOnEdge: 0>
+    __entries: dict # value = {'FilletSurf_TwoExtremityOnEdge': (<FilletSurf_StatusType.FilletSurf_TwoExtremityOnEdge: 0>, None), 'FilletSurf_OneExtremityOnEdge': (<FilletSurf_StatusType.FilletSurf_OneExtremityOnEdge: 1>, None), 'FilletSurf_NoExtremityOnEdge': (<FilletSurf_StatusType.FilletSurf_NoExtremityOnEdge: 2>, None)}
+    __members__: dict # value = {'FilletSurf_TwoExtremityOnEdge': <FilletSurf_StatusType.FilletSurf_TwoExtremityOnEdge: 0>, 'FilletSurf_OneExtremityOnEdge': <FilletSurf_StatusType.FilletSurf_OneExtremityOnEdge: 1>, 'FilletSurf_NoExtremityOnEdge': <FilletSurf_StatusType.FilletSurf_NoExtremityOnEdge: 2>}
     pass
-FilletSurf_EdgeNotG1: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotG1
-FilletSurf_EdgeNotOnShape: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotOnShape
-FilletSurf_EmptyList: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_EmptyList
-FilletSurf_FacesNotG1: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_FacesNotG1
-FilletSurf_IsNotOk: OCP.FilletSurf.FilletSurf_StatusDone # value = FilletSurf_StatusDone.FilletSurf_IsNotOk
-FilletSurf_IsOk: OCP.FilletSurf.FilletSurf_StatusDone # value = FilletSurf_StatusDone.FilletSurf_IsOk
-FilletSurf_IsPartial: OCP.FilletSurf.FilletSurf_StatusDone # value = FilletSurf_StatusDone.FilletSurf_IsPartial
-FilletSurf_NoExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = FilletSurf_StatusType.FilletSurf_NoExtremityOnEdge
-FilletSurf_NotSharpEdge: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_NotSharpEdge
-FilletSurf_OneExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = FilletSurf_StatusType.FilletSurf_OneExtremityOnEdge
-FilletSurf_PbFilletCompute: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = FilletSurf_ErrorTypeStatus.FilletSurf_PbFilletCompute
-FilletSurf_TwoExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = FilletSurf_StatusType.FilletSurf_TwoExtremityOnEdge
+FilletSurf_EdgeNotG1: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotG1: 1>
+FilletSurf_EdgeNotOnShape: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_EdgeNotOnShape: 3>
+FilletSurf_EmptyList: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_EmptyList: 0>
+FilletSurf_FacesNotG1: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_FacesNotG1: 2>
+FilletSurf_IsNotOk: OCP.FilletSurf.FilletSurf_StatusDone # value = <FilletSurf_StatusDone.FilletSurf_IsNotOk: 1>
+FilletSurf_IsOk: OCP.FilletSurf.FilletSurf_StatusDone # value = <FilletSurf_StatusDone.FilletSurf_IsOk: 0>
+FilletSurf_IsPartial: OCP.FilletSurf.FilletSurf_StatusDone # value = <FilletSurf_StatusDone.FilletSurf_IsPartial: 2>
+FilletSurf_NoExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = <FilletSurf_StatusType.FilletSurf_NoExtremityOnEdge: 2>
+FilletSurf_NotSharpEdge: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_NotSharpEdge: 4>
+FilletSurf_OneExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = <FilletSurf_StatusType.FilletSurf_OneExtremityOnEdge: 1>
+FilletSurf_PbFilletCompute: OCP.FilletSurf.FilletSurf_ErrorTypeStatus # value = <FilletSurf_ErrorTypeStatus.FilletSurf_PbFilletCompute: 5>
+FilletSurf_TwoExtremityOnEdge: OCP.FilletSurf.FilletSurf_StatusType # value = <FilletSurf_StatusType.FilletSurf_TwoExtremityOnEdge: 0>

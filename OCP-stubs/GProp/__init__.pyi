@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.TColgp
 import OCP.gp
+import OCP.TColgp
+import OCP.TColStd
 __all__  = [
 "GProp",
 "GProp_GProps",
@@ -104,23 +104,31 @@ class GProp_EquaType():
 
       GProp_None
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    GProp_Line: OCP.GProp.GProp_EquaType # value = GProp_EquaType.GProp_Line
-    GProp_None: OCP.GProp.GProp_EquaType # value = GProp_EquaType.GProp_None
-    GProp_Plane: OCP.GProp.GProp_EquaType # value = GProp_EquaType.GProp_Plane
-    GProp_Point: OCP.GProp.GProp_EquaType # value = GProp_EquaType.GProp_Point
-    GProp_Space: OCP.GProp.GProp_EquaType # value = GProp_EquaType.GProp_Space
-    __entries: dict # value = {'GProp_Plane': (GProp_EquaType.GProp_Plane, None), 'GProp_Line': (GProp_EquaType.GProp_Line, None), 'GProp_Point': (GProp_EquaType.GProp_Point, None), 'GProp_Space': (GProp_EquaType.GProp_Space, None), 'GProp_None': (GProp_EquaType.GProp_None, None)}
-    __members__: dict # value = {'GProp_Plane': GProp_EquaType.GProp_Plane, 'GProp_Line': GProp_EquaType.GProp_Line, 'GProp_Point': GProp_EquaType.GProp_Point, 'GProp_Space': GProp_EquaType.GProp_Space, 'GProp_None': GProp_EquaType.GProp_None}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    GProp_Line: OCP.GProp.GProp_EquaType # value = <GProp_EquaType.GProp_Line: 1>
+    GProp_None: OCP.GProp.GProp_EquaType # value = <GProp_EquaType.GProp_None: 4>
+    GProp_Plane: OCP.GProp.GProp_EquaType # value = <GProp_EquaType.GProp_Plane: 0>
+    GProp_Point: OCP.GProp.GProp_EquaType # value = <GProp_EquaType.GProp_Point: 2>
+    GProp_Space: OCP.GProp.GProp_EquaType # value = <GProp_EquaType.GProp_Space: 3>
+    __entries: dict # value = {'GProp_Plane': (<GProp_EquaType.GProp_Plane: 0>, None), 'GProp_Line': (<GProp_EquaType.GProp_Line: 1>, None), 'GProp_Point': (<GProp_EquaType.GProp_Point: 2>, None), 'GProp_Space': (<GProp_EquaType.GProp_Space: 3>, None), 'GProp_None': (<GProp_EquaType.GProp_None: 4>, None)}
+    __members__: dict # value = {'GProp_Plane': <GProp_EquaType.GProp_Plane: 0>, 'GProp_Line': <GProp_EquaType.GProp_Line: 1>, 'GProp_Point': <GProp_EquaType.GProp_Point: 2>, 'GProp_Space': <GProp_EquaType.GProp_Space: 3>, 'GProp_None': <GProp_EquaType.GProp_None: 4>}
     pass
 class GProp_CelGProps(GProp_GProps):
     """
@@ -172,9 +180,9 @@ class GProp_CelGProps(GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
-    def __init__(self,C : OCP.gp.gp_Circ,CLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Circ,CLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Circ,U1 : float,U2 : float,CLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
@@ -227,17 +235,17 @@ class GProp_PGProps(GProp_GProps):
         Either - initializes the global properties retained by this framework from those retained by the framework Item, or - brings together the global properties still retained by this framework with those retained by the framework Item. The value Density, which is 1.0 by default, is used as the density of the system analysed by Item. Sometimes the density will have already been given at the time of construction of the framework Item. This may be the case for example, if Item is a GProp_PGProps framework built to compute the global properties of a set of points ; or another GProp_GProps object which already retains composite global properties. In these cases the real density was perhaps already taken into account at the time of construction of Item. Note that this is not checked: if the density of parts of the system is taken into account two or more times, results of the computation will be false. Notes : - The point relative to which the inertia of Item is computed (i.e. the reference point of Item) may be different from the reference point in this framework. Huygens' theorem is applied automatically to transfer inertia values to the reference point in this framework. - The function Add is used once per component of the system. After that, you use the interrogation functions available to access values computed for the system. - The system whose global properties are already brought together by this framework is referred to as the current system. However, the current system is not retained by this framework, which maintains only its global properties. Exceptions Standard_DomainError if Density is less than or equal to gp::Resolution().
         """
     @overload
-    def AddPoint(self,P : OCP.gp.gp_Pnt) -> None: 
+    def AddPoint(self,P : OCP.gp.gp_Pnt,Density : float) -> None: 
         """
         Brings together the global properties already retained by this framework with those induced by the point Pnt. Pnt may be the first point of the current system. A point mass is attached to the point Pnt, it is either equal to 1. or to Density.
 
         Adds a new point P with its density in the system of points Exceptions Standard_DomainError if the mass value Density is less than gp::Resolution().
         """
     @overload
-    def AddPoint(self,P : OCP.gp.gp_Pnt,Density : float) -> None: ...
+    def AddPoint(self,P : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     @overload
-    def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array2OfPnt) -> OCP.gp.gp_Pnt: 
+    def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array2OfPnt,Density : OCP.TColStd.TColStd_Array2OfReal,G : OCP.gp.gp_Pnt) -> Tuple[float]: 
         """
         Computes the barycentre of a set of points. The density of the points is defaulted to 1.
 
@@ -249,13 +257,13 @@ class GProp_PGProps(GProp_GProps):
         """
     @staticmethod
     @overload
-    def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array1OfPnt,Density : OCP.TColStd.TColStd_Array1OfReal,G : OCP.gp.gp_Pnt) -> Tuple[float]: ...
-    @staticmethod
-    @overload
-    def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array2OfPnt,Density : OCP.TColStd.TColStd_Array2OfReal,G : OCP.gp.gp_Pnt) -> Tuple[float]: ...
+    def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array2OfPnt) -> OCP.gp.gp_Pnt: ...
     @staticmethod
     @overload
     def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array1OfPnt) -> OCP.gp.gp_Pnt: ...
+    @staticmethod
+    @overload
+    def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array1OfPnt,Density : OCP.TColStd.TColStd_Array1OfReal,G : OCP.gp.gp_Pnt) -> Tuple[float]: ...
     def CentreOfMass(self) -> OCP.gp.gp_Pnt: 
         """
         Returns the center of mass of the current system. If the gravitational field is uniform, it is the center of gravity. The coordinates returned for the center of mass are expressed in the absolute Cartesian coordinate system.
@@ -285,15 +293,15 @@ class GProp_PGProps(GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
-    def __init__(self,Pnts : OCP.TColgp.TColgp_Array2OfPnt,Density : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
+    def __init__(self,Pnts : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,Pnts : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def __init__(self,Pnts : OCP.TColgp.TColgp_Array1OfPnt,Density : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
+    def __init__(self,Pnts : OCP.TColgp.TColgp_Array2OfPnt,Density : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
     @overload
     def __init__(self,Pnts : OCP.TColgp.TColgp_Array2OfPnt) -> None: ...
-    @overload
-    def __init__(self,Pnts : OCP.TColgp.TColgp_Array1OfPnt,Density : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     pass
 class GProp_PrincipalProps():
     """
@@ -304,23 +312,23 @@ class GProp_PrincipalProps():
         returns the first axis of inertia.
         """
     @overload
-    def HasSymmetryAxis(self,aTol : float) -> bool: 
+    def HasSymmetryAxis(self) -> bool: 
         """
         returns true if the geometric system has an axis of symmetry. For comparing moments relative tolerance 1.e-10 is used. Usually it is enough for objects, restricted by faces with analitycal geometry.
 
         returns true if the geometric system has an axis of symmetry. aTol is relative tolerance for cheking equality of moments If aTol == 0, relative tolerance is ~ 1.e-16 (Epsilon(I))
         """
     @overload
-    def HasSymmetryAxis(self) -> bool: ...
+    def HasSymmetryAxis(self,aTol : float) -> bool: ...
     @overload
-    def HasSymmetryPoint(self,aTol : float) -> bool: 
+    def HasSymmetryPoint(self) -> bool: 
         """
         returns true if the geometric system has a point of symmetry. For comparing moments relative tolerance 1.e-10 is used. Usually it is enough for objects, restricted by faces with analitycal geometry.
 
         returns true if the geometric system has a point of symmetry. aTol is relative tolerance for cheking equality of moments If aTol == 0, relative tolerance is ~ 1.e-16 (Epsilon(I))
         """
     @overload
-    def HasSymmetryPoint(self) -> bool: ...
+    def HasSymmetryPoint(self,aTol : float) -> bool: ...
     def Moments(self) -> Tuple[float, float, float]: 
         """
         Ixx, Iyy and Izz return the principal moments of inertia in the current system. Notes : - If the current system has an axis of symmetry, two of the three values Ixx, Iyy and Izz are equal. They indicate which eigen vectors define an infinity of axes of principal inertia. - If the current system has a center of symmetry, Ixx, Iyy and Izz are equal.
@@ -364,7 +372,7 @@ class GProp_SelGProps(GProp_GProps):
         computes the moment of inertia of the material system about the axis A.
         """
     @overload
-    def Perform(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: 
+    def Perform(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: 
         """
         None
 
@@ -374,12 +382,12 @@ class GProp_SelGProps(GProp_GProps):
 
         None
         """
-    @overload
-    def Perform(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: ...
     @overload
     def Perform(self,S : OCP.gp.gp_Cone,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: ...
     @overload
-    def Perform(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: ...
+    def Perform(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: ...
+    @overload
+    def Perform(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: ...
     def PrincipalProperties(self) -> GProp_PrincipalProps: 
         """
         Computes the principal properties of inertia of the current system. There is always a set of axes for which the products of inertia of a geometric system are equal to 0; i.e. the matrix of inertia of the system is diagonal. These axes are the principal axes of inertia. Their origin is coincident with the center of mass of the system. The associated moments are called the principal moments of inertia. This function computes the eigen values and the eigen vectors of the matrix of inertia of the system. Results are stored by using a presentation framework of principal properties of inertia (GProp_PrincipalProps object) which may be queried to access the value sought.
@@ -397,15 +405,15 @@ class GProp_SelGProps(GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
-    def __init__(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self,S : OCP.gp.gp_Cone,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def __init__(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,S : OCP.gp.gp_Cone,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
     pass
 class GProp_UndefinedAxis(Exception, BaseException):
     class type():
@@ -446,29 +454,37 @@ class GProp_ValueType():
 
       GProp_Unknown
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    GProp_CenterMassX: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_CenterMassX
-    GProp_CenterMassY: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_CenterMassY
-    GProp_CenterMassZ: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_CenterMassZ
-    GProp_InertiaXX: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaXX
-    GProp_InertiaXY: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaXY
-    GProp_InertiaXZ: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaXZ
-    GProp_InertiaYY: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaYY
-    GProp_InertiaYZ: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaYZ
-    GProp_InertiaZZ: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaZZ
-    GProp_Mass: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_Mass
-    GProp_Unknown: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_Unknown
-    __entries: dict # value = {'GProp_Mass': (GProp_ValueType.GProp_Mass, None), 'GProp_CenterMassX': (GProp_ValueType.GProp_CenterMassX, None), 'GProp_CenterMassY': (GProp_ValueType.GProp_CenterMassY, None), 'GProp_CenterMassZ': (GProp_ValueType.GProp_CenterMassZ, None), 'GProp_InertiaXX': (GProp_ValueType.GProp_InertiaXX, None), 'GProp_InertiaYY': (GProp_ValueType.GProp_InertiaYY, None), 'GProp_InertiaZZ': (GProp_ValueType.GProp_InertiaZZ, None), 'GProp_InertiaXY': (GProp_ValueType.GProp_InertiaXY, None), 'GProp_InertiaXZ': (GProp_ValueType.GProp_InertiaXZ, None), 'GProp_InertiaYZ': (GProp_ValueType.GProp_InertiaYZ, None), 'GProp_Unknown': (GProp_ValueType.GProp_Unknown, None)}
-    __members__: dict # value = {'GProp_Mass': GProp_ValueType.GProp_Mass, 'GProp_CenterMassX': GProp_ValueType.GProp_CenterMassX, 'GProp_CenterMassY': GProp_ValueType.GProp_CenterMassY, 'GProp_CenterMassZ': GProp_ValueType.GProp_CenterMassZ, 'GProp_InertiaXX': GProp_ValueType.GProp_InertiaXX, 'GProp_InertiaYY': GProp_ValueType.GProp_InertiaYY, 'GProp_InertiaZZ': GProp_ValueType.GProp_InertiaZZ, 'GProp_InertiaXY': GProp_ValueType.GProp_InertiaXY, 'GProp_InertiaXZ': GProp_ValueType.GProp_InertiaXZ, 'GProp_InertiaYZ': GProp_ValueType.GProp_InertiaYZ, 'GProp_Unknown': GProp_ValueType.GProp_Unknown}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    GProp_CenterMassX: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_CenterMassX: 1>
+    GProp_CenterMassY: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_CenterMassY: 2>
+    GProp_CenterMassZ: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_CenterMassZ: 3>
+    GProp_InertiaXX: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaXX: 4>
+    GProp_InertiaXY: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaXY: 7>
+    GProp_InertiaXZ: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaXZ: 8>
+    GProp_InertiaYY: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaYY: 5>
+    GProp_InertiaYZ: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaYZ: 9>
+    GProp_InertiaZZ: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaZZ: 6>
+    GProp_Mass: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_Mass: 0>
+    GProp_Unknown: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_Unknown: 10>
+    __entries: dict # value = {'GProp_Mass': (<GProp_ValueType.GProp_Mass: 0>, None), 'GProp_CenterMassX': (<GProp_ValueType.GProp_CenterMassX: 1>, None), 'GProp_CenterMassY': (<GProp_ValueType.GProp_CenterMassY: 2>, None), 'GProp_CenterMassZ': (<GProp_ValueType.GProp_CenterMassZ: 3>, None), 'GProp_InertiaXX': (<GProp_ValueType.GProp_InertiaXX: 4>, None), 'GProp_InertiaYY': (<GProp_ValueType.GProp_InertiaYY: 5>, None), 'GProp_InertiaZZ': (<GProp_ValueType.GProp_InertiaZZ: 6>, None), 'GProp_InertiaXY': (<GProp_ValueType.GProp_InertiaXY: 7>, None), 'GProp_InertiaXZ': (<GProp_ValueType.GProp_InertiaXZ: 8>, None), 'GProp_InertiaYZ': (<GProp_ValueType.GProp_InertiaYZ: 9>, None), 'GProp_Unknown': (<GProp_ValueType.GProp_Unknown: 10>, None)}
+    __members__: dict # value = {'GProp_Mass': <GProp_ValueType.GProp_Mass: 0>, 'GProp_CenterMassX': <GProp_ValueType.GProp_CenterMassX: 1>, 'GProp_CenterMassY': <GProp_ValueType.GProp_CenterMassY: 2>, 'GProp_CenterMassZ': <GProp_ValueType.GProp_CenterMassZ: 3>, 'GProp_InertiaXX': <GProp_ValueType.GProp_InertiaXX: 4>, 'GProp_InertiaYY': <GProp_ValueType.GProp_InertiaYY: 5>, 'GProp_InertiaZZ': <GProp_ValueType.GProp_InertiaZZ: 6>, 'GProp_InertiaXY': <GProp_ValueType.GProp_InertiaXY: 7>, 'GProp_InertiaXZ': <GProp_ValueType.GProp_InertiaXZ: 8>, 'GProp_InertiaYZ': <GProp_ValueType.GProp_InertiaYZ: 9>, 'GProp_Unknown': <GProp_ValueType.GProp_Unknown: 10>}
     pass
 class GProp_VelGProps(GProp_GProps):
     """
@@ -495,7 +511,7 @@ class GProp_VelGProps(GProp_GProps):
         computes the moment of inertia of the material system about the axis A.
         """
     @overload
-    def Perform(self,S : OCP.gp.gp_Cone,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: 
+    def Perform(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: 
         """
         None
 
@@ -505,12 +521,12 @@ class GProp_VelGProps(GProp_GProps):
 
         None
         """
+    @overload
+    def Perform(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: ...
     @overload
     def Perform(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: ...
     @overload
-    def Perform(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: ...
-    @overload
-    def Perform(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: ...
+    def Perform(self,S : OCP.gp.gp_Cone,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: ...
     def PrincipalProperties(self) -> GProp_PrincipalProps: 
         """
         Computes the principal properties of inertia of the current system. There is always a set of axes for which the products of inertia of a geometric system are equal to 0; i.e. the matrix of inertia of the system is diagonal. These axes are the principal axes of inertia. Their origin is coincident with the center of mass of the system. The associated moments are called the principal moments of inertia. This function computes the eigen values and the eigen vectors of the matrix of inertia of the system. Results are stored by using a presentation framework of principal properties of inertia (GProp_PrincipalProps object) which may be queried to access the value sought.
@@ -528,29 +544,29 @@ class GProp_VelGProps(GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float,VLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float,VLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
+    def __init__(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
     def __init__(self,S : OCP.gp.gp_Cone,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,VLocation : OCP.gp.gp_Pnt) -> None: ...
     pass
-GProp_CenterMassX: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_CenterMassX
-GProp_CenterMassY: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_CenterMassY
-GProp_CenterMassZ: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_CenterMassZ
-GProp_InertiaXX: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaXX
-GProp_InertiaXY: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaXY
-GProp_InertiaXZ: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaXZ
-GProp_InertiaYY: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaYY
-GProp_InertiaYZ: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaYZ
-GProp_InertiaZZ: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_InertiaZZ
-GProp_Line: OCP.GProp.GProp_EquaType # value = GProp_EquaType.GProp_Line
-GProp_Mass: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_Mass
-GProp_None: OCP.GProp.GProp_EquaType # value = GProp_EquaType.GProp_None
-GProp_Plane: OCP.GProp.GProp_EquaType # value = GProp_EquaType.GProp_Plane
-GProp_Point: OCP.GProp.GProp_EquaType # value = GProp_EquaType.GProp_Point
-GProp_Space: OCP.GProp.GProp_EquaType # value = GProp_EquaType.GProp_Space
-GProp_Unknown: OCP.GProp.GProp_ValueType # value = GProp_ValueType.GProp_Unknown
+GProp_CenterMassX: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_CenterMassX: 1>
+GProp_CenterMassY: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_CenterMassY: 2>
+GProp_CenterMassZ: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_CenterMassZ: 3>
+GProp_InertiaXX: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaXX: 4>
+GProp_InertiaXY: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaXY: 7>
+GProp_InertiaXZ: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaXZ: 8>
+GProp_InertiaYY: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaYY: 5>
+GProp_InertiaYZ: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaYZ: 9>
+GProp_InertiaZZ: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_InertiaZZ: 6>
+GProp_Line: OCP.GProp.GProp_EquaType # value = <GProp_EquaType.GProp_Line: 1>
+GProp_Mass: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_Mass: 0>
+GProp_None: OCP.GProp.GProp_EquaType # value = <GProp_EquaType.GProp_None: 4>
+GProp_Plane: OCP.GProp.GProp_EquaType # value = <GProp_EquaType.GProp_Plane: 0>
+GProp_Point: OCP.GProp.GProp_EquaType # value = <GProp_EquaType.GProp_Point: 2>
+GProp_Space: OCP.GProp.GProp_EquaType # value = <GProp_EquaType.GProp_Space: 3>
+GProp_Unknown: OCP.GProp.GProp_ValueType # value = <GProp_ValueType.GProp_Unknown: 10>

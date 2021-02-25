@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
 import OCP.gp
+import OCP.NCollection
 __all__  = [
 "IntRes2d_Domain",
 "IntRes2d_Intersection",
@@ -93,16 +93,16 @@ class IntRes2d_Domain():
         Returns the tolerance of the last (right) bound. The exception DomainError is raised if HasLastPoint returns False.
         """
     @overload
-    def SetEquivalentParameters(self,p_first : float,p_last : float) -> None: 
+    def SetEquivalentParameters(self,zero : float,period : float) -> None: 
         """
         Defines a closed domain.
 
         Defines a closed domain.
         """
     @overload
-    def SetEquivalentParameters(self,zero : float,period : float) -> None: ...
+    def SetEquivalentParameters(self,p_first : float,p_last : float) -> None: ...
     @overload
-    def SetValues(self) -> None: 
+    def SetValues(self,Pnt1 : OCP.gp.gp_Pnt2d,Par1 : float,Tol1 : float,Pnt2 : OCP.gp.gp_Pnt2d,Par2 : float,Tol2 : float) -> None: 
         """
         Sets the values for a bounded domain.
 
@@ -111,9 +111,9 @@ class IntRes2d_Domain():
         Sets the values for a semi-infinite domain.
         """
     @overload
-    def SetValues(self,Pnt1 : OCP.gp.gp_Pnt2d,Par1 : float,Tol1 : float,Pnt2 : OCP.gp.gp_Pnt2d,Par2 : float,Tol2 : float) -> None: ...
-    @overload
     def SetValues(self,Pnt : OCP.gp.gp_Pnt2d,Par : float,Tol : float,First : bool) -> None: ...
+    @overload
+    def SetValues(self) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
@@ -212,9 +212,9 @@ class IntRes2d_IntersectionPoint():
         Returns the value of the coordinates of the intersection point in the 2D space.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,Uc1 : float,Uc2 : float,Trans1 : IntRes2d_Transition,Trans2 : IntRes2d_Transition,ReversedFlag : bool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,Uc1 : float,Uc2 : float,Trans1 : IntRes2d_Transition,Trans2 : IntRes2d_Transition,ReversedFlag : bool) -> None: ...
     pass
 class IntRes2d_IntersectionSegment():
     """
@@ -251,13 +251,13 @@ class IntRes2d_IntersectionSegment():
         Returns the last point of the segment as an IntersectionPoint (with a transition). The exception DomainError is raised if HasLastExtremity returns False.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,P : IntRes2d_IntersectionPoint,First : bool,Oppos : bool,ReverseFlag : bool) -> None: ...
-    @overload
     def __init__(self,Oppos : bool) -> None: ...
     @overload
     def __init__(self,P1 : IntRes2d_IntersectionPoint,P2 : IntRes2d_IntersectionPoint,Oppos : bool,ReverseFlag : bool) -> None: ...
+    @overload
+    def __init__(self,P : IntRes2d_IntersectionPoint,First : bool,Oppos : bool,ReverseFlag : bool) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntRes2d_Position():
     """
@@ -271,21 +271,29 @@ class IntRes2d_Position():
 
       IntRes2d_End
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IntRes2d_End: OCP.IntRes2d.IntRes2d_Position # value = IntRes2d_Position.IntRes2d_End
-    IntRes2d_Head: OCP.IntRes2d.IntRes2d_Position # value = IntRes2d_Position.IntRes2d_Head
-    IntRes2d_Middle: OCP.IntRes2d.IntRes2d_Position # value = IntRes2d_Position.IntRes2d_Middle
-    __entries: dict # value = {'IntRes2d_Head': (IntRes2d_Position.IntRes2d_Head, None), 'IntRes2d_Middle': (IntRes2d_Position.IntRes2d_Middle, None), 'IntRes2d_End': (IntRes2d_Position.IntRes2d_End, None)}
-    __members__: dict # value = {'IntRes2d_Head': IntRes2d_Position.IntRes2d_Head, 'IntRes2d_Middle': IntRes2d_Position.IntRes2d_Middle, 'IntRes2d_End': IntRes2d_Position.IntRes2d_End}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IntRes2d_End: OCP.IntRes2d.IntRes2d_Position # value = <IntRes2d_Position.IntRes2d_End: 2>
+    IntRes2d_Head: OCP.IntRes2d.IntRes2d_Position # value = <IntRes2d_Position.IntRes2d_Head: 0>
+    IntRes2d_Middle: OCP.IntRes2d.IntRes2d_Position # value = <IntRes2d_Position.IntRes2d_Middle: 1>
+    __entries: dict # value = {'IntRes2d_Head': (<IntRes2d_Position.IntRes2d_Head: 0>, None), 'IntRes2d_Middle': (<IntRes2d_Position.IntRes2d_Middle: 1>, None), 'IntRes2d_End': (<IntRes2d_Position.IntRes2d_End: 2>, None)}
+    __members__: dict # value = {'IntRes2d_Head': <IntRes2d_Position.IntRes2d_Head: 0>, 'IntRes2d_Middle': <IntRes2d_Position.IntRes2d_Middle: 1>, 'IntRes2d_End': <IntRes2d_Position.IntRes2d_End: 2>}
     pass
 class IntRes2d_SequenceOfIntersectionPoint(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -296,14 +304,14 @@ class IntRes2d_SequenceOfIntersectionPoint(OCP.NCollection.NCollection_BaseSeque
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IntRes2d_SequenceOfIntersectionPoint) -> None: 
+    def Append(self,theItem : IntRes2d_IntersectionPoint) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IntRes2d_IntersectionPoint) -> None: ...
+    def Append(self,theSeq : IntRes2d_SequenceOfIntersectionPoint) -> None: ...
     def Assign(self,theOther : IntRes2d_SequenceOfIntersectionPoint) -> IntRes2d_SequenceOfIntersectionPoint: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -409,12 +417,12 @@ class IntRes2d_SequenceOfIntersectionPoint(OCP.NCollection.NCollection_BaseSeque
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : IntRes2d_SequenceOfIntersectionPoint) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : IntRes2d_SequenceOfIntersectionPoint) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -430,14 +438,14 @@ class IntRes2d_SequenceOfIntersectionSegment(OCP.NCollection.NCollection_BaseSeq
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : IntRes2d_IntersectionSegment) -> None: 
+    def Append(self,theSeq : IntRes2d_SequenceOfIntersectionSegment) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : IntRes2d_SequenceOfIntersectionSegment) -> None: ...
+    def Append(self,theItem : IntRes2d_IntersectionSegment) -> None: ...
     def Assign(self,theOther : IntRes2d_SequenceOfIntersectionSegment) -> IntRes2d_SequenceOfIntersectionSegment: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -543,12 +551,12 @@ class IntRes2d_SequenceOfIntersectionSegment(OCP.NCollection.NCollection_BaseSeq
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : IntRes2d_SequenceOfIntersectionSegment) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -567,21 +575,29 @@ class IntRes2d_Situation():
 
       IntRes2d_Unknown
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IntRes2d_Inside: OCP.IntRes2d.IntRes2d_Situation # value = IntRes2d_Situation.IntRes2d_Inside
-    IntRes2d_Outside: OCP.IntRes2d.IntRes2d_Situation # value = IntRes2d_Situation.IntRes2d_Outside
-    IntRes2d_Unknown: OCP.IntRes2d.IntRes2d_Situation # value = IntRes2d_Situation.IntRes2d_Unknown
-    __entries: dict # value = {'IntRes2d_Inside': (IntRes2d_Situation.IntRes2d_Inside, None), 'IntRes2d_Outside': (IntRes2d_Situation.IntRes2d_Outside, None), 'IntRes2d_Unknown': (IntRes2d_Situation.IntRes2d_Unknown, None)}
-    __members__: dict # value = {'IntRes2d_Inside': IntRes2d_Situation.IntRes2d_Inside, 'IntRes2d_Outside': IntRes2d_Situation.IntRes2d_Outside, 'IntRes2d_Unknown': IntRes2d_Situation.IntRes2d_Unknown}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IntRes2d_Inside: OCP.IntRes2d.IntRes2d_Situation # value = <IntRes2d_Situation.IntRes2d_Inside: 0>
+    IntRes2d_Outside: OCP.IntRes2d.IntRes2d_Situation # value = <IntRes2d_Situation.IntRes2d_Outside: 1>
+    IntRes2d_Unknown: OCP.IntRes2d.IntRes2d_Situation # value = <IntRes2d_Situation.IntRes2d_Unknown: 2>
+    __entries: dict # value = {'IntRes2d_Inside': (<IntRes2d_Situation.IntRes2d_Inside: 0>, None), 'IntRes2d_Outside': (<IntRes2d_Situation.IntRes2d_Outside: 1>, None), 'IntRes2d_Unknown': (<IntRes2d_Situation.IntRes2d_Unknown: 2>, None)}
+    __members__: dict # value = {'IntRes2d_Inside': <IntRes2d_Situation.IntRes2d_Inside: 0>, 'IntRes2d_Outside': <IntRes2d_Situation.IntRes2d_Outside: 1>, 'IntRes2d_Unknown': <IntRes2d_Situation.IntRes2d_Unknown: 2>}
     pass
 class IntRes2d_Transition():
     """
@@ -612,7 +628,7 @@ class IntRes2d_Transition():
         Sets the value of the position.
         """
     @overload
-    def SetValue(self,Pos : IntRes2d_Position) -> None: 
+    def SetValue(self,Tangent : bool,Pos : IntRes2d_Position,Type : IntRes2d_TypeTrans) -> None: 
         """
         Sets the values of an IN or OUT transition.
 
@@ -627,7 +643,7 @@ class IntRes2d_Transition():
         Sets the values of an UNDECIDED transition.
         """
     @overload
-    def SetValue(self,Tangent : bool,Pos : IntRes2d_Position,Type : IntRes2d_TypeTrans) -> None: ...
+    def SetValue(self,Pos : IntRes2d_Position) -> None: ...
     @overload
     def SetValue(self,Tangent : bool,Pos : IntRes2d_Position,Situ : IntRes2d_Situation,Oppos : bool) -> None: ...
     def Situation(self) -> IntRes2d_Situation: 
@@ -643,13 +659,13 @@ class IntRes2d_Transition():
         Returns the type of transition at the intersection. It may be IN or OUT or TOUCH, or UNDECIDED if the two first derivatives are not enough to give the tangent to one of the two curves.
         """
     @overload
-    def __init__(self,Tangent : bool,Pos : IntRes2d_Position,Type : IntRes2d_TypeTrans) -> None: ...
-    @overload
     def __init__(self,Tangent : bool,Pos : IntRes2d_Position,Situ : IntRes2d_Situation,Oppos : bool) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Pos : IntRes2d_Position) -> None: ...
+    @overload
+    def __init__(self,Tangent : bool,Pos : IntRes2d_Position,Type : IntRes2d_TypeTrans) -> None: ...
     pass
 class IntRes2d_TypeTrans():
     """
@@ -665,30 +681,38 @@ class IntRes2d_TypeTrans():
 
       IntRes2d_Undecided
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IntRes2d_In: OCP.IntRes2d.IntRes2d_TypeTrans # value = IntRes2d_TypeTrans.IntRes2d_In
-    IntRes2d_Out: OCP.IntRes2d.IntRes2d_TypeTrans # value = IntRes2d_TypeTrans.IntRes2d_Out
-    IntRes2d_Touch: OCP.IntRes2d.IntRes2d_TypeTrans # value = IntRes2d_TypeTrans.IntRes2d_Touch
-    IntRes2d_Undecided: OCP.IntRes2d.IntRes2d_TypeTrans # value = IntRes2d_TypeTrans.IntRes2d_Undecided
-    __entries: dict # value = {'IntRes2d_In': (IntRes2d_TypeTrans.IntRes2d_In, None), 'IntRes2d_Out': (IntRes2d_TypeTrans.IntRes2d_Out, None), 'IntRes2d_Touch': (IntRes2d_TypeTrans.IntRes2d_Touch, None), 'IntRes2d_Undecided': (IntRes2d_TypeTrans.IntRes2d_Undecided, None)}
-    __members__: dict # value = {'IntRes2d_In': IntRes2d_TypeTrans.IntRes2d_In, 'IntRes2d_Out': IntRes2d_TypeTrans.IntRes2d_Out, 'IntRes2d_Touch': IntRes2d_TypeTrans.IntRes2d_Touch, 'IntRes2d_Undecided': IntRes2d_TypeTrans.IntRes2d_Undecided}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IntRes2d_In: OCP.IntRes2d.IntRes2d_TypeTrans # value = <IntRes2d_TypeTrans.IntRes2d_In: 0>
+    IntRes2d_Out: OCP.IntRes2d.IntRes2d_TypeTrans # value = <IntRes2d_TypeTrans.IntRes2d_Out: 1>
+    IntRes2d_Touch: OCP.IntRes2d.IntRes2d_TypeTrans # value = <IntRes2d_TypeTrans.IntRes2d_Touch: 2>
+    IntRes2d_Undecided: OCP.IntRes2d.IntRes2d_TypeTrans # value = <IntRes2d_TypeTrans.IntRes2d_Undecided: 3>
+    __entries: dict # value = {'IntRes2d_In': (<IntRes2d_TypeTrans.IntRes2d_In: 0>, None), 'IntRes2d_Out': (<IntRes2d_TypeTrans.IntRes2d_Out: 1>, None), 'IntRes2d_Touch': (<IntRes2d_TypeTrans.IntRes2d_Touch: 2>, None), 'IntRes2d_Undecided': (<IntRes2d_TypeTrans.IntRes2d_Undecided: 3>, None)}
+    __members__: dict # value = {'IntRes2d_In': <IntRes2d_TypeTrans.IntRes2d_In: 0>, 'IntRes2d_Out': <IntRes2d_TypeTrans.IntRes2d_Out: 1>, 'IntRes2d_Touch': <IntRes2d_TypeTrans.IntRes2d_Touch: 2>, 'IntRes2d_Undecided': <IntRes2d_TypeTrans.IntRes2d_Undecided: 3>}
     pass
-IntRes2d_End: OCP.IntRes2d.IntRes2d_Position # value = IntRes2d_Position.IntRes2d_End
-IntRes2d_Head: OCP.IntRes2d.IntRes2d_Position # value = IntRes2d_Position.IntRes2d_Head
-IntRes2d_In: OCP.IntRes2d.IntRes2d_TypeTrans # value = IntRes2d_TypeTrans.IntRes2d_In
-IntRes2d_Inside: OCP.IntRes2d.IntRes2d_Situation # value = IntRes2d_Situation.IntRes2d_Inside
-IntRes2d_Middle: OCP.IntRes2d.IntRes2d_Position # value = IntRes2d_Position.IntRes2d_Middle
-IntRes2d_Out: OCP.IntRes2d.IntRes2d_TypeTrans # value = IntRes2d_TypeTrans.IntRes2d_Out
-IntRes2d_Outside: OCP.IntRes2d.IntRes2d_Situation # value = IntRes2d_Situation.IntRes2d_Outside
-IntRes2d_Touch: OCP.IntRes2d.IntRes2d_TypeTrans # value = IntRes2d_TypeTrans.IntRes2d_Touch
-IntRes2d_Undecided: OCP.IntRes2d.IntRes2d_TypeTrans # value = IntRes2d_TypeTrans.IntRes2d_Undecided
-IntRes2d_Unknown: OCP.IntRes2d.IntRes2d_Situation # value = IntRes2d_Situation.IntRes2d_Unknown
+IntRes2d_End: OCP.IntRes2d.IntRes2d_Position # value = <IntRes2d_Position.IntRes2d_End: 2>
+IntRes2d_Head: OCP.IntRes2d.IntRes2d_Position # value = <IntRes2d_Position.IntRes2d_Head: 0>
+IntRes2d_In: OCP.IntRes2d.IntRes2d_TypeTrans # value = <IntRes2d_TypeTrans.IntRes2d_In: 0>
+IntRes2d_Inside: OCP.IntRes2d.IntRes2d_Situation # value = <IntRes2d_Situation.IntRes2d_Inside: 0>
+IntRes2d_Middle: OCP.IntRes2d.IntRes2d_Position # value = <IntRes2d_Position.IntRes2d_Middle: 1>
+IntRes2d_Out: OCP.IntRes2d.IntRes2d_TypeTrans # value = <IntRes2d_TypeTrans.IntRes2d_Out: 1>
+IntRes2d_Outside: OCP.IntRes2d.IntRes2d_Situation # value = <IntRes2d_Situation.IntRes2d_Outside: 1>
+IntRes2d_Touch: OCP.IntRes2d.IntRes2d_TypeTrans # value = <IntRes2d_TypeTrans.IntRes2d_Touch: 2>
+IntRes2d_Undecided: OCP.IntRes2d.IntRes2d_TypeTrans # value = <IntRes2d_TypeTrans.IntRes2d_Undecided: 3>
+IntRes2d_Unknown: OCP.IntRes2d.IntRes2d_Situation # value = <IntRes2d_Situation.IntRes2d_Unknown: 2>

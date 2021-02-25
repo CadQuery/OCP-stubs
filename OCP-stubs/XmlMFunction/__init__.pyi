@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
+import OCP.XmlObjMgt
 import OCP.TCollection
 import OCP.XmlMDF
-import OCP.XmlObjMgt
 import OCP.Message
 import OCP.Standard
 __all__  = [
@@ -69,6 +69,14 @@ class XmlMFunction_FunctionDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
+    def Namespace(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the namespace string
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -152,6 +160,14 @@ class XmlMFunction_GraphNodeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Stand
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
+    def Namespace(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the namespace string
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -235,6 +251,14 @@ class XmlMFunction_ScopeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standard_
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
+    def Namespace(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the namespace string
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None

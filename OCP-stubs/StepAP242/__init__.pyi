@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
-import OCP.StepRepr
 import OCP.StepBasic
+import OCP.StepRepr
 import OCP.StepShape
-import OCP.Standard
 import OCP.StepDimTol
+import OCP.Standard
 import OCP.StepAP214
 import OCP.StepData
 __all__  = [

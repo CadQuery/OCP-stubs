@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopoDS
 import OCP.Quantity
 import OCP.TDocStd
+import OCP.TopoDS
 import OCP.Vrml
 __all__  = [
 "VrmlAPI",
@@ -39,21 +39,29 @@ class VrmlAPI_RepresentationOfShape():
 
       VrmlAPI_BothRepresentation
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    VrmlAPI_BothRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = VrmlAPI_RepresentationOfShape.VrmlAPI_BothRepresentation
-    VrmlAPI_ShadedRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = VrmlAPI_RepresentationOfShape.VrmlAPI_ShadedRepresentation
-    VrmlAPI_WireFrameRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = VrmlAPI_RepresentationOfShape.VrmlAPI_WireFrameRepresentation
-    __entries: dict # value = {'VrmlAPI_ShadedRepresentation': (VrmlAPI_RepresentationOfShape.VrmlAPI_ShadedRepresentation, None), 'VrmlAPI_WireFrameRepresentation': (VrmlAPI_RepresentationOfShape.VrmlAPI_WireFrameRepresentation, None), 'VrmlAPI_BothRepresentation': (VrmlAPI_RepresentationOfShape.VrmlAPI_BothRepresentation, None)}
-    __members__: dict # value = {'VrmlAPI_ShadedRepresentation': VrmlAPI_RepresentationOfShape.VrmlAPI_ShadedRepresentation, 'VrmlAPI_WireFrameRepresentation': VrmlAPI_RepresentationOfShape.VrmlAPI_WireFrameRepresentation, 'VrmlAPI_BothRepresentation': VrmlAPI_RepresentationOfShape.VrmlAPI_BothRepresentation}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    VrmlAPI_BothRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = <VrmlAPI_RepresentationOfShape.VrmlAPI_BothRepresentation: 2>
+    VrmlAPI_ShadedRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = <VrmlAPI_RepresentationOfShape.VrmlAPI_ShadedRepresentation: 0>
+    VrmlAPI_WireFrameRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = <VrmlAPI_RepresentationOfShape.VrmlAPI_WireFrameRepresentation: 1>
+    __entries: dict # value = {'VrmlAPI_ShadedRepresentation': (<VrmlAPI_RepresentationOfShape.VrmlAPI_ShadedRepresentation: 0>, None), 'VrmlAPI_WireFrameRepresentation': (<VrmlAPI_RepresentationOfShape.VrmlAPI_WireFrameRepresentation: 1>, None), 'VrmlAPI_BothRepresentation': (<VrmlAPI_RepresentationOfShape.VrmlAPI_BothRepresentation: 2>, None)}
+    __members__: dict # value = {'VrmlAPI_ShadedRepresentation': <VrmlAPI_RepresentationOfShape.VrmlAPI_ShadedRepresentation: 0>, 'VrmlAPI_WireFrameRepresentation': <VrmlAPI_RepresentationOfShape.VrmlAPI_WireFrameRepresentation: 1>, 'VrmlAPI_BothRepresentation': <VrmlAPI_RepresentationOfShape.VrmlAPI_BothRepresentation: 2>}
     pass
 class VrmlAPI_Writer():
     """
@@ -145,6 +153,6 @@ class VrmlAPI_Writer():
         """
     def __init__(self) -> None: ...
     pass
-VrmlAPI_BothRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = VrmlAPI_RepresentationOfShape.VrmlAPI_BothRepresentation
-VrmlAPI_ShadedRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = VrmlAPI_RepresentationOfShape.VrmlAPI_ShadedRepresentation
-VrmlAPI_WireFrameRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = VrmlAPI_RepresentationOfShape.VrmlAPI_WireFrameRepresentation
+VrmlAPI_BothRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = <VrmlAPI_RepresentationOfShape.VrmlAPI_BothRepresentation: 2>
+VrmlAPI_ShadedRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = <VrmlAPI_RepresentationOfShape.VrmlAPI_ShadedRepresentation: 0>
+VrmlAPI_WireFrameRepresentation: OCP.VrmlAPI.VrmlAPI_RepresentationOfShape # value = <VrmlAPI_RepresentationOfShape.VrmlAPI_WireFrameRepresentation: 1>

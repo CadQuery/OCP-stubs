@@ -5,8 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
-import OCP.TCollection
 import OCP.Standard
+import OCP.TCollection
+import io
 __all__  = [
 "TColStd_Array1OfAsciiString",
 "TColStd_Array1OfBoolean",
@@ -154,12 +155,12 @@ class TColStd_Array1OfAsciiString():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theBegin : OCP.TCollection.TCollection_AsciiString,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_Array1OfAsciiString) -> None: ...
-    @overload
-    def __init__(self,theBegin : OCP.TCollection.TCollection_AsciiString,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_Array1OfBoolean():
     """
@@ -238,14 +239,14 @@ class TColStd_Array1OfBoolean():
         Constant value access
         """
     @overload
+    def __init__(self,theOther : TColStd_Array1OfBoolean) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : bool,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : TColStd_Array1OfBoolean) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_Array1OfByte():
     """
@@ -324,14 +325,14 @@ class TColStd_Array1OfByte():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : int,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_Array1OfByte) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_Array1OfCharacter():
     """
@@ -410,14 +411,14 @@ class TColStd_Array1OfCharacter():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColStd_Array1OfCharacter) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : str,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColStd_Array1OfCharacter) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_Array1OfExtendedString():
     """
@@ -498,12 +499,12 @@ class TColStd_Array1OfExtendedString():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : OCP.TCollection.TCollection_ExtendedString,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_Array1OfExtendedString) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theBegin : OCP.TCollection.TCollection_ExtendedString,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_Array1OfInteger():
     """
@@ -582,14 +583,14 @@ class TColStd_Array1OfInteger():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : TColStd_Array1OfInteger) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : int,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : TColStd_Array1OfInteger) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_Array1OfListOfInteger():
     """
@@ -668,14 +669,14 @@ class TColStd_Array1OfListOfInteger():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : TColStd_ListOfInteger,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : TColStd_Array1OfListOfInteger) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theBegin : TColStd_ListOfInteger,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TColStd_Array1OfListOfInteger) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_Array1OfReal():
     """
@@ -754,14 +755,14 @@ class TColStd_Array1OfReal():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : float,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_Array1OfReal) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : float,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_Array1OfTransient():
     """
@@ -847,7 +848,7 @@ class TColStd_Array1OfTransient():
     def __init__(self,theOther : TColStd_Array1OfTransient) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_Array2OfBoolean():
     """
@@ -920,13 +921,13 @@ class TColStd_Array2OfBoolean():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : bool,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_Array2OfBoolean) -> None: ...
     @overload
-    def __init__(self,theBegin : bool,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class TColStd_Array2OfCharacter():
     """
@@ -1001,11 +1002,11 @@ class TColStd_Array2OfCharacter():
     @overload
     def __init__(self,theOther : TColStd_Array2OfCharacter) -> None: ...
     @overload
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : str,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class TColStd_Array2OfInteger():
     """
@@ -1157,13 +1158,13 @@ class TColStd_Array2OfReal():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TColStd_Array2OfReal) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : float,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TColStd_Array2OfReal) -> None: ...
     pass
 class TColStd_Array2OfTransient():
     """
@@ -1238,11 +1239,11 @@ class TColStd_Array2OfTransient():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TColStd_Array2OfTransient) -> None: ...
-    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.Standard.Standard_Transient,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TColStd_Array2OfTransient) -> None: ...
     pass
 class TColStd_DataMapOfAsciiStringInteger(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1273,14 +1274,14 @@ class TColStd_DataMapOfAsciiStringInteger(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TColStd_DataMapOfAsciiStringInteger) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1322,7 +1323,7 @@ class TColStd_DataMapOfAsciiStringInteger(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1336,7 +1337,7 @@ class TColStd_DataMapOfAsciiStringInteger(OCP.NCollection.NCollection_BaseMap):
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_DataMapOfAsciiStringInteger) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_DataMapOfIntegerInteger(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1367,14 +1368,14 @@ class TColStd_DataMapOfIntegerInteger(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TColStd_DataMapOfIntegerInteger) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1416,7 +1417,7 @@ class TColStd_DataMapOfIntegerInteger(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1425,12 +1426,12 @@ class TColStd_DataMapOfIntegerInteger(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self,theOther : TColStd_DataMapOfIntegerInteger) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TColStd_DataMapOfIntegerInteger) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_DataMapOfIntegerListOfInteger(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1461,14 +1462,14 @@ class TColStd_DataMapOfIntegerListOfInteger(OCP.NCollection.NCollection_BaseMap)
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TColStd_DataMapOfIntegerListOfInteger) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1510,7 +1511,7 @@ class TColStd_DataMapOfIntegerListOfInteger(OCP.NCollection.NCollection_BaseMap)
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1519,12 +1520,12 @@ class TColStd_DataMapOfIntegerListOfInteger(OCP.NCollection.NCollection_BaseMap)
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : TColStd_DataMapOfIntegerListOfInteger) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_DataMapOfIntegerReal(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1572,14 +1573,14 @@ class TColStd_DataMapOfIntegerReal(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int,theValue : float) -> bool: 
+    def Find(self,theKey : int) -> float: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int) -> float: ...
+    def Find(self,theKey : int,theValue : float) -> bool: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -1604,7 +1605,7 @@ class TColStd_DataMapOfIntegerReal(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1613,12 +1614,12 @@ class TColStd_DataMapOfIntegerReal(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theOther : TColStd_DataMapOfIntegerReal) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : TColStd_DataMapOfIntegerReal) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_DataMapOfStringInteger(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1698,7 +1699,7 @@ class TColStd_DataMapOfStringInteger(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1709,10 +1710,10 @@ class TColStd_DataMapOfStringInteger(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theOther : TColStd_DataMapOfStringInteger) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_HArray1OfAsciiString(TColStd_Array1OfAsciiString, OCP.Standard.Standard_Transient):
     def Array1(self) -> TColStd_Array1OfAsciiString: 
@@ -1838,14 +1839,14 @@ class TColStd_HArray1OfAsciiString(TColStd_Array1OfAsciiString, OCP.Standard.Sta
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : TColStd_Array1OfAsciiString) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TColStd_Array1OfAsciiString) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1981,14 +1982,14 @@ class TColStd_HArray1OfBoolean(TColStd_Array1OfBoolean, OCP.Standard.Standard_Tr
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColStd_Array1OfBoolean) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : bool) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColStd_Array1OfBoolean) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2124,14 +2125,14 @@ class TColStd_HArray1OfByte(TColStd_Array1OfByte, OCP.Standard.Standard_Transien
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : int) -> None: ...
-    @overload
     def __init__(self,theOther : TColStd_Array1OfByte) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2267,14 +2268,14 @@ class TColStd_HArray1OfCharacter(TColStd_Array1OfCharacter, OCP.Standard.Standar
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : TColStd_Array1OfCharacter) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : str) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2410,14 +2411,14 @@ class TColStd_HArray1OfExtendedString(TColStd_Array1OfExtendedString, OCP.Standa
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : TColStd_Array1OfExtendedString) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.TCollection.TCollection_ExtendedString) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2555,12 +2556,12 @@ class TColStd_HArray1OfInteger(TColStd_Array1OfInteger, OCP.Standard.Standard_Tr
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColStd_Array1OfInteger) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2696,14 +2697,14 @@ class TColStd_HArray1OfListOfInteger(TColStd_Array1OfListOfInteger, OCP.Standard
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColStd_Array1OfListOfInteger) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : TColStd_ListOfInteger) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : TColStd_Array1OfListOfInteger) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : TColStd_ListOfInteger) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2841,12 +2842,12 @@ class TColStd_HArray1OfReal(TColStd_Array1OfReal, OCP.Standard.Standard_Transien
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : float) -> None: ...
     @overload
+    def __init__(self,theOther : TColStd_Array1OfReal) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : TColStd_Array1OfReal) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2982,14 +2983,14 @@ class TColStd_HArray1OfTransient(TColStd_Array1OfTransient, OCP.Standard.Standar
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.Standard.Standard_Transient) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_Array1OfTransient) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.Standard.Standard_Transient) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3119,11 +3120,11 @@ class TColStd_HArray2OfBoolean(TColStd_Array2OfBoolean, OCP.Standard.Standard_Tr
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColStd_Array2OfBoolean) -> None: ...
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : bool) -> None: ...
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    def __init__(self,theOther : TColStd_Array2OfBoolean) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3387,9 +3388,9 @@ class TColStd_HArray2OfInteger(TColStd_Array2OfInteger, OCP.Standard.Standard_Tr
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : int) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_Array2OfInteger) -> None: ...
     @staticmethod
@@ -3521,11 +3522,11 @@ class TColStd_HArray2OfReal(TColStd_Array2OfReal, OCP.Standard.Standard_Transien
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColStd_Array2OfReal) -> None: ...
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : float) -> None: ...
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    def __init__(self,theOther : TColStd_Array2OfReal) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3730,9 +3731,9 @@ class TColStd_HPackedMapOfInteger(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theOther : TColStd_PackedMapOfInteger) -> None: ...
-    @overload
     def __init__(self,NbBuckets : int=1) -> None: ...
+    @overload
+    def __init__(self,theOther : TColStd_PackedMapOfInteger) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3753,14 +3754,14 @@ class TColStd_SequenceOfAsciiString(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TCollection.TCollection_AsciiString) -> None: 
+    def Append(self,theSeq : TColStd_SequenceOfAsciiString) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : TColStd_SequenceOfAsciiString) -> None: ...
+    def Append(self,theItem : OCP.TCollection.TCollection_AsciiString) -> None: ...
     def Assign(self,theOther : TColStd_SequenceOfAsciiString) -> TColStd_SequenceOfAsciiString: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -3866,12 +3867,12 @@ class TColStd_SequenceOfAsciiString(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TColStd_SequenceOfAsciiString) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : TColStd_SequenceOfAsciiString) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -3924,14 +3925,14 @@ class TColStd_SequenceOfExtendedString(OCP.NCollection.NCollection_BaseSequence)
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.TCollection.TCollection_ExtendedString) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfExtendedString) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfExtendedString) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.TCollection.TCollection_ExtendedString) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
@@ -4000,12 +4001,12 @@ class TColStd_SequenceOfExtendedString(OCP.NCollection.NCollection_BaseSequence)
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColStd_SequenceOfExtendedString) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4058,14 +4059,14 @@ class TColStd_SequenceOfHAsciiString(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfHAsciiString) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfHAsciiString) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfHAsciiString) -> None: 
         """
@@ -4134,12 +4135,12 @@ class TColStd_SequenceOfHAsciiString(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TColStd_SequenceOfHAsciiString) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColStd_SequenceOfHAsciiString) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4155,14 +4156,14 @@ class TColStd_SequenceOfHExtendedString(OCP.NCollection.NCollection_BaseSequence
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : TColStd_SequenceOfHExtendedString) -> None: 
+    def Append(self,theItem : OCP.TCollection.TCollection_HExtendedString) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : OCP.TCollection.TCollection_HExtendedString) -> None: ...
+    def Append(self,theSeq : TColStd_SequenceOfHExtendedString) -> None: ...
     def Assign(self,theOther : TColStd_SequenceOfHExtendedString) -> TColStd_SequenceOfHExtendedString: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4226,14 +4227,14 @@ class TColStd_SequenceOfHExtendedString(OCP.NCollection.NCollection_BaseSequence
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.TCollection.TCollection_HExtendedString) -> None: 
+    def Prepend(self,theSeq : TColStd_SequenceOfHExtendedString) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TColStd_SequenceOfHExtendedString) -> None: ...
+    def Prepend(self,theItem : OCP.TCollection.TCollection_HExtendedString) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -4268,12 +4269,12 @@ class TColStd_SequenceOfHExtendedString(OCP.NCollection.NCollection_BaseSequence
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : TColStd_SequenceOfHExtendedString) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4360,14 +4361,14 @@ class TColStd_SequenceOfInteger(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TColStd_SequenceOfInteger) -> None: 
+    def Prepend(self,theItem : int) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : int) -> None: ...
+    def Prepend(self,theSeq : TColStd_SequenceOfInteger) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -4402,12 +4403,12 @@ class TColStd_SequenceOfInteger(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : TColStd_SequenceOfInteger) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : TColStd_SequenceOfInteger) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4423,14 +4424,14 @@ class TColStd_SequenceOfReal(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : TColStd_SequenceOfReal) -> None: 
+    def Append(self,theItem : float) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : float) -> None: ...
+    def Append(self,theSeq : TColStd_SequenceOfReal) -> None: ...
     def Assign(self,theOther : TColStd_SequenceOfReal) -> TColStd_SequenceOfReal: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4469,14 +4470,14 @@ class TColStd_SequenceOfReal(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : float) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : float) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfReal) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfReal) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : float) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4536,12 +4537,12 @@ class TColStd_SequenceOfReal(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TColStd_SequenceOfReal) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColStd_SequenceOfReal) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4594,23 +4595,23 @@ class TColStd_SequenceOfTransient(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfTransient) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OCP.Standard.Standard_Transient) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.Standard.Standard_Transient) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfTransient) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.Standard.Standard_Transient) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfTransient) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfTransient) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.Standard.Standard_Transient) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4628,23 +4629,23 @@ class TColStd_SequenceOfTransient(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TColStd_SequenceOfTransient) -> None: 
+    def Prepend(self,theItem : OCP.Standard.Standard_Transient) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.Standard.Standard_Transient) -> None: ...
+    def Prepend(self,theSeq : TColStd_SequenceOfTransient) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4675,7 +4676,7 @@ class TColStd_SequenceOfTransient(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self,theOther : TColStd_SequenceOfTransient) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4736,14 +4737,14 @@ class TColStd_IndexedDataMapOfStringString(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: 
+    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
+    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: ...
     def FindIndex(self,theKey1 : OCP.TCollection.TCollection_AsciiString) -> int: 
         """
         FindIndex
@@ -4784,7 +4785,7 @@ class TColStd_IndexedDataMapOfStringString(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -4802,7 +4803,7 @@ class TColStd_IndexedDataMapOfStringString(OCP.NCollection.NCollection_BaseMap):
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_IndexedMapOfInteger(OCP.NCollection.NCollection_BaseMap):
     """
@@ -4877,7 +4878,7 @@ class TColStd_IndexedMapOfInteger(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -4890,11 +4891,11 @@ class TColStd_IndexedMapOfInteger(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_IndexedMapOfInteger) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class TColStd_IndexedMapOfReal(OCP.NCollection.NCollection_BaseMap):
     """
@@ -4913,14 +4914,14 @@ class TColStd_IndexedMapOfReal(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : float) -> bool: 
         """
         Contains
@@ -4969,7 +4970,7 @@ class TColStd_IndexedMapOfReal(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -4982,11 +4983,11 @@ class TColStd_IndexedMapOfReal(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self,theOther : TColStd_IndexedMapOfReal) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : TColStd_IndexedMapOfReal) -> None: ...
     pass
 class TColStd_IndexedMapOfTransient(OCP.NCollection.NCollection_BaseMap):
     """
@@ -5061,7 +5062,7 @@ class TColStd_IndexedMapOfTransient(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -5074,9 +5075,9 @@ class TColStd_IndexedMapOfTransient(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theOther : TColStd_IndexedMapOfTransient) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TColStd_IndexedMapOfTransient) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
@@ -5089,7 +5090,7 @@ class TColStd_ListOfAsciiString(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : TColStd_ListOfAsciiString) -> None: 
+    def Append(self,theItem : OCP.TCollection.TCollection_AsciiString,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -5098,9 +5099,9 @@ class TColStd_ListOfAsciiString(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.TCollection.TCollection_AsciiString,theIter : Any) -> None: ...
-    @overload
     def Append(self,theItem : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
+    @overload
+    def Append(self,theOther : TColStd_ListOfAsciiString) -> None: ...
     def Assign(self,theOther : TColStd_ListOfAsciiString) -> TColStd_ListOfAsciiString: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -5148,14 +5149,14 @@ class TColStd_ListOfAsciiString(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : TColStd_ListOfAsciiString) -> None: 
+    def Prepend(self,theItem : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
+    def Prepend(self,theOther : TColStd_ListOfAsciiString) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -5173,12 +5174,12 @@ class TColStd_ListOfAsciiString(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theOther : TColStd_ListOfAsciiString) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self,theOther : TColStd_ListOfAsciiString) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_ListOfInteger(OCP.NCollection.NCollection_BaseList):
     """
@@ -5220,23 +5221,23 @@ class TColStd_ListOfInteger(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : TColStd_ListOfInteger,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : int,theIter : Any) -> int: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : int,theIter : Any) -> int: ...
+    def InsertAfter(self,theOther : TColStd_ListOfInteger,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theItem : int,theIter : Any) -> int: 
+    def InsertBefore(self,theOther : TColStd_ListOfInteger,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : TColStd_ListOfInteger,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : int,theIter : Any) -> int: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -5248,14 +5249,14 @@ class TColStd_ListOfInteger(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : int) -> int: 
+    def Prepend(self,theOther : TColStd_ListOfInteger) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : TColStd_ListOfInteger) -> None: ...
+    def Prepend(self,theItem : int) -> int: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -5273,12 +5274,12 @@ class TColStd_ListOfInteger(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : TColStd_ListOfInteger) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_ListOfReal(OCP.NCollection.NCollection_BaseList):
     """
@@ -5289,7 +5290,7 @@ class TColStd_ListOfReal(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : float,theIter : Any) -> None: 
+    def Append(self,theOther : TColStd_ListOfReal) -> None: 
         """
         Append one item at the end
 
@@ -5298,9 +5299,9 @@ class TColStd_ListOfReal(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : TColStd_ListOfReal) -> None: ...
-    @overload
     def Append(self,theItem : float) -> float: ...
+    @overload
+    def Append(self,theItem : float,theIter : Any) -> None: ...
     def Assign(self,theOther : TColStd_ListOfReal) -> TColStd_ListOfReal: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -5373,12 +5374,12 @@ class TColStd_ListOfReal(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_ListOfReal) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_ListOfTransient(OCP.NCollection.NCollection_BaseList):
     """
@@ -5398,9 +5399,9 @@ class TColStd_ListOfTransient(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : TColStd_ListOfTransient) -> None: ...
-    @overload
     def Append(self,theItem : OCP.Standard.Standard_Transient) -> OCP.Standard.Standard_Transient: ...
+    @overload
+    def Append(self,theOther : TColStd_ListOfTransient) -> None: ...
     def Assign(self,theOther : TColStd_ListOfTransient) -> TColStd_ListOfTransient: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -5448,14 +5449,14 @@ class TColStd_ListOfTransient(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : TColStd_ListOfTransient) -> None: 
+    def Prepend(self,theItem : OCP.Standard.Standard_Transient) -> OCP.Standard.Standard_Transient: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : OCP.Standard.Standard_Transient) -> OCP.Standard.Standard_Transient: ...
+    def Prepend(self,theOther : TColStd_ListOfTransient) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -5473,12 +5474,12 @@ class TColStd_ListOfTransient(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : TColStd_ListOfTransient) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColStd_MapIntegerHasher():
     """
@@ -5516,14 +5517,14 @@ class TColStd_MapOfAsciiString(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def Contains(self,K : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
@@ -5585,7 +5586,7 @@ class TColStd_MapOfAsciiString(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -5608,9 +5609,9 @@ class TColStd_MapOfAsciiString(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColStd_MapOfAsciiString) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TColStd_MapOfInteger(OCP.NCollection.NCollection_BaseMap):
     """
@@ -5633,23 +5634,23 @@ class TColStd_MapOfInteger(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def Contains(self,K : int) -> bool: 
+    def Contains(self,theOther : TColStd_MapOfInteger) -> bool: 
         """
         Contains
 
         Returns true if this map contains ALL keys of another map.
         """
     @overload
-    def Contains(self,theOther : TColStd_MapOfInteger) -> bool: ...
+    def Contains(self,K : int) -> bool: ...
     def Differ(self,theOther : TColStd_MapOfInteger) -> bool: 
         """
         Apply to this Map the symmetric difference (aka exclusive disjunction, boolean XOR) operation with another (given) Map. The result contains the values that are contained only in this or the operand map, but not in both. This algorithm is similar to method Difference(). Returns True if contents of this map is changed.
@@ -5702,7 +5703,7 @@ class TColStd_MapOfInteger(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -5819,7 +5820,7 @@ class TColStd_MapOfReal(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -5867,14 +5868,14 @@ class TColStd_MapOfTransient(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def Contains(self,K : OCP.Standard.Standard_Transient) -> bool: 
         """
@@ -5936,7 +5937,7 @@ class TColStd_MapOfTransient(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -5957,11 +5958,11 @@ class TColStd_MapOfTransient(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_MapOfTransient) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TColStd_MapRealHasher():
     """
@@ -6069,7 +6070,7 @@ class TColStd_PackedMapOfInteger():
         """
         None
         """
-    def Statistics(self,outStream : Any) -> None: 
+    def Statistics(self,outStream : io.BytesIO) -> None: 
         """
         None
         """
@@ -6090,9 +6091,9 @@ class TColStd_PackedMapOfInteger():
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union().
         """
     @overload
-    def __init__(self,NbBuckets : int=1) -> None: ...
-    @overload
     def __init__(self,theOther : TColStd_PackedMapOfInteger) -> None: ...
+    @overload
+    def __init__(self,NbBuckets : int=1) -> None: ...
     def __ipow__(self,MM : TColStd_PackedMapOfInteger) -> TColStd_PackedMapOfInteger: 
         """
         Overloaded operator version of Differ().
@@ -6148,23 +6149,23 @@ class TColStd_SequenceOfAddress(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : capsule) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfAddress) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfAddress) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : capsule) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfAddress) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : capsule) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : capsule) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfAddress) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -6182,14 +6183,14 @@ class TColStd_SequenceOfAddress(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : capsule) -> None: 
+    def Prepend(self,theSeq : TColStd_SequenceOfAddress) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TColStd_SequenceOfAddress) -> None: ...
+    def Prepend(self,theItem : capsule) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -6224,12 +6225,12 @@ class TColStd_SequenceOfAddress(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : TColStd_SequenceOfAddress) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : TColStd_SequenceOfAddress) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6405,10 +6406,10 @@ class TColStd_HSequenceOfAsciiString(TColStd_SequenceOfAsciiString, OCP.NCollect
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TColStd_SequenceOfAsciiString) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColStd_SequenceOfAsciiString) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6505,14 +6506,14 @@ class TColStd_SequenceOfBoolean(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : bool) -> None: 
+    def Prepend(self,theSeq : TColStd_SequenceOfBoolean) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TColStd_SequenceOfBoolean) -> None: ...
+    def Prepend(self,theItem : bool) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -6547,12 +6548,12 @@ class TColStd_SequenceOfBoolean(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_SequenceOfBoolean) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6626,14 +6627,14 @@ class TColStd_HSequenceOfExtendedString(TColStd_SequenceOfExtendedString, OCP.NC
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.TCollection.TCollection_ExtendedString) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfExtendedString) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfExtendedString) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.TCollection.TCollection_ExtendedString) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
@@ -6731,7 +6732,7 @@ class TColStd_HSequenceOfExtendedString(TColStd_SequenceOfExtendedString, OCP.NC
     def __init__(self,theOther : TColStd_SequenceOfExtendedString) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6815,14 +6816,14 @@ class TColStd_HSequenceOfHAsciiString(TColStd_SequenceOfHAsciiString, OCP.NColle
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfHAsciiString) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfHAsciiString) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfHAsciiString) -> None: 
         """
@@ -6917,10 +6918,10 @@ class TColStd_HSequenceOfHAsciiString(TColStd_SequenceOfHAsciiString, OCP.NColle
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TColStd_SequenceOfHAsciiString) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColStd_SequenceOfHAsciiString) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6943,14 +6944,14 @@ class TColStd_HSequenceOfHExtendedString(TColStd_SequenceOfHExtendedString, OCP.
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : TColStd_SequenceOfHExtendedString) -> None: 
+    def Append(self,theItem : OCP.TCollection.TCollection_HExtendedString) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : OCP.TCollection.TCollection_HExtendedString) -> None: ...
+    def Append(self,theSequence : TColStd_SequenceOfHExtendedString) -> None: ...
     def Assign(self,theOther : TColStd_SequenceOfHExtendedString) -> TColStd_SequenceOfHExtendedString: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -7056,14 +7057,14 @@ class TColStd_HSequenceOfHExtendedString(TColStd_SequenceOfHExtendedString, OCP.
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.TCollection.TCollection_HExtendedString) -> None: 
+    def Prepend(self,theSeq : TColStd_SequenceOfHExtendedString) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TColStd_SequenceOfHExtendedString) -> None: ...
+    def Prepend(self,theItem : OCP.TCollection.TCollection_HExtendedString) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -7109,7 +7110,7 @@ class TColStd_HSequenceOfHExtendedString(TColStd_SequenceOfHExtendedString, OCP.
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColStd_SequenceOfHExtendedString) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7132,14 +7133,14 @@ class TColStd_HSequenceOfInteger(TColStd_SequenceOfInteger, OCP.NCollection.NCol
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : int) -> None: 
+    def Append(self,theSequence : TColStd_SequenceOfInteger) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : TColStd_SequenceOfInteger) -> None: ...
+    def Append(self,theItem : int) -> None: ...
     def Assign(self,theOther : TColStd_SequenceOfInteger) -> TColStd_SequenceOfInteger: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -7245,14 +7246,14 @@ class TColStd_HSequenceOfInteger(TColStd_SequenceOfInteger, OCP.NCollection.NCol
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TColStd_SequenceOfInteger) -> None: 
+    def Prepend(self,theItem : int) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : int) -> None: ...
+    def Prepend(self,theSeq : TColStd_SequenceOfInteger) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -7295,10 +7296,10 @@ class TColStd_HSequenceOfInteger(TColStd_SequenceOfInteger, OCP.NCollection.NCol
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColStd_SequenceOfInteger) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7321,14 +7322,14 @@ class TColStd_HSequenceOfReal(TColStd_SequenceOfReal, OCP.NCollection.NCollectio
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : TColStd_SequenceOfReal) -> None: 
+    def Append(self,theItem : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : float) -> None: ...
+    def Append(self,theSequence : TColStd_SequenceOfReal) -> None: ...
     def Assign(self,theOther : TColStd_SequenceOfReal) -> TColStd_SequenceOfReal: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -7391,14 +7392,14 @@ class TColStd_HSequenceOfReal(TColStd_SequenceOfReal, OCP.NCollection.NCollectio
     @overload
     def InsertAfter(self,theIndex : int,theItem : float) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : float) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfReal) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfReal) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : float) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -7484,10 +7485,10 @@ class TColStd_HSequenceOfReal(TColStd_SequenceOfReal, OCP.NCollection.NCollectio
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TColStd_SequenceOfReal) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColStd_SequenceOfReal) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7510,14 +7511,14 @@ class TColStd_HSequenceOfTransient(TColStd_SequenceOfTransient, OCP.NCollection.
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : TColStd_SequenceOfTransient) -> None: 
+    def Append(self,theItem : OCP.Standard.Standard_Transient) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : OCP.Standard.Standard_Transient) -> None: ...
+    def Append(self,theSequence : TColStd_SequenceOfTransient) -> None: ...
     def Assign(self,theOther : TColStd_SequenceOfTransient) -> TColStd_SequenceOfTransient: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -7571,23 +7572,23 @@ class TColStd_HSequenceOfTransient(TColStd_SequenceOfTransient, OCP.NCollection.
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfTransient) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OCP.Standard.Standard_Transient) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.Standard.Standard_Transient) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : TColStd_SequenceOfTransient) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.Standard.Standard_Transient) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfTransient) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColStd_SequenceOfTransient) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.Standard.Standard_Transient) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -7623,23 +7624,23 @@ class TColStd_HSequenceOfTransient(TColStd_SequenceOfTransient, OCP.NCollection.
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TColStd_SequenceOfTransient) -> None: 
+    def Prepend(self,theItem : OCP.Standard.Standard_Transient) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.Standard.Standard_Transient) -> None: ...
+    def Prepend(self,theSeq : TColStd_SequenceOfTransient) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7673,10 +7674,10 @@ class TColStd_HSequenceOfTransient(TColStd_SequenceOfTransient, OCP.NCollection.
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColStd_SequenceOfTransient) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """

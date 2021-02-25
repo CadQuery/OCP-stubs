@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
 import OCP.GeomAdaptor
+import OCP.gp
 import OCP.TopoDS
 import OCP.IntCurveSurface
-import OCP.gp
+import OCP.TopAbs
 __all__  = [
 "BRepIntCurveSurface_Inter"
 ]
@@ -21,7 +21,7 @@ class BRepIntCurveSurface_Inter():
         returns the current face.
         """
     @overload
-    def Init(self,theShape : OCP.TopoDS.TopoDS_Shape,theCurve : OCP.GeomAdaptor.GeomAdaptor_Curve,theTol : float) -> None: 
+    def Init(self,theShape : OCP.TopoDS.TopoDS_Shape,theLine : OCP.gp.gp_Lin,theTol : float) -> None: 
         """
         Load the Shape, the curve and initialize the tolerance used for the classification.
 
@@ -30,9 +30,9 @@ class BRepIntCurveSurface_Inter():
         Method to find intersections of specified curve with loaded shape.
         """
     @overload
-    def Init(self,theShape : OCP.TopoDS.TopoDS_Shape,theLine : OCP.gp.gp_Lin,theTol : float) -> None: ...
-    @overload
     def Init(self,theCurve : OCP.GeomAdaptor.GeomAdaptor_Curve) -> None: ...
+    @overload
+    def Init(self,theShape : OCP.TopoDS.TopoDS_Shape,theCurve : OCP.GeomAdaptor.GeomAdaptor_Curve,theTol : float) -> None: ...
     def Load(self,theShape : OCP.TopoDS.TopoDS_Shape,theTol : float) -> None: 
         """
         Load the Shape, and initialize the tolerance used for the classification.

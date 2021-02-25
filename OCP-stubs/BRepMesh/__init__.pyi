@@ -4,30 +4,33 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.TCollection
-import OCP.TColStd
-import OCP.GeomAbs
-import OCP.Poly
-import OCP.Geom2d
-import OCP.Bnd
-import OCP.Standard
-import OCP.TopoDS
-import OCP.BRepAdaptor
-import OCP.Geom
 import OCP.NCollection
-import OCP.TopLoc
+import OCP.Geom
+import OCP.TopoDS
+import OCP.Bnd
+import OCP.BRepAdaptor
+import OCP.Standard
+import OCP.TopAbs
+import OCP.Poly
+import OCP.TColStd
+import OCP.TCollection
+import io
+import BRepMesh_GeomTool
 import OCP.gp
+import OCP.GeomAbs
+import OCP.Geom2d
+import OCP.TopLoc
 __all__  = [
 "BRepMesh_Circle",
 "BRepMesh_CircleInspector",
 "BRepMesh_CircleTool",
 "BRepMesh_Classifier",
-"BRepMesh_Context",
 "BRepMesh_CurveTessellator",
 "BRepMesh_DataStructureOfDelaun",
 "BRepMesh_Deflection",
 "BRepMesh_DegreeOfFreedom",
+"BRepMesh_DelabellaBaseMeshAlgo",
+"BRepMesh_DelabellaMeshAlgoFactory",
 "BRepMesh_DiscretFactory",
 "BRepMesh_DiscretRoot",
 "BRepMesh_OrientedEdge",
@@ -87,9 +90,9 @@ class BRepMesh_Circle():
         Sets radius of a circle.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLocation : OCP.gp.gp_XY,theRadius : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepMesh_CircleInspector(OCP.NCollection.NCollection_CellFilter_InspectorXY):
     """
@@ -134,6 +137,7 @@ class BRepMesh_CircleInspector(OCP.NCollection.NCollection_CellFilter_InspectorX
         Auxiliary method to shift point by each coordinate on given value; useful for preparing a points range for Inspect with tolerance
         """
     def __init__(self,theTolerance : float,theReservedSize : int,theAllocator : OCP.NCollection.NCollection_IncAllocator) -> None: ...
+    Dimension = 2
     pass
 class BRepMesh_CircleTool():
     """
@@ -187,9 +191,9 @@ class BRepMesh_CircleTool():
         Sets limits of inspection area.
         """
     @overload
-    def __init__(self,theReservedSize : int,theAllocator : OCP.NCollection.NCollection_IncAllocator) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_IncAllocator) -> None: ...
+    @overload
+    def __init__(self,theReservedSize : int,theAllocator : OCP.NCollection.NCollection_IncAllocator) -> None: ...
     pass
 class BRepMesh_Classifier(OCP.Standard.Standard_Transient):
     """
@@ -257,26 +261,6 @@ class BRepMesh_Classifier(OCP.Standard.Standard_Transient):
         None
         """
     pass
-class BRepMesh_Context():
-    """
-    Class implemeting default context of BRepMesh algorithm. Initializes context by default algorithms.
-    """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def __init__(self) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
 class BRepMesh_CurveTessellator():
     """
     Auxiliary class performing tessellation of passed edge according to specified parameters.
@@ -294,9 +278,9 @@ class BRepMesh_CurveTessellator():
         Returns parameters of solution with the given index.
         """
     @overload
-    def __init__(self,theEdge : IMeshData_Edge,theParameters : IMeshTools_Parameters) -> None: ...
-    @overload
     def __init__(self,theEdge : IMeshData_Edge,theOrientation : OCP.TopAbs.TopAbs_Orientation,theFace : IMeshData_Face,theParameters : IMeshTools_Parameters) -> None: ...
+    @overload
+    def __init__(self,theEdge : IMeshData_Edge,theParameters : IMeshTools_Parameters) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -443,7 +427,7 @@ class BRepMesh_DataStructureOfDelaun(OCP.Standard.Standard_Transient):
         """
         Removes node from the mesh in case if it has no connected links and its type is Free.
         """
-    def Statistics(self,theStream : Any) -> None: 
+    def Statistics(self,theStream : io.BytesIO) -> None: 
         """
         Dumps information about this structure.
         """
@@ -486,7 +470,7 @@ class BRepMesh_Deflection(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def ComputeDeflection_s(theDWire : IMeshData_Wire,theParameters : IMeshTools_Parameters) -> None: 
+    def ComputeDeflection_s(theDFace : IMeshData_Face,theParameters : IMeshTools_Parameters) -> None: 
         """
         Computes and updates deflection of the given discrete edge.
 
@@ -496,7 +480,7 @@ class BRepMesh_Deflection(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def ComputeDeflection_s(theDFace : IMeshData_Face,theParameters : IMeshTools_Parameters) -> None: ...
+    def ComputeDeflection_s(theDWire : IMeshData_Wire,theParameters : IMeshTools_Parameters) -> None: ...
     @staticmethod
     @overload
     def ComputeDeflection_s(theDEdge : IMeshData_Edge,theMaxShapeSize : float,theParameters : IMeshTools_Parameters) -> None: ...
@@ -519,6 +503,11 @@ class BRepMesh_Deflection(OCP.Standard.Standard_Transient):
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    @staticmethod
+    def IsConsistent_s(theCurrent : float,theRequired : float,theAllowDecrease : bool,theRatio : float=0.1) -> bool: 
+        """
+        Checks if the deflection of current polygonal representation is consistent with the required deflection.
         """
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
@@ -574,25 +563,77 @@ class BRepMesh_DegreeOfFreedom():
 
       BRepMesh_Deleted
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepMesh_Deleted: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_Deleted
-    BRepMesh_Fixed: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_Fixed
-    BRepMesh_Free: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_Free
-    BRepMesh_Frontier: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_Frontier
-    BRepMesh_InVolume: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_InVolume
-    BRepMesh_OnCurve: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_OnCurve
-    BRepMesh_OnSurface: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_OnSurface
-    __entries: dict # value = {'BRepMesh_Free': (BRepMesh_DegreeOfFreedom.BRepMesh_Free, None), 'BRepMesh_InVolume': (BRepMesh_DegreeOfFreedom.BRepMesh_InVolume, None), 'BRepMesh_OnSurface': (BRepMesh_DegreeOfFreedom.BRepMesh_OnSurface, None), 'BRepMesh_OnCurve': (BRepMesh_DegreeOfFreedom.BRepMesh_OnCurve, None), 'BRepMesh_Fixed': (BRepMesh_DegreeOfFreedom.BRepMesh_Fixed, None), 'BRepMesh_Frontier': (BRepMesh_DegreeOfFreedom.BRepMesh_Frontier, None), 'BRepMesh_Deleted': (BRepMesh_DegreeOfFreedom.BRepMesh_Deleted, None)}
-    __members__: dict # value = {'BRepMesh_Free': BRepMesh_DegreeOfFreedom.BRepMesh_Free, 'BRepMesh_InVolume': BRepMesh_DegreeOfFreedom.BRepMesh_InVolume, 'BRepMesh_OnSurface': BRepMesh_DegreeOfFreedom.BRepMesh_OnSurface, 'BRepMesh_OnCurve': BRepMesh_DegreeOfFreedom.BRepMesh_OnCurve, 'BRepMesh_Fixed': BRepMesh_DegreeOfFreedom.BRepMesh_Fixed, 'BRepMesh_Frontier': BRepMesh_DegreeOfFreedom.BRepMesh_Frontier, 'BRepMesh_Deleted': BRepMesh_DegreeOfFreedom.BRepMesh_Deleted}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepMesh_Deleted: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_Deleted: 6>
+    BRepMesh_Fixed: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_Fixed: 4>
+    BRepMesh_Free: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_Free: 0>
+    BRepMesh_Frontier: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_Frontier: 5>
+    BRepMesh_InVolume: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_InVolume: 1>
+    BRepMesh_OnCurve: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_OnCurve: 3>
+    BRepMesh_OnSurface: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_OnSurface: 2>
+    __entries: dict # value = {'BRepMesh_Free': (<BRepMesh_DegreeOfFreedom.BRepMesh_Free: 0>, None), 'BRepMesh_InVolume': (<BRepMesh_DegreeOfFreedom.BRepMesh_InVolume: 1>, None), 'BRepMesh_OnSurface': (<BRepMesh_DegreeOfFreedom.BRepMesh_OnSurface: 2>, None), 'BRepMesh_OnCurve': (<BRepMesh_DegreeOfFreedom.BRepMesh_OnCurve: 3>, None), 'BRepMesh_Fixed': (<BRepMesh_DegreeOfFreedom.BRepMesh_Fixed: 4>, None), 'BRepMesh_Frontier': (<BRepMesh_DegreeOfFreedom.BRepMesh_Frontier: 5>, None), 'BRepMesh_Deleted': (<BRepMesh_DegreeOfFreedom.BRepMesh_Deleted: 6>, None)}
+    __members__: dict # value = {'BRepMesh_Free': <BRepMesh_DegreeOfFreedom.BRepMesh_Free: 0>, 'BRepMesh_InVolume': <BRepMesh_DegreeOfFreedom.BRepMesh_InVolume: 1>, 'BRepMesh_OnSurface': <BRepMesh_DegreeOfFreedom.BRepMesh_OnSurface: 2>, 'BRepMesh_OnCurve': <BRepMesh_DegreeOfFreedom.BRepMesh_OnCurve: 3>, 'BRepMesh_Fixed': <BRepMesh_DegreeOfFreedom.BRepMesh_Fixed: 4>, 'BRepMesh_Frontier': <BRepMesh_DegreeOfFreedom.BRepMesh_Frontier: 5>, 'BRepMesh_Deleted': <BRepMesh_DegreeOfFreedom.BRepMesh_Deleted: 6>}
+    pass
+class BRepMesh_DelabellaBaseMeshAlgo():
+    """
+    Class provides base functionality to build face triangulation using Delabella project. Performs generation of mesh using raw data from model.
+    """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class BRepMesh_DelabellaMeshAlgoFactory():
+    """
+    Implementation of IMeshTools_MeshAlgoFactory providing Delabella-based algorithms of different complexity depending on type of target surface.
+    """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetAlgo(self,theSurfaceType : OCP.GeomAbs.GeomAbs_SurfaceType,theParameters : IMeshTools_Parameters) -> IMeshTools_MeshAlgo: 
+        """
+        Creates instance of meshing algorithm for the given type of surface.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class BRepMesh_DiscretFactory():
     """
@@ -682,7 +723,7 @@ class BRepMesh_DiscretRoot(OCP.Standard.Standard_Transient):
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Compute triangulation for set shape.
         """
@@ -908,22 +949,30 @@ class BRepMesh_FactoryError():
 
       BRepMesh_FE_CANNOTCREATEALGO
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepMesh_FE_CANNOTCREATEALGO: OCP.BRepMesh.BRepMesh_FactoryError # value = BRepMesh_FactoryError.BRepMesh_FE_CANNOTCREATEALGO
-    BRepMesh_FE_FUNCTIONNOTFOUND: OCP.BRepMesh.BRepMesh_FactoryError # value = BRepMesh_FactoryError.BRepMesh_FE_FUNCTIONNOTFOUND
-    BRepMesh_FE_LIBRARYNOTFOUND: OCP.BRepMesh.BRepMesh_FactoryError # value = BRepMesh_FactoryError.BRepMesh_FE_LIBRARYNOTFOUND
-    BRepMesh_FE_NOERROR: OCP.BRepMesh.BRepMesh_FactoryError # value = BRepMesh_FactoryError.BRepMesh_FE_NOERROR
-    __entries: dict # value = {'BRepMesh_FE_NOERROR': (BRepMesh_FactoryError.BRepMesh_FE_NOERROR, None), 'BRepMesh_FE_LIBRARYNOTFOUND': (BRepMesh_FactoryError.BRepMesh_FE_LIBRARYNOTFOUND, None), 'BRepMesh_FE_FUNCTIONNOTFOUND': (BRepMesh_FactoryError.BRepMesh_FE_FUNCTIONNOTFOUND, None), 'BRepMesh_FE_CANNOTCREATEALGO': (BRepMesh_FactoryError.BRepMesh_FE_CANNOTCREATEALGO, None)}
-    __members__: dict # value = {'BRepMesh_FE_NOERROR': BRepMesh_FactoryError.BRepMesh_FE_NOERROR, 'BRepMesh_FE_LIBRARYNOTFOUND': BRepMesh_FactoryError.BRepMesh_FE_LIBRARYNOTFOUND, 'BRepMesh_FE_FUNCTIONNOTFOUND': BRepMesh_FactoryError.BRepMesh_FE_FUNCTIONNOTFOUND, 'BRepMesh_FE_CANNOTCREATEALGO': BRepMesh_FactoryError.BRepMesh_FE_CANNOTCREATEALGO}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepMesh_FE_CANNOTCREATEALGO: OCP.BRepMesh.BRepMesh_FactoryError # value = <BRepMesh_FactoryError.BRepMesh_FE_CANNOTCREATEALGO: 3>
+    BRepMesh_FE_FUNCTIONNOTFOUND: OCP.BRepMesh.BRepMesh_FactoryError # value = <BRepMesh_FactoryError.BRepMesh_FE_FUNCTIONNOTFOUND: 2>
+    BRepMesh_FE_LIBRARYNOTFOUND: OCP.BRepMesh.BRepMesh_FactoryError # value = <BRepMesh_FactoryError.BRepMesh_FE_LIBRARYNOTFOUND: 1>
+    BRepMesh_FE_NOERROR: OCP.BRepMesh.BRepMesh_FactoryError # value = <BRepMesh_FactoryError.BRepMesh_FE_NOERROR: 0>
+    __entries: dict # value = {'BRepMesh_FE_NOERROR': (<BRepMesh_FactoryError.BRepMesh_FE_NOERROR: 0>, None), 'BRepMesh_FE_LIBRARYNOTFOUND': (<BRepMesh_FactoryError.BRepMesh_FE_LIBRARYNOTFOUND: 1>, None), 'BRepMesh_FE_FUNCTIONNOTFOUND': (<BRepMesh_FactoryError.BRepMesh_FE_FUNCTIONNOTFOUND: 2>, None), 'BRepMesh_FE_CANNOTCREATEALGO': (<BRepMesh_FactoryError.BRepMesh_FE_CANNOTCREATEALGO: 3>, None)}
+    __members__: dict # value = {'BRepMesh_FE_NOERROR': <BRepMesh_FactoryError.BRepMesh_FE_NOERROR: 0>, 'BRepMesh_FE_LIBRARYNOTFOUND': <BRepMesh_FactoryError.BRepMesh_FE_LIBRARYNOTFOUND: 1>, 'BRepMesh_FE_FUNCTIONNOTFOUND': <BRepMesh_FactoryError.BRepMesh_FE_FUNCTIONNOTFOUND: 2>, 'BRepMesh_FE_CANNOTCREATEALGO': <BRepMesh_FactoryError.BRepMesh_FE_CANNOTCREATEALGO: 3>}
     pass
 class BRepMesh_FastDiscret():
     """
@@ -935,12 +984,57 @@ class BRepMesh_GeomTool():
     """
     Tool class accumulating common geometrical functions as well as functionality using shape geometry to produce data necessary for tessellation. General aim is to calculate discretization points for the given curve or iso curve of surface according to the specified parameters.
     """
+    class IntFlag_e():
+        """
+        Enumerates states of segments intersection check.
+
+        Members:
+
+          NoIntersection
+
+          Cross
+
+          EndPointTouch
+
+          PointOnSegment
+
+          Glued
+
+          Same
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        Cross: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.Cross: 1>
+        EndPointTouch: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.EndPointTouch: 2>
+        Glued: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.Glued: 4>
+        NoIntersection: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.NoIntersection: 0>
+        PointOnSegment: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.PointOnSegment: 3>
+        Same: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.Same: 5>
+        __entries: dict # value = {'NoIntersection': (<IntFlag_e.NoIntersection: 0>, None), 'Cross': (<IntFlag_e.Cross: 1>, None), 'EndPointTouch': (<IntFlag_e.EndPointTouch: 2>, None), 'PointOnSegment': (<IntFlag_e.PointOnSegment: 3>, None), 'Glued': (<IntFlag_e.Glued: 4>, None), 'Same': (<IntFlag_e.Same: 5>, None)}
+        __members__: dict # value = {'NoIntersection': <IntFlag_e.NoIntersection: 0>, 'Cross': <IntFlag_e.Cross: 1>, 'EndPointTouch': <IntFlag_e.EndPointTouch: 2>, 'PointOnSegment': <IntFlag_e.PointOnSegment: 3>, 'Glued': <IntFlag_e.Glued: 4>, 'Same': <IntFlag_e.Same: 5>}
+        pass
     def AddPoint(self,thePoint : OCP.gp.gp_Pnt,theParam : float,theIsReplace : bool=True) -> int: 
         """
         Adds point to already calculated points (or replaces existing).
         """
     @staticmethod
-    def IntSegSeg_s(theStartPnt1 : OCP.gp.gp_XY,theEndPnt1 : OCP.gp.gp_XY,theStartPnt2 : OCP.gp.gp_XY,theEndPnt2 : OCP.gp.gp_XY,isConsiderEndPointTouch : bool,isConsiderPointOnSegment : bool,theIntPnt : OCP.gp.gp_Pnt2d) -> Any: 
+    def IntSegSeg_s(theStartPnt1 : OCP.gp.gp_XY,theEndPnt1 : OCP.gp.gp_XY,theStartPnt2 : OCP.gp.gp_XY,theEndPnt2 : OCP.gp.gp_XY,isConsiderEndPointTouch : bool,isConsiderPointOnSegment : bool,theIntPnt : OCP.gp.gp_Pnt2d) -> BRepMesh_GeomTool.IntFlag_e: 
         """
         Checks intersection between the two segments. Checks that intersection point lies within ranges of both segments.
         """
@@ -959,18 +1053,24 @@ class BRepMesh_GeomTool():
         Compute deflection of the given segment.
         """
     @overload
-    def Value(self,theIndex : int,theSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface,theParam : float,thePoint : OCP.gp.gp_Pnt,theUV : OCP.gp.gp_Pnt2d) -> bool: 
+    def Value(self,theIndex : int,theIsoParam : float,theParam : float,thePoint : OCP.gp.gp_Pnt,theUV : OCP.gp.gp_Pnt2d) -> bool: 
         """
         Gets parameters of discretization point with the given index.
 
         Gets parameters of discretization point with the given index.
         """
     @overload
-    def Value(self,theIndex : int,theIsoParam : float,theParam : float,thePoint : OCP.gp.gp_Pnt,theUV : OCP.gp.gp_Pnt2d) -> bool: ...
-    @overload
-    def __init__(self,theSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface,theIsoType : OCP.GeomAbs.GeomAbs_IsoType,theParamIso : float,theFirstParam : float,theLastParam : float,theLinDeflection : float,theAngDeflection : float,theMinPointsNb : int=2,theMinSize : float=1e-07) -> None: ...
+    def Value(self,theIndex : int,theSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface,theParam : float,thePoint : OCP.gp.gp_Pnt,theUV : OCP.gp.gp_Pnt2d) -> bool: ...
     @overload
     def __init__(self,theCurve : OCP.BRepAdaptor.BRepAdaptor_Curve,theFirstParam : float,theLastParam : float,theLinDeflection : float,theAngDeflection : float,theMinPointsNb : int=2,theMinSize : float=1e-07) -> None: ...
+    @overload
+    def __init__(self,theSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface,theIsoType : OCP.GeomAbs.GeomAbs_IsoType,theParamIso : float,theFirstParam : float,theLastParam : float,theLinDeflection : float,theAngDeflection : float,theMinPointsNb : int=2,theMinSize : float=1e-07) -> None: ...
+    Cross: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.Cross: 1>
+    EndPointTouch: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.EndPointTouch: 2>
+    Glued: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.Glued: 4>
+    NoIntersection: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.NoIntersection: 0>
+    PointOnSegment: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.PointOnSegment: 3>
+    Same: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.Same: 5>
     pass
 class BRepMesh_IncrementalMesh(BRepMesh_DiscretRoot, OCP.Standard.Standard_Transient):
     """
@@ -1040,14 +1140,14 @@ class BRepMesh_IncrementalMesh(BRepMesh_DiscretRoot, OCP.Standard.Standard_Trans
         Returns meshing parameters
         """
     @overload
-    def Perform(self,theContext : IMeshTools_Context) -> None: 
+    def Perform(self,theContext : IMeshTools_Context,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs meshing ot the shape.
 
         Performs meshing using custom context;
         """
     @overload
-    def Perform(self) -> None: ...
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @staticmethod
     def SetParallelDefault_s(isInParallel : bool) -> None: 
         """
@@ -1066,11 +1166,11 @@ class BRepMesh_IncrementalMesh(BRepMesh_DiscretRoot, OCP.Standard.Standard_Trans
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape,theParameters : IMeshTools_Parameters) -> None: ...
-    @overload
-    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape,theLinDeflection : float,isRelative : bool=False,theAngDeflection : float=0.5,isInParallel : bool=False) -> None: ...
+    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape,theParameters : IMeshTools_Parameters,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape,theLinDeflection : float,isRelative : bool=False,theAngDeflection : float=0.5,isInParallel : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1084,7 +1184,7 @@ class BRepMesh_IncrementalMesh(BRepMesh_DiscretRoot, OCP.Standard.Standard_Trans
     pass
 class BRepMesh_MeshAlgoFactory():
     """
-    Default implementation of IMeshTools_MeshAlgoFactory providing algorithms of different compexity depending on type of target surface.
+    Default implementation of IMeshTools_MeshAlgoFactory providing algorithms of different complexity depending on type of target surface.
     """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1139,14 +1239,14 @@ class BRepMesh_MeshTool(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def EraseFreeLinks(self) -> None: 
+    def EraseFreeLinks(self,theLinks : Any) -> None: 
         """
         Erases all links that have no elements connected to them.
 
         Erases links from the specified map that have no elements connected to them.
         """
     @overload
-    def EraseFreeLinks(self,theLinks : Any) -> None: ...
+    def EraseFreeLinks(self) -> None: ...
     def EraseItemsConnectedTo(self,theNodeIndex : int) -> None: 
         """
         Erases all elements connected to the specified artificial node. In addition, erases the artificial node itself.
@@ -1326,9 +1426,9 @@ class BRepMesh_Edge(BRepMesh_OrientedEdge):
         Sets movability flag of the Link.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theFirstNode : int,theLastNode : int,theMovability : BRepMesh_DegreeOfFreedom) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepMesh_PairOfIndex():
     """
@@ -1443,7 +1543,7 @@ class BRepMesh_SelectorOfDataStructureOfDelaun(OCP.Standard.Standard_Transient):
         Selects all neighboring elements by links of the given element.
         """
     @overload
-    def NeighboursOf(self,theNode : BRepMesh_Vertex) -> None: 
+    def NeighboursOf(self,theElement : BRepMesh_Triangle) -> None: 
         """
         Selects all neighboring elements of the given node.
 
@@ -1454,11 +1554,11 @@ class BRepMesh_SelectorOfDataStructureOfDelaun(OCP.Standard.Standard_Transient):
         Adds a level of neighbours by edge to the selector.
         """
     @overload
-    def NeighboursOf(self,arg1 : BRepMesh_SelectorOfDataStructureOfDelaun) -> None: ...
-    @overload
     def NeighboursOf(self,theLink : BRepMesh_Edge) -> None: ...
     @overload
-    def NeighboursOf(self,theElement : BRepMesh_Triangle) -> None: ...
+    def NeighboursOf(self,arg1 : BRepMesh_SelectorOfDataStructureOfDelaun) -> None: ...
+    @overload
+    def NeighboursOf(self,theNode : BRepMesh_Vertex) -> None: ...
     def NeighboursOfElement(self,theElementIndex : int) -> None: 
         """
         Selects all neighboring elements by nodes of the given element.
@@ -1480,9 +1580,9 @@ class BRepMesh_SelectorOfDataStructureOfDelaun(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theMesh : BRepMesh_DataStructureOfDelaun) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theMesh : BRepMesh_DataStructureOfDelaun) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1574,7 +1674,7 @@ class BRepMesh_ShapeTool(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Range_s(theEdge : OCP.TopoDS.TopoDS_Edge,theFace : OCP.TopoDS.TopoDS_Face,thePCurve : OCP.Geom2d.Geom2d_Curve,theFirstParam : float,theLastParam : float,isConsiderOrientation : bool=False) -> bool: 
+    def Range_s(theEdge : OCP.TopoDS.TopoDS_Edge,theCurve : OCP.Geom.Geom_Curve,theFirstParam : float,theLastParam : float,isConsiderOrientation : bool=False) -> bool: 
         """
         Gets the parametric range of the given edge on the given face.
 
@@ -1582,7 +1682,7 @@ class BRepMesh_ShapeTool(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Range_s(theEdge : OCP.TopoDS.TopoDS_Edge,theCurve : OCP.Geom.Geom_Curve,theFirstParam : float,theLastParam : float,isConsiderOrientation : bool=False) -> bool: ...
+    def Range_s(theEdge : OCP.TopoDS.TopoDS_Edge,theFace : OCP.TopoDS.TopoDS_Face,thePCurve : OCP.Geom2d.Geom2d_Curve,theFirstParam : float,theLastParam : float,isConsiderOrientation : bool=False) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1594,7 +1694,7 @@ class BRepMesh_ShapeTool(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon : OCP.Poly.Poly_Polygon3D) -> None: 
+    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon1 : OCP.Poly.Poly_PolygonOnTriangulation,thePolygon2 : OCP.Poly.Poly_PolygonOnTriangulation,theTriangulation : OCP.Poly.Poly_Triangulation,theLocation : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Updates the given edge by the given tessellated representation.
 
@@ -1604,10 +1704,10 @@ class BRepMesh_ShapeTool(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon1 : OCP.Poly.Poly_PolygonOnTriangulation,thePolygon2 : OCP.Poly.Poly_PolygonOnTriangulation,theTriangulation : OCP.Poly.Poly_Triangulation,theLocation : OCP.TopLoc.TopLoc_Location) -> None: ...
+    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon : OCP.Poly.Poly_PolygonOnTriangulation,theTriangulation : OCP.Poly.Poly_Triangulation,theLocation : OCP.TopLoc.TopLoc_Location) -> None: ...
     @staticmethod
     @overload
-    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon : OCP.Poly.Poly_PolygonOnTriangulation,theTriangulation : OCP.Poly.Poly_Triangulation,theLocation : OCP.TopLoc.TopLoc_Location) -> None: ...
+    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon : OCP.Poly.Poly_Polygon3D) -> None: ...
     @staticmethod
     def UseLocation_s(thePnt : OCP.gp.gp_Pnt,theLoc : OCP.TopLoc.TopLoc_Location) -> OCP.gp.gp_Pnt: 
         """
@@ -1634,14 +1734,14 @@ class BRepMesh_ShapeVisitor():
         None
         """
     @overload
-    def Visit(self,theFace : OCP.TopoDS.TopoDS_Face) -> None: 
+    def Visit(self,theEdge : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Handles TopoDS_Face object.
 
         Handles TopoDS_Edge object.
         """
     @overload
-    def Visit(self,theEdge : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def Visit(self,theFace : OCP.TopoDS.TopoDS_Face) -> None: ...
     def __init__(self,theModel : IMeshData_Model) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1691,11 +1791,11 @@ class BRepMesh_Vertex():
         Sets movability of the vertex.
         """
     @overload
+    def __init__(self,theU : float,theV : float,theMovability : BRepMesh_DegreeOfFreedom) -> None: ...
+    @overload
     def __init__(self,theUV : OCP.gp.gp_XY,theLocation3d : int,theMovability : BRepMesh_DegreeOfFreedom) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theU : float,theV : float,theMovability : BRepMesh_DegreeOfFreedom) -> None: ...
     pass
 class BRepMesh_VertexInspector(OCP.NCollection.NCollection_CellFilter_InspectorXY):
     """
@@ -1769,6 +1869,7 @@ class BRepMesh_VertexInspector(OCP.NCollection.NCollection_CellFilter_InspectorX
         Returns set of mesh vertices.
         """
     def __init__(self,theAllocator : OCP.NCollection.NCollection_IncAllocator) -> None: ...
+    Dimension = 2
     pass
 class BRepMesh_VertexTool(OCP.Standard.Standard_Transient):
     """
@@ -1853,14 +1954,14 @@ class BRepMesh_VertexTool(OCP.Standard.Standard_Transient):
         Remove last node from the structure.
         """
     @overload
-    def SetCellSize(self,theSize : float) -> None: 
+    def SetCellSize(self,theSizeX : float,theSizeY : float) -> None: 
         """
         Sets new size of cell for cellfilter equal in both directions.
 
         Sets new size of cell for cellfilter.
         """
     @overload
-    def SetCellSize(self,theSizeX : float,theSizeY : float) -> None: ...
+    def SetCellSize(self,theSize : float) -> None: ...
     @overload
     def SetTolerance(self,theToleranceX : float,theToleranceY : float) -> None: 
         """
@@ -1870,7 +1971,7 @@ class BRepMesh_VertexTool(OCP.Standard.Standard_Transient):
         """
     @overload
     def SetTolerance(self,theTolerance : float) -> None: ...
-    def Statistics(self,theStream : Any) -> None: 
+    def Statistics(self,theStream : io.BytesIO) -> None: 
         """
         Prints statistics.
         """
@@ -1899,33 +2000,33 @@ class BRepMesh_VertexTool(OCP.Standard.Standard_Transient):
         """
     pass
 @overload
-def HashCode(theTriangle : BRepMesh_Triangle,theUpperBound : int) -> int:
+def HashCode(theVertex : BRepMesh_Vertex,theUpperBound : int) -> int:
     """
-    Computes a hash code for the given oriented edge, in the range [1, theUpperBound]
-
-    Computes a hash code for the given triangle, in the range [1, theUpperBound]
-
     Computes a hash code for the given vertex, in the range [1, theUpperBound]
 
     Computes a hash code for the given edge, in the range [1, theUpperBound]
+
+    Computes a hash code for the given oriented edge, in the range [1, theUpperBound]
+
+    Computes a hash code for the given triangle, in the range [1, theUpperBound]
     """
 @overload
-def HashCode(theEdge : BRepMesh_Edge,theUpperBound : int) -> int:
+def HashCode(theTriangle : BRepMesh_Triangle,theUpperBound : int) -> int:
     pass
 @overload
 def HashCode(theOrientedEdge : BRepMesh_OrientedEdge,theUpperBound : int) -> int:
     pass
 @overload
-def HashCode(theVertex : BRepMesh_Vertex,theUpperBound : int) -> int:
+def HashCode(theEdge : BRepMesh_Edge,theUpperBound : int) -> int:
     pass
-BRepMesh_Deleted: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_Deleted
-BRepMesh_FE_CANNOTCREATEALGO: OCP.BRepMesh.BRepMesh_FactoryError # value = BRepMesh_FactoryError.BRepMesh_FE_CANNOTCREATEALGO
-BRepMesh_FE_FUNCTIONNOTFOUND: OCP.BRepMesh.BRepMesh_FactoryError # value = BRepMesh_FactoryError.BRepMesh_FE_FUNCTIONNOTFOUND
-BRepMesh_FE_LIBRARYNOTFOUND: OCP.BRepMesh.BRepMesh_FactoryError # value = BRepMesh_FactoryError.BRepMesh_FE_LIBRARYNOTFOUND
-BRepMesh_FE_NOERROR: OCP.BRepMesh.BRepMesh_FactoryError # value = BRepMesh_FactoryError.BRepMesh_FE_NOERROR
-BRepMesh_Fixed: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_Fixed
-BRepMesh_Free: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_Free
-BRepMesh_Frontier: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_Frontier
-BRepMesh_InVolume: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_InVolume
-BRepMesh_OnCurve: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_OnCurve
-BRepMesh_OnSurface: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = BRepMesh_DegreeOfFreedom.BRepMesh_OnSurface
+BRepMesh_Deleted: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_Deleted: 6>
+BRepMesh_FE_CANNOTCREATEALGO: OCP.BRepMesh.BRepMesh_FactoryError # value = <BRepMesh_FactoryError.BRepMesh_FE_CANNOTCREATEALGO: 3>
+BRepMesh_FE_FUNCTIONNOTFOUND: OCP.BRepMesh.BRepMesh_FactoryError # value = <BRepMesh_FactoryError.BRepMesh_FE_FUNCTIONNOTFOUND: 2>
+BRepMesh_FE_LIBRARYNOTFOUND: OCP.BRepMesh.BRepMesh_FactoryError # value = <BRepMesh_FactoryError.BRepMesh_FE_LIBRARYNOTFOUND: 1>
+BRepMesh_FE_NOERROR: OCP.BRepMesh.BRepMesh_FactoryError # value = <BRepMesh_FactoryError.BRepMesh_FE_NOERROR: 0>
+BRepMesh_Fixed: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_Fixed: 4>
+BRepMesh_Free: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_Free: 0>
+BRepMesh_Frontier: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_Frontier: 5>
+BRepMesh_InVolume: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_InVolume: 1>
+BRepMesh_OnCurve: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_OnCurve: 3>
+BRepMesh_OnSurface: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_OnSurface: 2>

@@ -6,12 +6,12 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
 import OCP.TCollection
+import io
 import OCP.IGESData
 import OCP.IFSelect
-import OCP.IFGraph
-import OCP.Message
-import OCP.Standard
 import OCP.Interface
+import OCP.Standard
+import OCP.IFGraph
 __all__  = [
 "IGESSelect",
 "IGESSelect_Activator",
@@ -982,15 +982,15 @@ class IGESSelect_CounterOfLevelNumber(OCP.IFSelect.IFSelect_SignCounter, OCP.IFS
         """
         Returns the number of times a level is used, 0 if it has not been recorded at all <level> = 0 counts entities attached to no level <level> < 0 counts entities attached to a LevelList
         """
-    def PrintCount(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintCount(self,S : io.BytesIO) -> None: 
         """
         Prints the counts of items (not the list) then the Highest Level Number recorded
         """
-    def PrintList(self,S : OCP.Message.Message_Messenger,model : OCP.Interface.Interface_InterfaceModel,mod : OCP.IFSelect.IFSelect_PrintCount=IFSelect_PrintCount.IFSelect_ListByItem) -> None: 
+    def PrintList(self,S : io.BytesIO,model : OCP.Interface.Interface_InterfaceModel,mod : OCP.IFSelect.IFSelect_PrintCount=IFSelect_PrintCount.IFSelect_ListByItem) -> None: 
         """
         Prints the lists of items, if they are present (else, prints a message "no list available") Uses <model> to determine for each entity to be listed, its number, and its specific identifier (by PrintLabel) <mod> gives a mode for printing : - CountByItem : just count (as PrintCount) - ShortByItem : minimum i.e. count plus 5 first entity numbers - ShortByItem(D) complete list of entity numbers (0: "Global") - EntitiesByItem : list of (entity number/PrintLabel from the model) other modes are ignored
         """
-    def PrintSum(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintSum(self,S : io.BytesIO) -> None: 
         """
         Prints a summary Item which has the greatest count of entities For items which are numeric values : their count, maximum, minimum values, cumul, average
         """
@@ -1441,11 +1441,11 @@ class IGESSelect_EditDirPart(OCP.IFSelect.IFSelect_Editor, OCP.Standard.Standard
         """
         Returns the count of Typed Values
         """
-    def PrintDefs(self,S : OCP.Message.Message_Messenger,labels : bool=False) -> None: 
+    def PrintDefs(self,S : io.BytesIO,labels : bool=False) -> None: 
         """
         None
         """
-    def PrintNames(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintNames(self,S : io.BytesIO) -> None: 
         """
         None
         """
@@ -1587,11 +1587,11 @@ class IGESSelect_EditHeader(OCP.IFSelect.IFSelect_Editor, OCP.Standard.Standard_
         """
         Returns the count of Typed Values
         """
-    def PrintDefs(self,S : OCP.Message.Message_Messenger,labels : bool=False) -> None: 
+    def PrintDefs(self,S : io.BytesIO,labels : bool=False) -> None: 
         """
         None
         """
-    def PrintNames(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintNames(self,S : io.BytesIO) -> None: 
         """
         None
         """
@@ -5006,7 +5006,7 @@ class IGESSelect_WorkLibrary(OCP.IFSelect.IFSelect_WorkLibrary, OCP.Standard.Sta
         """
         Memory deallocator for transient classes
         """
-    def DumpEntity(self,model : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol,entity : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger,level : int) -> None: 
+    def DumpEntity(self,model : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol,entity : OCP.Standard.Standard_Transient,S : io.BytesIO,level : int) -> None: 
         """
         Dumps an IGES Entity with an IGES Dumper. <level> is the one used by IGESDumper.
         """
@@ -5051,6 +5051,10 @@ class IGESSelect_WorkLibrary(OCP.IFSelect.IFSelect_WorkLibrary, OCP.Standard.Sta
     def ReadFile(self,name : str,model : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol) -> int: 
         """
         Reads a IGES File and returns a IGES Model (into <mod>), or lets <mod> "Null" in case of Error Returns 0 if OK, 1 if Read Error, -1 if File not opened
+        """
+    def ReadStream(self,theName : str,theIStream : io.BytesIO,model : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol) -> int: 
+        """
+        Interface to read a data from the specified stream.
         """
     def SetDumpHelp(self,level : int,help : str) -> None: 
         """

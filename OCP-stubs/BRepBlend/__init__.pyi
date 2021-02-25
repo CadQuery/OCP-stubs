@@ -4,24 +4,24 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.Geom2d
+import OCP.Approx
+import OCP.math
+import OCP.NCollection
 import OCP.Law
 import OCP.TColgp
-import OCP.BlendFunc
-import OCP.Adaptor3d
+import OCP.IntSurf
 import OCP.Blend
-import OCP.NCollection
+import OCP.Geom
+import OCP.Standard
+import OCP.TopAbs
+import OCP.Adaptor3d
+import OCP.TColStd
 import OCP.Adaptor2d
 import OCP.gp
-import OCP.TColStd
 import OCP.GeomAbs
-import OCP.Approx
-import OCP.IntSurf
-import OCP.Standard
+import OCP.BlendFunc
+import OCP.Geom2d
 import OCP.ChFiDS
-import OCP.Geom
-import OCP.math
 import OCP.AppBlend
 __all__  = [
 "BRepBlend_AppFuncRoot",
@@ -639,14 +639,14 @@ class BRepBlend_AppSurf(OCP.AppBlend.AppBlend_Approx):
         returns the type of parametrization used in the approximation
         """
     @overload
-    def Perform(self,Lin : BRepBlend_Line,SecGen : OCP.Blend.Blend_AppFunction,NbMaxP : int) -> None: 
+    def Perform(self,Lin : BRepBlend_Line,SecGen : OCP.Blend.Blend_AppFunction,SpApprox : bool=False) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Perform(self,Lin : BRepBlend_Line,SecGen : OCP.Blend.Blend_AppFunction,SpApprox : bool=False) -> None: ...
+    def Perform(self,Lin : BRepBlend_Line,SecGen : OCP.Blend.Blend_AppFunction,NbMaxP : int) -> None: ...
     def PerformSmoothing(self,Lin : BRepBlend_Line,SecGen : OCP.Blend.Blend_AppFunction) -> None: 
         """
         None
@@ -837,14 +837,14 @@ class BRepBlend_CurvPointRadInv(OCP.Blend.Blend_CurvPointFuncInv, OCP.math.math_
         Returns 3.
         """
     @overload
-    def Set(self,Choix : int) -> None: 
+    def Set(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         None
 
         Set the Point on which a solution has to be found.
         """
     @overload
-    def Set(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Set(self,Choix : int) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -912,7 +912,7 @@ class BRepBlend_Extremity():
         Set the tangent vector for an extremity on a surface.
         """
     @overload
-    def SetValue(self,P : OCP.gp.gp_Pnt,W : float,Param : float,Tol : float) -> None: 
+    def SetValue(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float) -> None: 
         """
         Set the values for an extremity on a surface.
 
@@ -921,9 +921,9 @@ class BRepBlend_Extremity():
         Set the values for an extremity on curve.
         """
     @overload
-    def SetValue(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float,Vtx : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: ...
+    def SetValue(self,P : OCP.gp.gp_Pnt,W : float,Param : float,Tol : float) -> None: ...
     @overload
-    def SetValue(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float) -> None: ...
+    def SetValue(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float,Vtx : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: ...
     def SetVertex(self,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: 
         """
         Set the values for an extremity on a curve.
@@ -953,9 +953,9 @@ class BRepBlend_Extremity():
         Returns the vertex when IsVertex returns Standard_True.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float,Vtx : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float,Vtx : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float) -> None: ...
     @overload
@@ -1314,23 +1314,23 @@ class BRepBlend_Line(OCP.Standard.Standard_Transient):
     @overload
     def Set(self,TranS1 : OCP.IntSurf.IntSurf_TypeTrans,TranS2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
-    def SetEndPoints(self,EndPtOnS1 : BRepBlend_Extremity,EndPtOnS2 : BRepBlend_Extremity) -> None: 
+    def SetEndPoints(self,EndPt1 : BRepBlend_Extremity,EndPt2 : BRepBlend_Extremity) -> None: 
         """
         Sets tne values of the end points for the line.
 
         Sets tne values of the end points for the line.
         """
     @overload
-    def SetEndPoints(self,EndPt1 : BRepBlend_Extremity,EndPt2 : BRepBlend_Extremity) -> None: ...
+    def SetEndPoints(self,EndPtOnS1 : BRepBlend_Extremity,EndPtOnS2 : BRepBlend_Extremity) -> None: ...
     @overload
-    def SetStartPoints(self,StartPt1 : BRepBlend_Extremity,StartPt2 : BRepBlend_Extremity) -> None: 
+    def SetStartPoints(self,StartPtOnS1 : BRepBlend_Extremity,StartPtOnS2 : BRepBlend_Extremity) -> None: 
         """
         Sets the values of the start points for the line.
 
         Sets the values of the start points for the line.
         """
     @overload
-    def SetStartPoints(self,StartPtOnS1 : BRepBlend_Extremity,StartPtOnS2 : BRepBlend_Extremity) -> None: ...
+    def SetStartPoints(self,StartPt1 : BRepBlend_Extremity,StartPt2 : BRepBlend_Extremity) -> None: ...
     def StartPointOnFirst(self) -> BRepBlend_Extremity: 
         """
         Returns the start point on S1.
@@ -1553,9 +1553,9 @@ class BRepBlend_RstRstConstRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_A
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @overload
     def Section(self,Param : float,U : float,V : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
+    @overload
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def Set(self,Param : float) -> None: 
         """
@@ -1570,13 +1570,13 @@ class BRepBlend_RstRstConstRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_A
         Sets the type of section generation for the approximations.
         """
     @overload
-    def Set(self,SurfRef1 : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef1 : OCP.Adaptor2d.Adaptor2d_HCurve2d,SurfRef2 : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef2 : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
-    @overload
-    def Set(self,Radius : float,Choix : int) -> None: ...
-    @overload
     def Set(self,First : float,Last : float) -> None: ...
     @overload
     def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
+    @overload
+    def Set(self,SurfRef1 : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef1 : OCP.Adaptor2d.Adaptor2d_HCurve2d,SurfRef2 : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef2 : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
+    @overload
+    def Set(self,Radius : float,Choix : int) -> None: ...
     def Tangent2dOnRst1(self) -> OCP.gp.gp_Vec2d: 
         """
         None
@@ -1740,13 +1740,13 @@ class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_Ap
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    def Section(self,Param : float,U : float,V : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Section(self,Param : float,U : float,V : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Set(self,Param : float) -> None: 
+    def Set(self,First : float,Last : float) -> None: 
         """
         None
 
@@ -1759,13 +1759,13 @@ class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_Ap
         Sets the type of section generation for the approximations.
         """
     @overload
-    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
-    @overload
     def Set(self,SurfRef1 : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef1 : OCP.Adaptor2d.Adaptor2d_HCurve2d,SurfRef2 : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef2 : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
     @overload
     def Set(self,Choix : int) -> None: ...
     @overload
-    def Set(self,First : float,Last : float) -> None: ...
+    def Set(self,Param : float) -> None: ...
+    @overload
+    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
     def Tangent2dOnRst1(self) -> OCP.gp.gp_Vec2d: 
         """
         None
@@ -1901,14 +1901,14 @@ class BRepBlend_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : BRepBlend_SequenceOfLine) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : BRepBlend_Line) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : BRepBlend_SequenceOfLine) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : BRepBlend_SequenceOfLine) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : BRepBlend_Line) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1970,10 +1970,10 @@ class BRepBlend_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : BRepBlend_SequenceOfLine) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2026,14 +2026,14 @@ class BRepBlend_SequenceOfPointOnRst(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : BRepBlend_PointOnRst) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : BRepBlend_PointOnRst) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: 
         """
@@ -2060,23 +2060,23 @@ class BRepBlend_SequenceOfPointOnRst(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : BRepBlend_PointOnRst) -> None: 
+    def Prepend(self,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: ...
+    def Prepend(self,theItem : BRepBlend_PointOnRst) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2102,12 +2102,12 @@ class BRepBlend_SequenceOfPointOnRst(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : BRepBlend_SequenceOfPointOnRst) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : BRepBlend_SequenceOfPointOnRst) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2147,14 +2147,14 @@ class BRepBlend_SurfCurvConstRadInv(OCP.Blend.Blend_SurfCurvFuncInv, OCP.math.ma
         Returns 3.
         """
     @overload
-    def Set(self,R : float,Choix : int) -> None: 
+    def Set(self,Rst : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
         """
         None
 
         Set the restriction on which a solution has to be found.
         """
     @overload
-    def Set(self,Rst : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
+    def Set(self,R : float,Choix : int) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -2249,14 +2249,14 @@ class BRepBlend_SurfPointConstRadInv(OCP.Blend.Blend_SurfPointFuncInv, OCP.math.
         Returns 3.
         """
     @overload
-    def Set(self,P : OCP.gp.gp_Pnt) -> None: 
+    def Set(self,R : float,Choix : int) -> None: 
         """
         None
 
         Set the Point on which a solution has to be found.
         """
     @overload
-    def Set(self,R : float,Choix : int) -> None: ...
+    def Set(self,P : OCP.gp.gp_Pnt) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -2300,14 +2300,14 @@ class BRepBlend_SurfPointEvolRadInv(OCP.Blend.Blend_SurfPointFuncInv, OCP.math.m
         Returns 3.
         """
     @overload
-    def Set(self,P : OCP.gp.gp_Pnt) -> None: 
+    def Set(self,Choix : int) -> None: 
         """
         None
 
         Set the Point on which a solution has to be found.
         """
     @overload
-    def Set(self,Choix : int) -> None: ...
+    def Set(self,P : OCP.gp.gp_Pnt) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -2436,7 +2436,7 @@ class BRepBlend_SurfRstConstRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Used for the first and last section
 
@@ -2447,13 +2447,13 @@ class BRepBlend_SurfRstConstRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
     def Section(self,Param : float,U : float,V : float,W : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
     @overload
-    def Set(self,Radius : float,Choix : int) -> None: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    @overload
+    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: 
         """
         None
 
@@ -2466,11 +2466,11 @@ class BRepBlend_SurfRstConstRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend
         Sets the type of section generation for the approximations.
         """
     @overload
+    def Set(self,First : float,Last : float) -> None: ...
+    @overload
     def Set(self,Param : float) -> None: ...
     @overload
-    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
-    @overload
-    def Set(self,First : float,Last : float) -> None: ...
+    def Set(self,Radius : float,Choix : int) -> None: ...
     @overload
     def Set(self,SurfRef : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
     def Tangent2dOnRst(self) -> OCP.gp.gp_Vec2d: 
@@ -2617,7 +2617,7 @@ class BRepBlend_SurfRstEvolRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend_
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section
 
@@ -2628,13 +2628,13 @@ class BRepBlend_SurfRstEvolRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend_
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
     def Section(self,Param : float,U : float,V : float,W : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def Set(self,Choix : int) -> None: 
+    def Set(self,First : float,Last : float) -> None: 
         """
         None
 
@@ -2647,13 +2647,13 @@ class BRepBlend_SurfRstEvolRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend_
         Sets the type of section generation for the approximations.
         """
     @overload
-    def Set(self,First : float,Last : float) -> None: ...
-    @overload
     def Set(self,Param : float) -> None: ...
     @overload
-    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
-    @overload
     def Set(self,SurfRef : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
+    @overload
+    def Set(self,Choix : int) -> None: ...
+    @overload
+    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
     def Tangent2dOnRst(self) -> OCP.gp.gp_Vec2d: 
         """
         None
@@ -2755,14 +2755,14 @@ class BRepBlend_Walking():
         None
         """
     @overload
-    def Continu(self,F : OCP.Blend.Blend_Function,FInv : OCP.Blend.Blend_FuncInv,P : float) -> bool: 
+    def Continu(self,F : OCP.Blend.Blend_Function,FInv : OCP.Blend.Blend_FuncInv,P : float,OnS1 : bool) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Continu(self,F : OCP.Blend.Blend_Function,FInv : OCP.Blend.Blend_FuncInv,P : float,OnS1 : bool) -> bool: ...
+    def Continu(self,F : OCP.Blend.Blend_Function,FInv : OCP.Blend.Blend_FuncInv,P : float) -> bool: ...
     def IsDone(self) -> bool: 
         """
         None
@@ -2776,14 +2776,14 @@ class BRepBlend_Walking():
         None
         """
     @overload
-    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,FInv : OCP.Blend.Blend_FuncInv,Pdep : float,Pmax : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,RecOnS1 : bool,RecOnS2 : bool,Psol : float,ParSol : OCP.math.math_Vector) -> bool: 
+    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,Pdep : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,Pos1 : OCP.TopAbs.TopAbs_State,Pos2 : OCP.TopAbs.TopAbs_State) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,Pdep : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,Pos1 : OCP.TopAbs.TopAbs_State,Pos2 : OCP.TopAbs.TopAbs_State) -> bool: ...
+    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,FInv : OCP.Blend.Blend_FuncInv,Pdep : float,Pmax : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,RecOnS1 : bool,RecOnS2 : bool,Psol : float,ParSol : OCP.math.math_Vector) -> bool: ...
     def SetDomainsToRecadre(self,RecDomain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,RecDomain2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: 
         """
         To define different domains for control and clipping.

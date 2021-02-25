@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
+import OCP.math
+import OCP.NCollection
 import OCP.GeomAbs
 import OCP.PLib
 import OCP.Standard
-import OCP.NCollection
-import OCP.math
 __all__  = [
 "FEmTool_Assembly",
 "FEmTool_AssemblyTable",
@@ -146,13 +146,13 @@ class FEmTool_AssemblyTable():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : FEmTool_AssemblyTable) -> None: ...
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.TColStd.TColStd_HArray1OfInteger,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : FEmTool_AssemblyTable) -> None: ...
     pass
 class FEmTool_Curve(OCP.Standard.Standard_Transient):
     """
@@ -323,14 +323,14 @@ class FEmTool_ElementaryCriterion(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+    def Set(self,FirstKnot : float,LastKnot : float) -> None: 
         """
         Set the coefficient of the Element (the Curve)
 
         Set the definition interval of the Element
         """
     @overload
-    def Set(self,FirstKnot : float,LastKnot : float) -> None: ...
+    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -339,6 +339,7 @@ class FEmTool_ElementaryCriterion(OCP.Standard.Standard_Transient):
         """
         To Compute J(E) where E is the current Element
         """
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -561,14 +562,14 @@ class FEmTool_LinearFlexion(FEmTool_ElementaryCriterion, OCP.Standard.Standard_T
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+    def Set(self,FirstKnot : float,LastKnot : float) -> None: 
         """
         Set the coefficient of the Element (the Curve)
 
         Set the definition interval of the Element
         """
     @overload
-    def Set(self,FirstKnot : float,LastKnot : float) -> None: ...
+    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -644,14 +645,14 @@ class FEmTool_LinearJerk(FEmTool_ElementaryCriterion, OCP.Standard.Standard_Tran
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+    def Set(self,FirstKnot : float,LastKnot : float) -> None: 
         """
         Set the coefficient of the Element (the Curve)
 
         Set the definition interval of the Element
         """
     @overload
-    def Set(self,FirstKnot : float,LastKnot : float) -> None: ...
+    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -727,14 +728,14 @@ class FEmTool_LinearTension(FEmTool_ElementaryCriterion, OCP.Standard.Standard_T
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+    def Set(self,FirstKnot : float,LastKnot : float) -> None: 
         """
         Set the coefficient of the Element (the Curve)
 
         Set the definition interval of the Element
         """
     @overload
-    def Set(self,FirstKnot : float,LastKnot : float) -> None: ...
+    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -764,7 +765,7 @@ class FEmTool_ListOfVectors(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TColStd.TColStd_HArray1OfReal,theIter : Any) -> None: 
+    def Append(self,theOther : FEmTool_ListOfVectors) -> None: 
         """
         Append one item at the end
 
@@ -775,7 +776,7 @@ class FEmTool_ListOfVectors(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> OCP.TColStd.TColStd_HArray1OfReal: ...
     @overload
-    def Append(self,theOther : FEmTool_ListOfVectors) -> None: ...
+    def Append(self,theItem : OCP.TColStd.TColStd_HArray1OfReal,theIter : Any) -> None: ...
     def Assign(self,theOther : FEmTool_ListOfVectors) -> FEmTool_ListOfVectors: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -804,14 +805,14 @@ class FEmTool_ListOfVectors(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : OCP.TColStd.TColStd_HArray1OfReal,theIter : Any) -> OCP.TColStd.TColStd_HArray1OfReal: ...
     @overload
-    def InsertBefore(self,theItem : OCP.TColStd.TColStd_HArray1OfReal,theIter : Any) -> OCP.TColStd.TColStd_HArray1OfReal: 
+    def InsertBefore(self,theOther : FEmTool_ListOfVectors,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : FEmTool_ListOfVectors,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : OCP.TColStd.TColStd_HArray1OfReal,theIter : Any) -> OCP.TColStd.TColStd_HArray1OfReal: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -823,14 +824,14 @@ class FEmTool_ListOfVectors(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> OCP.TColStd.TColStd_HArray1OfReal: 
+    def Prepend(self,theOther : FEmTool_ListOfVectors) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : FEmTool_ListOfVectors) -> None: ...
+    def Prepend(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> OCP.TColStd.TColStd_HArray1OfReal: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -848,12 +849,12 @@ class FEmTool_ListOfVectors(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : FEmTool_ListOfVectors) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : FEmTool_ListOfVectors) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class FEmTool_SparseMatrix(OCP.Standard.Standard_Transient):
     """
@@ -926,14 +927,14 @@ class FEmTool_SparseMatrix(OCP.Standard.Standard_Transient):
         returns the row range of a matrix.
         """
     @overload
-    def Solve(self,B : OCP.math.math_Vector,X : OCP.math.math_Vector) -> None: 
+    def Solve(self,B : OCP.math.math_Vector,Init : OCP.math.math_Vector,X : OCP.math.math_Vector,Residual : OCP.math.math_Vector,Tolerance : float=1e-08,NbIterations : int=50) -> None: 
         """
         Direct Solve of AX = B
 
         Iterative solve of AX = B
         """
     @overload
-    def Solve(self,B : OCP.math.math_Vector,Init : OCP.math.math_Vector,X : OCP.math.math_Vector,Residual : OCP.math.math_Vector,Tolerance : float=1e-08,NbIterations : int=50) -> None: ...
+    def Solve(self,B : OCP.math.math_Vector,X : OCP.math.math_Vector) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -958,14 +959,14 @@ class FEmTool_SeqOfLinConstr(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : FEmTool_ListOfVectors) -> None: 
+    def Append(self,theSeq : FEmTool_SeqOfLinConstr) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : FEmTool_SeqOfLinConstr) -> None: ...
+    def Append(self,theItem : FEmTool_ListOfVectors) -> None: ...
     def Assign(self,theOther : FEmTool_SeqOfLinConstr) -> FEmTool_SeqOfLinConstr: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1004,14 +1005,14 @@ class FEmTool_SeqOfLinConstr(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : FEmTool_ListOfVectors) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : FEmTool_SeqOfLinConstr) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : FEmTool_ListOfVectors) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : FEmTool_ListOfVectors) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : FEmTool_SeqOfLinConstr) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1029,14 +1030,14 @@ class FEmTool_SeqOfLinConstr(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : FEmTool_ListOfVectors) -> None: 
+    def Prepend(self,theSeq : FEmTool_SeqOfLinConstr) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : FEmTool_SeqOfLinConstr) -> None: ...
+    def Prepend(self,theItem : FEmTool_ListOfVectors) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -1076,7 +1077,7 @@ class FEmTool_SeqOfLinConstr(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self,theOther : FEmTool_SeqOfLinConstr) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1166,14 +1167,14 @@ class FEmTool_ProfileMatrix(FEmTool_SparseMatrix, OCP.Standard.Standard_Transien
         returns the row range of a matrix.
         """
     @overload
-    def Solve(self,B : OCP.math.math_Vector,Init : OCP.math.math_Vector,X : OCP.math.math_Vector,Residual : OCP.math.math_Vector,Tolerance : float=1e-08,NbIterations : int=50) -> None: 
+    def Solve(self,B : OCP.math.math_Vector,X : OCP.math.math_Vector) -> None: 
         """
         Direct Solve of AX = B
 
         Iterative solve of AX = B
         """
     @overload
-    def Solve(self,B : OCP.math.math_Vector,X : OCP.math.math_Vector) -> None: ...
+    def Solve(self,B : OCP.math.math_Vector,Init : OCP.math.math_Vector,X : OCP.math.math_Vector,Residual : OCP.math.math_Vector,Tolerance : float=1e-08,NbIterations : int=50) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

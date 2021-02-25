@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
-import OCP.TCollection
-import OCP.Expr
 import OCP.Standard
+import OCP.Expr
+import OCP.TCollection
 __all__  = [
 "ExprIntrp",
 "ExprIntrp_Analysis",
@@ -99,14 +99,14 @@ class ExprIntrp_Analysis():
         None
         """
     @overload
-    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: 
+    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: ...
+    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: ...
     def __init__(self) -> None: ...
     pass
 class ExprIntrp_Generator(OCP.Standard.Standard_Transient):
@@ -173,14 +173,14 @@ class ExprIntrp_Generator(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: 
+    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: ...
+    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -269,14 +269,14 @@ class ExprIntrp_GenFct(ExprIntrp_Generator, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: 
+    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: ...
+    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -369,14 +369,14 @@ class ExprIntrp_GenRel(ExprIntrp_Generator, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: 
+    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: ...
+    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -469,14 +469,14 @@ class ExprIntrp_GenExp(ExprIntrp_Generator, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: 
+    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: ...
+    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -497,14 +497,14 @@ class ExprIntrp_SequenceOfNamedExpression(OCP.NCollection.NCollection_BaseSequen
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.Expr.Expr_NamedExpression) -> None: 
+    def Append(self,theSeq : ExprIntrp_SequenceOfNamedExpression) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : ExprIntrp_SequenceOfNamedExpression) -> None: ...
+    def Append(self,theItem : OCP.Expr.Expr_NamedExpression) -> None: ...
     def Assign(self,theOther : ExprIntrp_SequenceOfNamedExpression) -> ExprIntrp_SequenceOfNamedExpression: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -534,14 +534,14 @@ class ExprIntrp_SequenceOfNamedExpression(OCP.NCollection.NCollection_BaseSequen
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.Expr.Expr_NamedExpression) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : ExprIntrp_SequenceOfNamedExpression) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : ExprIntrp_SequenceOfNamedExpression) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.Expr.Expr_NamedExpression) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : OCP.Expr.Expr_NamedExpression) -> None: 
         """
@@ -568,23 +568,23 @@ class ExprIntrp_SequenceOfNamedExpression(OCP.NCollection.NCollection_BaseSequen
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : ExprIntrp_SequenceOfNamedExpression) -> None: 
+    def Prepend(self,theItem : OCP.Expr.Expr_NamedExpression) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.Expr.Expr_NamedExpression) -> None: ...
+    def Prepend(self,theSeq : ExprIntrp_SequenceOfNamedExpression) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -610,12 +610,12 @@ class ExprIntrp_SequenceOfNamedExpression(OCP.NCollection.NCollection_BaseSequen
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : ExprIntrp_SequenceOfNamedExpression) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
+    def __init__(self,theOther : ExprIntrp_SequenceOfNamedExpression) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -631,14 +631,14 @@ class ExprIntrp_SequenceOfNamedFunction(OCP.NCollection.NCollection_BaseSequence
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.Expr.Expr_NamedFunction) -> None: 
+    def Append(self,theSeq : ExprIntrp_SequenceOfNamedFunction) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : ExprIntrp_SequenceOfNamedFunction) -> None: ...
+    def Append(self,theItem : OCP.Expr.Expr_NamedFunction) -> None: ...
     def Assign(self,theOther : ExprIntrp_SequenceOfNamedFunction) -> ExprIntrp_SequenceOfNamedFunction: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -668,23 +668,23 @@ class ExprIntrp_SequenceOfNamedFunction(OCP.NCollection.NCollection_BaseSequence
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : ExprIntrp_SequenceOfNamedFunction) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OCP.Expr.Expr_NamedFunction) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.Expr.Expr_NamedFunction) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : ExprIntrp_SequenceOfNamedFunction) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.Expr.Expr_NamedFunction) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : ExprIntrp_SequenceOfNamedFunction) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : ExprIntrp_SequenceOfNamedFunction) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.Expr.Expr_NamedFunction) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -744,12 +744,12 @@ class ExprIntrp_SequenceOfNamedFunction(OCP.NCollection.NCollection_BaseSequence
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : ExprIntrp_SequenceOfNamedFunction) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theOther : ExprIntrp_SequenceOfNamedFunction) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -774,9 +774,9 @@ class ExprIntrp_StackOfGeneralExpression(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.Expr.Expr_GeneralExpression) -> OCP.Expr.Expr_GeneralExpression: ...
-    @overload
     def Append(self,theItem : OCP.Expr.Expr_GeneralExpression,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : OCP.Expr.Expr_GeneralExpression) -> OCP.Expr.Expr_GeneralExpression: ...
     def Assign(self,theOther : ExprIntrp_StackOfGeneralExpression) -> ExprIntrp_StackOfGeneralExpression: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -796,14 +796,14 @@ class ExprIntrp_StackOfGeneralExpression(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : OCP.Expr.Expr_GeneralExpression,theIter : Any) -> OCP.Expr.Expr_GeneralExpression: 
+    def InsertAfter(self,theOther : ExprIntrp_StackOfGeneralExpression,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : ExprIntrp_StackOfGeneralExpression,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : OCP.Expr.Expr_GeneralExpression,theIter : Any) -> OCP.Expr.Expr_GeneralExpression: ...
     @overload
     def InsertBefore(self,theItem : OCP.Expr.Expr_GeneralExpression,theIter : Any) -> OCP.Expr.Expr_GeneralExpression: 
         """
@@ -851,10 +851,10 @@ class ExprIntrp_StackOfGeneralExpression(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : ExprIntrp_StackOfGeneralExpression) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : ExprIntrp_StackOfGeneralExpression) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class ExprIntrp_StackOfGeneralFunction(OCP.NCollection.NCollection_BaseList):
     """
@@ -865,7 +865,7 @@ class ExprIntrp_StackOfGeneralFunction(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : ExprIntrp_StackOfGeneralFunction) -> None: 
+    def Append(self,theItem : OCP.Expr.Expr_GeneralFunction,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -874,9 +874,9 @@ class ExprIntrp_StackOfGeneralFunction(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.Expr.Expr_GeneralFunction,theIter : Any) -> None: ...
-    @overload
     def Append(self,theItem : OCP.Expr.Expr_GeneralFunction) -> OCP.Expr.Expr_GeneralFunction: ...
+    @overload
+    def Append(self,theOther : ExprIntrp_StackOfGeneralFunction) -> None: ...
     def Assign(self,theOther : ExprIntrp_StackOfGeneralFunction) -> ExprIntrp_StackOfGeneralFunction: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -905,14 +905,14 @@ class ExprIntrp_StackOfGeneralFunction(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : OCP.Expr.Expr_GeneralFunction,theIter : Any) -> OCP.Expr.Expr_GeneralFunction: ...
     @overload
-    def InsertBefore(self,theItem : OCP.Expr.Expr_GeneralFunction,theIter : Any) -> OCP.Expr.Expr_GeneralFunction: 
+    def InsertBefore(self,theOther : ExprIntrp_StackOfGeneralFunction,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : ExprIntrp_StackOfGeneralFunction,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : OCP.Expr.Expr_GeneralFunction,theIter : Any) -> OCP.Expr.Expr_GeneralFunction: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -949,12 +949,12 @@ class ExprIntrp_StackOfGeneralFunction(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : ExprIntrp_StackOfGeneralFunction) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class ExprIntrp_StackOfGeneralRelation(OCP.NCollection.NCollection_BaseList):
     """
@@ -965,7 +965,7 @@ class ExprIntrp_StackOfGeneralRelation(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : ExprIntrp_StackOfGeneralRelation) -> None: 
+    def Append(self,theItem : OCP.Expr.Expr_GeneralRelation) -> OCP.Expr.Expr_GeneralRelation: 
         """
         Append one item at the end
 
@@ -974,7 +974,7 @@ class ExprIntrp_StackOfGeneralRelation(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.Expr.Expr_GeneralRelation) -> OCP.Expr.Expr_GeneralRelation: ...
+    def Append(self,theOther : ExprIntrp_StackOfGeneralRelation) -> None: ...
     @overload
     def Append(self,theItem : OCP.Expr.Expr_GeneralRelation,theIter : Any) -> None: ...
     def Assign(self,theOther : ExprIntrp_StackOfGeneralRelation) -> ExprIntrp_StackOfGeneralRelation: 
@@ -996,14 +996,14 @@ class ExprIntrp_StackOfGeneralRelation(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : ExprIntrp_StackOfGeneralRelation,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : OCP.Expr.Expr_GeneralRelation,theIter : Any) -> OCP.Expr.Expr_GeneralRelation: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : OCP.Expr.Expr_GeneralRelation,theIter : Any) -> OCP.Expr.Expr_GeneralRelation: ...
+    def InsertAfter(self,theOther : ExprIntrp_StackOfGeneralRelation,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theOther : ExprIntrp_StackOfGeneralRelation,theIter : Any) -> None: 
         """
@@ -1024,14 +1024,14 @@ class ExprIntrp_StackOfGeneralRelation(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : OCP.Expr.Expr_GeneralRelation) -> OCP.Expr.Expr_GeneralRelation: 
+    def Prepend(self,theOther : ExprIntrp_StackOfGeneralRelation) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : ExprIntrp_StackOfGeneralRelation) -> None: ...
+    def Prepend(self,theItem : OCP.Expr.Expr_GeneralRelation) -> OCP.Expr.Expr_GeneralRelation: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1049,12 +1049,12 @@ class ExprIntrp_StackOfGeneralRelation(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : ExprIntrp_StackOfGeneralRelation) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class ExprIntrp_SyntaxError(Exception, BaseException):
     class type():

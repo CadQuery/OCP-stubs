@@ -6,10 +6,10 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
 import OCP.TColStd
+import OCP.Interface
 import OCP.Standard
 import OCP.StepAP214
 import OCP.StepData
-import OCP.Interface
 __all__  = [
 "RWStepAP214",
 "RWStepAP214_GeneralModule",
@@ -647,14 +647,14 @@ class RWStepAP214_ReadWriteModule(OCP.StepData.StepData_ReadWriteModule, OCP.Int
         Translate the Type of record <num> in <data> to a positive Case Number, or 0 if failed. Works with a StepReaderData, in which the Type of an Entity is defined as a String : Reads the RecordType <num> then calls CaseNum (this type) Warning : The methods CaseStep, StepType and Recognize, must be in phase (triplets CaseNum-StepType-Type of Object)
         """
     @overload
-    def CaseStep(self,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> int: 
+    def CaseStep(self,atype : OCP.TCollection.TCollection_AsciiString) -> int: 
         """
         associates a positive Case Number to each type of StepAP214 entity, given as a String defined in the EXPRESS form
 
         associates a positive Case Number to each type of StepAP214 Complex entity, given as a String defined in the EXPRESS form
         """
     @overload
-    def CaseStep(self,atype : OCP.TCollection.TCollection_AsciiString) -> int: ...
+    def CaseStep(self,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> int: ...
     def ComplexType(self,CN : int,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> bool: 
         """
         None

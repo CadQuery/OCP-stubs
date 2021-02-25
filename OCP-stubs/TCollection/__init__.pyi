@@ -5,6 +5,7 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Standard
+import io
 __all__  = [
 "TCollection",
 "TCollection_AsciiString",
@@ -51,17 +52,17 @@ class TCollection_AsciiString():
         Appends <other> to me. This is an unary operator. Example: aString += anotherString
         """
     @overload
+    def AssignCat(self,other : float) -> None: ...
+    @overload
     def AssignCat(self,other : TCollection_AsciiString) -> None: ...
     @overload
     def AssignCat(self,other : int) -> None: ...
-    @overload
-    def AssignCat(self,other : float) -> None: ...
     def Capitalize(self) -> None: 
         """
         Converts the first character into its corresponding upper-case character and the other characters into lowercase Example: before me = "hellO " after me = "Hello "
         """
     @overload
-    def Cat(self,other : str) -> TCollection_AsciiString: 
+    def Cat(self,other : float) -> TCollection_AsciiString: 
         """
         Appends <other> to me. Syntax: aString = aString + "Dummy" Example: aString contains "I say " aString = aString + "Hello " + "Dolly" gives "I say Hello Dolly" To catenate more than one CString, you must put a String before. So the following example is WRONG ! aString = "Hello " + "Dolly" THIS IS NOT ALLOWED This rule is applicable to AssignCat (operator +=) too.
 
@@ -83,12 +84,12 @@ class TCollection_AsciiString():
 
         Appends <other> to me. Syntax: aString = aString + 15.15; Example: aString contains "I say " gives "I say 15.15" To catenate more than one CString, you must put a String before. So the following example is WRONG ! aString = "Hello " + "Dolly" THIS IS NOT ALLOWED This rule is applicable to AssignCat (operator +=) too.
         """
+    @overload
+    def Cat(self,other : int) -> TCollection_AsciiString: ...
     @overload
     def Cat(self,other : TCollection_AsciiString) -> TCollection_AsciiString: ...
     @overload
-    def Cat(self,other : float) -> TCollection_AsciiString: ...
-    @overload
-    def Cat(self,other : int) -> TCollection_AsciiString: ...
+    def Cat(self,other : str) -> TCollection_AsciiString: ...
     def Center(self,Width : int,Filler : str) -> None: 
         """
         Modifies this ASCII string so that its length becomes equal to Width and the new characters are equal to Filler. New characters are added both at the beginning and at the end of this string. If Width is less than the length of this ASCII string, nothing happens. Example TCollection_AsciiString myAlphabet("abcdef"); myAlphabet.Center(9,' '); assert ( myAlphabet == " abcdef " );
@@ -155,27 +156,27 @@ class TCollection_AsciiString():
         Returns True if the AsciiString contains only ASCII characters between ' ' and '~'. This means no control character and no extended ASCII code.
         """
     @overload
-    def IsDifferent(self,other : TCollection_AsciiString) -> bool: 
+    def IsDifferent(self,other : str) -> bool: 
         """
         Returns true if there are differences between the characters in this ASCII string and ASCII string other. Note that this method is an alias of operator !=
 
         Returns true if there are differences between the characters in this ASCII string and ASCII string other. Note that this method is an alias of operator !=
         """
     @overload
-    def IsDifferent(self,other : str) -> bool: ...
+    def IsDifferent(self,other : TCollection_AsciiString) -> bool: ...
     def IsEmpty(self) -> bool: 
         """
         Returns True if the string <me> contains zero character.
         """
     @overload
-    def IsEqual(self,other : TCollection_AsciiString) -> bool: 
+    def IsEqual(self,other : str) -> bool: 
         """
         Returns true if the characters in this ASCII string are identical to the characters in ASCII string other. Note that this method is an alias of operator ==.
 
         Returns true if the characters in this ASCII string are identical to the characters in ASCII string other. Note that this method is an alias of operator ==.
         """
     @overload
-    def IsEqual(self,other : str) -> bool: ...
+    def IsEqual(self,other : TCollection_AsciiString) -> bool: ...
     @staticmethod
     @overload
     def IsEqual_s(string1 : TCollection_AsciiString,string2 : str) -> bool: 
@@ -201,14 +202,14 @@ class TCollection_AsciiString():
         Returns True if the AsciiString contains an integer value. Note: an integer value is considered to be a real value as well.
         """
     @overload
-    def IsLess(self,other : TCollection_AsciiString) -> bool: 
+    def IsLess(self,other : str) -> bool: 
         """
         Returns TRUE if <me> is 'ASCII' less than <other>.
 
         Returns TRUE if <me> is 'ASCII' less than <other>.
         """
     @overload
-    def IsLess(self,other : str) -> bool: ...
+    def IsLess(self,other : TCollection_AsciiString) -> bool: ...
     def IsRealValue(self) -> bool: 
         """
         Returns True if the AsciiString contains a real value. Note: an integer value is considered to be a real value as well.
@@ -233,14 +234,14 @@ class TCollection_AsciiString():
         Returns number of characters in <me>. This is the same functionality as 'strlen' in C. Example TCollection_AsciiString myAlphabet("abcdef"); assert ( myAlphabet.Length() == 6 ); - 1 is the position of the first character in this string. - The length of this string gives the position of its last character. - Positions less than or equal to zero, or greater than the length of this string are invalid in functions which identify a character of this string by its position.
         """
     @overload
-    def Location(self,N : int,C : str,FromIndex : int,ToIndex : int) -> int: 
+    def Location(self,other : TCollection_AsciiString,FromIndex : int,ToIndex : int) -> int: 
         """
         Returns an index in the string <me> of the first occurence of the string S in the string <me> from the starting index FromIndex to the ending index ToIndex returns zero if failure Raises an exception if FromIndex or ToIndex is out of range. Example: before me = "aabAaAa", S = "Aa", FromIndex = 1, ToIndex = 7 after me = "aabAaAa" returns 4
 
         Returns the index of the nth occurence of the character C in the string <me> from the starting index FromIndex to the ending index ToIndex. Returns zero if failure. Raises an exception if FromIndex or ToIndex is out of range. Example: before me = "aabAa", N = 3, C = 'a', FromIndex = 1, ToIndex = 5 after me = "aabAa" returns 5
         """
     @overload
-    def Location(self,other : TCollection_AsciiString,FromIndex : int,ToIndex : int) -> int: ...
+    def Location(self,N : int,C : str,FromIndex : int,ToIndex : int) -> int: ...
     def LowerCase(self) -> None: 
         """
         Converts <me> to its lower-case equivalent. Example TCollection_AsciiString myString("Hello Dolly"); myString.UpperCase(); assert ( myString == "HELLO DOLLY" ); myString.LowerCase(); assert ( myString == "hello dolly" );
@@ -249,11 +250,11 @@ class TCollection_AsciiString():
         """
         Inserts the string other at the beginning of this ASCII string. Example TCollection_AsciiString myAlphabet("cde"); TCollection_AsciiString myBegin("ab"); myAlphabet.Prepend(myBegin); assert ( myAlphabet == "abcde" );
         """
-    def Print(self,astream : Any) -> None: 
+    def Print(self,astream : io.BytesIO) -> None: 
         """
         Displays <me> on a stream.
         """
-    def Read(self,astream : Any) -> None: 
+    def Read(self,astream : io.BytesIO) -> None: 
         """
         Read <me> from a stream.
         """
@@ -266,14 +267,14 @@ class TCollection_AsciiString():
         Erases <ahowmany> characters from position <where>, <where> included. Example: aString contains "Hello" aString.Remove(2,2) erases 2 characters from position 2 This gives "Hlo".
         """
     @overload
-    def RemoveAll(self,C : str,CaseSensitive : bool) -> None: 
+    def RemoveAll(self,what : str) -> None: 
         """
         Remove all the occurences of the character C in the string. Example: before me = "HellLLo", C = 'L' , CaseSensitive = True after me = "Hello"
 
         Removes every <what> characters from <me>.
         """
     @overload
-    def RemoveAll(self,what : str) -> None: ...
+    def RemoveAll(self,C : str,CaseSensitive : bool) -> None: ...
     def RightAdjust(self) -> None: 
         """
         Removes all space characters at the end of the string.
@@ -301,7 +302,7 @@ class TCollection_AsciiString():
     @overload
     def SearchFromEnd(self,what : str) -> int: ...
     @overload
-    def SetValue(self,where : int,what : str) -> None: 
+    def SetValue(self,where : int,what : TCollection_AsciiString) -> None: 
         """
         Replaces one character in the AsciiString at position <where>. If <where> is less than zero or greater than the length of <me> an exception is raised. Example: aString contains "Garbake" astring.Replace(6,'g') gives <me> = "Garbage"
 
@@ -310,7 +311,7 @@ class TCollection_AsciiString():
         Replaces a part of <me> by another AsciiString.
         """
     @overload
-    def SetValue(self,where : int,what : TCollection_AsciiString) -> None: ...
+    def SetValue(self,where : int,what : str) -> None: ...
     def Split(self,where : int) -> TCollection_AsciiString: 
         """
         Splits a AsciiString into two sub-strings. Example: aString contains "abcdefg" aString.Split(3) gives <me> = "abc" and returns "defg"
@@ -356,7 +357,7 @@ class TCollection_AsciiString():
         Returns character at position <where> in <me>. If <where> is less than zero or greater than the lenght of <me>, an exception is raised. Example: aString contains "Hello" aString.Value(2) returns 'e'
         """
     @overload
-    def __add__(self,other : float) -> TCollection_AsciiString: 
+    def __add__(self,other : str) -> TCollection_AsciiString: 
         """
         None
 
@@ -369,13 +370,13 @@ class TCollection_AsciiString():
         None
         """
     @overload
-    def __add__(self,other : str) -> TCollection_AsciiString: ...
-    @overload
-    def __add__(self,other : int) -> TCollection_AsciiString: ...
+    def __add__(self,other : float) -> TCollection_AsciiString: ...
     @overload
     def __add__(self,other : TCollection_AsciiString) -> TCollection_AsciiString: ...
     @overload
-    def __iadd__(self,other : TCollection_AsciiString) -> None: 
+    def __add__(self,other : int) -> TCollection_AsciiString: ...
+    @overload
+    def __iadd__(self,other : str) -> None: 
         """
         None
 
@@ -388,35 +389,35 @@ class TCollection_AsciiString():
         None
         """
     @overload
-    def __iadd__(self,other : int) -> None: ...
+    def __iadd__(self,other : TCollection_AsciiString) -> None: ...
     @overload
     def __iadd__(self,other : float) -> None: ...
     @overload
-    def __iadd__(self,other : str) -> None: ...
+    def __iadd__(self,other : int) -> None: ...
+    @overload
+    def __init__(self,aChar : str) -> None: ...
+    @overload
+    def __init__(self,astring : TCollection_ExtendedString,replaceNonAscii : str='\x00') -> None: ...
     @overload
     def __init__(self,message : str) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,astring : TCollection_ExtendedString,replaceNonAscii : str='\x00') -> None: ...
-    @overload
     def __init__(self,theStringUtf : str) -> None: ...
     @overload
-    def __init__(self,value : int) -> None: ...
-    @overload
-    def __init__(self,length : int,filler : str) -> None: ...
+    def __init__(self,astring : TCollection_AsciiString,message : str) -> None: ...
     @overload
     def __init__(self,value : float) -> None: ...
     @overload
-    def __init__(self,message : str,aLen : int) -> None: ...
+    def __init__(self,value : int) -> None: ...
     @overload
-    def __init__(self,aChar : str) -> None: ...
+    def __init__(self,message : str,aLen : int) -> None: ...
     @overload
     def __init__(self,astring : TCollection_AsciiString,message : TCollection_AsciiString) -> None: ...
     @overload
-    def __init__(self,astring : TCollection_AsciiString) -> None: ...
+    def __init__(self,length : int,filler : str) -> None: ...
     @overload
-    def __init__(self,astring : TCollection_AsciiString,message : str) -> None: ...
+    def __init__(self,astring : TCollection_AsciiString) -> None: ...
     pass
 class TCollection_BaseSequence():
     """
@@ -465,7 +466,7 @@ class TCollection_BasicMap():
 
         Returns the number of buckets in <me>.
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Prints on <S> usefull statistics about the map <me>. It can be used to test the quality of the hashcoding.
         """
@@ -493,10 +494,15 @@ class TCollection_ExtendedString():
     """
     A variable-length sequence of "extended" (UNICODE) characters (16-bit character type). It provides editing operations with built-in memory management to make ExtendedString objects easier to use than ordinary extended character arrays. ExtendedString objects follow "value semantics", that is, they are the actual strings, not handles to strings, and are copied through assignment. You may use HExtendedString objects to get handles to strings.
     """
+    @overload
     def AssignCat(self,other : TCollection_ExtendedString) -> None: 
         """
         Appends the other extended string to this extended string. Note that this method is an alias of operator +=. Example: aString += anotherString
+
+        Appends the utf16 char to this extended string.
         """
+    @overload
+    def AssignCat(self,theChar : str) -> None: ...
     def Cat(self,other : TCollection_ExtendedString) -> TCollection_ExtendedString: 
         """
         Appends <other> to me.
@@ -523,14 +529,14 @@ class TCollection_ExtendedString():
         Returns a hashed value for the extended string within the range 1 .. theUpper. Note: if string is ASCII, the computed value is the same as the value computed with the HashCode function on a TCollection_AsciiString string composed with equivalent ASCII characters.
         """
     @overload
-    def Insert(self,where : int,what : str) -> None: 
+    def Insert(self,where : int,what : TCollection_ExtendedString) -> None: 
         """
         Insert a Character at position <where>.
 
         Insert a ExtendedString at position <where>.
         """
     @overload
-    def Insert(self,where : int,what : TCollection_ExtendedString) -> None: ...
+    def Insert(self,where : int,what : str) -> None: ...
     def IsAscii(self) -> bool: 
         """
         Returns True if the ExtendedString contains only "Ascii Range" characters .
@@ -572,14 +578,14 @@ class TCollection_ExtendedString():
     @overload
     def IsGreater(self,other : str) -> bool: ...
     @overload
-    def IsLess(self,other : str) -> bool: 
+    def IsLess(self,other : TCollection_ExtendedString) -> bool: 
         """
         Returns TRUE if <me> is less than <other>.
 
         Returns TRUE if <me> is less than <other>.
         """
     @overload
-    def IsLess(self,other : TCollection_ExtendedString) -> bool: ...
+    def IsLess(self,other : str) -> bool: ...
     def Length(self) -> int: 
         """
         Returns the number of 16-bit code units (might be greater than number of Unicode symbols if string contains surrogate pairs).
@@ -588,7 +594,7 @@ class TCollection_ExtendedString():
         """
         Returns expected CString length in UTF8 coding. It can be used for memory calculation before converting to CString containing symbols in UTF8 coding.
         """
-    def Print(self,astream : Any) -> None: 
+    def Print(self,astream : io.BytesIO) -> None: 
         """
         Displays <me> .
         """
@@ -654,25 +660,25 @@ class TCollection_ExtendedString():
         None
         """
     @overload
-    def __init__(self,theStringUtf : str) -> None: ...
+    def __init__(self,value : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,value : int) -> None: ...
+    @overload
+    def __init__(self,astring : str,isMultiByte : bool=False) -> None: ...
+    @overload
+    def __init__(self,astring : str) -> None: ...
+    @overload
+    def __init__(self,length : int,filler : str) -> None: ...
     @overload
     def __init__(self,astring : TCollection_ExtendedString) -> None: ...
     @overload
     def __init__(self,aChar : str) -> None: ...
     @overload
-    def __init__(self,value : int) -> None: ...
+    def __init__(self,astring : TCollection_AsciiString,isMultiByte : bool=True) -> None: ...
     @overload
-    def __init__(self,astring : str) -> None: ...
-    @overload
-    def __init__(self,value : float) -> None: ...
-    @overload
-    def __init__(self,astring : str,isMultiByte : bool=False) -> None: ...
-    @overload
-    def __init__(self,length : int,filler : str) -> None: ...
-    @overload
-    def __init__(self,astring : TCollection_AsciiString) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theStringUtf : str) -> None: ...
     pass
 class TCollection_HAsciiString(OCP.Standard.Standard_Transient):
     """
@@ -696,14 +702,14 @@ class TCollection_HAsciiString(OCP.Standard.Standard_Transient):
         Converts the first character into its corresponding upper-case character and the other characters into lowercase. Example: before me = "hellO " after me = "Hello "
         """
     @overload
-    def Cat(self,other : TCollection_HAsciiString) -> TCollection_HAsciiString: 
+    def Cat(self,other : str) -> TCollection_HAsciiString: 
         """
         Creates a new string by concatenation of this ASCII string and the other ASCII string. Example: aString = aString + anotherString aString = aString + "Dummy" aString contains "I say " aString = aString + "Hello " + "Dolly" gives "I say Hello Dolly" Warning: To catenate more than one CString, you must put a String before. So the following example is WRONG ! aString = "Hello " + "Dolly" THIS IS NOT ALLOWED This rule is applicable to AssignCat (operator +=) too.
 
         Creates a new string by concatenation of this ASCII string and the other ASCII string. Example: aString = aString + anotherString
         """
     @overload
-    def Cat(self,other : str) -> TCollection_HAsciiString: ...
+    def Cat(self,other : TCollection_HAsciiString) -> TCollection_HAsciiString: ...
     def Center(self,Width : int,Filler : str) -> None: 
         """
         Modifies this ASCII string so that its length becomes equal to Width and the new characters are equal to Filler. New characters are added both at the beginning and at the end of this string. If Width is less than the length of this ASCII string, nothing happens. Example Handle(TCollection_HAsciiString) myAlphabet = new TCollection_HAsciiString ("abcdef"); myAlphabet->Center(9,' '); assert ( !strcmp( myAlphabet->ToCString(), " abcdef ") );
@@ -818,14 +824,14 @@ class TCollection_HAsciiString(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsSameString(self,S : TCollection_HAsciiString) -> bool: 
+    def IsSameString(self,S : TCollection_HAsciiString,CaseSensitive : bool) -> bool: 
         """
         Returns True if the string S contains same characters than the string <me>.
 
         Returns True if the string S contains same characters than the string <me>.
         """
     @overload
-    def IsSameString(self,S : TCollection_HAsciiString,CaseSensitive : bool) -> bool: ...
+    def IsSameString(self,S : TCollection_HAsciiString) -> bool: ...
     def LeftAdjust(self) -> None: 
         """
         Removes all space characters in the begining of the string
@@ -841,14 +847,14 @@ class TCollection_HAsciiString(OCP.Standard.Standard_Transient):
         Returns number of characters in <me>. This is the same functionality as 'strlen' in C.
         """
     @overload
-    def Location(self,N : int,C : str,FromIndex : int,ToIndex : int) -> int: 
+    def Location(self,other : TCollection_HAsciiString,FromIndex : int,ToIndex : int) -> int: 
         """
         returns an index in the string <me> of the first occurence of the string S in the string <me> from the starting index FromIndex to the ending index ToIndex returns zero if failure Raises an exception if FromIndex or ToIndex is out of range. Example: before me = "aabAaAa", S = "Aa", FromIndex = 1, ToIndex = 7 after me = "aabAaAa" returns 4
 
         Returns the index of the nth occurence of the character C in the string <me> from the starting index FromIndex to the ending index ToIndex. Returns zero if failure. Raises an exception if FromIndex or ToIndex is out of range Example: before me = "aabAa", N = 3, C = 'a', FromIndex = 1, ToIndex = 5 after me = "aabAa" returns 5
         """
     @overload
-    def Location(self,other : TCollection_HAsciiString,FromIndex : int,ToIndex : int) -> int: ...
+    def Location(self,N : int,C : str,FromIndex : int,ToIndex : int) -> int: ...
     def LowerCase(self) -> None: 
         """
         Converts <me> to its lower-case equivalent.
@@ -857,7 +863,7 @@ class TCollection_HAsciiString(OCP.Standard.Standard_Transient):
         """
         Inserts the other string at the begining of the string <me> Example: before me = "cde" , S = "ab" after me = "abcde" , S = "ab"
         """
-    def Print(self,astream : Any) -> None: 
+    def Print(self,astream : io.BytesIO) -> None: 
         """
         Prints this string on the stream <astream>.
         """
@@ -887,14 +893,14 @@ class TCollection_HAsciiString(OCP.Standard.Standard_Transient):
         Right justify. Length becomes equal to Width and the new characters are equal to Filler if Width < Length nothing happens Raises an exception if Width is less than zero Example: before me = "abcdef" , Width = 9 , Filler = ' ' after me = " abcdef"
         """
     @overload
-    def Search(self,what : TCollection_HAsciiString) -> int: 
+    def Search(self,what : str) -> int: 
         """
         Searches a CString in <me> from the beginning and returns position of first item <what> matching. It returns -1 if not found. Example: aString contains "Sample single test" aString.Search("le") returns 5
 
         Searches a String in <me> from the beginning and returns position of first item <what> matching. it returns -1 if not found.
         """
     @overload
-    def Search(self,what : str) -> int: ...
+    def Search(self,what : TCollection_HAsciiString) -> int: ...
     @overload
     def SearchFromEnd(self,what : str) -> int: 
         """
@@ -960,21 +966,21 @@ class TCollection_HAsciiString(OCP.Standard.Standard_Transient):
         Returns character at position <where> in <me>. If <where> is less than zero or greater than the lenght of <me>, an exception is raised. Example: aString contains "Hello" aString.Value(2) returns 'e'
         """
     @overload
+    def __init__(self,aChar : str) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,value : int) -> None: ...
     @overload
     def __init__(self,message : str) -> None: ...
     @overload
-    def __init__(self,aChar : str) -> None: ...
+    def __init__(self,aString : TCollection_AsciiString) -> None: ...
     @overload
     def __init__(self,aString : TCollection_HAsciiString) -> None: ...
-    @overload
-    def __init__(self,aString : TCollection_AsciiString) -> None: ...
     @overload
     def __init__(self,aString : TCollection_HExtendedString,replaceNonAscii : str) -> None: ...
     @overload
     def __init__(self,length : int,filler : str) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     @overload
     def __init__(self,value : float) -> None: ...
     @staticmethod
@@ -1079,7 +1085,7 @@ class TCollection_HExtendedString(OCP.Standard.Standard_Transient):
         """
         Returns number of characters in <me>. This is the same functionality as 'strlen' in C.
         """
-    def Print(self,astream : Any) -> None: 
+    def Print(self,astream : io.BytesIO) -> None: 
         """
         Displays <me> .
         """
@@ -1100,14 +1106,14 @@ class TCollection_HExtendedString(OCP.Standard.Standard_Transient):
         Searches a ExtendedString in another ExtendedString from the end and returns position of first item <what> matching. It returns -1 if not found.
         """
     @overload
-    def SetValue(self,where : int,what : str) -> None: 
+    def SetValue(self,where : int,what : TCollection_HExtendedString) -> None: 
         """
         Replaces one character in the string at position <where>. If <where> is less than zero or greater than the length of <me> an exception is raised. Example: aString contains "Garbake" astring.Replace(6,'g') gives <me> = "Garbage"
 
         Replaces a part of <me> by another string.
         """
     @overload
-    def SetValue(self,where : int,what : TCollection_HExtendedString) -> None: ...
+    def SetValue(self,where : int,what : str) -> None: ...
     def Split(self,where : int) -> TCollection_HExtendedString: 
         """
         Splits a ExtendedString into two sub-strings. Example: aString contains "abcdefg" aString.Split(3) gives <me> = "abc" and returns "defg"
@@ -1137,17 +1143,17 @@ class TCollection_HExtendedString(OCP.Standard.Standard_Transient):
         Returns ExtCharacter at position <where> in <me>. If <where> is less than zero or greater than the length of <me>, an exception is raised. Example: aString contains "Hello" aString.Value(2) returns 'e'
         """
     @overload
-    def __init__(self,aString : TCollection_HExtendedString) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,aString : TCollection_HAsciiString) -> None: ...
     @overload
     def __init__(self,length : int,filler : str) -> None: ...
     @overload
+    def __init__(self,aString : TCollection_HExtendedString) -> None: ...
+    @overload
     def __init__(self,aChar : str) -> None: ...
     @overload
-    def __init__(self,aString : TCollection_ExtendedString) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,aString : TCollection_HAsciiString) -> None: ...
+    def __init__(self,aString : TCollection_ExtendedString) -> None: ...
     @overload
     def __init__(self,message : str) -> None: ...
     @staticmethod
@@ -1300,34 +1306,42 @@ class TCollection_Side():
 
       TCollection_Right
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TCollection_Left: OCP.TCollection.TCollection_Side # value = TCollection_Side.TCollection_Left
-    TCollection_Right: OCP.TCollection.TCollection_Side # value = TCollection_Side.TCollection_Right
-    __entries: dict # value = {'TCollection_Left': (TCollection_Side.TCollection_Left, None), 'TCollection_Right': (TCollection_Side.TCollection_Right, None)}
-    __members__: dict # value = {'TCollection_Left': TCollection_Side.TCollection_Left, 'TCollection_Right': TCollection_Side.TCollection_Right}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TCollection_Left: OCP.TCollection.TCollection_Side # value = <TCollection_Side.TCollection_Left: 0>
+    TCollection_Right: OCP.TCollection.TCollection_Side # value = <TCollection_Side.TCollection_Right: 1>
+    __entries: dict # value = {'TCollection_Left': (<TCollection_Side.TCollection_Left: 0>, None), 'TCollection_Right': (<TCollection_Side.TCollection_Right: 1>, None)}
+    __members__: dict # value = {'TCollection_Left': <TCollection_Side.TCollection_Left: 0>, 'TCollection_Right': <TCollection_Side.TCollection_Right: 1>}
     pass
 @overload
-def HashCode(theAsciiString : TCollection_AsciiString,theUpperBound : int) -> int:
+def HashCode(theExtendedString : TCollection_ExtendedString,theUpperBound : int) -> int:
     """
-    Computes a hash code for the given extended string, in the range [1, theUpperBound]
-
     Computes a hash code for the given ASCII string, in the range [1, theUpperBound]
+
+    Computes a hash code for the given extended string, in the range [1, theUpperBound]
     """
 @overload
-def HashCode(theExtendedString : TCollection_ExtendedString,theUpperBound : int) -> int:
+def HashCode(theAsciiString : TCollection_AsciiString,theUpperBound : int) -> int:
     pass
 def IsEqual(string1 : TCollection_AsciiString,string2 : TCollection_AsciiString) -> bool:
     """
     None
     """
-TCollection_Left: OCP.TCollection.TCollection_Side # value = TCollection_Side.TCollection_Left
-TCollection_Right: OCP.TCollection.TCollection_Side # value = TCollection_Side.TCollection_Right
+TCollection_Left: OCP.TCollection.TCollection_Side # value = <TCollection_Side.TCollection_Left: 0>
+TCollection_Right: OCP.TCollection.TCollection_Side # value = <TCollection_Side.TCollection_Right: 1>

@@ -4,20 +4,22 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.Font
 import OCP.NCollection
-import OCP.gp
-import OCP.TColStd
-import OCP.Select3D
-import OCP.SelectMgr
-import OCP.OSD
+import OCP.Font
 import OCP.Bnd
-import OCP.Quantity
-import OCP.Aspect
-import OCP.Image
 import OCP.Standard
-import OCP.Geom
+import OCP.SelectMgr
+import OCP.Quantity
+import OCP.TCollection
+import OCP.TColStd
+import io
+import OCP.OSD
+import OCP.Select3D
+import Graphic3d_Camera
+import OCP.gp
+import OCP.Image
+import OCP.Aspect
+import OCP.TopLoc
 __all__  = [
 "Graphic3d_AlphaMode",
 "Graphic3d_Array1OfAttribute",
@@ -41,9 +43,6 @@ __all__  = [
 "Graphic3d_Attribute",
 "Graphic3d_AxisAspect",
 "Graphic3d_BSDF",
-"Graphic3d_BndBox3d",
-"Graphic3d_BndBox4d",
-"Graphic3d_BndBox4f",
 "Graphic3d_BoundBuffer",
 "Graphic3d_AttribBuffer",
 "Graphic3d_BufferRange",
@@ -99,6 +98,7 @@ __all__  = [
 "Graphic3d_NameOfTexture2D",
 "Graphic3d_NameOfTextureEnv",
 "Graphic3d_NameOfTexturePlane",
+"Graphic3d_PBRMaterial",
 "Graphic3d_PolygonOffset",
 "Graphic3d_PresentationAttributes",
 "Graphic3d_PriorityDefinitionError",
@@ -132,6 +132,7 @@ __all__  = [
 "Graphic3d_TextureParams",
 "Graphic3d_CubeMapSeparate",
 "Graphic3d_MediaTextureSet",
+"Graphic3d_TextureSetBits",
 "Graphic3d_TextureUnit",
 "Graphic3d_ToneMappingMethod",
 "Graphic3d_TransModeFlags",
@@ -214,6 +215,7 @@ __all__  = [
 "Graphic3d_BT_RGB",
 "Graphic3d_BT_RGBA",
 "Graphic3d_BT_RGB_RayTraceHdrLeft",
+"Graphic3d_BT_Red",
 "Graphic3d_CMS_NEG_X",
 "Graphic3d_CMS_NEG_Y",
 "Graphic3d_CMS_NEG_Z",
@@ -244,19 +246,37 @@ __all__  = [
 "Graphic3d_FrameStatsCounter_EstimatedBytesFbos",
 "Graphic3d_FrameStatsCounter_EstimatedBytesGeom",
 "Graphic3d_FrameStatsCounter_EstimatedBytesTextures",
+"Graphic3d_FrameStatsCounter_IMMEDIATE_LOWER",
+"Graphic3d_FrameStatsCounter_IMMEDIATE_UPPER",
 "Graphic3d_FrameStatsCounter_NB",
+"Graphic3d_FrameStatsCounter_NbElemsFillImmediate",
 "Graphic3d_FrameStatsCounter_NbElemsFillNotCulled",
+"Graphic3d_FrameStatsCounter_NbElemsImmediate",
+"Graphic3d_FrameStatsCounter_NbElemsLineImmediate",
 "Graphic3d_FrameStatsCounter_NbElemsLineNotCulled",
 "Graphic3d_FrameStatsCounter_NbElemsNotCulled",
+"Graphic3d_FrameStatsCounter_NbElemsPointImmediate",
 "Graphic3d_FrameStatsCounter_NbElemsPointNotCulled",
+"Graphic3d_FrameStatsCounter_NbElemsTextImmediate",
 "Graphic3d_FrameStatsCounter_NbElemsTextNotCulled",
+"Graphic3d_FrameStatsCounter_NbGroupsImmediate",
 "Graphic3d_FrameStatsCounter_NbGroupsNotCulled",
 "Graphic3d_FrameStatsCounter_NbLayers",
+"Graphic3d_FrameStatsCounter_NbLayersImmediate",
 "Graphic3d_FrameStatsCounter_NbLayersNotCulled",
+"Graphic3d_FrameStatsCounter_NbLinesImmediate",
+"Graphic3d_FrameStatsCounter_NbLinesNotCulled",
+"Graphic3d_FrameStatsCounter_NbPointsImmediate",
 "Graphic3d_FrameStatsCounter_NbPointsNotCulled",
 "Graphic3d_FrameStatsCounter_NbStructs",
+"Graphic3d_FrameStatsCounter_NbStructsImmediate",
 "Graphic3d_FrameStatsCounter_NbStructsNotCulled",
+"Graphic3d_FrameStatsCounter_NbTrianglesImmediate",
 "Graphic3d_FrameStatsCounter_NbTrianglesNotCulled",
+"Graphic3d_FrameStatsCounter_RENDERED_LOWER",
+"Graphic3d_FrameStatsCounter_RENDERED_UPPER",
+"Graphic3d_FrameStatsCounter_SCENE_LOWER",
+"Graphic3d_FrameStatsCounter_SCENE_UPPER",
 "Graphic3d_FrameStatsTimer_CpuCulling",
 "Graphic3d_FrameStatsTimer_CpuDynamics",
 "Graphic3d_FrameStatsTimer_CpuFrame",
@@ -336,6 +356,32 @@ __all__  = [
 "Graphic3d_NOT_ENV_SKY1",
 "Graphic3d_NOT_ENV_SKY2",
 "Graphic3d_NOT_ENV_UNKNOWN",
+"Graphic3d_NameOfMaterial_Aluminum",
+"Graphic3d_NameOfMaterial_Brass",
+"Graphic3d_NameOfMaterial_Bronze",
+"Graphic3d_NameOfMaterial_Charcoal",
+"Graphic3d_NameOfMaterial_Chrome",
+"Graphic3d_NameOfMaterial_Copper",
+"Graphic3d_NameOfMaterial_DEFAULT",
+"Graphic3d_NameOfMaterial_Diamond",
+"Graphic3d_NameOfMaterial_Glass",
+"Graphic3d_NameOfMaterial_Gold",
+"Graphic3d_NameOfMaterial_Ionized",
+"Graphic3d_NameOfMaterial_Jade",
+"Graphic3d_NameOfMaterial_Metalized",
+"Graphic3d_NameOfMaterial_Neon",
+"Graphic3d_NameOfMaterial_Obsidian",
+"Graphic3d_NameOfMaterial_Pewter",
+"Graphic3d_NameOfMaterial_Plastered",
+"Graphic3d_NameOfMaterial_Plastified",
+"Graphic3d_NameOfMaterial_Satin",
+"Graphic3d_NameOfMaterial_ShinyPlastified",
+"Graphic3d_NameOfMaterial_Silver",
+"Graphic3d_NameOfMaterial_Steel",
+"Graphic3d_NameOfMaterial_Stone",
+"Graphic3d_NameOfMaterial_Transparent",
+"Graphic3d_NameOfMaterial_UserDefined",
+"Graphic3d_NameOfMaterial_Water",
 "Graphic3d_RM_RASTERIZATION",
 "Graphic3d_RM_RAYTRACING",
 "Graphic3d_RTM_BLEND_OIT",
@@ -344,6 +390,7 @@ __all__  = [
 "Graphic3d_StereoMode_ChessBoard",
 "Graphic3d_StereoMode_ColumnInterlaced",
 "Graphic3d_StereoMode_NB",
+"Graphic3d_StereoMode_OpenVR",
 "Graphic3d_StereoMode_OverUnder",
 "Graphic3d_StereoMode_QuadBuffer",
 "Graphic3d_StereoMode_RowInterlaced",
@@ -407,6 +454,8 @@ __all__  = [
 "Graphic3d_TOSM_FACET",
 "Graphic3d_TOSM_FRAGMENT",
 "Graphic3d_TOSM_NONE",
+"Graphic3d_TOSM_PBR",
+"Graphic3d_TOSM_PBR_FACET",
 "Graphic3d_TOSM_UNLIT",
 "Graphic3d_TOSM_VERTEX",
 "Graphic3d_TOS_ALL",
@@ -437,6 +486,12 @@ __all__  = [
 "Graphic3d_TP_LEFT",
 "Graphic3d_TP_RIGHT",
 "Graphic3d_TP_UP",
+"Graphic3d_TextureSetBits_BaseColor",
+"Graphic3d_TextureSetBits_Emissive",
+"Graphic3d_TextureSetBits_MetallicRoughness",
+"Graphic3d_TextureSetBits_NONE",
+"Graphic3d_TextureSetBits_Normal",
+"Graphic3d_TextureSetBits_Occlusion",
 "Graphic3d_TextureUnit_0",
 "Graphic3d_TextureUnit_1",
 "Graphic3d_TextureUnit_10",
@@ -454,8 +509,16 @@ __all__  = [
 "Graphic3d_TextureUnit_8",
 "Graphic3d_TextureUnit_9",
 "Graphic3d_TextureUnit_BaseColor",
+"Graphic3d_TextureUnit_Emissive",
 "Graphic3d_TextureUnit_EnvMap",
+"Graphic3d_TextureUnit_MetallicRoughness",
 "Graphic3d_TextureUnit_NB",
+"Graphic3d_TextureUnit_Normal",
+"Graphic3d_TextureUnit_Occlusion",
+"Graphic3d_TextureUnit_PbrEnvironmentLUT",
+"Graphic3d_TextureUnit_PbrIblDiffuseSH",
+"Graphic3d_TextureUnit_PbrIblSpecular",
+"Graphic3d_TextureUnit_PointSprite",
 "Graphic3d_ToneMappingMethod_Disabled",
 "Graphic3d_ToneMappingMethod_Filmic",
 "Graphic3d_TypeOfBackground_NB",
@@ -464,10 +527,12 @@ __all__  = [
 "Graphic3d_TypeOfLimit_HasBlendedOitMsaa",
 "Graphic3d_TypeOfLimit_HasFlatShading",
 "Graphic3d_TypeOfLimit_HasMeshEdges",
+"Graphic3d_TypeOfLimit_HasPBR",
 "Graphic3d_TypeOfLimit_HasRayTracing",
 "Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling",
 "Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic",
 "Graphic3d_TypeOfLimit_HasRayTracingTextures",
+"Graphic3d_TypeOfLimit_HasSRGB",
 "Graphic3d_TypeOfLimit_IsWorkaroundFBO",
 "Graphic3d_TypeOfLimit_MaxCombinedTextureUnits",
 "Graphic3d_TypeOfLimit_MaxMsaa",
@@ -517,22 +582,30 @@ class Graphic3d_AlphaMode():
 
       Graphic3d_AlphaMode_BlendAuto
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_AlphaMode_Blend: OCP.Graphic3d.Graphic3d_AlphaMode # value = Graphic3d_AlphaMode.Graphic3d_AlphaMode_Blend
-    Graphic3d_AlphaMode_BlendAuto: OCP.Graphic3d.Graphic3d_AlphaMode # value = Graphic3d_AlphaMode.Graphic3d_AlphaMode_BlendAuto
-    Graphic3d_AlphaMode_Mask: OCP.Graphic3d.Graphic3d_AlphaMode # value = Graphic3d_AlphaMode.Graphic3d_AlphaMode_Mask
-    Graphic3d_AlphaMode_Opaque: OCP.Graphic3d.Graphic3d_AlphaMode # value = Graphic3d_AlphaMode.Graphic3d_AlphaMode_Opaque
-    __entries: dict # value = {'Graphic3d_AlphaMode_Opaque': (Graphic3d_AlphaMode.Graphic3d_AlphaMode_Opaque, None), 'Graphic3d_AlphaMode_Mask': (Graphic3d_AlphaMode.Graphic3d_AlphaMode_Mask, None), 'Graphic3d_AlphaMode_Blend': (Graphic3d_AlphaMode.Graphic3d_AlphaMode_Blend, None), 'Graphic3d_AlphaMode_BlendAuto': (Graphic3d_AlphaMode.Graphic3d_AlphaMode_BlendAuto, None)}
-    __members__: dict # value = {'Graphic3d_AlphaMode_Opaque': Graphic3d_AlphaMode.Graphic3d_AlphaMode_Opaque, 'Graphic3d_AlphaMode_Mask': Graphic3d_AlphaMode.Graphic3d_AlphaMode_Mask, 'Graphic3d_AlphaMode_Blend': Graphic3d_AlphaMode.Graphic3d_AlphaMode_Blend, 'Graphic3d_AlphaMode_BlendAuto': Graphic3d_AlphaMode.Graphic3d_AlphaMode_BlendAuto}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_AlphaMode_Blend: OCP.Graphic3d.Graphic3d_AlphaMode # value = <Graphic3d_AlphaMode.Graphic3d_AlphaMode_Blend: 2>
+    Graphic3d_AlphaMode_BlendAuto: OCP.Graphic3d.Graphic3d_AlphaMode # value = <Graphic3d_AlphaMode.Graphic3d_AlphaMode_BlendAuto: -1>
+    Graphic3d_AlphaMode_Mask: OCP.Graphic3d.Graphic3d_AlphaMode # value = <Graphic3d_AlphaMode.Graphic3d_AlphaMode_Mask: 1>
+    Graphic3d_AlphaMode_Opaque: OCP.Graphic3d.Graphic3d_AlphaMode # value = <Graphic3d_AlphaMode.Graphic3d_AlphaMode_Opaque: 0>
+    __entries: dict # value = {'Graphic3d_AlphaMode_Opaque': (<Graphic3d_AlphaMode.Graphic3d_AlphaMode_Opaque: 0>, None), 'Graphic3d_AlphaMode_Mask': (<Graphic3d_AlphaMode.Graphic3d_AlphaMode_Mask: 1>, None), 'Graphic3d_AlphaMode_Blend': (<Graphic3d_AlphaMode.Graphic3d_AlphaMode_Blend: 2>, None), 'Graphic3d_AlphaMode_BlendAuto': (<Graphic3d_AlphaMode.Graphic3d_AlphaMode_BlendAuto: -1>, None)}
+    __members__: dict # value = {'Graphic3d_AlphaMode_Opaque': <Graphic3d_AlphaMode.Graphic3d_AlphaMode_Opaque: 0>, 'Graphic3d_AlphaMode_Mask': <Graphic3d_AlphaMode.Graphic3d_AlphaMode_Mask: 1>, 'Graphic3d_AlphaMode_Blend': <Graphic3d_AlphaMode.Graphic3d_AlphaMode_Blend: 2>, 'Graphic3d_AlphaMode_BlendAuto': <Graphic3d_AlphaMode.Graphic3d_AlphaMode_BlendAuto: -1>}
     pass
 class Graphic3d_Array1OfAttribute():
     """
@@ -611,14 +684,14 @@ class Graphic3d_Array1OfAttribute():
         Constant value access
         """
     @overload
+    def __init__(self,theBegin : Graphic3d_Attribute,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Graphic3d_Array1OfAttribute) -> None: ...
-    @overload
-    def __init__(self,theBegin : Graphic3d_Attribute,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Graphic3d_ArrayOfIndexedMapOfStructure():
     """
@@ -699,19 +772,19 @@ class Graphic3d_ArrayOfIndexedMapOfStructure():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : Graphic3d_IndexedMapOfStructure,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Graphic3d_ArrayOfIndexedMapOfStructure) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
     """
     This class furnish services to defined and fill an array of primitives which can be passed directly to graphics rendering API.This class furnish services to defined and fill an array of primitives which can be passed directly to graphics rendering API.This class furnish services to defined and fill an array of primitives which can be passed directly to graphics rendering API.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -720,15 +793,15 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: ...
+    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array.
 
@@ -737,7 +810,7 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
     @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -783,7 +856,7 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: 
         """
         Adds a vertice in the array.
 
@@ -822,31 +895,31 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
     @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
+    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -966,16 +1039,16 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the vertex color of rank theIndex in the array.
 
@@ -986,9 +1059,9 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Change the vertex color of rank theIndex> in the array.
         """
     @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
@@ -1001,23 +1074,23 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
         """
         Change the vertex texel of rank theIndex in the array.
 
         Change the vertex texel of rank theIndex in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
         Change the vertice of rank theIndex in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -1031,7 +1104,7 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
@@ -1042,20 +1115,20 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Returns the vertex color values at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
     def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the vertex normal at rank theRank from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -1074,14 +1147,14 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
     @overload
     def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the vertice at rank theRank from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1098,7 +1171,7 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
     Contains polygons array definition. WARNING! Polygon primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.Contains polygons array definition. WARNING! Polygon primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -1107,15 +1180,15 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: ...
+    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array.
 
@@ -1124,7 +1197,7 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
     @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -1170,7 +1243,7 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: 
         """
         Adds a vertice in the array.
 
@@ -1209,31 +1282,31 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
     @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
+    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -1353,16 +1426,16 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the vertex color of rank theIndex in the array.
 
@@ -1373,9 +1446,9 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Change the vertex color of rank theIndex> in the array.
         """
     @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
@@ -1388,23 +1461,23 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
         """
         Change the vertex texel of rank theIndex in the array.
 
         Change the vertex texel of rank theIndex in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
         Change the vertice of rank theIndex in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -1418,7 +1491,7 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
@@ -1429,20 +1502,20 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the vertex color values at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
     def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the vertex normal at rank theRank from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -1461,14 +1534,14 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
     @overload
     def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the vertice at rank theRank from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
     @overload
@@ -1489,7 +1562,7 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
     Contains polylines array definition.Contains polylines array definition.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -1498,15 +1571,15 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: ...
+    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array.
 
@@ -1515,7 +1588,7 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
     @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -1561,7 +1634,7 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: 
         """
         Adds a vertice in the array.
 
@@ -1600,31 +1673,31 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
     @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
+    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -1744,16 +1817,16 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the vertex color of rank theIndex in the array.
 
@@ -1764,9 +1837,9 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Change the vertex color of rank theIndex> in the array.
         """
     @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
@@ -1779,23 +1852,23 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
         """
         Change the vertex texel of rank theIndex in the array.
 
         Change the vertex texel of rank theIndex in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
         Change the vertice of rank theIndex in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -1809,7 +1882,7 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
@@ -1820,20 +1893,20 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the vertex color values at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
     def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the vertex normal at rank theRank from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -1852,14 +1925,14 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
     @overload
     def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the vertice at rank theRank from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
     @overload
@@ -1880,7 +1953,7 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
     Contains points array definition.Contains points array definition.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -1889,15 +1962,15 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: ...
+    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array.
 
@@ -1906,7 +1979,7 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
     @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -1952,7 +2025,7 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: 
         """
         Adds a vertice in the array.
 
@@ -1991,31 +2064,31 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
     @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
+    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -2135,16 +2208,16 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the vertex color of rank theIndex in the array.
 
@@ -2155,9 +2228,9 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Change the vertex color of rank theIndex> in the array.
         """
     @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
@@ -2170,23 +2243,23 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
         """
         Change the vertex texel of rank theIndex in the array.
 
         Change the vertex texel of rank theIndex in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
         Change the vertice of rank theIndex in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -2200,7 +2273,7 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
@@ -2211,20 +2284,20 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Returns the vertex color values at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
     def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the vertex normal at rank theRank from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -2243,14 +2316,14 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
     @overload
     def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the vertice at rank theRank from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theArrayFlags : int) -> None: ...
     @overload
@@ -2271,7 +2344,7 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
     Contains quadrangles strip array definition. WARNING! Quadrangle primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.Contains quadrangles strip array definition. WARNING! Quadrangle primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -2280,15 +2353,15 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: ...
+    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array.
 
@@ -2297,7 +2370,7 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
     @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -2343,7 +2416,7 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: 
         """
         Adds a vertice in the array.
 
@@ -2382,31 +2455,31 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
     @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
+    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -2526,16 +2599,16 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the vertex color of rank theIndex in the array.
 
@@ -2546,9 +2619,9 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Change the vertex color of rank theIndex> in the array.
         """
     @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
@@ -2561,23 +2634,23 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
         """
         Change the vertex texel of rank theIndex in the array.
 
         Change the vertex texel of rank theIndex in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
         Change the vertice of rank theIndex in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -2591,7 +2664,7 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
@@ -2602,20 +2675,20 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Returns the vertex color values at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
     def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the vertex normal at rank theRank from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -2634,14 +2707,14 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
     @overload
     def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the vertice at rank theRank from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxStrips : int,theArrayFlags : int) -> None: ...
     @overload
@@ -2662,7 +2735,7 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
     Contains quadrangles array definition. WARNING! Quadrangle primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.Contains quadrangles array definition. WARNING! Quadrangle primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -2671,15 +2744,15 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: ...
+    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array.
 
@@ -2688,7 +2761,7 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
     @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -2734,7 +2807,7 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: 
         """
         Adds a vertice in the array.
 
@@ -2773,31 +2846,31 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
     @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
+    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -2917,16 +2990,16 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the vertex color of rank theIndex in the array.
 
@@ -2937,9 +3010,9 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Change the vertex color of rank theIndex> in the array.
         """
     @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
@@ -2952,23 +3025,23 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
         """
         Change the vertex texel of rank theIndex in the array.
 
         Change the vertex texel of rank theIndex in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
         Change the vertice of rank theIndex in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -2982,7 +3055,7 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
@@ -2993,20 +3066,20 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Returns the vertex color values at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
     def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the vertex normal at rank theRank from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -3025,18 +3098,18 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
     @overload
     def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the vertice at rank theRank from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
-    @overload
-    def __init__(self,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxEdges : int=0,theHasVNormals : bool=False,theHasVColors : bool=False,theHasVTexels : bool=False) -> None: ...
+    @overload
+    def __init__(self,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3053,7 +3126,7 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
     Contains segments array definition.Contains segments array definition.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -3062,15 +3135,15 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: ...
+    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array.
 
@@ -3079,7 +3152,7 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
     @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -3125,7 +3198,7 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: 
         """
         Adds a vertice in the array.
 
@@ -3164,31 +3237,31 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
     @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
+    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -3308,16 +3381,16 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the vertex color of rank theIndex in the array.
 
@@ -3328,9 +3401,9 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Change the vertex color of rank theIndex> in the array.
         """
     @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
@@ -3343,23 +3416,23 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
         """
         Change the vertex texel of rank theIndex in the array.
 
         Change the vertex texel of rank theIndex in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
         Change the vertice of rank theIndex in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -3373,7 +3446,7 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
@@ -3384,20 +3457,20 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the vertex color values at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
     def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the vertex normal at rank theRank from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -3416,18 +3489,18 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
     @overload
     def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the vertice at rank theRank from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
-    @overload
-    def __init__(self,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxEdges : int=0,theHasVColors : bool=False) -> None: ...
+    @overload
+    def __init__(self,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3444,7 +3517,7 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
     Contains triangles fan array definitionContains triangles fan array definition
     """
     @overload
-    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -3453,15 +3526,15 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: ...
+    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array.
 
@@ -3470,7 +3543,7 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
     @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -3516,7 +3589,7 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: 
         """
         Adds a vertice in the array.
 
@@ -3555,31 +3628,31 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
     @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
+    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -3699,16 +3772,16 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the vertex color of rank theIndex in the array.
 
@@ -3719,9 +3792,9 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Change the vertex color of rank theIndex> in the array.
         """
     @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
@@ -3734,23 +3807,23 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
         """
         Change the vertex texel of rank theIndex in the array.
 
         Change the vertex texel of rank theIndex in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
         Change the vertice of rank theIndex in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -3764,7 +3837,7 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
@@ -3775,20 +3848,20 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Returns the vertex color values at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
     def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the vertex normal at rank theRank from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -3807,14 +3880,14 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
     @overload
     def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the vertice at rank theRank from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxFans : int=0,theHasVNormals : bool=False,theHasVColors : bool=False,theHasBColors : bool=False,theHasVTexels : bool=False) -> None: ...
     @overload
@@ -3835,7 +3908,7 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
     Contains triangles strip array definition.Contains triangles strip array definition.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -3844,15 +3917,15 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: ...
+    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array.
 
@@ -3861,7 +3934,7 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
     @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -3907,7 +3980,7 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: 
         """
         Adds a vertice in the array.
 
@@ -3946,31 +4019,31 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
     @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
+    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -4090,16 +4163,16 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the vertex color of rank theIndex in the array.
 
@@ -4110,9 +4183,9 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Change the vertex color of rank theIndex> in the array.
         """
     @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
@@ -4125,23 +4198,23 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
         """
         Change the vertex texel of rank theIndex in the array.
 
         Change the vertex texel of rank theIndex in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
         Change the vertice of rank theIndex in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -4155,7 +4228,7 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
@@ -4166,20 +4239,20 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Returns the vertex color values at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
     def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the vertex normal at rank theRank from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -4198,18 +4271,18 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
     @overload
     def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the vertice at rank theRank from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
-    @overload
-    def __init__(self,theMaxVertexs : int,theMaxStrips : int,theArrayFlags : int) -> None: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxStrips : int=0,theHasVNormals : bool=False,theHasVColors : bool=False,theHasBColors : bool=False,theHasVTexels : bool=False) -> None: ...
+    @overload
+    def __init__(self,theMaxVertexs : int,theMaxStrips : int,theArrayFlags : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4226,7 +4299,7 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
     Contains triangles array definitionContains triangles array definition
     """
     @overload
-    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -4235,15 +4308,15 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: ...
+    def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array.
 
@@ -4252,7 +4325,7 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
     @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -4298,7 +4371,7 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: 
         """
         Adds a vertice in the array.
 
@@ -4337,31 +4410,31 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
     @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
+    def AddVertex(self,theVertex : Graphic3d_Vec3) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -4481,16 +4554,16 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the vertex color of rank theIndex in the array.
 
@@ -4501,9 +4574,9 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Change the vertex color of rank theIndex> in the array.
         """
     @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
@@ -4516,23 +4589,23 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
         """
         Change the vertex texel of rank theIndex in the array.
 
         Change the vertex texel of rank theIndex in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
         Change the vertice of rank theIndex in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -4546,7 +4619,7 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
@@ -4557,20 +4630,20 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the vertex color values at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
     def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the vertex normal at rank theRank from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -4589,18 +4662,18 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
     @overload
     def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the vertice at rank theRank from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
-    @overload
-    def __init__(self,theMaxVertexs : int,theMaxEdges : int=0,theHasVNormals : bool=False,theHasVColors : bool=False,theHasVTexels : bool=False) -> None: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
+    @overload
+    def __init__(self,theMaxVertexs : int,theMaxEdges : int=0,theHasVNormals : bool=False,theHasVColors : bool=False,theHasVTexels : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4672,6 +4745,16 @@ class Graphic3d_Aspects(OCP.Standard.Standard_Transient):
         """
         Decrements the reference counter of this object; returns the decremented value
         """
+    @staticmethod
+    def DefaultLinePatternForType_s(theType : OCP.Aspect.Aspect_TypeOfLine) -> int: 
+        """
+        Return stipple line pattern for line type.
+        """
+    @staticmethod
+    def DefaultLineTypeForPattern_s(thePattern : int) -> OCP.Aspect.Aspect_TypeOfLine: 
+        """
+        Return line type for stipple line pattern.
+        """
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -4680,7 +4763,7 @@ class Graphic3d_Aspects(OCP.Standard.Standard_Transient):
         """
         Returns true if material properties should be distinguished for back and front faces (false by default).
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -4762,6 +4845,14 @@ class Graphic3d_Aspects(OCP.Standard.Standard_Transient):
         """
         Returns TRUE when the Text Zoomable is on.
         """
+    def LinePattern(self) -> int: 
+        """
+        Return custom stipple line pattern; 0xFFFF by default.
+        """
+    def LineStippleFactor(self) -> int: 
+        """
+        Return a multiplier for each bit in the line stipple pattern within [1, 256] range; 1 by default.
+        """
     def LineType(self) -> OCP.Aspect.Aspect_TypeOfLine: 
         """
         Return line type; Aspect_TOL_SOLID by default.
@@ -4795,14 +4886,14 @@ class Graphic3d_Aspects(OCP.Standard.Standard_Transient):
         Defines the way how alpha value should be treated.
         """
     @overload
-    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Modifies the color of the interior of the back face
 
         Modifies the color of the interior of the back face
         """
     @overload
-    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     def SetBackMaterial(self,theMaterial : Graphic3d_MaterialAspect) -> None: 
         """
         Modifies the surface material of internal faces
@@ -4812,14 +4903,14 @@ class Graphic3d_Aspects(OCP.Standard.Standard_Transient):
         Modifies the color.
         """
     @overload
-    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Modifies text background/shadow color; equals to EdgeColor() property.
 
         Modifies text background/shadow color; equals to EdgeColor() property.
         """
     @overload
-    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetDistinguish(self,toDistinguish : bool) -> None: 
         """
         Set material distinction between front and back faces.
@@ -4841,14 +4932,14 @@ class Graphic3d_Aspects(OCP.Standard.Standard_Transient):
         Enables/disables drawing silhouette (outline).
         """
     @overload
-    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Modifies the color of the edge of the face
 
         Modifies the color of the edge of the face
         """
     @overload
-    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     def SetEdgeLineType(self,theType : OCP.Aspect.Aspect_TypeOfLine) -> None: 
         """
         Modifies the edge line type (same as SetLineType())
@@ -4870,26 +4961,34 @@ class Graphic3d_Aspects(OCP.Standard.Standard_Transient):
         Modifies the surface material of external faces
         """
     @overload
-    def SetHatchStyle(self,theStyle : OCP.Aspect.Aspect_HatchStyle) -> None: 
+    def SetHatchStyle(self,theStyle : Graphic3d_HatchStyle) -> None: 
         """
         Modifies the hatch type used when InteriorStyle is IS_HATCH
 
         Modifies the hatch type used when InteriorStyle is IS_HATCH
         """
     @overload
-    def SetHatchStyle(self,theStyle : Graphic3d_HatchStyle) -> None: ...
+    def SetHatchStyle(self,theStyle : OCP.Aspect.Aspect_HatchStyle) -> None: ...
     @overload
-    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Modifies the color of the interior of the face
 
         Modifies the color of the interior of the face
         """
     @overload
-    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetInteriorStyle(self,theStyle : OCP.Aspect.Aspect_InteriorStyle) -> None: 
         """
         Modifies the interior type used for rendering
+        """
+    def SetLinePattern(self,thePattern : int) -> None: 
+        """
+        Modifies the stipple line pattern, and changes line type to Aspect_TOL_USERDEFINED for non-standard pattern.
+        """
+    def SetLineStippleFactor(self,theFactor : int) -> None: 
+        """
+        Set a multiplier for each bit in the line stipple pattern.
         """
     def SetLineType(self,theType : OCP.Aspect.Aspect_TypeOfLine) -> None: 
         """
@@ -4968,14 +5067,14 @@ class Graphic3d_Aspects(OCP.Standard.Standard_Transient):
         Disable texture mapping.
         """
     @overload
-    def SetTextureMapOn(self) -> None: 
+    def SetTextureMapOn(self,theToMap : bool) -> None: 
         """
         Enable or disable texture mapping (has no effect if texture is not set).
 
         Enable texture mapping (has no effect if texture is not set).
         """
     @overload
-    def SetTextureMapOn(self,theToMap : bool) -> None: ...
+    def SetTextureMapOn(self) -> None: ...
     def SetTextureSet(self,theTextures : Graphic3d_TextureSet) -> None: 
         """
         Setup texture array to be mapped.
@@ -5120,6 +5219,16 @@ class Graphic3d_AspectLine3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         """
         Decrements the reference counter of this object; returns the decremented value
         """
+    @staticmethod
+    def DefaultLinePatternForType_s(theType : OCP.Aspect.Aspect_TypeOfLine) -> int: 
+        """
+        Return stipple line pattern for line type.
+        """
+    @staticmethod
+    def DefaultLineTypeForPattern_s(thePattern : int) -> OCP.Aspect.Aspect_TypeOfLine: 
+        """
+        Return line type for stipple line pattern.
+        """
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -5128,7 +5237,7 @@ class Graphic3d_AspectLine3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         """
         Returns true if material properties should be distinguished for back and front faces (false by default).
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -5210,6 +5319,14 @@ class Graphic3d_AspectLine3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         """
         Returns TRUE when the Text Zoomable is on.
         """
+    def LinePattern(self) -> int: 
+        """
+        Return custom stipple line pattern; 0xFFFF by default.
+        """
+    def LineStippleFactor(self) -> int: 
+        """
+        Return a multiplier for each bit in the line stipple pattern within [1, 256] range; 1 by default.
+        """
     def LineType(self) -> OCP.Aspect.Aspect_TypeOfLine: 
         """
         Return line type; Aspect_TOL_SOLID by default.
@@ -5243,14 +5360,14 @@ class Graphic3d_AspectLine3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Defines the way how alpha value should be treated.
         """
     @overload
-    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Modifies the color of the interior of the back face
 
         Modifies the color of the interior of the back face
         """
     @overload
-    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     def SetBackMaterial(self,theMaterial : Graphic3d_MaterialAspect) -> None: 
         """
         Modifies the surface material of internal faces
@@ -5260,14 +5377,14 @@ class Graphic3d_AspectLine3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Modifies the color.
         """
     @overload
-    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Modifies text background/shadow color; equals to EdgeColor() property.
 
         Modifies text background/shadow color; equals to EdgeColor() property.
         """
     @overload
-    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetDistinguish(self,toDistinguish : bool) -> None: 
         """
         Set material distinction between front and back faces.
@@ -5289,14 +5406,14 @@ class Graphic3d_AspectLine3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Enables/disables drawing silhouette (outline).
         """
     @overload
-    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Modifies the color of the edge of the face
 
         Modifies the color of the edge of the face
         """
     @overload
-    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     def SetEdgeLineType(self,theType : OCP.Aspect.Aspect_TypeOfLine) -> None: 
         """
         Modifies the edge line type (same as SetLineType())
@@ -5318,26 +5435,34 @@ class Graphic3d_AspectLine3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Modifies the surface material of external faces
         """
     @overload
-    def SetHatchStyle(self,theStyle : OCP.Aspect.Aspect_HatchStyle) -> None: 
+    def SetHatchStyle(self,theStyle : Graphic3d_HatchStyle) -> None: 
         """
         Modifies the hatch type used when InteriorStyle is IS_HATCH
 
         Modifies the hatch type used when InteriorStyle is IS_HATCH
         """
     @overload
-    def SetHatchStyle(self,theStyle : Graphic3d_HatchStyle) -> None: ...
+    def SetHatchStyle(self,theStyle : OCP.Aspect.Aspect_HatchStyle) -> None: ...
     @overload
-    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Modifies the color of the interior of the face
 
         Modifies the color of the interior of the face
         """
     @overload
-    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetInteriorStyle(self,theStyle : OCP.Aspect.Aspect_InteriorStyle) -> None: 
         """
         Modifies the interior type used for rendering
+        """
+    def SetLinePattern(self,thePattern : int) -> None: 
+        """
+        Modifies the stipple line pattern, and changes line type to Aspect_TOL_USERDEFINED for non-standard pattern.
+        """
+    def SetLineStippleFactor(self,theFactor : int) -> None: 
+        """
+        Set a multiplier for each bit in the line stipple pattern.
         """
     def SetLineType(self,theType : OCP.Aspect.Aspect_TypeOfLine) -> None: 
         """
@@ -5416,14 +5541,14 @@ class Graphic3d_AspectLine3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Disable texture mapping.
         """
     @overload
-    def SetTextureMapOn(self) -> None: 
+    def SetTextureMapOn(self,theToMap : bool) -> None: 
         """
         Enable or disable texture mapping (has no effect if texture is not set).
 
         Enable texture mapping (has no effect if texture is not set).
         """
     @overload
-    def SetTextureMapOn(self,theToMap : bool) -> None: ...
+    def SetTextureMapOn(self) -> None: ...
     def SetTextureSet(self,theTextures : Graphic3d_TextureSet) -> None: 
         """
         Setup texture array to be mapped.
@@ -5515,9 +5640,9 @@ class Graphic3d_AspectLine3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Return line width.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theColor : OCP.Quantity.Quantity_Color,theType : OCP.Aspect.Aspect_TypeOfLine,theWidth : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5589,6 +5714,16 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         """
         Decrements the reference counter of this object; returns the decremented value
         """
+    @staticmethod
+    def DefaultLinePatternForType_s(theType : OCP.Aspect.Aspect_TypeOfLine) -> int: 
+        """
+        Return stipple line pattern for line type.
+        """
+    @staticmethod
+    def DefaultLineTypeForPattern_s(thePattern : int) -> OCP.Aspect.Aspect_TypeOfLine: 
+        """
+        Return line type for stipple line pattern.
+        """
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -5597,7 +5732,7 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         """
         Returns true if material properties should be distinguished for back and front faces (false by default).
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -5687,6 +5822,14 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         """
         Returns TRUE when the Text Zoomable is on.
         """
+    def LinePattern(self) -> int: 
+        """
+        Return custom stipple line pattern; 0xFFFF by default.
+        """
+    def LineStippleFactor(self) -> int: 
+        """
+        Return a multiplier for each bit in the line stipple pattern within [1, 256] range; 1 by default.
+        """
     def LineType(self) -> OCP.Aspect.Aspect_TypeOfLine: 
         """
         Return line type; Aspect_TOL_SOLID by default.
@@ -5724,14 +5867,14 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         Defines the way how alpha value should be treated.
         """
     @overload
-    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Modifies the color of the interior of the back face
 
         Modifies the color of the interior of the back face
         """
     @overload
-    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     def SetBackMaterial(self,theMaterial : Graphic3d_MaterialAspect) -> None: 
         """
         Modifies the surface material of internal faces
@@ -5745,14 +5888,14 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         Modifies the color.
         """
     @overload
-    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Modifies text background/shadow color; equals to EdgeColor() property.
 
         Modifies text background/shadow color; equals to EdgeColor() property.
         """
     @overload
-    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetDistinguish(self,toDistinguish : bool) -> None: 
         """
         Set material distinction between front and back faces.
@@ -5774,14 +5917,14 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         Enables/disables drawing silhouette (outline).
         """
     @overload
-    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Modifies the color of the edge of the face
 
         Modifies the color of the edge of the face
         """
     @overload
-    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     def SetEdgeLineType(self,theType : OCP.Aspect.Aspect_TypeOfLine) -> None: 
         """
         Modifies the edge line type (same as SetLineType())
@@ -5803,26 +5946,34 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         Modifies the surface material of external faces
         """
     @overload
-    def SetHatchStyle(self,theStyle : OCP.Aspect.Aspect_HatchStyle) -> None: 
+    def SetHatchStyle(self,theStyle : Graphic3d_HatchStyle) -> None: 
         """
         Modifies the hatch type used when InteriorStyle is IS_HATCH
 
         Modifies the hatch type used when InteriorStyle is IS_HATCH
         """
     @overload
-    def SetHatchStyle(self,theStyle : Graphic3d_HatchStyle) -> None: ...
+    def SetHatchStyle(self,theStyle : OCP.Aspect.Aspect_HatchStyle) -> None: ...
     @overload
-    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Modifies the color of the interior of the face
 
         Modifies the color of the interior of the face
         """
     @overload
-    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetInteriorStyle(self,theStyle : OCP.Aspect.Aspect_InteriorStyle) -> None: 
         """
         Modifies the interior type used for rendering
+        """
+    def SetLinePattern(self,thePattern : int) -> None: 
+        """
+        Modifies the stipple line pattern, and changes line type to Aspect_TOL_USERDEFINED for non-standard pattern.
+        """
+    def SetLineStippleFactor(self,theFactor : int) -> None: 
+        """
+        Set a multiplier for each bit in the line stipple pattern.
         """
     def SetLineType(self,theType : OCP.Aspect.Aspect_TypeOfLine) -> None: 
         """
@@ -5907,14 +6058,14 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         Disable texture mapping.
         """
     @overload
-    def SetTextureMapOn(self) -> None: 
+    def SetTextureMapOn(self,theToMap : bool) -> None: 
         """
         Enable or disable texture mapping (has no effect if texture is not set).
 
         Enable texture mapping (has no effect if texture is not set).
         """
     @overload
-    def SetTextureMapOn(self,theToMap : bool) -> None: ...
+    def SetTextureMapOn(self) -> None: ...
     def SetTextureSet(self,theTextures : Graphic3d_TextureSet) -> None: 
         """
         Setup texture array to be mapped.
@@ -5996,13 +6147,13 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         Return marker type.
         """
     @overload
-    def __init__(self,theType : OCP.Aspect.Aspect_TypeOfMarker,theColor : OCP.Quantity.Quantity_Color,theScale : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theTextureImage : OCP.Image.Image_PixMap) -> None: ...
+    def __init__(self,theType : OCP.Aspect.Aspect_TypeOfMarker,theColor : OCP.Quantity.Quantity_Color,theScale : float) -> None: ...
     @overload
     def __init__(self,theColor : OCP.Quantity.Quantity_Color,theWidth : int,theHeight : int,theTextureBitmap : OCP.TColStd.TColStd_HArray1OfByte) -> None: ...
+    @overload
+    def __init__(self,theTextureImage : OCP.Image.Image_PixMap) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6074,6 +6225,16 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         """
         Decrements the reference counter of this object; returns the decremented value
         """
+    @staticmethod
+    def DefaultLinePatternForType_s(theType : OCP.Aspect.Aspect_TypeOfLine) -> int: 
+        """
+        Return stipple line pattern for line type.
+        """
+    @staticmethod
+    def DefaultLineTypeForPattern_s(thePattern : int) -> OCP.Aspect.Aspect_TypeOfLine: 
+        """
+        Return line type for stipple line pattern.
+        """
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -6086,7 +6247,7 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         """
         Returns true if material properties should be distinguished for back and front faces (false by default).
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -6184,6 +6345,14 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         """
         Returns TRUE when the Text Zoomable is on.
         """
+    def LinePattern(self) -> int: 
+        """
+        Return custom stipple line pattern; 0xFFFF by default.
+        """
+    def LineStippleFactor(self) -> int: 
+        """
+        Return a multiplier for each bit in the line stipple pattern within [1, 256] range; 1 by default.
+        """
     def LineType(self) -> OCP.Aspect.Aspect_TypeOfLine: 
         """
         Return line type; Aspect_TOL_SOLID by default.
@@ -6217,14 +6386,14 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Defines the way how alpha value should be treated.
         """
     @overload
-    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Modifies the color of the interior of the back face
 
         Modifies the color of the interior of the back face
         """
     @overload
-    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     def SetBackMaterial(self,theMaterial : Graphic3d_MaterialAspect) -> None: 
         """
         Modifies the surface material of internal faces
@@ -6239,14 +6408,14 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
     @overload
     def SetColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Modifies text background/shadow color; equals to EdgeColor() property.
 
         Modifies text background/shadow color; equals to EdgeColor() property.
         """
     @overload
-    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetDisplayType(self,theDisplayType : OCP.Aspect.Aspect_TypeOfDisplayText) -> None: 
         """
         Define the display type of the text.
@@ -6272,14 +6441,14 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Enables/disables drawing silhouette (outline).
         """
     @overload
-    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Modifies the color of the edge of the face
 
         Modifies the color of the edge of the face
         """
     @overload
-    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     def SetEdgeLineType(self,theType : OCP.Aspect.Aspect_TypeOfLine) -> None: 
         """
         Modifies the edge line type (same as SetLineType())
@@ -6297,39 +6466,47 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Modifies the edge thickness (same as SetLineWidth())
         """
     @overload
-    def SetFont(self,theFont : str) -> None: 
+    def SetFont(self,theFont : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Modifies the font.
 
         Modifies the font.
         """
     @overload
-    def SetFont(self,theFont : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def SetFont(self,theFont : str) -> None: ...
     def SetFrontMaterial(self,theMaterial : Graphic3d_MaterialAspect) -> None: 
         """
         Modifies the surface material of external faces
         """
     @overload
-    def SetHatchStyle(self,theStyle : OCP.Aspect.Aspect_HatchStyle) -> None: 
+    def SetHatchStyle(self,theStyle : Graphic3d_HatchStyle) -> None: 
         """
         Modifies the hatch type used when InteriorStyle is IS_HATCH
 
         Modifies the hatch type used when InteriorStyle is IS_HATCH
         """
     @overload
-    def SetHatchStyle(self,theStyle : Graphic3d_HatchStyle) -> None: ...
+    def SetHatchStyle(self,theStyle : OCP.Aspect.Aspect_HatchStyle) -> None: ...
     @overload
-    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Modifies the color of the interior of the face
 
         Modifies the color of the interior of the face
         """
     @overload
-    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetInteriorStyle(self,theStyle : OCP.Aspect.Aspect_InteriorStyle) -> None: 
         """
         Modifies the interior type used for rendering
+        """
+    def SetLinePattern(self,thePattern : int) -> None: 
+        """
+        Modifies the stipple line pattern, and changes line type to Aspect_TOL_USERDEFINED for non-standard pattern.
+        """
+    def SetLineStippleFactor(self,theFactor : int) -> None: 
+        """
+        Set a multiplier for each bit in the line stipple pattern.
         """
     def SetLineType(self,theType : OCP.Aspect.Aspect_TypeOfLine) -> None: 
         """
@@ -6412,14 +6589,14 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Disable texture mapping.
         """
     @overload
-    def SetTextureMapOn(self) -> None: 
+    def SetTextureMapOn(self,theToMap : bool) -> None: 
         """
         Enable or disable texture mapping (has no effect if texture is not set).
 
         Enable texture mapping (has no effect if texture is not set).
         """
     @overload
-    def SetTextureMapOn(self,theToMap : bool) -> None: ...
+    def SetTextureMapOn(self) -> None: ...
     def SetTextureSet(self,theTextures : Graphic3d_TextureSet) -> None: 
         """
         Setup texture array to be mapped.
@@ -6571,6 +6748,16 @@ class Graphic3d_AspectFillArea3d(Graphic3d_Aspects, OCP.Standard.Standard_Transi
         """
         Decrements the reference counter of this object; returns the decremented value
         """
+    @staticmethod
+    def DefaultLinePatternForType_s(theType : OCP.Aspect.Aspect_TypeOfLine) -> int: 
+        """
+        Return stipple line pattern for line type.
+        """
+    @staticmethod
+    def DefaultLineTypeForPattern_s(thePattern : int) -> OCP.Aspect.Aspect_TypeOfLine: 
+        """
+        Return line type for stipple line pattern.
+        """
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -6579,7 +6766,7 @@ class Graphic3d_AspectFillArea3d(Graphic3d_Aspects, OCP.Standard.Standard_Transi
         """
         Returns true if material properties should be distinguished for back and front faces (false by default).
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -6665,6 +6852,14 @@ class Graphic3d_AspectFillArea3d(Graphic3d_Aspects, OCP.Standard.Standard_Transi
         """
         Returns TRUE when the Text Zoomable is on.
         """
+    def LinePattern(self) -> int: 
+        """
+        Return custom stipple line pattern; 0xFFFF by default.
+        """
+    def LineStippleFactor(self) -> int: 
+        """
+        Return a multiplier for each bit in the line stipple pattern within [1, 256] range; 1 by default.
+        """
     def LineType(self) -> OCP.Aspect.Aspect_TypeOfLine: 
         """
         Return line type; Aspect_TOL_SOLID by default.
@@ -6698,14 +6893,14 @@ class Graphic3d_AspectFillArea3d(Graphic3d_Aspects, OCP.Standard.Standard_Transi
         Defines the way how alpha value should be treated.
         """
     @overload
-    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Modifies the color of the interior of the back face
 
         Modifies the color of the interior of the back face
         """
     @overload
-    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetBackInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     def SetBackMaterial(self,theMaterial : Graphic3d_MaterialAspect) -> None: 
         """
         Modifies the surface material of internal faces
@@ -6715,14 +6910,14 @@ class Graphic3d_AspectFillArea3d(Graphic3d_Aspects, OCP.Standard.Standard_Transi
         Modifies the color.
         """
     @overload
-    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Modifies text background/shadow color; equals to EdgeColor() property.
 
         Modifies text background/shadow color; equals to EdgeColor() property.
         """
     @overload
-    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetDistinguish(self,toDistinguish : bool) -> None: 
         """
         Set material distinction between front and back faces.
@@ -6744,14 +6939,14 @@ class Graphic3d_AspectFillArea3d(Graphic3d_Aspects, OCP.Standard.Standard_Transi
         Enables/disables drawing silhouette (outline).
         """
     @overload
-    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Modifies the color of the edge of the face
 
         Modifies the color of the edge of the face
         """
     @overload
-    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetEdgeColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
     def SetEdgeLineType(self,theType : OCP.Aspect.Aspect_TypeOfLine) -> None: 
         """
         Modifies the edge line type (same as SetLineType())
@@ -6773,26 +6968,34 @@ class Graphic3d_AspectFillArea3d(Graphic3d_Aspects, OCP.Standard.Standard_Transi
         Modifies the surface material of external faces
         """
     @overload
-    def SetHatchStyle(self,theStyle : OCP.Aspect.Aspect_HatchStyle) -> None: 
+    def SetHatchStyle(self,theStyle : Graphic3d_HatchStyle) -> None: 
         """
         Modifies the hatch type used when InteriorStyle is IS_HATCH
 
         Modifies the hatch type used when InteriorStyle is IS_HATCH
         """
     @overload
-    def SetHatchStyle(self,theStyle : Graphic3d_HatchStyle) -> None: ...
+    def SetHatchStyle(self,theStyle : OCP.Aspect.Aspect_HatchStyle) -> None: ...
     @overload
-    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Modifies the color of the interior of the face
 
         Modifies the color of the interior of the face
         """
     @overload
-    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetInteriorColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetInteriorStyle(self,theStyle : OCP.Aspect.Aspect_InteriorStyle) -> None: 
         """
         Modifies the interior type used for rendering
+        """
+    def SetLinePattern(self,thePattern : int) -> None: 
+        """
+        Modifies the stipple line pattern, and changes line type to Aspect_TOL_USERDEFINED for non-standard pattern.
+        """
+    def SetLineStippleFactor(self,theFactor : int) -> None: 
+        """
+        Set a multiplier for each bit in the line stipple pattern.
         """
     def SetLineType(self,theType : OCP.Aspect.Aspect_TypeOfLine) -> None: 
         """
@@ -6871,14 +7074,14 @@ class Graphic3d_AspectFillArea3d(Graphic3d_Aspects, OCP.Standard.Standard_Transi
         Disable texture mapping.
         """
     @overload
-    def SetTextureMapOn(self) -> None: 
+    def SetTextureMapOn(self,theToMap : bool) -> None: 
         """
         Enable or disable texture mapping (has no effect if texture is not set).
 
         Enable texture mapping (has no effect if texture is not set).
         """
     @overload
-    def SetTextureMapOn(self,theToMap : bool) -> None: ...
+    def SetTextureMapOn(self) -> None: ...
     def SetTextureSet(self,theTextures : Graphic3d_TextureSet) -> None: 
         """
         Setup texture array to be mapped.
@@ -7018,6 +7221,10 @@ class Graphic3d_Buffer(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -7039,14 +7246,14 @@ class Graphic3d_Buffer(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: 
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: 
         """
         Allocates new empty array
 
         Allocates new empty array
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: ...
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: ...
     def Invalidate(self) -> None: 
         """
         Invalidate entire buffer.
@@ -7285,6 +7492,11 @@ class Graphic3d_BSDF():
         Creates BSDF describing glass-like object. Glass-like BSDF mixes refraction and reflection effects at grazing angles using physically-based Fresnel dielectric model.
         """
     @staticmethod
+    def CreateMetallicRoughness_s(thePbr : Graphic3d_PBRMaterial) -> Graphic3d_BSDF: 
+        """
+        Creates BSDF from PBR metallic-roughness material.
+        """
+    @staticmethod
     def CreateMetallic_s(theWeight : Graphic3d_Vec3,theFresnel : Graphic3d_Fresnel,theRoughness : float) -> Graphic3d_BSDF: 
         """
         Creates BSDF describing polished metallic-like surface.
@@ -7293,6 +7505,10 @@ class Graphic3d_BSDF():
     def CreateTransparent_s(theWeight : Graphic3d_Vec3,theAbsorptionColor : Graphic3d_Vec3,theAbsorptionCoeff : float) -> Graphic3d_BSDF: 
         """
         Creates BSDF describing transparent object. Transparent BSDF models simple transparency without refraction (the ray passes straight through the surface).
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def Normalize(self) -> None: 
         """
@@ -7364,195 +7580,6 @@ class Graphic3d_BSDF():
     def Le(self, arg0: Graphic3d_Vec3) -> None:
         pass
     pass
-class Graphic3d_BndBox3d():
-    """
-    Defines axis aligned bounding box (AABB) based on BVH vectors.
-    """
-    def Add(self,thePoint : OCP.SelectMgr.SelectMgr_Vec3) -> None: 
-        """
-        Appends new point to the bounding box.
-        """
-    def Area(self) -> float: 
-        """
-        Returns surface area of bounding box. If the box is degenerated into line, returns the perimeter instead.
-        """
-    def Center(self,theAxis : int) -> float: 
-        """
-        Returns center of bounding box along the given axis.
-        """
-    def Clear(self) -> None: 
-        """
-        Clears bounding box.
-        """
-    def Combine(self,theBox : Graphic3d_BndBox3d) -> None: 
-        """
-        Combines bounding box with another one.
-        """
-    @overload
-    def Contains(self,theMinPoint : OCP.SelectMgr.SelectMgr_Vec3,theMaxPoint : OCP.SelectMgr.SelectMgr_Vec3,hasOverlap : bool) -> bool: 
-        """
-        Checks if the Box fully contains the other box.
-
-        Checks if the Box is fully contains the other box.
-        """
-    @overload
-    def Contains(self,theOther : Graphic3d_BndBox3d,hasOverlap : bool) -> bool: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
-        """
-        Dumps the content of me into the stream
-        """
-    @overload
-    def IsOut(self,theOther : Graphic3d_BndBox3d) -> bool: 
-        """
-        Checks if the Box is out of the other box.
-
-        Checks if the Box is out of the other box defined by two points.
-
-        Checks if the Point is out of the box.
-        """
-    @overload
-    def IsOut(self,theMinPoint : OCP.SelectMgr.SelectMgr_Vec3,theMaxPoint : OCP.SelectMgr.SelectMgr_Vec3) -> bool: ...
-    @overload
-    def IsOut(self,thePoint : OCP.SelectMgr.SelectMgr_Vec3) -> bool: ...
-    def IsValid(self) -> bool: 
-        """
-        Is bounding box valid?
-        """
-    @overload
-    def __init__(self,thePoint : OCP.SelectMgr.SelectMgr_Vec3) -> None: ...
-    @overload
-    def __init__(self,theBox : Graphic3d_BndBox3d) -> None: ...
-    @overload
-    def __init__(self,theMinPoint : OCP.SelectMgr.SelectMgr_Vec3,theMaxPoint : OCP.SelectMgr.SelectMgr_Vec3) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    pass
-class Graphic3d_BndBox4d():
-    """
-    Defines axis aligned bounding box (AABB) based on BVH vectors.
-    """
-    def Add(self,thePoint : Graphic3d_Vec4d) -> None: 
-        """
-        Appends new point to the bounding box.
-        """
-    def Area(self) -> float: 
-        """
-        Returns surface area of bounding box. If the box is degenerated into line, returns the perimeter instead.
-        """
-    def Center(self,theAxis : int) -> float: 
-        """
-        Returns center of bounding box along the given axis.
-        """
-    def Clear(self) -> None: 
-        """
-        Clears bounding box.
-        """
-    def Combine(self,theBox : Graphic3d_BndBox4d) -> None: 
-        """
-        Combines bounding box with another one.
-        """
-    @overload
-    def Contains(self,theMinPoint : Graphic3d_Vec4d,theMaxPoint : Graphic3d_Vec4d,hasOverlap : bool) -> bool: 
-        """
-        Checks if the Box fully contains the other box.
-
-        Checks if the Box is fully contains the other box.
-        """
-    @overload
-    def Contains(self,theOther : Graphic3d_BndBox4d,hasOverlap : bool) -> bool: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
-        """
-        Dumps the content of me into the stream
-        """
-    @overload
-    def IsOut(self,theOther : Graphic3d_BndBox4d) -> bool: 
-        """
-        Checks if the Box is out of the other box.
-
-        Checks if the Box is out of the other box defined by two points.
-
-        Checks if the Point is out of the box.
-        """
-    @overload
-    def IsOut(self,theMinPoint : Graphic3d_Vec4d,theMaxPoint : Graphic3d_Vec4d) -> bool: ...
-    @overload
-    def IsOut(self,thePoint : Graphic3d_Vec4d) -> bool: ...
-    def IsValid(self) -> bool: 
-        """
-        Is bounding box valid?
-        """
-    @overload
-    def __init__(self,theBox : Graphic3d_BndBox4d) -> None: ...
-    @overload
-    def __init__(self,theMinPoint : Graphic3d_Vec4d,theMaxPoint : Graphic3d_Vec4d) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,thePoint : Graphic3d_Vec4d) -> None: ...
-    pass
-class Graphic3d_BndBox4f():
-    """
-    Defines axis aligned bounding box (AABB) based on BVH vectors.
-    """
-    def Add(self,thePoint : Graphic3d_Vec4) -> None: 
-        """
-        Appends new point to the bounding box.
-        """
-    def Area(self) -> float: 
-        """
-        Returns surface area of bounding box. If the box is degenerated into line, returns the perimeter instead.
-        """
-    def Center(self,theAxis : int) -> float: 
-        """
-        Returns center of bounding box along the given axis.
-        """
-    def Clear(self) -> None: 
-        """
-        Clears bounding box.
-        """
-    def Combine(self,theBox : Graphic3d_BndBox4f) -> None: 
-        """
-        Combines bounding box with another one.
-        """
-    @overload
-    def Contains(self,theMinPoint : Graphic3d_Vec4,theMaxPoint : Graphic3d_Vec4,hasOverlap : bool) -> bool: 
-        """
-        Checks if the Box fully contains the other box.
-
-        Checks if the Box is fully contains the other box.
-        """
-    @overload
-    def Contains(self,theOther : Graphic3d_BndBox4f,hasOverlap : bool) -> bool: ...
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
-        """
-        Dumps the content of me into the stream
-        """
-    @overload
-    def IsOut(self,theOther : Graphic3d_BndBox4f) -> bool: 
-        """
-        Checks if the Box is out of the other box.
-
-        Checks if the Box is out of the other box defined by two points.
-
-        Checks if the Point is out of the box.
-        """
-    @overload
-    def IsOut(self,thePoint : Graphic3d_Vec4) -> bool: ...
-    @overload
-    def IsOut(self,theMinPoint : Graphic3d_Vec4,theMaxPoint : Graphic3d_Vec4) -> bool: ...
-    def IsValid(self) -> bool: 
-        """
-        Is bounding box valid?
-        """
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBox : Graphic3d_BndBox4f) -> None: ...
-    @overload
-    def __init__(self,thePoint : Graphic3d_Vec4) -> None: ...
-    @overload
-    def __init__(self,theMinPoint : Graphic3d_Vec4,theMaxPoint : Graphic3d_Vec4) -> None: ...
-    pass
 class Graphic3d_BoundBuffer(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard_Transient):
     """
     Bounds buffer.Bounds buffer.
@@ -7580,6 +7607,10 @@ class Graphic3d_BoundBuffer(OCP.NCollection.NCollection_Buffer, OCP.Standard.Sta
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -7715,6 +7746,10 @@ class Graphic3d_AttribBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffe
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -7745,7 +7780,7 @@ class Graphic3d_AttribBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffe
     @overload
     def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: ...
     @overload
-    def Invalidate(self,theAttributeIndex : int,theVertexLower : int,theVertexUpper : int) -> None: 
+    def Invalidate(self,theAttributeIndex : int) -> None: 
         """
         Invalidate the entire buffer data.
 
@@ -7756,9 +7791,9 @@ class Graphic3d_AttribBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffe
         Invalidate all attribute data within specified vertex sub-range (starting from 0).
         """
     @overload
-    def Invalidate(self) -> None: ...
+    def Invalidate(self,theAttributeIndex : int,theVertexLower : int,theVertexUpper : int) -> None: ...
     @overload
-    def Invalidate(self,theAttributeIndex : int) -> None: ...
+    def Invalidate(self) -> None: ...
     @overload
     def Invalidate(self,theVertexLower : int,theVertexUpper : int) -> None: ...
     def InvalidatedRange(self) -> Graphic3d_BufferRange: 
@@ -7896,9 +7931,9 @@ class Graphic3d_BufferRange():
         Return the Upper element within the range
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theStart : int,theLength : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @property
     def Length(self) -> int:
         """
@@ -7929,23 +7964,34 @@ class Graphic3d_BufferType():
       Graphic3d_BT_Depth
 
       Graphic3d_BT_RGB_RayTraceHdrLeft
-    """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
-    def __int__(self) -> int: ...
-    @property
-    def name(self) -> str:
-        """
-        (self: handle) -> str
 
-        :type: str
+      Graphic3d_BT_Red
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
         """
-    Graphic3d_BT_Depth: OCP.Graphic3d.Graphic3d_BufferType # value = Graphic3d_BufferType.Graphic3d_BT_Depth
-    Graphic3d_BT_RGB: OCP.Graphic3d.Graphic3d_BufferType # value = Graphic3d_BufferType.Graphic3d_BT_RGB
-    Graphic3d_BT_RGBA: OCP.Graphic3d.Graphic3d_BufferType # value = Graphic3d_BufferType.Graphic3d_BT_RGBA
-    Graphic3d_BT_RGB_RayTraceHdrLeft: OCP.Graphic3d.Graphic3d_BufferType # value = Graphic3d_BufferType.Graphic3d_BT_RGB_RayTraceHdrLeft
-    __entries: dict # value = {'Graphic3d_BT_RGB': (Graphic3d_BufferType.Graphic3d_BT_RGB, None), 'Graphic3d_BT_RGBA': (Graphic3d_BufferType.Graphic3d_BT_RGBA, None), 'Graphic3d_BT_Depth': (Graphic3d_BufferType.Graphic3d_BT_Depth, None), 'Graphic3d_BT_RGB_RayTraceHdrLeft': (Graphic3d_BufferType.Graphic3d_BT_RGB_RayTraceHdrLeft, None)}
-    __members__: dict # value = {'Graphic3d_BT_RGB': Graphic3d_BufferType.Graphic3d_BT_RGB, 'Graphic3d_BT_RGBA': Graphic3d_BufferType.Graphic3d_BT_RGBA, 'Graphic3d_BT_Depth': Graphic3d_BufferType.Graphic3d_BT_Depth, 'Graphic3d_BT_RGB_RayTraceHdrLeft': Graphic3d_BufferType.Graphic3d_BT_RGB_RayTraceHdrLeft}
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_BT_Depth: OCP.Graphic3d.Graphic3d_BufferType # value = <Graphic3d_BufferType.Graphic3d_BT_Depth: 2>
+    Graphic3d_BT_RGB: OCP.Graphic3d.Graphic3d_BufferType # value = <Graphic3d_BufferType.Graphic3d_BT_RGB: 0>
+    Graphic3d_BT_RGBA: OCP.Graphic3d.Graphic3d_BufferType # value = <Graphic3d_BufferType.Graphic3d_BT_RGBA: 1>
+    Graphic3d_BT_RGB_RayTraceHdrLeft: OCP.Graphic3d.Graphic3d_BufferType # value = <Graphic3d_BufferType.Graphic3d_BT_RGB_RayTraceHdrLeft: 3>
+    Graphic3d_BT_Red: OCP.Graphic3d.Graphic3d_BufferType # value = <Graphic3d_BufferType.Graphic3d_BT_Red: 4>
+    __entries: dict # value = {'Graphic3d_BT_RGB': (<Graphic3d_BufferType.Graphic3d_BT_RGB: 0>, None), 'Graphic3d_BT_RGBA': (<Graphic3d_BufferType.Graphic3d_BT_RGBA: 1>, None), 'Graphic3d_BT_Depth': (<Graphic3d_BufferType.Graphic3d_BT_Depth: 2>, None), 'Graphic3d_BT_RGB_RayTraceHdrLeft': (<Graphic3d_BufferType.Graphic3d_BT_RGB_RayTraceHdrLeft: 3>, None), 'Graphic3d_BT_Red': (<Graphic3d_BufferType.Graphic3d_BT_Red: 4>, None)}
+    __members__: dict # value = {'Graphic3d_BT_RGB': <Graphic3d_BufferType.Graphic3d_BT_RGB: 0>, 'Graphic3d_BT_RGBA': <Graphic3d_BufferType.Graphic3d_BT_RGBA: 1>, 'Graphic3d_BT_Depth': <Graphic3d_BufferType.Graphic3d_BT_Depth: 2>, 'Graphic3d_BT_RGB_RayTraceHdrLeft': <Graphic3d_BufferType.Graphic3d_BT_RGB_RayTraceHdrLeft: 3>, 'Graphic3d_BT_Red': <Graphic3d_BufferType.Graphic3d_BT_Red: 4>}
     pass
 class Graphic3d_CLight(OCP.Standard.Standard_Transient):
     """
@@ -7988,6 +8034,10 @@ class Graphic3d_CLight(OCP.Standard.Standard_Transient):
         """
     @overload
     def Direction(self) -> OCP.gp.gp_Dir: ...
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -8050,23 +8100,27 @@ class Graphic3d_CLight(OCP.Standard.Standard_Transient):
         """
         Returns the color of the light source with dummy Alpha component, which should be ignored.
         """
-    def PackedDirection(self) -> Graphic3d_Vec4: 
+    def PackedDirectionRange(self) -> Graphic3d_Vec4: 
         """
-        Returns direction of directional/spot light.
+        Returns direction of directional/spot light and range for positional/spot light in alpha channel.
         """
     def PackedParams(self) -> Graphic3d_Vec4: 
         """
         Packed light parameters.
         """
     @overload
-    def Position(self) -> Tuple[float, float, float]: 
+    def Position(self) -> OCP.gp.gp_Pnt: 
         """
         Returns location of positional/spot light.
 
         Returns location of positional/spot light; (0, 0, 0) by default.
         """
     @overload
-    def Position(self) -> OCP.gp.gp_Pnt: ...
+    def Position(self) -> Tuple[float, float, float]: ...
+    def Range(self) -> float: 
+        """
+        Returns maximum distance on which point light source affects to objects and is considered during illumination calculations. 0.0 means disabling range considering at all without any distance limits. Has sense only for point light sources (positional and spot).
+        """
     def Revision(self) -> int: 
         """
         Returns modification counter
@@ -8088,14 +8142,14 @@ class Graphic3d_CLight(OCP.Standard.Standard_Transient):
         Defines the coefficient of concentration; value should be within range [0.0, 1.0].
         """
     @overload
-    def SetDirection(self,theVx : float,theVy : float,theVz : float) -> None: 
+    def SetDirection(self,theDir : OCP.gp.gp_Dir) -> None: 
         """
         Sets direction of directional/spot light.
 
         Sets direction of directional/spot light.
         """
     @overload
-    def SetDirection(self,theDir : OCP.gp.gp_Dir) -> None: ...
+    def SetDirection(self,theVx : float,theVy : float,theVz : float) -> None: ...
     def SetEnabled(self,theIsOn : bool) -> None: 
         """
         Change enabled state of the light state. This call does not remove or deactivate light source in Views/Viewers; instead it turns it OFF so that it just have no effect.
@@ -8113,14 +8167,18 @@ class Graphic3d_CLight(OCP.Standard.Standard_Transient):
         Sets light source name.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
+    def SetRange(self,theValue : float) -> None: 
+        """
+        Modifies maximum distance on which point light source affects to objects and is considered during illumination calculations. Positional and spot lights are only point light sources. 0.0 means disabling range considering at all without any distance limits.
+        """
     def SetSmoothAngle(self,theValue : float) -> None: 
         """
         Modifies the smoothing angle (in radians) of directional light source; should be within range [0.0, M_PI/2].
@@ -8161,11 +8219,11 @@ class Graphic3d_CStructure(OCP.Standard.Standard_Transient):
         """
         Returns whether check of object's bounding box clipping is enabled before drawing of object; TRUE by default.
         """
-    def BoundingBox(self) -> Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of this presentation
         """
-    def ChangeBoundingBox(self) -> Graphic3d_BndBox3d: 
+    def ChangeBoundingBox(self) -> Any: 
         """
         Returns bounding box of this presentation without transformation matrix applied
         """
@@ -8192,6 +8250,10 @@ class Graphic3d_CStructure(OCP.Standard.Standard_Transient):
     def Disconnect(self,theStructure : Graphic3d_CStructure) -> None: 
         """
         Disconnect other structure to this one
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -8292,7 +8354,7 @@ class Graphic3d_CStructure(OCP.Standard.Standard_Transient):
         """
         Set transformation persistence.
         """
-    def SetTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Assign transformation.
         """
@@ -8312,7 +8374,7 @@ class Graphic3d_CStructure(OCP.Standard.Standard_Transient):
         """
         Return transformation persistence.
         """
-    def Transformation(self) -> OCP.Geom.Geom_Transformation: 
+    def Transformation(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return transformation.
         """
@@ -8410,6 +8472,114 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
     """
     Camera class provides object-oriented approach to setting up projection and orientation properties of 3D view.Camera class provides object-oriented approach to setting up projection and orientation properties of 3D view.
     """
+    class FocusType_e():
+        """
+        Enumerates approaches to define stereographic focus. - FocusType_Absolute : focus is specified as absolute value. - FocusType_Relative : focus is specified relative to (as coefficient of) camera focal length.
+
+        Members:
+
+          FocusType_Absolute
+
+          FocusType_Relative
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        FocusType_Absolute: OCP.Graphic3d.FocusType_e # value = <FocusType_e.FocusType_Absolute: 0>
+        FocusType_Relative: OCP.Graphic3d.FocusType_e # value = <FocusType_e.FocusType_Relative: 1>
+        __entries: dict # value = {'FocusType_Absolute': (<FocusType_e.FocusType_Absolute: 0>, None), 'FocusType_Relative': (<FocusType_e.FocusType_Relative: 1>, None)}
+        __members__: dict # value = {'FocusType_Absolute': <FocusType_e.FocusType_Absolute: 0>, 'FocusType_Relative': <FocusType_e.FocusType_Relative: 1>}
+        pass
+    class IODType_e():
+        """
+        Enumerates approaches to define Intraocular distance. - IODType_Absolute : Intraocular distance is defined as absolute value. - IODType_Relative : Intraocular distance is defined relative to (as coefficient of) camera focal length.
+
+        Members:
+
+          IODType_Absolute
+
+          IODType_Relative
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        IODType_Absolute: OCP.Graphic3d.IODType_e # value = <IODType_e.IODType_Absolute: 0>
+        IODType_Relative: OCP.Graphic3d.IODType_e # value = <IODType_e.IODType_Relative: 1>
+        __entries: dict # value = {'IODType_Absolute': (<IODType_e.IODType_Absolute: 0>, None), 'IODType_Relative': (<IODType_e.IODType_Relative: 1>, None)}
+        __members__: dict # value = {'IODType_Absolute': <IODType_e.IODType_Absolute: 0>, 'IODType_Relative': <IODType_e.IODType_Relative: 1>}
+        pass
+    class Projection_e():
+        """
+        Enumerates supported monographic projections. - Projection_Orthographic : orthographic projection. - Projection_Perspective : perspective projection. - Projection_Stereo : stereographic projection. - Projection_MonoLeftEye : mono projection for stereo left eye. - Projection_MonoRightEye : mono projection for stereo right eye.
+
+        Members:
+
+          Projection_Orthographic
+
+          Projection_Perspective
+
+          Projection_Stereo
+
+          Projection_MonoLeftEye
+
+          Projection_MonoRightEye
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        Projection_MonoLeftEye: OCP.Graphic3d.Projection_e # value = <Projection_e.Projection_MonoLeftEye: 3>
+        Projection_MonoRightEye: OCP.Graphic3d.Projection_e # value = <Projection_e.Projection_MonoRightEye: 4>
+        Projection_Orthographic: OCP.Graphic3d.Projection_e # value = <Projection_e.Projection_Orthographic: 0>
+        Projection_Perspective: OCP.Graphic3d.Projection_e # value = <Projection_e.Projection_Perspective: 1>
+        Projection_Stereo: OCP.Graphic3d.Projection_e # value = <Projection_e.Projection_Stereo: 2>
+        __entries: dict # value = {'Projection_Orthographic': (<Projection_e.Projection_Orthographic: 0>, None), 'Projection_Perspective': (<Projection_e.Projection_Perspective: 1>, None), 'Projection_Stereo': (<Projection_e.Projection_Stereo: 2>, None), 'Projection_MonoLeftEye': (<Projection_e.Projection_MonoLeftEye: 3>, None), 'Projection_MonoRightEye': (<Projection_e.Projection_MonoRightEye: 4>, None)}
+        __members__: dict # value = {'Projection_Orthographic': <Projection_e.Projection_Orthographic: 0>, 'Projection_Perspective': <Projection_e.Projection_Perspective: 1>, 'Projection_Stereo': <Projection_e.Projection_Stereo: 2>, 'Projection_MonoLeftEye': <Projection_e.Projection_MonoLeftEye: 3>, 'Projection_MonoRightEye': <Projection_e.Projection_MonoRightEye: 4>}
+        pass
     def Aspect(self) -> float: 
         """
         Get camera display ratio.
@@ -8466,6 +8636,10 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         """
         Get distance of Eye from camera Center.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -8473,6 +8647,14 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
     def Eye(self) -> OCP.gp.gp_Pnt: 
         """
         Get camera Eye position.
+        """
+    def FOV2d(self) -> float: 
+        """
+        Get Field Of View (FOV) restriction for 2D on-screen elements; 180 degrees by default. When 2D FOV is smaller than FOVy or FOVx, 2D elements defined within offset from view corner will be extended to fit into specified 2D FOV. This can be useful to make 2D elements sharply visible, like in case of HMD normally having extra large FOVy.
+        """
+    def FOVx(self) -> float: 
+        """
+        Get Field Of View (FOV) in x axis.
         """
     def FOVy(self) -> float: 
         """
@@ -8482,11 +8664,11 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         """
         Calculate WCS frustum planes for the camera projection volume. Frustum is a convex volume determined by six planes directing inwards. The frustum planes are usually used as inputs for camera algorithms. Thus, if any changes to projection matrix calculation are necessary, the frustum planes calculation should be also touched.
         """
-    def FrustumPoints(self,thePoints : Any) -> None: 
+    def FrustumPoints(self,thePoints : Any,theModelWorld : Graphic3d_Mat4d=Graphic3d_Mat4d) -> None: 
         """
         Fill array of current view frustum corners. The size of this array is equal to FrustumVerticesNB. The order of vertices is as defined in FrustumVert_* enumeration.
         """
-    def GetIODType(self) -> Any: 
+    def GetIODType(self) -> Graphic3d_Camera.IODType_e: 
         """
         Get Intraocular distance definition type.
         """
@@ -8509,6 +8691,18 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
     def InvalidateProjection(self) -> None: 
         """
         Invalidate state of projection matrix. The matrix will be updated on request.
+        """
+    def IsCustomMonoProjection(self) -> bool: 
+        """
+        Return TRUE if custom projection matrix is set.
+        """
+    def IsCustomStereoFrustum(self) -> bool: 
+        """
+        Return TRUE if custom stereo frustums are set.
+        """
+    def IsCustomStereoProjection(self) -> bool: 
+        """
+        Return TRUE if custom stereo projection matrices are set.
         """
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
@@ -8539,6 +8733,14 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
     def MoveEyeTo(self,theEye : OCP.gp.gp_Pnt) -> None: 
         """
         Sets camera Eye position. Unlike SetEye(), this method only changes Eye point and preserves camera direction.
+        """
+    def NDC2dOffsetX(self) -> float: 
+        """
+        Return offset to the view corner in NDC space within dimension X for 2d on-screen elements, which is normally 0.5. Can be clamped when FOVx exceeds FOV2d.
+        """
+    def NDC2dOffsetY(self) -> float: 
+        """
+        Return offset to the view corner in NDC space within dimension X for 2d on-screen elements, which is normally 0.5. Can be clamped when FOVy exceeds FOV2d.
         """
     def OrientationMatrix(self) -> Graphic3d_Mat4d: 
         """
@@ -8588,9 +8790,13 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         """
         Returns stereographic matrix of Standard_ShortReal precision computed for right eye. Please note that this method is used for rendering for Projection_Stereo.
         """
-    def ProjectionType(self) -> Any: 
+    def ProjectionType(self) -> Graphic3d_Camera.Projection_e: 
         """
         Returns camera projection type.
+        """
+    def ResetCustomProjection(self) -> None: 
+        """
+        Unset all custom frustums and projection matrices.
         """
     def Scale(self) -> float: 
         """
@@ -8607,6 +8813,18 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
     def SetCenter(self,theCenter : OCP.gp.gp_Pnt) -> None: 
         """
         Sets Center of the camera, e.g. the point where camera looks at. This methods changes camera direction, so that the new direction is computed from current Eye position to specified Center position.
+        """
+    def SetCustomMonoProjection(self,theProj : Graphic3d_Mat4d) -> None: 
+        """
+        Set custom projection matrix.
+        """
+    def SetCustomStereoFrustums(self,theFrustumL : Any,theFrustumR : Any) -> None: 
+        """
+        Set custom stereo frustums. These can be retrieved from APIs like OpenVR.
+        """
+    def SetCustomStereoProjection(self,theProjL : Graphic3d_Mat4d,theHeadToEyeL : Graphic3d_Mat4d,theProjR : Graphic3d_Mat4d,theHeadToEyeR : Graphic3d_Mat4d) -> None: 
+        """
+        Set custom stereo projection matrices.
         """
     def SetDirection(self,theDir : OCP.gp.gp_Dir) -> None: 
         """
@@ -8628,15 +8846,19 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         """
         Sets camera Eye and Center positions.
         """
+    def SetFOV2d(self,theFOV : float) -> None: 
+        """
+        Set Field Of View (FOV) restriction for 2D on-screen elements.
+        """
     def SetFOVy(self,theFOVy : float) -> None: 
         """
-        Set Field Of View (FOV) in y axis for perspective projection.
+        Set Field Of View (FOV) in y axis for perspective projection. Field of View in x axis is automatically scaled from view aspect ratio.
         """
-    def SetIOD(self,theType : Any,theIOD : float) -> None: 
+    def SetIOD(self,theType : Graphic3d_Camera.IODType_e,theIOD : float) -> None: 
         """
         Sets Intraocular distance.
         """
-    def SetProjectionType(self,theProjection : Any) -> None: 
+    def SetProjectionType(self,theProjection : Graphic3d_Camera.Projection_e) -> None: 
         """
         Change camera projection type. When switching to perspective projection from orthographic one, the ZNear and ZFar are reset to default values (0.001, 3000.0) if less than 0.0.
         """
@@ -8652,13 +8874,25 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         """
         Sets camera Up direction vector, orthogonal to camera direction. WARNING! This method does NOT verify that the new Up vector is orthogonal to the current Direction().
         """
-    def SetZFocus(self,theType : Any,theZFocus : float) -> None: 
+    def SetZFocus(self,theType : Graphic3d_Camera.FocusType_e,theZFocus : float) -> None: 
         """
         Sets stereographic focus distance.
         """
     def SetZRange(self,theZNear : float,theZFar : float) -> None: 
         """
         Change the Near and Far Z-clipping plane positions. For orthographic projection, theZNear, theZFar can be negative or positive. For perspective projection, only positive values are allowed. Program error exception is raised if non-positive values are specified for perspective projection or theZNear >= theZFar.
+        """
+    def SideRight(self) -> OCP.gp.gp_Dir: 
+        """
+        Right side direction.
+        """
+    def StereoProjection(self,theProjL : Graphic3d_Mat4d,theHeadToEyeL : Graphic3d_Mat4d,theProjR : Graphic3d_Mat4d,theHeadToEyeR : Graphic3d_Mat4d) -> None: 
+        """
+        Get stereo projection matrices.
+        """
+    def StereoProjectionF(self,theProjL : Graphic3d_Mat4,theHeadToEyeL : Graphic3d_Mat4,theProjR : Graphic3d_Mat4,theHeadToEyeR : Graphic3d_Mat4) -> None: 
+        """
+        Get stereo projection matrices.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -8681,14 +8915,14 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         Get camera Up direction vector.
         """
     @overload
-    def ViewDimensions(self) -> OCP.gp.gp_XYZ: 
+    def ViewDimensions(self,theZValue : float) -> OCP.gp.gp_XYZ: 
         """
         Calculate view plane size at center (target) point and distance between ZFar and ZNear planes.
 
         Calculate view plane size at center point with specified Z offset and distance between ZFar and ZNear planes.
         """
     @overload
-    def ViewDimensions(self,theZValue : float) -> OCP.gp.gp_XYZ: ...
+    def ViewDimensions(self) -> OCP.gp.gp_XYZ: ...
     def WorldViewProjState(self) -> Graphic3d_WorldViewProjState: 
         """
         Returns projection modification state of the camera.
@@ -8714,7 +8948,7 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         """
         Get stereographic focus value.
         """
-    def ZFocusType(self) -> Any: 
+    def ZFocusType(self) -> Graphic3d_Camera.FocusType_e: 
         """
         Get stereographic focus definition type.
         """
@@ -8723,9 +8957,9 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         Get the Near Z-clipping plane position.
         """
     @overload
-    def __init__(self,theOther : Graphic3d_Camera) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Graphic3d_Camera) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -8736,6 +8970,24 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         """
         None
         """
+    FocusType_Absolute: OCP.Graphic3d.FocusType_e # value = <FocusType_e.FocusType_Absolute: 0>
+    FocusType_Relative: OCP.Graphic3d.FocusType_e # value = <FocusType_e.FocusType_Relative: 1>
+    FrustumVert_LeftBottomFar = 1
+    FrustumVert_LeftBottomNear = 0
+    FrustumVert_LeftTopFar = 3
+    FrustumVert_LeftTopNear = 2
+    FrustumVert_RightBottomFar = 5
+    FrustumVert_RightBottomNear = 4
+    FrustumVert_RightTopFar = 7
+    FrustumVert_RightTopNear = 6
+    FrustumVerticesNB = 8
+    IODType_Absolute: OCP.Graphic3d.IODType_e # value = <IODType_e.IODType_Absolute: 0>
+    IODType_Relative: OCP.Graphic3d.IODType_e # value = <IODType_e.IODType_Relative: 1>
+    Projection_MonoLeftEye: OCP.Graphic3d.Projection_e # value = <Projection_e.Projection_MonoLeftEye: 3>
+    Projection_MonoRightEye: OCP.Graphic3d.Projection_e # value = <Projection_e.Projection_MonoRightEye: 4>
+    Projection_Orthographic: OCP.Graphic3d.Projection_e # value = <Projection_e.Projection_Orthographic: 0>
+    Projection_Perspective: OCP.Graphic3d.Projection_e # value = <Projection_e.Projection_Perspective: 1>
+    Projection_Stereo: OCP.Graphic3d.Projection_e # value = <Projection_e.Projection_Stereo: 2>
     pass
 class Graphic3d_CameraLerp():
     """
@@ -8766,6 +9018,10 @@ class Graphic3d_CameraTile():
     def Cropped(self) -> Graphic3d_CameraTile: 
         """
         Return the copy cropped by total size
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def IsValid(self) -> bool: 
         """
@@ -8817,23 +9073,31 @@ class Graphic3d_CappingFlags():
 
       Graphic3d_CappingFlags_ObjectAspect
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_CappingFlags_None: OCP.Graphic3d.Graphic3d_CappingFlags # value = Graphic3d_CappingFlags.Graphic3d_CappingFlags_None
-    Graphic3d_CappingFlags_ObjectAspect: OCP.Graphic3d.Graphic3d_CappingFlags # value = Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectAspect
-    Graphic3d_CappingFlags_ObjectMaterial: OCP.Graphic3d.Graphic3d_CappingFlags # value = Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectMaterial
-    Graphic3d_CappingFlags_ObjectShader: OCP.Graphic3d.Graphic3d_CappingFlags # value = Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectShader
-    Graphic3d_CappingFlags_ObjectTexture: OCP.Graphic3d.Graphic3d_CappingFlags # value = Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectTexture
-    __entries: dict # value = {'Graphic3d_CappingFlags_None': (Graphic3d_CappingFlags.Graphic3d_CappingFlags_None, None), 'Graphic3d_CappingFlags_ObjectMaterial': (Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectMaterial, None), 'Graphic3d_CappingFlags_ObjectTexture': (Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectTexture, None), 'Graphic3d_CappingFlags_ObjectShader': (Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectShader, None), 'Graphic3d_CappingFlags_ObjectAspect': (Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectAspect, None)}
-    __members__: dict # value = {'Graphic3d_CappingFlags_None': Graphic3d_CappingFlags.Graphic3d_CappingFlags_None, 'Graphic3d_CappingFlags_ObjectMaterial': Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectMaterial, 'Graphic3d_CappingFlags_ObjectTexture': Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectTexture, 'Graphic3d_CappingFlags_ObjectShader': Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectShader, 'Graphic3d_CappingFlags_ObjectAspect': Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectAspect}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_CappingFlags_None: OCP.Graphic3d.Graphic3d_CappingFlags # value = <Graphic3d_CappingFlags.Graphic3d_CappingFlags_None: 0>
+    Graphic3d_CappingFlags_ObjectAspect: OCP.Graphic3d.Graphic3d_CappingFlags # value = <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectAspect: 11>
+    Graphic3d_CappingFlags_ObjectMaterial: OCP.Graphic3d.Graphic3d_CappingFlags # value = <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectMaterial: 1>
+    Graphic3d_CappingFlags_ObjectShader: OCP.Graphic3d.Graphic3d_CappingFlags # value = <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectShader: 8>
+    Graphic3d_CappingFlags_ObjectTexture: OCP.Graphic3d.Graphic3d_CappingFlags # value = <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectTexture: 2>
+    __entries: dict # value = {'Graphic3d_CappingFlags_None': (<Graphic3d_CappingFlags.Graphic3d_CappingFlags_None: 0>, None), 'Graphic3d_CappingFlags_ObjectMaterial': (<Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectMaterial: 1>, None), 'Graphic3d_CappingFlags_ObjectTexture': (<Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectTexture: 2>, None), 'Graphic3d_CappingFlags_ObjectShader': (<Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectShader: 8>, None), 'Graphic3d_CappingFlags_ObjectAspect': (<Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectAspect: 11>, None)}
+    __members__: dict # value = {'Graphic3d_CappingFlags_None': <Graphic3d_CappingFlags.Graphic3d_CappingFlags_None: 0>, 'Graphic3d_CappingFlags_ObjectMaterial': <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectMaterial: 1>, 'Graphic3d_CappingFlags_ObjectTexture': <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectTexture: 2>, 'Graphic3d_CappingFlags_ObjectShader': <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectShader: 8>, 'Graphic3d_CappingFlags_ObjectAspect': <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectAspect: 11>}
     pass
 class Graphic3d_ClipPlane(OCP.Standard.Standard_Transient):
     """
@@ -8883,6 +9147,10 @@ class Graphic3d_ClipPlane(OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -8903,11 +9171,11 @@ class Graphic3d_ClipPlane(OCP.Standard.Standard_Transient):
         """
         Increments the reference counter of this object
         """
-    def IsBoxFullInHalfspace(self,theBox : Graphic3d_BndBox3d) -> bool: 
+    def IsBoxFullInHalfspace(self,theBox : Any) -> bool: 
         """
         Check if the given bounding box is fully inside (or touches from inside) the half-space (e.g. NOT discarded by clipping plane).
         """
-    def IsBoxFullOutHalfspace(self,theBox : Graphic3d_BndBox3d) -> bool: 
+    def IsBoxFullOutHalfspace(self,theBox : Any) -> bool: 
         """
         Check if the given bounding box is fully outside of the half-space (e.g. should be discarded by clipping plane).
         """
@@ -8961,19 +9229,19 @@ class Graphic3d_ClipPlane(OCP.Standard.Standard_Transient):
         """
         Return the number of chains in forward direction (including this item, so it is always >= 1). For a head of Chain - returns the length of entire Chain.
         """
-    def ProbeBox(self,theBox : Graphic3d_BndBox3d) -> Graphic3d_ClipState: 
+    def ProbeBox(self,theBox : Any) -> Graphic3d_ClipState: 
         """
         Check if the given bounding box is fully outside / fully inside.
         """
-    def ProbeBoxHalfspace(self,theBox : Graphic3d_BndBox3d) -> Graphic3d_ClipState: 
+    def ProbeBoxHalfspace(self,theBox : Any) -> Graphic3d_ClipState: 
         """
         Check if the given bounding box is fully outside / fully inside the half-space.
         """
-    def ProbeBoxMaxPointHalfspace(self,theBox : Graphic3d_BndBox3d) -> Graphic3d_ClipState: 
+    def ProbeBoxMaxPointHalfspace(self,theBox : Any) -> Graphic3d_ClipState: 
         """
         Check if the given bounding box is fully outside of the half-space (e.g. should be discarded by clipping plane).
         """
-    def ProbeBoxTouch(self,theBox : Graphic3d_BndBox3d) -> bool: 
+    def ProbeBoxTouch(self,theBox : Any) -> bool: 
         """
         Check if the given bounding box is In and touch the clipping planes
         """
@@ -9081,11 +9349,11 @@ class Graphic3d_ClipPlane(OCP.Standard.Standard_Transient):
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,thePlane : OCP.gp.gp_Pln) -> None: ...
+    @overload
     def __init__(self,theEquation : Graphic3d_Vec4d) -> None: ...
     @overload
     def __init__(self,theOther : Graphic3d_ClipPlane) -> None: ...
-    @overload
-    def __init__(self,thePlane : OCP.gp.gp_Pln) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -9109,21 +9377,29 @@ class Graphic3d_ClipState():
 
       Graphic3d_ClipState_On
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_ClipState_In: OCP.Graphic3d.Graphic3d_ClipState # value = Graphic3d_ClipState.Graphic3d_ClipState_In
-    Graphic3d_ClipState_On: OCP.Graphic3d.Graphic3d_ClipState # value = Graphic3d_ClipState.Graphic3d_ClipState_On
-    Graphic3d_ClipState_Out: OCP.Graphic3d.Graphic3d_ClipState # value = Graphic3d_ClipState.Graphic3d_ClipState_Out
-    __entries: dict # value = {'Graphic3d_ClipState_Out': (Graphic3d_ClipState.Graphic3d_ClipState_Out, None), 'Graphic3d_ClipState_In': (Graphic3d_ClipState.Graphic3d_ClipState_In, None), 'Graphic3d_ClipState_On': (Graphic3d_ClipState.Graphic3d_ClipState_On, None)}
-    __members__: dict # value = {'Graphic3d_ClipState_Out': Graphic3d_ClipState.Graphic3d_ClipState_Out, 'Graphic3d_ClipState_In': Graphic3d_ClipState.Graphic3d_ClipState_In, 'Graphic3d_ClipState_On': Graphic3d_ClipState.Graphic3d_ClipState_On}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_ClipState_In: OCP.Graphic3d.Graphic3d_ClipState # value = <Graphic3d_ClipState.Graphic3d_ClipState_In: 1>
+    Graphic3d_ClipState_On: OCP.Graphic3d.Graphic3d_ClipState # value = <Graphic3d_ClipState.Graphic3d_ClipState_On: 2>
+    Graphic3d_ClipState_Out: OCP.Graphic3d.Graphic3d_ClipState # value = <Graphic3d_ClipState.Graphic3d_ClipState_Out: 0>
+    __entries: dict # value = {'Graphic3d_ClipState_Out': (<Graphic3d_ClipState.Graphic3d_ClipState_Out: 0>, None), 'Graphic3d_ClipState_In': (<Graphic3d_ClipState.Graphic3d_ClipState_In: 1>, None), 'Graphic3d_ClipState_On': (<Graphic3d_ClipState.Graphic3d_ClipState_On: 2>, None)}
+    __members__: dict # value = {'Graphic3d_ClipState_Out': <Graphic3d_ClipState.Graphic3d_ClipState_Out: 0>, 'Graphic3d_ClipState_In': <Graphic3d_ClipState.Graphic3d_ClipState_In: 1>, 'Graphic3d_ClipState_On': <Graphic3d_ClipState.Graphic3d_ClipState_On: 2>}
     pass
 class Graphic3d_TextureRoot(OCP.Standard.Standard_Transient):
     """
@@ -9141,11 +9417,15 @@ class Graphic3d_TextureRoot(OCP.Standard.Standard_Transient):
         """
         None
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
         """
@@ -9160,6 +9440,10 @@ class Graphic3d_TextureRoot(OCP.Standard.Standard_Transient):
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -9183,6 +9467,10 @@ class Graphic3d_TextureRoot(OCP.Standard.Standard_Transient):
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
+        """
     def Path(self) -> OCP.OSD.OSD_Path: 
         """
         Returns the full path of the defined texture. It could be empty path if GetImage() is overridden to load image not from file.
@@ -9190,6 +9478,10 @@ class Graphic3d_TextureRoot(OCP.Standard.Standard_Transient):
     def Revision(self) -> int: 
         """
         Return image revision.
+        """
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
         """
     @staticmethod
     def TexturesFolder_s() -> OCP.TCollection.TCollection_AsciiString: 
@@ -9294,11 +9586,11 @@ class Graphic3d_CubeMapOrder():
     pass
 class Graphic3d_TextureMap(Graphic3d_TextureRoot, OCP.Standard.Standard_Transient):
     """
-    This is an abstract class for managing texture applyable on polygons.This is an abstract class for managing texture applyable on polygons.This is an abstract class for managing texture applyable on polygons.
+    This is an abstract class for managing texture applyable on polygons.This is an abstract class for managing texture applyable on polygons.
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
-        Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -9336,11 +9628,15 @@ class Graphic3d_TextureMap(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
         """
         enable texture smoothing
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
         """
@@ -9355,6 +9651,10 @@ class Graphic3d_TextureMap(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -9390,6 +9690,10 @@ class Graphic3d_TextureMap(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
         """
         Returns TRUE if the texture is smoothed.
         """
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
+        """
     def Path(self) -> OCP.OSD.OSD_Path: 
         """
         Returns the full path of the defined texture. It could be empty path if GetImage() is overridden to load image not from file.
@@ -9399,6 +9703,10 @@ class Graphic3d_TextureMap(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
         Return image revision.
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
     @staticmethod
     def TexturesFolder_s() -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -9433,7 +9741,11 @@ class Graphic3d_CubeMap(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Standar
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
-        Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        """
+    def CompressedValue(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        Returns current cubemap side as compressed PixMap. Returns null handle if current side is invalid or if image is not in supported compressed format.
         """
     def CurrentSide(self) -> Graphic3d_CubeMapSide: 
         """
@@ -9475,11 +9787,15 @@ class Graphic3d_CubeMap(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Standar
         """
         enable texture smoothing
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
         """
@@ -9491,9 +9807,17 @@ class Graphic3d_CubeMap(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Standar
         """
         Get the reference counter of this object
         """
+    def HasMipmaps(self) -> bool: 
+        """
+        Returns whether mipmaps of cubemap will be generated or not.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -9554,6 +9878,14 @@ class Graphic3d_CubeMap(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Standar
         Return image revision.
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
+        """
+        Sets whether to generate mipmaps of cubemap or not.
+        """
     def SetZInversion(self,theZIsInverted : bool) -> None: 
         """
         Sets Z axis inversion (vertical flipping).
@@ -9575,7 +9907,7 @@ class Graphic3d_CubeMap(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Standar
         """
         Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
         """
-    def Value(self) -> OCP.Image.Image_PixMap: 
+    def Value(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         Returns PixMap containing current side of cubemap. Returns null handle if current side is invalid.
         """
@@ -9584,9 +9916,9 @@ class Graphic3d_CubeMap(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Standar
         Returns whether Z axis is inverted.
         """
     @overload
-    def __init__(self,thePixmap : OCP.Image.Image_PixMap=None) -> None: ...
+    def __init__(self,thePixmap : OCP.Image.Image_PixMap=None,theToGenerateMipmaps : bool=False) -> None: ...
     @overload
-    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString,theToGenerateMipmaps : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -9616,24 +9948,32 @@ class Graphic3d_CubeMapSide():
 
       Graphic3d_CMS_NEG_Z
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_CMS_NEG_X: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_X
-    Graphic3d_CMS_NEG_Y: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Y
-    Graphic3d_CMS_NEG_Z: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Z
-    Graphic3d_CMS_POS_X: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_POS_X
-    Graphic3d_CMS_POS_Y: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Y
-    Graphic3d_CMS_POS_Z: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Z
-    __entries: dict # value = {'Graphic3d_CMS_POS_X': (Graphic3d_CubeMapSide.Graphic3d_CMS_POS_X, None), 'Graphic3d_CMS_NEG_X': (Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_X, None), 'Graphic3d_CMS_POS_Y': (Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Y, None), 'Graphic3d_CMS_NEG_Y': (Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Y, None), 'Graphic3d_CMS_POS_Z': (Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Z, None), 'Graphic3d_CMS_NEG_Z': (Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Z, None)}
-    __members__: dict # value = {'Graphic3d_CMS_POS_X': Graphic3d_CubeMapSide.Graphic3d_CMS_POS_X, 'Graphic3d_CMS_NEG_X': Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_X, 'Graphic3d_CMS_POS_Y': Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Y, 'Graphic3d_CMS_NEG_Y': Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Y, 'Graphic3d_CMS_POS_Z': Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Z, 'Graphic3d_CMS_NEG_Z': Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Z}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_CMS_NEG_X: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_X: 1>
+    Graphic3d_CMS_NEG_Y: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Y: 3>
+    Graphic3d_CMS_NEG_Z: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Z: 5>
+    Graphic3d_CMS_POS_X: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_POS_X: 0>
+    Graphic3d_CMS_POS_Y: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Y: 2>
+    Graphic3d_CMS_POS_Z: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Z: 4>
+    __entries: dict # value = {'Graphic3d_CMS_POS_X': (<Graphic3d_CubeMapSide.Graphic3d_CMS_POS_X: 0>, None), 'Graphic3d_CMS_NEG_X': (<Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_X: 1>, None), 'Graphic3d_CMS_POS_Y': (<Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Y: 2>, None), 'Graphic3d_CMS_NEG_Y': (<Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Y: 3>, None), 'Graphic3d_CMS_POS_Z': (<Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Z: 4>, None), 'Graphic3d_CMS_NEG_Z': (<Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Z: 5>, None)}
+    __members__: dict # value = {'Graphic3d_CMS_POS_X': <Graphic3d_CubeMapSide.Graphic3d_CMS_POS_X: 0>, 'Graphic3d_CMS_NEG_X': <Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_X: 1>, 'Graphic3d_CMS_POS_Y': <Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Y: 2>, 'Graphic3d_CMS_NEG_Y': <Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Y: 3>, 'Graphic3d_CMS_POS_Z': <Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Z: 4>, 'Graphic3d_CMS_NEG_Z': <Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Z: 5>}
     pass
 class Graphic3d_CullingTool():
     """
@@ -9647,9 +9987,29 @@ class Graphic3d_CullingTool():
         """
         Return the camera definition.
         """
-    def IsCulled(self,theCtx : Any,theMinPt : OCP.SelectMgr.SelectMgr_Vec3,theMaxPt : OCP.SelectMgr.SelectMgr_Vec3) -> bool: 
+    def CameraDirection(self) -> OCP.SelectMgr.SelectMgr_Vec3: 
+        """
+        Returns camera direction.
+        """
+    def CameraEye(self) -> OCP.SelectMgr.SelectMgr_Vec3: 
+        """
+        Returns camera eye position.
+        """
+    def IsCulled(self,theCtx : Any,theMinPnt : OCP.SelectMgr.SelectMgr_Vec3,theMaxPnt : OCP.SelectMgr.SelectMgr_Vec3,theIsInside : bool=None) -> bool: 
         """
         Checks whether given AABB should be entirely culled or not.
+        """
+    def IsOutFrustum(self,theMinPnt : OCP.SelectMgr.SelectMgr_Vec3,theMaxPnt : OCP.SelectMgr.SelectMgr_Vec3,theIsInside : bool=None) -> bool: 
+        """
+        Detects if AABB overlaps view volume using separating axis theorem (SAT).
+        """
+    def IsTooDistant(self,theCtx : Any,theMinPnt : OCP.SelectMgr.SelectMgr_Vec3,theMaxPnt : OCP.SelectMgr.SelectMgr_Vec3,theIsInside : bool=None) -> bool: 
+        """
+        Returns TRUE if given AABB should be discarded by distance culling criterion.
+        """
+    def IsTooSmall(self,theCtx : Any,theMinPnt : OCP.SelectMgr.SelectMgr_Vec3,theMaxPnt : OCP.SelectMgr.SelectMgr_Vec3) -> bool: 
+        """
+        Returns TRUE if given AABB should be discarded by size culling criterion.
         """
     def ProjectionMatrix(self) -> Graphic3d_Mat4d: 
         """
@@ -9663,13 +10023,17 @@ class Graphic3d_CullingTool():
         """
         Setup size culling.
         """
-    def SetViewVolume(self,theCamera : Graphic3d_Camera) -> None: 
+    def SetViewVolume(self,theCamera : Graphic3d_Camera,theModelWorld : Graphic3d_Mat4d=Graphic3d_Mat4d) -> None: 
         """
         Retrieves view volume's planes equations and its vertices from projection and world-view matrices.
         """
     def SetViewportSize(self,theViewportWidth : int,theViewportHeight : int,theResolutionRatio : float) -> None: 
         """
         None
+        """
+    def SignedPlanePointDistance(self,theNormal : Graphic3d_Vec4d,thePnt : Graphic3d_Vec4d) -> float: 
+        """
+        Calculates signed distance from plane to point.
         """
     def ViewportHeight(self) -> int: 
         """
@@ -9709,13 +10073,17 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Returns cubemap being setted last time on background.
         """
-    def BackgroundImage(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def BackgroundImage(self) -> Graphic3d_TextureMap: 
         """
-        Returns background image texture file path.
+        Returns background image texture map.
         """
     def BackgroundImageStyle(self) -> OCP.Aspect.Aspect_FillMethod: 
         """
         Returns background image fill style.
+        """
+    def BaseXRCamera(self) -> Graphic3d_Camera: 
+        """
+        Returns anchor camera definition (without tracked head orientation).
         """
     def BufferDump(self,theImage : OCP.Image.Image_PixMap,theBufferType : Graphic3d_BufferType) -> bool: 
         """
@@ -9733,6 +10101,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Returns reference to current rendering parameters and effect settings.
         """
+    def ClearPBREnvironment(self) -> None: 
+        """
+        Fills PBR specular probe and irradiance map with white color. So that environment indirect illumination will be constant and will be fully controlled by ambient light sources. If PBR is unavailable it does nothing.
+        """
     def ClipPlanes(self) -> Graphic3d_SequenceOfHClipPlane: 
         """
         Returns list of clip planes set for the view.
@@ -9740,6 +10112,14 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
     def Compute(self) -> None: 
         """
         Computes the new presentation of the structures displayed in this view with the type Graphic3d_TOS_COMPUTED.
+        """
+    def ComputeXRBaseCameraFromPosed(self,theCamPosed : Graphic3d_Camera,thePoseTrsf : OCP.gp.gp_Trsf) -> None: 
+        """
+        Update based camera from posed camera by applying reversed transformation.
+        """
+    def ComputeXRPosedCameraFromBase(self,theCam : Graphic3d_Camera,theXRTrsf : OCP.gp.gp_Trsf) -> None: 
+        """
+        Compute camera position based on XR pose.
         """
     def ComputedMode(self) -> bool: 
         """
@@ -9782,6 +10162,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Returns the set of structures displayed in this view.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -9805,6 +10189,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
     def FBORelease(self,theFbo : OCP.Standard.Standard_Transient) -> Any: 
         """
         Remove offscreen FBO from the graphic library
+        """
+    def GeneratePBREnvironment(self) -> None: 
+        """
+        Generates PBR specular probe and irradiance map in order to provide environment indirect illumination in PBR shading model (Image Based Lighting). The source of environment data is background cubemap. If PBR is unavailable it does nothing. If PBR is available but there is no cubemap being set to background it clears all IBL maps (see 'ClearPBREnvironment').
         """
     def GetGraduatedTrihedron(self) -> Graphic3d_GraduatedTrihedron: 
         """
@@ -9842,6 +10230,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Increments the reference counter of this object
         """
+    def InitXR(self) -> bool: 
+        """
+        Initialize XR session.
+        """
     def InsertLayerAfter(self,theNewLayerId : int,theSettings : Graphic3d_ZLayerSettings,theLayerBefore : int) -> None: 
         """
         Add a layer to the view.
@@ -9865,6 +10257,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
     def IsActive(self) -> bool: 
         """
         Returns the activity flag of the view.
+        """
+    def IsActiveXR(self) -> bool: 
+        """
+        Return TRUE if there is active XR session.
         """
     def IsComputed(self,theStructId : int,theComputedStruct : Graphic3d_Structure) -> bool: 
         """
@@ -9925,6 +10321,18 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Returns number of displayed structures in the view.
         """
+    def PoseXRToWorld(self,thePoseXR : OCP.gp.gp_Trsf) -> OCP.gp.gp_Trsf: 
+        """
+        Convert XR pose to world space.
+        """
+    def PosedXRCamera(self) -> Graphic3d_Camera: 
+        """
+        Returns transient XR camera position with tracked head orientation applied.
+        """
+    def ProcessXRInput(self) -> None: 
+        """
+        Process input.
+        """
     def ReCompute(self,theStructure : Graphic3d_Structure) -> None: 
         """
         Computes the new presentation of the structure displayed in this view with the type Graphic3d_TOS_COMPUTED.
@@ -9936,6 +10344,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
     def RedrawImmediate(self) -> None: 
         """
         Redraw immediate content of the view.
+        """
+    def ReleaseXR(self) -> None: 
+        """
+        Release XR session.
         """
     def Remove(self) -> None: 
         """
@@ -9961,17 +10373,17 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Sets background fill color.
         """
-    def SetBackgroundCubeMap(self,theCubeMap : Graphic3d_CubeMap) -> None: 
+    def SetBackgroundImage(self,theTextureMap : Graphic3d_TextureMap,theToUpdatePBREnv : bool=True) -> None: 
         """
-        Sets environment cubemap as background.
-        """
-    def SetBackgroundImage(self,theFilePath : OCP.TCollection.TCollection_AsciiString) -> None: 
-        """
-        Sets background image texture file path.
+        Sets image texture or environment cubemap as backround.
         """
     def SetBackgroundImageStyle(self,theFillStyle : OCP.Aspect.Aspect_FillMethod) -> None: 
         """
         Sets background image fill style.
+        """
+    def SetBaseXRCamera(self,theCamera : Graphic3d_Camera) -> None: 
+        """
+        Sets anchor camera definition.
         """
     def SetCamera(self,theCamera : Graphic3d_Camera) -> None: 
         """
@@ -10001,6 +10413,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Sets list of lights for the view.
         """
+    def SetPosedXRCamera(self,theCamera : Graphic3d_Camera) -> None: 
+        """
+        Sets transient XR camera position with tracked head orientation applied.
+        """
     def SetShadingModel(self,theModel : Graphic3d_TypeOfShadingModel) -> None: 
         """
         Sets default Shading Model of the view. Will throw an exception on attempt to set Graphic3d_TOSM_DEFAULT.
@@ -10008,6 +10424,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
     def SetTextureEnv(self,theTextureEnv : Graphic3d_TextureEnv) -> None: 
         """
         Sets environment texture for the view.
+        """
+    def SetUnitFactor(self,theFactor : float) -> None: 
+        """
+        Set unit scale factor.
         """
     def SetVisualizationType(self,theType : Graphic3d_TypeOfVisualization) -> None: 
         """
@@ -10017,9 +10437,17 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Creates and maps rendering window to the view.
         """
+    def SetXRSession(self,theSession : OCP.Aspect.Aspect_XRSession) -> None: 
+        """
+        Set XR session.
+        """
     def SetZLayerSettings(self,theLayerId : int,theSettings : Graphic3d_ZLayerSettings) -> None: 
         """
         Sets the settings for a single Z layer of specified view.
+        """
+    def SetupXRPosedCamera(self) -> None: 
+        """
+        Compute PosedXRCamera() based on current XR head pose and make it active.
         """
     def ShadingModel(self) -> Graphic3d_TypeOfShadingModel: 
         """
@@ -10038,6 +10466,14 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Returns the structure manager handle which manage structures associated with this view.
         """
+    def SynchronizeXRBaseToPosedCamera(self) -> None: 
+        """
+        Recomputes PosedXRCamera() based on BaseXRCamera() and head orientation.
+        """
+    def SynchronizeXRPosedToBaseCamera(self) -> None: 
+        """
+        Checks if PosedXRCamera() has been modified since SetupXRPosedCamera() and copies these modifications to BaseXRCamera().
+        """
     def TextureEnv(self) -> Graphic3d_TextureEnv: 
         """
         Returns environment texture set for the view.
@@ -10045,6 +10481,18 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TurnViewXRCamera(self,theTrsfTurn : OCP.gp.gp_Trsf) -> None: 
+        """
+        Turn XR camera direction using current (head) eye position as anchor.
+        """
+    def UnitFactor(self) -> float: 
+        """
+        Return unit scale factor defined as scale factor for m (meters); 1.0 by default. Normally, view definition is unitless, however some operations like VR input requires proper units mapping.
+        """
+    def UnsetXRPosedCamera(self) -> None: 
+        """
+        Set current camera back to BaseXRCamera() and copy temporary modifications of PosedXRCamera(). Calls SynchronizeXRPosedToBaseCamera() beforehand.
         """
     def Update(self,theLayerId : int=-1) -> None: 
         """
@@ -10057,6 +10505,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
     def Window(self) -> OCP.Aspect.Aspect_Window: 
         """
         Returns the window associated to the view.
+        """
+    def XRSession(self) -> OCP.Aspect.Aspect_XRSession: 
+        """
+        Return XR session.
         """
     def ZLayerMax(self) -> int: 
         """
@@ -10098,27 +10550,35 @@ class Graphic3d_DiagnosticInfo():
 
       Graphic3d_DiagnosticInfo_Complete
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_DiagnosticInfo_Basic: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Basic
-    Graphic3d_DiagnosticInfo_Complete: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Complete
-    Graphic3d_DiagnosticInfo_Device: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Device
-    Graphic3d_DiagnosticInfo_Extensions: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Extensions
-    Graphic3d_DiagnosticInfo_FrameBuffer: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_FrameBuffer
-    Graphic3d_DiagnosticInfo_Limits: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Limits
-    Graphic3d_DiagnosticInfo_Memory: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Memory
-    Graphic3d_DiagnosticInfo_NativePlatform: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_NativePlatform
-    Graphic3d_DiagnosticInfo_Short: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Short
-    __entries: dict # value = {'Graphic3d_DiagnosticInfo_Device': (Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Device, None), 'Graphic3d_DiagnosticInfo_FrameBuffer': (Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_FrameBuffer, None), 'Graphic3d_DiagnosticInfo_Limits': (Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Limits, None), 'Graphic3d_DiagnosticInfo_Memory': (Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Memory, None), 'Graphic3d_DiagnosticInfo_NativePlatform': (Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_NativePlatform, None), 'Graphic3d_DiagnosticInfo_Extensions': (Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Extensions, None), 'Graphic3d_DiagnosticInfo_Short': (Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Short, None), 'Graphic3d_DiagnosticInfo_Basic': (Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Basic, None), 'Graphic3d_DiagnosticInfo_Complete': (Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Complete, None)}
-    __members__: dict # value = {'Graphic3d_DiagnosticInfo_Device': Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Device, 'Graphic3d_DiagnosticInfo_FrameBuffer': Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_FrameBuffer, 'Graphic3d_DiagnosticInfo_Limits': Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Limits, 'Graphic3d_DiagnosticInfo_Memory': Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Memory, 'Graphic3d_DiagnosticInfo_NativePlatform': Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_NativePlatform, 'Graphic3d_DiagnosticInfo_Extensions': Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Extensions, 'Graphic3d_DiagnosticInfo_Short': Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Short, 'Graphic3d_DiagnosticInfo_Basic': Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Basic, 'Graphic3d_DiagnosticInfo_Complete': Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Complete}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_DiagnosticInfo_Basic: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Basic: 31>
+    Graphic3d_DiagnosticInfo_Complete: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Complete: 63>
+    Graphic3d_DiagnosticInfo_Device: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Device: 1>
+    Graphic3d_DiagnosticInfo_Extensions: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Extensions: 32>
+    Graphic3d_DiagnosticInfo_FrameBuffer: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_FrameBuffer: 2>
+    Graphic3d_DiagnosticInfo_Limits: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Limits: 4>
+    Graphic3d_DiagnosticInfo_Memory: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Memory: 8>
+    Graphic3d_DiagnosticInfo_NativePlatform: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_NativePlatform: 16>
+    Graphic3d_DiagnosticInfo_Short: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Short: 7>
+    __entries: dict # value = {'Graphic3d_DiagnosticInfo_Device': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Device: 1>, None), 'Graphic3d_DiagnosticInfo_FrameBuffer': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_FrameBuffer: 2>, None), 'Graphic3d_DiagnosticInfo_Limits': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Limits: 4>, None), 'Graphic3d_DiagnosticInfo_Memory': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Memory: 8>, None), 'Graphic3d_DiagnosticInfo_NativePlatform': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_NativePlatform: 16>, None), 'Graphic3d_DiagnosticInfo_Extensions': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Extensions: 32>, None), 'Graphic3d_DiagnosticInfo_Short': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Short: 7>, None), 'Graphic3d_DiagnosticInfo_Basic': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Basic: 31>, None), 'Graphic3d_DiagnosticInfo_Complete': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Complete: 63>, None)}
+    __members__: dict # value = {'Graphic3d_DiagnosticInfo_Device': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Device: 1>, 'Graphic3d_DiagnosticInfo_FrameBuffer': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_FrameBuffer: 2>, 'Graphic3d_DiagnosticInfo_Limits': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Limits: 4>, 'Graphic3d_DiagnosticInfo_Memory': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Memory: 8>, 'Graphic3d_DiagnosticInfo_NativePlatform': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_NativePlatform: 16>, 'Graphic3d_DiagnosticInfo_Extensions': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Extensions: 32>, 'Graphic3d_DiagnosticInfo_Short': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Short: 7>, 'Graphic3d_DiagnosticInfo_Basic': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Basic: 31>, 'Graphic3d_DiagnosticInfo_Complete': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Complete: 63>}
     pass
 class Graphic3d_FrameStats(OCP.Standard.Standard_Transient):
     """
@@ -10275,9 +10735,15 @@ class Graphic3d_FrameStatsCounter():
 
       Graphic3d_FrameStatsCounter_NbLayers
 
-      Graphic3d_FrameStatsCounter_NbLayersNotCulled
-
       Graphic3d_FrameStatsCounter_NbStructs
+
+      Graphic3d_FrameStatsCounter_EstimatedBytesGeom
+
+      Graphic3d_FrameStatsCounter_EstimatedBytesFbos
+
+      Graphic3d_FrameStatsCounter_EstimatedBytesTextures
+
+      Graphic3d_FrameStatsCounter_NbLayersNotCulled
 
       Graphic3d_FrameStatsCounter_NbStructsNotCulled
 
@@ -10295,41 +10761,79 @@ class Graphic3d_FrameStatsCounter():
 
       Graphic3d_FrameStatsCounter_NbTrianglesNotCulled
 
+      Graphic3d_FrameStatsCounter_NbLinesNotCulled
+
       Graphic3d_FrameStatsCounter_NbPointsNotCulled
 
-      Graphic3d_FrameStatsCounter_EstimatedBytesGeom
+      Graphic3d_FrameStatsCounter_NbLayersImmediate
 
-      Graphic3d_FrameStatsCounter_EstimatedBytesFbos
+      Graphic3d_FrameStatsCounter_NbStructsImmediate
 
-      Graphic3d_FrameStatsCounter_EstimatedBytesTextures
+      Graphic3d_FrameStatsCounter_NbGroupsImmediate
+
+      Graphic3d_FrameStatsCounter_NbElemsImmediate
+
+      Graphic3d_FrameStatsCounter_NbElemsFillImmediate
+
+      Graphic3d_FrameStatsCounter_NbElemsLineImmediate
+
+      Graphic3d_FrameStatsCounter_NbElemsPointImmediate
+
+      Graphic3d_FrameStatsCounter_NbElemsTextImmediate
+
+      Graphic3d_FrameStatsCounter_NbTrianglesImmediate
+
+      Graphic3d_FrameStatsCounter_NbLinesImmediate
+
+      Graphic3d_FrameStatsCounter_NbPointsImmediate
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_FrameStatsCounter_EstimatedBytesFbos: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesFbos
-    Graphic3d_FrameStatsCounter_EstimatedBytesGeom: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesGeom
-    Graphic3d_FrameStatsCounter_EstimatedBytesTextures: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesTextures
-    Graphic3d_FrameStatsCounter_NbElemsFillNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillNotCulled
-    Graphic3d_FrameStatsCounter_NbElemsLineNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineNotCulled
-    Graphic3d_FrameStatsCounter_NbElemsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsNotCulled
-    Graphic3d_FrameStatsCounter_NbElemsPointNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointNotCulled
-    Graphic3d_FrameStatsCounter_NbElemsTextNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextNotCulled
-    Graphic3d_FrameStatsCounter_NbGroupsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsNotCulled
-    Graphic3d_FrameStatsCounter_NbLayers: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayers
-    Graphic3d_FrameStatsCounter_NbLayersNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersNotCulled
-    Graphic3d_FrameStatsCounter_NbPointsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsNotCulled
-    Graphic3d_FrameStatsCounter_NbStructs: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructs
-    Graphic3d_FrameStatsCounter_NbStructsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsNotCulled
-    Graphic3d_FrameStatsCounter_NbTrianglesNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesNotCulled
-    __entries: dict # value = {'Graphic3d_FrameStatsCounter_NbLayers': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayers, None), 'Graphic3d_FrameStatsCounter_NbLayersNotCulled': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersNotCulled, None), 'Graphic3d_FrameStatsCounter_NbStructs': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructs, None), 'Graphic3d_FrameStatsCounter_NbStructsNotCulled': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsNotCulled, None), 'Graphic3d_FrameStatsCounter_NbGroupsNotCulled': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsNotCulled, None), 'Graphic3d_FrameStatsCounter_NbElemsNotCulled': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsNotCulled, None), 'Graphic3d_FrameStatsCounter_NbElemsFillNotCulled': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillNotCulled, None), 'Graphic3d_FrameStatsCounter_NbElemsLineNotCulled': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineNotCulled, None), 'Graphic3d_FrameStatsCounter_NbElemsPointNotCulled': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointNotCulled, None), 'Graphic3d_FrameStatsCounter_NbElemsTextNotCulled': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextNotCulled, None), 'Graphic3d_FrameStatsCounter_NbTrianglesNotCulled': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesNotCulled, None), 'Graphic3d_FrameStatsCounter_NbPointsNotCulled': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsNotCulled, None), 'Graphic3d_FrameStatsCounter_EstimatedBytesGeom': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesGeom, None), 'Graphic3d_FrameStatsCounter_EstimatedBytesFbos': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesFbos, None), 'Graphic3d_FrameStatsCounter_EstimatedBytesTextures': (Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesTextures, None)}
-    __members__: dict # value = {'Graphic3d_FrameStatsCounter_NbLayers': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayers, 'Graphic3d_FrameStatsCounter_NbLayersNotCulled': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersNotCulled, 'Graphic3d_FrameStatsCounter_NbStructs': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructs, 'Graphic3d_FrameStatsCounter_NbStructsNotCulled': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsNotCulled, 'Graphic3d_FrameStatsCounter_NbGroupsNotCulled': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsNotCulled, 'Graphic3d_FrameStatsCounter_NbElemsNotCulled': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsNotCulled, 'Graphic3d_FrameStatsCounter_NbElemsFillNotCulled': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillNotCulled, 'Graphic3d_FrameStatsCounter_NbElemsLineNotCulled': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineNotCulled, 'Graphic3d_FrameStatsCounter_NbElemsPointNotCulled': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointNotCulled, 'Graphic3d_FrameStatsCounter_NbElemsTextNotCulled': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextNotCulled, 'Graphic3d_FrameStatsCounter_NbTrianglesNotCulled': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesNotCulled, 'Graphic3d_FrameStatsCounter_NbPointsNotCulled': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsNotCulled, 'Graphic3d_FrameStatsCounter_EstimatedBytesGeom': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesGeom, 'Graphic3d_FrameStatsCounter_EstimatedBytesFbos': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesFbos, 'Graphic3d_FrameStatsCounter_EstimatedBytesTextures': Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesTextures}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_FrameStatsCounter_EstimatedBytesFbos: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesFbos: 3>
+    Graphic3d_FrameStatsCounter_EstimatedBytesGeom: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesGeom: 2>
+    Graphic3d_FrameStatsCounter_EstimatedBytesTextures: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesTextures: 4>
+    Graphic3d_FrameStatsCounter_NbElemsFillImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillImmediate: 20>
+    Graphic3d_FrameStatsCounter_NbElemsFillNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillNotCulled: 9>
+    Graphic3d_FrameStatsCounter_NbElemsImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsImmediate: 19>
+    Graphic3d_FrameStatsCounter_NbElemsLineImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineImmediate: 21>
+    Graphic3d_FrameStatsCounter_NbElemsLineNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineNotCulled: 10>
+    Graphic3d_FrameStatsCounter_NbElemsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsNotCulled: 8>
+    Graphic3d_FrameStatsCounter_NbElemsPointImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointImmediate: 22>
+    Graphic3d_FrameStatsCounter_NbElemsPointNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointNotCulled: 11>
+    Graphic3d_FrameStatsCounter_NbElemsTextImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextImmediate: 23>
+    Graphic3d_FrameStatsCounter_NbElemsTextNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextNotCulled: 12>
+    Graphic3d_FrameStatsCounter_NbGroupsImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsImmediate: 18>
+    Graphic3d_FrameStatsCounter_NbGroupsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsNotCulled: 7>
+    Graphic3d_FrameStatsCounter_NbLayers: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayers: 0>
+    Graphic3d_FrameStatsCounter_NbLayersImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersImmediate: 16>
+    Graphic3d_FrameStatsCounter_NbLayersNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersNotCulled: 5>
+    Graphic3d_FrameStatsCounter_NbLinesImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLinesImmediate: 25>
+    Graphic3d_FrameStatsCounter_NbLinesNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLinesNotCulled: 14>
+    Graphic3d_FrameStatsCounter_NbPointsImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsImmediate: 26>
+    Graphic3d_FrameStatsCounter_NbPointsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsNotCulled: 15>
+    Graphic3d_FrameStatsCounter_NbStructs: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructs: 1>
+    Graphic3d_FrameStatsCounter_NbStructsImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsImmediate: 17>
+    Graphic3d_FrameStatsCounter_NbStructsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsNotCulled: 6>
+    Graphic3d_FrameStatsCounter_NbTrianglesImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesImmediate: 24>
+    Graphic3d_FrameStatsCounter_NbTrianglesNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesNotCulled: 13>
+    __entries: dict # value = {'Graphic3d_FrameStatsCounter_NbLayers': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayers: 0>, None), 'Graphic3d_FrameStatsCounter_NbStructs': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructs: 1>, None), 'Graphic3d_FrameStatsCounter_EstimatedBytesGeom': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesGeom: 2>, None), 'Graphic3d_FrameStatsCounter_EstimatedBytesFbos': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesFbos: 3>, None), 'Graphic3d_FrameStatsCounter_EstimatedBytesTextures': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesTextures: 4>, None), 'Graphic3d_FrameStatsCounter_NbLayersNotCulled': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersNotCulled: 5>, None), 'Graphic3d_FrameStatsCounter_NbStructsNotCulled': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsNotCulled: 6>, None), 'Graphic3d_FrameStatsCounter_NbGroupsNotCulled': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsNotCulled: 7>, None), 'Graphic3d_FrameStatsCounter_NbElemsNotCulled': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsNotCulled: 8>, None), 'Graphic3d_FrameStatsCounter_NbElemsFillNotCulled': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillNotCulled: 9>, None), 'Graphic3d_FrameStatsCounter_NbElemsLineNotCulled': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineNotCulled: 10>, None), 'Graphic3d_FrameStatsCounter_NbElemsPointNotCulled': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointNotCulled: 11>, None), 'Graphic3d_FrameStatsCounter_NbElemsTextNotCulled': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextNotCulled: 12>, None), 'Graphic3d_FrameStatsCounter_NbTrianglesNotCulled': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesNotCulled: 13>, None), 'Graphic3d_FrameStatsCounter_NbLinesNotCulled': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLinesNotCulled: 14>, None), 'Graphic3d_FrameStatsCounter_NbPointsNotCulled': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsNotCulled: 15>, None), 'Graphic3d_FrameStatsCounter_NbLayersImmediate': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersImmediate: 16>, None), 'Graphic3d_FrameStatsCounter_NbStructsImmediate': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsImmediate: 17>, None), 'Graphic3d_FrameStatsCounter_NbGroupsImmediate': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsImmediate: 18>, None), 'Graphic3d_FrameStatsCounter_NbElemsImmediate': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsImmediate: 19>, None), 'Graphic3d_FrameStatsCounter_NbElemsFillImmediate': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillImmediate: 20>, None), 'Graphic3d_FrameStatsCounter_NbElemsLineImmediate': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineImmediate: 21>, None), 'Graphic3d_FrameStatsCounter_NbElemsPointImmediate': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointImmediate: 22>, None), 'Graphic3d_FrameStatsCounter_NbElemsTextImmediate': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextImmediate: 23>, None), 'Graphic3d_FrameStatsCounter_NbTrianglesImmediate': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesImmediate: 24>, None), 'Graphic3d_FrameStatsCounter_NbLinesImmediate': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLinesImmediate: 25>, None), 'Graphic3d_FrameStatsCounter_NbPointsImmediate': (<Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsImmediate: 26>, None)}
+    __members__: dict # value = {'Graphic3d_FrameStatsCounter_NbLayers': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayers: 0>, 'Graphic3d_FrameStatsCounter_NbStructs': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructs: 1>, 'Graphic3d_FrameStatsCounter_EstimatedBytesGeom': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesGeom: 2>, 'Graphic3d_FrameStatsCounter_EstimatedBytesFbos': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesFbos: 3>, 'Graphic3d_FrameStatsCounter_EstimatedBytesTextures': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesTextures: 4>, 'Graphic3d_FrameStatsCounter_NbLayersNotCulled': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersNotCulled: 5>, 'Graphic3d_FrameStatsCounter_NbStructsNotCulled': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsNotCulled: 6>, 'Graphic3d_FrameStatsCounter_NbGroupsNotCulled': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsNotCulled: 7>, 'Graphic3d_FrameStatsCounter_NbElemsNotCulled': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsNotCulled: 8>, 'Graphic3d_FrameStatsCounter_NbElemsFillNotCulled': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillNotCulled: 9>, 'Graphic3d_FrameStatsCounter_NbElemsLineNotCulled': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineNotCulled: 10>, 'Graphic3d_FrameStatsCounter_NbElemsPointNotCulled': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointNotCulled: 11>, 'Graphic3d_FrameStatsCounter_NbElemsTextNotCulled': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextNotCulled: 12>, 'Graphic3d_FrameStatsCounter_NbTrianglesNotCulled': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesNotCulled: 13>, 'Graphic3d_FrameStatsCounter_NbLinesNotCulled': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLinesNotCulled: 14>, 'Graphic3d_FrameStatsCounter_NbPointsNotCulled': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsNotCulled: 15>, 'Graphic3d_FrameStatsCounter_NbLayersImmediate': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersImmediate: 16>, 'Graphic3d_FrameStatsCounter_NbStructsImmediate': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsImmediate: 17>, 'Graphic3d_FrameStatsCounter_NbGroupsImmediate': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsImmediate: 18>, 'Graphic3d_FrameStatsCounter_NbElemsImmediate': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsImmediate: 19>, 'Graphic3d_FrameStatsCounter_NbElemsFillImmediate': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillImmediate: 20>, 'Graphic3d_FrameStatsCounter_NbElemsLineImmediate': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineImmediate: 21>, 'Graphic3d_FrameStatsCounter_NbElemsPointImmediate': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointImmediate: 22>, 'Graphic3d_FrameStatsCounter_NbElemsTextImmediate': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextImmediate: 23>, 'Graphic3d_FrameStatsCounter_NbTrianglesImmediate': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesImmediate: 24>, 'Graphic3d_FrameStatsCounter_NbLinesImmediate': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLinesImmediate: 25>, 'Graphic3d_FrameStatsCounter_NbPointsImmediate': <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsImmediate: 26>}
     pass
 class Graphic3d_FrameStatsData():
     """
@@ -10350,6 +10854,14 @@ class Graphic3d_FrameStatsData():
     def FrameRateCpu(self) -> float: 
         """
         Returns CPU FPS (frames per seconds, CPU time). This number indicates a PREDICTED frame rate, basing on CPU elapsed time between updates and NOT real elapsed time (which might include periods of CPU inactivity). Number is expected to be greater then actual frame rate returned by FrameRate(). Values significantly greater actual frame rate indicate that rendering is limited by GPU performance (CPU is stalled in-between), while values around actual frame rate indicate rendering being limited by CPU performance (GPU is stalled in-between).
+        """
+    def ImmediateFrameRate(self) -> float: 
+        """
+        Returns FPS for immediate redraws.
+        """
+    def ImmediateFrameRateCpu(self) -> float: 
+        """
+        Returns CPU FPS for immediate redraws.
         """
     def Reset(self) -> None: 
         """
@@ -10397,6 +10909,14 @@ class Graphic3d_FrameStatsDataTmp(Graphic3d_FrameStatsData):
         """
         Returns CPU FPS (frames per seconds, CPU time). This number indicates a PREDICTED frame rate, basing on CPU elapsed time between updates and NOT real elapsed time (which might include periods of CPU inactivity). Number is expected to be greater then actual frame rate returned by FrameRate(). Values significantly greater actual frame rate indicate that rendering is limited by GPU performance (CPU is stalled in-between), while values around actual frame rate indicate rendering being limited by CPU performance (GPU is stalled in-between).
         """
+    def ImmediateFrameRate(self) -> float: 
+        """
+        Returns FPS for immediate redraws.
+        """
+    def ImmediateFrameRateCpu(self) -> float: 
+        """
+        Returns CPU FPS for immediate redraws.
+        """
     def Reset(self) -> None: 
         """
         Reset data.
@@ -10430,6 +10950,30 @@ class Graphic3d_FrameStatsDataTmp(Graphic3d_FrameStatsData):
         """
         Returns CPU FPS (frames per seconds, CPU time).
         """
+    @property
+    def ChangeImmediateFrameRate(self) -> float:
+        """
+        Returns FPS for immediate redraws.
+
+        :type: float
+        """
+    @ChangeImmediateFrameRate.setter
+    def ChangeImmediateFrameRate(self, arg1: float) -> None:
+        """
+        Returns FPS for immediate redraws.
+        """
+    @property
+    def ChangeImmediateFrameRateCpu(self) -> float:
+        """
+        Returns CPU FPS for immediate redraws.
+
+        :type: float
+        """
+    @ChangeImmediateFrameRateCpu.setter
+    def ChangeImmediateFrameRateCpu(self, arg1: float) -> None:
+        """
+        Returns CPU FPS for immediate redraws.
+        """
     pass
 class Graphic3d_FrameStatsTimer():
     """
@@ -10447,23 +10991,31 @@ class Graphic3d_FrameStatsTimer():
 
       Graphic3d_FrameStatsTimer_CpuDynamics
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_FrameStatsTimer_CpuCulling: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuCulling
-    Graphic3d_FrameStatsTimer_CpuDynamics: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuDynamics
-    Graphic3d_FrameStatsTimer_CpuFrame: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuFrame
-    Graphic3d_FrameStatsTimer_CpuPicking: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuPicking
-    Graphic3d_FrameStatsTimer_ElapsedFrame: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_ElapsedFrame
-    __entries: dict # value = {'Graphic3d_FrameStatsTimer_ElapsedFrame': (Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_ElapsedFrame, None), 'Graphic3d_FrameStatsTimer_CpuFrame': (Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuFrame, None), 'Graphic3d_FrameStatsTimer_CpuCulling': (Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuCulling, None), 'Graphic3d_FrameStatsTimer_CpuPicking': (Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuPicking, None), 'Graphic3d_FrameStatsTimer_CpuDynamics': (Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuDynamics, None)}
-    __members__: dict # value = {'Graphic3d_FrameStatsTimer_ElapsedFrame': Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_ElapsedFrame, 'Graphic3d_FrameStatsTimer_CpuFrame': Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuFrame, 'Graphic3d_FrameStatsTimer_CpuCulling': Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuCulling, 'Graphic3d_FrameStatsTimer_CpuPicking': Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuPicking, 'Graphic3d_FrameStatsTimer_CpuDynamics': Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuDynamics}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_FrameStatsTimer_CpuCulling: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuCulling: 2>
+    Graphic3d_FrameStatsTimer_CpuDynamics: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuDynamics: 4>
+    Graphic3d_FrameStatsTimer_CpuFrame: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuFrame: 1>
+    Graphic3d_FrameStatsTimer_CpuPicking: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuPicking: 3>
+    Graphic3d_FrameStatsTimer_ElapsedFrame: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_ElapsedFrame: 0>
+    __entries: dict # value = {'Graphic3d_FrameStatsTimer_ElapsedFrame': (<Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_ElapsedFrame: 0>, None), 'Graphic3d_FrameStatsTimer_CpuFrame': (<Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuFrame: 1>, None), 'Graphic3d_FrameStatsTimer_CpuCulling': (<Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuCulling: 2>, None), 'Graphic3d_FrameStatsTimer_CpuPicking': (<Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuPicking: 3>, None), 'Graphic3d_FrameStatsTimer_CpuDynamics': (<Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuDynamics: 4>, None)}
+    __members__: dict # value = {'Graphic3d_FrameStatsTimer_ElapsedFrame': <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_ElapsedFrame: 0>, 'Graphic3d_FrameStatsTimer_CpuFrame': <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuFrame: 1>, 'Graphic3d_FrameStatsTimer_CpuCulling': <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuCulling: 2>, 'Graphic3d_FrameStatsTimer_CpuPicking': <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuPicking: 3>, 'Graphic3d_FrameStatsTimer_CpuDynamics': <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuDynamics: 4>}
     pass
 class Graphic3d_Fresnel():
     """
@@ -10495,6 +11047,10 @@ class Graphic3d_Fresnel():
         """
         Creates Schlick's approximation of Fresnel factor.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def FresnelType(self) -> Graphic3d_FresnelModel: 
         """
         Returns type of Fresnel.
@@ -10519,22 +11075,30 @@ class Graphic3d_FresnelModel():
 
       Graphic3d_FM_DIELECTRIC
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_FM_CONDUCTOR: OCP.Graphic3d.Graphic3d_FresnelModel # value = Graphic3d_FresnelModel.Graphic3d_FM_CONDUCTOR
-    Graphic3d_FM_CONSTANT: OCP.Graphic3d.Graphic3d_FresnelModel # value = Graphic3d_FresnelModel.Graphic3d_FM_CONSTANT
-    Graphic3d_FM_DIELECTRIC: OCP.Graphic3d.Graphic3d_FresnelModel # value = Graphic3d_FresnelModel.Graphic3d_FM_DIELECTRIC
-    Graphic3d_FM_SCHLICK: OCP.Graphic3d.Graphic3d_FresnelModel # value = Graphic3d_FresnelModel.Graphic3d_FM_SCHLICK
-    __entries: dict # value = {'Graphic3d_FM_SCHLICK': (Graphic3d_FresnelModel.Graphic3d_FM_SCHLICK, None), 'Graphic3d_FM_CONSTANT': (Graphic3d_FresnelModel.Graphic3d_FM_CONSTANT, None), 'Graphic3d_FM_CONDUCTOR': (Graphic3d_FresnelModel.Graphic3d_FM_CONDUCTOR, None), 'Graphic3d_FM_DIELECTRIC': (Graphic3d_FresnelModel.Graphic3d_FM_DIELECTRIC, None)}
-    __members__: dict # value = {'Graphic3d_FM_SCHLICK': Graphic3d_FresnelModel.Graphic3d_FM_SCHLICK, 'Graphic3d_FM_CONSTANT': Graphic3d_FresnelModel.Graphic3d_FM_CONSTANT, 'Graphic3d_FM_CONDUCTOR': Graphic3d_FresnelModel.Graphic3d_FM_CONDUCTOR, 'Graphic3d_FM_DIELECTRIC': Graphic3d_FresnelModel.Graphic3d_FM_DIELECTRIC}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_FM_CONDUCTOR: OCP.Graphic3d.Graphic3d_FresnelModel # value = <Graphic3d_FresnelModel.Graphic3d_FM_CONDUCTOR: 2>
+    Graphic3d_FM_CONSTANT: OCP.Graphic3d.Graphic3d_FresnelModel # value = <Graphic3d_FresnelModel.Graphic3d_FM_CONSTANT: 1>
+    Graphic3d_FM_DIELECTRIC: OCP.Graphic3d.Graphic3d_FresnelModel # value = <Graphic3d_FresnelModel.Graphic3d_FM_DIELECTRIC: 3>
+    Graphic3d_FM_SCHLICK: OCP.Graphic3d.Graphic3d_FresnelModel # value = <Graphic3d_FresnelModel.Graphic3d_FM_SCHLICK: 0>
+    __entries: dict # value = {'Graphic3d_FM_SCHLICK': (<Graphic3d_FresnelModel.Graphic3d_FM_SCHLICK: 0>, None), 'Graphic3d_FM_CONSTANT': (<Graphic3d_FresnelModel.Graphic3d_FM_CONSTANT: 1>, None), 'Graphic3d_FM_CONDUCTOR': (<Graphic3d_FresnelModel.Graphic3d_FM_CONDUCTOR: 2>, None), 'Graphic3d_FM_DIELECTRIC': (<Graphic3d_FresnelModel.Graphic3d_FM_DIELECTRIC: 3>, None)}
+    __members__: dict # value = {'Graphic3d_FM_SCHLICK': <Graphic3d_FresnelModel.Graphic3d_FM_SCHLICK: 0>, 'Graphic3d_FM_CONSTANT': <Graphic3d_FresnelModel.Graphic3d_FM_CONSTANT: 1>, 'Graphic3d_FM_CONDUCTOR': <Graphic3d_FresnelModel.Graphic3d_FM_CONDUCTOR: 2>, 'Graphic3d_FM_DIELECTRIC': <Graphic3d_FresnelModel.Graphic3d_FM_DIELECTRIC: 3>}
     pass
 class Graphic3d_GraduatedTrihedron():
     """
@@ -10678,6 +11242,10 @@ class Graphic3d_GraphicDriver(OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -10820,11 +11388,11 @@ class Graphic3d_Group(OCP.Standard.Standard_Transient):
         """
         Return fill area aspect.
         """
-    def BoundingBox(self) -> Graphic3d_BndBox4f: 
+    def BoundingBox(self) -> Any: 
         """
         Returns boundary box of the group <me> without transformation applied,
         """
-    def ChangeBoundingBox(self) -> Graphic3d_BndBox4f: 
+    def ChangeBoundingBox(self) -> Any: 
         """
         Returns non-const boundary box of the group <me> without transformation applied,
         """
@@ -10844,7 +11412,7 @@ class Graphic3d_Group(OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -10939,7 +11507,7 @@ class Graphic3d_Group(OCP.Standard.Standard_Transient):
         Update presentation aspects after their modification.
         """
     @overload
-    def Text(self,theText : OCP.TCollection.TCollection_ExtendedString,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : Graphic3d_TextPath,theHTA : Graphic3d_HorizontalTextAlignment,theVTA : Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: 
+    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : Graphic3d_TextPath,AHta : Graphic3d_HorizontalTextAlignment,AVta : Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: 
         """
         Creates the string <AText> at position <APoint>. The 3D point of attachment is projected. The text is written in the plane of projection. The attributes are given with respect to the plane of projection. AHeight : Height of text. (Relative to the Normalized Projection Coordinates (NPC) Space). AAngle : Orientation of the text (with respect to the horizontal).
 
@@ -10953,16 +11521,16 @@ class Graphic3d_Group(OCP.Standard.Standard_Transient):
 
         Creates the string <theText> at orientation <theOrientation> in 3D space.
         """
-    @overload
-    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: ...
-    @overload
-    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : Graphic3d_TextPath,AHta : Graphic3d_HorizontalTextAlignment,AVta : Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: ...
-    @overload
-    def Text(self,theTextUtf : str,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : Graphic3d_TextPath,theHTA : Graphic3d_HorizontalTextAlignment,theVTA : Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: ...
     @overload
     def Text(self,AText : str,APoint : Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : Graphic3d_TextPath,AHta : Graphic3d_HorizontalTextAlignment,AVta : Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: ...
     @overload
+    def Text(self,theTextUtf : str,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : Graphic3d_TextPath,theHTA : Graphic3d_HorizontalTextAlignment,theVTA : Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: ...
+    @overload
     def Text(self,AText : str,APoint : Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: ...
+    @overload
+    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: ...
+    @overload
+    def Text(self,theText : OCP.TCollection.TCollection_ExtendedString,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : Graphic3d_TextPath,theHTA : Graphic3d_HorizontalTextAlignment,theVTA : Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -10992,22 +11560,30 @@ class Graphic3d_GroupAspect():
 
       Graphic3d_ASPECT_FILL_AREA
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_ASPECT_FILL_AREA: OCP.Graphic3d.Graphic3d_GroupAspect # value = Graphic3d_GroupAspect.Graphic3d_ASPECT_FILL_AREA
-    Graphic3d_ASPECT_LINE: OCP.Graphic3d.Graphic3d_GroupAspect # value = Graphic3d_GroupAspect.Graphic3d_ASPECT_LINE
-    Graphic3d_ASPECT_MARKER: OCP.Graphic3d.Graphic3d_GroupAspect # value = Graphic3d_GroupAspect.Graphic3d_ASPECT_MARKER
-    Graphic3d_ASPECT_TEXT: OCP.Graphic3d.Graphic3d_GroupAspect # value = Graphic3d_GroupAspect.Graphic3d_ASPECT_TEXT
-    __entries: dict # value = {'Graphic3d_ASPECT_LINE': (Graphic3d_GroupAspect.Graphic3d_ASPECT_LINE, None), 'Graphic3d_ASPECT_TEXT': (Graphic3d_GroupAspect.Graphic3d_ASPECT_TEXT, None), 'Graphic3d_ASPECT_MARKER': (Graphic3d_GroupAspect.Graphic3d_ASPECT_MARKER, None), 'Graphic3d_ASPECT_FILL_AREA': (Graphic3d_GroupAspect.Graphic3d_ASPECT_FILL_AREA, None)}
-    __members__: dict # value = {'Graphic3d_ASPECT_LINE': Graphic3d_GroupAspect.Graphic3d_ASPECT_LINE, 'Graphic3d_ASPECT_TEXT': Graphic3d_GroupAspect.Graphic3d_ASPECT_TEXT, 'Graphic3d_ASPECT_MARKER': Graphic3d_GroupAspect.Graphic3d_ASPECT_MARKER, 'Graphic3d_ASPECT_FILL_AREA': Graphic3d_GroupAspect.Graphic3d_ASPECT_FILL_AREA}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_ASPECT_FILL_AREA: OCP.Graphic3d.Graphic3d_GroupAspect # value = <Graphic3d_GroupAspect.Graphic3d_ASPECT_FILL_AREA: 3>
+    Graphic3d_ASPECT_LINE: OCP.Graphic3d.Graphic3d_GroupAspect # value = <Graphic3d_GroupAspect.Graphic3d_ASPECT_LINE: 0>
+    Graphic3d_ASPECT_MARKER: OCP.Graphic3d.Graphic3d_GroupAspect # value = <Graphic3d_GroupAspect.Graphic3d_ASPECT_MARKER: 2>
+    Graphic3d_ASPECT_TEXT: OCP.Graphic3d.Graphic3d_GroupAspect # value = <Graphic3d_GroupAspect.Graphic3d_ASPECT_TEXT: 1>
+    __entries: dict # value = {'Graphic3d_ASPECT_LINE': (<Graphic3d_GroupAspect.Graphic3d_ASPECT_LINE: 0>, None), 'Graphic3d_ASPECT_TEXT': (<Graphic3d_GroupAspect.Graphic3d_ASPECT_TEXT: 1>, None), 'Graphic3d_ASPECT_MARKER': (<Graphic3d_GroupAspect.Graphic3d_ASPECT_MARKER: 2>, None), 'Graphic3d_ASPECT_FILL_AREA': (<Graphic3d_GroupAspect.Graphic3d_ASPECT_FILL_AREA: 3>, None)}
+    __members__: dict # value = {'Graphic3d_ASPECT_LINE': <Graphic3d_GroupAspect.Graphic3d_ASPECT_LINE: 0>, 'Graphic3d_ASPECT_TEXT': <Graphic3d_GroupAspect.Graphic3d_ASPECT_TEXT: 1>, 'Graphic3d_ASPECT_MARKER': <Graphic3d_GroupAspect.Graphic3d_ASPECT_MARKER: 2>, 'Graphic3d_ASPECT_FILL_AREA': <Graphic3d_GroupAspect.Graphic3d_ASPECT_FILL_AREA: 3>}
     pass
 class Graphic3d_GroupDefinitionError(Exception, BaseException):
     class type():
@@ -11031,6 +11607,10 @@ class Graphic3d_HatchStyle(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -11101,21 +11681,29 @@ class Graphic3d_HorizontalTextAlignment():
 
       Graphic3d_HTA_RIGHT
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_HTA_CENTER: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_CENTER
-    Graphic3d_HTA_LEFT: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT
-    Graphic3d_HTA_RIGHT: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_RIGHT
-    __entries: dict # value = {'Graphic3d_HTA_LEFT': (Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT, None), 'Graphic3d_HTA_CENTER': (Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_CENTER, None), 'Graphic3d_HTA_RIGHT': (Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_RIGHT, None)}
-    __members__: dict # value = {'Graphic3d_HTA_LEFT': Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT, 'Graphic3d_HTA_CENTER': Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_CENTER, 'Graphic3d_HTA_RIGHT': Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_RIGHT}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_HTA_CENTER: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = <Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_CENTER: 1>
+    Graphic3d_HTA_LEFT: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = <Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT: 0>
+    Graphic3d_HTA_RIGHT: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = <Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_RIGHT: 2>
+    __entries: dict # value = {'Graphic3d_HTA_LEFT': (<Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT: 0>, None), 'Graphic3d_HTA_CENTER': (<Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_CENTER: 1>, None), 'Graphic3d_HTA_RIGHT': (<Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_RIGHT: 2>, None)}
+    __members__: dict # value = {'Graphic3d_HTA_LEFT': <Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT: 0>, 'Graphic3d_HTA_CENTER': <Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_CENTER: 1>, 'Graphic3d_HTA_RIGHT': <Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_RIGHT: 2>}
     pass
 class Graphic3d_IndexBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard_Transient):
     """
@@ -11169,6 +11757,10 @@ class Graphic3d_IndexBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffer
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -11194,14 +11786,14 @@ class Graphic3d_IndexBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffer
         Access index at specified position
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: 
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: 
         """
         Allocates new empty array
 
         Allocates new empty array
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: ...
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: ...
     def InitInt32(self,theNbElems : int) -> bool: 
         """
         Allocates new empty index array
@@ -11333,14 +11925,14 @@ class Graphic3d_IndexedMapOfStructure(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : Graphic3d_CStructure) -> bool: 
         """
         Contains
@@ -11389,7 +11981,7 @@ class Graphic3d_IndexedMapOfStructure(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -11402,11 +11994,11 @@ class Graphic3d_IndexedMapOfStructure(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : Graphic3d_IndexedMapOfStructure) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Graphic3d_Layer(OCP.Standard.Standard_Transient):
     """
@@ -11435,6 +12027,10 @@ class Graphic3d_Layer(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -11564,27 +12160,74 @@ class Graphic3d_LevelOfTextureAnisotropy():
 
       Graphic3d_LOTA_QUALITY
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_LOTA_FAST: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_FAST
-    Graphic3d_LOTA_MIDDLE: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_MIDDLE
-    Graphic3d_LOTA_OFF: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_OFF
-    Graphic3d_LOTA_QUALITY: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_QUALITY
-    __entries: dict # value = {'Graphic3d_LOTA_OFF': (Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_OFF, None), 'Graphic3d_LOTA_FAST': (Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_FAST, None), 'Graphic3d_LOTA_MIDDLE': (Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_MIDDLE, None), 'Graphic3d_LOTA_QUALITY': (Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_QUALITY, None)}
-    __members__: dict # value = {'Graphic3d_LOTA_OFF': Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_OFF, 'Graphic3d_LOTA_FAST': Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_FAST, 'Graphic3d_LOTA_MIDDLE': Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_MIDDLE, 'Graphic3d_LOTA_QUALITY': Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_QUALITY}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_LOTA_FAST: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_FAST: 1>
+    Graphic3d_LOTA_MIDDLE: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_MIDDLE: 2>
+    Graphic3d_LOTA_OFF: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_OFF: 0>
+    Graphic3d_LOTA_QUALITY: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_QUALITY: 3>
+    __entries: dict # value = {'Graphic3d_LOTA_OFF': (<Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_OFF: 0>, None), 'Graphic3d_LOTA_FAST': (<Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_FAST: 1>, None), 'Graphic3d_LOTA_MIDDLE': (<Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_MIDDLE: 2>, None), 'Graphic3d_LOTA_QUALITY': (<Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_QUALITY: 3>, None)}
+    __members__: dict # value = {'Graphic3d_LOTA_OFF': <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_OFF: 0>, 'Graphic3d_LOTA_FAST': <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_FAST: 1>, 'Graphic3d_LOTA_MIDDLE': <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_MIDDLE: 2>, 'Graphic3d_LOTA_QUALITY': <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_QUALITY: 3>}
     pass
 class Graphic3d_LightSet(OCP.Standard.Standard_Transient):
     """
     Class defining the set of light sources.Class defining the set of light sources.
     """
+    class IterationFilter_e():
+        """
+        Iteration filter flags.
+
+        Members:
+
+          IterationFilter_None
+
+          IterationFilter_ExcludeAmbient
+
+          IterationFilter_ExcludeDisabled
+
+          IterationFilter_ExcludeDisabledAndAmbient
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        IterationFilter_ExcludeAmbient: OCP.Graphic3d.IterationFilter_e # value = <IterationFilter_e.IterationFilter_ExcludeAmbient: 2>
+        IterationFilter_ExcludeDisabled: OCP.Graphic3d.IterationFilter_e # value = <IterationFilter_e.IterationFilter_ExcludeDisabled: 4>
+        IterationFilter_ExcludeDisabledAndAmbient: OCP.Graphic3d.IterationFilter_e # value = <IterationFilter_e.IterationFilter_ExcludeDisabledAndAmbient: 6>
+        IterationFilter_None: OCP.Graphic3d.IterationFilter_e # value = <IterationFilter_e.IterationFilter_None: 0>
+        __entries: dict # value = {'IterationFilter_None': (<IterationFilter_e.IterationFilter_None: 0>, None), 'IterationFilter_ExcludeAmbient': (<IterationFilter_e.IterationFilter_ExcludeAmbient: 2>, None), 'IterationFilter_ExcludeDisabled': (<IterationFilter_e.IterationFilter_ExcludeDisabled: 4>, None), 'IterationFilter_ExcludeDisabledAndAmbient': (<IterationFilter_e.IterationFilter_ExcludeDisabledAndAmbient: 6>, None)}
+        __members__: dict # value = {'IterationFilter_None': <IterationFilter_e.IterationFilter_None: 0>, 'IterationFilter_ExcludeAmbient': <IterationFilter_e.IterationFilter_ExcludeAmbient: 2>, 'IterationFilter_ExcludeDisabled': <IterationFilter_e.IterationFilter_ExcludeDisabled: 4>, 'IterationFilter_ExcludeDisabledAndAmbient': <IterationFilter_e.IterationFilter_ExcludeDisabledAndAmbient: 6>}
+        pass
     def Add(self,theLight : Graphic3d_CLight) -> bool: 
         """
         Append new light source.
@@ -11702,6 +12345,10 @@ class Graphic3d_LightSet(OCP.Standard.Standard_Transient):
         """
         None
         """
+    IterationFilter_ExcludeAmbient: OCP.Graphic3d.IterationFilter_e # value = <IterationFilter_e.IterationFilter_ExcludeAmbient: 2>
+    IterationFilter_ExcludeDisabled: OCP.Graphic3d.IterationFilter_e # value = <IterationFilter_e.IterationFilter_ExcludeDisabled: 4>
+    IterationFilter_ExcludeDisabledAndAmbient: OCP.Graphic3d.IterationFilter_e # value = <IterationFilter_e.IterationFilter_ExcludeDisabledAndAmbient: 6>
+    IterationFilter_None: OCP.Graphic3d.IterationFilter_e # value = <IterationFilter_e.IterationFilter_None: 0>
     pass
 class Graphic3d_MapOfZLayerSettings(OCP.NCollection.NCollection_BaseMap):
     """
@@ -11781,7 +12428,7 @@ class Graphic3d_MapOfZLayerSettings(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -11790,12 +12437,12 @@ class Graphic3d_MapOfZLayerSettings(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : Graphic3d_MapOfZLayerSettings) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Graphic3d_MarkerImage(OCP.Standard.Standard_Transient):
     """
@@ -11899,6 +12546,10 @@ class Graphic3d_Mat4():
         """
         Get number of columns.
         """
+    def DumpJson(self,theOStream : io.BytesIO,arg2 : int) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetColumn(self,theCol : int) -> Graphic3d_Vec4: 
         """
         Get vector of elements for the specified column.
@@ -11943,16 +12594,16 @@ class Graphic3d_Mat4():
         Maps plain C array to matrix type.
         """
     @overload
-    def Multiplied(self,theMat : Graphic3d_Mat4) -> Graphic3d_Mat4: 
+    def Multiplied(self,theFactor : float) -> Graphic3d_Mat4: 
         """
         Compute matrix multiplication product.
 
         Compute per-element multiplication.
         """
     @overload
-    def Multiplied(self,theFactor : float) -> Graphic3d_Mat4: ...
+    def Multiplied(self,theMat : Graphic3d_Mat4) -> Graphic3d_Mat4: ...
     @overload
-    def Multiply(self,theMat : Graphic3d_Mat4) -> None: 
+    def Multiply(self,theMatA : Graphic3d_Mat4,theMatB : Graphic3d_Mat4) -> Graphic3d_Mat4: 
         """
         Compute matrix multiplication product: A * B.
 
@@ -11961,7 +12612,7 @@ class Graphic3d_Mat4():
         Compute per-component multiplication.
         """
     @overload
-    def Multiply(self,theMatA : Graphic3d_Mat4,theMatB : Graphic3d_Mat4) -> Graphic3d_Mat4: ...
+    def Multiply(self,theMat : Graphic3d_Mat4) -> None: ...
     @overload
     def Multiply(self,theFactor : float) -> None: ...
     @staticmethod
@@ -11988,14 +12639,14 @@ class Graphic3d_Mat4():
     @overload
     def SetDiagonal(self,theVec : Graphic3d_Vec3) -> None: ...
     @overload
-    def SetRow(self,theRow : int,theVec : Graphic3d_Vec4) -> None: 
+    def SetRow(self,theRow : int,theVec : Graphic3d_Vec3) -> None: 
         """
         Change first 3 row values by the passed vector.
 
         Set row values by the passed 4 element vector.
         """
     @overload
-    def SetRow(self,theRow : int,theVec : Graphic3d_Vec3) -> None: ...
+    def SetRow(self,theRow : int,theVec : Graphic3d_Vec4) -> None: ...
     def SetValue(self,theRow : int,theCol : int,theValue : float) -> None: 
         """
         Set value for the element specified by row and columns.
@@ -12023,7 +12674,7 @@ class Graphic3d_Mat4():
     def __imul__(self,theFactor : float) -> Graphic3d_Mat4: ...
     def __init__(self) -> None: ...
     @overload
-    def __mul__(self,theFactor : float) -> Graphic3d_Mat4: 
+    def __mul__(self,theMat : Graphic3d_Mat4) -> Graphic3d_Mat4: 
         """
         Multiply by the vector (M * V).
 
@@ -12034,9 +12685,9 @@ class Graphic3d_Mat4():
     @overload
     def __mul__(self,theVec : Graphic3d_Vec4) -> Graphic3d_Vec4: ...
     @overload
-    def __mul__(self,theMat : Graphic3d_Mat4) -> Graphic3d_Mat4: ...
+    def __mul__(self,theFactor : float) -> Graphic3d_Mat4: ...
     @overload
-    def __rmul__(self,theVec : Graphic3d_Vec4) -> Graphic3d_Vec4: 
+    def __rmul__(self,theMat : Graphic3d_Mat4) -> Graphic3d_Mat4: 
         """
         Multiply by the vector (M * V).
 
@@ -12045,9 +12696,9 @@ class Graphic3d_Mat4():
         Compute per-element multiplication.
         """
     @overload
-    def __rmul__(self,theMat : Graphic3d_Mat4) -> Graphic3d_Mat4: ...
-    @overload
     def __rmul__(self,theFactor : float) -> Graphic3d_Mat4: ...
+    @overload
+    def __rmul__(self,theVec : Graphic3d_Vec4) -> Graphic3d_Vec4: ...
     pass
 class Graphic3d_Mat4d():
     """
@@ -12065,6 +12716,10 @@ class Graphic3d_Mat4d():
     def Cols_s() -> int: 
         """
         Get number of columns.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,arg2 : int) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def GetColumn(self,theCol : int) -> Graphic3d_Vec4d: 
         """
@@ -12110,14 +12765,14 @@ class Graphic3d_Mat4d():
         Maps plain C array to matrix type.
         """
     @overload
-    def Multiplied(self,theMat : Graphic3d_Mat4d) -> Graphic3d_Mat4d: 
+    def Multiplied(self,theFactor : float) -> Graphic3d_Mat4d: 
         """
         Compute matrix multiplication product.
 
         Compute per-element multiplication.
         """
     @overload
-    def Multiplied(self,theFactor : float) -> Graphic3d_Mat4d: ...
+    def Multiplied(self,theMat : Graphic3d_Mat4d) -> Graphic3d_Mat4d: ...
     @overload
     def Multiply(self,theMat : Graphic3d_Mat4d) -> None: 
         """
@@ -12180,14 +12835,14 @@ class Graphic3d_Mat4d():
         Transpose the matrix.
         """
     @overload
-    def __imul__(self,theMat : Graphic3d_Mat4d) -> Graphic3d_Mat4d: 
+    def __imul__(self,theFactor : float) -> Graphic3d_Mat4d: 
         """
         Multiply by the another matrix.
 
         Compute per-element multiplication.
         """
     @overload
-    def __imul__(self,theFactor : float) -> Graphic3d_Mat4d: ...
+    def __imul__(self,theMat : Graphic3d_Mat4d) -> Graphic3d_Mat4d: ...
     def __init__(self) -> None: ...
     @overload
     def __mul__(self,theVec : Graphic3d_Vec4d) -> Graphic3d_Vec4d: 
@@ -12199,9 +12854,9 @@ class Graphic3d_Mat4d():
         Compute per-element multiplication.
         """
     @overload
-    def __mul__(self,theMat : Graphic3d_Mat4d) -> Graphic3d_Mat4d: ...
-    @overload
     def __mul__(self,theFactor : float) -> Graphic3d_Mat4d: ...
+    @overload
+    def __mul__(self,theMat : Graphic3d_Mat4d) -> Graphic3d_Mat4d: ...
     @overload
     def __rmul__(self,theVec : Graphic3d_Vec4d) -> Graphic3d_Vec4d: 
         """
@@ -12240,6 +12895,10 @@ class Graphic3d_MaterialAspect():
         """
         Returns the diffuse color of the surface.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def EmissiveColor(self) -> OCP.Quantity.Quantity_Color: 
         """
         Returns the emissive color of the surface.
@@ -12262,7 +12921,7 @@ class Graphic3d_MaterialAspect():
         """
         Finds the material for specified name.
 
-        Returns the material for specified name or Graphic3d_NOM_DEFAULT if name is unknown.
+        Returns the material for specified name or Graphic3d_NameOfMaterial_DEFAULT if name is unknown.
         """
     @staticmethod
     @overload
@@ -12298,6 +12957,10 @@ class Graphic3d_MaterialAspect():
     def NumberOfMaterials_s() -> int: 
         """
         Returns the number of predefined textures.
+        """
+    def PBRMaterial(self) -> Graphic3d_PBRMaterial: 
+        """
+        Returns physically based representation of material
         """
     def ReflectionMode(self,theType : Graphic3d_TypeOfReflection) -> bool: 
         """
@@ -12347,6 +13010,10 @@ class Graphic3d_MaterialAspect():
         """
         Set material type.
         """
+    def SetPBRMaterial(self,thePBRMaterial : Graphic3d_PBRMaterial) -> None: 
+        """
+        Modifies the physically based representation of material
+        """
     def SetReflectionModeOff(self,theType : Graphic3d_TypeOfReflection) -> None: 
         """
         Deactivates the reflective properties of the surface with specified reflection type.
@@ -12384,9 +13051,9 @@ class Graphic3d_MaterialAspect():
         Returns the transparency coefficient of the surface (1.0 - Alpha); 0.0 means opaque.
         """
     @overload
-    def __init__(self,theName : Graphic3d_NameOfMaterial) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theName : Graphic3d_NameOfMaterial) -> None: ...
     pass
 class Graphic3d_MaterialDefinitionError(Exception, BaseException):
     class type():
@@ -12405,7 +13072,7 @@ class Graphic3d_Texture2D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
-        Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -12443,11 +13110,15 @@ class Graphic3d_Texture2D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         """
         enable texture smoothing
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
         """
@@ -12466,6 +13137,10 @@ class Graphic3d_Texture2D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -12501,6 +13176,10 @@ class Graphic3d_Texture2D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         """
         Returns TRUE if the texture is smoothed.
         """
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
+        """
     def Name(self) -> Graphic3d_NameOfTexture2D: 
         """
         Returns the name of the predefined textures or NOT_2D_UNKNOWN when the name is given as a filename.
@@ -12519,6 +13198,10 @@ class Graphic3d_Texture2D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         Return image revision.
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
     def SetImage(self,thePixMap : OCP.Image.Image_PixMap) -> None: 
         """
         Assign new image to the texture. Note that this method does not invalidate already uploaded resources - consider calling ::UpdateRevision() if needed.
@@ -12562,7 +13245,7 @@ class Graphic3d_Texture2D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
     pass
 class Graphic3d_TextureSet(OCP.Standard.Standard_Transient):
     """
-    Class holding array of textures to be mapped as a set.
+    Class holding array of textures to be mapped as a set. Textures should be defined in ascending order of texture units within the set.
     """
     def DecrementRefCounter(self) -> int: 
         """
@@ -12639,11 +13322,11 @@ class Graphic3d_TextureSet(OCP.Standard.Standard_Transient):
         Return the texture at specified position within [0, Size()) range.
         """
     @overload
+    def __init__(self,theTexture : Graphic3d_TextureMap) -> None: ...
+    @overload
     def __init__(self,theNbTextures : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theTexture : Graphic3d_TextureMap) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -12707,6 +13390,10 @@ class Graphic3d_MutableIndexBuffer(Graphic3d_IndexBuffer, Graphic3d_Buffer, OCP.
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -12732,27 +13419,27 @@ class Graphic3d_MutableIndexBuffer(Graphic3d_IndexBuffer, Graphic3d_Buffer, OCP.
         Access index at specified position
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: 
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: 
         """
         Allocates new empty array
 
         Allocates new empty array
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: ...
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: ...
     def InitInt32(self,theNbElems : int) -> bool: 
         """
         Allocates new empty index array
         """
     @overload
-    def Invalidate(self) -> None: 
+    def Invalidate(self,theIndexLower : int,theIndexUpper : int) -> None: 
         """
         Invalidate the entire buffer data.
 
         Invalidate the given indexes (starting from 0)
         """
     @overload
-    def Invalidate(self,theIndexLower : int,theIndexUpper : int) -> None: ...
+    def Invalidate(self) -> None: ...
     def InvalidatedRange(self) -> Graphic3d_BufferRange: 
         """
         Return invalidated range.
@@ -12865,9 +13552,61 @@ class Graphic3d_MutableIndexBuffer(Graphic3d_IndexBuffer, Graphic3d_Buffer, OCP.
     pass
 class Graphic3d_NameOfMaterial():
     """
-    Types of aspect materials.
+    List of named materials (predefined presets). Each preset defines either physical (having natural color) or generic (mutable color) material (
 
     Members:
+
+      Graphic3d_NameOfMaterial_Brass
+
+      Graphic3d_NameOfMaterial_Bronze
+
+      Graphic3d_NameOfMaterial_Copper
+
+      Graphic3d_NameOfMaterial_Gold
+
+      Graphic3d_NameOfMaterial_Pewter
+
+      Graphic3d_NameOfMaterial_Plastered
+
+      Graphic3d_NameOfMaterial_Plastified
+
+      Graphic3d_NameOfMaterial_Silver
+
+      Graphic3d_NameOfMaterial_Steel
+
+      Graphic3d_NameOfMaterial_Stone
+
+      Graphic3d_NameOfMaterial_ShinyPlastified
+
+      Graphic3d_NameOfMaterial_Satin
+
+      Graphic3d_NameOfMaterial_Metalized
+
+      Graphic3d_NameOfMaterial_Ionized
+
+      Graphic3d_NameOfMaterial_Chrome
+
+      Graphic3d_NameOfMaterial_Aluminum
+
+      Graphic3d_NameOfMaterial_Obsidian
+
+      Graphic3d_NameOfMaterial_Neon
+
+      Graphic3d_NameOfMaterial_Jade
+
+      Graphic3d_NameOfMaterial_Charcoal
+
+      Graphic3d_NameOfMaterial_Water
+
+      Graphic3d_NameOfMaterial_Glass
+
+      Graphic3d_NameOfMaterial_Diamond
+
+      Graphic3d_NameOfMaterial_Transparent
+
+      Graphic3d_NameOfMaterial_DEFAULT
+
+      Graphic3d_NameOfMaterial_UserDefined
 
       Graphic3d_NOM_BRASS
 
@@ -12921,44 +13660,78 @@ class Graphic3d_NameOfMaterial():
 
       Graphic3d_NOM_UserDefined
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_NOM_ALUMINIUM: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_ALUMINIUM
-    Graphic3d_NOM_BRASS: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_BRASS
-    Graphic3d_NOM_BRONZE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_BRONZE
-    Graphic3d_NOM_CHARCOAL: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_CHARCOAL
-    Graphic3d_NOM_CHROME: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_CHROME
-    Graphic3d_NOM_COPPER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_COPPER
-    Graphic3d_NOM_DEFAULT: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_DEFAULT
-    Graphic3d_NOM_DIAMOND: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_DIAMOND
-    Graphic3d_NOM_GLASS: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_GLASS
-    Graphic3d_NOM_GOLD: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_GOLD
-    Graphic3d_NOM_JADE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_JADE
-    Graphic3d_NOM_METALIZED: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_METALIZED
-    Graphic3d_NOM_NEON_GNC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_NEON_GNC
-    Graphic3d_NOM_NEON_PHC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_NEON_PHC
-    Graphic3d_NOM_OBSIDIAN: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_OBSIDIAN
-    Graphic3d_NOM_PEWTER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_PEWTER
-    Graphic3d_NOM_PLASTER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_PLASTER
-    Graphic3d_NOM_PLASTIC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_PLASTIC
-    Graphic3d_NOM_SATIN: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_SATIN
-    Graphic3d_NOM_SHINY_PLASTIC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_SHINY_PLASTIC
-    Graphic3d_NOM_SILVER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_SILVER
-    Graphic3d_NOM_STEEL: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_STEEL
-    Graphic3d_NOM_STONE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_STONE
-    Graphic3d_NOM_TRANSPARENT: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_TRANSPARENT
-    Graphic3d_NOM_UserDefined: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_UserDefined
-    Graphic3d_NOM_WATER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_WATER
-    __entries: dict # value = {'Graphic3d_NOM_BRASS': (Graphic3d_NameOfMaterial.Graphic3d_NOM_BRASS, None), 'Graphic3d_NOM_BRONZE': (Graphic3d_NameOfMaterial.Graphic3d_NOM_BRONZE, None), 'Graphic3d_NOM_COPPER': (Graphic3d_NameOfMaterial.Graphic3d_NOM_COPPER, None), 'Graphic3d_NOM_GOLD': (Graphic3d_NameOfMaterial.Graphic3d_NOM_GOLD, None), 'Graphic3d_NOM_PEWTER': (Graphic3d_NameOfMaterial.Graphic3d_NOM_PEWTER, None), 'Graphic3d_NOM_PLASTER': (Graphic3d_NameOfMaterial.Graphic3d_NOM_PLASTER, None), 'Graphic3d_NOM_PLASTIC': (Graphic3d_NameOfMaterial.Graphic3d_NOM_PLASTIC, None), 'Graphic3d_NOM_SILVER': (Graphic3d_NameOfMaterial.Graphic3d_NOM_SILVER, None), 'Graphic3d_NOM_STEEL': (Graphic3d_NameOfMaterial.Graphic3d_NOM_STEEL, None), 'Graphic3d_NOM_STONE': (Graphic3d_NameOfMaterial.Graphic3d_NOM_STONE, None), 'Graphic3d_NOM_SHINY_PLASTIC': (Graphic3d_NameOfMaterial.Graphic3d_NOM_SHINY_PLASTIC, None), 'Graphic3d_NOM_SATIN': (Graphic3d_NameOfMaterial.Graphic3d_NOM_SATIN, None), 'Graphic3d_NOM_METALIZED': (Graphic3d_NameOfMaterial.Graphic3d_NOM_METALIZED, None), 'Graphic3d_NOM_NEON_GNC': (Graphic3d_NameOfMaterial.Graphic3d_NOM_NEON_GNC, None), 'Graphic3d_NOM_CHROME': (Graphic3d_NameOfMaterial.Graphic3d_NOM_CHROME, None), 'Graphic3d_NOM_ALUMINIUM': (Graphic3d_NameOfMaterial.Graphic3d_NOM_ALUMINIUM, None), 'Graphic3d_NOM_OBSIDIAN': (Graphic3d_NameOfMaterial.Graphic3d_NOM_OBSIDIAN, None), 'Graphic3d_NOM_NEON_PHC': (Graphic3d_NameOfMaterial.Graphic3d_NOM_NEON_PHC, None), 'Graphic3d_NOM_JADE': (Graphic3d_NameOfMaterial.Graphic3d_NOM_JADE, None), 'Graphic3d_NOM_CHARCOAL': (Graphic3d_NameOfMaterial.Graphic3d_NOM_CHARCOAL, None), 'Graphic3d_NOM_WATER': (Graphic3d_NameOfMaterial.Graphic3d_NOM_WATER, None), 'Graphic3d_NOM_GLASS': (Graphic3d_NameOfMaterial.Graphic3d_NOM_GLASS, None), 'Graphic3d_NOM_DIAMOND': (Graphic3d_NameOfMaterial.Graphic3d_NOM_DIAMOND, None), 'Graphic3d_NOM_TRANSPARENT': (Graphic3d_NameOfMaterial.Graphic3d_NOM_TRANSPARENT, None), 'Graphic3d_NOM_DEFAULT': (Graphic3d_NameOfMaterial.Graphic3d_NOM_DEFAULT, None), 'Graphic3d_NOM_UserDefined': (Graphic3d_NameOfMaterial.Graphic3d_NOM_UserDefined, None)}
-    __members__: dict # value = {'Graphic3d_NOM_BRASS': Graphic3d_NameOfMaterial.Graphic3d_NOM_BRASS, 'Graphic3d_NOM_BRONZE': Graphic3d_NameOfMaterial.Graphic3d_NOM_BRONZE, 'Graphic3d_NOM_COPPER': Graphic3d_NameOfMaterial.Graphic3d_NOM_COPPER, 'Graphic3d_NOM_GOLD': Graphic3d_NameOfMaterial.Graphic3d_NOM_GOLD, 'Graphic3d_NOM_PEWTER': Graphic3d_NameOfMaterial.Graphic3d_NOM_PEWTER, 'Graphic3d_NOM_PLASTER': Graphic3d_NameOfMaterial.Graphic3d_NOM_PLASTER, 'Graphic3d_NOM_PLASTIC': Graphic3d_NameOfMaterial.Graphic3d_NOM_PLASTIC, 'Graphic3d_NOM_SILVER': Graphic3d_NameOfMaterial.Graphic3d_NOM_SILVER, 'Graphic3d_NOM_STEEL': Graphic3d_NameOfMaterial.Graphic3d_NOM_STEEL, 'Graphic3d_NOM_STONE': Graphic3d_NameOfMaterial.Graphic3d_NOM_STONE, 'Graphic3d_NOM_SHINY_PLASTIC': Graphic3d_NameOfMaterial.Graphic3d_NOM_SHINY_PLASTIC, 'Graphic3d_NOM_SATIN': Graphic3d_NameOfMaterial.Graphic3d_NOM_SATIN, 'Graphic3d_NOM_METALIZED': Graphic3d_NameOfMaterial.Graphic3d_NOM_METALIZED, 'Graphic3d_NOM_NEON_GNC': Graphic3d_NameOfMaterial.Graphic3d_NOM_NEON_GNC, 'Graphic3d_NOM_CHROME': Graphic3d_NameOfMaterial.Graphic3d_NOM_CHROME, 'Graphic3d_NOM_ALUMINIUM': Graphic3d_NameOfMaterial.Graphic3d_NOM_ALUMINIUM, 'Graphic3d_NOM_OBSIDIAN': Graphic3d_NameOfMaterial.Graphic3d_NOM_OBSIDIAN, 'Graphic3d_NOM_NEON_PHC': Graphic3d_NameOfMaterial.Graphic3d_NOM_NEON_PHC, 'Graphic3d_NOM_JADE': Graphic3d_NameOfMaterial.Graphic3d_NOM_JADE, 'Graphic3d_NOM_CHARCOAL': Graphic3d_NameOfMaterial.Graphic3d_NOM_CHARCOAL, 'Graphic3d_NOM_WATER': Graphic3d_NameOfMaterial.Graphic3d_NOM_WATER, 'Graphic3d_NOM_GLASS': Graphic3d_NameOfMaterial.Graphic3d_NOM_GLASS, 'Graphic3d_NOM_DIAMOND': Graphic3d_NameOfMaterial.Graphic3d_NOM_DIAMOND, 'Graphic3d_NOM_TRANSPARENT': Graphic3d_NameOfMaterial.Graphic3d_NOM_TRANSPARENT, 'Graphic3d_NOM_DEFAULT': Graphic3d_NameOfMaterial.Graphic3d_NOM_DEFAULT, 'Graphic3d_NOM_UserDefined': Graphic3d_NameOfMaterial.Graphic3d_NOM_UserDefined}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_NOM_ALUMINIUM: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Aluminum: 15>
+    Graphic3d_NOM_BRASS: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Brass: 0>
+    Graphic3d_NOM_BRONZE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Bronze: 1>
+    Graphic3d_NOM_CHARCOAL: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Charcoal: 19>
+    Graphic3d_NOM_CHROME: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Chrome: 14>
+    Graphic3d_NOM_COPPER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Copper: 2>
+    Graphic3d_NOM_DEFAULT: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_DEFAULT: 24>
+    Graphic3d_NOM_DIAMOND: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Diamond: 22>
+    Graphic3d_NOM_GLASS: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Glass: 21>
+    Graphic3d_NOM_GOLD: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Gold: 3>
+    Graphic3d_NOM_JADE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Jade: 18>
+    Graphic3d_NOM_METALIZED: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Metalized: 12>
+    Graphic3d_NOM_NEON_GNC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Ionized: 13>
+    Graphic3d_NOM_NEON_PHC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Neon: 17>
+    Graphic3d_NOM_OBSIDIAN: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Obsidian: 16>
+    Graphic3d_NOM_PEWTER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Pewter: 4>
+    Graphic3d_NOM_PLASTER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastered: 5>
+    Graphic3d_NOM_PLASTIC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastified: 6>
+    Graphic3d_NOM_SATIN: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Satin: 11>
+    Graphic3d_NOM_SHINY_PLASTIC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_ShinyPlastified: 10>
+    Graphic3d_NOM_SILVER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Silver: 7>
+    Graphic3d_NOM_STEEL: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Steel: 8>
+    Graphic3d_NOM_STONE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Stone: 9>
+    Graphic3d_NOM_TRANSPARENT: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Transparent: 23>
+    Graphic3d_NOM_UserDefined: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_UserDefined: 25>
+    Graphic3d_NOM_WATER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Water: 20>
+    Graphic3d_NameOfMaterial_Aluminum: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Aluminum: 15>
+    Graphic3d_NameOfMaterial_Brass: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Brass: 0>
+    Graphic3d_NameOfMaterial_Bronze: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Bronze: 1>
+    Graphic3d_NameOfMaterial_Charcoal: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Charcoal: 19>
+    Graphic3d_NameOfMaterial_Chrome: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Chrome: 14>
+    Graphic3d_NameOfMaterial_Copper: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Copper: 2>
+    Graphic3d_NameOfMaterial_DEFAULT: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_DEFAULT: 24>
+    Graphic3d_NameOfMaterial_Diamond: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Diamond: 22>
+    Graphic3d_NameOfMaterial_Glass: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Glass: 21>
+    Graphic3d_NameOfMaterial_Gold: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Gold: 3>
+    Graphic3d_NameOfMaterial_Ionized: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Ionized: 13>
+    Graphic3d_NameOfMaterial_Jade: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Jade: 18>
+    Graphic3d_NameOfMaterial_Metalized: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Metalized: 12>
+    Graphic3d_NameOfMaterial_Neon: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Neon: 17>
+    Graphic3d_NameOfMaterial_Obsidian: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Obsidian: 16>
+    Graphic3d_NameOfMaterial_Pewter: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Pewter: 4>
+    Graphic3d_NameOfMaterial_Plastered: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastered: 5>
+    Graphic3d_NameOfMaterial_Plastified: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastified: 6>
+    Graphic3d_NameOfMaterial_Satin: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Satin: 11>
+    Graphic3d_NameOfMaterial_ShinyPlastified: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_ShinyPlastified: 10>
+    Graphic3d_NameOfMaterial_Silver: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Silver: 7>
+    Graphic3d_NameOfMaterial_Steel: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Steel: 8>
+    Graphic3d_NameOfMaterial_Stone: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Stone: 9>
+    Graphic3d_NameOfMaterial_Transparent: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Transparent: 23>
+    Graphic3d_NameOfMaterial_UserDefined: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_UserDefined: 25>
+    Graphic3d_NameOfMaterial_Water: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Water: 20>
+    __entries: dict # value = {'Graphic3d_NameOfMaterial_Brass': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Brass: 0>, None), 'Graphic3d_NameOfMaterial_Bronze': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Bronze: 1>, None), 'Graphic3d_NameOfMaterial_Copper': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Copper: 2>, None), 'Graphic3d_NameOfMaterial_Gold': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Gold: 3>, None), 'Graphic3d_NameOfMaterial_Pewter': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Pewter: 4>, None), 'Graphic3d_NameOfMaterial_Plastered': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastered: 5>, None), 'Graphic3d_NameOfMaterial_Plastified': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastified: 6>, None), 'Graphic3d_NameOfMaterial_Silver': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Silver: 7>, None), 'Graphic3d_NameOfMaterial_Steel': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Steel: 8>, None), 'Graphic3d_NameOfMaterial_Stone': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Stone: 9>, None), 'Graphic3d_NameOfMaterial_ShinyPlastified': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_ShinyPlastified: 10>, None), 'Graphic3d_NameOfMaterial_Satin': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Satin: 11>, None), 'Graphic3d_NameOfMaterial_Metalized': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Metalized: 12>, None), 'Graphic3d_NameOfMaterial_Ionized': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Ionized: 13>, None), 'Graphic3d_NameOfMaterial_Chrome': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Chrome: 14>, None), 'Graphic3d_NameOfMaterial_Aluminum': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Aluminum: 15>, None), 'Graphic3d_NameOfMaterial_Obsidian': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Obsidian: 16>, None), 'Graphic3d_NameOfMaterial_Neon': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Neon: 17>, None), 'Graphic3d_NameOfMaterial_Jade': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Jade: 18>, None), 'Graphic3d_NameOfMaterial_Charcoal': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Charcoal: 19>, None), 'Graphic3d_NameOfMaterial_Water': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Water: 20>, None), 'Graphic3d_NameOfMaterial_Glass': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Glass: 21>, None), 'Graphic3d_NameOfMaterial_Diamond': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Diamond: 22>, None), 'Graphic3d_NameOfMaterial_Transparent': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Transparent: 23>, None), 'Graphic3d_NameOfMaterial_DEFAULT': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_DEFAULT: 24>, None), 'Graphic3d_NameOfMaterial_UserDefined': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_UserDefined: 25>, None), 'Graphic3d_NOM_BRASS': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Brass: 0>, None), 'Graphic3d_NOM_BRONZE': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Bronze: 1>, None), 'Graphic3d_NOM_COPPER': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Copper: 2>, None), 'Graphic3d_NOM_GOLD': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Gold: 3>, None), 'Graphic3d_NOM_PEWTER': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Pewter: 4>, None), 'Graphic3d_NOM_PLASTER': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastered: 5>, None), 'Graphic3d_NOM_PLASTIC': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastified: 6>, None), 'Graphic3d_NOM_SILVER': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Silver: 7>, None), 'Graphic3d_NOM_STEEL': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Steel: 8>, None), 'Graphic3d_NOM_STONE': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Stone: 9>, None), 'Graphic3d_NOM_SHINY_PLASTIC': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_ShinyPlastified: 10>, None), 'Graphic3d_NOM_SATIN': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Satin: 11>, None), 'Graphic3d_NOM_METALIZED': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Metalized: 12>, None), 'Graphic3d_NOM_NEON_GNC': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Ionized: 13>, None), 'Graphic3d_NOM_CHROME': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Chrome: 14>, None), 'Graphic3d_NOM_ALUMINIUM': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Aluminum: 15>, None), 'Graphic3d_NOM_OBSIDIAN': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Obsidian: 16>, None), 'Graphic3d_NOM_NEON_PHC': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Neon: 17>, None), 'Graphic3d_NOM_JADE': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Jade: 18>, None), 'Graphic3d_NOM_CHARCOAL': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Charcoal: 19>, None), 'Graphic3d_NOM_WATER': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Water: 20>, None), 'Graphic3d_NOM_GLASS': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Glass: 21>, None), 'Graphic3d_NOM_DIAMOND': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Diamond: 22>, None), 'Graphic3d_NOM_TRANSPARENT': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Transparent: 23>, None), 'Graphic3d_NOM_DEFAULT': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_DEFAULT: 24>, None), 'Graphic3d_NOM_UserDefined': (<Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_UserDefined: 25>, None)}
+    __members__: dict # value = {'Graphic3d_NameOfMaterial_Brass': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Brass: 0>, 'Graphic3d_NameOfMaterial_Bronze': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Bronze: 1>, 'Graphic3d_NameOfMaterial_Copper': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Copper: 2>, 'Graphic3d_NameOfMaterial_Gold': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Gold: 3>, 'Graphic3d_NameOfMaterial_Pewter': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Pewter: 4>, 'Graphic3d_NameOfMaterial_Plastered': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastered: 5>, 'Graphic3d_NameOfMaterial_Plastified': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastified: 6>, 'Graphic3d_NameOfMaterial_Silver': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Silver: 7>, 'Graphic3d_NameOfMaterial_Steel': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Steel: 8>, 'Graphic3d_NameOfMaterial_Stone': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Stone: 9>, 'Graphic3d_NameOfMaterial_ShinyPlastified': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_ShinyPlastified: 10>, 'Graphic3d_NameOfMaterial_Satin': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Satin: 11>, 'Graphic3d_NameOfMaterial_Metalized': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Metalized: 12>, 'Graphic3d_NameOfMaterial_Ionized': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Ionized: 13>, 'Graphic3d_NameOfMaterial_Chrome': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Chrome: 14>, 'Graphic3d_NameOfMaterial_Aluminum': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Aluminum: 15>, 'Graphic3d_NameOfMaterial_Obsidian': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Obsidian: 16>, 'Graphic3d_NameOfMaterial_Neon': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Neon: 17>, 'Graphic3d_NameOfMaterial_Jade': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Jade: 18>, 'Graphic3d_NameOfMaterial_Charcoal': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Charcoal: 19>, 'Graphic3d_NameOfMaterial_Water': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Water: 20>, 'Graphic3d_NameOfMaterial_Glass': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Glass: 21>, 'Graphic3d_NameOfMaterial_Diamond': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Diamond: 22>, 'Graphic3d_NameOfMaterial_Transparent': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Transparent: 23>, 'Graphic3d_NameOfMaterial_DEFAULT': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_DEFAULT: 24>, 'Graphic3d_NameOfMaterial_UserDefined': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_UserDefined: 25>, 'Graphic3d_NOM_BRASS': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Brass: 0>, 'Graphic3d_NOM_BRONZE': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Bronze: 1>, 'Graphic3d_NOM_COPPER': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Copper: 2>, 'Graphic3d_NOM_GOLD': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Gold: 3>, 'Graphic3d_NOM_PEWTER': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Pewter: 4>, 'Graphic3d_NOM_PLASTER': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastered: 5>, 'Graphic3d_NOM_PLASTIC': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastified: 6>, 'Graphic3d_NOM_SILVER': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Silver: 7>, 'Graphic3d_NOM_STEEL': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Steel: 8>, 'Graphic3d_NOM_STONE': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Stone: 9>, 'Graphic3d_NOM_SHINY_PLASTIC': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_ShinyPlastified: 10>, 'Graphic3d_NOM_SATIN': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Satin: 11>, 'Graphic3d_NOM_METALIZED': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Metalized: 12>, 'Graphic3d_NOM_NEON_GNC': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Ionized: 13>, 'Graphic3d_NOM_CHROME': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Chrome: 14>, 'Graphic3d_NOM_ALUMINIUM': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Aluminum: 15>, 'Graphic3d_NOM_OBSIDIAN': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Obsidian: 16>, 'Graphic3d_NOM_NEON_PHC': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Neon: 17>, 'Graphic3d_NOM_JADE': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Jade: 18>, 'Graphic3d_NOM_CHARCOAL': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Charcoal: 19>, 'Graphic3d_NOM_WATER': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Water: 20>, 'Graphic3d_NOM_GLASS': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Glass: 21>, 'Graphic3d_NOM_DIAMOND': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Diamond: 22>, 'Graphic3d_NOM_TRANSPARENT': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Transparent: 23>, 'Graphic3d_NOM_DEFAULT': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_DEFAULT: 24>, 'Graphic3d_NOM_UserDefined': <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_UserDefined: 25>}
     pass
 class Graphic3d_NameOfTexture1D():
     """
@@ -12970,20 +13743,28 @@ class Graphic3d_NameOfTexture1D():
 
       Graphic3d_NOT_1D_UNKNOWN
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_NOT_1D_ELEVATION: OCP.Graphic3d.Graphic3d_NameOfTexture1D # value = Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_ELEVATION
-    Graphic3d_NOT_1D_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexture1D # value = Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_UNKNOWN
-    __entries: dict # value = {'Graphic3d_NOT_1D_ELEVATION': (Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_ELEVATION, None), 'Graphic3d_NOT_1D_UNKNOWN': (Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_UNKNOWN, None)}
-    __members__: dict # value = {'Graphic3d_NOT_1D_ELEVATION': Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_ELEVATION, 'Graphic3d_NOT_1D_UNKNOWN': Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_UNKNOWN}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_NOT_1D_ELEVATION: OCP.Graphic3d.Graphic3d_NameOfTexture1D # value = <Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_ELEVATION: 0>
+    Graphic3d_NOT_1D_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexture1D # value = <Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_UNKNOWN: 1>
+    __entries: dict # value = {'Graphic3d_NOT_1D_ELEVATION': (<Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_ELEVATION: 0>, None), 'Graphic3d_NOT_1D_UNKNOWN': (<Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_UNKNOWN: 1>, None)}
+    __members__: dict # value = {'Graphic3d_NOT_1D_ELEVATION': <Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_ELEVATION: 0>, 'Graphic3d_NOT_1D_UNKNOWN': <Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_UNKNOWN: 1>}
     pass
 class Graphic3d_NameOfTexture2D():
     """
@@ -13037,41 +13818,49 @@ class Graphic3d_NameOfTexture2D():
 
       Graphic3d_NOT_2D_UNKNOWN
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_NOT_2D_ALIENSKIN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALIENSKIN
-    Graphic3d_NOT_2D_ALUMINUM: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALUMINUM
-    Graphic3d_NOT_2D_BLUEWHITE_PAPER: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUEWHITE_PAPER
-    Graphic3d_NOT_2D_BLUE_ROCK: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUE_ROCK
-    Graphic3d_NOT_2D_BRUSHED: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BRUSHED
-    Graphic3d_NOT_2D_BUBBLES: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUBBLES
-    Graphic3d_NOT_2D_BUMP: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUMP
-    Graphic3d_NOT_2D_CAST: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CAST
-    Graphic3d_NOT_2D_CHESS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHESS
-    Graphic3d_NOT_2D_CHIPBD: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHIPBD
-    Graphic3d_NOT_2D_CLOUDS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CLOUDS
-    Graphic3d_NOT_2D_FLESH: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLESH
-    Graphic3d_NOT_2D_FLOOR: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLOOR
-    Graphic3d_NOT_2D_GALVNISD: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GALVNISD
-    Graphic3d_NOT_2D_GRASS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GRASS
-    Graphic3d_NOT_2D_KNURL: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_KNURL
-    Graphic3d_NOT_2D_MAPLE: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MAPLE
-    Graphic3d_NOT_2D_MARBLE: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MARBLE
-    Graphic3d_NOT_2D_MATRA: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MATRA
-    Graphic3d_NOT_2D_MOTTLED: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MOTTLED
-    Graphic3d_NOT_2D_RAIN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_RAIN
-    Graphic3d_NOT_2D_ROCK: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ROCK
-    Graphic3d_NOT_2D_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_UNKNOWN
-    __entries: dict # value = {'Graphic3d_NOT_2D_MATRA': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MATRA, None), 'Graphic3d_NOT_2D_ALIENSKIN': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALIENSKIN, None), 'Graphic3d_NOT_2D_BLUE_ROCK': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUE_ROCK, None), 'Graphic3d_NOT_2D_BLUEWHITE_PAPER': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUEWHITE_PAPER, None), 'Graphic3d_NOT_2D_BRUSHED': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BRUSHED, None), 'Graphic3d_NOT_2D_BUBBLES': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUBBLES, None), 'Graphic3d_NOT_2D_BUMP': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUMP, None), 'Graphic3d_NOT_2D_CAST': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CAST, None), 'Graphic3d_NOT_2D_CHIPBD': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHIPBD, None), 'Graphic3d_NOT_2D_CLOUDS': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CLOUDS, None), 'Graphic3d_NOT_2D_FLESH': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLESH, None), 'Graphic3d_NOT_2D_FLOOR': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLOOR, None), 'Graphic3d_NOT_2D_GALVNISD': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GALVNISD, None), 'Graphic3d_NOT_2D_GRASS': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GRASS, None), 'Graphic3d_NOT_2D_ALUMINUM': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALUMINUM, None), 'Graphic3d_NOT_2D_ROCK': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ROCK, None), 'Graphic3d_NOT_2D_KNURL': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_KNURL, None), 'Graphic3d_NOT_2D_MAPLE': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MAPLE, None), 'Graphic3d_NOT_2D_MARBLE': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MARBLE, None), 'Graphic3d_NOT_2D_MOTTLED': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MOTTLED, None), 'Graphic3d_NOT_2D_RAIN': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_RAIN, None), 'Graphic3d_NOT_2D_CHESS': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHESS, None), 'Graphic3d_NOT_2D_UNKNOWN': (Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_UNKNOWN, None)}
-    __members__: dict # value = {'Graphic3d_NOT_2D_MATRA': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MATRA, 'Graphic3d_NOT_2D_ALIENSKIN': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALIENSKIN, 'Graphic3d_NOT_2D_BLUE_ROCK': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUE_ROCK, 'Graphic3d_NOT_2D_BLUEWHITE_PAPER': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUEWHITE_PAPER, 'Graphic3d_NOT_2D_BRUSHED': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BRUSHED, 'Graphic3d_NOT_2D_BUBBLES': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUBBLES, 'Graphic3d_NOT_2D_BUMP': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUMP, 'Graphic3d_NOT_2D_CAST': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CAST, 'Graphic3d_NOT_2D_CHIPBD': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHIPBD, 'Graphic3d_NOT_2D_CLOUDS': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CLOUDS, 'Graphic3d_NOT_2D_FLESH': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLESH, 'Graphic3d_NOT_2D_FLOOR': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLOOR, 'Graphic3d_NOT_2D_GALVNISD': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GALVNISD, 'Graphic3d_NOT_2D_GRASS': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GRASS, 'Graphic3d_NOT_2D_ALUMINUM': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALUMINUM, 'Graphic3d_NOT_2D_ROCK': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ROCK, 'Graphic3d_NOT_2D_KNURL': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_KNURL, 'Graphic3d_NOT_2D_MAPLE': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MAPLE, 'Graphic3d_NOT_2D_MARBLE': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MARBLE, 'Graphic3d_NOT_2D_MOTTLED': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MOTTLED, 'Graphic3d_NOT_2D_RAIN': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_RAIN, 'Graphic3d_NOT_2D_CHESS': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHESS, 'Graphic3d_NOT_2D_UNKNOWN': Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_UNKNOWN}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_NOT_2D_ALIENSKIN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALIENSKIN: 1>
+    Graphic3d_NOT_2D_ALUMINUM: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALUMINUM: 14>
+    Graphic3d_NOT_2D_BLUEWHITE_PAPER: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUEWHITE_PAPER: 3>
+    Graphic3d_NOT_2D_BLUE_ROCK: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUE_ROCK: 2>
+    Graphic3d_NOT_2D_BRUSHED: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BRUSHED: 4>
+    Graphic3d_NOT_2D_BUBBLES: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUBBLES: 5>
+    Graphic3d_NOT_2D_BUMP: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUMP: 6>
+    Graphic3d_NOT_2D_CAST: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CAST: 7>
+    Graphic3d_NOT_2D_CHESS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHESS: 21>
+    Graphic3d_NOT_2D_CHIPBD: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHIPBD: 8>
+    Graphic3d_NOT_2D_CLOUDS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CLOUDS: 9>
+    Graphic3d_NOT_2D_FLESH: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLESH: 10>
+    Graphic3d_NOT_2D_FLOOR: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLOOR: 11>
+    Graphic3d_NOT_2D_GALVNISD: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GALVNISD: 12>
+    Graphic3d_NOT_2D_GRASS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GRASS: 13>
+    Graphic3d_NOT_2D_KNURL: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_KNURL: 16>
+    Graphic3d_NOT_2D_MAPLE: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MAPLE: 17>
+    Graphic3d_NOT_2D_MARBLE: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MARBLE: 18>
+    Graphic3d_NOT_2D_MATRA: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MATRA: 0>
+    Graphic3d_NOT_2D_MOTTLED: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MOTTLED: 19>
+    Graphic3d_NOT_2D_RAIN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_RAIN: 20>
+    Graphic3d_NOT_2D_ROCK: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ROCK: 15>
+    Graphic3d_NOT_2D_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_UNKNOWN: 22>
+    __entries: dict # value = {'Graphic3d_NOT_2D_MATRA': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MATRA: 0>, None), 'Graphic3d_NOT_2D_ALIENSKIN': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALIENSKIN: 1>, None), 'Graphic3d_NOT_2D_BLUE_ROCK': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUE_ROCK: 2>, None), 'Graphic3d_NOT_2D_BLUEWHITE_PAPER': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUEWHITE_PAPER: 3>, None), 'Graphic3d_NOT_2D_BRUSHED': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BRUSHED: 4>, None), 'Graphic3d_NOT_2D_BUBBLES': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUBBLES: 5>, None), 'Graphic3d_NOT_2D_BUMP': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUMP: 6>, None), 'Graphic3d_NOT_2D_CAST': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CAST: 7>, None), 'Graphic3d_NOT_2D_CHIPBD': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHIPBD: 8>, None), 'Graphic3d_NOT_2D_CLOUDS': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CLOUDS: 9>, None), 'Graphic3d_NOT_2D_FLESH': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLESH: 10>, None), 'Graphic3d_NOT_2D_FLOOR': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLOOR: 11>, None), 'Graphic3d_NOT_2D_GALVNISD': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GALVNISD: 12>, None), 'Graphic3d_NOT_2D_GRASS': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GRASS: 13>, None), 'Graphic3d_NOT_2D_ALUMINUM': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALUMINUM: 14>, None), 'Graphic3d_NOT_2D_ROCK': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ROCK: 15>, None), 'Graphic3d_NOT_2D_KNURL': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_KNURL: 16>, None), 'Graphic3d_NOT_2D_MAPLE': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MAPLE: 17>, None), 'Graphic3d_NOT_2D_MARBLE': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MARBLE: 18>, None), 'Graphic3d_NOT_2D_MOTTLED': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MOTTLED: 19>, None), 'Graphic3d_NOT_2D_RAIN': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_RAIN: 20>, None), 'Graphic3d_NOT_2D_CHESS': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHESS: 21>, None), 'Graphic3d_NOT_2D_UNKNOWN': (<Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_UNKNOWN: 22>, None)}
+    __members__: dict # value = {'Graphic3d_NOT_2D_MATRA': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MATRA: 0>, 'Graphic3d_NOT_2D_ALIENSKIN': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALIENSKIN: 1>, 'Graphic3d_NOT_2D_BLUE_ROCK': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUE_ROCK: 2>, 'Graphic3d_NOT_2D_BLUEWHITE_PAPER': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUEWHITE_PAPER: 3>, 'Graphic3d_NOT_2D_BRUSHED': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BRUSHED: 4>, 'Graphic3d_NOT_2D_BUBBLES': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUBBLES: 5>, 'Graphic3d_NOT_2D_BUMP': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUMP: 6>, 'Graphic3d_NOT_2D_CAST': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CAST: 7>, 'Graphic3d_NOT_2D_CHIPBD': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHIPBD: 8>, 'Graphic3d_NOT_2D_CLOUDS': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CLOUDS: 9>, 'Graphic3d_NOT_2D_FLESH': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLESH: 10>, 'Graphic3d_NOT_2D_FLOOR': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLOOR: 11>, 'Graphic3d_NOT_2D_GALVNISD': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GALVNISD: 12>, 'Graphic3d_NOT_2D_GRASS': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GRASS: 13>, 'Graphic3d_NOT_2D_ALUMINUM': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALUMINUM: 14>, 'Graphic3d_NOT_2D_ROCK': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ROCK: 15>, 'Graphic3d_NOT_2D_KNURL': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_KNURL: 16>, 'Graphic3d_NOT_2D_MAPLE': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MAPLE: 17>, 'Graphic3d_NOT_2D_MARBLE': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MARBLE: 18>, 'Graphic3d_NOT_2D_MOTTLED': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MOTTLED: 19>, 'Graphic3d_NOT_2D_RAIN': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_RAIN: 20>, 'Graphic3d_NOT_2D_CHESS': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHESS: 21>, 'Graphic3d_NOT_2D_UNKNOWN': <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_UNKNOWN: 22>}
     pass
 class Graphic3d_NameOfTextureEnv():
     """
@@ -13097,27 +13886,35 @@ class Graphic3d_NameOfTextureEnv():
 
       Graphic3d_NOT_ENV_UNKNOWN
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_NOT_ENV_CLOUDS: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CLOUDS
-    Graphic3d_NOT_ENV_CV: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CV
-    Graphic3d_NOT_ENV_LINES: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_LINES
-    Graphic3d_NOT_ENV_MEDIT: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_MEDIT
-    Graphic3d_NOT_ENV_PEARL: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_PEARL
-    Graphic3d_NOT_ENV_ROAD: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_ROAD
-    Graphic3d_NOT_ENV_SKY1: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY1
-    Graphic3d_NOT_ENV_SKY2: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY2
-    Graphic3d_NOT_ENV_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_UNKNOWN
-    __entries: dict # value = {'Graphic3d_NOT_ENV_CLOUDS': (Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CLOUDS, None), 'Graphic3d_NOT_ENV_CV': (Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CV, None), 'Graphic3d_NOT_ENV_MEDIT': (Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_MEDIT, None), 'Graphic3d_NOT_ENV_PEARL': (Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_PEARL, None), 'Graphic3d_NOT_ENV_SKY1': (Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY1, None), 'Graphic3d_NOT_ENV_SKY2': (Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY2, None), 'Graphic3d_NOT_ENV_LINES': (Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_LINES, None), 'Graphic3d_NOT_ENV_ROAD': (Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_ROAD, None), 'Graphic3d_NOT_ENV_UNKNOWN': (Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_UNKNOWN, None)}
-    __members__: dict # value = {'Graphic3d_NOT_ENV_CLOUDS': Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CLOUDS, 'Graphic3d_NOT_ENV_CV': Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CV, 'Graphic3d_NOT_ENV_MEDIT': Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_MEDIT, 'Graphic3d_NOT_ENV_PEARL': Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_PEARL, 'Graphic3d_NOT_ENV_SKY1': Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY1, 'Graphic3d_NOT_ENV_SKY2': Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY2, 'Graphic3d_NOT_ENV_LINES': Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_LINES, 'Graphic3d_NOT_ENV_ROAD': Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_ROAD, 'Graphic3d_NOT_ENV_UNKNOWN': Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_UNKNOWN}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_NOT_ENV_CLOUDS: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CLOUDS: 0>
+    Graphic3d_NOT_ENV_CV: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CV: 1>
+    Graphic3d_NOT_ENV_LINES: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_LINES: 6>
+    Graphic3d_NOT_ENV_MEDIT: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_MEDIT: 2>
+    Graphic3d_NOT_ENV_PEARL: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_PEARL: 3>
+    Graphic3d_NOT_ENV_ROAD: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_ROAD: 7>
+    Graphic3d_NOT_ENV_SKY1: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY1: 4>
+    Graphic3d_NOT_ENV_SKY2: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY2: 5>
+    Graphic3d_NOT_ENV_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_UNKNOWN: 8>
+    __entries: dict # value = {'Graphic3d_NOT_ENV_CLOUDS': (<Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CLOUDS: 0>, None), 'Graphic3d_NOT_ENV_CV': (<Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CV: 1>, None), 'Graphic3d_NOT_ENV_MEDIT': (<Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_MEDIT: 2>, None), 'Graphic3d_NOT_ENV_PEARL': (<Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_PEARL: 3>, None), 'Graphic3d_NOT_ENV_SKY1': (<Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY1: 4>, None), 'Graphic3d_NOT_ENV_SKY2': (<Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY2: 5>, None), 'Graphic3d_NOT_ENV_LINES': (<Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_LINES: 6>, None), 'Graphic3d_NOT_ENV_ROAD': (<Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_ROAD: 7>, None), 'Graphic3d_NOT_ENV_UNKNOWN': (<Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_UNKNOWN: 8>, None)}
+    __members__: dict # value = {'Graphic3d_NOT_ENV_CLOUDS': <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CLOUDS: 0>, 'Graphic3d_NOT_ENV_CV': <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CV: 1>, 'Graphic3d_NOT_ENV_MEDIT': <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_MEDIT: 2>, 'Graphic3d_NOT_ENV_PEARL': <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_PEARL: 3>, 'Graphic3d_NOT_ENV_SKY1': <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY1: 4>, 'Graphic3d_NOT_ENV_SKY2': <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY2: 5>, 'Graphic3d_NOT_ENV_LINES': <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_LINES: 6>, 'Graphic3d_NOT_ENV_ROAD': <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_ROAD: 7>, 'Graphic3d_NOT_ENV_UNKNOWN': <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_UNKNOWN: 8>}
     pass
 class Graphic3d_NameOfTexturePlane():
     """
@@ -13133,28 +13930,140 @@ class Graphic3d_NameOfTexturePlane():
 
       Graphic3d_NOTP_UNKNOWN
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_NOTP_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_UNKNOWN: 3>
+    Graphic3d_NOTP_XY: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_XY: 0>
+    Graphic3d_NOTP_YZ: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_YZ: 1>
+    Graphic3d_NOTP_ZX: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_ZX: 2>
+    __entries: dict # value = {'Graphic3d_NOTP_XY': (<Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_XY: 0>, None), 'Graphic3d_NOTP_YZ': (<Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_YZ: 1>, None), 'Graphic3d_NOTP_ZX': (<Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_ZX: 2>, None), 'Graphic3d_NOTP_UNKNOWN': (<Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_UNKNOWN: 3>, None)}
+    __members__: dict # value = {'Graphic3d_NOTP_XY': <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_XY: 0>, 'Graphic3d_NOTP_YZ': <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_YZ: 1>, 'Graphic3d_NOTP_ZX': <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_ZX: 2>, 'Graphic3d_NOTP_UNKNOWN': <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_UNKNOWN: 3>}
+    pass
+class Graphic3d_PBRMaterial():
+    """
+    Class implementing Metallic-Roughness physically based material definition
+    """
+    def Alpha(self) -> float: 
+        """
+        Returns alpha component in range [0, 1].
+        """
+    def Color(self) -> OCP.Quantity.Quantity_ColorRGBA: 
+        """
+        Returns albedo color with alpha component of material.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def Emission(self) -> Graphic3d_Vec3: 
+        """
+        Returns light intensity emitted by material. Values are greater or equal 0.
+        """
+    @staticmethod
+    def GenerateEnvLUT_s(theLUT : OCP.Image.Image_PixMap,theNbIntegralSamples : int=1024) -> None: 
+        """
+        Generates 2D look up table of scale and bias for fresnell zero coefficient. It is needed for calculation reflectance part of environment lighting.
+        """
+    def IOR(self) -> float: 
+        """
+        Returns index of refraction in [1, 3] range.
+        """
+    def Metallic(self) -> float: 
+        """
+        Returns material's metallic coefficient in [0, 1] range. 1 for metals and 0 for dielectrics. It is preferable to be exactly 0 or 1. Average values are needed for textures mixing in shader.
+        """
+    @staticmethod
+    def MetallicFromSpecular_s(theSpecular : OCP.Quantity.Quantity_Color) -> float: 
+        """
+        Compute material metallicity from common material (specular color).
+        """
+    @staticmethod
+    def MinRoughness_s() -> float: 
+        """
+        Roughness cannot be 0 in real calculations, so it returns minimal achievable level of roughness in practice
+        """
+    def NormalizedRoughness(self) -> float: 
+        """
+        Returns roughness mapping parameter in [0, 1] range. Roughness is defined in [0, 1] for handful material settings and is mapped to [MinRoughness, 1] for calculations.
+        """
+    def Roughness(self) -> float: 
+        """
+        Returns real value of roughness in [MinRoughness, 1] range for calculations.
+        """
+    @staticmethod
+    def RoughnessFromSpecular_s(theSpecular : OCP.Quantity.Quantity_Color,theShiness : float) -> float: 
+        """
+        Compute material roughness from common material (specular color + shininess).
+        """
+    @staticmethod
+    def Roughness_s(theNormalizedRoughness : float) -> float: 
+        """
+        Maps roughness from [0, 1] to [MinRoughness, 1] for calculations.
+        """
+    def SetAlpha(self,theAlpha : float) -> None: 
+        """
+        Modifies alpha component.
+        """
+    def SetBSDF(self,theBSDF : Graphic3d_BSDF) -> None: 
+        """
+        Generates material in Metallic-Roughness system from Graphic3d_BSDF.
+        """
+    @overload
+    def SetColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
+        """
+        Modifies albedo color with alpha component.
 
-        :type: str
+        Modifies only albedo color.
         """
-    Graphic3d_NOTP_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_UNKNOWN
-    Graphic3d_NOTP_XY: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_XY
-    Graphic3d_NOTP_YZ: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_YZ
-    Graphic3d_NOTP_ZX: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_ZX
-    __entries: dict # value = {'Graphic3d_NOTP_XY': (Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_XY, None), 'Graphic3d_NOTP_YZ': (Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_YZ, None), 'Graphic3d_NOTP_ZX': (Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_ZX, None), 'Graphic3d_NOTP_UNKNOWN': (Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_UNKNOWN, None)}
-    __members__: dict # value = {'Graphic3d_NOTP_XY': Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_XY, 'Graphic3d_NOTP_YZ': Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_YZ, 'Graphic3d_NOTP_ZX': Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_ZX, 'Graphic3d_NOTP_UNKNOWN': Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_UNKNOWN}
+    @overload
+    def SetColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetEmission(self,theEmission : Graphic3d_Vec3) -> None: 
+        """
+        Modifies light intensity emitted by material.
+        """
+    def SetIOR(self,theIOR : float) -> None: 
+        """
+        Modifies index of refraction in [1, 3] range. In practice affects only on non-metal materials reflection possibilities.
+        """
+    def SetMetallic(self,theMetallic : float) -> None: 
+        """
+        Modifies metallic coefficient of material in [0, 1] range.
+        """
+    def SetRoughness(self,theRoughness : float) -> None: 
+        """
+        Modifies roughness coefficient of material in [0, 1] range.
+        """
+    @staticmethod
+    def SpecIBLMapSamplesFactor_s(theProbability : float,theRoughness : float) -> float: 
+        """
+        Shows how much times less samples can be used in certain roughness value specular IBL map generation in compare with samples number for map with roughness of 1. Specular IBL maps with less roughness values have higher resolution but require less samples for the same quality of baking. So that reducing samples number is good strategy to improve performance of baking. The samples number for specular IBL map with roughness of 1 (the maximum possible samples number) is expected to be defined as baking parameter. Samples number for other roughness values can be calculated by multiplication origin samples number by this factor.
+        """
+    @overload
+    def __init__(self,theBSDF : Graphic3d_BSDF) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Graphic3d_PolygonOffset():
     """
     Polygon offset parameters.
     """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -13211,6 +14120,10 @@ class Graphic3d_PresentationAttributes(OCP.Standard.Standard_Transient):
     def DisplayMode(self) -> int: 
         """
         Returns display mode, 0 by default. -1 means undefined (main display mode of presentation to be used).
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -13315,20 +14228,28 @@ class Graphic3d_RenderTransparentMethod():
 
       Graphic3d_RTM_BLEND_OIT
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_RTM_BLEND_OIT: OCP.Graphic3d.Graphic3d_RenderTransparentMethod # value = Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_OIT
-    Graphic3d_RTM_BLEND_UNORDERED: OCP.Graphic3d.Graphic3d_RenderTransparentMethod # value = Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_UNORDERED
-    __entries: dict # value = {'Graphic3d_RTM_BLEND_UNORDERED': (Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_UNORDERED, None), 'Graphic3d_RTM_BLEND_OIT': (Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_OIT, None)}
-    __members__: dict # value = {'Graphic3d_RTM_BLEND_UNORDERED': Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_UNORDERED, 'Graphic3d_RTM_BLEND_OIT': Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_OIT}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_RTM_BLEND_OIT: OCP.Graphic3d.Graphic3d_RenderTransparentMethod # value = <Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_OIT: 1>
+    Graphic3d_RTM_BLEND_UNORDERED: OCP.Graphic3d.Graphic3d_RenderTransparentMethod # value = <Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_UNORDERED: 0>
+    __entries: dict # value = {'Graphic3d_RTM_BLEND_UNORDERED': (<Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_UNORDERED: 0>, None), 'Graphic3d_RTM_BLEND_OIT': (<Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_OIT: 1>, None)}
+    __members__: dict # value = {'Graphic3d_RTM_BLEND_UNORDERED': <Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_UNORDERED: 0>, 'Graphic3d_RTM_BLEND_OIT': <Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_OIT: 1>}
     pass
 class Graphic3d_RenderingMode():
     """
@@ -13340,25 +14261,196 @@ class Graphic3d_RenderingMode():
 
       Graphic3d_RM_RAYTRACING
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_RM_RASTERIZATION: OCP.Graphic3d.Graphic3d_RenderingMode # value = Graphic3d_RenderingMode.Graphic3d_RM_RASTERIZATION
-    Graphic3d_RM_RAYTRACING: OCP.Graphic3d.Graphic3d_RenderingMode # value = Graphic3d_RenderingMode.Graphic3d_RM_RAYTRACING
-    __entries: dict # value = {'Graphic3d_RM_RASTERIZATION': (Graphic3d_RenderingMode.Graphic3d_RM_RASTERIZATION, None), 'Graphic3d_RM_RAYTRACING': (Graphic3d_RenderingMode.Graphic3d_RM_RAYTRACING, None)}
-    __members__: dict # value = {'Graphic3d_RM_RASTERIZATION': Graphic3d_RenderingMode.Graphic3d_RM_RASTERIZATION, 'Graphic3d_RM_RAYTRACING': Graphic3d_RenderingMode.Graphic3d_RM_RAYTRACING}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_RM_RASTERIZATION: OCP.Graphic3d.Graphic3d_RenderingMode # value = <Graphic3d_RenderingMode.Graphic3d_RM_RASTERIZATION: 0>
+    Graphic3d_RM_RAYTRACING: OCP.Graphic3d.Graphic3d_RenderingMode # value = <Graphic3d_RenderingMode.Graphic3d_RM_RAYTRACING: 1>
+    __entries: dict # value = {'Graphic3d_RM_RASTERIZATION': (<Graphic3d_RenderingMode.Graphic3d_RM_RASTERIZATION: 0>, None), 'Graphic3d_RM_RAYTRACING': (<Graphic3d_RenderingMode.Graphic3d_RM_RAYTRACING: 1>, None)}
+    __members__: dict # value = {'Graphic3d_RM_RASTERIZATION': <Graphic3d_RenderingMode.Graphic3d_RM_RASTERIZATION: 0>, 'Graphic3d_RM_RAYTRACING': <Graphic3d_RenderingMode.Graphic3d_RM_RAYTRACING: 1>}
     pass
 class Graphic3d_RenderingParams():
     """
     Helper class to store rendering parameters.
     """
+    class Anaglyph_e():
+        """
+        Anaglyph filter presets.
+
+        Members:
+
+          Anaglyph_RedCyan_Simple
+
+          Anaglyph_RedCyan_Optimized
+
+          Anaglyph_YellowBlue_Simple
+
+          Anaglyph_YellowBlue_Optimized
+
+          Anaglyph_GreenMagenta_Simple
+
+          Anaglyph_UserDefined
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        Anaglyph_GreenMagenta_Simple: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_GreenMagenta_Simple: 4>
+        Anaglyph_RedCyan_Optimized: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_RedCyan_Optimized: 1>
+        Anaglyph_RedCyan_Simple: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_RedCyan_Simple: 0>
+        Anaglyph_UserDefined: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_UserDefined: 5>
+        Anaglyph_YellowBlue_Optimized: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_YellowBlue_Optimized: 3>
+        Anaglyph_YellowBlue_Simple: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_YellowBlue_Simple: 2>
+        __entries: dict # value = {'Anaglyph_RedCyan_Simple': (<Anaglyph_e.Anaglyph_RedCyan_Simple: 0>, None), 'Anaglyph_RedCyan_Optimized': (<Anaglyph_e.Anaglyph_RedCyan_Optimized: 1>, None), 'Anaglyph_YellowBlue_Simple': (<Anaglyph_e.Anaglyph_YellowBlue_Simple: 2>, None), 'Anaglyph_YellowBlue_Optimized': (<Anaglyph_e.Anaglyph_YellowBlue_Optimized: 3>, None), 'Anaglyph_GreenMagenta_Simple': (<Anaglyph_e.Anaglyph_GreenMagenta_Simple: 4>, None), 'Anaglyph_UserDefined': (<Anaglyph_e.Anaglyph_UserDefined: 5>, None)}
+        __members__: dict # value = {'Anaglyph_RedCyan_Simple': <Anaglyph_e.Anaglyph_RedCyan_Simple: 0>, 'Anaglyph_RedCyan_Optimized': <Anaglyph_e.Anaglyph_RedCyan_Optimized: 1>, 'Anaglyph_YellowBlue_Simple': <Anaglyph_e.Anaglyph_YellowBlue_Simple: 2>, 'Anaglyph_YellowBlue_Optimized': <Anaglyph_e.Anaglyph_YellowBlue_Optimized: 3>, 'Anaglyph_GreenMagenta_Simple': <Anaglyph_e.Anaglyph_GreenMagenta_Simple: 4>, 'Anaglyph_UserDefined': <Anaglyph_e.Anaglyph_UserDefined: 5>}
+        pass
+    class FrustumCulling_e():
+        """
+        State of frustum culling optimization.
+
+        Members:
+
+          FrustumCulling_Off
+
+          FrustumCulling_On
+
+          FrustumCulling_NoUpdate
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        FrustumCulling_NoUpdate: OCP.Graphic3d.FrustumCulling_e # value = <FrustumCulling_e.FrustumCulling_NoUpdate: 2>
+        FrustumCulling_Off: OCP.Graphic3d.FrustumCulling_e # value = <FrustumCulling_e.FrustumCulling_Off: 0>
+        FrustumCulling_On: OCP.Graphic3d.FrustumCulling_e # value = <FrustumCulling_e.FrustumCulling_On: 1>
+        __entries: dict # value = {'FrustumCulling_Off': (<FrustumCulling_e.FrustumCulling_Off: 0>, None), 'FrustumCulling_On': (<FrustumCulling_e.FrustumCulling_On: 1>, None), 'FrustumCulling_NoUpdate': (<FrustumCulling_e.FrustumCulling_NoUpdate: 2>, None)}
+        __members__: dict # value = {'FrustumCulling_Off': <FrustumCulling_e.FrustumCulling_Off: 0>, 'FrustumCulling_On': <FrustumCulling_e.FrustumCulling_On: 1>, 'FrustumCulling_NoUpdate': <FrustumCulling_e.FrustumCulling_NoUpdate: 2>}
+        pass
+    class PerfCounters_e():
+        """
+        Statistics display flags. If not specified otherwise, the counter value is computed for a single rendered frame.
+
+        Members:
+
+          PerfCounters_NONE
+
+          PerfCounters_FrameRate
+
+          PerfCounters_CPU
+
+          PerfCounters_Layers
+
+          PerfCounters_Structures
+
+          PerfCounters_Groups
+
+          PerfCounters_GroupArrays
+
+          PerfCounters_Triangles
+
+          PerfCounters_Points
+
+          PerfCounters_Lines
+
+          PerfCounters_EstimMem
+
+          PerfCounters_FrameTime
+
+          PerfCounters_FrameTimeMax
+
+          PerfCounters_SkipImmediate
+
+          PerfCounters_Basic
+
+          PerfCounters_Extended
+
+          PerfCounters_All
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        PerfCounters_All: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_All: 4095>
+        PerfCounters_Basic: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Basic: 15>
+        PerfCounters_CPU: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_CPU: 2>
+        PerfCounters_EstimMem: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_EstimMem: 512>
+        PerfCounters_Extended: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Extended: 1023>
+        PerfCounters_FrameRate: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_FrameRate: 1>
+        PerfCounters_FrameTime: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_FrameTime: 1024>
+        PerfCounters_FrameTimeMax: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_FrameTimeMax: 2048>
+        PerfCounters_GroupArrays: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_GroupArrays: 32>
+        PerfCounters_Groups: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Groups: 16>
+        PerfCounters_Layers: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Layers: 4>
+        PerfCounters_Lines: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Lines: 256>
+        PerfCounters_NONE: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_NONE: 0>
+        PerfCounters_Points: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Points: 128>
+        PerfCounters_SkipImmediate: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_SkipImmediate: 4096>
+        PerfCounters_Structures: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Structures: 8>
+        PerfCounters_Triangles: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Triangles: 64>
+        __entries: dict # value = {'PerfCounters_NONE': (<PerfCounters_e.PerfCounters_NONE: 0>, None), 'PerfCounters_FrameRate': (<PerfCounters_e.PerfCounters_FrameRate: 1>, None), 'PerfCounters_CPU': (<PerfCounters_e.PerfCounters_CPU: 2>, None), 'PerfCounters_Layers': (<PerfCounters_e.PerfCounters_Layers: 4>, None), 'PerfCounters_Structures': (<PerfCounters_e.PerfCounters_Structures: 8>, None), 'PerfCounters_Groups': (<PerfCounters_e.PerfCounters_Groups: 16>, None), 'PerfCounters_GroupArrays': (<PerfCounters_e.PerfCounters_GroupArrays: 32>, None), 'PerfCounters_Triangles': (<PerfCounters_e.PerfCounters_Triangles: 64>, None), 'PerfCounters_Points': (<PerfCounters_e.PerfCounters_Points: 128>, None), 'PerfCounters_Lines': (<PerfCounters_e.PerfCounters_Lines: 256>, None), 'PerfCounters_EstimMem': (<PerfCounters_e.PerfCounters_EstimMem: 512>, None), 'PerfCounters_FrameTime': (<PerfCounters_e.PerfCounters_FrameTime: 1024>, None), 'PerfCounters_FrameTimeMax': (<PerfCounters_e.PerfCounters_FrameTimeMax: 2048>, None), 'PerfCounters_SkipImmediate': (<PerfCounters_e.PerfCounters_SkipImmediate: 4096>, None), 'PerfCounters_Basic': (<PerfCounters_e.PerfCounters_Basic: 15>, None), 'PerfCounters_Extended': (<PerfCounters_e.PerfCounters_Extended: 1023>, None), 'PerfCounters_All': (<PerfCounters_e.PerfCounters_All: 4095>, None)}
+        __members__: dict # value = {'PerfCounters_NONE': <PerfCounters_e.PerfCounters_NONE: 0>, 'PerfCounters_FrameRate': <PerfCounters_e.PerfCounters_FrameRate: 1>, 'PerfCounters_CPU': <PerfCounters_e.PerfCounters_CPU: 2>, 'PerfCounters_Layers': <PerfCounters_e.PerfCounters_Layers: 4>, 'PerfCounters_Structures': <PerfCounters_e.PerfCounters_Structures: 8>, 'PerfCounters_Groups': <PerfCounters_e.PerfCounters_Groups: 16>, 'PerfCounters_GroupArrays': <PerfCounters_e.PerfCounters_GroupArrays: 32>, 'PerfCounters_Triangles': <PerfCounters_e.PerfCounters_Triangles: 64>, 'PerfCounters_Points': <PerfCounters_e.PerfCounters_Points: 128>, 'PerfCounters_Lines': <PerfCounters_e.PerfCounters_Lines: 256>, 'PerfCounters_EstimMem': <PerfCounters_e.PerfCounters_EstimMem: 512>, 'PerfCounters_FrameTime': <PerfCounters_e.PerfCounters_FrameTime: 1024>, 'PerfCounters_FrameTimeMax': <PerfCounters_e.PerfCounters_FrameTimeMax: 2048>, 'PerfCounters_SkipImmediate': <PerfCounters_e.PerfCounters_SkipImmediate: 4096>, 'PerfCounters_Basic': <PerfCounters_e.PerfCounters_Basic: 15>, 'PerfCounters_Extended': <PerfCounters_e.PerfCounters_Extended: 1023>, 'PerfCounters_All': <PerfCounters_e.PerfCounters_All: 4095>}
+        pass
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def ResolutionRatio(self) -> float: 
         """
         Returns resolution ratio.
@@ -13435,6 +14527,14 @@ class Graphic3d_RenderingParams():
         """
     @Exposure.setter
     def Exposure(self, arg0: float) -> None:
+        pass
+    @property
+    def HmdFov2d(self) -> float:
+        """
+        :type: float
+        """
+    @HmdFov2d.setter
+    def HmdFov2d(self, arg0: float) -> None:
         pass
     @property
     def IsAntialiasingEnabled(self) -> bool:
@@ -13515,6 +14615,46 @@ class Graphic3d_RenderingParams():
         """
     @OitDepthFactor.setter
     def OitDepthFactor(self, arg0: float) -> None:
+        pass
+    @property
+    def PbrEnvBakingDiffNbSamples(self) -> int:
+        """
+        :type: int
+        """
+    @PbrEnvBakingDiffNbSamples.setter
+    def PbrEnvBakingDiffNbSamples(self, arg0: int) -> None:
+        pass
+    @property
+    def PbrEnvBakingProbability(self) -> float:
+        """
+        :type: float
+        """
+    @PbrEnvBakingProbability.setter
+    def PbrEnvBakingProbability(self, arg0: float) -> None:
+        pass
+    @property
+    def PbrEnvBakingSpecNbSamples(self) -> int:
+        """
+        :type: int
+        """
+    @PbrEnvBakingSpecNbSamples.setter
+    def PbrEnvBakingSpecNbSamples(self, arg0: int) -> None:
+        pass
+    @property
+    def PbrEnvPow2Size(self) -> int:
+        """
+        :type: int
+        """
+    @PbrEnvPow2Size.setter
+    def PbrEnvPow2Size(self, arg0: int) -> None:
+        pass
+    @property
+    def PbrEnvSpecMapNbLevels(self) -> int:
+        """
+        :type: int
+        """
+    @PbrEnvSpecMapNbLevels.setter
+    def PbrEnvSpecMapNbLevels(self, arg0: int) -> None:
         pass
     @property
     def RadianceClampingValue(self) -> float:
@@ -13629,6 +14769,22 @@ class Graphic3d_RenderingParams():
     def ToEnableDepthPrepass(self, arg0: bool) -> None:
         pass
     @property
+    def ToIgnoreNormalMapInRayTracing(self) -> bool:
+        """
+        :type: bool
+        """
+    @ToIgnoreNormalMapInRayTracing.setter
+    def ToIgnoreNormalMapInRayTracing(self, arg0: bool) -> None:
+        pass
+    @property
+    def ToMirrorComposer(self) -> bool:
+        """
+        :type: bool
+        """
+    @ToMirrorComposer.setter
+    def ToMirrorComposer(self, arg0: bool) -> None:
+        pass
+    @property
     def ToReverseStereo(self) -> bool:
         """
         :type: bool
@@ -13684,6 +14840,32 @@ class Graphic3d_RenderingParams():
     @WhitePoint.setter
     def WhitePoint(self, arg0: float) -> None:
         pass
+    Anaglyph_GreenMagenta_Simple: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_GreenMagenta_Simple: 4>
+    Anaglyph_RedCyan_Optimized: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_RedCyan_Optimized: 1>
+    Anaglyph_RedCyan_Simple: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_RedCyan_Simple: 0>
+    Anaglyph_UserDefined: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_UserDefined: 5>
+    Anaglyph_YellowBlue_Optimized: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_YellowBlue_Optimized: 3>
+    Anaglyph_YellowBlue_Simple: OCP.Graphic3d.Anaglyph_e # value = <Anaglyph_e.Anaglyph_YellowBlue_Simple: 2>
+    FrustumCulling_NoUpdate: OCP.Graphic3d.FrustumCulling_e # value = <FrustumCulling_e.FrustumCulling_NoUpdate: 2>
+    FrustumCulling_Off: OCP.Graphic3d.FrustumCulling_e # value = <FrustumCulling_e.FrustumCulling_Off: 0>
+    FrustumCulling_On: OCP.Graphic3d.FrustumCulling_e # value = <FrustumCulling_e.FrustumCulling_On: 1>
+    PerfCounters_All: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_All: 4095>
+    PerfCounters_Basic: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Basic: 15>
+    PerfCounters_CPU: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_CPU: 2>
+    PerfCounters_EstimMem: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_EstimMem: 512>
+    PerfCounters_Extended: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Extended: 1023>
+    PerfCounters_FrameRate: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_FrameRate: 1>
+    PerfCounters_FrameTime: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_FrameTime: 1024>
+    PerfCounters_FrameTimeMax: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_FrameTimeMax: 2048>
+    PerfCounters_GroupArrays: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_GroupArrays: 32>
+    PerfCounters_Groups: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Groups: 16>
+    PerfCounters_Layers: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Layers: 4>
+    PerfCounters_Lines: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Lines: 256>
+    PerfCounters_NONE: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_NONE: 0>
+    PerfCounters_Points: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Points: 128>
+    PerfCounters_SkipImmediate: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_SkipImmediate: 4096>
+    PerfCounters_Structures: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Structures: 8>
+    PerfCounters_Triangles: OCP.Graphic3d.PerfCounters_e # value = <PerfCounters_e.PerfCounters_Triangles: 64>
     pass
 class Graphic3d_SequenceOfGroup(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -13694,14 +14876,14 @@ class Graphic3d_SequenceOfGroup(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Graphic3d_SequenceOfGroup) -> None: 
+    def Append(self,theItem : Graphic3d_Group) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Graphic3d_Group) -> None: ...
+    def Append(self,theSeq : Graphic3d_SequenceOfGroup) -> None: ...
     def Assign(self,theOther : Graphic3d_SequenceOfGroup) -> Graphic3d_SequenceOfGroup: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -13765,23 +14947,23 @@ class Graphic3d_SequenceOfGroup(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Graphic3d_SequenceOfGroup) -> None: 
+    def Prepend(self,theItem : Graphic3d_Group) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Graphic3d_Group) -> None: ...
+    def Prepend(self,theSeq : Graphic3d_SequenceOfGroup) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -13807,12 +14989,12 @@ class Graphic3d_SequenceOfGroup(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : Graphic3d_SequenceOfGroup) -> None: ...
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -13838,6 +15020,10 @@ class Graphic3d_SequenceOfHClipPlane(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -13960,23 +15146,23 @@ class Graphic3d_SequenceOfStructure(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Graphic3d_SequenceOfStructure) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Graphic3d_Structure) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Graphic3d_Structure) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Graphic3d_SequenceOfStructure) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Graphic3d_Structure) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Graphic3d_SequenceOfStructure) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Graphic3d_SequenceOfStructure) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Graphic3d_Structure) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -13994,14 +15180,14 @@ class Graphic3d_SequenceOfStructure(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Graphic3d_SequenceOfStructure) -> None: 
+    def Prepend(self,theItem : Graphic3d_Structure) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Graphic3d_Structure) -> None: ...
+    def Prepend(self,theSeq : Graphic3d_SequenceOfStructure) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -14036,12 +15222,12 @@ class Graphic3d_SequenceOfStructure(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Graphic3d_SequenceOfStructure) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -14123,14 +15309,14 @@ class Graphic3d_ShaderAttributeList(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Graphic3d_ShaderAttributeList) -> None: 
+    def Append(self,theItem : Graphic3d_ShaderAttribute) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Graphic3d_ShaderAttribute) -> None: ...
+    def Append(self,theSeq : Graphic3d_ShaderAttributeList) -> None: ...
     def Assign(self,theOther : Graphic3d_ShaderAttributeList) -> Graphic3d_ShaderAttributeList: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -14160,14 +15346,14 @@ class Graphic3d_ShaderAttributeList(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Graphic3d_ShaderAttribute) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Graphic3d_ShaderAttributeList) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Graphic3d_ShaderAttributeList) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : Graphic3d_ShaderAttribute) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Graphic3d_ShaderAttribute) -> None: 
         """
@@ -14203,14 +15389,14 @@ class Graphic3d_ShaderAttributeList(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : Graphic3d_ShaderAttribute) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -14238,10 +15424,10 @@ class Graphic3d_ShaderAttributeList(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : Graphic3d_ShaderAttributeList) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -14344,14 +15530,14 @@ class Graphic3d_ShaderObjectList(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Graphic3d_ShaderObjectList) -> None: 
+    def Append(self,theItem : Graphic3d_ShaderObject) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Graphic3d_ShaderObject) -> None: ...
+    def Append(self,theSeq : Graphic3d_ShaderObjectList) -> None: ...
     def Assign(self,theOther : Graphic3d_ShaderObjectList) -> Graphic3d_ShaderObjectList: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -14381,14 +15567,14 @@ class Graphic3d_ShaderObjectList(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Graphic3d_ShaderObject) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Graphic3d_ShaderObjectList) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Graphic3d_ShaderObjectList) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : Graphic3d_ShaderObject) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Graphic3d_ShaderObject) -> None: 
         """
@@ -14415,14 +15601,14 @@ class Graphic3d_ShaderObjectList(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Graphic3d_ShaderObject) -> None: 
+    def Prepend(self,theSeq : Graphic3d_ShaderObjectList) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Graphic3d_ShaderObjectList) -> None: ...
+    def Prepend(self,theItem : Graphic3d_ShaderObject) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -14457,12 +15643,12 @@ class Graphic3d_ShaderObjectList(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Graphic3d_ShaderObjectList) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -14551,6 +15737,10 @@ class Graphic3d_ShaderProgram(OCP.Standard.Standard_Transient):
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def IsPBR(self) -> bool: 
+        """
+        Return TRUE if standard program header should define functions and variables used in PBR pipeline. FALSE by default.
+        """
     def NbClipPlanesMax(self) -> int: 
         """
         Return the length of array of clipping planes (THE_MAX_CLIP_PLANES), to be used for initialization occClipPlaneEquations. Default value is THE_MAX_CLIP_PLANES_DEFAULT.
@@ -14623,6 +15813,14 @@ class Graphic3d_ShaderProgram(OCP.Standard.Standard_Transient):
         """
         Specify the length of array of light sources (THE_MAX_LIGHTS).
         """
+    def SetPBR(self,theIsPBR : bool) -> None: 
+        """
+        Sets whether standard program header should define functions and variables used in PBR pipeline.
+        """
+    def SetTextureSetBits(self,theBits : int) -> None: 
+        """
+        Set texture units declared within the program.
+        """
     def SetVertexAttributes(self,theAttributes : Graphic3d_ShaderAttributeList) -> None: 
         """
         Assign the list of custom vertex attributes. Should be done before GLSL program initialization.
@@ -14639,6 +15837,10 @@ class Graphic3d_ShaderProgram(OCP.Standard.Standard_Transient):
     def ShadersFolder_s() -> OCP.TCollection.TCollection_AsciiString: 
         """
         The path to GLSL programs determined from CSF_ShadersDirectory or CASROOT environment variables.
+        """
+    def TextureSetBits(self) -> int: 
+        """
+        Return texture units declared within the program,
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -14742,14 +15944,14 @@ class Graphic3d_ShaderVariableList(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Graphic3d_ShaderVariableList) -> None: 
+    def Append(self,theItem : Graphic3d_ShaderVariable) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Graphic3d_ShaderVariable) -> None: ...
+    def Append(self,theSeq : Graphic3d_ShaderVariableList) -> None: ...
     def Assign(self,theOther : Graphic3d_ShaderVariableList) -> Graphic3d_ShaderVariableList: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -14813,23 +16015,23 @@ class Graphic3d_ShaderVariableList(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Graphic3d_ShaderVariableList) -> None: 
+    def Prepend(self,theItem : Graphic3d_ShaderVariable) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Graphic3d_ShaderVariable) -> None: ...
+    def Prepend(self,theSeq : Graphic3d_ShaderVariableList) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -14855,12 +16057,12 @@ class Graphic3d_ShaderVariableList(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Graphic3d_ShaderVariableList) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : Graphic3d_ShaderVariableList) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -14889,29 +16091,40 @@ class Graphic3d_StereoMode():
 
       Graphic3d_StereoMode_SoftPageFlip
 
+      Graphic3d_StereoMode_OpenVR
+
       Graphic3d_StereoMode_NB
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_StereoMode_Anaglyph: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph
-    Graphic3d_StereoMode_ChessBoard: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard
-    Graphic3d_StereoMode_ColumnInterlaced: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced
-    Graphic3d_StereoMode_NB: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_NB
-    Graphic3d_StereoMode_OverUnder: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder
-    Graphic3d_StereoMode_QuadBuffer: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer
-    Graphic3d_StereoMode_RowInterlaced: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced
-    Graphic3d_StereoMode_SideBySide: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide
-    Graphic3d_StereoMode_SoftPageFlip: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip
-    __entries: dict # value = {'Graphic3d_StereoMode_QuadBuffer': (Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer, None), 'Graphic3d_StereoMode_Anaglyph': (Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph, None), 'Graphic3d_StereoMode_RowInterlaced': (Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced, None), 'Graphic3d_StereoMode_ColumnInterlaced': (Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced, None), 'Graphic3d_StereoMode_ChessBoard': (Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard, None), 'Graphic3d_StereoMode_SideBySide': (Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide, None), 'Graphic3d_StereoMode_OverUnder': (Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder, None), 'Graphic3d_StereoMode_SoftPageFlip': (Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip, None), 'Graphic3d_StereoMode_NB': (Graphic3d_StereoMode.Graphic3d_StereoMode_NB, None)}
-    __members__: dict # value = {'Graphic3d_StereoMode_QuadBuffer': Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer, 'Graphic3d_StereoMode_Anaglyph': Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph, 'Graphic3d_StereoMode_RowInterlaced': Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced, 'Graphic3d_StereoMode_ColumnInterlaced': Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced, 'Graphic3d_StereoMode_ChessBoard': Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard, 'Graphic3d_StereoMode_SideBySide': Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide, 'Graphic3d_StereoMode_OverUnder': Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder, 'Graphic3d_StereoMode_SoftPageFlip': Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip, 'Graphic3d_StereoMode_NB': Graphic3d_StereoMode.Graphic3d_StereoMode_NB}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_StereoMode_Anaglyph: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph: 1>
+    Graphic3d_StereoMode_ChessBoard: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard: 4>
+    Graphic3d_StereoMode_ColumnInterlaced: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced: 3>
+    Graphic3d_StereoMode_NB: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_NB: 9>
+    Graphic3d_StereoMode_OpenVR: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_OpenVR: 8>
+    Graphic3d_StereoMode_OverUnder: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder: 6>
+    Graphic3d_StereoMode_QuadBuffer: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer: 0>
+    Graphic3d_StereoMode_RowInterlaced: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced: 2>
+    Graphic3d_StereoMode_SideBySide: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide: 5>
+    Graphic3d_StereoMode_SoftPageFlip: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip: 7>
+    __entries: dict # value = {'Graphic3d_StereoMode_QuadBuffer': (<Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer: 0>, None), 'Graphic3d_StereoMode_Anaglyph': (<Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph: 1>, None), 'Graphic3d_StereoMode_RowInterlaced': (<Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced: 2>, None), 'Graphic3d_StereoMode_ColumnInterlaced': (<Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced: 3>, None), 'Graphic3d_StereoMode_ChessBoard': (<Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard: 4>, None), 'Graphic3d_StereoMode_SideBySide': (<Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide: 5>, None), 'Graphic3d_StereoMode_OverUnder': (<Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder: 6>, None), 'Graphic3d_StereoMode_SoftPageFlip': (<Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip: 7>, None), 'Graphic3d_StereoMode_OpenVR': (<Graphic3d_StereoMode.Graphic3d_StereoMode_OpenVR: 8>, None), 'Graphic3d_StereoMode_NB': (<Graphic3d_StereoMode.Graphic3d_StereoMode_NB: 9>, None)}
+    __members__: dict # value = {'Graphic3d_StereoMode_QuadBuffer': <Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer: 0>, 'Graphic3d_StereoMode_Anaglyph': <Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph: 1>, 'Graphic3d_StereoMode_RowInterlaced': <Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced: 2>, 'Graphic3d_StereoMode_ColumnInterlaced': <Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced: 3>, 'Graphic3d_StereoMode_ChessBoard': <Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard: 4>, 'Graphic3d_StereoMode_SideBySide': <Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide: 5>, 'Graphic3d_StereoMode_OverUnder': <Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder: 6>, 'Graphic3d_StereoMode_SoftPageFlip': <Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip: 7>, 'Graphic3d_StereoMode_OpenVR': <Graphic3d_StereoMode.Graphic3d_StereoMode_OpenVR: 8>, 'Graphic3d_StereoMode_NB': <Graphic3d_StereoMode.Graphic3d_StereoMode_NB: 9>}
     pass
 class Graphic3d_Structure(OCP.Standard.Standard_Transient):
     """
@@ -14942,40 +16155,23 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         """
         Get clip planes slicing the structure on rendering.
         """
-    @overload
     def Compute(self) -> None: 
         """
         None
-
-        Returns the new Structure defined for the new visualization
-
-        Returns the new Structure defined for the new visualization
-
-        Returns the new Structure defined for the new visualization
-
-        Returns the new Structure defined for the new visualization
         """
-    @overload
-    def Compute(self,theProjector : Graphic3d_DataStructureManager,theStructure : Graphic3d_Structure) -> Any: ...
-    @overload
-    def Compute(self,theProjector : Graphic3d_DataStructureManager,theTrsf : OCP.Geom.Geom_Transformation) -> Graphic3d_Structure: ...
-    @overload
-    def Compute(self,theProjector : Graphic3d_DataStructureManager) -> Graphic3d_Structure: ...
-    @overload
-    def Compute(self,theProjector : Graphic3d_DataStructureManager,theTrsf : OCP.Geom.Geom_Transformation,theStructure : Graphic3d_Structure) -> Any: ...
     def ComputeVisual(self) -> Graphic3d_TypeOfStructure: 
         """
         None
         """
     @overload
-    def Connect(self,theStructure : Graphic3d_Structure,theType : Graphic3d_TypeOfConnection,theWithCheck : bool=False) -> None: 
+    def Connect(self,thePrs : Graphic3d_Structure) -> None: 
         """
         If Atype is TOC_DESCENDANT then add <AStructure> as a child structure of <me>. If Atype is TOC_ANCESTOR then add <AStructure> as a parent structure of <me>. The connection propagates Display, Highlight, Erase, Remove, and stacks the transformations. No connection if the graph of the structures contains a cycle and <WithCheck> is Standard_True;
 
         None
         """
     @overload
-    def Connect(self,thePrs : Graphic3d_Structure) -> None: ...
+    def Connect(self,theStructure : Graphic3d_Structure,theType : Graphic3d_TypeOfConnection,theWithCheck : bool=False) -> None: ...
     def ContainsFacet(self) -> bool: 
         """
         Returns Standard_True if the structure <me> contains Polygons, Triangles or Quadrangles.
@@ -15012,13 +16208,17 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         """
         Returns the current display priority for this structure.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
     def Erase(self) -> None: 
         """
-        Erases the structure <me> in all the views of the visualiser.
+        Erases this structure in all the views of the visualiser.
         """
     def GetRefCount(self) -> int: 
         """
@@ -15040,7 +16240,7 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def GraphicTransform(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def GraphicTransform(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Internal method which sets new transformation without calling graphic manager callbacks.
         """
@@ -15145,16 +16345,16 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         Prints informations about the network associated with the structure <AStructure>.
         """
     @overload
-    def ReCompute(self) -> None: 
+    def ReCompute(self,aProjector : Graphic3d_DataStructureManager) -> None: 
         """
         Forces a new construction of the structure <me> if <me> is displayed and TOS_COMPUTED.
 
         Forces a new construction of the structure <me> if <me> is displayed in <aProjetor> and TOS_COMPUTED.
         """
     @overload
-    def ReCompute(self,aProjector : Graphic3d_DataStructureManager) -> None: ...
+    def ReCompute(self) -> None: ...
     @overload
-    def Remove(self,thePtr : Graphic3d_Structure,theType : Graphic3d_TypeOfConnection) -> None: 
+    def Remove(self) -> None: 
         """
         Suppress the structure <me>. It will be erased at the next screen update. Warning: No more graphic operations in <me> after this call. Category: Methods to modify the class definition
 
@@ -15165,7 +16365,7 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
     @overload
     def Remove(self,thePrs : Graphic3d_Structure) -> None: ...
     @overload
-    def Remove(self) -> None: ...
+    def Remove(self,thePtr : Graphic3d_Structure,theType : Graphic3d_TypeOfConnection) -> None: ...
     def RemoveAll(self) -> None: 
         """
         None
@@ -15210,7 +16410,7 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         """
         Modifies the current transform persistence (pan, zoom or rotate)
         """
-    def SetTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Modifies the current local transformation
         """
@@ -15234,7 +16434,7 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Transform(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def Transform(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         None
         """
@@ -15242,7 +16442,7 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         """
         Returns transform persistence of the presentable object.
         """
-    def Transformation(self) -> OCP.Geom.Geom_Transformation: 
+    def Transformation(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return local transformation.
         """
@@ -15260,6 +16460,10 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         Returns the visualisation mode for the structure <me>.
         """
     def __init__(self,theManager : Graphic3d_StructureManager,theLinkPrs : Graphic3d_Structure=None) -> None: ...
+    def computeHLR(self,theProjector : Graphic3d_Camera,theStructure : Graphic3d_Structure) -> Any: 
+        """
+        Returns the new Structure defined for the new visualization
+        """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -15326,6 +16530,10 @@ class Graphic3d_StructureManager(OCP.Standard.Standard_Transient):
         """
         Returns the set of structures displayed in visualiser <me>.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -15356,14 +16564,14 @@ class Graphic3d_StructureManager(OCP.Standard.Standard_Transient):
         Returns the set of highlighted structures in a visualiser <me>.
         """
     @overload
-    def Identification(self,theView : Graphic3d_CView) -> int: 
+    def Identification(self,AId : int) -> Graphic3d_Structure: 
         """
         Attaches the view to this structure manager and sets its identification number within the manager.
 
         Returns the structure with the identification number <AId>.
         """
     @overload
-    def Identification(self,AId : int) -> Graphic3d_Structure: ...
+    def Identification(self,theView : Graphic3d_CView) -> int: ...
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -15399,14 +16607,14 @@ class Graphic3d_StructureManager(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ReCompute(self,theStructure : Graphic3d_Structure,theProjector : Graphic3d_DataStructureManager) -> None: 
+    def ReCompute(self,theStructure : Graphic3d_Structure) -> None: 
         """
         Forces a new construction of the structure. if <theStructure> is displayed and TOS_COMPUTED.
 
         Forces a new construction of the structure. if <theStructure> is displayed in <theProjector> and TOS_COMPUTED.
         """
     @overload
-    def ReCompute(self,theStructure : Graphic3d_Structure) -> None: ...
+    def ReCompute(self,theStructure : Graphic3d_Structure,theProjector : Graphic3d_DataStructureManager) -> None: ...
     @overload
     def RecomputeStructures(self) -> None: 
         """
@@ -15428,7 +16636,7 @@ class Graphic3d_StructureManager(OCP.Standard.Standard_Transient):
         """
         Sets Device Lost flag.
         """
-    def SetTransform(self,theStructure : Graphic3d_Structure,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetTransform(self,theStructure : Graphic3d_Structure,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Transforms the structure.
         """
@@ -15437,14 +16645,14 @@ class Graphic3d_StructureManager(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def UnHighlight(self,AStructure : Graphic3d_Structure) -> None: 
+    def UnHighlight(self) -> None: 
         """
         Suppress the highlighting on the structure <AStructure>.
 
         Suppresses the highlighting on all the structures in <me>.
         """
     @overload
-    def UnHighlight(self) -> None: ...
+    def UnHighlight(self,AStructure : Graphic3d_Structure) -> None: ...
     def UnIdentification(self,theView : Graphic3d_CView) -> None: 
         """
         Detach the view from this structure manager and release its identification.
@@ -15560,7 +16768,7 @@ class Graphic3d_Text(OCP.Standard.Standard_Transient):
         Sets text point.
         """
     @overload
-    def SetText(self,theText : OCP.NCollection.NCollection_Utf8String) -> None: 
+    def SetText(self,theText : str) -> None: 
         """
         Sets text value.
 
@@ -15569,9 +16777,13 @@ class Graphic3d_Text(OCP.Standard.Standard_Transient):
         Sets text value.
         """
     @overload
-    def SetText(self,theText : str) -> None: ...
+    def SetText(self,theText : OCP.NCollection.NCollection_Utf8String) -> None: ...
     @overload
     def SetText(self,theText : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def SetTextFormatter(self,theFormatter : OCP.Font.Font_TextFormatter) -> None: 
+        """
+        Setup text default formatter for text within this context.
+        """
     def SetVerticalAlignment(self,theJustification : Graphic3d_VerticalTextAlignment) -> None: 
         """
         Sets vertical alignment of text.
@@ -15579,6 +16791,10 @@ class Graphic3d_Text(OCP.Standard.Standard_Transient):
     def Text(self) -> OCP.NCollection.NCollection_Utf8String: 
         """
         Returns text value.
+        """
+    def TextFormatter(self) -> OCP.Font.Font_TextFormatter: 
+        """
+        Returns text formatter; NULL by default, which means standard text formatter will be used.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -15614,22 +16830,30 @@ class Graphic3d_TextPath():
 
       Graphic3d_TP_RIGHT
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TP_DOWN: OCP.Graphic3d.Graphic3d_TextPath # value = Graphic3d_TextPath.Graphic3d_TP_DOWN
-    Graphic3d_TP_LEFT: OCP.Graphic3d.Graphic3d_TextPath # value = Graphic3d_TextPath.Graphic3d_TP_LEFT
-    Graphic3d_TP_RIGHT: OCP.Graphic3d.Graphic3d_TextPath # value = Graphic3d_TextPath.Graphic3d_TP_RIGHT
-    Graphic3d_TP_UP: OCP.Graphic3d.Graphic3d_TextPath # value = Graphic3d_TextPath.Graphic3d_TP_UP
-    __entries: dict # value = {'Graphic3d_TP_UP': (Graphic3d_TextPath.Graphic3d_TP_UP, None), 'Graphic3d_TP_DOWN': (Graphic3d_TextPath.Graphic3d_TP_DOWN, None), 'Graphic3d_TP_LEFT': (Graphic3d_TextPath.Graphic3d_TP_LEFT, None), 'Graphic3d_TP_RIGHT': (Graphic3d_TextPath.Graphic3d_TP_RIGHT, None)}
-    __members__: dict # value = {'Graphic3d_TP_UP': Graphic3d_TextPath.Graphic3d_TP_UP, 'Graphic3d_TP_DOWN': Graphic3d_TextPath.Graphic3d_TP_DOWN, 'Graphic3d_TP_LEFT': Graphic3d_TextPath.Graphic3d_TP_LEFT, 'Graphic3d_TP_RIGHT': Graphic3d_TextPath.Graphic3d_TP_RIGHT}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TP_DOWN: OCP.Graphic3d.Graphic3d_TextPath # value = <Graphic3d_TextPath.Graphic3d_TP_DOWN: 1>
+    Graphic3d_TP_LEFT: OCP.Graphic3d.Graphic3d_TextPath # value = <Graphic3d_TextPath.Graphic3d_TP_LEFT: 2>
+    Graphic3d_TP_RIGHT: OCP.Graphic3d.Graphic3d_TextPath # value = <Graphic3d_TextPath.Graphic3d_TP_RIGHT: 3>
+    Graphic3d_TP_UP: OCP.Graphic3d.Graphic3d_TextPath # value = <Graphic3d_TextPath.Graphic3d_TP_UP: 0>
+    __entries: dict # value = {'Graphic3d_TP_UP': (<Graphic3d_TextPath.Graphic3d_TP_UP: 0>, None), 'Graphic3d_TP_DOWN': (<Graphic3d_TextPath.Graphic3d_TP_DOWN: 1>, None), 'Graphic3d_TP_LEFT': (<Graphic3d_TextPath.Graphic3d_TP_LEFT: 2>, None), 'Graphic3d_TP_RIGHT': (<Graphic3d_TextPath.Graphic3d_TP_RIGHT: 3>, None)}
+    __members__: dict # value = {'Graphic3d_TP_UP': <Graphic3d_TextPath.Graphic3d_TP_UP: 0>, 'Graphic3d_TP_DOWN': <Graphic3d_TextPath.Graphic3d_TP_DOWN: 1>, 'Graphic3d_TP_LEFT': <Graphic3d_TextPath.Graphic3d_TP_LEFT: 2>, 'Graphic3d_TP_RIGHT': <Graphic3d_TextPath.Graphic3d_TP_RIGHT: 3>}
     pass
 class Graphic3d_Texture1D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Standard.Standard_Transient):
     """
@@ -15637,7 +16861,7 @@ class Graphic3d_Texture1D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
-        Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -15675,11 +16899,15 @@ class Graphic3d_Texture1D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         """
         enable texture smoothing
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
         """
@@ -15694,6 +16922,10 @@ class Graphic3d_Texture1D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -15729,6 +16961,10 @@ class Graphic3d_Texture1D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         """
         Returns TRUE if the texture is smoothed.
         """
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
+        """
     def Name(self) -> Graphic3d_NameOfTexture1D: 
         """
         Returns the name of the predefined textures or NOT_1D_UNKNOWN when the name is given as a filename.
@@ -15747,6 +16983,10 @@ class Graphic3d_Texture1D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         Return image revision.
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
     @staticmethod
     def TextureName_s(aRank : int) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -15786,7 +17026,7 @@ class Graphic3d_Texture1Dmanual(Graphic3d_Texture1D, Graphic3d_TextureMap, Graph
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
-        Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -15824,11 +17064,15 @@ class Graphic3d_Texture1Dmanual(Graphic3d_Texture1D, Graphic3d_TextureMap, Graph
         """
         enable texture smoothing
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
         """
@@ -15843,6 +17087,10 @@ class Graphic3d_Texture1Dmanual(Graphic3d_Texture1D, Graphic3d_TextureMap, Graph
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -15878,6 +17126,10 @@ class Graphic3d_Texture1Dmanual(Graphic3d_Texture1D, Graphic3d_TextureMap, Graph
         """
         Returns TRUE if the texture is smoothed.
         """
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
+        """
     def Name(self) -> Graphic3d_NameOfTexture1D: 
         """
         Returns the name of the predefined textures or NOT_1D_UNKNOWN when the name is given as a filename.
@@ -15896,6 +17148,10 @@ class Graphic3d_Texture1Dmanual(Graphic3d_Texture1D, Graphic3d_TextureMap, Graph
         Return image revision.
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
     @staticmethod
     def TextureName_s(aRank : int) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -15919,11 +17175,11 @@ class Graphic3d_Texture1Dmanual(Graphic3d_Texture1D, Graphic3d_TextureMap, Graph
         Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
         """
     @overload
-    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
     @overload
     def __init__(self,theNOT : Graphic3d_NameOfTexture1D) -> None: ...
     @overload
-    def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -15941,7 +17197,7 @@ class Graphic3d_Texture1Dsegment(Graphic3d_Texture1D, Graphic3d_TextureMap, Grap
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
-        Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -15979,11 +17235,15 @@ class Graphic3d_Texture1Dsegment(Graphic3d_Texture1D, Graphic3d_TextureMap, Grap
         """
         enable texture smoothing
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
         """
@@ -15998,6 +17258,10 @@ class Graphic3d_Texture1Dsegment(Graphic3d_Texture1D, Graphic3d_TextureMap, Grap
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -16033,6 +17297,10 @@ class Graphic3d_Texture1Dsegment(Graphic3d_Texture1D, Graphic3d_TextureMap, Grap
         """
         Returns TRUE if the texture is smoothed.
         """
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
+        """
     def Name(self) -> Graphic3d_NameOfTexture1D: 
         """
         Returns the name of the predefined textures or NOT_1D_UNKNOWN when the name is given as a filename.
@@ -16055,6 +17323,10 @@ class Graphic3d_Texture1Dsegment(Graphic3d_Texture1D, Graphic3d_TextureMap, Grap
         Returns the values of the current segment X1, Y1, Z1 , X2, Y2, Z2.
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
     def SetSegment(self,theX1 : float,theY1 : float,theZ1 : float,theX2 : float,theY2 : float,theZ2 : float) -> None: 
         """
         Sets the texture application bounds. Defines the way the texture is stretched across facets. Default values are <0.0, 0.0, 0.0> , <0.0, 0.0, 1.0>
@@ -16082,11 +17354,11 @@ class Graphic3d_Texture1Dsegment(Graphic3d_Texture1D, Graphic3d_TextureMap, Grap
         Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
         """
     @overload
+    def __init__(self,theNOT : Graphic3d_NameOfTexture1D) -> None: ...
+    @overload
     def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
     @overload
     def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
-    def __init__(self,theNOT : Graphic3d_NameOfTexture1D) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -16104,7 +17376,7 @@ class Graphic3d_MediaTexture(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphic3
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
-        Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -16150,11 +17422,15 @@ class Graphic3d_MediaTexture(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphic3
         """
         Regenerate a new texture id
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         Image reader.
         """
@@ -16173,6 +17449,10 @@ class Graphic3d_MediaTexture(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphic3
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -16208,6 +17488,10 @@ class Graphic3d_MediaTexture(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphic3
         """
         Returns TRUE if the texture is smoothed.
         """
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
+        """
     def Name(self) -> Graphic3d_NameOfTexture2D: 
         """
         Returns the name of the predefined textures or NOT_2D_UNKNOWN when the name is given as a filename.
@@ -16226,6 +17510,10 @@ class Graphic3d_MediaTexture(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphic3
         Return image revision.
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
     def SetFrame(self,theFrame : Media_Frame) -> None: 
         """
         Set the frame.
@@ -16278,7 +17566,7 @@ class Graphic3d_Texture2Dmanual(Graphic3d_Texture2D, Graphic3d_TextureMap, Graph
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
-        Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -16316,11 +17604,15 @@ class Graphic3d_Texture2Dmanual(Graphic3d_Texture2D, Graphic3d_TextureMap, Graph
         """
         enable texture smoothing
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
         """
@@ -16339,6 +17631,10 @@ class Graphic3d_Texture2Dmanual(Graphic3d_Texture2D, Graphic3d_TextureMap, Graph
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -16374,6 +17670,10 @@ class Graphic3d_Texture2Dmanual(Graphic3d_Texture2D, Graphic3d_TextureMap, Graph
         """
         Returns TRUE if the texture is smoothed.
         """
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
+        """
     def Name(self) -> Graphic3d_NameOfTexture2D: 
         """
         Returns the name of the predefined textures or NOT_2D_UNKNOWN when the name is given as a filename.
@@ -16392,6 +17692,10 @@ class Graphic3d_Texture2Dmanual(Graphic3d_Texture2D, Graphic3d_TextureMap, Graph
         Return image revision.
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
     def SetImage(self,thePixMap : OCP.Image.Image_PixMap) -> None: 
         """
         Assign new image to the texture. Note that this method does not invalidate already uploaded resources - consider calling ::UpdateRevision() if needed.
@@ -16425,9 +17729,9 @@ class Graphic3d_Texture2Dmanual(Graphic3d_Texture2D, Graphic3d_TextureMap, Graph
     @overload
     def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def __init__(self,theNOT : Graphic3d_NameOfTexture2D) -> None: ...
-    @overload
     def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
+    @overload
+    def __init__(self,theNOT : Graphic3d_NameOfTexture2D) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -16445,7 +17749,7 @@ class Graphic3d_Texture2Dplane(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphi
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
-        Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -16483,11 +17787,15 @@ class Graphic3d_Texture2Dplane(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphi
         """
         enable texture smoothing
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
         """
@@ -16506,6 +17814,10 @@ class Graphic3d_Texture2Dplane(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphi
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -16540,6 +17852,10 @@ class Graphic3d_Texture2Dplane(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphi
     def IsSmoothed(self) -> bool: 
         """
         Returns TRUE if the texture is smoothed.
+        """
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
         """
     def Name(self) -> Graphic3d_NameOfTexture2D: 
         """
@@ -16583,6 +17899,10 @@ class Graphic3d_Texture2Dplane(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphi
         Returns the current texture T scale value
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
     def SetImage(self,thePixMap : OCP.Image.Image_PixMap) -> None: 
         """
         Assign new image to the texture. Note that this method does not invalidate already uploaded resources - consider calling ::UpdateRevision() if needed.
@@ -16656,9 +17976,9 @@ class Graphic3d_Texture2Dplane(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphi
     @overload
     def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
     @overload
-    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self,theNOT : Graphic3d_NameOfTexture2D) -> None: ...
+    @overload
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -16686,11 +18006,15 @@ class Graphic3d_TextureEnv(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
         """
         None
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
         """
@@ -16705,6 +18029,10 @@ class Graphic3d_TextureEnv(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -16728,6 +18056,10 @@ class Graphic3d_TextureEnv(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
+        """
     def Name(self) -> Graphic3d_NameOfTextureEnv: 
         """
         Returns the name of the predefined textures or NOT_ENV_UNKNOWN when the name is given as a filename.
@@ -16744,6 +18076,10 @@ class Graphic3d_TextureEnv(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
     def Revision(self) -> int: 
         """
         Return image revision.
+        """
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
         """
     @staticmethod
     def TextureName_s(theRank : int) -> OCP.TCollection.TCollection_AsciiString: 
@@ -16768,11 +18104,11 @@ class Graphic3d_TextureEnv(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
         Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
         """
     @overload
-    def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
-    @overload
     def __init__(self,theName : Graphic3d_NameOfTextureEnv) -> None: ...
     @overload
     def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @overload
+    def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -16790,7 +18126,11 @@ class Graphic3d_CubeMapPacked(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic3d
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
-        Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        """
+    def CompressedValue(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        Returns current cubemap side as compressed PixMap.
         """
     def CurrentSide(self) -> Graphic3d_CubeMapSide: 
         """
@@ -16832,11 +18172,15 @@ class Graphic3d_CubeMapPacked(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic3d
         """
         enable texture smoothing
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
         """
@@ -16848,9 +18192,17 @@ class Graphic3d_CubeMapPacked(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic3d
         """
         Get the reference counter of this object
         """
+    def HasMipmaps(self) -> bool: 
+        """
+        Returns whether mipmaps of cubemap will be generated or not.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -16911,6 +18263,14 @@ class Graphic3d_CubeMapPacked(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic3d
         Return image revision.
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
+        """
+        Sets whether to generate mipmaps of cubemap or not.
+        """
     def SetZInversion(self,theZIsInverted : bool) -> None: 
         """
         Sets Z axis inversion (vertical flipping).
@@ -16932,7 +18292,7 @@ class Graphic3d_CubeMapPacked(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic3d
         """
         Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
         """
-    def Value(self) -> OCP.Image.Image_PixMap: 
+    def Value(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         Returns current cubemap side as PixMap. Resulting PixMap is memory wrapper over original image. Returns null handle if current side or whole cubemap is invalid. Origin image has to contain six quad tiles having one sizes without any gaps to be valid.
         """
@@ -16962,6 +18322,10 @@ class Graphic3d_TextureParams(OCP.Standard.Standard_Transient):
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
         Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        """
+    def BaseLevel(self) -> int: 
+        """
+        Returns base texture mipmap level; 0 by default.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -17025,9 +18389,13 @@ class Graphic3d_TextureParams(OCP.Standard.Standard_Transient):
         """
         Returns TRUE if the texture repeat is enabled. Default value is FALSE.
         """
+    def MaxLevel(self) -> int: 
+        """
+        Return maximum texture mipmap array level; 1000 by default. Real rendering limit will take into account mipmap generation flags and presence of mipmaps in loaded image.
+        """
     def Rotation(self) -> float: 
         """
-        Returns rotation angle in degrees Default value is 0.
+        Return rotation angle in degrees; 0 by default. Complete transformation matrix: Rotation -> Translation -> Scale.
         """
     def SamplerRevision(self) -> int: 
         """
@@ -17035,13 +18403,17 @@ class Graphic3d_TextureParams(OCP.Standard.Standard_Transient):
         """
     def Scale(self) -> Graphic3d_Vec2: 
         """
-        Returns scale factor Default value is no scaling (1.0; 1.0).
+        Return scale factor; (1.0; 1.0) by default, which means no scaling. Complete transformation matrix: Rotation -> Translation -> Scale.
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
     def SetFilter(self,theFilter : Graphic3d_TypeOfTextureFilter) -> None: ...
     def SetGenMode(self,theMode : Graphic3d_TypeOfTextureMode,thePlaneS : Graphic3d_Vec4,thePlaneT : Graphic3d_Vec4) -> None: 
         """
         Setup texture coordinates generation mode.
+        """
+    def SetLevelsRange(self,theFirstLevel : int,theSecondLevel : int=0) -> None: 
+        """
+        Setups texture mipmap array levels range. The lowest value will be the base level. The remaining one will be the maximum level.
         """
     def SetModulate(self,theToModulate : bool) -> None: ...
     def SetRepeat(self,theToRepeat : bool) -> None: ...
@@ -17062,7 +18434,7 @@ class Graphic3d_TextureParams(OCP.Standard.Standard_Transient):
         """
     def Translation(self) -> Graphic3d_Vec2: 
         """
-        Returns translation vector Default value is no translation (0.0; 0.0).
+        Return translation vector; (0.0; 0.0), which means no translation. Complete transformation matrix: Rotation -> Translation -> Scale.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -17082,7 +18454,11 @@ class Graphic3d_CubeMapSeparate(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
-        Returns level of anisontropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        """
+    def CompressedValue(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        Returns current cubemap side as compressed PixMap.
         """
     def CurrentSide(self) -> Graphic3d_CubeMapSide: 
         """
@@ -17124,11 +18500,15 @@ class Graphic3d_CubeMapSeparate(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic
         """
         enable texture smoothing
         """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
     def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         This ID will be used to manage resource in graphic driver.
         """
-    def GetImage(self) -> OCP.Image.Image_PixMap: 
+    def GetImage(self,arg1 : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         Returns NULL.
         """
@@ -17140,9 +18520,17 @@ class Graphic3d_CubeMapSeparate(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic
         """
         Get the reference counter of this object
         """
+    def HasMipmaps(self) -> bool: 
+        """
+        Returns whether mipmaps of cubemap will be generated or not.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
         """
     def IsDone(self) -> bool: 
         """
@@ -17203,6 +18591,14 @@ class Graphic3d_CubeMapSeparate(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic
         Return image revision.
         """
     def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
+        """
+        Sets whether to generate mipmaps of cubemap or not.
+        """
     def SetZInversion(self,theZIsInverted : bool) -> None: 
         """
         Sets Z axis inversion (vertical flipping).
@@ -17224,7 +18620,7 @@ class Graphic3d_CubeMapSeparate(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic
         """
         Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
         """
-    def Value(self) -> OCP.Image.Image_PixMap: 
+    def Value(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
         """
         Returns current side of cubemap as PixMap. Returns null handle if current side or whole cubemap is invalid. All origin images have to have the same sizes, format and quad shapes to form valid cubemap.
         """
@@ -17233,9 +18629,9 @@ class Graphic3d_CubeMapSeparate(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic
         Returns whether Z axis is inverted.
         """
     @overload
-    def __init__(self,thePaths : OCP.TColStd.TColStd_Array1OfAsciiString) -> None: ...
-    @overload
     def __init__(self,theImages : Any) -> None: ...
+    @overload
+    def __init__(self,thePaths : OCP.TColStd.TColStd_Array1OfAsciiString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -17387,6 +18783,51 @@ class Graphic3d_MediaTextureSet(Graphic3d_TextureSet, OCP.Standard.Standard_Tran
         None
         """
     pass
+class Graphic3d_TextureSetBits():
+    """
+    Standard texture units combination bits.
+
+    Members:
+
+      Graphic3d_TextureSetBits_NONE
+
+      Graphic3d_TextureSetBits_BaseColor
+
+      Graphic3d_TextureSetBits_Emissive
+
+      Graphic3d_TextureSetBits_Occlusion
+
+      Graphic3d_TextureSetBits_Normal
+
+      Graphic3d_TextureSetBits_MetallicRoughness
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TextureSetBits_BaseColor: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_BaseColor: 1>
+    Graphic3d_TextureSetBits_Emissive: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Emissive: 2>
+    Graphic3d_TextureSetBits_MetallicRoughness: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_MetallicRoughness: 16>
+    Graphic3d_TextureSetBits_NONE: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_NONE: 0>
+    Graphic3d_TextureSetBits_Normal: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Normal: 8>
+    Graphic3d_TextureSetBits_Occlusion: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Occlusion: 4>
+    __entries: dict # value = {'Graphic3d_TextureSetBits_NONE': (<Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_NONE: 0>, None), 'Graphic3d_TextureSetBits_BaseColor': (<Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_BaseColor: 1>, None), 'Graphic3d_TextureSetBits_Emissive': (<Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Emissive: 2>, None), 'Graphic3d_TextureSetBits_Occlusion': (<Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Occlusion: 4>, None), 'Graphic3d_TextureSetBits_Normal': (<Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Normal: 8>, None), 'Graphic3d_TextureSetBits_MetallicRoughness': (<Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_MetallicRoughness: 16>, None)}
+    __members__: dict # value = {'Graphic3d_TextureSetBits_NONE': <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_NONE: 0>, 'Graphic3d_TextureSetBits_BaseColor': <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_BaseColor: 1>, 'Graphic3d_TextureSetBits_Emissive': <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Emissive: 2>, 'Graphic3d_TextureSetBits_Occlusion': <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Occlusion: 4>, 'Graphic3d_TextureSetBits_Normal': <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Normal: 8>, 'Graphic3d_TextureSetBits_MetallicRoughness': <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_MetallicRoughness: 16>}
+    pass
 class Graphic3d_TextureUnit():
     """
     Texture unit.
@@ -17427,38 +18868,70 @@ class Graphic3d_TextureUnit():
 
       Graphic3d_TextureUnit_BaseColor
 
-      Graphic3d_TextureUnit_EnvMap
-    """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
-    def __int__(self) -> int: ...
-    @property
-    def name(self) -> str:
-        """
-        (self: handle) -> str
+      Graphic3d_TextureUnit_Emissive
 
-        :type: str
+      Graphic3d_TextureUnit_Occlusion
+
+      Graphic3d_TextureUnit_Normal
+
+      Graphic3d_TextureUnit_MetallicRoughness
+
+      Graphic3d_TextureUnit_EnvMap
+
+      Graphic3d_TextureUnit_PointSprite
+
+      Graphic3d_TextureUnit_PbrEnvironmentLUT
+
+      Graphic3d_TextureUnit_PbrIblDiffuseSH
+
+      Graphic3d_TextureUnit_PbrIblSpecular
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
         """
-    Graphic3d_TextureUnit_0: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_0
-    Graphic3d_TextureUnit_1: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_1
-    Graphic3d_TextureUnit_10: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_10
-    Graphic3d_TextureUnit_11: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_11
-    Graphic3d_TextureUnit_12: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_12
-    Graphic3d_TextureUnit_13: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_13
-    Graphic3d_TextureUnit_14: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_14
-    Graphic3d_TextureUnit_15: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_15
-    Graphic3d_TextureUnit_2: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_2
-    Graphic3d_TextureUnit_3: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_3
-    Graphic3d_TextureUnit_4: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_4
-    Graphic3d_TextureUnit_5: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_5
-    Graphic3d_TextureUnit_6: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_6
-    Graphic3d_TextureUnit_7: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_7
-    Graphic3d_TextureUnit_8: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_8
-    Graphic3d_TextureUnit_9: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_9
-    Graphic3d_TextureUnit_BaseColor: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_0
-    Graphic3d_TextureUnit_EnvMap: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_0
-    __entries: dict # value = {'Graphic3d_TextureUnit_0': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_0, None), 'Graphic3d_TextureUnit_1': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_1, None), 'Graphic3d_TextureUnit_2': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_2, None), 'Graphic3d_TextureUnit_3': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_3, None), 'Graphic3d_TextureUnit_4': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_4, None), 'Graphic3d_TextureUnit_5': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_5, None), 'Graphic3d_TextureUnit_6': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_6, None), 'Graphic3d_TextureUnit_7': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_7, None), 'Graphic3d_TextureUnit_8': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_8, None), 'Graphic3d_TextureUnit_9': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_9, None), 'Graphic3d_TextureUnit_10': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_10, None), 'Graphic3d_TextureUnit_11': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_11, None), 'Graphic3d_TextureUnit_12': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_12, None), 'Graphic3d_TextureUnit_13': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_13, None), 'Graphic3d_TextureUnit_14': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_14, None), 'Graphic3d_TextureUnit_15': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_15, None), 'Graphic3d_TextureUnit_BaseColor': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_0, None), 'Graphic3d_TextureUnit_EnvMap': (Graphic3d_TextureUnit.Graphic3d_TextureUnit_0, None)}
-    __members__: dict # value = {'Graphic3d_TextureUnit_0': Graphic3d_TextureUnit.Graphic3d_TextureUnit_0, 'Graphic3d_TextureUnit_1': Graphic3d_TextureUnit.Graphic3d_TextureUnit_1, 'Graphic3d_TextureUnit_2': Graphic3d_TextureUnit.Graphic3d_TextureUnit_2, 'Graphic3d_TextureUnit_3': Graphic3d_TextureUnit.Graphic3d_TextureUnit_3, 'Graphic3d_TextureUnit_4': Graphic3d_TextureUnit.Graphic3d_TextureUnit_4, 'Graphic3d_TextureUnit_5': Graphic3d_TextureUnit.Graphic3d_TextureUnit_5, 'Graphic3d_TextureUnit_6': Graphic3d_TextureUnit.Graphic3d_TextureUnit_6, 'Graphic3d_TextureUnit_7': Graphic3d_TextureUnit.Graphic3d_TextureUnit_7, 'Graphic3d_TextureUnit_8': Graphic3d_TextureUnit.Graphic3d_TextureUnit_8, 'Graphic3d_TextureUnit_9': Graphic3d_TextureUnit.Graphic3d_TextureUnit_9, 'Graphic3d_TextureUnit_10': Graphic3d_TextureUnit.Graphic3d_TextureUnit_10, 'Graphic3d_TextureUnit_11': Graphic3d_TextureUnit.Graphic3d_TextureUnit_11, 'Graphic3d_TextureUnit_12': Graphic3d_TextureUnit.Graphic3d_TextureUnit_12, 'Graphic3d_TextureUnit_13': Graphic3d_TextureUnit.Graphic3d_TextureUnit_13, 'Graphic3d_TextureUnit_14': Graphic3d_TextureUnit.Graphic3d_TextureUnit_14, 'Graphic3d_TextureUnit_15': Graphic3d_TextureUnit.Graphic3d_TextureUnit_15, 'Graphic3d_TextureUnit_BaseColor': Graphic3d_TextureUnit.Graphic3d_TextureUnit_0, 'Graphic3d_TextureUnit_EnvMap': Graphic3d_TextureUnit.Graphic3d_TextureUnit_0}
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TextureUnit_0: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>
+    Graphic3d_TextureUnit_1: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>
+    Graphic3d_TextureUnit_10: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_10: 10>
+    Graphic3d_TextureUnit_11: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_11: 11>
+    Graphic3d_TextureUnit_12: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_12: 12>
+    Graphic3d_TextureUnit_13: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_13: 13>
+    Graphic3d_TextureUnit_14: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_14: 14>
+    Graphic3d_TextureUnit_15: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_15: 15>
+    Graphic3d_TextureUnit_2: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_2: 2>
+    Graphic3d_TextureUnit_3: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_3: 3>
+    Graphic3d_TextureUnit_4: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_4: 4>
+    Graphic3d_TextureUnit_5: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_5: 5>
+    Graphic3d_TextureUnit_6: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_6: 6>
+    Graphic3d_TextureUnit_7: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_7: 7>
+    Graphic3d_TextureUnit_8: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_8: 8>
+    Graphic3d_TextureUnit_9: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_9: 9>
+    Graphic3d_TextureUnit_BaseColor: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>
+    Graphic3d_TextureUnit_Emissive: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>
+    Graphic3d_TextureUnit_EnvMap: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>
+    Graphic3d_TextureUnit_MetallicRoughness: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_4: 4>
+    Graphic3d_TextureUnit_Normal: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_3: 3>
+    Graphic3d_TextureUnit_Occlusion: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_2: 2>
+    Graphic3d_TextureUnit_PbrEnvironmentLUT: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrEnvironmentLUT: -3>
+    Graphic3d_TextureUnit_PbrIblDiffuseSH: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrIblDiffuseSH: -2>
+    Graphic3d_TextureUnit_PbrIblSpecular: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrIblSpecular: -1>
+    Graphic3d_TextureUnit_PointSprite: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>
+    __entries: dict # value = {'Graphic3d_TextureUnit_0': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>, None), 'Graphic3d_TextureUnit_1': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>, None), 'Graphic3d_TextureUnit_2': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_2: 2>, None), 'Graphic3d_TextureUnit_3': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_3: 3>, None), 'Graphic3d_TextureUnit_4': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_4: 4>, None), 'Graphic3d_TextureUnit_5': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_5: 5>, None), 'Graphic3d_TextureUnit_6': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_6: 6>, None), 'Graphic3d_TextureUnit_7': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_7: 7>, None), 'Graphic3d_TextureUnit_8': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_8: 8>, None), 'Graphic3d_TextureUnit_9': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_9: 9>, None), 'Graphic3d_TextureUnit_10': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_10: 10>, None), 'Graphic3d_TextureUnit_11': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_11: 11>, None), 'Graphic3d_TextureUnit_12': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_12: 12>, None), 'Graphic3d_TextureUnit_13': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_13: 13>, None), 'Graphic3d_TextureUnit_14': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_14: 14>, None), 'Graphic3d_TextureUnit_15': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_15: 15>, None), 'Graphic3d_TextureUnit_BaseColor': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>, None), 'Graphic3d_TextureUnit_Emissive': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>, None), 'Graphic3d_TextureUnit_Occlusion': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_2: 2>, None), 'Graphic3d_TextureUnit_Normal': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_3: 3>, None), 'Graphic3d_TextureUnit_MetallicRoughness': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_4: 4>, None), 'Graphic3d_TextureUnit_EnvMap': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>, None), 'Graphic3d_TextureUnit_PointSprite': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>, None), 'Graphic3d_TextureUnit_PbrEnvironmentLUT': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrEnvironmentLUT: -3>, None), 'Graphic3d_TextureUnit_PbrIblDiffuseSH': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrIblDiffuseSH: -2>, None), 'Graphic3d_TextureUnit_PbrIblSpecular': (<Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrIblSpecular: -1>, None)}
+    __members__: dict # value = {'Graphic3d_TextureUnit_0': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>, 'Graphic3d_TextureUnit_1': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>, 'Graphic3d_TextureUnit_2': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_2: 2>, 'Graphic3d_TextureUnit_3': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_3: 3>, 'Graphic3d_TextureUnit_4': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_4: 4>, 'Graphic3d_TextureUnit_5': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_5: 5>, 'Graphic3d_TextureUnit_6': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_6: 6>, 'Graphic3d_TextureUnit_7': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_7: 7>, 'Graphic3d_TextureUnit_8': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_8: 8>, 'Graphic3d_TextureUnit_9': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_9: 9>, 'Graphic3d_TextureUnit_10': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_10: 10>, 'Graphic3d_TextureUnit_11': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_11: 11>, 'Graphic3d_TextureUnit_12': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_12: 12>, 'Graphic3d_TextureUnit_13': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_13: 13>, 'Graphic3d_TextureUnit_14': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_14: 14>, 'Graphic3d_TextureUnit_15': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_15: 15>, 'Graphic3d_TextureUnit_BaseColor': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>, 'Graphic3d_TextureUnit_Emissive': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>, 'Graphic3d_TextureUnit_Occlusion': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_2: 2>, 'Graphic3d_TextureUnit_Normal': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_3: 3>, 'Graphic3d_TextureUnit_MetallicRoughness': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_4: 4>, 'Graphic3d_TextureUnit_EnvMap': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>, 'Graphic3d_TextureUnit_PointSprite': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>, 'Graphic3d_TextureUnit_PbrEnvironmentLUT': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrEnvironmentLUT: -3>, 'Graphic3d_TextureUnit_PbrIblDiffuseSH': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrIblDiffuseSH: -2>, 'Graphic3d_TextureUnit_PbrIblSpecular': <Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrIblSpecular: -1>}
     pass
 class Graphic3d_ToneMappingMethod():
     """
@@ -17470,20 +18943,28 @@ class Graphic3d_ToneMappingMethod():
 
       Graphic3d_ToneMappingMethod_Filmic
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_ToneMappingMethod_Disabled: OCP.Graphic3d.Graphic3d_ToneMappingMethod # value = Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Disabled
-    Graphic3d_ToneMappingMethod_Filmic: OCP.Graphic3d.Graphic3d_ToneMappingMethod # value = Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Filmic
-    __entries: dict # value = {'Graphic3d_ToneMappingMethod_Disabled': (Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Disabled, None), 'Graphic3d_ToneMappingMethod_Filmic': (Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Filmic, None)}
-    __members__: dict # value = {'Graphic3d_ToneMappingMethod_Disabled': Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Disabled, 'Graphic3d_ToneMappingMethod_Filmic': Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Filmic}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_ToneMappingMethod_Disabled: OCP.Graphic3d.Graphic3d_ToneMappingMethod # value = <Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Disabled: 0>
+    Graphic3d_ToneMappingMethod_Filmic: OCP.Graphic3d.Graphic3d_ToneMappingMethod # value = <Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Filmic: 1>
+    __entries: dict # value = {'Graphic3d_ToneMappingMethod_Disabled': (<Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Disabled: 0>, None), 'Graphic3d_ToneMappingMethod_Filmic': (<Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Filmic: 1>, None)}
+    __members__: dict # value = {'Graphic3d_ToneMappingMethod_Disabled': <Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Disabled: 0>, 'Graphic3d_ToneMappingMethod_Filmic': <Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Filmic: 1>}
     pass
 class Graphic3d_TransModeFlags():
     """
@@ -17503,24 +18984,32 @@ class Graphic3d_TransModeFlags():
 
       Graphic3d_TMF_ZoomRotatePers
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TMF_2d: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_2d
-    Graphic3d_TMF_None: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_None
-    Graphic3d_TMF_RotatePers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_RotatePers
-    Graphic3d_TMF_TriedronPers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_TriedronPers
-    Graphic3d_TMF_ZoomPers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomPers
-    Graphic3d_TMF_ZoomRotatePers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomRotatePers
-    __entries: dict # value = {'Graphic3d_TMF_None': (Graphic3d_TransModeFlags.Graphic3d_TMF_None, None), 'Graphic3d_TMF_ZoomPers': (Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomPers, None), 'Graphic3d_TMF_RotatePers': (Graphic3d_TransModeFlags.Graphic3d_TMF_RotatePers, None), 'Graphic3d_TMF_TriedronPers': (Graphic3d_TransModeFlags.Graphic3d_TMF_TriedronPers, None), 'Graphic3d_TMF_2d': (Graphic3d_TransModeFlags.Graphic3d_TMF_2d, None), 'Graphic3d_TMF_ZoomRotatePers': (Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomRotatePers, None)}
-    __members__: dict # value = {'Graphic3d_TMF_None': Graphic3d_TransModeFlags.Graphic3d_TMF_None, 'Graphic3d_TMF_ZoomPers': Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomPers, 'Graphic3d_TMF_RotatePers': Graphic3d_TransModeFlags.Graphic3d_TMF_RotatePers, 'Graphic3d_TMF_TriedronPers': Graphic3d_TransModeFlags.Graphic3d_TMF_TriedronPers, 'Graphic3d_TMF_2d': Graphic3d_TransModeFlags.Graphic3d_TMF_2d, 'Graphic3d_TMF_ZoomRotatePers': Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomRotatePers}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TMF_2d: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_2d: 64>
+    Graphic3d_TMF_None: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_None: 0>
+    Graphic3d_TMF_RotatePers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_RotatePers: 8>
+    Graphic3d_TMF_TriedronPers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_TriedronPers: 32>
+    Graphic3d_TMF_ZoomPers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomPers: 2>
+    Graphic3d_TMF_ZoomRotatePers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomRotatePers: 10>
+    __entries: dict # value = {'Graphic3d_TMF_None': (<Graphic3d_TransModeFlags.Graphic3d_TMF_None: 0>, None), 'Graphic3d_TMF_ZoomPers': (<Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomPers: 2>, None), 'Graphic3d_TMF_RotatePers': (<Graphic3d_TransModeFlags.Graphic3d_TMF_RotatePers: 8>, None), 'Graphic3d_TMF_TriedronPers': (<Graphic3d_TransModeFlags.Graphic3d_TMF_TriedronPers: 32>, None), 'Graphic3d_TMF_2d': (<Graphic3d_TransModeFlags.Graphic3d_TMF_2d: 64>, None), 'Graphic3d_TMF_ZoomRotatePers': (<Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomRotatePers: 10>, None)}
+    __members__: dict # value = {'Graphic3d_TMF_None': <Graphic3d_TransModeFlags.Graphic3d_TMF_None: 0>, 'Graphic3d_TMF_ZoomPers': <Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomPers: 2>, 'Graphic3d_TMF_RotatePers': <Graphic3d_TransModeFlags.Graphic3d_TMF_RotatePers: 8>, 'Graphic3d_TMF_TriedronPers': <Graphic3d_TransModeFlags.Graphic3d_TMF_TriedronPers: 32>, 'Graphic3d_TMF_2d': <Graphic3d_TransModeFlags.Graphic3d_TMF_2d: 64>, 'Graphic3d_TMF_ZoomRotatePers': <Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomRotatePers: 10>}
     pass
 class Graphic3d_TransformError(Exception, BaseException):
     class type():
@@ -17552,6 +19041,10 @@ class Graphic3d_TransformPers(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -17672,21 +19165,29 @@ class Graphic3d_TypeOfAnswer():
 
       Graphic3d_TOA_COMPUTE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOA_COMPUTE: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = Graphic3d_TypeOfAnswer.Graphic3d_TOA_COMPUTE
-    Graphic3d_TOA_NO: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = Graphic3d_TypeOfAnswer.Graphic3d_TOA_NO
-    Graphic3d_TOA_YES: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = Graphic3d_TypeOfAnswer.Graphic3d_TOA_YES
-    __entries: dict # value = {'Graphic3d_TOA_YES': (Graphic3d_TypeOfAnswer.Graphic3d_TOA_YES, None), 'Graphic3d_TOA_NO': (Graphic3d_TypeOfAnswer.Graphic3d_TOA_NO, None), 'Graphic3d_TOA_COMPUTE': (Graphic3d_TypeOfAnswer.Graphic3d_TOA_COMPUTE, None)}
-    __members__: dict # value = {'Graphic3d_TOA_YES': Graphic3d_TypeOfAnswer.Graphic3d_TOA_YES, 'Graphic3d_TOA_NO': Graphic3d_TypeOfAnswer.Graphic3d_TOA_NO, 'Graphic3d_TOA_COMPUTE': Graphic3d_TypeOfAnswer.Graphic3d_TOA_COMPUTE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOA_COMPUTE: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = <Graphic3d_TypeOfAnswer.Graphic3d_TOA_COMPUTE: 2>
+    Graphic3d_TOA_NO: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = <Graphic3d_TypeOfAnswer.Graphic3d_TOA_NO: 1>
+    Graphic3d_TOA_YES: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = <Graphic3d_TypeOfAnswer.Graphic3d_TOA_YES: 0>
+    __entries: dict # value = {'Graphic3d_TOA_YES': (<Graphic3d_TypeOfAnswer.Graphic3d_TOA_YES: 0>, None), 'Graphic3d_TOA_NO': (<Graphic3d_TypeOfAnswer.Graphic3d_TOA_NO: 1>, None), 'Graphic3d_TOA_COMPUTE': (<Graphic3d_TypeOfAnswer.Graphic3d_TOA_COMPUTE: 2>, None)}
+    __members__: dict # value = {'Graphic3d_TOA_YES': <Graphic3d_TypeOfAnswer.Graphic3d_TOA_YES: 0>, 'Graphic3d_TOA_NO': <Graphic3d_TypeOfAnswer.Graphic3d_TOA_NO: 1>, 'Graphic3d_TOA_COMPUTE': <Graphic3d_TypeOfAnswer.Graphic3d_TOA_COMPUTE: 2>}
     pass
 class Graphic3d_TypeOfAttribute():
     """
@@ -17704,23 +19205,31 @@ class Graphic3d_TypeOfAttribute():
 
       Graphic3d_TOA_CUSTOM
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOA_COLOR: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = Graphic3d_TypeOfAttribute.Graphic3d_TOA_COLOR
-    Graphic3d_TOA_CUSTOM: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = Graphic3d_TypeOfAttribute.Graphic3d_TOA_CUSTOM
-    Graphic3d_TOA_NORM: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = Graphic3d_TypeOfAttribute.Graphic3d_TOA_NORM
-    Graphic3d_TOA_POS: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = Graphic3d_TypeOfAttribute.Graphic3d_TOA_POS
-    Graphic3d_TOA_UV: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = Graphic3d_TypeOfAttribute.Graphic3d_TOA_UV
-    __entries: dict # value = {'Graphic3d_TOA_POS': (Graphic3d_TypeOfAttribute.Graphic3d_TOA_POS, None), 'Graphic3d_TOA_NORM': (Graphic3d_TypeOfAttribute.Graphic3d_TOA_NORM, None), 'Graphic3d_TOA_UV': (Graphic3d_TypeOfAttribute.Graphic3d_TOA_UV, None), 'Graphic3d_TOA_COLOR': (Graphic3d_TypeOfAttribute.Graphic3d_TOA_COLOR, None), 'Graphic3d_TOA_CUSTOM': (Graphic3d_TypeOfAttribute.Graphic3d_TOA_CUSTOM, None)}
-    __members__: dict # value = {'Graphic3d_TOA_POS': Graphic3d_TypeOfAttribute.Graphic3d_TOA_POS, 'Graphic3d_TOA_NORM': Graphic3d_TypeOfAttribute.Graphic3d_TOA_NORM, 'Graphic3d_TOA_UV': Graphic3d_TypeOfAttribute.Graphic3d_TOA_UV, 'Graphic3d_TOA_COLOR': Graphic3d_TypeOfAttribute.Graphic3d_TOA_COLOR, 'Graphic3d_TOA_CUSTOM': Graphic3d_TypeOfAttribute.Graphic3d_TOA_CUSTOM}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOA_COLOR: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = <Graphic3d_TypeOfAttribute.Graphic3d_TOA_COLOR: 3>
+    Graphic3d_TOA_CUSTOM: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = <Graphic3d_TypeOfAttribute.Graphic3d_TOA_CUSTOM: 4>
+    Graphic3d_TOA_NORM: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = <Graphic3d_TypeOfAttribute.Graphic3d_TOA_NORM: 1>
+    Graphic3d_TOA_POS: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = <Graphic3d_TypeOfAttribute.Graphic3d_TOA_POS: 0>
+    Graphic3d_TOA_UV: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = <Graphic3d_TypeOfAttribute.Graphic3d_TOA_UV: 2>
+    __entries: dict # value = {'Graphic3d_TOA_POS': (<Graphic3d_TypeOfAttribute.Graphic3d_TOA_POS: 0>, None), 'Graphic3d_TOA_NORM': (<Graphic3d_TypeOfAttribute.Graphic3d_TOA_NORM: 1>, None), 'Graphic3d_TOA_UV': (<Graphic3d_TypeOfAttribute.Graphic3d_TOA_UV: 2>, None), 'Graphic3d_TOA_COLOR': (<Graphic3d_TypeOfAttribute.Graphic3d_TOA_COLOR: 3>, None), 'Graphic3d_TOA_CUSTOM': (<Graphic3d_TypeOfAttribute.Graphic3d_TOA_CUSTOM: 4>, None)}
+    __members__: dict # value = {'Graphic3d_TOA_POS': <Graphic3d_TypeOfAttribute.Graphic3d_TOA_POS: 0>, 'Graphic3d_TOA_NORM': <Graphic3d_TypeOfAttribute.Graphic3d_TOA_NORM: 1>, 'Graphic3d_TOA_UV': <Graphic3d_TypeOfAttribute.Graphic3d_TOA_UV: 2>, 'Graphic3d_TOA_COLOR': <Graphic3d_TypeOfAttribute.Graphic3d_TOA_COLOR: 3>, 'Graphic3d_TOA_CUSTOM': <Graphic3d_TypeOfAttribute.Graphic3d_TOA_CUSTOM: 4>}
     pass
 class Graphic3d_TypeOfBackfacingModel():
     """
@@ -17734,21 +19243,29 @@ class Graphic3d_TypeOfBackfacingModel():
 
       Graphic3d_TOBM_DISABLE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOBM_AUTOMATIC: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_AUTOMATIC
-    Graphic3d_TOBM_DISABLE: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_DISABLE
-    Graphic3d_TOBM_FORCE: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_FORCE
-    __entries: dict # value = {'Graphic3d_TOBM_AUTOMATIC': (Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_AUTOMATIC, None), 'Graphic3d_TOBM_FORCE': (Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_FORCE, None), 'Graphic3d_TOBM_DISABLE': (Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_DISABLE, None)}
-    __members__: dict # value = {'Graphic3d_TOBM_AUTOMATIC': Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_AUTOMATIC, 'Graphic3d_TOBM_FORCE': Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_FORCE, 'Graphic3d_TOBM_DISABLE': Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_DISABLE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOBM_AUTOMATIC: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_AUTOMATIC: 0>
+    Graphic3d_TOBM_DISABLE: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_DISABLE: 2>
+    Graphic3d_TOBM_FORCE: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_FORCE: 1>
+    __entries: dict # value = {'Graphic3d_TOBM_AUTOMATIC': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_AUTOMATIC: 0>, None), 'Graphic3d_TOBM_FORCE': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_FORCE: 1>, None), 'Graphic3d_TOBM_DISABLE': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_DISABLE: 2>, None)}
+    __members__: dict # value = {'Graphic3d_TOBM_AUTOMATIC': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_AUTOMATIC: 0>, 'Graphic3d_TOBM_FORCE': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_FORCE: 1>, 'Graphic3d_TOBM_DISABLE': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_DISABLE: 2>}
     pass
 class Graphic3d_TypeOfBackground():
     """
@@ -17764,22 +19281,30 @@ class Graphic3d_TypeOfBackground():
 
       Graphic3d_TOB_CUBEMAP
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOB_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = Graphic3d_TypeOfBackground.Graphic3d_TOB_CUBEMAP
-    Graphic3d_TOB_GRADIENT: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = Graphic3d_TypeOfBackground.Graphic3d_TOB_GRADIENT
-    Graphic3d_TOB_NONE: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = Graphic3d_TypeOfBackground.Graphic3d_TOB_NONE
-    Graphic3d_TOB_TEXTURE: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = Graphic3d_TypeOfBackground.Graphic3d_TOB_TEXTURE
-    __entries: dict # value = {'Graphic3d_TOB_NONE': (Graphic3d_TypeOfBackground.Graphic3d_TOB_NONE, None), 'Graphic3d_TOB_GRADIENT': (Graphic3d_TypeOfBackground.Graphic3d_TOB_GRADIENT, None), 'Graphic3d_TOB_TEXTURE': (Graphic3d_TypeOfBackground.Graphic3d_TOB_TEXTURE, None), 'Graphic3d_TOB_CUBEMAP': (Graphic3d_TypeOfBackground.Graphic3d_TOB_CUBEMAP, None)}
-    __members__: dict # value = {'Graphic3d_TOB_NONE': Graphic3d_TypeOfBackground.Graphic3d_TOB_NONE, 'Graphic3d_TOB_GRADIENT': Graphic3d_TypeOfBackground.Graphic3d_TOB_GRADIENT, 'Graphic3d_TOB_TEXTURE': Graphic3d_TypeOfBackground.Graphic3d_TOB_TEXTURE, 'Graphic3d_TOB_CUBEMAP': Graphic3d_TypeOfBackground.Graphic3d_TOB_CUBEMAP}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOB_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = <Graphic3d_TypeOfBackground.Graphic3d_TOB_CUBEMAP: 2>
+    Graphic3d_TOB_GRADIENT: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = <Graphic3d_TypeOfBackground.Graphic3d_TOB_GRADIENT: 0>
+    Graphic3d_TOB_NONE: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = <Graphic3d_TypeOfBackground.Graphic3d_TOB_NONE: -1>
+    Graphic3d_TOB_TEXTURE: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = <Graphic3d_TypeOfBackground.Graphic3d_TOB_TEXTURE: 1>
+    __entries: dict # value = {'Graphic3d_TOB_NONE': (<Graphic3d_TypeOfBackground.Graphic3d_TOB_NONE: -1>, None), 'Graphic3d_TOB_GRADIENT': (<Graphic3d_TypeOfBackground.Graphic3d_TOB_GRADIENT: 0>, None), 'Graphic3d_TOB_TEXTURE': (<Graphic3d_TypeOfBackground.Graphic3d_TOB_TEXTURE: 1>, None), 'Graphic3d_TOB_CUBEMAP': (<Graphic3d_TypeOfBackground.Graphic3d_TOB_CUBEMAP: 2>, None)}
+    __members__: dict # value = {'Graphic3d_TOB_NONE': <Graphic3d_TypeOfBackground.Graphic3d_TOB_NONE: -1>, 'Graphic3d_TOB_GRADIENT': <Graphic3d_TypeOfBackground.Graphic3d_TOB_GRADIENT: 0>, 'Graphic3d_TOB_TEXTURE': <Graphic3d_TypeOfBackground.Graphic3d_TOB_TEXTURE: 1>, 'Graphic3d_TOB_CUBEMAP': <Graphic3d_TypeOfBackground.Graphic3d_TOB_CUBEMAP: 2>}
     pass
 class Graphic3d_TypeOfComposition():
     """
@@ -17791,20 +19316,28 @@ class Graphic3d_TypeOfComposition():
 
       Graphic3d_TOC_POSTCONCATENATE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOC_POSTCONCATENATE: OCP.Graphic3d.Graphic3d_TypeOfComposition # value = Graphic3d_TypeOfComposition.Graphic3d_TOC_POSTCONCATENATE
-    Graphic3d_TOC_REPLACE: OCP.Graphic3d.Graphic3d_TypeOfComposition # value = Graphic3d_TypeOfComposition.Graphic3d_TOC_REPLACE
-    __entries: dict # value = {'Graphic3d_TOC_REPLACE': (Graphic3d_TypeOfComposition.Graphic3d_TOC_REPLACE, None), 'Graphic3d_TOC_POSTCONCATENATE': (Graphic3d_TypeOfComposition.Graphic3d_TOC_POSTCONCATENATE, None)}
-    __members__: dict # value = {'Graphic3d_TOC_REPLACE': Graphic3d_TypeOfComposition.Graphic3d_TOC_REPLACE, 'Graphic3d_TOC_POSTCONCATENATE': Graphic3d_TypeOfComposition.Graphic3d_TOC_POSTCONCATENATE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOC_POSTCONCATENATE: OCP.Graphic3d.Graphic3d_TypeOfComposition # value = <Graphic3d_TypeOfComposition.Graphic3d_TOC_POSTCONCATENATE: 1>
+    Graphic3d_TOC_REPLACE: OCP.Graphic3d.Graphic3d_TypeOfComposition # value = <Graphic3d_TypeOfComposition.Graphic3d_TOC_REPLACE: 0>
+    __entries: dict # value = {'Graphic3d_TOC_REPLACE': (<Graphic3d_TypeOfComposition.Graphic3d_TOC_REPLACE: 0>, None), 'Graphic3d_TOC_POSTCONCATENATE': (<Graphic3d_TypeOfComposition.Graphic3d_TOC_POSTCONCATENATE: 1>, None)}
+    __members__: dict # value = {'Graphic3d_TOC_REPLACE': <Graphic3d_TypeOfComposition.Graphic3d_TOC_REPLACE: 0>, 'Graphic3d_TOC_POSTCONCATENATE': <Graphic3d_TypeOfComposition.Graphic3d_TOC_POSTCONCATENATE: 1>}
     pass
 class Graphic3d_TypeOfConnection():
     """
@@ -17816,20 +19349,28 @@ class Graphic3d_TypeOfConnection():
 
       Graphic3d_TOC_DESCENDANT
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOC_ANCESTOR: OCP.Graphic3d.Graphic3d_TypeOfConnection # value = Graphic3d_TypeOfConnection.Graphic3d_TOC_ANCESTOR
-    Graphic3d_TOC_DESCENDANT: OCP.Graphic3d.Graphic3d_TypeOfConnection # value = Graphic3d_TypeOfConnection.Graphic3d_TOC_DESCENDANT
-    __entries: dict # value = {'Graphic3d_TOC_ANCESTOR': (Graphic3d_TypeOfConnection.Graphic3d_TOC_ANCESTOR, None), 'Graphic3d_TOC_DESCENDANT': (Graphic3d_TypeOfConnection.Graphic3d_TOC_DESCENDANT, None)}
-    __members__: dict # value = {'Graphic3d_TOC_ANCESTOR': Graphic3d_TypeOfConnection.Graphic3d_TOC_ANCESTOR, 'Graphic3d_TOC_DESCENDANT': Graphic3d_TypeOfConnection.Graphic3d_TOC_DESCENDANT}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOC_ANCESTOR: OCP.Graphic3d.Graphic3d_TypeOfConnection # value = <Graphic3d_TypeOfConnection.Graphic3d_TOC_ANCESTOR: 0>
+    Graphic3d_TOC_DESCENDANT: OCP.Graphic3d.Graphic3d_TypeOfConnection # value = <Graphic3d_TypeOfConnection.Graphic3d_TOC_DESCENDANT: 1>
+    __entries: dict # value = {'Graphic3d_TOC_ANCESTOR': (<Graphic3d_TypeOfConnection.Graphic3d_TOC_ANCESTOR: 0>, None), 'Graphic3d_TOC_DESCENDANT': (<Graphic3d_TypeOfConnection.Graphic3d_TOC_DESCENDANT: 1>, None)}
+    __members__: dict # value = {'Graphic3d_TOC_ANCESTOR': <Graphic3d_TypeOfConnection.Graphic3d_TOC_ANCESTOR: 0>, 'Graphic3d_TOC_DESCENDANT': <Graphic3d_TypeOfConnection.Graphic3d_TOC_DESCENDANT: 1>}
     pass
 class Graphic3d_TypeOfData():
     """
@@ -17851,25 +19392,33 @@ class Graphic3d_TypeOfData():
 
       Graphic3d_TOD_FLOAT
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOD_FLOAT: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_FLOAT
-    Graphic3d_TOD_UINT: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_UINT
-    Graphic3d_TOD_USHORT: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_USHORT
-    Graphic3d_TOD_VEC2: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_VEC2
-    Graphic3d_TOD_VEC3: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_VEC3
-    Graphic3d_TOD_VEC4: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_VEC4
-    Graphic3d_TOD_VEC4UB: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_VEC4UB
-    __entries: dict # value = {'Graphic3d_TOD_USHORT': (Graphic3d_TypeOfData.Graphic3d_TOD_USHORT, None), 'Graphic3d_TOD_UINT': (Graphic3d_TypeOfData.Graphic3d_TOD_UINT, None), 'Graphic3d_TOD_VEC2': (Graphic3d_TypeOfData.Graphic3d_TOD_VEC2, None), 'Graphic3d_TOD_VEC3': (Graphic3d_TypeOfData.Graphic3d_TOD_VEC3, None), 'Graphic3d_TOD_VEC4': (Graphic3d_TypeOfData.Graphic3d_TOD_VEC4, None), 'Graphic3d_TOD_VEC4UB': (Graphic3d_TypeOfData.Graphic3d_TOD_VEC4UB, None), 'Graphic3d_TOD_FLOAT': (Graphic3d_TypeOfData.Graphic3d_TOD_FLOAT, None)}
-    __members__: dict # value = {'Graphic3d_TOD_USHORT': Graphic3d_TypeOfData.Graphic3d_TOD_USHORT, 'Graphic3d_TOD_UINT': Graphic3d_TypeOfData.Graphic3d_TOD_UINT, 'Graphic3d_TOD_VEC2': Graphic3d_TypeOfData.Graphic3d_TOD_VEC2, 'Graphic3d_TOD_VEC3': Graphic3d_TypeOfData.Graphic3d_TOD_VEC3, 'Graphic3d_TOD_VEC4': Graphic3d_TypeOfData.Graphic3d_TOD_VEC4, 'Graphic3d_TOD_VEC4UB': Graphic3d_TypeOfData.Graphic3d_TOD_VEC4UB, 'Graphic3d_TOD_FLOAT': Graphic3d_TypeOfData.Graphic3d_TOD_FLOAT}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOD_FLOAT: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_FLOAT: 6>
+    Graphic3d_TOD_UINT: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_UINT: 1>
+    Graphic3d_TOD_USHORT: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_USHORT: 0>
+    Graphic3d_TOD_VEC2: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_VEC2: 2>
+    Graphic3d_TOD_VEC3: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_VEC3: 3>
+    Graphic3d_TOD_VEC4: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_VEC4: 4>
+    Graphic3d_TOD_VEC4UB: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_VEC4UB: 5>
+    __entries: dict # value = {'Graphic3d_TOD_USHORT': (<Graphic3d_TypeOfData.Graphic3d_TOD_USHORT: 0>, None), 'Graphic3d_TOD_UINT': (<Graphic3d_TypeOfData.Graphic3d_TOD_UINT: 1>, None), 'Graphic3d_TOD_VEC2': (<Graphic3d_TypeOfData.Graphic3d_TOD_VEC2: 2>, None), 'Graphic3d_TOD_VEC3': (<Graphic3d_TypeOfData.Graphic3d_TOD_VEC3: 3>, None), 'Graphic3d_TOD_VEC4': (<Graphic3d_TypeOfData.Graphic3d_TOD_VEC4: 4>, None), 'Graphic3d_TOD_VEC4UB': (<Graphic3d_TypeOfData.Graphic3d_TOD_VEC4UB: 5>, None), 'Graphic3d_TOD_FLOAT': (<Graphic3d_TypeOfData.Graphic3d_TOD_FLOAT: 6>, None)}
+    __members__: dict # value = {'Graphic3d_TOD_USHORT': <Graphic3d_TypeOfData.Graphic3d_TOD_USHORT: 0>, 'Graphic3d_TOD_UINT': <Graphic3d_TypeOfData.Graphic3d_TOD_UINT: 1>, 'Graphic3d_TOD_VEC2': <Graphic3d_TypeOfData.Graphic3d_TOD_VEC2: 2>, 'Graphic3d_TOD_VEC3': <Graphic3d_TypeOfData.Graphic3d_TOD_VEC3: 3>, 'Graphic3d_TOD_VEC4': <Graphic3d_TypeOfData.Graphic3d_TOD_VEC4: 4>, 'Graphic3d_TOD_VEC4UB': <Graphic3d_TypeOfData.Graphic3d_TOD_VEC4UB: 5>, 'Graphic3d_TOD_FLOAT': <Graphic3d_TypeOfData.Graphic3d_TOD_FLOAT: 6>}
     pass
 class Graphic3d_TypeOfLightSource():
     """
@@ -17893,26 +19442,34 @@ class Graphic3d_TypeOfLightSource():
 
       V3d_SPOT
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOLS_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT
-    Graphic3d_TOLS_DIRECTIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL
-    Graphic3d_TOLS_POSITIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL
-    Graphic3d_TOLS_SPOT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT
-    V3d_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT
-    V3d_DIRECTIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL
-    V3d_POSITIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL
-    V3d_SPOT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT
-    __entries: dict # value = {'Graphic3d_TOLS_AMBIENT': (Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT, None), 'Graphic3d_TOLS_DIRECTIONAL': (Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL, None), 'Graphic3d_TOLS_POSITIONAL': (Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL, None), 'Graphic3d_TOLS_SPOT': (Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT, None), 'V3d_AMBIENT': (Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT, None), 'V3d_DIRECTIONAL': (Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL, None), 'V3d_POSITIONAL': (Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL, None), 'V3d_SPOT': (Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT, None)}
-    __members__: dict # value = {'Graphic3d_TOLS_AMBIENT': Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT, 'Graphic3d_TOLS_DIRECTIONAL': Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL, 'Graphic3d_TOLS_POSITIONAL': Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL, 'Graphic3d_TOLS_SPOT': Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT, 'V3d_AMBIENT': Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT, 'V3d_DIRECTIONAL': Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL, 'V3d_POSITIONAL': Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL, 'V3d_SPOT': Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOLS_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT: 0>
+    Graphic3d_TOLS_DIRECTIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL: 1>
+    Graphic3d_TOLS_POSITIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL: 2>
+    Graphic3d_TOLS_SPOT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT: 3>
+    V3d_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT: 0>
+    V3d_DIRECTIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL: 1>
+    V3d_POSITIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL: 2>
+    V3d_SPOT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT: 3>
+    __entries: dict # value = {'Graphic3d_TOLS_AMBIENT': (<Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT: 0>, None), 'Graphic3d_TOLS_DIRECTIONAL': (<Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL: 1>, None), 'Graphic3d_TOLS_POSITIONAL': (<Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL: 2>, None), 'Graphic3d_TOLS_SPOT': (<Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT: 3>, None), 'V3d_AMBIENT': (<Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT: 0>, None), 'V3d_DIRECTIONAL': (<Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL: 1>, None), 'V3d_POSITIONAL': (<Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL: 2>, None), 'V3d_SPOT': (<Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT: 3>, None)}
+    __members__: dict # value = {'Graphic3d_TOLS_AMBIENT': <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT: 0>, 'Graphic3d_TOLS_DIRECTIONAL': <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL: 1>, 'Graphic3d_TOLS_POSITIONAL': <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL: 2>, 'Graphic3d_TOLS_SPOT': <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT: 3>, 'V3d_AMBIENT': <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT: 0>, 'V3d_DIRECTIONAL': <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL: 1>, 'V3d_POSITIONAL': <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL: 2>, 'V3d_SPOT': <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT: 3>}
     pass
 class Graphic3d_TypeOfLimit():
     """
@@ -17936,6 +19493,8 @@ class Graphic3d_TypeOfLimit():
 
       Graphic3d_TypeOfLimit_MaxMsaa
 
+      Graphic3d_TypeOfLimit_HasPBR
+
       Graphic3d_TypeOfLimit_HasRayTracing
 
       Graphic3d_TypeOfLimit_HasRayTracingTextures
@@ -17943,6 +19502,8 @@ class Graphic3d_TypeOfLimit():
       Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling
 
       Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic
+
+      Graphic3d_TypeOfLimit_HasSRGB
 
       Graphic3d_TypeOfLimit_HasBlendedOit
 
@@ -17956,36 +19517,46 @@ class Graphic3d_TypeOfLimit():
 
       Graphic3d_TypeOfLimit_NB
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TypeOfLimit_HasBlendedOit: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOit
-    Graphic3d_TypeOfLimit_HasBlendedOitMsaa: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOitMsaa
-    Graphic3d_TypeOfLimit_HasFlatShading: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasFlatShading
-    Graphic3d_TypeOfLimit_HasMeshEdges: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasMeshEdges
-    Graphic3d_TypeOfLimit_HasRayTracing: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracing
-    Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling
-    Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic
-    Graphic3d_TypeOfLimit_HasRayTracingTextures: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingTextures
-    Graphic3d_TypeOfLimit_IsWorkaroundFBO: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_IsWorkaroundFBO
-    Graphic3d_TypeOfLimit_MaxCombinedTextureUnits: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxCombinedTextureUnits
-    Graphic3d_TypeOfLimit_MaxMsaa: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxMsaa
-    Graphic3d_TypeOfLimit_MaxNbClipPlanes: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbClipPlanes
-    Graphic3d_TypeOfLimit_MaxNbLights: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbLights
-    Graphic3d_TypeOfLimit_MaxNbViews: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbViews
-    Graphic3d_TypeOfLimit_MaxTextureSize: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxTextureSize
-    Graphic3d_TypeOfLimit_MaxViewDumpSizeX: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeX
-    Graphic3d_TypeOfLimit_MaxViewDumpSizeY: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeY
-    Graphic3d_TypeOfLimit_NB: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_NB
-    __entries: dict # value = {'Graphic3d_TypeOfLimit_MaxNbLights': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbLights, None), 'Graphic3d_TypeOfLimit_MaxNbClipPlanes': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbClipPlanes, None), 'Graphic3d_TypeOfLimit_MaxNbViews': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbViews, None), 'Graphic3d_TypeOfLimit_MaxTextureSize': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxTextureSize, None), 'Graphic3d_TypeOfLimit_MaxViewDumpSizeX': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeX, None), 'Graphic3d_TypeOfLimit_MaxViewDumpSizeY': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeY, None), 'Graphic3d_TypeOfLimit_MaxCombinedTextureUnits': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxCombinedTextureUnits, None), 'Graphic3d_TypeOfLimit_MaxMsaa': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxMsaa, None), 'Graphic3d_TypeOfLimit_HasRayTracing': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracing, None), 'Graphic3d_TypeOfLimit_HasRayTracingTextures': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingTextures, None), 'Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling, None), 'Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic, None), 'Graphic3d_TypeOfLimit_HasBlendedOit': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOit, None), 'Graphic3d_TypeOfLimit_HasBlendedOitMsaa': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOitMsaa, None), 'Graphic3d_TypeOfLimit_HasFlatShading': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasFlatShading, None), 'Graphic3d_TypeOfLimit_HasMeshEdges': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasMeshEdges, None), 'Graphic3d_TypeOfLimit_IsWorkaroundFBO': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_IsWorkaroundFBO, None), 'Graphic3d_TypeOfLimit_NB': (Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_NB, None)}
-    __members__: dict # value = {'Graphic3d_TypeOfLimit_MaxNbLights': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbLights, 'Graphic3d_TypeOfLimit_MaxNbClipPlanes': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbClipPlanes, 'Graphic3d_TypeOfLimit_MaxNbViews': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbViews, 'Graphic3d_TypeOfLimit_MaxTextureSize': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxTextureSize, 'Graphic3d_TypeOfLimit_MaxViewDumpSizeX': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeX, 'Graphic3d_TypeOfLimit_MaxViewDumpSizeY': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeY, 'Graphic3d_TypeOfLimit_MaxCombinedTextureUnits': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxCombinedTextureUnits, 'Graphic3d_TypeOfLimit_MaxMsaa': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxMsaa, 'Graphic3d_TypeOfLimit_HasRayTracing': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracing, 'Graphic3d_TypeOfLimit_HasRayTracingTextures': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingTextures, 'Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling, 'Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic, 'Graphic3d_TypeOfLimit_HasBlendedOit': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOit, 'Graphic3d_TypeOfLimit_HasBlendedOitMsaa': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOitMsaa, 'Graphic3d_TypeOfLimit_HasFlatShading': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasFlatShading, 'Graphic3d_TypeOfLimit_HasMeshEdges': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasMeshEdges, 'Graphic3d_TypeOfLimit_IsWorkaroundFBO': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_IsWorkaroundFBO, 'Graphic3d_TypeOfLimit_NB': Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_NB}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TypeOfLimit_HasBlendedOit: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOit: 14>
+    Graphic3d_TypeOfLimit_HasBlendedOitMsaa: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOitMsaa: 15>
+    Graphic3d_TypeOfLimit_HasFlatShading: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasFlatShading: 16>
+    Graphic3d_TypeOfLimit_HasMeshEdges: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasMeshEdges: 17>
+    Graphic3d_TypeOfLimit_HasPBR: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasPBR: 8>
+    Graphic3d_TypeOfLimit_HasRayTracing: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracing: 9>
+    Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling: 11>
+    Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic: 12>
+    Graphic3d_TypeOfLimit_HasRayTracingTextures: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingTextures: 10>
+    Graphic3d_TypeOfLimit_HasSRGB: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasSRGB: 13>
+    Graphic3d_TypeOfLimit_IsWorkaroundFBO: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_IsWorkaroundFBO: 18>
+    Graphic3d_TypeOfLimit_MaxCombinedTextureUnits: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxCombinedTextureUnits: 6>
+    Graphic3d_TypeOfLimit_MaxMsaa: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxMsaa: 7>
+    Graphic3d_TypeOfLimit_MaxNbClipPlanes: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbClipPlanes: 1>
+    Graphic3d_TypeOfLimit_MaxNbLights: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbLights: 0>
+    Graphic3d_TypeOfLimit_MaxNbViews: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbViews: 2>
+    Graphic3d_TypeOfLimit_MaxTextureSize: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxTextureSize: 3>
+    Graphic3d_TypeOfLimit_MaxViewDumpSizeX: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeX: 4>
+    Graphic3d_TypeOfLimit_MaxViewDumpSizeY: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeY: 5>
+    Graphic3d_TypeOfLimit_NB: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_NB: 19>
+    __entries: dict # value = {'Graphic3d_TypeOfLimit_MaxNbLights': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbLights: 0>, None), 'Graphic3d_TypeOfLimit_MaxNbClipPlanes': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbClipPlanes: 1>, None), 'Graphic3d_TypeOfLimit_MaxNbViews': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbViews: 2>, None), 'Graphic3d_TypeOfLimit_MaxTextureSize': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxTextureSize: 3>, None), 'Graphic3d_TypeOfLimit_MaxViewDumpSizeX': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeX: 4>, None), 'Graphic3d_TypeOfLimit_MaxViewDumpSizeY': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeY: 5>, None), 'Graphic3d_TypeOfLimit_MaxCombinedTextureUnits': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxCombinedTextureUnits: 6>, None), 'Graphic3d_TypeOfLimit_MaxMsaa': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxMsaa: 7>, None), 'Graphic3d_TypeOfLimit_HasPBR': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasPBR: 8>, None), 'Graphic3d_TypeOfLimit_HasRayTracing': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracing: 9>, None), 'Graphic3d_TypeOfLimit_HasRayTracingTextures': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingTextures: 10>, None), 'Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling: 11>, None), 'Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic: 12>, None), 'Graphic3d_TypeOfLimit_HasSRGB': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasSRGB: 13>, None), 'Graphic3d_TypeOfLimit_HasBlendedOit': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOit: 14>, None), 'Graphic3d_TypeOfLimit_HasBlendedOitMsaa': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOitMsaa: 15>, None), 'Graphic3d_TypeOfLimit_HasFlatShading': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasFlatShading: 16>, None), 'Graphic3d_TypeOfLimit_HasMeshEdges': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasMeshEdges: 17>, None), 'Graphic3d_TypeOfLimit_IsWorkaroundFBO': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_IsWorkaroundFBO: 18>, None), 'Graphic3d_TypeOfLimit_NB': (<Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_NB: 19>, None)}
+    __members__: dict # value = {'Graphic3d_TypeOfLimit_MaxNbLights': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbLights: 0>, 'Graphic3d_TypeOfLimit_MaxNbClipPlanes': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbClipPlanes: 1>, 'Graphic3d_TypeOfLimit_MaxNbViews': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbViews: 2>, 'Graphic3d_TypeOfLimit_MaxTextureSize': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxTextureSize: 3>, 'Graphic3d_TypeOfLimit_MaxViewDumpSizeX': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeX: 4>, 'Graphic3d_TypeOfLimit_MaxViewDumpSizeY': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeY: 5>, 'Graphic3d_TypeOfLimit_MaxCombinedTextureUnits': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxCombinedTextureUnits: 6>, 'Graphic3d_TypeOfLimit_MaxMsaa': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxMsaa: 7>, 'Graphic3d_TypeOfLimit_HasPBR': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasPBR: 8>, 'Graphic3d_TypeOfLimit_HasRayTracing': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracing: 9>, 'Graphic3d_TypeOfLimit_HasRayTracingTextures': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingTextures: 10>, 'Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling: 11>, 'Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic: 12>, 'Graphic3d_TypeOfLimit_HasSRGB': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasSRGB: 13>, 'Graphic3d_TypeOfLimit_HasBlendedOit': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOit: 14>, 'Graphic3d_TypeOfLimit_HasBlendedOitMsaa': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOitMsaa: 15>, 'Graphic3d_TypeOfLimit_HasFlatShading': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasFlatShading: 16>, 'Graphic3d_TypeOfLimit_HasMeshEdges': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasMeshEdges: 17>, 'Graphic3d_TypeOfLimit_IsWorkaroundFBO': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_IsWorkaroundFBO: 18>, 'Graphic3d_TypeOfLimit_NB': <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_NB: 19>}
     pass
 class Graphic3d_TypeOfMaterial():
     """
@@ -17997,20 +19568,28 @@ class Graphic3d_TypeOfMaterial():
 
       Graphic3d_MATERIAL_PHYSIC
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_MATERIAL_ASPECT: OCP.Graphic3d.Graphic3d_TypeOfMaterial # value = Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_ASPECT
-    Graphic3d_MATERIAL_PHYSIC: OCP.Graphic3d.Graphic3d_TypeOfMaterial # value = Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_PHYSIC
-    __entries: dict # value = {'Graphic3d_MATERIAL_ASPECT': (Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_ASPECT, None), 'Graphic3d_MATERIAL_PHYSIC': (Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_PHYSIC, None)}
-    __members__: dict # value = {'Graphic3d_MATERIAL_ASPECT': Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_ASPECT, 'Graphic3d_MATERIAL_PHYSIC': Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_PHYSIC}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_MATERIAL_ASPECT: OCP.Graphic3d.Graphic3d_TypeOfMaterial # value = <Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_ASPECT: 0>
+    Graphic3d_MATERIAL_PHYSIC: OCP.Graphic3d.Graphic3d_TypeOfMaterial # value = <Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_PHYSIC: 1>
+    __entries: dict # value = {'Graphic3d_MATERIAL_ASPECT': (<Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_ASPECT: 0>, None), 'Graphic3d_MATERIAL_PHYSIC': (<Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_PHYSIC: 1>, None)}
+    __members__: dict # value = {'Graphic3d_MATERIAL_ASPECT': <Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_ASPECT: 0>, 'Graphic3d_MATERIAL_PHYSIC': <Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_PHYSIC: 1>}
     pass
 class Graphic3d_TypeOfPrimitiveArray():
     """
@@ -18046,32 +19625,40 @@ class Graphic3d_TypeOfPrimitiveArray():
 
       Graphic3d_TOPA_POLYGONS
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOPA_LINES_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINES_ADJACENCY
-    Graphic3d_TOPA_LINE_STRIP_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINE_STRIP_ADJACENCY
-    Graphic3d_TOPA_POINTS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POINTS
-    Graphic3d_TOPA_POLYGONS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYGONS
-    Graphic3d_TOPA_POLYLINES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYLINES
-    Graphic3d_TOPA_QUADRANGLES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLES
-    Graphic3d_TOPA_QUADRANGLESTRIPS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLESTRIPS
-    Graphic3d_TOPA_SEGMENTS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_SEGMENTS
-    Graphic3d_TOPA_TRIANGLEFANS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLEFANS
-    Graphic3d_TOPA_TRIANGLES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES
-    Graphic3d_TOPA_TRIANGLESTRIPS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLESTRIPS
-    Graphic3d_TOPA_TRIANGLES_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES_ADJACENCY
-    Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY
-    Graphic3d_TOPA_UNDEFINED: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_UNDEFINED
-    __entries: dict # value = {'Graphic3d_TOPA_UNDEFINED': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_UNDEFINED, None), 'Graphic3d_TOPA_POINTS': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POINTS, None), 'Graphic3d_TOPA_SEGMENTS': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_SEGMENTS, None), 'Graphic3d_TOPA_POLYLINES': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYLINES, None), 'Graphic3d_TOPA_TRIANGLES': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES, None), 'Graphic3d_TOPA_TRIANGLESTRIPS': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLESTRIPS, None), 'Graphic3d_TOPA_TRIANGLEFANS': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLEFANS, None), 'Graphic3d_TOPA_LINES_ADJACENCY': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINES_ADJACENCY, None), 'Graphic3d_TOPA_LINE_STRIP_ADJACENCY': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINE_STRIP_ADJACENCY, None), 'Graphic3d_TOPA_TRIANGLES_ADJACENCY': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES_ADJACENCY, None), 'Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY, None), 'Graphic3d_TOPA_QUADRANGLES': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLES, None), 'Graphic3d_TOPA_QUADRANGLESTRIPS': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLESTRIPS, None), 'Graphic3d_TOPA_POLYGONS': (Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYGONS, None)}
-    __members__: dict # value = {'Graphic3d_TOPA_UNDEFINED': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_UNDEFINED, 'Graphic3d_TOPA_POINTS': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POINTS, 'Graphic3d_TOPA_SEGMENTS': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_SEGMENTS, 'Graphic3d_TOPA_POLYLINES': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYLINES, 'Graphic3d_TOPA_TRIANGLES': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES, 'Graphic3d_TOPA_TRIANGLESTRIPS': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLESTRIPS, 'Graphic3d_TOPA_TRIANGLEFANS': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLEFANS, 'Graphic3d_TOPA_LINES_ADJACENCY': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINES_ADJACENCY, 'Graphic3d_TOPA_LINE_STRIP_ADJACENCY': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINE_STRIP_ADJACENCY, 'Graphic3d_TOPA_TRIANGLES_ADJACENCY': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES_ADJACENCY, 'Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY, 'Graphic3d_TOPA_QUADRANGLES': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLES, 'Graphic3d_TOPA_QUADRANGLESTRIPS': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLESTRIPS, 'Graphic3d_TOPA_POLYGONS': Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYGONS}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOPA_LINES_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINES_ADJACENCY: 7>
+    Graphic3d_TOPA_LINE_STRIP_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINE_STRIP_ADJACENCY: 8>
+    Graphic3d_TOPA_POINTS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POINTS: 1>
+    Graphic3d_TOPA_POLYGONS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYGONS: 13>
+    Graphic3d_TOPA_POLYLINES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYLINES: 3>
+    Graphic3d_TOPA_QUADRANGLES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLES: 11>
+    Graphic3d_TOPA_QUADRANGLESTRIPS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLESTRIPS: 12>
+    Graphic3d_TOPA_SEGMENTS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_SEGMENTS: 2>
+    Graphic3d_TOPA_TRIANGLEFANS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLEFANS: 6>
+    Graphic3d_TOPA_TRIANGLES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES: 4>
+    Graphic3d_TOPA_TRIANGLESTRIPS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLESTRIPS: 5>
+    Graphic3d_TOPA_TRIANGLES_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES_ADJACENCY: 9>
+    Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY: 10>
+    Graphic3d_TOPA_UNDEFINED: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_UNDEFINED: 0>
+    __entries: dict # value = {'Graphic3d_TOPA_UNDEFINED': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_UNDEFINED: 0>, None), 'Graphic3d_TOPA_POINTS': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POINTS: 1>, None), 'Graphic3d_TOPA_SEGMENTS': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_SEGMENTS: 2>, None), 'Graphic3d_TOPA_POLYLINES': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYLINES: 3>, None), 'Graphic3d_TOPA_TRIANGLES': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES: 4>, None), 'Graphic3d_TOPA_TRIANGLESTRIPS': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLESTRIPS: 5>, None), 'Graphic3d_TOPA_TRIANGLEFANS': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLEFANS: 6>, None), 'Graphic3d_TOPA_LINES_ADJACENCY': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINES_ADJACENCY: 7>, None), 'Graphic3d_TOPA_LINE_STRIP_ADJACENCY': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINE_STRIP_ADJACENCY: 8>, None), 'Graphic3d_TOPA_TRIANGLES_ADJACENCY': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES_ADJACENCY: 9>, None), 'Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY: 10>, None), 'Graphic3d_TOPA_QUADRANGLES': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLES: 11>, None), 'Graphic3d_TOPA_QUADRANGLESTRIPS': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLESTRIPS: 12>, None), 'Graphic3d_TOPA_POLYGONS': (<Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYGONS: 13>, None)}
+    __members__: dict # value = {'Graphic3d_TOPA_UNDEFINED': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_UNDEFINED: 0>, 'Graphic3d_TOPA_POINTS': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POINTS: 1>, 'Graphic3d_TOPA_SEGMENTS': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_SEGMENTS: 2>, 'Graphic3d_TOPA_POLYLINES': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYLINES: 3>, 'Graphic3d_TOPA_TRIANGLES': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES: 4>, 'Graphic3d_TOPA_TRIANGLESTRIPS': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLESTRIPS: 5>, 'Graphic3d_TOPA_TRIANGLEFANS': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLEFANS: 6>, 'Graphic3d_TOPA_LINES_ADJACENCY': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINES_ADJACENCY: 7>, 'Graphic3d_TOPA_LINE_STRIP_ADJACENCY': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINE_STRIP_ADJACENCY: 8>, 'Graphic3d_TOPA_TRIANGLES_ADJACENCY': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES_ADJACENCY: 9>, 'Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY: 10>, 'Graphic3d_TOPA_QUADRANGLES': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLES: 11>, 'Graphic3d_TOPA_QUADRANGLESTRIPS': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLESTRIPS: 12>, 'Graphic3d_TOPA_POLYGONS': <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYGONS: 13>}
     pass
 class Graphic3d_TypeOfReflection():
     """
@@ -18087,22 +19674,30 @@ class Graphic3d_TypeOfReflection():
 
       Graphic3d_TOR_EMISSION
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOR_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = Graphic3d_TypeOfReflection.Graphic3d_TOR_AMBIENT
-    Graphic3d_TOR_DIFFUSE: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = Graphic3d_TypeOfReflection.Graphic3d_TOR_DIFFUSE
-    Graphic3d_TOR_EMISSION: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = Graphic3d_TypeOfReflection.Graphic3d_TOR_EMISSION
-    Graphic3d_TOR_SPECULAR: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = Graphic3d_TypeOfReflection.Graphic3d_TOR_SPECULAR
-    __entries: dict # value = {'Graphic3d_TOR_AMBIENT': (Graphic3d_TypeOfReflection.Graphic3d_TOR_AMBIENT, None), 'Graphic3d_TOR_DIFFUSE': (Graphic3d_TypeOfReflection.Graphic3d_TOR_DIFFUSE, None), 'Graphic3d_TOR_SPECULAR': (Graphic3d_TypeOfReflection.Graphic3d_TOR_SPECULAR, None), 'Graphic3d_TOR_EMISSION': (Graphic3d_TypeOfReflection.Graphic3d_TOR_EMISSION, None)}
-    __members__: dict # value = {'Graphic3d_TOR_AMBIENT': Graphic3d_TypeOfReflection.Graphic3d_TOR_AMBIENT, 'Graphic3d_TOR_DIFFUSE': Graphic3d_TypeOfReflection.Graphic3d_TOR_DIFFUSE, 'Graphic3d_TOR_SPECULAR': Graphic3d_TypeOfReflection.Graphic3d_TOR_SPECULAR, 'Graphic3d_TOR_EMISSION': Graphic3d_TypeOfReflection.Graphic3d_TOR_EMISSION}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOR_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = <Graphic3d_TypeOfReflection.Graphic3d_TOR_AMBIENT: 0>
+    Graphic3d_TOR_DIFFUSE: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = <Graphic3d_TypeOfReflection.Graphic3d_TOR_DIFFUSE: 1>
+    Graphic3d_TOR_EMISSION: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = <Graphic3d_TypeOfReflection.Graphic3d_TOR_EMISSION: 3>
+    Graphic3d_TOR_SPECULAR: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = <Graphic3d_TypeOfReflection.Graphic3d_TOR_SPECULAR: 2>
+    __entries: dict # value = {'Graphic3d_TOR_AMBIENT': (<Graphic3d_TypeOfReflection.Graphic3d_TOR_AMBIENT: 0>, None), 'Graphic3d_TOR_DIFFUSE': (<Graphic3d_TypeOfReflection.Graphic3d_TOR_DIFFUSE: 1>, None), 'Graphic3d_TOR_SPECULAR': (<Graphic3d_TypeOfReflection.Graphic3d_TOR_SPECULAR: 2>, None), 'Graphic3d_TOR_EMISSION': (<Graphic3d_TypeOfReflection.Graphic3d_TOR_EMISSION: 3>, None)}
+    __members__: dict # value = {'Graphic3d_TOR_AMBIENT': <Graphic3d_TypeOfReflection.Graphic3d_TOR_AMBIENT: 0>, 'Graphic3d_TOR_DIFFUSE': <Graphic3d_TypeOfReflection.Graphic3d_TOR_DIFFUSE: 1>, 'Graphic3d_TOR_SPECULAR': <Graphic3d_TypeOfReflection.Graphic3d_TOR_SPECULAR: 2>, 'Graphic3d_TOR_EMISSION': <Graphic3d_TypeOfReflection.Graphic3d_TOR_EMISSION: 3>}
     pass
 class Graphic3d_TypeOfShaderObject():
     """
@@ -18122,24 +19717,32 @@ class Graphic3d_TypeOfShaderObject():
 
       Graphic3d_TOS_COMPUTE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOS_COMPUTE: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_COMPUTE
-    Graphic3d_TOS_FRAGMENT: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_FRAGMENT
-    Graphic3d_TOS_GEOMETRY: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_GEOMETRY
-    Graphic3d_TOS_TESS_CONTROL: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_CONTROL
-    Graphic3d_TOS_TESS_EVALUATION: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_EVALUATION
-    Graphic3d_TOS_VERTEX: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_VERTEX
-    __entries: dict # value = {'Graphic3d_TOS_VERTEX': (Graphic3d_TypeOfShaderObject.Graphic3d_TOS_VERTEX, None), 'Graphic3d_TOS_TESS_CONTROL': (Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_CONTROL, None), 'Graphic3d_TOS_TESS_EVALUATION': (Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_EVALUATION, None), 'Graphic3d_TOS_GEOMETRY': (Graphic3d_TypeOfShaderObject.Graphic3d_TOS_GEOMETRY, None), 'Graphic3d_TOS_FRAGMENT': (Graphic3d_TypeOfShaderObject.Graphic3d_TOS_FRAGMENT, None), 'Graphic3d_TOS_COMPUTE': (Graphic3d_TypeOfShaderObject.Graphic3d_TOS_COMPUTE, None)}
-    __members__: dict # value = {'Graphic3d_TOS_VERTEX': Graphic3d_TypeOfShaderObject.Graphic3d_TOS_VERTEX, 'Graphic3d_TOS_TESS_CONTROL': Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_CONTROL, 'Graphic3d_TOS_TESS_EVALUATION': Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_EVALUATION, 'Graphic3d_TOS_GEOMETRY': Graphic3d_TypeOfShaderObject.Graphic3d_TOS_GEOMETRY, 'Graphic3d_TOS_FRAGMENT': Graphic3d_TypeOfShaderObject.Graphic3d_TOS_FRAGMENT, 'Graphic3d_TOS_COMPUTE': Graphic3d_TypeOfShaderObject.Graphic3d_TOS_COMPUTE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOS_COMPUTE: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_COMPUTE: 32>
+    Graphic3d_TOS_FRAGMENT: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_FRAGMENT: 16>
+    Graphic3d_TOS_GEOMETRY: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_GEOMETRY: 8>
+    Graphic3d_TOS_TESS_CONTROL: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_CONTROL: 2>
+    Graphic3d_TOS_TESS_EVALUATION: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_EVALUATION: 4>
+    Graphic3d_TOS_VERTEX: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_VERTEX: 1>
+    __entries: dict # value = {'Graphic3d_TOS_VERTEX': (<Graphic3d_TypeOfShaderObject.Graphic3d_TOS_VERTEX: 1>, None), 'Graphic3d_TOS_TESS_CONTROL': (<Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_CONTROL: 2>, None), 'Graphic3d_TOS_TESS_EVALUATION': (<Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_EVALUATION: 4>, None), 'Graphic3d_TOS_GEOMETRY': (<Graphic3d_TypeOfShaderObject.Graphic3d_TOS_GEOMETRY: 8>, None), 'Graphic3d_TOS_FRAGMENT': (<Graphic3d_TypeOfShaderObject.Graphic3d_TOS_FRAGMENT: 16>, None), 'Graphic3d_TOS_COMPUTE': (<Graphic3d_TypeOfShaderObject.Graphic3d_TOS_COMPUTE: 32>, None)}
+    __members__: dict # value = {'Graphic3d_TOS_VERTEX': <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_VERTEX: 1>, 'Graphic3d_TOS_TESS_CONTROL': <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_CONTROL: 2>, 'Graphic3d_TOS_TESS_EVALUATION': <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_EVALUATION: 4>, 'Graphic3d_TOS_GEOMETRY': <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_GEOMETRY: 8>, 'Graphic3d_TOS_FRAGMENT': <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_FRAGMENT: 16>, 'Graphic3d_TOS_COMPUTE': <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_COMPUTE: 32>}
     pass
 class Graphic3d_TypeOfShadingModel():
     """
@@ -18157,6 +19760,10 @@ class Graphic3d_TypeOfShadingModel():
 
       Graphic3d_TOSM_FRAGMENT
 
+      Graphic3d_TOSM_PBR
+
+      Graphic3d_TOSM_PBR_FACET
+
       Graphic3d_TOSM_NONE
 
       V3d_COLOR
@@ -18167,28 +19774,38 @@ class Graphic3d_TypeOfShadingModel():
 
       V3d_PHONG
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOSM_DEFAULT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_DEFAULT
-    Graphic3d_TOSM_FACET: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET
-    Graphic3d_TOSM_FRAGMENT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT
-    Graphic3d_TOSM_NONE: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT
-    Graphic3d_TOSM_UNLIT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT
-    Graphic3d_TOSM_VERTEX: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX
-    V3d_COLOR: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT
-    V3d_FLAT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET
-    V3d_GOURAUD: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX
-    V3d_PHONG: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT
-    __entries: dict # value = {'Graphic3d_TOSM_DEFAULT': (Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_DEFAULT, None), 'Graphic3d_TOSM_UNLIT': (Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT, None), 'Graphic3d_TOSM_FACET': (Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET, None), 'Graphic3d_TOSM_VERTEX': (Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX, None), 'Graphic3d_TOSM_FRAGMENT': (Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT, None), 'Graphic3d_TOSM_NONE': (Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT, None), 'V3d_COLOR': (Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT, None), 'V3d_FLAT': (Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET, None), 'V3d_GOURAUD': (Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX, None), 'V3d_PHONG': (Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT, None)}
-    __members__: dict # value = {'Graphic3d_TOSM_DEFAULT': Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_DEFAULT, 'Graphic3d_TOSM_UNLIT': Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT, 'Graphic3d_TOSM_FACET': Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET, 'Graphic3d_TOSM_VERTEX': Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX, 'Graphic3d_TOSM_FRAGMENT': Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT, 'Graphic3d_TOSM_NONE': Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT, 'V3d_COLOR': Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT, 'V3d_FLAT': Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET, 'V3d_GOURAUD': Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX, 'V3d_PHONG': Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOSM_DEFAULT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_DEFAULT: -1>
+    Graphic3d_TOSM_FACET: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET: 1>
+    Graphic3d_TOSM_FRAGMENT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT: 3>
+    Graphic3d_TOSM_NONE: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>
+    Graphic3d_TOSM_PBR: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_PBR: 4>
+    Graphic3d_TOSM_PBR_FACET: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_PBR_FACET: 5>
+    Graphic3d_TOSM_UNLIT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>
+    Graphic3d_TOSM_VERTEX: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX: 2>
+    V3d_COLOR: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>
+    V3d_FLAT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET: 1>
+    V3d_GOURAUD: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX: 2>
+    V3d_PHONG: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT: 3>
+    __entries: dict # value = {'Graphic3d_TOSM_DEFAULT': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_DEFAULT: -1>, None), 'Graphic3d_TOSM_UNLIT': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>, None), 'Graphic3d_TOSM_FACET': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET: 1>, None), 'Graphic3d_TOSM_VERTEX': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX: 2>, None), 'Graphic3d_TOSM_FRAGMENT': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT: 3>, None), 'Graphic3d_TOSM_PBR': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_PBR: 4>, None), 'Graphic3d_TOSM_PBR_FACET': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_PBR_FACET: 5>, None), 'Graphic3d_TOSM_NONE': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>, None), 'V3d_COLOR': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>, None), 'V3d_FLAT': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET: 1>, None), 'V3d_GOURAUD': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX: 2>, None), 'V3d_PHONG': (<Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT: 3>, None)}
+    __members__: dict # value = {'Graphic3d_TOSM_DEFAULT': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_DEFAULT: -1>, 'Graphic3d_TOSM_UNLIT': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>, 'Graphic3d_TOSM_FACET': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET: 1>, 'Graphic3d_TOSM_VERTEX': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX: 2>, 'Graphic3d_TOSM_FRAGMENT': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT: 3>, 'Graphic3d_TOSM_PBR': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_PBR: 4>, 'Graphic3d_TOSM_PBR_FACET': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_PBR_FACET: 5>, 'Graphic3d_TOSM_NONE': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>, 'V3d_COLOR': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>, 'V3d_FLAT': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET: 1>, 'V3d_GOURAUD': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX: 2>, 'V3d_PHONG': <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT: 3>}
     pass
 class Graphic3d_TypeOfStructure():
     """
@@ -18204,22 +19821,30 @@ class Graphic3d_TypeOfStructure():
 
       Graphic3d_TOS_ALL
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOS_ALL: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = Graphic3d_TypeOfStructure.Graphic3d_TOS_ALL
-    Graphic3d_TOS_COMPUTED: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = Graphic3d_TypeOfStructure.Graphic3d_TOS_COMPUTED
-    Graphic3d_TOS_SHADING: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = Graphic3d_TypeOfStructure.Graphic3d_TOS_SHADING
-    Graphic3d_TOS_WIREFRAME: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = Graphic3d_TypeOfStructure.Graphic3d_TOS_WIREFRAME
-    __entries: dict # value = {'Graphic3d_TOS_WIREFRAME': (Graphic3d_TypeOfStructure.Graphic3d_TOS_WIREFRAME, None), 'Graphic3d_TOS_SHADING': (Graphic3d_TypeOfStructure.Graphic3d_TOS_SHADING, None), 'Graphic3d_TOS_COMPUTED': (Graphic3d_TypeOfStructure.Graphic3d_TOS_COMPUTED, None), 'Graphic3d_TOS_ALL': (Graphic3d_TypeOfStructure.Graphic3d_TOS_ALL, None)}
-    __members__: dict # value = {'Graphic3d_TOS_WIREFRAME': Graphic3d_TypeOfStructure.Graphic3d_TOS_WIREFRAME, 'Graphic3d_TOS_SHADING': Graphic3d_TypeOfStructure.Graphic3d_TOS_SHADING, 'Graphic3d_TOS_COMPUTED': Graphic3d_TypeOfStructure.Graphic3d_TOS_COMPUTED, 'Graphic3d_TOS_ALL': Graphic3d_TypeOfStructure.Graphic3d_TOS_ALL}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOS_ALL: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = <Graphic3d_TypeOfStructure.Graphic3d_TOS_ALL: 3>
+    Graphic3d_TOS_COMPUTED: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = <Graphic3d_TypeOfStructure.Graphic3d_TOS_COMPUTED: 2>
+    Graphic3d_TOS_SHADING: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = <Graphic3d_TypeOfStructure.Graphic3d_TOS_SHADING: 1>
+    Graphic3d_TOS_WIREFRAME: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = <Graphic3d_TypeOfStructure.Graphic3d_TOS_WIREFRAME: 0>
+    __entries: dict # value = {'Graphic3d_TOS_WIREFRAME': (<Graphic3d_TypeOfStructure.Graphic3d_TOS_WIREFRAME: 0>, None), 'Graphic3d_TOS_SHADING': (<Graphic3d_TypeOfStructure.Graphic3d_TOS_SHADING: 1>, None), 'Graphic3d_TOS_COMPUTED': (<Graphic3d_TypeOfStructure.Graphic3d_TOS_COMPUTED: 2>, None), 'Graphic3d_TOS_ALL': (<Graphic3d_TypeOfStructure.Graphic3d_TOS_ALL: 3>, None)}
+    __members__: dict # value = {'Graphic3d_TOS_WIREFRAME': <Graphic3d_TypeOfStructure.Graphic3d_TOS_WIREFRAME: 0>, 'Graphic3d_TOS_SHADING': <Graphic3d_TypeOfStructure.Graphic3d_TOS_SHADING: 1>, 'Graphic3d_TOS_COMPUTED': <Graphic3d_TypeOfStructure.Graphic3d_TOS_COMPUTED: 2>, 'Graphic3d_TOS_ALL': <Graphic3d_TypeOfStructure.Graphic3d_TOS_ALL: 3>}
     pass
 class Graphic3d_TypeOfTexture():
     """
@@ -18235,22 +19860,30 @@ class Graphic3d_TypeOfTexture():
 
       Graphic3d_TOT_CUBEMAP
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOT_1D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = Graphic3d_TypeOfTexture.Graphic3d_TOT_1D
-    Graphic3d_TOT_2D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = Graphic3d_TypeOfTexture.Graphic3d_TOT_2D
-    Graphic3d_TOT_2D_MIPMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP
-    Graphic3d_TOT_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP
-    __entries: dict # value = {'Graphic3d_TOT_1D': (Graphic3d_TypeOfTexture.Graphic3d_TOT_1D, None), 'Graphic3d_TOT_2D': (Graphic3d_TypeOfTexture.Graphic3d_TOT_2D, None), 'Graphic3d_TOT_2D_MIPMAP': (Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP, None), 'Graphic3d_TOT_CUBEMAP': (Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP, None)}
-    __members__: dict # value = {'Graphic3d_TOT_1D': Graphic3d_TypeOfTexture.Graphic3d_TOT_1D, 'Graphic3d_TOT_2D': Graphic3d_TypeOfTexture.Graphic3d_TOT_2D, 'Graphic3d_TOT_2D_MIPMAP': Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP, 'Graphic3d_TOT_CUBEMAP': Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOT_1D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_1D: 0>
+    Graphic3d_TOT_2D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D: 1>
+    Graphic3d_TOT_2D_MIPMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 2>
+    Graphic3d_TOT_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP: 3>
+    __entries: dict # value = {'Graphic3d_TOT_1D': (<Graphic3d_TypeOfTexture.Graphic3d_TOT_1D: 0>, None), 'Graphic3d_TOT_2D': (<Graphic3d_TypeOfTexture.Graphic3d_TOT_2D: 1>, None), 'Graphic3d_TOT_2D_MIPMAP': (<Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 2>, None), 'Graphic3d_TOT_CUBEMAP': (<Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP: 3>, None)}
+    __members__: dict # value = {'Graphic3d_TOT_1D': <Graphic3d_TypeOfTexture.Graphic3d_TOT_1D: 0>, 'Graphic3d_TOT_2D': <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D: 1>, 'Graphic3d_TOT_2D_MIPMAP': <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 2>, 'Graphic3d_TOT_CUBEMAP': <Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP: 3>}
     pass
 class Graphic3d_TypeOfTextureFilter():
     """
@@ -18264,21 +19897,29 @@ class Graphic3d_TypeOfTextureFilter():
 
       Graphic3d_TOTF_TRILINEAR
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOTF_BILINEAR: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_BILINEAR
-    Graphic3d_TOTF_NEAREST: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_NEAREST
-    Graphic3d_TOTF_TRILINEAR: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_TRILINEAR
-    __entries: dict # value = {'Graphic3d_TOTF_NEAREST': (Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_NEAREST, None), 'Graphic3d_TOTF_BILINEAR': (Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_BILINEAR, None), 'Graphic3d_TOTF_TRILINEAR': (Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_TRILINEAR, None)}
-    __members__: dict # value = {'Graphic3d_TOTF_NEAREST': Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_NEAREST, 'Graphic3d_TOTF_BILINEAR': Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_BILINEAR, 'Graphic3d_TOTF_TRILINEAR': Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_TRILINEAR}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOTF_BILINEAR: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = <Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_BILINEAR: 1>
+    Graphic3d_TOTF_NEAREST: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = <Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_NEAREST: 0>
+    Graphic3d_TOTF_TRILINEAR: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = <Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_TRILINEAR: 2>
+    __entries: dict # value = {'Graphic3d_TOTF_NEAREST': (<Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_NEAREST: 0>, None), 'Graphic3d_TOTF_BILINEAR': (<Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_BILINEAR: 1>, None), 'Graphic3d_TOTF_TRILINEAR': (<Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_TRILINEAR: 2>, None)}
+    __members__: dict # value = {'Graphic3d_TOTF_NEAREST': <Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_NEAREST: 0>, 'Graphic3d_TOTF_BILINEAR': <Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_BILINEAR: 1>, 'Graphic3d_TOTF_TRILINEAR': <Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_TRILINEAR: 2>}
     pass
 class Graphic3d_TypeOfTextureMode():
     """
@@ -18296,23 +19937,31 @@ class Graphic3d_TypeOfTextureMode():
 
       Graphic3d_TOTM_SPRITE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOTM_EYE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_EYE
-    Graphic3d_TOTM_MANUAL: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_MANUAL
-    Graphic3d_TOTM_OBJECT: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_OBJECT
-    Graphic3d_TOTM_SPHERE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPHERE
-    Graphic3d_TOTM_SPRITE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPRITE
-    __entries: dict # value = {'Graphic3d_TOTM_OBJECT': (Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_OBJECT, None), 'Graphic3d_TOTM_SPHERE': (Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPHERE, None), 'Graphic3d_TOTM_EYE': (Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_EYE, None), 'Graphic3d_TOTM_MANUAL': (Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_MANUAL, None), 'Graphic3d_TOTM_SPRITE': (Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPRITE, None)}
-    __members__: dict # value = {'Graphic3d_TOTM_OBJECT': Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_OBJECT, 'Graphic3d_TOTM_SPHERE': Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPHERE, 'Graphic3d_TOTM_EYE': Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_EYE, 'Graphic3d_TOTM_MANUAL': Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_MANUAL, 'Graphic3d_TOTM_SPRITE': Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPRITE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOTM_EYE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_EYE: 2>
+    Graphic3d_TOTM_MANUAL: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_MANUAL: 3>
+    Graphic3d_TOTM_OBJECT: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_OBJECT: 0>
+    Graphic3d_TOTM_SPHERE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPHERE: 1>
+    Graphic3d_TOTM_SPRITE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPRITE: 4>
+    __entries: dict # value = {'Graphic3d_TOTM_OBJECT': (<Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_OBJECT: 0>, None), 'Graphic3d_TOTM_SPHERE': (<Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPHERE: 1>, None), 'Graphic3d_TOTM_EYE': (<Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_EYE: 2>, None), 'Graphic3d_TOTM_MANUAL': (<Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_MANUAL: 3>, None), 'Graphic3d_TOTM_SPRITE': (<Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPRITE: 4>, None)}
+    __members__: dict # value = {'Graphic3d_TOTM_OBJECT': <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_OBJECT: 0>, 'Graphic3d_TOTM_SPHERE': <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPHERE: 1>, 'Graphic3d_TOTM_EYE': <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_EYE: 2>, 'Graphic3d_TOTM_MANUAL': <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_MANUAL: 3>, 'Graphic3d_TOTM_SPRITE': <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPRITE: 4>}
     pass
 class Graphic3d_TypeOfVisualization():
     """
@@ -18324,20 +19973,28 @@ class Graphic3d_TypeOfVisualization():
 
       Graphic3d_TOV_SHADING
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_TOV_SHADING: OCP.Graphic3d.Graphic3d_TypeOfVisualization # value = Graphic3d_TypeOfVisualization.Graphic3d_TOV_SHADING
-    Graphic3d_TOV_WIREFRAME: OCP.Graphic3d.Graphic3d_TypeOfVisualization # value = Graphic3d_TypeOfVisualization.Graphic3d_TOV_WIREFRAME
-    __entries: dict # value = {'Graphic3d_TOV_WIREFRAME': (Graphic3d_TypeOfVisualization.Graphic3d_TOV_WIREFRAME, None), 'Graphic3d_TOV_SHADING': (Graphic3d_TypeOfVisualization.Graphic3d_TOV_SHADING, None)}
-    __members__: dict # value = {'Graphic3d_TOV_WIREFRAME': Graphic3d_TypeOfVisualization.Graphic3d_TOV_WIREFRAME, 'Graphic3d_TOV_SHADING': Graphic3d_TypeOfVisualization.Graphic3d_TOV_SHADING}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_TOV_SHADING: OCP.Graphic3d.Graphic3d_TypeOfVisualization # value = <Graphic3d_TypeOfVisualization.Graphic3d_TOV_SHADING: 1>
+    Graphic3d_TOV_WIREFRAME: OCP.Graphic3d.Graphic3d_TypeOfVisualization # value = <Graphic3d_TypeOfVisualization.Graphic3d_TOV_WIREFRAME: 0>
+    __entries: dict # value = {'Graphic3d_TOV_WIREFRAME': (<Graphic3d_TypeOfVisualization.Graphic3d_TOV_WIREFRAME: 0>, None), 'Graphic3d_TOV_SHADING': (<Graphic3d_TypeOfVisualization.Graphic3d_TOV_SHADING: 1>, None)}
+    __members__: dict # value = {'Graphic3d_TOV_WIREFRAME': <Graphic3d_TypeOfVisualization.Graphic3d_TOV_WIREFRAME: 0>, 'Graphic3d_TOV_SHADING': <Graphic3d_TypeOfVisualization.Graphic3d_TOV_SHADING: 1>}
     pass
 class Graphic3d_ValueInterface():
     """
@@ -18470,6 +20127,7 @@ class Graphic3d_ValidatedCubeMapOrder():
     """
     Graphic3d_ValidatedCubeMapOrder contains completely valid order object. The only way to create this class except copy constructor is 'Validated' method of Graphic3d_CubeMapOrder. This class can initialize Graphic3d_CubeMapOrder. It is supposed to be used in case of necessity of completely valid order (in function argument as example). It helps to automate order's valid checks.Graphic3d_ValidatedCubeMapOrder contains completely valid order object. The only way to create this class except copy constructor is 'Validated' method of Graphic3d_CubeMapOrder. This class can initialize Graphic3d_CubeMapOrder. It is supposed to be used in case of necessity of completely valid order (in function argument as example). It helps to automate order's valid checks.
     """
+    def __init__(self,theOther : Graphic3d_ValidatedCubeMapOrder) -> None: ...
     pass
 class Graphic3d_UniformFloat(Graphic3d_ValueInterface):
     """
@@ -18502,6 +20160,10 @@ class Graphic3d_Vec2():
     def Dot(self,theOther : Graphic3d_Vec2) -> float: 
         """
         Computes the dot product.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def GetData(self) -> float: 
         """
@@ -18541,14 +20203,14 @@ class Graphic3d_Vec2():
         Compute per-component summary.
         """
     @overload
-    def __imul__(self,theRight : Graphic3d_Vec2) -> Graphic3d_Vec2: 
+    def __imul__(self,theFactor : float) -> Graphic3d_Vec2: 
         """
         Compute per-component multiplication.
 
         Compute per-component multiplication by scale factor.
         """
     @overload
-    def __imul__(self,theFactor : float) -> Graphic3d_Vec2: ...
+    def __imul__(self,theRight : Graphic3d_Vec2) -> Graphic3d_Vec2: ...
     @overload
     def __init__(self,theXY : float) -> None: ...
     @overload
@@ -18560,14 +20222,14 @@ class Graphic3d_Vec2():
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theInvFactor : float) -> Graphic3d_Vec2: 
+    def __itruediv__(self,theRight : Graphic3d_Vec2) -> Graphic3d_Vec2: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec2) -> Graphic3d_Vec2: ...
+    def __itruediv__(self,theInvFactor : float) -> Graphic3d_Vec2: ...
     def __mul__(self,theFactor : float) -> Graphic3d_Vec2: 
         """
         Compute per-component multiplication by scale factor.
@@ -18647,6 +20309,10 @@ class Graphic3d_Vec2b():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> str: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -18694,9 +20360,9 @@ class Graphic3d_Vec2b():
     @overload
     def __imul__(self,theFactor : str) -> Graphic3d_Vec2b: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theXY : str) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theX : str,theY : str) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec2b) -> Graphic3d_Vec2b: 
@@ -18704,14 +20370,14 @@ class Graphic3d_Vec2b():
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec2b) -> Graphic3d_Vec2b: 
+    def __itruediv__(self,theInvFactor : str) -> Graphic3d_Vec2b: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theInvFactor : str) -> Graphic3d_Vec2b: ...
+    def __itruediv__(self,theRight : Graphic3d_Vec2b) -> Graphic3d_Vec2b: ...
     def __mul__(self,theFactor : str) -> Graphic3d_Vec2b: 
         """
         Compute per-component multiplication by scale factor.
@@ -18791,6 +20457,10 @@ class Graphic3d_Vec2d():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> float: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -18829,20 +20499,20 @@ class Graphic3d_Vec2d():
         Compute per-component summary.
         """
     @overload
-    def __imul__(self,theFactor : float) -> Graphic3d_Vec2d: 
+    def __imul__(self,theRight : Graphic3d_Vec2d) -> Graphic3d_Vec2d: 
         """
         Compute per-component multiplication.
 
         Compute per-component multiplication by scale factor.
         """
     @overload
-    def __imul__(self,theRight : Graphic3d_Vec2d) -> Graphic3d_Vec2d: ...
+    def __imul__(self,theFactor : float) -> Graphic3d_Vec2d: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theX : float,theY : float) -> None: ...
     @overload
     def __init__(self,theXY : float) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec2d) -> Graphic3d_Vec2d: 
         """
         Compute per-component subtraction.
@@ -18934,6 +20604,10 @@ class Graphic3d_Vec2i():
     def Dot(self,theOther : Graphic3d_Vec2i) -> int: 
         """
         Computes the dot product.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def GetData(self) -> int: 
         """
@@ -19079,6 +20753,10 @@ class Graphic3d_Vec2ub():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> int: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -19117,33 +20795,33 @@ class Graphic3d_Vec2ub():
         Compute per-component summary.
         """
     @overload
-    def __imul__(self,theRight : Graphic3d_Vec2ub) -> Graphic3d_Vec2ub: 
+    def __imul__(self,theFactor : int) -> Graphic3d_Vec2ub: 
         """
         Compute per-component multiplication.
 
         Compute per-component multiplication by scale factor.
         """
     @overload
-    def __imul__(self,theFactor : int) -> Graphic3d_Vec2ub: ...
+    def __imul__(self,theRight : Graphic3d_Vec2ub) -> Graphic3d_Vec2ub: ...
+    @overload
+    def __init__(self,theX : int,theY : int) -> None: ...
     @overload
     def __init__(self,theXY : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theX : int,theY : int) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec2ub) -> Graphic3d_Vec2ub: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theInvFactor : int) -> Graphic3d_Vec2ub: 
+    def __itruediv__(self,theRight : Graphic3d_Vec2ub) -> Graphic3d_Vec2ub: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec2ub) -> Graphic3d_Vec2ub: ...
+    def __itruediv__(self,theInvFactor : int) -> Graphic3d_Vec2ub: ...
     def __mul__(self,theFactor : int) -> Graphic3d_Vec2ub: 
         """
         Compute per-component multiplication by scale factor.
@@ -19233,6 +20911,10 @@ class Graphic3d_Vec3():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> float: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -19272,14 +20954,14 @@ class Graphic3d_Vec3():
         Normalize the vector.
         """
     @overload
-    def SetValues(self,theVec2 : Graphic3d_Vec2,theZ : float) -> None: 
+    def SetValues(self,theX : float,theY : float,theZ : float) -> None: 
         """
         Assign new values to the vector.
 
         Assign new values to the vector.
         """
     @overload
-    def SetValues(self,theX : float,theY : float,theZ : float) -> None: ...
+    def SetValues(self,theVec2 : Graphic3d_Vec2,theZ : float) -> None: ...
     def SquareModulus(self) -> float: 
         """
         Computes the square of vector modulus (magnitude, length). This method may be used for performance tricks.
@@ -19298,26 +20980,26 @@ class Graphic3d_Vec3():
     @overload
     def __imul__(self,theFactor : float) -> Graphic3d_Vec3: ...
     @overload
-    def __init__(self,theX : float,theY : float,theZ : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theVec2 : Graphic3d_Vec2,theZ : float=0.0) -> None: ...
-    @overload
     def __init__(self,theValue : float) -> None: ...
+    @overload
+    def __init__(self,theX : float,theY : float,theZ : float) -> None: ...
+    @overload
+    def __init__(self,theVec2 : Graphic3d_Vec2,theZ : float=0.0) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec3) -> Graphic3d_Vec3: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theInvFactor : float) -> Graphic3d_Vec3: 
+    def __itruediv__(self,theRight : Graphic3d_Vec3) -> Graphic3d_Vec3: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec3) -> Graphic3d_Vec3: ...
+    def __itruediv__(self,theInvFactor : float) -> Graphic3d_Vec3: ...
     def __mul__(self,theFactor : float) -> Graphic3d_Vec3: 
         """
         Compute per-component multiplication by scale factor.
@@ -19471,6 +21153,10 @@ class Graphic3d_Vec3b():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> str: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -19527,20 +21213,20 @@ class Graphic3d_Vec3b():
         Compute per-component summary.
         """
     @overload
-    def __imul__(self,theRight : Graphic3d_Vec3b) -> Graphic3d_Vec3b: 
+    def __imul__(self,theFactor : str) -> Graphic3d_Vec3b: 
         """
         Compute per-component multiplication.
 
         Compute per-component multiplication by scale factor.
         """
     @overload
-    def __imul__(self,theFactor : str) -> Graphic3d_Vec3b: ...
+    def __imul__(self,theRight : Graphic3d_Vec3b) -> Graphic3d_Vec3b: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theValue : str) -> None: ...
     @overload
     def __init__(self,theX : str,theY : str,theZ : str) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     @overload
     def __init__(self,theVec2 : Graphic3d_Vec2b,theZ : str='\x00') -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec3b) -> Graphic3d_Vec3b: 
@@ -19548,14 +21234,14 @@ class Graphic3d_Vec3b():
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec3b) -> Graphic3d_Vec3b: 
+    def __itruediv__(self,theInvFactor : str) -> Graphic3d_Vec3b: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theInvFactor : str) -> Graphic3d_Vec3b: ...
+    def __itruediv__(self,theRight : Graphic3d_Vec3b) -> Graphic3d_Vec3b: ...
     def __mul__(self,theFactor : str) -> Graphic3d_Vec3b: 
         """
         Compute per-component multiplication by scale factor.
@@ -19709,6 +21395,10 @@ class Graphic3d_Vec3i():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> int: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -19774,26 +21464,26 @@ class Graphic3d_Vec3i():
     @overload
     def __imul__(self,theRight : Graphic3d_Vec3i) -> Graphic3d_Vec3i: ...
     @overload
-    def __init__(self,theValue : int) -> None: ...
+    def __init__(self,theX : int,theY : int,theZ : int) -> None: ...
     @overload
     def __init__(self,theVec2 : Graphic3d_Vec2i,theZ : int=0) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theValue : int) -> None: ...
     @overload
-    def __init__(self,theX : int,theY : int,theZ : int) -> None: ...
+    def __init__(self) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec3i) -> Graphic3d_Vec3i: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theInvFactor : int) -> Graphic3d_Vec3i: 
+    def __itruediv__(self,theRight : Graphic3d_Vec3i) -> Graphic3d_Vec3i: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec3i) -> Graphic3d_Vec3i: ...
+    def __itruediv__(self,theInvFactor : int) -> Graphic3d_Vec3i: ...
     def __mul__(self,theFactor : int) -> Graphic3d_Vec3i: 
         """
         Compute per-component multiplication by scale factor.
@@ -19947,6 +21637,10 @@ class Graphic3d_Vec3ub():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> int: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -19986,14 +21680,14 @@ class Graphic3d_Vec3ub():
         Normalize the vector.
         """
     @overload
-    def SetValues(self,theVec2 : Graphic3d_Vec2ub,theZ : int) -> None: 
+    def SetValues(self,theX : int,theY : int,theZ : int) -> None: 
         """
         Assign new values to the vector.
 
         Assign new values to the vector.
         """
     @overload
-    def SetValues(self,theX : int,theY : int,theZ : int) -> None: ...
+    def SetValues(self,theVec2 : Graphic3d_Vec2ub,theZ : int) -> None: ...
     def SquareModulus(self) -> int: 
         """
         Computes the square of vector modulus (magnitude, length). This method may be used for performance tricks.
@@ -20012,13 +21706,13 @@ class Graphic3d_Vec3ub():
     @overload
     def __imul__(self,theFactor : int) -> Graphic3d_Vec3ub: ...
     @overload
-    def __init__(self,theVec2 : Graphic3d_Vec2ub,theZ : int=0) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theX : int,theY : int,theZ : int) -> None: ...
     @overload
     def __init__(self,theValue : int) -> None: ...
     @overload
-    def __init__(self,theX : int,theY : int,theZ : int) -> None: ...
+    def __init__(self,theVec2 : Graphic3d_Vec2ub,theZ : int=0) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec3ub) -> Graphic3d_Vec3ub: 
         """
         Compute per-component subtraction.
@@ -20165,6 +21859,10 @@ class Graphic3d_Vec4():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> float: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -20187,14 +21885,14 @@ class Graphic3d_Vec4():
         Compute per-component multiplication.
         """
     @overload
-    def SetValues(self,theX : float,theY : float,theZ : float,theW : float) -> None: 
+    def SetValues(self,theVec3 : Graphic3d_Vec3,theW : float) -> None: 
         """
         Assign new values to the vector.
 
         Assign new values as 3-component vector and a 4-th value.
         """
     @overload
-    def SetValues(self,theVec3 : Graphic3d_Vec3,theW : float) -> None: ...
+    def SetValues(self,theX : float,theY : float,theZ : float,theW : float) -> None: ...
     def __iadd__(self,theAdd : Graphic3d_Vec4) -> Graphic3d_Vec4: 
         """
         Compute per-component summary.
@@ -20209,15 +21907,15 @@ class Graphic3d_Vec4():
     @overload
     def __imul__(self,theFactor : float) -> Graphic3d_Vec4: ...
     @overload
-    def __init__(self,theVec3 : Graphic3d_Vec3,theW : float=0.0) -> None: ...
+    def __init__(self,theValue : float) -> None: ...
     @overload
     def __init__(self,theX : float,theY : float,theZ : float,theW : float) -> None: ...
     @overload
     def __init__(self,theVec2 : Graphic3d_Vec2) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theVec3 : Graphic3d_Vec3,theW : float=0.0) -> None: ...
     @overload
-    def __init__(self,theValue : float) -> None: ...
+    def __init__(self) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec4) -> Graphic3d_Vec4: 
         """
         Compute per-component subtraction.
@@ -20496,6 +22194,10 @@ class Graphic3d_Vec4b():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> str: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -20540,13 +22242,13 @@ class Graphic3d_Vec4b():
     @overload
     def __imul__(self,theFactor : str) -> Graphic3d_Vec4b: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theVec3 : Graphic3d_Vec3b,theW : str='\x00') -> None: ...
+    @overload
+    def __init__(self,theVec2 : Graphic3d_Vec2b) -> None: ...
     @overload
     def __init__(self,theX : str,theY : str,theZ : str,theW : str) -> None: ...
     @overload
-    def __init__(self,theVec2 : Graphic3d_Vec2b) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theValue : str) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec4b) -> Graphic3d_Vec4b: 
@@ -20827,6 +22529,10 @@ class Graphic3d_Vec4d():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> float: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -20849,14 +22555,14 @@ class Graphic3d_Vec4d():
         Compute per-component multiplication.
         """
     @overload
-    def SetValues(self,theVec3 : OCP.SelectMgr.SelectMgr_Vec3,theW : float) -> None: 
+    def SetValues(self,theX : float,theY : float,theZ : float,theW : float) -> None: 
         """
         Assign new values to the vector.
 
         Assign new values as 3-component vector and a 4-th value.
         """
     @overload
-    def SetValues(self,theX : float,theY : float,theZ : float,theW : float) -> None: ...
+    def SetValues(self,theVec3 : OCP.SelectMgr.SelectMgr_Vec3,theW : float) -> None: ...
     def __iadd__(self,theAdd : Graphic3d_Vec4d) -> Graphic3d_Vec4d: 
         """
         Compute per-component summary.
@@ -20871,28 +22577,28 @@ class Graphic3d_Vec4d():
     @overload
     def __imul__(self,theRight : Graphic3d_Vec4d) -> Graphic3d_Vec4d: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theVec3 : OCP.SelectMgr.SelectMgr_Vec3,theW : float=0.0) -> None: ...
     @overload
-    def __init__(self,theX : float,theY : float,theZ : float,theW : float) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theValue : float) -> None: ...
     @overload
     def __init__(self,theVec2 : Graphic3d_Vec2d) -> None: ...
     @overload
-    def __init__(self,theValue : float) -> None: ...
+    def __init__(self,theX : float,theY : float,theZ : float,theW : float) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec4d) -> Graphic3d_Vec4d: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec4d) -> Graphic3d_Vec4d: 
+    def __itruediv__(self,theInvFactor : float) -> Graphic3d_Vec4d: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theInvFactor : float) -> Graphic3d_Vec4d: ...
+    def __itruediv__(self,theRight : Graphic3d_Vec4d) -> Graphic3d_Vec4d: ...
     def __mul__(self,theFactor : float) -> Graphic3d_Vec4d: 
         """
         Compute per-component multiplication.
@@ -21158,6 +22864,10 @@ class Graphic3d_Vec4i():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> int: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -21202,15 +22912,15 @@ class Graphic3d_Vec4i():
     @overload
     def __imul__(self,theRight : Graphic3d_Vec4i) -> Graphic3d_Vec4i: ...
     @overload
+    def __init__(self,theVec3 : Graphic3d_Vec3i,theW : int=0) -> None: ...
+    @overload
+    def __init__(self,theValue : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theX : int,theY : int,theZ : int,theW : int) -> None: ...
     @overload
     def __init__(self,theVec2 : Graphic3d_Vec2i) -> None: ...
-    @overload
-    def __init__(self,theValue : int) -> None: ...
-    @overload
-    def __init__(self,theVec3 : Graphic3d_Vec3i,theW : int=0) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec4i) -> Graphic3d_Vec4i: 
         """
         Compute per-component subtraction.
@@ -21489,6 +23199,10 @@ class Graphic3d_Vec4ub():
         """
         Computes the dot product.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetData(self) -> int: 
         """
         Raw access to the data (for OpenGL exchange).
@@ -21524,24 +23238,24 @@ class Graphic3d_Vec4ub():
         Compute per-component summary.
         """
     @overload
-    def __imul__(self,theFactor : int) -> Graphic3d_Vec4ub: 
+    def __imul__(self,theRight : Graphic3d_Vec4ub) -> Graphic3d_Vec4ub: 
         """
         Compute per-component multiplication.
 
         Compute per-component multiplication.
         """
     @overload
-    def __imul__(self,theRight : Graphic3d_Vec4ub) -> Graphic3d_Vec4ub: ...
+    def __imul__(self,theFactor : int) -> Graphic3d_Vec4ub: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theValue : int) -> None: ...
+    @overload
+    def __init__(self,theVec2 : Graphic3d_Vec2ub) -> None: ...
     @overload
     def __init__(self,theX : int,theY : int,theZ : int,theW : int) -> None: ...
     @overload
     def __init__(self,theVec3 : Graphic3d_Vec3ub,theW : int=0) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theVec2 : Graphic3d_Vec2ub) -> None: ...
-    @overload
-    def __init__(self,theValue : int) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec4ub) -> Graphic3d_Vec4ub: 
         """
         Compute per-component subtraction.
@@ -21825,6 +23539,10 @@ class Graphic3d_Vertex():
         """
         Returns the distance between two points.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def SetCoord(self,theX : float,theY : float,theZ : float) -> None: 
         """
         Modifies the coordinates.
@@ -21844,11 +23562,9 @@ class Graphic3d_Vertex():
         Returns the Z coordinate.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,thePoint : Graphic3d_Vertex) -> None: ...
-    @overload
     def __init__(self,theX : float,theY : float,theZ : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Graphic3d_VerticalTextAlignment():
     """
@@ -21864,22 +23580,30 @@ class Graphic3d_VerticalTextAlignment():
 
       Graphic3d_VTA_TOPFIRSTLINE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_VTA_BOTTOM: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM
-    Graphic3d_VTA_CENTER: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = Graphic3d_VerticalTextAlignment.Graphic3d_VTA_CENTER
-    Graphic3d_VTA_TOP: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOP
-    Graphic3d_VTA_TOPFIRSTLINE: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOPFIRSTLINE
-    __entries: dict # value = {'Graphic3d_VTA_BOTTOM': (Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM, None), 'Graphic3d_VTA_CENTER': (Graphic3d_VerticalTextAlignment.Graphic3d_VTA_CENTER, None), 'Graphic3d_VTA_TOP': (Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOP, None), 'Graphic3d_VTA_TOPFIRSTLINE': (Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOPFIRSTLINE, None)}
-    __members__: dict # value = {'Graphic3d_VTA_BOTTOM': Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM, 'Graphic3d_VTA_CENTER': Graphic3d_VerticalTextAlignment.Graphic3d_VTA_CENTER, 'Graphic3d_VTA_TOP': Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOP, 'Graphic3d_VTA_TOPFIRSTLINE': Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOPFIRSTLINE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_VTA_BOTTOM: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM: 0>
+    Graphic3d_VTA_CENTER: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_CENTER: 1>
+    Graphic3d_VTA_TOP: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOP: 2>
+    Graphic3d_VTA_TOPFIRSTLINE: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOPFIRSTLINE: 3>
+    __entries: dict # value = {'Graphic3d_VTA_BOTTOM': (<Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM: 0>, None), 'Graphic3d_VTA_CENTER': (<Graphic3d_VerticalTextAlignment.Graphic3d_VTA_CENTER: 1>, None), 'Graphic3d_VTA_TOP': (<Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOP: 2>, None), 'Graphic3d_VTA_TOPFIRSTLINE': (<Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOPFIRSTLINE: 3>, None)}
+    __members__: dict # value = {'Graphic3d_VTA_BOTTOM': <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM: 0>, 'Graphic3d_VTA_CENTER': <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_CENTER: 1>, 'Graphic3d_VTA_TOP': <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOP: 2>, 'Graphic3d_VTA_TOPFIRSTLINE': <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOPFIRSTLINE: 3>}
     pass
 class Graphic3d_ViewAffinity(OCP.Standard.Standard_Transient):
     """
@@ -21892,6 +23616,10 @@ class Graphic3d_ViewAffinity(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -21928,14 +23656,14 @@ class Graphic3d_ViewAffinity(OCP.Standard.Standard_Transient):
         Return visibility flag.
         """
     @overload
-    def SetVisible(self,theIsVisible : bool) -> None: 
+    def SetVisible(self,theViewId : int,theIsVisible : bool) -> None: 
         """
         Setup visibility flag for all views.
 
         Setup visibility flag.
         """
     @overload
-    def SetVisible(self,theViewId : int,theIsVisible : bool) -> None: ...
+    def SetVisible(self,theIsVisible : bool) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -21956,15 +23684,19 @@ class Graphic3d_WorldViewProjState():
     """
     Helper class for keeping reference on world-view-projection state. Helpful for synchronizing state of WVP dependent data structures.
     """
+    def DumpJson(self,theOStream : io.BytesIO,arg2 : int) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     @overload
-    def Initialize(self,theCamera : OCP.Standard.Standard_Transient=None) -> None: 
+    def Initialize(self,theProjectionState : int,theWorldViewState : int,theCamera : OCP.Standard.Standard_Transient=None) -> None: 
         """
         Initialize world view projection state.
 
         Initialize world view projection state.
         """
     @overload
-    def Initialize(self,theProjectionState : int,theWorldViewState : int,theCamera : OCP.Standard.Standard_Transient=None) -> None: ...
+    def Initialize(self,theCamera : OCP.Standard.Standard_Transient=None) -> None: ...
     def IsChanged(self,theState : Graphic3d_WorldViewProjState) -> bool: 
         """
         Compare with other world view projection state.
@@ -21994,9 +23726,9 @@ class Graphic3d_WorldViewProjState():
         Returns world view state counter.
         """
     @overload
-    def __init__(self,theProjectionState : int,theWorldViewState : int,theCamera : OCP.Standard.Standard_Transient=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theProjectionState : int,theWorldViewState : int,theCamera : OCP.Standard.Standard_Transient=None) -> None: ...
     pass
 class Graphic3d_ZLayerSetting():
     """
@@ -22012,22 +23744,30 @@ class Graphic3d_ZLayerSetting():
 
       Graphic3d_ZLayerDepthOffset
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Graphic3d_ZLayerDepthClear: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthClear
-    Graphic3d_ZLayerDepthOffset: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthOffset
-    Graphic3d_ZLayerDepthTest: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthTest
-    Graphic3d_ZLayerDepthWrite: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthWrite
-    __entries: dict # value = {'Graphic3d_ZLayerDepthTest': (Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthTest, None), 'Graphic3d_ZLayerDepthWrite': (Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthWrite, None), 'Graphic3d_ZLayerDepthClear': (Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthClear, None), 'Graphic3d_ZLayerDepthOffset': (Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthOffset, None)}
-    __members__: dict # value = {'Graphic3d_ZLayerDepthTest': Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthTest, 'Graphic3d_ZLayerDepthWrite': Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthWrite, 'Graphic3d_ZLayerDepthClear': Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthClear, 'Graphic3d_ZLayerDepthOffset': Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthOffset}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_ZLayerDepthClear: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthClear: 4>
+    Graphic3d_ZLayerDepthOffset: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthOffset: 8>
+    Graphic3d_ZLayerDepthTest: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthTest: 1>
+    Graphic3d_ZLayerDepthWrite: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthWrite: 2>
+    __entries: dict # value = {'Graphic3d_ZLayerDepthTest': (<Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthTest: 1>, None), 'Graphic3d_ZLayerDepthWrite': (<Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthWrite: 2>, None), 'Graphic3d_ZLayerDepthClear': (<Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthClear: 4>, None), 'Graphic3d_ZLayerDepthOffset': (<Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthOffset: 8>, None)}
+    __members__: dict # value = {'Graphic3d_ZLayerDepthTest': <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthTest: 1>, 'Graphic3d_ZLayerDepthWrite': <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthWrite: 2>, 'Graphic3d_ZLayerDepthClear': <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthClear: 4>, 'Graphic3d_ZLayerDepthOffset': <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthOffset: 8>}
     pass
 class Graphic3d_ZLayerSettings():
     """
@@ -22048,6 +23788,10 @@ class Graphic3d_ZLayerSettings():
     def DisableSetting(self,theSetting : Graphic3d_ZLayerSetting) -> None: 
         """
         Disables theSetting
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def EnableSetting(self,theSetting : Graphic3d_ZLayerSetting) -> None: 
         """
@@ -22085,7 +23829,7 @@ class Graphic3d_ZLayerSettings():
         """
         Return the origin of all objects within the layer.
         """
-    def OriginTransformation(self) -> OCP.Geom.Geom_Transformation: 
+    def OriginTransformation(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return the transformation to the origin.
         """
@@ -22175,14 +23919,14 @@ class Graphic3d_ZLayerSettings():
         """
     def __init__(self) -> None: ...
     pass
-Graphic3d_ASPECT_FILL_AREA: OCP.Graphic3d.Graphic3d_GroupAspect # value = Graphic3d_GroupAspect.Graphic3d_ASPECT_FILL_AREA
-Graphic3d_ASPECT_LINE: OCP.Graphic3d.Graphic3d_GroupAspect # value = Graphic3d_GroupAspect.Graphic3d_ASPECT_LINE
-Graphic3d_ASPECT_MARKER: OCP.Graphic3d.Graphic3d_GroupAspect # value = Graphic3d_GroupAspect.Graphic3d_ASPECT_MARKER
-Graphic3d_ASPECT_TEXT: OCP.Graphic3d.Graphic3d_GroupAspect # value = Graphic3d_GroupAspect.Graphic3d_ASPECT_TEXT
-Graphic3d_AlphaMode_Blend: OCP.Graphic3d.Graphic3d_AlphaMode # value = Graphic3d_AlphaMode.Graphic3d_AlphaMode_Blend
-Graphic3d_AlphaMode_BlendAuto: OCP.Graphic3d.Graphic3d_AlphaMode # value = Graphic3d_AlphaMode.Graphic3d_AlphaMode_BlendAuto
-Graphic3d_AlphaMode_Mask: OCP.Graphic3d.Graphic3d_AlphaMode # value = Graphic3d_AlphaMode.Graphic3d_AlphaMode_Mask
-Graphic3d_AlphaMode_Opaque: OCP.Graphic3d.Graphic3d_AlphaMode # value = Graphic3d_AlphaMode.Graphic3d_AlphaMode_Opaque
+Graphic3d_ASPECT_FILL_AREA: OCP.Graphic3d.Graphic3d_GroupAspect # value = <Graphic3d_GroupAspect.Graphic3d_ASPECT_FILL_AREA: 3>
+Graphic3d_ASPECT_LINE: OCP.Graphic3d.Graphic3d_GroupAspect # value = <Graphic3d_GroupAspect.Graphic3d_ASPECT_LINE: 0>
+Graphic3d_ASPECT_MARKER: OCP.Graphic3d.Graphic3d_GroupAspect # value = <Graphic3d_GroupAspect.Graphic3d_ASPECT_MARKER: 2>
+Graphic3d_ASPECT_TEXT: OCP.Graphic3d.Graphic3d_GroupAspect # value = <Graphic3d_GroupAspect.Graphic3d_ASPECT_TEXT: 1>
+Graphic3d_AlphaMode_Blend: OCP.Graphic3d.Graphic3d_AlphaMode # value = <Graphic3d_AlphaMode.Graphic3d_AlphaMode_Blend: 2>
+Graphic3d_AlphaMode_BlendAuto: OCP.Graphic3d.Graphic3d_AlphaMode # value = <Graphic3d_AlphaMode.Graphic3d_AlphaMode_BlendAuto: -1>
+Graphic3d_AlphaMode_Mask: OCP.Graphic3d.Graphic3d_AlphaMode # value = <Graphic3d_AlphaMode.Graphic3d_AlphaMode_Mask: 1>
+Graphic3d_AlphaMode_Opaque: OCP.Graphic3d.Graphic3d_AlphaMode # value = <Graphic3d_AlphaMode.Graphic3d_AlphaMode_Opaque: 0>
 Graphic3d_ArrayFlags_AttribsDeinterleaved = 64
 Graphic3d_ArrayFlags_AttribsMutable = 32
 Graphic3d_ArrayFlags_BoundColor = 16
@@ -22191,295 +23935,359 @@ Graphic3d_ArrayFlags_None = 0
 Graphic3d_ArrayFlags_VertexColor = 2
 Graphic3d_ArrayFlags_VertexNormal = 1
 Graphic3d_ArrayFlags_VertexTexel = 4
-Graphic3d_BT_Depth: OCP.Graphic3d.Graphic3d_BufferType # value = Graphic3d_BufferType.Graphic3d_BT_Depth
-Graphic3d_BT_RGB: OCP.Graphic3d.Graphic3d_BufferType # value = Graphic3d_BufferType.Graphic3d_BT_RGB
-Graphic3d_BT_RGBA: OCP.Graphic3d.Graphic3d_BufferType # value = Graphic3d_BufferType.Graphic3d_BT_RGBA
-Graphic3d_BT_RGB_RayTraceHdrLeft: OCP.Graphic3d.Graphic3d_BufferType # value = Graphic3d_BufferType.Graphic3d_BT_RGB_RayTraceHdrLeft
-Graphic3d_CMS_NEG_X: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_X
-Graphic3d_CMS_NEG_Y: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Y
-Graphic3d_CMS_NEG_Z: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Z
-Graphic3d_CMS_POS_X: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_POS_X
-Graphic3d_CMS_POS_Y: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Y
-Graphic3d_CMS_POS_Z: OCP.Graphic3d.Graphic3d_CubeMapSide # value = Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Z
-Graphic3d_CappingFlags_None: OCP.Graphic3d.Graphic3d_CappingFlags # value = Graphic3d_CappingFlags.Graphic3d_CappingFlags_None
-Graphic3d_CappingFlags_ObjectAspect: OCP.Graphic3d.Graphic3d_CappingFlags # value = Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectAspect
-Graphic3d_CappingFlags_ObjectMaterial: OCP.Graphic3d.Graphic3d_CappingFlags # value = Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectMaterial
-Graphic3d_CappingFlags_ObjectShader: OCP.Graphic3d.Graphic3d_CappingFlags # value = Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectShader
-Graphic3d_CappingFlags_ObjectTexture: OCP.Graphic3d.Graphic3d_CappingFlags # value = Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectTexture
-Graphic3d_ClipState_In: OCP.Graphic3d.Graphic3d_ClipState # value = Graphic3d_ClipState.Graphic3d_ClipState_In
-Graphic3d_ClipState_On: OCP.Graphic3d.Graphic3d_ClipState # value = Graphic3d_ClipState.Graphic3d_ClipState_On
-Graphic3d_ClipState_Out: OCP.Graphic3d.Graphic3d_ClipState # value = Graphic3d_ClipState.Graphic3d_ClipState_Out
-Graphic3d_DiagnosticInfo_Basic: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Basic
-Graphic3d_DiagnosticInfo_Complete: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Complete
-Graphic3d_DiagnosticInfo_Device: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Device
-Graphic3d_DiagnosticInfo_Extensions: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Extensions
-Graphic3d_DiagnosticInfo_FrameBuffer: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_FrameBuffer
-Graphic3d_DiagnosticInfo_Limits: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Limits
-Graphic3d_DiagnosticInfo_Memory: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Memory
-Graphic3d_DiagnosticInfo_NativePlatform: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_NativePlatform
-Graphic3d_DiagnosticInfo_Short: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Short
-Graphic3d_FM_CONDUCTOR: OCP.Graphic3d.Graphic3d_FresnelModel # value = Graphic3d_FresnelModel.Graphic3d_FM_CONDUCTOR
-Graphic3d_FM_CONSTANT: OCP.Graphic3d.Graphic3d_FresnelModel # value = Graphic3d_FresnelModel.Graphic3d_FM_CONSTANT
-Graphic3d_FM_DIELECTRIC: OCP.Graphic3d.Graphic3d_FresnelModel # value = Graphic3d_FresnelModel.Graphic3d_FM_DIELECTRIC
-Graphic3d_FM_SCHLICK: OCP.Graphic3d.Graphic3d_FresnelModel # value = Graphic3d_FresnelModel.Graphic3d_FM_SCHLICK
-Graphic3d_FrameStatsCounter_EstimatedBytesFbos: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesFbos
-Graphic3d_FrameStatsCounter_EstimatedBytesGeom: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesGeom
-Graphic3d_FrameStatsCounter_EstimatedBytesTextures: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesTextures
-Graphic3d_FrameStatsCounter_NB = 15
-Graphic3d_FrameStatsCounter_NbElemsFillNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillNotCulled
-Graphic3d_FrameStatsCounter_NbElemsLineNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineNotCulled
-Graphic3d_FrameStatsCounter_NbElemsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsNotCulled
-Graphic3d_FrameStatsCounter_NbElemsPointNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointNotCulled
-Graphic3d_FrameStatsCounter_NbElemsTextNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextNotCulled
-Graphic3d_FrameStatsCounter_NbGroupsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsNotCulled
-Graphic3d_FrameStatsCounter_NbLayers: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayers
-Graphic3d_FrameStatsCounter_NbLayersNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersNotCulled
-Graphic3d_FrameStatsCounter_NbPointsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsNotCulled
-Graphic3d_FrameStatsCounter_NbStructs: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructs
-Graphic3d_FrameStatsCounter_NbStructsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsNotCulled
-Graphic3d_FrameStatsCounter_NbTrianglesNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesNotCulled
-Graphic3d_FrameStatsTimer_CpuCulling: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuCulling
-Graphic3d_FrameStatsTimer_CpuDynamics: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuDynamics
-Graphic3d_FrameStatsTimer_CpuFrame: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuFrame
-Graphic3d_FrameStatsTimer_CpuPicking: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuPicking
-Graphic3d_FrameStatsTimer_ElapsedFrame: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_ElapsedFrame
+Graphic3d_BT_Depth: OCP.Graphic3d.Graphic3d_BufferType # value = <Graphic3d_BufferType.Graphic3d_BT_Depth: 2>
+Graphic3d_BT_RGB: OCP.Graphic3d.Graphic3d_BufferType # value = <Graphic3d_BufferType.Graphic3d_BT_RGB: 0>
+Graphic3d_BT_RGBA: OCP.Graphic3d.Graphic3d_BufferType # value = <Graphic3d_BufferType.Graphic3d_BT_RGBA: 1>
+Graphic3d_BT_RGB_RayTraceHdrLeft: OCP.Graphic3d.Graphic3d_BufferType # value = <Graphic3d_BufferType.Graphic3d_BT_RGB_RayTraceHdrLeft: 3>
+Graphic3d_BT_Red: OCP.Graphic3d.Graphic3d_BufferType # value = <Graphic3d_BufferType.Graphic3d_BT_Red: 4>
+Graphic3d_CMS_NEG_X: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_X: 1>
+Graphic3d_CMS_NEG_Y: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Y: 3>
+Graphic3d_CMS_NEG_Z: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_NEG_Z: 5>
+Graphic3d_CMS_POS_X: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_POS_X: 0>
+Graphic3d_CMS_POS_Y: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Y: 2>
+Graphic3d_CMS_POS_Z: OCP.Graphic3d.Graphic3d_CubeMapSide # value = <Graphic3d_CubeMapSide.Graphic3d_CMS_POS_Z: 4>
+Graphic3d_CappingFlags_None: OCP.Graphic3d.Graphic3d_CappingFlags # value = <Graphic3d_CappingFlags.Graphic3d_CappingFlags_None: 0>
+Graphic3d_CappingFlags_ObjectAspect: OCP.Graphic3d.Graphic3d_CappingFlags # value = <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectAspect: 11>
+Graphic3d_CappingFlags_ObjectMaterial: OCP.Graphic3d.Graphic3d_CappingFlags # value = <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectMaterial: 1>
+Graphic3d_CappingFlags_ObjectShader: OCP.Graphic3d.Graphic3d_CappingFlags # value = <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectShader: 8>
+Graphic3d_CappingFlags_ObjectTexture: OCP.Graphic3d.Graphic3d_CappingFlags # value = <Graphic3d_CappingFlags.Graphic3d_CappingFlags_ObjectTexture: 2>
+Graphic3d_ClipState_In: OCP.Graphic3d.Graphic3d_ClipState # value = <Graphic3d_ClipState.Graphic3d_ClipState_In: 1>
+Graphic3d_ClipState_On: OCP.Graphic3d.Graphic3d_ClipState # value = <Graphic3d_ClipState.Graphic3d_ClipState_On: 2>
+Graphic3d_ClipState_Out: OCP.Graphic3d.Graphic3d_ClipState # value = <Graphic3d_ClipState.Graphic3d_ClipState_Out: 0>
+Graphic3d_DiagnosticInfo_Basic: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Basic: 31>
+Graphic3d_DiagnosticInfo_Complete: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Complete: 63>
+Graphic3d_DiagnosticInfo_Device: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Device: 1>
+Graphic3d_DiagnosticInfo_Extensions: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Extensions: 32>
+Graphic3d_DiagnosticInfo_FrameBuffer: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_FrameBuffer: 2>
+Graphic3d_DiagnosticInfo_Limits: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Limits: 4>
+Graphic3d_DiagnosticInfo_Memory: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Memory: 8>
+Graphic3d_DiagnosticInfo_NativePlatform: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_NativePlatform: 16>
+Graphic3d_DiagnosticInfo_Short: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Short: 7>
+Graphic3d_FM_CONDUCTOR: OCP.Graphic3d.Graphic3d_FresnelModel # value = <Graphic3d_FresnelModel.Graphic3d_FM_CONDUCTOR: 2>
+Graphic3d_FM_CONSTANT: OCP.Graphic3d.Graphic3d_FresnelModel # value = <Graphic3d_FresnelModel.Graphic3d_FM_CONSTANT: 1>
+Graphic3d_FM_DIELECTRIC: OCP.Graphic3d.Graphic3d_FresnelModel # value = <Graphic3d_FresnelModel.Graphic3d_FM_DIELECTRIC: 3>
+Graphic3d_FM_SCHLICK: OCP.Graphic3d.Graphic3d_FresnelModel # value = <Graphic3d_FresnelModel.Graphic3d_FM_SCHLICK: 0>
+Graphic3d_FrameStatsCounter_EstimatedBytesFbos: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesFbos: 3>
+Graphic3d_FrameStatsCounter_EstimatedBytesGeom: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesGeom: 2>
+Graphic3d_FrameStatsCounter_EstimatedBytesTextures: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_EstimatedBytesTextures: 4>
+Graphic3d_FrameStatsCounter_IMMEDIATE_LOWER = 16
+Graphic3d_FrameStatsCounter_IMMEDIATE_UPPER = 26
+Graphic3d_FrameStatsCounter_NB = 27
+Graphic3d_FrameStatsCounter_NbElemsFillImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillImmediate: 20>
+Graphic3d_FrameStatsCounter_NbElemsFillNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsFillNotCulled: 9>
+Graphic3d_FrameStatsCounter_NbElemsImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsImmediate: 19>
+Graphic3d_FrameStatsCounter_NbElemsLineImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineImmediate: 21>
+Graphic3d_FrameStatsCounter_NbElemsLineNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsLineNotCulled: 10>
+Graphic3d_FrameStatsCounter_NbElemsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsNotCulled: 8>
+Graphic3d_FrameStatsCounter_NbElemsPointImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointImmediate: 22>
+Graphic3d_FrameStatsCounter_NbElemsPointNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsPointNotCulled: 11>
+Graphic3d_FrameStatsCounter_NbElemsTextImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextImmediate: 23>
+Graphic3d_FrameStatsCounter_NbElemsTextNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbElemsTextNotCulled: 12>
+Graphic3d_FrameStatsCounter_NbGroupsImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsImmediate: 18>
+Graphic3d_FrameStatsCounter_NbGroupsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbGroupsNotCulled: 7>
+Graphic3d_FrameStatsCounter_NbLayers: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayers: 0>
+Graphic3d_FrameStatsCounter_NbLayersImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersImmediate: 16>
+Graphic3d_FrameStatsCounter_NbLayersNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLayersNotCulled: 5>
+Graphic3d_FrameStatsCounter_NbLinesImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLinesImmediate: 25>
+Graphic3d_FrameStatsCounter_NbLinesNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbLinesNotCulled: 14>
+Graphic3d_FrameStatsCounter_NbPointsImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsImmediate: 26>
+Graphic3d_FrameStatsCounter_NbPointsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbPointsNotCulled: 15>
+Graphic3d_FrameStatsCounter_NbStructs: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructs: 1>
+Graphic3d_FrameStatsCounter_NbStructsImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsImmediate: 17>
+Graphic3d_FrameStatsCounter_NbStructsNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbStructsNotCulled: 6>
+Graphic3d_FrameStatsCounter_NbTrianglesImmediate: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesImmediate: 24>
+Graphic3d_FrameStatsCounter_NbTrianglesNotCulled: OCP.Graphic3d.Graphic3d_FrameStatsCounter # value = <Graphic3d_FrameStatsCounter.Graphic3d_FrameStatsCounter_NbTrianglesNotCulled: 13>
+Graphic3d_FrameStatsCounter_RENDERED_LOWER = 5
+Graphic3d_FrameStatsCounter_RENDERED_UPPER = 15
+Graphic3d_FrameStatsCounter_SCENE_LOWER = 0
+Graphic3d_FrameStatsCounter_SCENE_UPPER = 4
+Graphic3d_FrameStatsTimer_CpuCulling: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuCulling: 2>
+Graphic3d_FrameStatsTimer_CpuDynamics: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuDynamics: 4>
+Graphic3d_FrameStatsTimer_CpuFrame: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuFrame: 1>
+Graphic3d_FrameStatsTimer_CpuPicking: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_CpuPicking: 3>
+Graphic3d_FrameStatsTimer_ElapsedFrame: OCP.Graphic3d.Graphic3d_FrameStatsTimer # value = <Graphic3d_FrameStatsTimer.Graphic3d_FrameStatsTimer_ElapsedFrame: 0>
 Graphic3d_FrameStatsTimer_NB = 5
-Graphic3d_HTA_CENTER: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_CENTER
-Graphic3d_HTA_LEFT: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT
-Graphic3d_HTA_RIGHT: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_RIGHT
-Graphic3d_LOTA_FAST: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_FAST
-Graphic3d_LOTA_MIDDLE: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_MIDDLE
-Graphic3d_LOTA_OFF: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_OFF
-Graphic3d_LOTA_QUALITY: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_QUALITY
-Graphic3d_MATERIAL_ASPECT: OCP.Graphic3d.Graphic3d_TypeOfMaterial # value = Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_ASPECT
-Graphic3d_MATERIAL_PHYSIC: OCP.Graphic3d.Graphic3d_TypeOfMaterial # value = Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_PHYSIC
-Graphic3d_NOM_ALUMINIUM: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_ALUMINIUM
-Graphic3d_NOM_BRASS: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_BRASS
-Graphic3d_NOM_BRONZE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_BRONZE
-Graphic3d_NOM_CHARCOAL: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_CHARCOAL
-Graphic3d_NOM_CHROME: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_CHROME
-Graphic3d_NOM_COPPER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_COPPER
-Graphic3d_NOM_DEFAULT: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_DEFAULT
-Graphic3d_NOM_DIAMOND: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_DIAMOND
-Graphic3d_NOM_GLASS: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_GLASS
-Graphic3d_NOM_GOLD: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_GOLD
-Graphic3d_NOM_JADE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_JADE
-Graphic3d_NOM_METALIZED: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_METALIZED
-Graphic3d_NOM_NEON_GNC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_NEON_GNC
-Graphic3d_NOM_NEON_PHC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_NEON_PHC
-Graphic3d_NOM_OBSIDIAN: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_OBSIDIAN
-Graphic3d_NOM_PEWTER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_PEWTER
-Graphic3d_NOM_PLASTER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_PLASTER
-Graphic3d_NOM_PLASTIC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_PLASTIC
-Graphic3d_NOM_SATIN: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_SATIN
-Graphic3d_NOM_SHINY_PLASTIC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_SHINY_PLASTIC
-Graphic3d_NOM_SILVER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_SILVER
-Graphic3d_NOM_STEEL: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_STEEL
-Graphic3d_NOM_STONE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_STONE
-Graphic3d_NOM_TRANSPARENT: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_TRANSPARENT
-Graphic3d_NOM_UserDefined: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_UserDefined
-Graphic3d_NOM_WATER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = Graphic3d_NameOfMaterial.Graphic3d_NOM_WATER
-Graphic3d_NOTP_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_UNKNOWN
-Graphic3d_NOTP_XY: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_XY
-Graphic3d_NOTP_YZ: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_YZ
-Graphic3d_NOTP_ZX: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_ZX
-Graphic3d_NOT_1D_ELEVATION: OCP.Graphic3d.Graphic3d_NameOfTexture1D # value = Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_ELEVATION
-Graphic3d_NOT_1D_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexture1D # value = Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_UNKNOWN
-Graphic3d_NOT_2D_ALIENSKIN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALIENSKIN
-Graphic3d_NOT_2D_ALUMINUM: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALUMINUM
-Graphic3d_NOT_2D_BLUEWHITE_PAPER: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUEWHITE_PAPER
-Graphic3d_NOT_2D_BLUE_ROCK: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUE_ROCK
-Graphic3d_NOT_2D_BRUSHED: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BRUSHED
-Graphic3d_NOT_2D_BUBBLES: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUBBLES
-Graphic3d_NOT_2D_BUMP: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUMP
-Graphic3d_NOT_2D_CAST: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CAST
-Graphic3d_NOT_2D_CHESS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHESS
-Graphic3d_NOT_2D_CHIPBD: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHIPBD
-Graphic3d_NOT_2D_CLOUDS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CLOUDS
-Graphic3d_NOT_2D_FLESH: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLESH
-Graphic3d_NOT_2D_FLOOR: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLOOR
-Graphic3d_NOT_2D_GALVNISD: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GALVNISD
-Graphic3d_NOT_2D_GRASS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GRASS
-Graphic3d_NOT_2D_KNURL: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_KNURL
-Graphic3d_NOT_2D_MAPLE: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MAPLE
-Graphic3d_NOT_2D_MARBLE: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MARBLE
-Graphic3d_NOT_2D_MATRA: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MATRA
-Graphic3d_NOT_2D_MOTTLED: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MOTTLED
-Graphic3d_NOT_2D_RAIN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_RAIN
-Graphic3d_NOT_2D_ROCK: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ROCK
-Graphic3d_NOT_2D_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_UNKNOWN
-Graphic3d_NOT_ENV_CLOUDS: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CLOUDS
-Graphic3d_NOT_ENV_CV: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CV
-Graphic3d_NOT_ENV_LINES: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_LINES
-Graphic3d_NOT_ENV_MEDIT: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_MEDIT
-Graphic3d_NOT_ENV_PEARL: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_PEARL
-Graphic3d_NOT_ENV_ROAD: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_ROAD
-Graphic3d_NOT_ENV_SKY1: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY1
-Graphic3d_NOT_ENV_SKY2: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY2
-Graphic3d_NOT_ENV_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_UNKNOWN
-Graphic3d_RM_RASTERIZATION: OCP.Graphic3d.Graphic3d_RenderingMode # value = Graphic3d_RenderingMode.Graphic3d_RM_RASTERIZATION
-Graphic3d_RM_RAYTRACING: OCP.Graphic3d.Graphic3d_RenderingMode # value = Graphic3d_RenderingMode.Graphic3d_RM_RAYTRACING
-Graphic3d_RTM_BLEND_OIT: OCP.Graphic3d.Graphic3d_RenderTransparentMethod # value = Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_OIT
-Graphic3d_RTM_BLEND_UNORDERED: OCP.Graphic3d.Graphic3d_RenderTransparentMethod # value = Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_UNORDERED
-Graphic3d_StereoMode_Anaglyph: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph
-Graphic3d_StereoMode_ChessBoard: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard
-Graphic3d_StereoMode_ColumnInterlaced: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced
-Graphic3d_StereoMode_NB: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_NB
-Graphic3d_StereoMode_OverUnder: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder
-Graphic3d_StereoMode_QuadBuffer: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer
-Graphic3d_StereoMode_RowInterlaced: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced
-Graphic3d_StereoMode_SideBySide: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide
-Graphic3d_StereoMode_SoftPageFlip: OCP.Graphic3d.Graphic3d_StereoMode # value = Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip
-Graphic3d_TMF_2d: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_2d
-Graphic3d_TMF_None: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_None
-Graphic3d_TMF_RotatePers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_RotatePers
-Graphic3d_TMF_TriedronPers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_TriedronPers
-Graphic3d_TMF_ZoomPers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomPers
-Graphic3d_TMF_ZoomRotatePers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomRotatePers
-Graphic3d_TOA_COLOR: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = Graphic3d_TypeOfAttribute.Graphic3d_TOA_COLOR
-Graphic3d_TOA_COMPUTE: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = Graphic3d_TypeOfAnswer.Graphic3d_TOA_COMPUTE
-Graphic3d_TOA_CUSTOM: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = Graphic3d_TypeOfAttribute.Graphic3d_TOA_CUSTOM
-Graphic3d_TOA_NO: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = Graphic3d_TypeOfAnswer.Graphic3d_TOA_NO
-Graphic3d_TOA_NORM: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = Graphic3d_TypeOfAttribute.Graphic3d_TOA_NORM
-Graphic3d_TOA_POS: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = Graphic3d_TypeOfAttribute.Graphic3d_TOA_POS
-Graphic3d_TOA_UV: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = Graphic3d_TypeOfAttribute.Graphic3d_TOA_UV
-Graphic3d_TOA_YES: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = Graphic3d_TypeOfAnswer.Graphic3d_TOA_YES
-Graphic3d_TOBM_AUTOMATIC: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_AUTOMATIC
-Graphic3d_TOBM_DISABLE: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_DISABLE
-Graphic3d_TOBM_FORCE: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_FORCE
-Graphic3d_TOB_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = Graphic3d_TypeOfBackground.Graphic3d_TOB_CUBEMAP
-Graphic3d_TOB_GRADIENT: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = Graphic3d_TypeOfBackground.Graphic3d_TOB_GRADIENT
-Graphic3d_TOB_NONE: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = Graphic3d_TypeOfBackground.Graphic3d_TOB_NONE
-Graphic3d_TOB_TEXTURE: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = Graphic3d_TypeOfBackground.Graphic3d_TOB_TEXTURE
-Graphic3d_TOC_ANCESTOR: OCP.Graphic3d.Graphic3d_TypeOfConnection # value = Graphic3d_TypeOfConnection.Graphic3d_TOC_ANCESTOR
-Graphic3d_TOC_DESCENDANT: OCP.Graphic3d.Graphic3d_TypeOfConnection # value = Graphic3d_TypeOfConnection.Graphic3d_TOC_DESCENDANT
-Graphic3d_TOC_POSTCONCATENATE: OCP.Graphic3d.Graphic3d_TypeOfComposition # value = Graphic3d_TypeOfComposition.Graphic3d_TOC_POSTCONCATENATE
-Graphic3d_TOC_REPLACE: OCP.Graphic3d.Graphic3d_TypeOfComposition # value = Graphic3d_TypeOfComposition.Graphic3d_TOC_REPLACE
-Graphic3d_TOD_FLOAT: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_FLOAT
-Graphic3d_TOD_UINT: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_UINT
-Graphic3d_TOD_USHORT: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_USHORT
-Graphic3d_TOD_VEC2: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_VEC2
-Graphic3d_TOD_VEC3: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_VEC3
-Graphic3d_TOD_VEC4: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_VEC4
-Graphic3d_TOD_VEC4UB: OCP.Graphic3d.Graphic3d_TypeOfData # value = Graphic3d_TypeOfData.Graphic3d_TOD_VEC4UB
-Graphic3d_TOLS_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT
-Graphic3d_TOLS_DIRECTIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL
-Graphic3d_TOLS_POSITIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL
-Graphic3d_TOLS_SPOT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT
-Graphic3d_TOPA_LINES_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINES_ADJACENCY
-Graphic3d_TOPA_LINE_STRIP_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINE_STRIP_ADJACENCY
-Graphic3d_TOPA_POINTS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POINTS
-Graphic3d_TOPA_POLYGONS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYGONS
-Graphic3d_TOPA_POLYLINES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYLINES
-Graphic3d_TOPA_QUADRANGLES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLES
-Graphic3d_TOPA_QUADRANGLESTRIPS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLESTRIPS
-Graphic3d_TOPA_SEGMENTS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_SEGMENTS
-Graphic3d_TOPA_TRIANGLEFANS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLEFANS
-Graphic3d_TOPA_TRIANGLES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES
-Graphic3d_TOPA_TRIANGLESTRIPS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLESTRIPS
-Graphic3d_TOPA_TRIANGLES_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES_ADJACENCY
-Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY
-Graphic3d_TOPA_UNDEFINED: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_UNDEFINED
-Graphic3d_TOR_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = Graphic3d_TypeOfReflection.Graphic3d_TOR_AMBIENT
-Graphic3d_TOR_DIFFUSE: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = Graphic3d_TypeOfReflection.Graphic3d_TOR_DIFFUSE
-Graphic3d_TOR_EMISSION: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = Graphic3d_TypeOfReflection.Graphic3d_TOR_EMISSION
-Graphic3d_TOR_SPECULAR: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = Graphic3d_TypeOfReflection.Graphic3d_TOR_SPECULAR
-Graphic3d_TOSM_DEFAULT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_DEFAULT
-Graphic3d_TOSM_FACET: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET
-Graphic3d_TOSM_FRAGMENT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT
-Graphic3d_TOSM_NONE: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT
-Graphic3d_TOSM_UNLIT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT
-Graphic3d_TOSM_VERTEX: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX
-Graphic3d_TOS_ALL: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = Graphic3d_TypeOfStructure.Graphic3d_TOS_ALL
-Graphic3d_TOS_COMPUTE: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_COMPUTE
-Graphic3d_TOS_COMPUTED: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = Graphic3d_TypeOfStructure.Graphic3d_TOS_COMPUTED
-Graphic3d_TOS_FRAGMENT: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_FRAGMENT
-Graphic3d_TOS_GEOMETRY: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_GEOMETRY
-Graphic3d_TOS_SHADING: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = Graphic3d_TypeOfStructure.Graphic3d_TOS_SHADING
-Graphic3d_TOS_TESS_CONTROL: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_CONTROL
-Graphic3d_TOS_TESS_EVALUATION: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_EVALUATION
-Graphic3d_TOS_VERTEX: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = Graphic3d_TypeOfShaderObject.Graphic3d_TOS_VERTEX
-Graphic3d_TOS_WIREFRAME: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = Graphic3d_TypeOfStructure.Graphic3d_TOS_WIREFRAME
-Graphic3d_TOTF_BILINEAR: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_BILINEAR
-Graphic3d_TOTF_NEAREST: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_NEAREST
-Graphic3d_TOTF_TRILINEAR: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_TRILINEAR
-Graphic3d_TOTM_EYE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_EYE
-Graphic3d_TOTM_MANUAL: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_MANUAL
-Graphic3d_TOTM_OBJECT: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_OBJECT
-Graphic3d_TOTM_SPHERE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPHERE
-Graphic3d_TOTM_SPRITE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPRITE
-Graphic3d_TOT_1D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = Graphic3d_TypeOfTexture.Graphic3d_TOT_1D
-Graphic3d_TOT_2D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = Graphic3d_TypeOfTexture.Graphic3d_TOT_2D
-Graphic3d_TOT_2D_MIPMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP
-Graphic3d_TOT_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP
-Graphic3d_TOV_SHADING: OCP.Graphic3d.Graphic3d_TypeOfVisualization # value = Graphic3d_TypeOfVisualization.Graphic3d_TOV_SHADING
-Graphic3d_TOV_WIREFRAME: OCP.Graphic3d.Graphic3d_TypeOfVisualization # value = Graphic3d_TypeOfVisualization.Graphic3d_TOV_WIREFRAME
-Graphic3d_TP_DOWN: OCP.Graphic3d.Graphic3d_TextPath # value = Graphic3d_TextPath.Graphic3d_TP_DOWN
-Graphic3d_TP_LEFT: OCP.Graphic3d.Graphic3d_TextPath # value = Graphic3d_TextPath.Graphic3d_TP_LEFT
-Graphic3d_TP_RIGHT: OCP.Graphic3d.Graphic3d_TextPath # value = Graphic3d_TextPath.Graphic3d_TP_RIGHT
-Graphic3d_TP_UP: OCP.Graphic3d.Graphic3d_TextPath # value = Graphic3d_TextPath.Graphic3d_TP_UP
-Graphic3d_TextureUnit_0: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_0
-Graphic3d_TextureUnit_1: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_1
-Graphic3d_TextureUnit_10: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_10
-Graphic3d_TextureUnit_11: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_11
-Graphic3d_TextureUnit_12: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_12
-Graphic3d_TextureUnit_13: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_13
-Graphic3d_TextureUnit_14: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_14
-Graphic3d_TextureUnit_15: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_15
-Graphic3d_TextureUnit_2: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_2
-Graphic3d_TextureUnit_3: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_3
-Graphic3d_TextureUnit_4: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_4
-Graphic3d_TextureUnit_5: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_5
-Graphic3d_TextureUnit_6: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_6
-Graphic3d_TextureUnit_7: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_7
-Graphic3d_TextureUnit_8: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_8
-Graphic3d_TextureUnit_9: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_9
-Graphic3d_TextureUnit_BaseColor: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_0
-Graphic3d_TextureUnit_EnvMap: OCP.Graphic3d.Graphic3d_TextureUnit # value = Graphic3d_TextureUnit.Graphic3d_TextureUnit_0
+Graphic3d_HTA_CENTER: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = <Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_CENTER: 1>
+Graphic3d_HTA_LEFT: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = <Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT: 0>
+Graphic3d_HTA_RIGHT: OCP.Graphic3d.Graphic3d_HorizontalTextAlignment # value = <Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_RIGHT: 2>
+Graphic3d_LOTA_FAST: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_FAST: 1>
+Graphic3d_LOTA_MIDDLE: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_MIDDLE: 2>
+Graphic3d_LOTA_OFF: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_OFF: 0>
+Graphic3d_LOTA_QUALITY: OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy # value = <Graphic3d_LevelOfTextureAnisotropy.Graphic3d_LOTA_QUALITY: 3>
+Graphic3d_MATERIAL_ASPECT: OCP.Graphic3d.Graphic3d_TypeOfMaterial # value = <Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_ASPECT: 0>
+Graphic3d_MATERIAL_PHYSIC: OCP.Graphic3d.Graphic3d_TypeOfMaterial # value = <Graphic3d_TypeOfMaterial.Graphic3d_MATERIAL_PHYSIC: 1>
+Graphic3d_NOM_ALUMINIUM: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Aluminum: 15>
+Graphic3d_NOM_BRASS: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Brass: 0>
+Graphic3d_NOM_BRONZE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Bronze: 1>
+Graphic3d_NOM_CHARCOAL: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Charcoal: 19>
+Graphic3d_NOM_CHROME: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Chrome: 14>
+Graphic3d_NOM_COPPER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Copper: 2>
+Graphic3d_NOM_DEFAULT: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_DEFAULT: 24>
+Graphic3d_NOM_DIAMOND: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Diamond: 22>
+Graphic3d_NOM_GLASS: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Glass: 21>
+Graphic3d_NOM_GOLD: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Gold: 3>
+Graphic3d_NOM_JADE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Jade: 18>
+Graphic3d_NOM_METALIZED: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Metalized: 12>
+Graphic3d_NOM_NEON_GNC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Ionized: 13>
+Graphic3d_NOM_NEON_PHC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Neon: 17>
+Graphic3d_NOM_OBSIDIAN: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Obsidian: 16>
+Graphic3d_NOM_PEWTER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Pewter: 4>
+Graphic3d_NOM_PLASTER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastered: 5>
+Graphic3d_NOM_PLASTIC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastified: 6>
+Graphic3d_NOM_SATIN: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Satin: 11>
+Graphic3d_NOM_SHINY_PLASTIC: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_ShinyPlastified: 10>
+Graphic3d_NOM_SILVER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Silver: 7>
+Graphic3d_NOM_STEEL: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Steel: 8>
+Graphic3d_NOM_STONE: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Stone: 9>
+Graphic3d_NOM_TRANSPARENT: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Transparent: 23>
+Graphic3d_NOM_UserDefined: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_UserDefined: 25>
+Graphic3d_NOM_WATER: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Water: 20>
+Graphic3d_NOTP_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_UNKNOWN: 3>
+Graphic3d_NOTP_XY: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_XY: 0>
+Graphic3d_NOTP_YZ: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_YZ: 1>
+Graphic3d_NOTP_ZX: OCP.Graphic3d.Graphic3d_NameOfTexturePlane # value = <Graphic3d_NameOfTexturePlane.Graphic3d_NOTP_ZX: 2>
+Graphic3d_NOT_1D_ELEVATION: OCP.Graphic3d.Graphic3d_NameOfTexture1D # value = <Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_ELEVATION: 0>
+Graphic3d_NOT_1D_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexture1D # value = <Graphic3d_NameOfTexture1D.Graphic3d_NOT_1D_UNKNOWN: 1>
+Graphic3d_NOT_2D_ALIENSKIN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALIENSKIN: 1>
+Graphic3d_NOT_2D_ALUMINUM: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ALUMINUM: 14>
+Graphic3d_NOT_2D_BLUEWHITE_PAPER: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUEWHITE_PAPER: 3>
+Graphic3d_NOT_2D_BLUE_ROCK: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BLUE_ROCK: 2>
+Graphic3d_NOT_2D_BRUSHED: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BRUSHED: 4>
+Graphic3d_NOT_2D_BUBBLES: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUBBLES: 5>
+Graphic3d_NOT_2D_BUMP: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_BUMP: 6>
+Graphic3d_NOT_2D_CAST: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CAST: 7>
+Graphic3d_NOT_2D_CHESS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHESS: 21>
+Graphic3d_NOT_2D_CHIPBD: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CHIPBD: 8>
+Graphic3d_NOT_2D_CLOUDS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_CLOUDS: 9>
+Graphic3d_NOT_2D_FLESH: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLESH: 10>
+Graphic3d_NOT_2D_FLOOR: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_FLOOR: 11>
+Graphic3d_NOT_2D_GALVNISD: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GALVNISD: 12>
+Graphic3d_NOT_2D_GRASS: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_GRASS: 13>
+Graphic3d_NOT_2D_KNURL: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_KNURL: 16>
+Graphic3d_NOT_2D_MAPLE: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MAPLE: 17>
+Graphic3d_NOT_2D_MARBLE: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MARBLE: 18>
+Graphic3d_NOT_2D_MATRA: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MATRA: 0>
+Graphic3d_NOT_2D_MOTTLED: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_MOTTLED: 19>
+Graphic3d_NOT_2D_RAIN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_RAIN: 20>
+Graphic3d_NOT_2D_ROCK: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_ROCK: 15>
+Graphic3d_NOT_2D_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTexture2D # value = <Graphic3d_NameOfTexture2D.Graphic3d_NOT_2D_UNKNOWN: 22>
+Graphic3d_NOT_ENV_CLOUDS: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CLOUDS: 0>
+Graphic3d_NOT_ENV_CV: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_CV: 1>
+Graphic3d_NOT_ENV_LINES: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_LINES: 6>
+Graphic3d_NOT_ENV_MEDIT: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_MEDIT: 2>
+Graphic3d_NOT_ENV_PEARL: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_PEARL: 3>
+Graphic3d_NOT_ENV_ROAD: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_ROAD: 7>
+Graphic3d_NOT_ENV_SKY1: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY1: 4>
+Graphic3d_NOT_ENV_SKY2: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_SKY2: 5>
+Graphic3d_NOT_ENV_UNKNOWN: OCP.Graphic3d.Graphic3d_NameOfTextureEnv # value = <Graphic3d_NameOfTextureEnv.Graphic3d_NOT_ENV_UNKNOWN: 8>
+Graphic3d_NameOfMaterial_Aluminum: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Aluminum: 15>
+Graphic3d_NameOfMaterial_Brass: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Brass: 0>
+Graphic3d_NameOfMaterial_Bronze: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Bronze: 1>
+Graphic3d_NameOfMaterial_Charcoal: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Charcoal: 19>
+Graphic3d_NameOfMaterial_Chrome: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Chrome: 14>
+Graphic3d_NameOfMaterial_Copper: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Copper: 2>
+Graphic3d_NameOfMaterial_DEFAULT: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_DEFAULT: 24>
+Graphic3d_NameOfMaterial_Diamond: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Diamond: 22>
+Graphic3d_NameOfMaterial_Glass: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Glass: 21>
+Graphic3d_NameOfMaterial_Gold: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Gold: 3>
+Graphic3d_NameOfMaterial_Ionized: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Ionized: 13>
+Graphic3d_NameOfMaterial_Jade: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Jade: 18>
+Graphic3d_NameOfMaterial_Metalized: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Metalized: 12>
+Graphic3d_NameOfMaterial_Neon: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Neon: 17>
+Graphic3d_NameOfMaterial_Obsidian: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Obsidian: 16>
+Graphic3d_NameOfMaterial_Pewter: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Pewter: 4>
+Graphic3d_NameOfMaterial_Plastered: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastered: 5>
+Graphic3d_NameOfMaterial_Plastified: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Plastified: 6>
+Graphic3d_NameOfMaterial_Satin: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Satin: 11>
+Graphic3d_NameOfMaterial_ShinyPlastified: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_ShinyPlastified: 10>
+Graphic3d_NameOfMaterial_Silver: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Silver: 7>
+Graphic3d_NameOfMaterial_Steel: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Steel: 8>
+Graphic3d_NameOfMaterial_Stone: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Stone: 9>
+Graphic3d_NameOfMaterial_Transparent: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Transparent: 23>
+Graphic3d_NameOfMaterial_UserDefined: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_UserDefined: 25>
+Graphic3d_NameOfMaterial_Water: OCP.Graphic3d.Graphic3d_NameOfMaterial # value = <Graphic3d_NameOfMaterial.Graphic3d_NameOfMaterial_Water: 20>
+Graphic3d_RM_RASTERIZATION: OCP.Graphic3d.Graphic3d_RenderingMode # value = <Graphic3d_RenderingMode.Graphic3d_RM_RASTERIZATION: 0>
+Graphic3d_RM_RAYTRACING: OCP.Graphic3d.Graphic3d_RenderingMode # value = <Graphic3d_RenderingMode.Graphic3d_RM_RAYTRACING: 1>
+Graphic3d_RTM_BLEND_OIT: OCP.Graphic3d.Graphic3d_RenderTransparentMethod # value = <Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_OIT: 1>
+Graphic3d_RTM_BLEND_UNORDERED: OCP.Graphic3d.Graphic3d_RenderTransparentMethod # value = <Graphic3d_RenderTransparentMethod.Graphic3d_RTM_BLEND_UNORDERED: 0>
+Graphic3d_StereoMode_Anaglyph: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph: 1>
+Graphic3d_StereoMode_ChessBoard: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard: 4>
+Graphic3d_StereoMode_ColumnInterlaced: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced: 3>
+Graphic3d_StereoMode_NB: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_NB: 9>
+Graphic3d_StereoMode_OpenVR: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_OpenVR: 8>
+Graphic3d_StereoMode_OverUnder: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder: 6>
+Graphic3d_StereoMode_QuadBuffer: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer: 0>
+Graphic3d_StereoMode_RowInterlaced: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced: 2>
+Graphic3d_StereoMode_SideBySide: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide: 5>
+Graphic3d_StereoMode_SoftPageFlip: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip: 7>
+Graphic3d_TMF_2d: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_2d: 64>
+Graphic3d_TMF_None: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_None: 0>
+Graphic3d_TMF_RotatePers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_RotatePers: 8>
+Graphic3d_TMF_TriedronPers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_TriedronPers: 32>
+Graphic3d_TMF_ZoomPers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomPers: 2>
+Graphic3d_TMF_ZoomRotatePers: OCP.Graphic3d.Graphic3d_TransModeFlags # value = <Graphic3d_TransModeFlags.Graphic3d_TMF_ZoomRotatePers: 10>
+Graphic3d_TOA_COLOR: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = <Graphic3d_TypeOfAttribute.Graphic3d_TOA_COLOR: 3>
+Graphic3d_TOA_COMPUTE: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = <Graphic3d_TypeOfAnswer.Graphic3d_TOA_COMPUTE: 2>
+Graphic3d_TOA_CUSTOM: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = <Graphic3d_TypeOfAttribute.Graphic3d_TOA_CUSTOM: 4>
+Graphic3d_TOA_NO: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = <Graphic3d_TypeOfAnswer.Graphic3d_TOA_NO: 1>
+Graphic3d_TOA_NORM: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = <Graphic3d_TypeOfAttribute.Graphic3d_TOA_NORM: 1>
+Graphic3d_TOA_POS: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = <Graphic3d_TypeOfAttribute.Graphic3d_TOA_POS: 0>
+Graphic3d_TOA_UV: OCP.Graphic3d.Graphic3d_TypeOfAttribute # value = <Graphic3d_TypeOfAttribute.Graphic3d_TOA_UV: 2>
+Graphic3d_TOA_YES: OCP.Graphic3d.Graphic3d_TypeOfAnswer # value = <Graphic3d_TypeOfAnswer.Graphic3d_TOA_YES: 0>
+Graphic3d_TOBM_AUTOMATIC: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_AUTOMATIC: 0>
+Graphic3d_TOBM_DISABLE: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_DISABLE: 2>
+Graphic3d_TOBM_FORCE: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TOBM_FORCE: 1>
+Graphic3d_TOB_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = <Graphic3d_TypeOfBackground.Graphic3d_TOB_CUBEMAP: 2>
+Graphic3d_TOB_GRADIENT: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = <Graphic3d_TypeOfBackground.Graphic3d_TOB_GRADIENT: 0>
+Graphic3d_TOB_NONE: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = <Graphic3d_TypeOfBackground.Graphic3d_TOB_NONE: -1>
+Graphic3d_TOB_TEXTURE: OCP.Graphic3d.Graphic3d_TypeOfBackground # value = <Graphic3d_TypeOfBackground.Graphic3d_TOB_TEXTURE: 1>
+Graphic3d_TOC_ANCESTOR: OCP.Graphic3d.Graphic3d_TypeOfConnection # value = <Graphic3d_TypeOfConnection.Graphic3d_TOC_ANCESTOR: 0>
+Graphic3d_TOC_DESCENDANT: OCP.Graphic3d.Graphic3d_TypeOfConnection # value = <Graphic3d_TypeOfConnection.Graphic3d_TOC_DESCENDANT: 1>
+Graphic3d_TOC_POSTCONCATENATE: OCP.Graphic3d.Graphic3d_TypeOfComposition # value = <Graphic3d_TypeOfComposition.Graphic3d_TOC_POSTCONCATENATE: 1>
+Graphic3d_TOC_REPLACE: OCP.Graphic3d.Graphic3d_TypeOfComposition # value = <Graphic3d_TypeOfComposition.Graphic3d_TOC_REPLACE: 0>
+Graphic3d_TOD_FLOAT: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_FLOAT: 6>
+Graphic3d_TOD_UINT: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_UINT: 1>
+Graphic3d_TOD_USHORT: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_USHORT: 0>
+Graphic3d_TOD_VEC2: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_VEC2: 2>
+Graphic3d_TOD_VEC3: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_VEC3: 3>
+Graphic3d_TOD_VEC4: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_VEC4: 4>
+Graphic3d_TOD_VEC4UB: OCP.Graphic3d.Graphic3d_TypeOfData # value = <Graphic3d_TypeOfData.Graphic3d_TOD_VEC4UB: 5>
+Graphic3d_TOLS_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT: 0>
+Graphic3d_TOLS_DIRECTIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL: 1>
+Graphic3d_TOLS_POSITIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL: 2>
+Graphic3d_TOLS_SPOT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT: 3>
+Graphic3d_TOPA_LINES_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINES_ADJACENCY: 7>
+Graphic3d_TOPA_LINE_STRIP_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_LINE_STRIP_ADJACENCY: 8>
+Graphic3d_TOPA_POINTS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POINTS: 1>
+Graphic3d_TOPA_POLYGONS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYGONS: 13>
+Graphic3d_TOPA_POLYLINES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_POLYLINES: 3>
+Graphic3d_TOPA_QUADRANGLES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLES: 11>
+Graphic3d_TOPA_QUADRANGLESTRIPS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_QUADRANGLESTRIPS: 12>
+Graphic3d_TOPA_SEGMENTS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_SEGMENTS: 2>
+Graphic3d_TOPA_TRIANGLEFANS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLEFANS: 6>
+Graphic3d_TOPA_TRIANGLES: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES: 4>
+Graphic3d_TOPA_TRIANGLESTRIPS: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLESTRIPS: 5>
+Graphic3d_TOPA_TRIANGLES_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLES_ADJACENCY: 9>
+Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_TRIANGLE_STRIP_ADJACENCY: 10>
+Graphic3d_TOPA_UNDEFINED: OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray # value = <Graphic3d_TypeOfPrimitiveArray.Graphic3d_TOPA_UNDEFINED: 0>
+Graphic3d_TOR_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = <Graphic3d_TypeOfReflection.Graphic3d_TOR_AMBIENT: 0>
+Graphic3d_TOR_DIFFUSE: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = <Graphic3d_TypeOfReflection.Graphic3d_TOR_DIFFUSE: 1>
+Graphic3d_TOR_EMISSION: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = <Graphic3d_TypeOfReflection.Graphic3d_TOR_EMISSION: 3>
+Graphic3d_TOR_SPECULAR: OCP.Graphic3d.Graphic3d_TypeOfReflection # value = <Graphic3d_TypeOfReflection.Graphic3d_TOR_SPECULAR: 2>
+Graphic3d_TOSM_DEFAULT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_DEFAULT: -1>
+Graphic3d_TOSM_FACET: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET: 1>
+Graphic3d_TOSM_FRAGMENT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT: 3>
+Graphic3d_TOSM_NONE: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>
+Graphic3d_TOSM_PBR: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_PBR: 4>
+Graphic3d_TOSM_PBR_FACET: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_PBR_FACET: 5>
+Graphic3d_TOSM_UNLIT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>
+Graphic3d_TOSM_VERTEX: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX: 2>
+Graphic3d_TOS_ALL: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = <Graphic3d_TypeOfStructure.Graphic3d_TOS_ALL: 3>
+Graphic3d_TOS_COMPUTE: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_COMPUTE: 32>
+Graphic3d_TOS_COMPUTED: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = <Graphic3d_TypeOfStructure.Graphic3d_TOS_COMPUTED: 2>
+Graphic3d_TOS_FRAGMENT: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_FRAGMENT: 16>
+Graphic3d_TOS_GEOMETRY: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_GEOMETRY: 8>
+Graphic3d_TOS_SHADING: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = <Graphic3d_TypeOfStructure.Graphic3d_TOS_SHADING: 1>
+Graphic3d_TOS_TESS_CONTROL: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_CONTROL: 2>
+Graphic3d_TOS_TESS_EVALUATION: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_TESS_EVALUATION: 4>
+Graphic3d_TOS_VERTEX: OCP.Graphic3d.Graphic3d_TypeOfShaderObject # value = <Graphic3d_TypeOfShaderObject.Graphic3d_TOS_VERTEX: 1>
+Graphic3d_TOS_WIREFRAME: OCP.Graphic3d.Graphic3d_TypeOfStructure # value = <Graphic3d_TypeOfStructure.Graphic3d_TOS_WIREFRAME: 0>
+Graphic3d_TOTF_BILINEAR: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = <Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_BILINEAR: 1>
+Graphic3d_TOTF_NEAREST: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = <Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_NEAREST: 0>
+Graphic3d_TOTF_TRILINEAR: OCP.Graphic3d.Graphic3d_TypeOfTextureFilter # value = <Graphic3d_TypeOfTextureFilter.Graphic3d_TOTF_TRILINEAR: 2>
+Graphic3d_TOTM_EYE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_EYE: 2>
+Graphic3d_TOTM_MANUAL: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_MANUAL: 3>
+Graphic3d_TOTM_OBJECT: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_OBJECT: 0>
+Graphic3d_TOTM_SPHERE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPHERE: 1>
+Graphic3d_TOTM_SPRITE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPRITE: 4>
+Graphic3d_TOT_1D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_1D: 0>
+Graphic3d_TOT_2D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D: 1>
+Graphic3d_TOT_2D_MIPMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 2>
+Graphic3d_TOT_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP: 3>
+Graphic3d_TOV_SHADING: OCP.Graphic3d.Graphic3d_TypeOfVisualization # value = <Graphic3d_TypeOfVisualization.Graphic3d_TOV_SHADING: 1>
+Graphic3d_TOV_WIREFRAME: OCP.Graphic3d.Graphic3d_TypeOfVisualization # value = <Graphic3d_TypeOfVisualization.Graphic3d_TOV_WIREFRAME: 0>
+Graphic3d_TP_DOWN: OCP.Graphic3d.Graphic3d_TextPath # value = <Graphic3d_TextPath.Graphic3d_TP_DOWN: 1>
+Graphic3d_TP_LEFT: OCP.Graphic3d.Graphic3d_TextPath # value = <Graphic3d_TextPath.Graphic3d_TP_LEFT: 2>
+Graphic3d_TP_RIGHT: OCP.Graphic3d.Graphic3d_TextPath # value = <Graphic3d_TextPath.Graphic3d_TP_RIGHT: 3>
+Graphic3d_TP_UP: OCP.Graphic3d.Graphic3d_TextPath # value = <Graphic3d_TextPath.Graphic3d_TP_UP: 0>
+Graphic3d_TextureSetBits_BaseColor: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_BaseColor: 1>
+Graphic3d_TextureSetBits_Emissive: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Emissive: 2>
+Graphic3d_TextureSetBits_MetallicRoughness: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_MetallicRoughness: 16>
+Graphic3d_TextureSetBits_NONE: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_NONE: 0>
+Graphic3d_TextureSetBits_Normal: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Normal: 8>
+Graphic3d_TextureSetBits_Occlusion: OCP.Graphic3d.Graphic3d_TextureSetBits # value = <Graphic3d_TextureSetBits.Graphic3d_TextureSetBits_Occlusion: 4>
+Graphic3d_TextureUnit_0: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>
+Graphic3d_TextureUnit_1: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>
+Graphic3d_TextureUnit_10: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_10: 10>
+Graphic3d_TextureUnit_11: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_11: 11>
+Graphic3d_TextureUnit_12: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_12: 12>
+Graphic3d_TextureUnit_13: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_13: 13>
+Graphic3d_TextureUnit_14: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_14: 14>
+Graphic3d_TextureUnit_15: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_15: 15>
+Graphic3d_TextureUnit_2: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_2: 2>
+Graphic3d_TextureUnit_3: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_3: 3>
+Graphic3d_TextureUnit_4: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_4: 4>
+Graphic3d_TextureUnit_5: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_5: 5>
+Graphic3d_TextureUnit_6: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_6: 6>
+Graphic3d_TextureUnit_7: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_7: 7>
+Graphic3d_TextureUnit_8: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_8: 8>
+Graphic3d_TextureUnit_9: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_9: 9>
+Graphic3d_TextureUnit_BaseColor: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>
+Graphic3d_TextureUnit_Emissive: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>
+Graphic3d_TextureUnit_EnvMap: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_0: 0>
+Graphic3d_TextureUnit_MetallicRoughness: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_4: 4>
 Graphic3d_TextureUnit_NB = 16
-Graphic3d_ToneMappingMethod_Disabled: OCP.Graphic3d.Graphic3d_ToneMappingMethod # value = Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Disabled
-Graphic3d_ToneMappingMethod_Filmic: OCP.Graphic3d.Graphic3d_ToneMappingMethod # value = Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Filmic
+Graphic3d_TextureUnit_Normal: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_3: 3>
+Graphic3d_TextureUnit_Occlusion: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_2: 2>
+Graphic3d_TextureUnit_PbrEnvironmentLUT: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrEnvironmentLUT: -3>
+Graphic3d_TextureUnit_PbrIblDiffuseSH: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrIblDiffuseSH: -2>
+Graphic3d_TextureUnit_PbrIblSpecular: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_PbrIblSpecular: -1>
+Graphic3d_TextureUnit_PointSprite: OCP.Graphic3d.Graphic3d_TextureUnit # value = <Graphic3d_TextureUnit.Graphic3d_TextureUnit_1: 1>
+Graphic3d_ToneMappingMethod_Disabled: OCP.Graphic3d.Graphic3d_ToneMappingMethod # value = <Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Disabled: 0>
+Graphic3d_ToneMappingMethod_Filmic: OCP.Graphic3d.Graphic3d_ToneMappingMethod # value = <Graphic3d_ToneMappingMethod.Graphic3d_ToneMappingMethod_Filmic: 1>
 Graphic3d_TypeOfBackground_NB = 3
 Graphic3d_TypeOfLightSource_NB = 4
-Graphic3d_TypeOfLimit_HasBlendedOit: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOit
-Graphic3d_TypeOfLimit_HasBlendedOitMsaa: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOitMsaa
-Graphic3d_TypeOfLimit_HasFlatShading: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasFlatShading
-Graphic3d_TypeOfLimit_HasMeshEdges: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasMeshEdges
-Graphic3d_TypeOfLimit_HasRayTracing: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracing
-Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling
-Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic
-Graphic3d_TypeOfLimit_HasRayTracingTextures: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingTextures
-Graphic3d_TypeOfLimit_IsWorkaroundFBO: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_IsWorkaroundFBO
-Graphic3d_TypeOfLimit_MaxCombinedTextureUnits: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxCombinedTextureUnits
-Graphic3d_TypeOfLimit_MaxMsaa: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxMsaa
-Graphic3d_TypeOfLimit_MaxNbClipPlanes: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbClipPlanes
-Graphic3d_TypeOfLimit_MaxNbLights: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbLights
-Graphic3d_TypeOfLimit_MaxNbViews: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbViews
-Graphic3d_TypeOfLimit_MaxTextureSize: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxTextureSize
-Graphic3d_TypeOfLimit_MaxViewDumpSizeX: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeX
-Graphic3d_TypeOfLimit_MaxViewDumpSizeY: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeY
-Graphic3d_TypeOfLimit_NB: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_NB
+Graphic3d_TypeOfLimit_HasBlendedOit: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOit: 14>
+Graphic3d_TypeOfLimit_HasBlendedOitMsaa: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasBlendedOitMsaa: 15>
+Graphic3d_TypeOfLimit_HasFlatShading: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasFlatShading: 16>
+Graphic3d_TypeOfLimit_HasMeshEdges: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasMeshEdges: 17>
+Graphic3d_TypeOfLimit_HasPBR: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasPBR: 8>
+Graphic3d_TypeOfLimit_HasRayTracing: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracing: 9>
+Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSampling: 11>
+Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingAdaptiveSamplingAtomic: 12>
+Graphic3d_TypeOfLimit_HasRayTracingTextures: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasRayTracingTextures: 10>
+Graphic3d_TypeOfLimit_HasSRGB: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_HasSRGB: 13>
+Graphic3d_TypeOfLimit_IsWorkaroundFBO: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_IsWorkaroundFBO: 18>
+Graphic3d_TypeOfLimit_MaxCombinedTextureUnits: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxCombinedTextureUnits: 6>
+Graphic3d_TypeOfLimit_MaxMsaa: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxMsaa: 7>
+Graphic3d_TypeOfLimit_MaxNbClipPlanes: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbClipPlanes: 1>
+Graphic3d_TypeOfLimit_MaxNbLights: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbLights: 0>
+Graphic3d_TypeOfLimit_MaxNbViews: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxNbViews: 2>
+Graphic3d_TypeOfLimit_MaxTextureSize: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxTextureSize: 3>
+Graphic3d_TypeOfLimit_MaxViewDumpSizeX: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeX: 4>
+Graphic3d_TypeOfLimit_MaxViewDumpSizeY: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_MaxViewDumpSizeY: 5>
+Graphic3d_TypeOfLimit_NB: OCP.Graphic3d.Graphic3d_TypeOfLimit # value = <Graphic3d_TypeOfLimit.Graphic3d_TypeOfLimit_NB: 19>
 Graphic3d_TypeOfReflection_NB = 4
-Graphic3d_TypeOfShadingModel_NB = 4
-Graphic3d_VTA_BOTTOM: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM
-Graphic3d_VTA_CENTER: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = Graphic3d_VerticalTextAlignment.Graphic3d_VTA_CENTER
-Graphic3d_VTA_TOP: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOP
-Graphic3d_VTA_TOPFIRSTLINE: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOPFIRSTLINE
-Graphic3d_ZLayerDepthClear: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthClear
-Graphic3d_ZLayerDepthOffset: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthOffset
-Graphic3d_ZLayerDepthTest: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthTest
-Graphic3d_ZLayerDepthWrite: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthWrite
+Graphic3d_TypeOfShadingModel_NB = 6
+Graphic3d_VTA_BOTTOM: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM: 0>
+Graphic3d_VTA_CENTER: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_CENTER: 1>
+Graphic3d_VTA_TOP: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOP: 2>
+Graphic3d_VTA_TOPFIRSTLINE: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOPFIRSTLINE: 3>
+Graphic3d_ZLayerDepthClear: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthClear: 4>
+Graphic3d_ZLayerDepthOffset: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthOffset: 8>
+Graphic3d_ZLayerDepthTest: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthTest: 1>
+Graphic3d_ZLayerDepthWrite: OCP.Graphic3d.Graphic3d_ZLayerSetting # value = <Graphic3d_ZLayerSetting.Graphic3d_ZLayerDepthWrite: 2>
 Graphic3d_ZLayerId_BotOSD = -5
 Graphic3d_ZLayerId_Default = 0
 Graphic3d_ZLayerId_Top = -2
 Graphic3d_ZLayerId_TopOSD = -4
 Graphic3d_ZLayerId_Topmost = -3
 Graphic3d_ZLayerId_UNKNOWN = -1
-V3d_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT
-V3d_COLOR: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT
-V3d_DIRECTIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL
-V3d_FLAT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET
-V3d_GOURAUD: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX
-V3d_PHONG: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT
-V3d_POSITIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL
-V3d_SPOT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT
+V3d_AMBIENT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_AMBIENT: 0>
+V3d_COLOR: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT: 0>
+V3d_DIRECTIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_DIRECTIONAL: 1>
+V3d_FLAT: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FACET: 1>
+V3d_GOURAUD: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_VERTEX: 2>
+V3d_PHONG: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_FRAGMENT: 3>
+V3d_POSITIONAL: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_POSITIONAL: 2>
+V3d_SPOT: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TOLS_SPOT: 3>

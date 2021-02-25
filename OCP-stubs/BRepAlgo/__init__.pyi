@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.TopAbs
-import OCP.BRepBuilderAPI
+import OCP.Adaptor3d
 import OCP.TopTools
 import OCP.TopOpeBRepBuild
-import OCP.Adaptor3d
-import OCP.Standard
-import OCP.TopoDS
-import OCP.Geom
+import OCP.BRepBuilderAPI
+import OCP.GeomAbs
 import OCP.gp
+import OCP.Geom
+import OCP.TopoDS
+import OCP.Standard
+import OCP.TopAbs
 __all__  = [
 "BRepAlgo",
 "BRepAlgo_AsDes",
@@ -52,7 +52,7 @@ class BRepAlgo():
         """
     @staticmethod
     @overload
-    def IsValid_s(theArgs : OCP.TopTools.TopTools_ListOfShape,theResult : OCP.TopoDS.TopoDS_Shape,closedSolid : bool=False,GeomCtrl : bool=True) -> bool: 
+    def IsValid_s(S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Checks if the shape is "correct". If not, returns <Standard_False>, else returns <Standard_True>.
 
@@ -60,7 +60,7 @@ class BRepAlgo():
         """
     @staticmethod
     @overload
-    def IsValid_s(S : OCP.TopoDS.TopoDS_Shape) -> bool: ...
+    def IsValid_s(theArgs : OCP.TopTools.TopTools_ListOfShape,theResult : OCP.TopoDS.TopoDS_Shape,closedSolid : bool=False,GeomCtrl : bool=True) -> bool: ...
     def __init__(self) -> None: ...
     pass
 class BRepAlgo_AsDes(OCP.Standard.Standard_Transient):
@@ -229,20 +229,28 @@ class BRepAlgo_CheckStatus():
 
       BRepAlgo_NOK
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepAlgo_NOK: OCP.BRepAlgo.BRepAlgo_CheckStatus # value = BRepAlgo_CheckStatus.BRepAlgo_NOK
-    BRepAlgo_OK: OCP.BRepAlgo.BRepAlgo_CheckStatus # value = BRepAlgo_CheckStatus.BRepAlgo_OK
-    __entries: dict # value = {'BRepAlgo_OK': (BRepAlgo_CheckStatus.BRepAlgo_OK, None), 'BRepAlgo_NOK': (BRepAlgo_CheckStatus.BRepAlgo_NOK, None)}
-    __members__: dict # value = {'BRepAlgo_OK': BRepAlgo_CheckStatus.BRepAlgo_OK, 'BRepAlgo_NOK': BRepAlgo_CheckStatus.BRepAlgo_NOK}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepAlgo_NOK: OCP.BRepAlgo.BRepAlgo_CheckStatus # value = <BRepAlgo_CheckStatus.BRepAlgo_NOK: 1>
+    BRepAlgo_OK: OCP.BRepAlgo.BRepAlgo_CheckStatus # value = <BRepAlgo_CheckStatus.BRepAlgo_OK: 0>
+    __entries: dict # value = {'BRepAlgo_OK': (<BRepAlgo_CheckStatus.BRepAlgo_OK: 0>, None), 'BRepAlgo_NOK': (<BRepAlgo_CheckStatus.BRepAlgo_NOK: 1>, None)}
+    __members__: dict # value = {'BRepAlgo_OK': <BRepAlgo_CheckStatus.BRepAlgo_OK: 0>, 'BRepAlgo_NOK': <BRepAlgo_CheckStatus.BRepAlgo_NOK: 1>}
     pass
 class BRepAlgo_Common(BRepAlgo_BooleanOperation, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -449,14 +457,14 @@ class BRepAlgo_Image():
     Stores link between a shape <S> and a shape <NewS> obtained from <S>. <NewS> is an image of <S>.
     """
     @overload
-    def Add(self,OldS : OCP.TopoDS.TopoDS_Shape,NewS : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def Add(self,OldS : OCP.TopoDS.TopoDS_Shape,NewS : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Add <NewS> to the image of <OldS>.
 
         Add <NewS> to the image of <OldS>.
         """
     @overload
-    def Add(self,OldS : OCP.TopoDS.TopoDS_Shape,NewS : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Add(self,OldS : OCP.TopoDS.TopoDS_Shape,NewS : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     @overload
     def Bind(self,OldS : OCP.TopoDS.TopoDS_Shape,NewS : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
@@ -501,6 +509,14 @@ class BRepAlgo_Image():
     def Remove(self,S : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Remove <S> to set of images.
+        """
+    def RemoveRoot(self,Root : OCP.TopoDS.TopoDS_Shape) -> None: 
+        """
+        Removes the root <theRoot> from the list of roots and up and down maps.
+        """
+    def ReplaceRoot(self,OldRoot : OCP.TopoDS.TopoDS_Shape,NewRoot : OCP.TopoDS.TopoDS_Shape) -> None: 
+        """
+        Replaces the <OldRoot> with the <NewRoot>, so all images of the <OldRoot> become the images of the <NewRoot>. The <OldRoot> is removed.
         """
     def Root(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -559,6 +575,14 @@ class BRepAlgo_Loop():
     def Perform(self) -> None: 
         """
         Make loops.
+        """
+    def SetImageVV(self,theImageVV : BRepAlgo_Image) -> None: 
+        """
+        Sets the Image Vertex - Vertex
+        """
+    def UpdateVEmap(self,theVEmap : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape) -> None: 
+        """
+        Update VE map according to Image Vertex - Vertex
         """
     def VerticesForSubstitute(self,VerVerMap : OCP.TopTools.TopTools_DataMapOfShapeShape) -> None: 
         """
@@ -635,9 +659,9 @@ class BRepAlgo_NormalProjection():
         Set the parameters used for computation Tol3d is the requiered tolerance between the 3d projected curve and its 2d representation InternalContinuity is the order of constraints used for approximation. MaxDeg and MaxSeg are the maximum degree and the maximum number of segment for BSpline resulting of an approximation.
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     pass
 class BRepAlgo_Section(BRepAlgo_BooleanOperation, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -693,7 +717,7 @@ class BRepAlgo_Section(BRepAlgo_BooleanOperation, OCP.BRepBuilderAPI.BRepBuilder
     @overload
     def Init1(self,Pl : OCP.gp.gp_Pln) -> None: ...
     @overload
-    def Init2(self,Pl : OCP.gp.gp_Pln) -> None: 
+    def Init2(self,Sf : OCP.Geom.Geom_Surface) -> None: 
         """
         initialize second part
 
@@ -704,7 +728,7 @@ class BRepAlgo_Section(BRepAlgo_BooleanOperation, OCP.BRepBuilderAPI.BRepBuilder
     @overload
     def Init2(self,S2 : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
-    def Init2(self,Sf : OCP.Geom.Geom_Surface) -> None: ...
+    def Init2(self,Pl : OCP.gp.gp_Pln) -> None: ...
     def IsDeleted(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         None
@@ -738,15 +762,15 @@ class BRepAlgo_Section(BRepAlgo_BooleanOperation, OCP.BRepBuilderAPI.BRepBuilder
         Returns the second shape involved in this Boolean operation.
         """
     @overload
-    def __init__(self,Sf : OCP.Geom.Geom_Surface,Sh : OCP.TopoDS.TopoDS_Shape,PerformNow : bool=True) -> None: ...
-    @overload
     def __init__(self,Sf1 : OCP.Geom.Geom_Surface,Sf2 : OCP.Geom.Geom_Surface,PerformNow : bool=True) -> None: ...
     @overload
-    def __init__(self,Sh1 : OCP.TopoDS.TopoDS_Shape,Sh2 : OCP.TopoDS.TopoDS_Shape,PerformNow : bool=True) -> None: ...
+    def __init__(self,Sf : OCP.Geom.Geom_Surface,Sh : OCP.TopoDS.TopoDS_Shape,PerformNow : bool=True) -> None: ...
+    @overload
+    def __init__(self,Sh : OCP.TopoDS.TopoDS_Shape,Pl : OCP.gp.gp_Pln,PerformNow : bool=True) -> None: ...
     @overload
     def __init__(self,Sh : OCP.TopoDS.TopoDS_Shape,Sf : OCP.Geom.Geom_Surface,PerformNow : bool=True) -> None: ...
     @overload
-    def __init__(self,Sh : OCP.TopoDS.TopoDS_Shape,Pl : OCP.gp.gp_Pln,PerformNow : bool=True) -> None: ...
+    def __init__(self,Sh1 : OCP.TopoDS.TopoDS_Shape,Sh2 : OCP.TopoDS.TopoDS_Shape,PerformNow : bool=True) -> None: ...
     pass
 class BRepAlgo_Tool():
     """
@@ -759,5 +783,5 @@ class BRepAlgo_Tool():
         """
     def __init__(self) -> None: ...
     pass
-BRepAlgo_NOK: OCP.BRepAlgo.BRepAlgo_CheckStatus # value = BRepAlgo_CheckStatus.BRepAlgo_NOK
-BRepAlgo_OK: OCP.BRepAlgo.BRepAlgo_CheckStatus # value = BRepAlgo_CheckStatus.BRepAlgo_OK
+BRepAlgo_NOK: OCP.BRepAlgo.BRepAlgo_CheckStatus # value = <BRepAlgo_CheckStatus.BRepAlgo_NOK: 1>
+BRepAlgo_OK: OCP.BRepAlgo.BRepAlgo_CheckStatus # value = <BRepAlgo_CheckStatus.BRepAlgo_OK: 0>

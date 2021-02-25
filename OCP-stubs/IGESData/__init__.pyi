@@ -4,12 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TColStd
+import OCP.TCollection
+import io
 import OCP.Message
-import OCP.Standard
-import OCP.Interface
 import OCP.gp
+import OCP.Interface
+import OCP.Standard
 __all__  = [
 "IGESData",
 "IGESData_Array1OfDirPart",
@@ -174,12 +175,12 @@ class IGESData_Array1OfDirPart():
     @overload
     def __init__(self,theOther : IGESData_Array1OfDirPart) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theBegin : IGESData_DirPart,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESData_Array1OfIGESEntity():
     """
@@ -258,14 +259,14 @@ class IGESData_Array1OfIGESEntity():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : IGESData_Array1OfIGESEntity) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : IGESData_IGESEntity,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : IGESData_IGESEntity,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : IGESData_Array1OfIGESEntity) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESData_BasicEditor():
     """
@@ -348,11 +349,11 @@ class IGESData_BasicEditor():
         From the name of unit, computes flag number, 0 if incorrect (in this case, user defined entity remains possible)
         """
     @overload
-    def __init__(self,model : IGESData_IGESModel,protocol : IGESData_Protocol) -> None: ...
+    def __init__(self,protocol : IGESData_Protocol) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,protocol : IGESData_Protocol) -> None: ...
+    def __init__(self,model : IGESData_IGESModel,protocol : IGESData_Protocol) -> None: ...
     pass
 class IGESData_IGESEntity(OCP.Standard.Standard_Transient):
     """
@@ -687,23 +688,31 @@ class IGESData_DefList():
 
       IGESData_ErrorSeveral
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IGESData_DefNone: OCP.IGESData.IGESData_DefList # value = IGESData_DefList.IGESData_DefNone
-    IGESData_DefOne: OCP.IGESData.IGESData_DefList # value = IGESData_DefList.IGESData_DefOne
-    IGESData_DefSeveral: OCP.IGESData.IGESData_DefList # value = IGESData_DefList.IGESData_DefSeveral
-    IGESData_ErrorOne: OCP.IGESData.IGESData_DefList # value = IGESData_DefList.IGESData_ErrorOne
-    IGESData_ErrorSeveral: OCP.IGESData.IGESData_DefList # value = IGESData_DefList.IGESData_ErrorSeveral
-    __entries: dict # value = {'IGESData_DefNone': (IGESData_DefList.IGESData_DefNone, None), 'IGESData_DefOne': (IGESData_DefList.IGESData_DefOne, None), 'IGESData_DefSeveral': (IGESData_DefList.IGESData_DefSeveral, None), 'IGESData_ErrorOne': (IGESData_DefList.IGESData_ErrorOne, None), 'IGESData_ErrorSeveral': (IGESData_DefList.IGESData_ErrorSeveral, None)}
-    __members__: dict # value = {'IGESData_DefNone': IGESData_DefList.IGESData_DefNone, 'IGESData_DefOne': IGESData_DefList.IGESData_DefOne, 'IGESData_DefSeveral': IGESData_DefList.IGESData_DefSeveral, 'IGESData_ErrorOne': IGESData_DefList.IGESData_ErrorOne, 'IGESData_ErrorSeveral': IGESData_DefList.IGESData_ErrorSeveral}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IGESData_DefNone: OCP.IGESData.IGESData_DefList # value = <IGESData_DefList.IGESData_DefNone: 0>
+    IGESData_DefOne: OCP.IGESData.IGESData_DefList # value = <IGESData_DefList.IGESData_DefOne: 1>
+    IGESData_DefSeveral: OCP.IGESData.IGESData_DefList # value = <IGESData_DefList.IGESData_DefSeveral: 2>
+    IGESData_ErrorOne: OCP.IGESData.IGESData_DefList # value = <IGESData_DefList.IGESData_ErrorOne: 3>
+    IGESData_ErrorSeveral: OCP.IGESData.IGESData_DefList # value = <IGESData_DefList.IGESData_ErrorSeveral: 4>
+    __entries: dict # value = {'IGESData_DefNone': (<IGESData_DefList.IGESData_DefNone: 0>, None), 'IGESData_DefOne': (<IGESData_DefList.IGESData_DefOne: 1>, None), 'IGESData_DefSeveral': (<IGESData_DefList.IGESData_DefSeveral: 2>, None), 'IGESData_ErrorOne': (<IGESData_DefList.IGESData_ErrorOne: 3>, None), 'IGESData_ErrorSeveral': (<IGESData_DefList.IGESData_ErrorSeveral: 4>, None)}
+    __members__: dict # value = {'IGESData_DefNone': <IGESData_DefList.IGESData_DefNone: 0>, 'IGESData_DefOne': <IGESData_DefList.IGESData_DefOne: 1>, 'IGESData_DefSeveral': <IGESData_DefList.IGESData_DefSeveral: 2>, 'IGESData_ErrorOne': <IGESData_DefList.IGESData_ErrorOne: 3>, 'IGESData_ErrorSeveral': <IGESData_DefList.IGESData_ErrorSeveral: 4>}
     pass
 class IGESData_DefSwitch():
     """
@@ -749,24 +758,32 @@ class IGESData_DefType():
 
       IGESData_ErrorRef
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IGESData_DefAny: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_DefAny
-    IGESData_DefReference: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_DefReference
-    IGESData_DefValue: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_DefValue
-    IGESData_DefVoid: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_DefVoid
-    IGESData_ErrorRef: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_ErrorRef
-    IGESData_ErrorVal: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_ErrorVal
-    __entries: dict # value = {'IGESData_DefVoid': (IGESData_DefType.IGESData_DefVoid, None), 'IGESData_DefValue': (IGESData_DefType.IGESData_DefValue, None), 'IGESData_DefReference': (IGESData_DefType.IGESData_DefReference, None), 'IGESData_DefAny': (IGESData_DefType.IGESData_DefAny, None), 'IGESData_ErrorVal': (IGESData_DefType.IGESData_ErrorVal, None), 'IGESData_ErrorRef': (IGESData_DefType.IGESData_ErrorRef, None)}
-    __members__: dict # value = {'IGESData_DefVoid': IGESData_DefType.IGESData_DefVoid, 'IGESData_DefValue': IGESData_DefType.IGESData_DefValue, 'IGESData_DefReference': IGESData_DefType.IGESData_DefReference, 'IGESData_DefAny': IGESData_DefType.IGESData_DefAny, 'IGESData_ErrorVal': IGESData_DefType.IGESData_ErrorVal, 'IGESData_ErrorRef': IGESData_DefType.IGESData_ErrorRef}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IGESData_DefAny: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_DefAny: 3>
+    IGESData_DefReference: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_DefReference: 2>
+    IGESData_DefValue: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_DefValue: 1>
+    IGESData_DefVoid: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_DefVoid: 0>
+    IGESData_ErrorRef: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_ErrorRef: 5>
+    IGESData_ErrorVal: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_ErrorVal: 4>
+    __entries: dict # value = {'IGESData_DefVoid': (<IGESData_DefType.IGESData_DefVoid: 0>, None), 'IGESData_DefValue': (<IGESData_DefType.IGESData_DefValue: 1>, None), 'IGESData_DefReference': (<IGESData_DefType.IGESData_DefReference: 2>, None), 'IGESData_DefAny': (<IGESData_DefType.IGESData_DefAny: 3>, None), 'IGESData_ErrorVal': (<IGESData_DefType.IGESData_ErrorVal: 4>, None), 'IGESData_ErrorRef': (<IGESData_DefType.IGESData_ErrorRef: 5>, None)}
+    __members__: dict # value = {'IGESData_DefVoid': <IGESData_DefType.IGESData_DefVoid: 0>, 'IGESData_DefValue': <IGESData_DefType.IGESData_DefValue: 1>, 'IGESData_DefReference': <IGESData_DefType.IGESData_DefReference: 2>, 'IGESData_DefAny': <IGESData_DefType.IGESData_DefAny: 3>, 'IGESData_ErrorVal': <IGESData_DefType.IGESData_ErrorVal: 4>, 'IGESData_ErrorRef': <IGESData_DefType.IGESData_ErrorRef: 5>}
     pass
 class IGESData_GeneralModule(OCP.Interface.Interface_GeneralModule, OCP.Standard.Standard_Transient):
     """
@@ -956,7 +973,7 @@ class IGESData_SpecificModule(OCP.Standard.Standard_Transient):
         """
         Specific Automatic Correction on own Parameters of an Entity. It works by setting in accordance redundant data, if there are when there is no ambiguity (else, it does nothing). Remark that classic Corrections on Directory Entry (to set void data) are taken into account alsewhere.
         """
-    def OwnDump(self,CN : int,ent : IGESData_IGESEntity,dumper : IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,CN : int,ent : IGESData_IGESEntity,dumper : IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Specific Dump for each type of IGES Entity : it concerns only own parameters, the general data (Directory Part, Lists) are taken into account by the IGESDumper See class IGESDumper for the rules to follow for <own> and <attached> level
         """
@@ -1052,13 +1069,13 @@ class IGESData_DirChecker():
         Sets Blank Status to be required at a given value Give -1 to demand UseFlag not zero (but no precise value req.)
         """
     @overload
+    def __init__(self,atype : int,aform : int) -> None: ...
+    @overload
     def __init__(self,atype : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,atype : int,aform1 : int,aform2 : int) -> None: ...
-    @overload
-    def __init__(self,atype : int,aform : int) -> None: ...
     pass
 class IGESData_DirPart():
     """
@@ -2084,14 +2101,14 @@ class IGESData_GlobalSection():
         None
         """
     @overload
-    def SetLastChangeDate(self) -> None: 
+    def SetLastChangeDate(self,val : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetLastChangeDate(self,val : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    def SetLastChangeDate(self) -> None: ...
     def SetLineWeightGrad(self,val : int) -> None: 
         """
         None
@@ -2298,14 +2315,14 @@ class IGESData_HArray1OfIGESEntity(IGESData_Array1OfIGESEntity, OCP.Standard.Sta
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESData_IGESEntity) -> None: ...
     @overload
     def __init__(self,theOther : IGESData_Array1OfIGESEntity) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESData_IGESEntity) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2321,19 +2338,19 @@ class IGESData_IGESDumper():
     """
     Provides a way to obtain a clear Dump of an IGESEntity (distinct from normalized output). It works with tools attached to Entities, as for normalized Reade and Write
     """
-    def Dump(self,ent : IGESData_IGESEntity,S : OCP.Message.Message_Messenger,own : int,attached : int=-1) -> None: 
+    def Dump(self,ent : IGESData_IGESEntity,S : io.BytesIO,own : int,attached : int=-1) -> None: 
         """
         None
         """
-    def OwnDump(self,ent : IGESData_IGESEntity,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESData_IGESEntity,S : io.BytesIO,own : int) -> None: 
         """
         Specific Dump for each IGES Entity, call by Dump (just above) <own> is the parameter <own> from Dump
         """
-    def PrintDNum(self,ent : IGESData_IGESEntity,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintDNum(self,ent : IGESData_IGESEntity,S : io.BytesIO) -> None: 
         """
         Prints onto an output, the "Number of Directory Entry" which corresponds to an IGESEntity in the IGESModel, under the form "D#nnn" (a Null Handle gives D#0)
         """
-    def PrintShort(self,ent : IGESData_IGESEntity,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintShort(self,ent : IGESData_IGESEntity,S : io.BytesIO) -> None: 
         """
         Prints onto an output, the "Number of Directory Entry" (see PrintDNum) plus IGES Type and Form Numbers, which gives "D#nnn Type nnn Form nnn"
         """
@@ -2751,7 +2768,7 @@ class IGESData_IGESModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         """
         Clears the list of entities (service WhenDelete)
         """
-    def DumpHeader(self,S : OCP.Message.Message_Messenger,level : int=0) -> None: 
+    def DumpHeader(self,S : io.BytesIO,level : int=0) -> None: 
         """
         Prints the IGES file header (Start and Global Sections) to the log file. The integer parameter is intended to be used as a level indicator but is not used at present.
         """
@@ -2879,19 +2896,19 @@ class IGESData_IGESModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         """
         Returns the Number of an Entity in the Model if it contains it. Else returns 0. For a ReportEntity, looks at Concerned Entity. Returns the Directory entry Number of an Entity in the Model if it contains it. Else returns 0. For a ReportEntity, looks at Concerned Entity.
         """
-    def Print(self,ent : OCP.Standard.Standard_Transient,s : OCP.Message.Message_Messenger,mode : int=0) -> None: 
+    def Print(self,ent : OCP.Standard.Standard_Transient,s : io.BytesIO,mode : int=0) -> None: 
         """
         Prints identification of a given entity in <me>, in order to be printed in a list or phrase <mode> < 0 : prints only its number <mode> = 1 : just calls PrintLabel <mode> = 0 (D) : prints its number plus '/' plus PrintLabel If <ent> == <me>, simply prints "Global" If <ent> is unknown, prints "??/its type"
         """
-    def PrintInfo(self,ent : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintInfo(self,ent : OCP.Standard.Standard_Transient,S : io.BytesIO) -> None: 
         """
         Prints label specific to IGES norm for a given entity, i.e. its directory entry number (2*Number-1)
         """
-    def PrintLabel(self,ent : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintLabel(self,ent : OCP.Standard.Standard_Transient,S : io.BytesIO) -> None: 
         """
         Prints label specific to IGES norm for a given entity, i.e. its directory entry number (2*Number-1)
         """
-    def PrintToLog(self,ent : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintToLog(self,ent : OCP.Standard.Standard_Transient,S : io.BytesIO) -> None: 
         """
         Prints label specific to IGES norm for a given -- -- entity, i.e. its directory entry number (2*Number-1) in the log file format.
         """
@@ -3030,7 +3047,7 @@ class IGESData_IGESReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
         adds a parameter to global section's parameter list
         """
     @overload
-    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: 
+    def AddParam(self,num : int,FP : OCP.Interface.Interface_FileParameter) -> None: 
         """
         Adds a parameter to record no "num" and fills its fields (EntityNumber is optional) Warning : <aval> is assumed to be memory-managed elsewhere : it is NOT copied. This gives a best speed : strings remain stored in pages of characters
 
@@ -3039,9 +3056,9 @@ class IGESData_IGESReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
         Same as above, but gets a complete FileParameter Warning : Content of <FP> is NOT copied : its original address and space in memory are assumed to be managed elsewhere (see ParamSet)
         """
     @overload
-    def AddParam(self,num : int,aval : str,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
+    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
     @overload
-    def AddParam(self,num : int,FP : OCP.Interface.Interface_FileParameter) -> None: ...
+    def AddParam(self,num : int,aval : str,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
     def AddStartLine(self,aval : str) -> None: 
         """
         adds a start line to start section
@@ -3389,7 +3406,7 @@ class IGESData_IGESWriter():
         """
         sends own parameters of the entity, by sending firstly its type, then calling specific method WriteOwnParams Error if not in sections DP or Stage not "Own"
         """
-    def Print(self,S : Any) -> bool: 
+    def Print(self,S : io.BytesIO) -> bool: 
         """
         Writes result on an output defined as an OStream resolves stored infos at this time; in particular, numbers of lines used to adress P-section from D-section and final totals Takes WriteMode into account
         """
@@ -3418,7 +3435,7 @@ class IGESData_IGESWriter():
         prepares sending of list of entities, as Sections D (directory list) and P (Parameters lists, one per entity) Entities will be then processed, one after the other error if SectionG has not be called just before
         """
     @overload
-    def Send(self,val : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def Send(self,val : OCP.gp.gp_XY) -> None: 
         """
         sends an Integer parameter
 
@@ -3433,15 +3450,15 @@ class IGESData_IGESWriter():
         Sends a XYZ, interpreted as a couple of 2 Reals (X , Y & Z)
         """
     @overload
-    def Send(self,val : float) -> None: ...
+    def Send(self,val : int) -> None: ...
     @overload
     def Send(self,val : IGESData_IGESEntity,negative : bool=False) -> None: ...
     @overload
-    def Send(self,val : int) -> None: ...
-    @overload
-    def Send(self,val : OCP.gp.gp_XY) -> None: ...
+    def Send(self,val : float) -> None: ...
     @overload
     def Send(self,val : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def Send(self,val : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     def SendBoolean(self,val : bool) -> None: 
         """
         sends a Boolean parameter as an Integer value 0(False)/1(True)
@@ -3465,9 +3482,9 @@ class IGESData_IGESWriter():
     @overload
     def __init__(self,amodel : IGESData_IGESModel) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,other : IGESData_IGESWriter) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @property
     def WriteMode(self) -> int:
         """
@@ -4975,14 +4992,14 @@ class IGESData_ParamReader():
     access to a list of parameters, with management of read stage (owned parameters, properties, associativities) and current parameter number, read errors (which feed a Check), plus convenient facilities to read parameters, in particular : - first parameter is ignored (it repeats entity type), hence number 1 gives 2nd parameter, etc... - lists are not explicit, list-reading methods are provided which manage a current param. number - interpretation is made as possible (texts, reals, entities ...) (in particular, Reading a Real accepts an Integer)
     """
     @overload
-    def AddFail(self,af : OCP.TCollection.TCollection_HAsciiString,bf : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def AddFail(self,afail : str,bfail : str='') -> None: 
         """
         None
 
         feeds the Check with a new fail (as a String or as a CString)
         """
     @overload
-    def AddFail(self,afail : str,bfail : str='') -> None: ...
+    def AddFail(self,af : OCP.TCollection.TCollection_HAsciiString,bf : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     @overload
     def AddWarning(self,awarn : str,bwarn : str='') -> None: 
         """
@@ -5082,16 +5099,16 @@ class IGESData_ParamReader():
     @overload
     def ReadBoolean(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : bool,exact : bool=True) -> bool: ...
     @overload
-    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: 
+    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: 
         """
         None
 
         Reads a list of Entities defined by PC Same conditions as for ReadEnts, for PC The list is given as an EntityList (index has no meaning; the EntityList starts from clear) If "ord" is given True (default), entities will be added to the list in their original order Remark : Negative or Null Pointers are ignored Else ("ord" False), order is not garanteed (faster mode) If all params cannot be read as Entities, same as above Warning Give "ord" to False ONLY if order is not significant
         """
     @overload
-    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: ...
+    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: ...
     @overload
-    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,type : OCP.Standard.Standard_Type,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: 
+    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,aStatus : IGESData_Status,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: 
         """
         None
 
@@ -5102,29 +5119,29 @@ class IGESData_ParamReader():
         Works as ReadEntity without Type, but in addition checks the Type of the Entity, which must be "kind of" a given <type> Then, gives the same fail cases as ReadEntity without Type, plus the case "Incorrect Type" (in such a case, returns False and givel <val> = Null)
         """
     @overload
-    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
-    @overload
-    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,aStatus : IGESData_Status,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
-    @overload
     def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,aStatus : IGESData_Status,type : OCP.Standard.Standard_Type,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
     @overload
-    def ReadEnts(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : IGESData_HArray1OfIGESEntity,index : int=1) -> bool: 
+    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
+    @overload
+    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,type : OCP.Standard.Standard_Type,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
+    @overload
+    def ReadEnts(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : IGESData_HArray1OfIGESEntity,index : int=1) -> bool: 
         """
         None
 
         Reads a list of Entities defined by PC Same conditions as for ReadInts, for PC and index The list is given as a HArray1, numered from "index" If all params cannot be read as Entities, Check is filled (using mess) and return value is False Remark : Null references are accepted, they are ignored (negative pointers too : they provoke a Warning message) If the caller wants to check them, a loop on ReadEntity should be used
         """
     @overload
-    def ReadEnts(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : IGESData_HArray1OfIGESEntity,index : int=1) -> bool: ...
+    def ReadEnts(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : IGESData_HArray1OfIGESEntity,index : int=1) -> bool: ...
     @overload
-    def ReadInteger(self,PC : IGESData_ParamCursor,mess : str,val : int) -> bool: 
+    def ReadInteger(self,PC : IGESData_ParamCursor,val : int) -> bool: 
         """
         None
 
         Reads an Integer value designated by PC The method Current designates the current parameter and advances the Current Number by one after reading Note that if a count (not 1) is given, it is ignored If it is not an Integer, fills Check with a Fail (using mess) and returns False
         """
     @overload
-    def ReadInteger(self,PC : IGESData_ParamCursor,val : int) -> bool: ...
+    def ReadInteger(self,PC : IGESData_ParamCursor,mess : str,val : int) -> bool: ...
     @overload
     def ReadInts(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TColStd.TColStd_HArray1OfInteger,index : int=1) -> bool: 
         """
@@ -5153,14 +5170,14 @@ class IGESData_ParamReader():
     @overload
     def ReadReals(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TColStd.TColStd_HArray1OfReal,index : int=1) -> bool: ...
     @overload
-    def ReadText(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TCollection.TCollection_HAsciiString) -> bool: 
+    def ReadText(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TCollection.TCollection_HAsciiString) -> bool: 
         """
         None
 
         Reads a Text value from parameter "num", as a String from Collection, that is, Hollerith text without leading "nnnH" If it is not a String, fills Check with a Fail (using mess) and returns False
         """
     @overload
-    def ReadText(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TCollection.TCollection_HAsciiString) -> bool: ...
+    def ReadText(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TCollection.TCollection_HAsciiString) -> bool: ...
     @overload
     def ReadTexts(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.Interface.Interface_HArray1OfHAsciiString,index : int=1) -> bool: 
         """
@@ -5171,41 +5188,41 @@ class IGESData_ParamReader():
     @overload
     def ReadTexts(self,PC : IGESData_ParamCursor,mess : str,val : OCP.Interface.Interface_HArray1OfHAsciiString,index : int=1) -> bool: ...
     @overload
-    def ReadXY(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.gp.gp_XY) -> bool: 
+    def ReadXY(self,PC : IGESData_ParamCursor,mess : str,val : OCP.gp.gp_XY) -> bool: 
         """
         None
 
         Reads a couple of Real values (X,Y) from parameter "num" Integers are accepted (Check is filled with a Warning message) and cause return to be True (as normal case) In other cases, Check is filled with a Fail and return is False
         """
     @overload
-    def ReadXY(self,PC : IGESData_ParamCursor,mess : str,val : OCP.gp.gp_XY) -> bool: ...
+    def ReadXY(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.gp.gp_XY) -> bool: ...
     @overload
-    def ReadXYZ(self,PC : IGESData_ParamCursor,mess : str,val : OCP.gp.gp_XYZ) -> bool: 
+    def ReadXYZ(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.gp.gp_XYZ) -> bool: 
         """
         None
 
         Reads a triplet of Real values (X,Y,Z) from parameter "num" Integers are accepted (Check is filled with a Warning message) and cause return to be True (as normal case) In other cases, Check is filled with a Fail and return is False For Message
         """
     @overload
-    def ReadXYZ(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.gp.gp_XYZ) -> bool: ...
+    def ReadXYZ(self,PC : IGESData_ParamCursor,mess : str,val : OCP.gp.gp_XYZ) -> bool: ...
     @overload
-    def ReadingEntityNumber(self,num : int,mess : str,val : int) -> bool: 
+    def ReadingEntityNumber(self,num : int,val : int) -> bool: 
         """
         None
 
         Routine which reads an Entity Number (which allows to read the Entity in the IGESReaderData by BoundEntity), given its number in the list of Parameters Same conditions as ReadEntity for mess, val, and return value In particular, returns True and val to zero means Null Entity, and val not zero means Entity read by BoundEntity
         """
     @overload
-    def ReadingEntityNumber(self,num : int,val : int) -> bool: ...
+    def ReadingEntityNumber(self,num : int,mess : str,val : int) -> bool: ...
     @overload
-    def ReadingReal(self,num : int,mess : str,val : float) -> bool: 
+    def ReadingReal(self,num : int,val : float) -> bool: 
         """
         None
 
         Routine which reads a Real parameter, given its number Same conditions as ReadReal for mess, val, and return value
         """
     @overload
-    def ReadingReal(self,num : int,val : float) -> bool: ...
+    def ReadingReal(self,num : int,mess : str,val : float) -> bool: ...
     def SendFail(self,amsg : OCP.Message.Message_Msg) -> None: 
         """
         None
@@ -5365,23 +5382,31 @@ class IGESData_ReadStage():
 
       IGESData_ReadEnd
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IGESData_ReadAssocs: OCP.IGESData.IGESData_ReadStage # value = IGESData_ReadStage.IGESData_ReadAssocs
-    IGESData_ReadDir: OCP.IGESData.IGESData_ReadStage # value = IGESData_ReadStage.IGESData_ReadDir
-    IGESData_ReadEnd: OCP.IGESData.IGESData_ReadStage # value = IGESData_ReadStage.IGESData_ReadEnd
-    IGESData_ReadOwn: OCP.IGESData.IGESData_ReadStage # value = IGESData_ReadStage.IGESData_ReadOwn
-    IGESData_ReadProps: OCP.IGESData.IGESData_ReadStage # value = IGESData_ReadStage.IGESData_ReadProps
-    __entries: dict # value = {'IGESData_ReadDir': (IGESData_ReadStage.IGESData_ReadDir, None), 'IGESData_ReadOwn': (IGESData_ReadStage.IGESData_ReadOwn, None), 'IGESData_ReadAssocs': (IGESData_ReadStage.IGESData_ReadAssocs, None), 'IGESData_ReadProps': (IGESData_ReadStage.IGESData_ReadProps, None), 'IGESData_ReadEnd': (IGESData_ReadStage.IGESData_ReadEnd, None)}
-    __members__: dict # value = {'IGESData_ReadDir': IGESData_ReadStage.IGESData_ReadDir, 'IGESData_ReadOwn': IGESData_ReadStage.IGESData_ReadOwn, 'IGESData_ReadAssocs': IGESData_ReadStage.IGESData_ReadAssocs, 'IGESData_ReadProps': IGESData_ReadStage.IGESData_ReadProps, 'IGESData_ReadEnd': IGESData_ReadStage.IGESData_ReadEnd}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IGESData_ReadAssocs: OCP.IGESData.IGESData_ReadStage # value = <IGESData_ReadStage.IGESData_ReadAssocs: 2>
+    IGESData_ReadDir: OCP.IGESData.IGESData_ReadStage # value = <IGESData_ReadStage.IGESData_ReadDir: 0>
+    IGESData_ReadEnd: OCP.IGESData.IGESData_ReadStage # value = <IGESData_ReadStage.IGESData_ReadEnd: 4>
+    IGESData_ReadOwn: OCP.IGESData.IGESData_ReadStage # value = <IGESData_ReadStage.IGESData_ReadOwn: 1>
+    IGESData_ReadProps: OCP.IGESData.IGESData_ReadStage # value = <IGESData_ReadStage.IGESData_ReadProps: 3>
+    __entries: dict # value = {'IGESData_ReadDir': (<IGESData_ReadStage.IGESData_ReadDir: 0>, None), 'IGESData_ReadOwn': (<IGESData_ReadStage.IGESData_ReadOwn: 1>, None), 'IGESData_ReadAssocs': (<IGESData_ReadStage.IGESData_ReadAssocs: 2>, None), 'IGESData_ReadProps': (<IGESData_ReadStage.IGESData_ReadProps: 3>, None), 'IGESData_ReadEnd': (<IGESData_ReadStage.IGESData_ReadEnd: 4>, None)}
+    __members__: dict # value = {'IGESData_ReadDir': <IGESData_ReadStage.IGESData_ReadDir: 0>, 'IGESData_ReadOwn': <IGESData_ReadStage.IGESData_ReadOwn: 1>, 'IGESData_ReadAssocs': <IGESData_ReadStage.IGESData_ReadAssocs: 2>, 'IGESData_ReadProps': <IGESData_ReadStage.IGESData_ReadProps: 3>, 'IGESData_ReadEnd': <IGESData_ReadStage.IGESData_ReadEnd: 4>}
     pass
 class IGESData_ReadWriteModule(OCP.Interface.Interface_ReaderModule, OCP.Standard.Standard_Transient):
     """
@@ -5889,7 +5914,7 @@ class IGESData_DefaultSpecific(IGESData_SpecificModule, OCP.Standard.Standard_Tr
         """
         Specific Automatic Correction on own Parameters of an Entity. It works by setting in accordance redundant data, if there are when there is no ambiguity (else, it does nothing). Remark that classic Corrections on Directory Entry (to set void data) are taken into account alsewhere.
         """
-    def OwnDump(self,CN : int,ent : IGESData_IGESEntity,dumper : IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,CN : int,ent : IGESData_IGESEntity,dumper : IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Specific Dump for UndefinedEntity : it concerns only own parameters, the general data (Directory Part, Lists) are taken into account by the IGESDumper
         """
@@ -5923,22 +5948,30 @@ class IGESData_Status():
 
       IGESData_TypeError
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IGESData_EntityError: OCP.IGESData.IGESData_Status # value = IGESData_Status.IGESData_EntityError
-    IGESData_EntityOK: OCP.IGESData.IGESData_Status # value = IGESData_Status.IGESData_EntityOK
-    IGESData_ReferenceError: OCP.IGESData.IGESData_Status # value = IGESData_Status.IGESData_ReferenceError
-    IGESData_TypeError: OCP.IGESData.IGESData_Status # value = IGESData_Status.IGESData_TypeError
-    __entries: dict # value = {'IGESData_EntityOK': (IGESData_Status.IGESData_EntityOK, None), 'IGESData_EntityError': (IGESData_Status.IGESData_EntityError, None), 'IGESData_ReferenceError': (IGESData_Status.IGESData_ReferenceError, None), 'IGESData_TypeError': (IGESData_Status.IGESData_TypeError, None)}
-    __members__: dict # value = {'IGESData_EntityOK': IGESData_Status.IGESData_EntityOK, 'IGESData_EntityError': IGESData_Status.IGESData_EntityError, 'IGESData_ReferenceError': IGESData_Status.IGESData_ReferenceError, 'IGESData_TypeError': IGESData_Status.IGESData_TypeError}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IGESData_EntityError: OCP.IGESData.IGESData_Status # value = <IGESData_Status.IGESData_EntityError: 1>
+    IGESData_EntityOK: OCP.IGESData.IGESData_Status # value = <IGESData_Status.IGESData_EntityOK: 0>
+    IGESData_ReferenceError: OCP.IGESData.IGESData_Status # value = <IGESData_Status.IGESData_ReferenceError: 2>
+    IGESData_TypeError: OCP.IGESData.IGESData_Status # value = <IGESData_Status.IGESData_TypeError: 3>
+    __entries: dict # value = {'IGESData_EntityOK': (<IGESData_Status.IGESData_EntityOK: 0>, None), 'IGESData_EntityError': (<IGESData_Status.IGESData_EntityError: 1>, None), 'IGESData_ReferenceError': (<IGESData_Status.IGESData_ReferenceError: 2>, None), 'IGESData_TypeError': (<IGESData_Status.IGESData_TypeError: 3>, None)}
+    __members__: dict # value = {'IGESData_EntityOK': <IGESData_Status.IGESData_EntityOK: 0>, 'IGESData_EntityError': <IGESData_Status.IGESData_EntityError: 1>, 'IGESData_ReferenceError': <IGESData_Status.IGESData_ReferenceError: 2>, 'IGESData_TypeError': <IGESData_Status.IGESData_TypeError: 3>}
     pass
 class IGESData_ToolLocation(OCP.Standard.Standard_Transient):
     """
@@ -7190,23 +7223,23 @@ class IGESData_WriterLib():
     @overload
     def __init__(self,aprotocol : IGESData_Protocol) -> None: ...
     pass
-IGESData_DefAny: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_DefAny
-IGESData_DefNone: OCP.IGESData.IGESData_DefList # value = IGESData_DefList.IGESData_DefNone
-IGESData_DefOne: OCP.IGESData.IGESData_DefList # value = IGESData_DefList.IGESData_DefOne
-IGESData_DefReference: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_DefReference
-IGESData_DefSeveral: OCP.IGESData.IGESData_DefList # value = IGESData_DefList.IGESData_DefSeveral
-IGESData_DefValue: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_DefValue
-IGESData_DefVoid: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_DefVoid
-IGESData_EntityError: OCP.IGESData.IGESData_Status # value = IGESData_Status.IGESData_EntityError
-IGESData_EntityOK: OCP.IGESData.IGESData_Status # value = IGESData_Status.IGESData_EntityOK
-IGESData_ErrorOne: OCP.IGESData.IGESData_DefList # value = IGESData_DefList.IGESData_ErrorOne
-IGESData_ErrorRef: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_ErrorRef
-IGESData_ErrorSeveral: OCP.IGESData.IGESData_DefList # value = IGESData_DefList.IGESData_ErrorSeveral
-IGESData_ErrorVal: OCP.IGESData.IGESData_DefType # value = IGESData_DefType.IGESData_ErrorVal
-IGESData_ReadAssocs: OCP.IGESData.IGESData_ReadStage # value = IGESData_ReadStage.IGESData_ReadAssocs
-IGESData_ReadDir: OCP.IGESData.IGESData_ReadStage # value = IGESData_ReadStage.IGESData_ReadDir
-IGESData_ReadEnd: OCP.IGESData.IGESData_ReadStage # value = IGESData_ReadStage.IGESData_ReadEnd
-IGESData_ReadOwn: OCP.IGESData.IGESData_ReadStage # value = IGESData_ReadStage.IGESData_ReadOwn
-IGESData_ReadProps: OCP.IGESData.IGESData_ReadStage # value = IGESData_ReadStage.IGESData_ReadProps
-IGESData_ReferenceError: OCP.IGESData.IGESData_Status # value = IGESData_Status.IGESData_ReferenceError
-IGESData_TypeError: OCP.IGESData.IGESData_Status # value = IGESData_Status.IGESData_TypeError
+IGESData_DefAny: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_DefAny: 3>
+IGESData_DefNone: OCP.IGESData.IGESData_DefList # value = <IGESData_DefList.IGESData_DefNone: 0>
+IGESData_DefOne: OCP.IGESData.IGESData_DefList # value = <IGESData_DefList.IGESData_DefOne: 1>
+IGESData_DefReference: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_DefReference: 2>
+IGESData_DefSeveral: OCP.IGESData.IGESData_DefList # value = <IGESData_DefList.IGESData_DefSeveral: 2>
+IGESData_DefValue: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_DefValue: 1>
+IGESData_DefVoid: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_DefVoid: 0>
+IGESData_EntityError: OCP.IGESData.IGESData_Status # value = <IGESData_Status.IGESData_EntityError: 1>
+IGESData_EntityOK: OCP.IGESData.IGESData_Status # value = <IGESData_Status.IGESData_EntityOK: 0>
+IGESData_ErrorOne: OCP.IGESData.IGESData_DefList # value = <IGESData_DefList.IGESData_ErrorOne: 3>
+IGESData_ErrorRef: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_ErrorRef: 5>
+IGESData_ErrorSeveral: OCP.IGESData.IGESData_DefList # value = <IGESData_DefList.IGESData_ErrorSeveral: 4>
+IGESData_ErrorVal: OCP.IGESData.IGESData_DefType # value = <IGESData_DefType.IGESData_ErrorVal: 4>
+IGESData_ReadAssocs: OCP.IGESData.IGESData_ReadStage # value = <IGESData_ReadStage.IGESData_ReadAssocs: 2>
+IGESData_ReadDir: OCP.IGESData.IGESData_ReadStage # value = <IGESData_ReadStage.IGESData_ReadDir: 0>
+IGESData_ReadEnd: OCP.IGESData.IGESData_ReadStage # value = <IGESData_ReadStage.IGESData_ReadEnd: 4>
+IGESData_ReadOwn: OCP.IGESData.IGESData_ReadStage # value = <IGESData_ReadStage.IGESData_ReadOwn: 1>
+IGESData_ReadProps: OCP.IGESData.IGESData_ReadStage # value = <IGESData_ReadStage.IGESData_ReadProps: 3>
+IGESData_ReferenceError: OCP.IGESData.IGESData_Status # value = <IGESData_Status.IGESData_ReferenceError: 2>
+IGESData_TypeError: OCP.IGESData.IGESData_Status # value = <IGESData_Status.IGESData_TypeError: 3>

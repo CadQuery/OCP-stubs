@@ -4,18 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TDF
-import OCP.TColStd
-import OCP.PCDM
-import OCP.BinLDrivers
-import OCP.Message
-import OCP.Storage
-import OCP.Standard
 import OCP.TDocStd
-import OCP.CDM
+import OCP.TCollection
+import OCP.TColStd
 import OCP.BinObjMgt
+import io
+import OCP.Message
 import OCP.BinMDF
+import OCP.CDM
+import OCP.PCDM
+import OCP.Storage
+import OCP.BinLDrivers
+import OCP.Standard
 __all__  = [
 "BinTObjDrivers",
 "BinTObjDrivers_DocumentRetrievalDriver",
@@ -110,14 +111,14 @@ class BinTObjDrivers_DocumentRetrievalDriver(OCP.BinLDrivers.BinLDrivers_Documen
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: 
+    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         retrieves the content of the file into a new Document.
 
         None
         """
     @overload
-    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: ...
+    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @staticmethod
     def ReferenceCounter_s(theFileName : OCP.TCollection.TCollection_ExtendedString,theMsgDriver : OCP.Message.Message_Messenger) -> int: 
         """
@@ -203,14 +204,14 @@ class BinTObjDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentS
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -228,14 +229,14 @@ class BinTObjDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentS
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString) -> None: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Write <theDocument> to the binary file <theFileName>
 
         Write <theDocument> to theOStream
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : Any) -> None: ...
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -287,23 +288,25 @@ class BinTObjDrivers_IntSparseArrayDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standar
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
         """
     @overload
-    def Paste(self,theSource : OCP.BinObjMgt.BinObjMgt_Persistent,theTarget : OCP.TDF.TDF_Attribute,theRelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.BinObjMgt.BinObjMgt_Persistent,theRelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.BinObjMgt.BinObjMgt_Persistent,theRelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def Paste(self,theSource : OCP.BinObjMgt.BinObjMgt_Persistent,theTarget : OCP.TDF.TDF_Attribute,theRelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the type of source object, inheriting from Attribute from TDF.
-
         Returns the type of source object, inheriting from Attribute from TDF.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
@@ -367,6 +370,10 @@ class BinTObjDrivers_ModelDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standar
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -382,8 +389,6 @@ class BinTObjDrivers_ModelDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standar
     def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the type of source object, inheriting from Attribute from TDF.
-
         Returns the type of source object, inheriting from Attribute from TDF.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
@@ -447,23 +452,25 @@ class BinTObjDrivers_ObjectDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the type of source object, inheriting from Attribute from TDF.
-
         Returns the type of source object, inheriting from Attribute from TDF.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
@@ -527,23 +534,25 @@ class BinTObjDrivers_ReferenceDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Sta
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the type of source object, inheriting from Attribute from TDF.
-
         Returns the type of source object, inheriting from Attribute from TDF.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
@@ -607,6 +616,10 @@ class BinTObjDrivers_XYZDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard_
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -622,8 +635,6 @@ class BinTObjDrivers_XYZDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard_
     def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.BinObjMgt.BinObjMgt_Persistent,theRelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the type of source object, inheriting from Attribute from TDF.
-
         Returns the type of source object, inheriting from Attribute from TDF.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 

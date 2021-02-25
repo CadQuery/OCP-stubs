@@ -4,8 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.Quantity
+import OCP.TCollection
+import io
+import OSD_MemInfo
 import OCP.Standard
 __all__  = [
 "OSD_Chronometer",
@@ -176,7 +178,7 @@ class OSD_Chronometer():
         Restarts the Chronometer.
         """
     @overload
-    def Show(self) -> None: 
+    def Show(self) -> Tuple[float, float]: 
         """
         Shows the current CPU user and system time on the standard output stream <cout>. The chronometer can be running (laps Time) or stopped.
 
@@ -187,11 +189,11 @@ class OSD_Chronometer():
         Returns the current CPU user and system time in variables. The chronometer can be running (laps Time) or stopped.
         """
     @overload
-    def Show(self) -> Tuple[float, float]: ...
-    @overload
-    def Show(self,theOStream : Any) -> None: ...
+    def Show(self) -> None: ...
     @overload
     def Show(self) -> Tuple[float]: ...
+    @overload
+    def Show(self,theOStream : io.BytesIO) -> None: ...
     def Start(self) -> None: ...
     def Stop(self) -> None: 
         """
@@ -309,9 +311,9 @@ class OSD_DirectoryIterator():
         Returns the next item found .
         """
     @overload
-    def __init__(self,where : OSD_Path,Mask : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,where : OSD_Path,Mask : OCP.TCollection.TCollection_AsciiString) -> None: ...
     pass
 class OSD_Disk():
     """
@@ -350,11 +352,11 @@ class OSD_Disk():
         Instantiates <me> with <Name>.
         """
     @overload
-    def __init__(self,PathName : str) -> None: ...
+    def __init__(self,Name : OSD_Path) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,Name : OSD_Path) -> None: ...
+    def __init__(self,PathName : str) -> None: ...
     pass
 class OSD_Environment():
     """
@@ -398,11 +400,11 @@ class OSD_Environment():
         Gets the value of an environment variable
         """
     @overload
-    def __init__(self,Name : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self,Name : OCP.TCollection.TCollection_AsciiString,Value : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Name : OCP.TCollection.TCollection_AsciiString) -> None: ...
     pass
 class OSD_Error():
     """
@@ -751,14 +753,14 @@ class OSD_File(OSD_FileNode):
         Returns access mode of <me>.
         """
     @overload
-    def Read(self,Buffer : OCP.TCollection.TCollection_AsciiString,Nbyte : int) -> None: 
+    def Read(self,Buffer : capsule,Nbyte : int) -> Tuple[int]: 
         """
         Attempts to read Nbyte bytes from the file associated with the object file. Upon successful completion, Read returns the number of bytes actually read and placed in the Buffer. This number may be less than Nbyte if the number of bytes left in the file is less than Nbyte bytes. In this case only number of read bytes will be placed in the buffer.
 
         Attempts to read Nbyte bytes from the files associated with the object File. Upon successful completion, Read returns the number of bytes actually read and placed in the Buffer. This number may be less than Nbyte if the number of bytes left in the file is less than Nbyte bytes. For this reason the output parameter Readbyte will contain the number of read bytes.
         """
     @overload
-    def Read(self,Buffer : capsule,Nbyte : int) -> Tuple[int]: ...
+    def Read(self,Buffer : OCP.TCollection.TCollection_AsciiString,Nbyte : int) -> None: ...
     def ReadLastLine(self,aLine : OCP.TCollection.TCollection_AsciiString,aDelay : int,aNbTries : int) -> bool: 
         """
         Enables to emulate unix "tail -f" command. If a line is available in the file <me> returns it. Otherwise attemps to read again aNbTries times in the file waiting aDelay seconds between each read. If meanwhile the file increases returns the next line, otherwise returns FALSE.
@@ -809,14 +811,14 @@ class OSD_File(OSD_FileNode):
         Unlocks current file
         """
     @overload
-    def Write(self,theBuffer : capsule,theNbBytes : int) -> None: 
+    def Write(self,theBuffer : OCP.TCollection.TCollection_AsciiString,theNbBytes : int) -> None: 
         """
         Attempts to write theNbBytes bytes from the AsciiString to the file.
 
         Attempts to write theNbBytes bytes from the buffer pointed to by theBuffer to the file associated to the object File.
         """
     @overload
-    def Write(self,theBuffer : OCP.TCollection.TCollection_AsciiString,theNbBytes : int) -> None: ...
+    def Write(self,theBuffer : capsule,theNbBytes : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
@@ -950,21 +952,29 @@ class OSD_FromWhere():
 
       OSD_FromEnd
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OSD_FromBeginning: OCP.OSD.OSD_FromWhere # value = OSD_FromWhere.OSD_FromBeginning
-    OSD_FromEnd: OCP.OSD.OSD_FromWhere # value = OSD_FromWhere.OSD_FromEnd
-    OSD_FromHere: OCP.OSD.OSD_FromWhere # value = OSD_FromWhere.OSD_FromHere
-    __entries: dict # value = {'OSD_FromBeginning': (OSD_FromWhere.OSD_FromBeginning, None), 'OSD_FromHere': (OSD_FromWhere.OSD_FromHere, None), 'OSD_FromEnd': (OSD_FromWhere.OSD_FromEnd, None)}
-    __members__: dict # value = {'OSD_FromBeginning': OSD_FromWhere.OSD_FromBeginning, 'OSD_FromHere': OSD_FromWhere.OSD_FromHere, 'OSD_FromEnd': OSD_FromWhere.OSD_FromEnd}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OSD_FromBeginning: OCP.OSD.OSD_FromWhere # value = <OSD_FromWhere.OSD_FromBeginning: 0>
+    OSD_FromEnd: OCP.OSD.OSD_FromWhere # value = <OSD_FromWhere.OSD_FromEnd: 2>
+    OSD_FromHere: OCP.OSD.OSD_FromWhere # value = <OSD_FromWhere.OSD_FromHere: 1>
+    __entries: dict # value = {'OSD_FromBeginning': (<OSD_FromWhere.OSD_FromBeginning: 0>, None), 'OSD_FromHere': (<OSD_FromWhere.OSD_FromHere: 1>, None), 'OSD_FromEnd': (<OSD_FromWhere.OSD_FromEnd: 2>, None)}
+    __members__: dict # value = {'OSD_FromBeginning': <OSD_FromWhere.OSD_FromBeginning: 0>, 'OSD_FromHere': <OSD_FromWhere.OSD_FromHere: 1>, 'OSD_FromEnd': <OSD_FromWhere.OSD_FromEnd: 2>}
     pass
 class OSD_Host():
     """
@@ -1028,23 +1038,31 @@ class OSD_KindFile():
 
       OSD_UNKNOWN
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OSD_DIRECTORY: OCP.OSD.OSD_KindFile # value = OSD_KindFile.OSD_DIRECTORY
-    OSD_FILE: OCP.OSD.OSD_KindFile # value = OSD_KindFile.OSD_FILE
-    OSD_LINK: OCP.OSD.OSD_KindFile # value = OSD_KindFile.OSD_LINK
-    OSD_SOCKET: OCP.OSD.OSD_KindFile # value = OSD_KindFile.OSD_SOCKET
-    OSD_UNKNOWN: OCP.OSD.OSD_KindFile # value = OSD_KindFile.OSD_UNKNOWN
-    __entries: dict # value = {'OSD_FILE': (OSD_KindFile.OSD_FILE, None), 'OSD_DIRECTORY': (OSD_KindFile.OSD_DIRECTORY, None), 'OSD_LINK': (OSD_KindFile.OSD_LINK, None), 'OSD_SOCKET': (OSD_KindFile.OSD_SOCKET, None), 'OSD_UNKNOWN': (OSD_KindFile.OSD_UNKNOWN, None)}
-    __members__: dict # value = {'OSD_FILE': OSD_KindFile.OSD_FILE, 'OSD_DIRECTORY': OSD_KindFile.OSD_DIRECTORY, 'OSD_LINK': OSD_KindFile.OSD_LINK, 'OSD_SOCKET': OSD_KindFile.OSD_SOCKET, 'OSD_UNKNOWN': OSD_KindFile.OSD_UNKNOWN}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OSD_DIRECTORY: OCP.OSD.OSD_KindFile # value = <OSD_KindFile.OSD_DIRECTORY: 1>
+    OSD_FILE: OCP.OSD.OSD_KindFile # value = <OSD_KindFile.OSD_FILE: 0>
+    OSD_LINK: OCP.OSD.OSD_KindFile # value = <OSD_KindFile.OSD_LINK: 2>
+    OSD_SOCKET: OCP.OSD.OSD_KindFile # value = <OSD_KindFile.OSD_SOCKET: 3>
+    OSD_UNKNOWN: OCP.OSD.OSD_KindFile # value = <OSD_KindFile.OSD_UNKNOWN: 4>
+    __entries: dict # value = {'OSD_FILE': (<OSD_KindFile.OSD_FILE: 0>, None), 'OSD_DIRECTORY': (<OSD_KindFile.OSD_DIRECTORY: 1>, None), 'OSD_LINK': (<OSD_KindFile.OSD_LINK: 2>, None), 'OSD_SOCKET': (<OSD_KindFile.OSD_SOCKET: 3>, None), 'OSD_UNKNOWN': (<OSD_KindFile.OSD_UNKNOWN: 4>, None)}
+    __members__: dict # value = {'OSD_FILE': <OSD_KindFile.OSD_FILE: 0>, 'OSD_DIRECTORY': <OSD_KindFile.OSD_DIRECTORY: 1>, 'OSD_LINK': <OSD_KindFile.OSD_LINK: 2>, 'OSD_SOCKET': <OSD_KindFile.OSD_SOCKET: 3>, 'OSD_UNKNOWN': <OSD_KindFile.OSD_UNKNOWN: 4>}
     pass
 class OSD_LoadMode():
     """
@@ -1056,20 +1074,28 @@ class OSD_LoadMode():
 
       OSD_RTLD_NOW
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OSD_RTLD_LAZY: OCP.OSD.OSD_LoadMode # value = OSD_LoadMode.OSD_RTLD_LAZY
-    OSD_RTLD_NOW: OCP.OSD.OSD_LoadMode # value = OSD_LoadMode.OSD_RTLD_NOW
-    __entries: dict # value = {'OSD_RTLD_LAZY': (OSD_LoadMode.OSD_RTLD_LAZY, None), 'OSD_RTLD_NOW': (OSD_LoadMode.OSD_RTLD_NOW, None)}
-    __members__: dict # value = {'OSD_RTLD_LAZY': OSD_LoadMode.OSD_RTLD_LAZY, 'OSD_RTLD_NOW': OSD_LoadMode.OSD_RTLD_NOW}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OSD_RTLD_LAZY: OCP.OSD.OSD_LoadMode # value = <OSD_LoadMode.OSD_RTLD_LAZY: 0>
+    OSD_RTLD_NOW: OCP.OSD.OSD_LoadMode # value = <OSD_LoadMode.OSD_RTLD_NOW: 1>
+    __entries: dict # value = {'OSD_RTLD_LAZY': (<OSD_LoadMode.OSD_RTLD_LAZY: 0>, None), 'OSD_RTLD_NOW': (<OSD_LoadMode.OSD_RTLD_NOW: 1>, None)}
+    __members__: dict # value = {'OSD_RTLD_LAZY': <OSD_LoadMode.OSD_RTLD_LAZY: 0>, 'OSD_RTLD_NOW': <OSD_LoadMode.OSD_RTLD_NOW: 1>}
     pass
 class OSD_LockType():
     """
@@ -1085,22 +1111,30 @@ class OSD_LockType():
 
       OSD_ExclusiveLock
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OSD_ExclusiveLock: OCP.OSD.OSD_LockType # value = OSD_LockType.OSD_ExclusiveLock
-    OSD_NoLock: OCP.OSD.OSD_LockType # value = OSD_LockType.OSD_NoLock
-    OSD_ReadLock: OCP.OSD.OSD_LockType # value = OSD_LockType.OSD_ReadLock
-    OSD_WriteLock: OCP.OSD.OSD_LockType # value = OSD_LockType.OSD_WriteLock
-    __entries: dict # value = {'OSD_NoLock': (OSD_LockType.OSD_NoLock, None), 'OSD_ReadLock': (OSD_LockType.OSD_ReadLock, None), 'OSD_WriteLock': (OSD_LockType.OSD_WriteLock, None), 'OSD_ExclusiveLock': (OSD_LockType.OSD_ExclusiveLock, None)}
-    __members__: dict # value = {'OSD_NoLock': OSD_LockType.OSD_NoLock, 'OSD_ReadLock': OSD_LockType.OSD_ReadLock, 'OSD_WriteLock': OSD_LockType.OSD_WriteLock, 'OSD_ExclusiveLock': OSD_LockType.OSD_ExclusiveLock}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OSD_ExclusiveLock: OCP.OSD.OSD_LockType # value = <OSD_LockType.OSD_ExclusiveLock: 3>
+    OSD_NoLock: OCP.OSD.OSD_LockType # value = <OSD_LockType.OSD_NoLock: 0>
+    OSD_ReadLock: OCP.OSD.OSD_LockType # value = <OSD_LockType.OSD_ReadLock: 1>
+    OSD_WriteLock: OCP.OSD.OSD_LockType # value = <OSD_LockType.OSD_WriteLock: 2>
+    __entries: dict # value = {'OSD_NoLock': (<OSD_LockType.OSD_NoLock: 0>, None), 'OSD_ReadLock': (<OSD_LockType.OSD_ReadLock: 1>, None), 'OSD_WriteLock': (<OSD_LockType.OSD_WriteLock: 2>, None), 'OSD_ExclusiveLock': (<OSD_LockType.OSD_ExclusiveLock: 3>, None)}
+    __members__: dict # value = {'OSD_NoLock': <OSD_LockType.OSD_NoLock: 0>, 'OSD_ReadLock': <OSD_LockType.OSD_ReadLock: 1>, 'OSD_WriteLock': <OSD_LockType.OSD_WriteLock: 2>, 'OSD_ExclusiveLock': <OSD_LockType.OSD_ExclusiveLock: 3>}
     pass
 class OSD_MAllocHook():
     """
@@ -1132,15 +1166,79 @@ class OSD_MemInfo():
     """
     This class provide information about memory utilized by current process. This information includes: - Private Memory - synthetic value that tries to filter out the memory usage only by the process itself (allocated for data and stack), excluding dynamic libraries. These pages may be in RAM or in SWAP. - Virtual Memory - amount of reserved and committed memory in the user-mode portion of the virtual address space. Notice that this counter includes reserved memory (not yet in used) and shared between processes memory (libraries). - Working Set - set of memory pages in the virtual address space of the process that are currently resident in physical memory (RAM). These pages are available for an application to use without triggering a page fault. - Pagefile Usage - space allocated for the pagefile, in bytes. Those pages may or may not be in memory (RAM) thus this counter couldn't be used to estimate how many active pages doesn't present in RAM.
     """
+    class Counter_e():
+        """
+        None
+
+        Members:
+
+          MemPrivate
+
+          MemVirtual
+
+          MemWorkingSet
+
+          MemWorkingSetPeak
+
+          MemSwapUsage
+
+          MemSwapUsagePeak
+
+          MemHeapUsage
+
+          MemCounter_NB
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        MemCounter_NB: OCP.OSD.Counter_e # value = <Counter_e.MemCounter_NB: 7>
+        MemHeapUsage: OCP.OSD.Counter_e # value = <Counter_e.MemHeapUsage: 6>
+        MemPrivate: OCP.OSD.Counter_e # value = <Counter_e.MemPrivate: 0>
+        MemSwapUsage: OCP.OSD.Counter_e # value = <Counter_e.MemSwapUsage: 4>
+        MemSwapUsagePeak: OCP.OSD.Counter_e # value = <Counter_e.MemSwapUsagePeak: 5>
+        MemVirtual: OCP.OSD.Counter_e # value = <Counter_e.MemVirtual: 1>
+        MemWorkingSet: OCP.OSD.Counter_e # value = <Counter_e.MemWorkingSet: 2>
+        MemWorkingSetPeak: OCP.OSD.Counter_e # value = <Counter_e.MemWorkingSetPeak: 3>
+        __entries: dict # value = {'MemPrivate': (<Counter_e.MemPrivate: 0>, None), 'MemVirtual': (<Counter_e.MemVirtual: 1>, None), 'MemWorkingSet': (<Counter_e.MemWorkingSet: 2>, None), 'MemWorkingSetPeak': (<Counter_e.MemWorkingSetPeak: 3>, None), 'MemSwapUsage': (<Counter_e.MemSwapUsage: 4>, None), 'MemSwapUsagePeak': (<Counter_e.MemSwapUsagePeak: 5>, None), 'MemHeapUsage': (<Counter_e.MemHeapUsage: 6>, None), 'MemCounter_NB': (<Counter_e.MemCounter_NB: 7>, None)}
+        __members__: dict # value = {'MemPrivate': <Counter_e.MemPrivate: 0>, 'MemVirtual': <Counter_e.MemVirtual: 1>, 'MemWorkingSet': <Counter_e.MemWorkingSet: 2>, 'MemWorkingSetPeak': <Counter_e.MemWorkingSetPeak: 3>, 'MemSwapUsage': <Counter_e.MemSwapUsage: 4>, 'MemSwapUsagePeak': <Counter_e.MemSwapUsagePeak: 5>, 'MemHeapUsage': <Counter_e.MemHeapUsage: 6>, 'MemCounter_NB': <Counter_e.MemCounter_NB: 7>}
+        pass
     def Clear(self) -> None: 
         """
         Clear counters
+        """
+    def IsActive(self,theCounter : OSD_MemInfo.Counter_e) -> bool: 
+        """
+        Return true if the counter is active
         """
     @staticmethod
     def PrintInfo_s() -> OCP.TCollection.TCollection_AsciiString: 
         """
         Return the string representation for all available counter.
         """
+    @overload
+    def SetActive(self,theCounter : OSD_MemInfo.Counter_e,theActive : bool) -> None: 
+        """
+        Set all counters active. The information is collected for active counters.
+
+        Set the counter active. The information is collected for active counters.
+        """
+    @overload
+    def SetActive(self,theActive : bool) -> None: ...
     def ToString(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Return the string representation for all available counter.
@@ -1149,19 +1247,27 @@ class OSD_MemInfo():
         """
         Update counters
         """
-    def Value(self,theCounter : Any) -> int: 
+    def Value(self,theCounter : OSD_MemInfo.Counter_e) -> int: 
         """
         Return value of specified counter in bytes. Notice that NOT all counters are available on various systems. Standard_Size(-1) means invalid (unavailable) value.
         """
-    def ValueMiB(self,theCounter : Any) -> int: 
+    def ValueMiB(self,theCounter : OSD_MemInfo.Counter_e) -> int: 
         """
         Return value of specified counter in MiB. Notice that NOT all counters are available on various systems. Standard_Size(-1) means invalid (unavailable) value.
         """
-    def ValuePreciseMiB(self,theCounter : Any) -> float: 
+    def ValuePreciseMiB(self,theCounter : OSD_MemInfo.Counter_e) -> float: 
         """
         Return floating value of specified counter in MiB. Notice that NOT all counters are available on various systems. Standard_Real(-1) means invalid (unavailable) value.
         """
     def __init__(self,theImmediateUpdate : bool=True) -> None: ...
+    MemCounter_NB: OCP.OSD.Counter_e # value = <Counter_e.MemCounter_NB: 7>
+    MemHeapUsage: OCP.OSD.Counter_e # value = <Counter_e.MemHeapUsage: 6>
+    MemPrivate: OCP.OSD.Counter_e # value = <Counter_e.MemPrivate: 0>
+    MemSwapUsage: OCP.OSD.Counter_e # value = <Counter_e.MemSwapUsage: 4>
+    MemSwapUsagePeak: OCP.OSD.Counter_e # value = <Counter_e.MemSwapUsagePeak: 5>
+    MemVirtual: OCP.OSD.Counter_e # value = <Counter_e.MemVirtual: 1>
+    MemWorkingSet: OCP.OSD.Counter_e # value = <Counter_e.MemWorkingSet: 2>
+    MemWorkingSetPeak: OCP.OSD.Counter_e # value = <Counter_e.MemWorkingSetPeak: 3>
     pass
 class OSD_OEMType():
     """
@@ -1193,30 +1299,38 @@ class OSD_OEMType():
 
       OSD_AIX
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OSD_AIX: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_AIX
-    OSD_DEC: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_DEC
-    OSD_HP: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_HP
-    OSD_IBM: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_IBM
-    OSD_LIN: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_LIN
-    OSD_MAC: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_MAC
-    OSD_NEC: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_NEC
-    OSD_PC: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_PC
-    OSD_SGI: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_SGI
-    OSD_SUN: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_SUN
-    OSD_Unavailable: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_Unavailable
-    OSD_VAX: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_VAX
-    __entries: dict # value = {'OSD_Unavailable': (OSD_OEMType.OSD_Unavailable, None), 'OSD_SUN': (OSD_OEMType.OSD_SUN, None), 'OSD_DEC': (OSD_OEMType.OSD_DEC, None), 'OSD_SGI': (OSD_OEMType.OSD_SGI, None), 'OSD_NEC': (OSD_OEMType.OSD_NEC, None), 'OSD_MAC': (OSD_OEMType.OSD_MAC, None), 'OSD_PC': (OSD_OEMType.OSD_PC, None), 'OSD_HP': (OSD_OEMType.OSD_HP, None), 'OSD_IBM': (OSD_OEMType.OSD_IBM, None), 'OSD_VAX': (OSD_OEMType.OSD_VAX, None), 'OSD_LIN': (OSD_OEMType.OSD_LIN, None), 'OSD_AIX': (OSD_OEMType.OSD_AIX, None)}
-    __members__: dict # value = {'OSD_Unavailable': OSD_OEMType.OSD_Unavailable, 'OSD_SUN': OSD_OEMType.OSD_SUN, 'OSD_DEC': OSD_OEMType.OSD_DEC, 'OSD_SGI': OSD_OEMType.OSD_SGI, 'OSD_NEC': OSD_OEMType.OSD_NEC, 'OSD_MAC': OSD_OEMType.OSD_MAC, 'OSD_PC': OSD_OEMType.OSD_PC, 'OSD_HP': OSD_OEMType.OSD_HP, 'OSD_IBM': OSD_OEMType.OSD_IBM, 'OSD_VAX': OSD_OEMType.OSD_VAX, 'OSD_LIN': OSD_OEMType.OSD_LIN, 'OSD_AIX': OSD_OEMType.OSD_AIX}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OSD_AIX: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_AIX: 11>
+    OSD_DEC: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_DEC: 2>
+    OSD_HP: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_HP: 7>
+    OSD_IBM: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_IBM: 8>
+    OSD_LIN: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_LIN: 10>
+    OSD_MAC: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_MAC: 5>
+    OSD_NEC: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_NEC: 4>
+    OSD_PC: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_PC: 6>
+    OSD_SGI: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_SGI: 3>
+    OSD_SUN: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_SUN: 1>
+    OSD_Unavailable: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_Unavailable: 0>
+    OSD_VAX: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_VAX: 9>
+    __entries: dict # value = {'OSD_Unavailable': (<OSD_OEMType.OSD_Unavailable: 0>, None), 'OSD_SUN': (<OSD_OEMType.OSD_SUN: 1>, None), 'OSD_DEC': (<OSD_OEMType.OSD_DEC: 2>, None), 'OSD_SGI': (<OSD_OEMType.OSD_SGI: 3>, None), 'OSD_NEC': (<OSD_OEMType.OSD_NEC: 4>, None), 'OSD_MAC': (<OSD_OEMType.OSD_MAC: 5>, None), 'OSD_PC': (<OSD_OEMType.OSD_PC: 6>, None), 'OSD_HP': (<OSD_OEMType.OSD_HP: 7>, None), 'OSD_IBM': (<OSD_OEMType.OSD_IBM: 8>, None), 'OSD_VAX': (<OSD_OEMType.OSD_VAX: 9>, None), 'OSD_LIN': (<OSD_OEMType.OSD_LIN: 10>, None), 'OSD_AIX': (<OSD_OEMType.OSD_AIX: 11>, None)}
+    __members__: dict # value = {'OSD_Unavailable': <OSD_OEMType.OSD_Unavailable: 0>, 'OSD_SUN': <OSD_OEMType.OSD_SUN: 1>, 'OSD_DEC': <OSD_OEMType.OSD_DEC: 2>, 'OSD_SGI': <OSD_OEMType.OSD_SGI: 3>, 'OSD_NEC': <OSD_OEMType.OSD_NEC: 4>, 'OSD_MAC': <OSD_OEMType.OSD_MAC: 5>, 'OSD_PC': <OSD_OEMType.OSD_PC: 6>, 'OSD_HP': <OSD_OEMType.OSD_HP: 7>, 'OSD_IBM': <OSD_OEMType.OSD_IBM: 8>, 'OSD_VAX': <OSD_OEMType.OSD_VAX: 9>, 'OSD_LIN': <OSD_OEMType.OSD_LIN: 10>, 'OSD_AIX': <OSD_OEMType.OSD_AIX: 11>}
     pass
 class OSD_OSDError(Exception, BaseException):
     class type():
@@ -1241,21 +1355,29 @@ class OSD_OpenMode():
 
       OSD_ReadWrite
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OSD_ReadOnly: OCP.OSD.OSD_OpenMode # value = OSD_OpenMode.OSD_ReadOnly
-    OSD_ReadWrite: OCP.OSD.OSD_OpenMode # value = OSD_OpenMode.OSD_ReadWrite
-    OSD_WriteOnly: OCP.OSD.OSD_OpenMode # value = OSD_OpenMode.OSD_WriteOnly
-    __entries: dict # value = {'OSD_ReadOnly': (OSD_OpenMode.OSD_ReadOnly, None), 'OSD_WriteOnly': (OSD_OpenMode.OSD_WriteOnly, None), 'OSD_ReadWrite': (OSD_OpenMode.OSD_ReadWrite, None)}
-    __members__: dict # value = {'OSD_ReadOnly': OSD_OpenMode.OSD_ReadOnly, 'OSD_WriteOnly': OSD_OpenMode.OSD_WriteOnly, 'OSD_ReadWrite': OSD_OpenMode.OSD_ReadWrite}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OSD_ReadOnly: OCP.OSD.OSD_OpenMode # value = <OSD_OpenMode.OSD_ReadOnly: 0>
+    OSD_ReadWrite: OCP.OSD.OSD_OpenMode # value = <OSD_OpenMode.OSD_ReadWrite: 2>
+    OSD_WriteOnly: OCP.OSD.OSD_OpenMode # value = <OSD_OpenMode.OSD_WriteOnly: 1>
+    __entries: dict # value = {'OSD_ReadOnly': (<OSD_OpenMode.OSD_ReadOnly: 0>, None), 'OSD_WriteOnly': (<OSD_OpenMode.OSD_WriteOnly: 1>, None), 'OSD_ReadWrite': (<OSD_OpenMode.OSD_ReadWrite: 2>, None)}
+    __members__: dict # value = {'OSD_ReadOnly': <OSD_OpenMode.OSD_ReadOnly: 0>, 'OSD_WriteOnly': <OSD_OpenMode.OSD_WriteOnly: 1>, 'OSD_ReadWrite': <OSD_OpenMode.OSD_ReadWrite: 2>}
     pass
 class OSD_Parallel():
     """
@@ -1302,6 +1424,11 @@ class OSD_Path():
     def Extension(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns my extension name. This returns an empty string if path contains no file name.
+        """
+    @staticmethod
+    def FileNameAndExtension_s(theFilePath : OCP.TCollection.TCollection_AsciiString,theName : OCP.TCollection.TCollection_AsciiString,theExtension : OCP.TCollection.TCollection_AsciiString) -> None: 
+        """
+        Return file extension from the name in lower case. Extension is expected to be within 20-symbols length, and determined as file name tail after last dot. Example: IN theFilePath ='Image.sbs.JPG' OUT theName ='Image.sbs' OUT theFileName ='jpg'
         """
     @staticmethod
     def FolderAndFileFromPath_s(theFilePath : OCP.TCollection.TCollection_AsciiString,theFolder : OCP.TCollection.TCollection_AsciiString,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: 
@@ -1380,14 +1507,14 @@ class OSD_Path():
         Returns the relative file path between the absolute directory path <DirPath> and the absolute file path <AbsFilePath>. If <DirPath> starts with "/", paths are handled as on Unix, if it starts with a letter followed by ":", as on WNT. In particular on WNT directory names are not key sensitive. If handling fails, an empty string is returned.
         """
     @overload
-    def RemoveATrek(self,aName : OCP.TCollection.TCollection_AsciiString) -> None: 
+    def RemoveATrek(self,where : int) -> None: 
         """
         This removes a component of Trek in <me> at position <where>. The first component of Trek is numbered 1. ex: me = "|usr|bin|" me.RemoveATrek(1) gives me = "|bin|" To avoid a 'NumericError' because of a bad <where>, use TrekLength() to know number of components of Trek in <me>.
 
         This removes <aName> from <me> in Trek. No error is raised if <aName> is not in <me>. ex: me = "|usr|sys|etc|doc" me.RemoveATrek("sys") gives me = "|usr|etc|doc".
         """
     @overload
-    def RemoveATrek(self,where : int) -> None: ...
+    def RemoveATrek(self,aName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     def SetDisk(self,aName : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Sets Disk of <me>.
@@ -1449,9 +1576,9 @@ class OSD_Path():
         Gets each component of a path.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aDependentName : OCP.TCollection.TCollection_AsciiString,aSysType : OSD_SysType=OSD_SysType.OSD_Default) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,aNode : OCP.TCollection.TCollection_AsciiString,aUsername : OCP.TCollection.TCollection_AsciiString,aPassword : OCP.TCollection.TCollection_AsciiString,aDisk : OCP.TCollection.TCollection_AsciiString,aTrek : OCP.TCollection.TCollection_AsciiString,aName : OCP.TCollection.TCollection_AsciiString,anExtension : OCP.TCollection.TCollection_AsciiString) -> None: ...
     pass
@@ -1480,9 +1607,9 @@ class OSD_PerfMeter():
         Increments the counter w/o time measurement
         """
     @overload
-    def __init__(self,theMeter : str,theToAutoStart : bool=True) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theMeter : str,theToAutoStart : bool=True) -> None: ...
     pass
 class OSD_Process():
     """
@@ -1747,22 +1874,30 @@ class OSD_SignalMode():
 
       OSD_SignalMode_Unset
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OSD_SignalMode_AsIs: OCP.OSD.OSD_SignalMode # value = OSD_SignalMode.OSD_SignalMode_AsIs
-    OSD_SignalMode_Set: OCP.OSD.OSD_SignalMode # value = OSD_SignalMode.OSD_SignalMode_Set
-    OSD_SignalMode_SetUnhandled: OCP.OSD.OSD_SignalMode # value = OSD_SignalMode.OSD_SignalMode_SetUnhandled
-    OSD_SignalMode_Unset: OCP.OSD.OSD_SignalMode # value = OSD_SignalMode.OSD_SignalMode_Unset
-    __entries: dict # value = {'OSD_SignalMode_AsIs': (OSD_SignalMode.OSD_SignalMode_AsIs, None), 'OSD_SignalMode_Set': (OSD_SignalMode.OSD_SignalMode_Set, None), 'OSD_SignalMode_SetUnhandled': (OSD_SignalMode.OSD_SignalMode_SetUnhandled, None), 'OSD_SignalMode_Unset': (OSD_SignalMode.OSD_SignalMode_Unset, None)}
-    __members__: dict # value = {'OSD_SignalMode_AsIs': OSD_SignalMode.OSD_SignalMode_AsIs, 'OSD_SignalMode_Set': OSD_SignalMode.OSD_SignalMode_Set, 'OSD_SignalMode_SetUnhandled': OSD_SignalMode.OSD_SignalMode_SetUnhandled, 'OSD_SignalMode_Unset': OSD_SignalMode.OSD_SignalMode_Unset}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OSD_SignalMode_AsIs: OCP.OSD.OSD_SignalMode # value = <OSD_SignalMode.OSD_SignalMode_AsIs: 0>
+    OSD_SignalMode_Set: OCP.OSD.OSD_SignalMode # value = <OSD_SignalMode.OSD_SignalMode_Set: 1>
+    OSD_SignalMode_SetUnhandled: OCP.OSD.OSD_SignalMode # value = <OSD_SignalMode.OSD_SignalMode_SetUnhandled: 2>
+    OSD_SignalMode_Unset: OCP.OSD.OSD_SignalMode # value = <OSD_SignalMode.OSD_SignalMode_Unset: 3>
+    __entries: dict # value = {'OSD_SignalMode_AsIs': (<OSD_SignalMode.OSD_SignalMode_AsIs: 0>, None), 'OSD_SignalMode_Set': (<OSD_SignalMode.OSD_SignalMode_Set: 1>, None), 'OSD_SignalMode_SetUnhandled': (<OSD_SignalMode.OSD_SignalMode_SetUnhandled: 2>, None), 'OSD_SignalMode_Unset': (<OSD_SignalMode.OSD_SignalMode_Unset: 3>, None)}
+    __members__: dict # value = {'OSD_SignalMode_AsIs': <OSD_SignalMode.OSD_SignalMode_AsIs: 0>, 'OSD_SignalMode_Set': <OSD_SignalMode.OSD_SignalMode_Set: 1>, 'OSD_SignalMode_SetUnhandled': <OSD_SignalMode.OSD_SignalMode_SetUnhandled: 2>, 'OSD_SignalMode_Unset': <OSD_SignalMode.OSD_SignalMode_Unset: 3>}
     pass
 class OSD_SingleProtection():
     """
@@ -1802,34 +1937,42 @@ class OSD_SingleProtection():
 
       OSD_RWXD
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OSD_D: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_D
-    OSD_None: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_None
-    OSD_R: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_R
-    OSD_RD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RD
-    OSD_RW: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RW
-    OSD_RWD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RWD
-    OSD_RWX: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RWX
-    OSD_RWXD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RWXD
-    OSD_RX: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RX
-    OSD_RXD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RXD
-    OSD_W: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_W
-    OSD_WD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_WD
-    OSD_WX: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_WX
-    OSD_WXD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_WXD
-    OSD_X: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_X
-    OSD_XD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_XD
-    __entries: dict # value = {'OSD_None': (OSD_SingleProtection.OSD_None, None), 'OSD_R': (OSD_SingleProtection.OSD_R, None), 'OSD_W': (OSD_SingleProtection.OSD_W, None), 'OSD_RW': (OSD_SingleProtection.OSD_RW, None), 'OSD_X': (OSD_SingleProtection.OSD_X, None), 'OSD_RX': (OSD_SingleProtection.OSD_RX, None), 'OSD_WX': (OSD_SingleProtection.OSD_WX, None), 'OSD_RWX': (OSD_SingleProtection.OSD_RWX, None), 'OSD_D': (OSD_SingleProtection.OSD_D, None), 'OSD_RD': (OSD_SingleProtection.OSD_RD, None), 'OSD_WD': (OSD_SingleProtection.OSD_WD, None), 'OSD_RWD': (OSD_SingleProtection.OSD_RWD, None), 'OSD_XD': (OSD_SingleProtection.OSD_XD, None), 'OSD_RXD': (OSD_SingleProtection.OSD_RXD, None), 'OSD_WXD': (OSD_SingleProtection.OSD_WXD, None), 'OSD_RWXD': (OSD_SingleProtection.OSD_RWXD, None)}
-    __members__: dict # value = {'OSD_None': OSD_SingleProtection.OSD_None, 'OSD_R': OSD_SingleProtection.OSD_R, 'OSD_W': OSD_SingleProtection.OSD_W, 'OSD_RW': OSD_SingleProtection.OSD_RW, 'OSD_X': OSD_SingleProtection.OSD_X, 'OSD_RX': OSD_SingleProtection.OSD_RX, 'OSD_WX': OSD_SingleProtection.OSD_WX, 'OSD_RWX': OSD_SingleProtection.OSD_RWX, 'OSD_D': OSD_SingleProtection.OSD_D, 'OSD_RD': OSD_SingleProtection.OSD_RD, 'OSD_WD': OSD_SingleProtection.OSD_WD, 'OSD_RWD': OSD_SingleProtection.OSD_RWD, 'OSD_XD': OSD_SingleProtection.OSD_XD, 'OSD_RXD': OSD_SingleProtection.OSD_RXD, 'OSD_WXD': OSD_SingleProtection.OSD_WXD, 'OSD_RWXD': OSD_SingleProtection.OSD_RWXD}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OSD_D: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_D: 8>
+    OSD_None: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_None: 0>
+    OSD_R: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_R: 1>
+    OSD_RD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RD: 9>
+    OSD_RW: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RW: 3>
+    OSD_RWD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RWD: 11>
+    OSD_RWX: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RWX: 7>
+    OSD_RWXD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RWXD: 15>
+    OSD_RX: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RX: 5>
+    OSD_RXD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RXD: 13>
+    OSD_W: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_W: 2>
+    OSD_WD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_WD: 10>
+    OSD_WX: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_WX: 6>
+    OSD_WXD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_WXD: 14>
+    OSD_X: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_X: 4>
+    OSD_XD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_XD: 12>
+    __entries: dict # value = {'OSD_None': (<OSD_SingleProtection.OSD_None: 0>, None), 'OSD_R': (<OSD_SingleProtection.OSD_R: 1>, None), 'OSD_W': (<OSD_SingleProtection.OSD_W: 2>, None), 'OSD_RW': (<OSD_SingleProtection.OSD_RW: 3>, None), 'OSD_X': (<OSD_SingleProtection.OSD_X: 4>, None), 'OSD_RX': (<OSD_SingleProtection.OSD_RX: 5>, None), 'OSD_WX': (<OSD_SingleProtection.OSD_WX: 6>, None), 'OSD_RWX': (<OSD_SingleProtection.OSD_RWX: 7>, None), 'OSD_D': (<OSD_SingleProtection.OSD_D: 8>, None), 'OSD_RD': (<OSD_SingleProtection.OSD_RD: 9>, None), 'OSD_WD': (<OSD_SingleProtection.OSD_WD: 10>, None), 'OSD_RWD': (<OSD_SingleProtection.OSD_RWD: 11>, None), 'OSD_XD': (<OSD_SingleProtection.OSD_XD: 12>, None), 'OSD_RXD': (<OSD_SingleProtection.OSD_RXD: 13>, None), 'OSD_WXD': (<OSD_SingleProtection.OSD_WXD: 14>, None), 'OSD_RWXD': (<OSD_SingleProtection.OSD_RWXD: 15>, None)}
+    __members__: dict # value = {'OSD_None': <OSD_SingleProtection.OSD_None: 0>, 'OSD_R': <OSD_SingleProtection.OSD_R: 1>, 'OSD_W': <OSD_SingleProtection.OSD_W: 2>, 'OSD_RW': <OSD_SingleProtection.OSD_RW: 3>, 'OSD_X': <OSD_SingleProtection.OSD_X: 4>, 'OSD_RX': <OSD_SingleProtection.OSD_RX: 5>, 'OSD_WX': <OSD_SingleProtection.OSD_WX: 6>, 'OSD_RWX': <OSD_SingleProtection.OSD_RWX: 7>, 'OSD_D': <OSD_SingleProtection.OSD_D: 8>, 'OSD_RD': <OSD_SingleProtection.OSD_RD: 9>, 'OSD_WD': <OSD_SingleProtection.OSD_WD: 10>, 'OSD_RWD': <OSD_SingleProtection.OSD_RWD: 11>, 'OSD_XD': <OSD_SingleProtection.OSD_XD: 12>, 'OSD_RXD': <OSD_SingleProtection.OSD_RXD: 13>, 'OSD_WXD': <OSD_SingleProtection.OSD_WXD: 14>, 'OSD_RWXD': <OSD_SingleProtection.OSD_RWXD: 15>}
     pass
 class OSD_SysType():
     """
@@ -1861,30 +2004,38 @@ class OSD_SysType():
 
       OSD_Aix
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OSD_Aix: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_Aix
-    OSD_Default: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_Default
-    OSD_LinuxREDHAT: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_LinuxREDHAT
-    OSD_MacOs: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_MacOs
-    OSD_OS2: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_OS2
-    OSD_OSF: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_OSF
-    OSD_Taligent: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_Taligent
-    OSD_UnixBSD: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_UnixBSD
-    OSD_UnixSystemV: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_UnixSystemV
-    OSD_Unknown: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_Unknown
-    OSD_VMS: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_VMS
-    OSD_WindowsNT: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_WindowsNT
-    __entries: dict # value = {'OSD_Unknown': (OSD_SysType.OSD_Unknown, None), 'OSD_Default': (OSD_SysType.OSD_Default, None), 'OSD_UnixBSD': (OSD_SysType.OSD_UnixBSD, None), 'OSD_UnixSystemV': (OSD_SysType.OSD_UnixSystemV, None), 'OSD_VMS': (OSD_SysType.OSD_VMS, None), 'OSD_OS2': (OSD_SysType.OSD_OS2, None), 'OSD_OSF': (OSD_SysType.OSD_OSF, None), 'OSD_MacOs': (OSD_SysType.OSD_MacOs, None), 'OSD_Taligent': (OSD_SysType.OSD_Taligent, None), 'OSD_WindowsNT': (OSD_SysType.OSD_WindowsNT, None), 'OSD_LinuxREDHAT': (OSD_SysType.OSD_LinuxREDHAT, None), 'OSD_Aix': (OSD_SysType.OSD_Aix, None)}
-    __members__: dict # value = {'OSD_Unknown': OSD_SysType.OSD_Unknown, 'OSD_Default': OSD_SysType.OSD_Default, 'OSD_UnixBSD': OSD_SysType.OSD_UnixBSD, 'OSD_UnixSystemV': OSD_SysType.OSD_UnixSystemV, 'OSD_VMS': OSD_SysType.OSD_VMS, 'OSD_OS2': OSD_SysType.OSD_OS2, 'OSD_OSF': OSD_SysType.OSD_OSF, 'OSD_MacOs': OSD_SysType.OSD_MacOs, 'OSD_Taligent': OSD_SysType.OSD_Taligent, 'OSD_WindowsNT': OSD_SysType.OSD_WindowsNT, 'OSD_LinuxREDHAT': OSD_SysType.OSD_LinuxREDHAT, 'OSD_Aix': OSD_SysType.OSD_Aix}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OSD_Aix: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_Aix: 11>
+    OSD_Default: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_Default: 1>
+    OSD_LinuxREDHAT: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_LinuxREDHAT: 10>
+    OSD_MacOs: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_MacOs: 7>
+    OSD_OS2: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_OS2: 5>
+    OSD_OSF: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_OSF: 6>
+    OSD_Taligent: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_Taligent: 8>
+    OSD_UnixBSD: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_UnixBSD: 2>
+    OSD_UnixSystemV: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_UnixSystemV: 3>
+    OSD_Unknown: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_Unknown: 0>
+    OSD_VMS: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_VMS: 4>
+    OSD_WindowsNT: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_WindowsNT: 9>
+    __entries: dict # value = {'OSD_Unknown': (<OSD_SysType.OSD_Unknown: 0>, None), 'OSD_Default': (<OSD_SysType.OSD_Default: 1>, None), 'OSD_UnixBSD': (<OSD_SysType.OSD_UnixBSD: 2>, None), 'OSD_UnixSystemV': (<OSD_SysType.OSD_UnixSystemV: 3>, None), 'OSD_VMS': (<OSD_SysType.OSD_VMS: 4>, None), 'OSD_OS2': (<OSD_SysType.OSD_OS2: 5>, None), 'OSD_OSF': (<OSD_SysType.OSD_OSF: 6>, None), 'OSD_MacOs': (<OSD_SysType.OSD_MacOs: 7>, None), 'OSD_Taligent': (<OSD_SysType.OSD_Taligent: 8>, None), 'OSD_WindowsNT': (<OSD_SysType.OSD_WindowsNT: 9>, None), 'OSD_LinuxREDHAT': (<OSD_SysType.OSD_LinuxREDHAT: 10>, None), 'OSD_Aix': (<OSD_SysType.OSD_Aix: 11>, None)}
+    __members__: dict # value = {'OSD_Unknown': <OSD_SysType.OSD_Unknown: 0>, 'OSD_Default': <OSD_SysType.OSD_Default: 1>, 'OSD_UnixBSD': <OSD_SysType.OSD_UnixBSD: 2>, 'OSD_UnixSystemV': <OSD_SysType.OSD_UnixSystemV: 3>, 'OSD_VMS': <OSD_SysType.OSD_VMS: 4>, 'OSD_OS2': <OSD_SysType.OSD_OS2: 5>, 'OSD_OSF': <OSD_SysType.OSD_OSF: 6>, 'OSD_MacOs': <OSD_SysType.OSD_MacOs: 7>, 'OSD_Taligent': <OSD_SysType.OSD_Taligent: 8>, 'OSD_WindowsNT': <OSD_SysType.OSD_WindowsNT: 9>, 'OSD_LinuxREDHAT': <OSD_SysType.OSD_LinuxREDHAT: 10>, 'OSD_Aix': <OSD_SysType.OSD_Aix: 11>}
     pass
 class OSD_Thread():
     """
@@ -1920,9 +2071,9 @@ class OSD_Thread():
         Waits till the thread finishes execution.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,other : OSD_Thread) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class OSD_ThreadPool(OCP.Standard.Standard_Transient):
     """
@@ -2052,7 +2203,7 @@ class OSD_Timer(OSD_Chronometer):
         Restarts the Timer.
         """
     @overload
-    def Show(self,os : Any) -> None: 
+    def Show(self) -> None: 
         """
         Shows both the elapsed time and CPU time on the standard output stream <cout>.The chronometer can be running (Lap Time) or stopped.
 
@@ -2061,9 +2212,9 @@ class OSD_Timer(OSD_Chronometer):
         returns both the elapsed time(seconds,minutes,hours) and CPU time.
         """
     @overload
-    def Show(self) -> None: ...
-    @overload
     def Show(self) -> Tuple[float, int, int, float]: ...
+    @overload
+    def Show(self,os : io.BytesIO) -> None: ...
     def Start(self) -> None: ...
     def Stop(self) -> None: 
         """
@@ -2115,33 +2266,41 @@ class OSD_WhoAmI():
 
       OSD_WEnvironmentIterator
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OSD_WChronometer: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WChronometer
-    OSD_WDirectory: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WDirectory
-    OSD_WDirectoryIterator: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WDirectoryIterator
-    OSD_WDisk: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WDisk
-    OSD_WEnvironment: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WEnvironment
-    OSD_WEnvironmentIterator: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WEnvironmentIterator
-    OSD_WFile: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WFile
-    OSD_WFileIterator: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WFileIterator
-    OSD_WFileNode: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WFileNode
-    OSD_WHost: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WHost
-    OSD_WPackage: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WPackage
-    OSD_WPath: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WPath
-    OSD_WProcess: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WProcess
-    OSD_WProtection: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WProtection
-    OSD_WTimer: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WTimer
-    __entries: dict # value = {'OSD_WDirectory': (OSD_WhoAmI.OSD_WDirectory, None), 'OSD_WDirectoryIterator': (OSD_WhoAmI.OSD_WDirectoryIterator, None), 'OSD_WEnvironment': (OSD_WhoAmI.OSD_WEnvironment, None), 'OSD_WFile': (OSD_WhoAmI.OSD_WFile, None), 'OSD_WFileNode': (OSD_WhoAmI.OSD_WFileNode, None), 'OSD_WFileIterator': (OSD_WhoAmI.OSD_WFileIterator, None), 'OSD_WPath': (OSD_WhoAmI.OSD_WPath, None), 'OSD_WProcess': (OSD_WhoAmI.OSD_WProcess, None), 'OSD_WProtection': (OSD_WhoAmI.OSD_WProtection, None), 'OSD_WHost': (OSD_WhoAmI.OSD_WHost, None), 'OSD_WDisk': (OSD_WhoAmI.OSD_WDisk, None), 'OSD_WChronometer': (OSD_WhoAmI.OSD_WChronometer, None), 'OSD_WTimer': (OSD_WhoAmI.OSD_WTimer, None), 'OSD_WPackage': (OSD_WhoAmI.OSD_WPackage, None), 'OSD_WEnvironmentIterator': (OSD_WhoAmI.OSD_WEnvironmentIterator, None)}
-    __members__: dict # value = {'OSD_WDirectory': OSD_WhoAmI.OSD_WDirectory, 'OSD_WDirectoryIterator': OSD_WhoAmI.OSD_WDirectoryIterator, 'OSD_WEnvironment': OSD_WhoAmI.OSD_WEnvironment, 'OSD_WFile': OSD_WhoAmI.OSD_WFile, 'OSD_WFileNode': OSD_WhoAmI.OSD_WFileNode, 'OSD_WFileIterator': OSD_WhoAmI.OSD_WFileIterator, 'OSD_WPath': OSD_WhoAmI.OSD_WPath, 'OSD_WProcess': OSD_WhoAmI.OSD_WProcess, 'OSD_WProtection': OSD_WhoAmI.OSD_WProtection, 'OSD_WHost': OSD_WhoAmI.OSD_WHost, 'OSD_WDisk': OSD_WhoAmI.OSD_WDisk, 'OSD_WChronometer': OSD_WhoAmI.OSD_WChronometer, 'OSD_WTimer': OSD_WhoAmI.OSD_WTimer, 'OSD_WPackage': OSD_WhoAmI.OSD_WPackage, 'OSD_WEnvironmentIterator': OSD_WhoAmI.OSD_WEnvironmentIterator}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OSD_WChronometer: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WChronometer: 11>
+    OSD_WDirectory: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WDirectory: 0>
+    OSD_WDirectoryIterator: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WDirectoryIterator: 1>
+    OSD_WDisk: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WDisk: 10>
+    OSD_WEnvironment: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WEnvironment: 2>
+    OSD_WEnvironmentIterator: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WEnvironmentIterator: 14>
+    OSD_WFile: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WFile: 3>
+    OSD_WFileIterator: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WFileIterator: 5>
+    OSD_WFileNode: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WFileNode: 4>
+    OSD_WHost: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WHost: 9>
+    OSD_WPackage: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WPackage: 13>
+    OSD_WPath: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WPath: 6>
+    OSD_WProcess: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WProcess: 7>
+    OSD_WProtection: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WProtection: 8>
+    OSD_WTimer: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WTimer: 12>
+    __entries: dict # value = {'OSD_WDirectory': (<OSD_WhoAmI.OSD_WDirectory: 0>, None), 'OSD_WDirectoryIterator': (<OSD_WhoAmI.OSD_WDirectoryIterator: 1>, None), 'OSD_WEnvironment': (<OSD_WhoAmI.OSD_WEnvironment: 2>, None), 'OSD_WFile': (<OSD_WhoAmI.OSD_WFile: 3>, None), 'OSD_WFileNode': (<OSD_WhoAmI.OSD_WFileNode: 4>, None), 'OSD_WFileIterator': (<OSD_WhoAmI.OSD_WFileIterator: 5>, None), 'OSD_WPath': (<OSD_WhoAmI.OSD_WPath: 6>, None), 'OSD_WProcess': (<OSD_WhoAmI.OSD_WProcess: 7>, None), 'OSD_WProtection': (<OSD_WhoAmI.OSD_WProtection: 8>, None), 'OSD_WHost': (<OSD_WhoAmI.OSD_WHost: 9>, None), 'OSD_WDisk': (<OSD_WhoAmI.OSD_WDisk: 10>, None), 'OSD_WChronometer': (<OSD_WhoAmI.OSD_WChronometer: 11>, None), 'OSD_WTimer': (<OSD_WhoAmI.OSD_WTimer: 12>, None), 'OSD_WPackage': (<OSD_WhoAmI.OSD_WPackage: 13>, None), 'OSD_WEnvironmentIterator': (<OSD_WhoAmI.OSD_WEnvironmentIterator: 14>, None)}
+    __members__: dict # value = {'OSD_WDirectory': <OSD_WhoAmI.OSD_WDirectory: 0>, 'OSD_WDirectoryIterator': <OSD_WhoAmI.OSD_WDirectoryIterator: 1>, 'OSD_WEnvironment': <OSD_WhoAmI.OSD_WEnvironment: 2>, 'OSD_WFile': <OSD_WhoAmI.OSD_WFile: 3>, 'OSD_WFileNode': <OSD_WhoAmI.OSD_WFileNode: 4>, 'OSD_WFileIterator': <OSD_WhoAmI.OSD_WFileIterator: 5>, 'OSD_WPath': <OSD_WhoAmI.OSD_WPath: 6>, 'OSD_WProcess': <OSD_WhoAmI.OSD_WProcess: 7>, 'OSD_WProtection': <OSD_WhoAmI.OSD_WProtection: 8>, 'OSD_WHost': <OSD_WhoAmI.OSD_WHost: 9>, 'OSD_WDisk': <OSD_WhoAmI.OSD_WDisk: 10>, 'OSD_WChronometer': <OSD_WhoAmI.OSD_WChronometer: 11>, 'OSD_WTimer': <OSD_WhoAmI.OSD_WTimer: 12>, 'OSD_WPackage': <OSD_WhoAmI.OSD_WPackage: 13>, 'OSD_WEnvironmentIterator': <OSD_WhoAmI.OSD_WEnvironmentIterator: 14>}
     pass
 def OSD_FileStatCTime(theName : str) -> int:
     """
@@ -2155,79 +2314,79 @@ def OSD_OpenFileDescriptor(theName : OCP.TCollection.TCollection_ExtendedString,
     """
     Open file descriptor for specified UTF-16 file path.
     """
-OSD_AIX: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_AIX
-OSD_Aix: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_Aix
-OSD_D: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_D
-OSD_DEC: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_DEC
-OSD_DIRECTORY: OCP.OSD.OSD_KindFile # value = OSD_KindFile.OSD_DIRECTORY
-OSD_Default: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_Default
-OSD_ExclusiveLock: OCP.OSD.OSD_LockType # value = OSD_LockType.OSD_ExclusiveLock
-OSD_FILE: OCP.OSD.OSD_KindFile # value = OSD_KindFile.OSD_FILE
-OSD_FromBeginning: OCP.OSD.OSD_FromWhere # value = OSD_FromWhere.OSD_FromBeginning
-OSD_FromEnd: OCP.OSD.OSD_FromWhere # value = OSD_FromWhere.OSD_FromEnd
-OSD_FromHere: OCP.OSD.OSD_FromWhere # value = OSD_FromWhere.OSD_FromHere
-OSD_HP: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_HP
-OSD_IBM: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_IBM
-OSD_LIN: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_LIN
-OSD_LINK: OCP.OSD.OSD_KindFile # value = OSD_KindFile.OSD_LINK
-OSD_LinuxREDHAT: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_LinuxREDHAT
-OSD_MAC: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_MAC
-OSD_MacOs: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_MacOs
-OSD_NEC: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_NEC
-OSD_NoLock: OCP.OSD.OSD_LockType # value = OSD_LockType.OSD_NoLock
-OSD_None: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_None
-OSD_OS2: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_OS2
-OSD_OSF: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_OSF
-OSD_PC: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_PC
-OSD_R: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_R
-OSD_RD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RD
-OSD_RTLD_LAZY: OCP.OSD.OSD_LoadMode # value = OSD_LoadMode.OSD_RTLD_LAZY
-OSD_RTLD_NOW: OCP.OSD.OSD_LoadMode # value = OSD_LoadMode.OSD_RTLD_NOW
-OSD_RW: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RW
-OSD_RWD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RWD
-OSD_RWX: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RWX
-OSD_RWXD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RWXD
-OSD_RX: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RX
-OSD_RXD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_RXD
-OSD_ReadLock: OCP.OSD.OSD_LockType # value = OSD_LockType.OSD_ReadLock
-OSD_ReadOnly: OCP.OSD.OSD_OpenMode # value = OSD_OpenMode.OSD_ReadOnly
-OSD_ReadWrite: OCP.OSD.OSD_OpenMode # value = OSD_OpenMode.OSD_ReadWrite
-OSD_SGI: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_SGI
-OSD_SOCKET: OCP.OSD.OSD_KindFile # value = OSD_KindFile.OSD_SOCKET
-OSD_SUN: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_SUN
-OSD_SignalMode_AsIs: OCP.OSD.OSD_SignalMode # value = OSD_SignalMode.OSD_SignalMode_AsIs
-OSD_SignalMode_Set: OCP.OSD.OSD_SignalMode # value = OSD_SignalMode.OSD_SignalMode_Set
-OSD_SignalMode_SetUnhandled: OCP.OSD.OSD_SignalMode # value = OSD_SignalMode.OSD_SignalMode_SetUnhandled
-OSD_SignalMode_Unset: OCP.OSD.OSD_SignalMode # value = OSD_SignalMode.OSD_SignalMode_Unset
-OSD_Taligent: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_Taligent
-OSD_UNKNOWN: OCP.OSD.OSD_KindFile # value = OSD_KindFile.OSD_UNKNOWN
-OSD_Unavailable: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_Unavailable
-OSD_UnixBSD: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_UnixBSD
-OSD_UnixSystemV: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_UnixSystemV
-OSD_Unknown: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_Unknown
-OSD_VAX: OCP.OSD.OSD_OEMType # value = OSD_OEMType.OSD_VAX
-OSD_VMS: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_VMS
-OSD_W: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_W
-OSD_WChronometer: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WChronometer
-OSD_WD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_WD
-OSD_WDirectory: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WDirectory
-OSD_WDirectoryIterator: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WDirectoryIterator
-OSD_WDisk: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WDisk
-OSD_WEnvironment: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WEnvironment
-OSD_WEnvironmentIterator: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WEnvironmentIterator
-OSD_WFile: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WFile
-OSD_WFileIterator: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WFileIterator
-OSD_WFileNode: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WFileNode
-OSD_WHost: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WHost
-OSD_WPackage: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WPackage
-OSD_WPath: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WPath
-OSD_WProcess: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WProcess
-OSD_WProtection: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WProtection
-OSD_WTimer: OCP.OSD.OSD_WhoAmI # value = OSD_WhoAmI.OSD_WTimer
-OSD_WX: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_WX
-OSD_WXD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_WXD
-OSD_WindowsNT: OCP.OSD.OSD_SysType # value = OSD_SysType.OSD_WindowsNT
-OSD_WriteLock: OCP.OSD.OSD_LockType # value = OSD_LockType.OSD_WriteLock
-OSD_WriteOnly: OCP.OSD.OSD_OpenMode # value = OSD_OpenMode.OSD_WriteOnly
-OSD_X: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_X
-OSD_XD: OCP.OSD.OSD_SingleProtection # value = OSD_SingleProtection.OSD_XD
+OSD_AIX: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_AIX: 11>
+OSD_Aix: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_Aix: 11>
+OSD_D: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_D: 8>
+OSD_DEC: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_DEC: 2>
+OSD_DIRECTORY: OCP.OSD.OSD_KindFile # value = <OSD_KindFile.OSD_DIRECTORY: 1>
+OSD_Default: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_Default: 1>
+OSD_ExclusiveLock: OCP.OSD.OSD_LockType # value = <OSD_LockType.OSD_ExclusiveLock: 3>
+OSD_FILE: OCP.OSD.OSD_KindFile # value = <OSD_KindFile.OSD_FILE: 0>
+OSD_FromBeginning: OCP.OSD.OSD_FromWhere # value = <OSD_FromWhere.OSD_FromBeginning: 0>
+OSD_FromEnd: OCP.OSD.OSD_FromWhere # value = <OSD_FromWhere.OSD_FromEnd: 2>
+OSD_FromHere: OCP.OSD.OSD_FromWhere # value = <OSD_FromWhere.OSD_FromHere: 1>
+OSD_HP: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_HP: 7>
+OSD_IBM: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_IBM: 8>
+OSD_LIN: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_LIN: 10>
+OSD_LINK: OCP.OSD.OSD_KindFile # value = <OSD_KindFile.OSD_LINK: 2>
+OSD_LinuxREDHAT: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_LinuxREDHAT: 10>
+OSD_MAC: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_MAC: 5>
+OSD_MacOs: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_MacOs: 7>
+OSD_NEC: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_NEC: 4>
+OSD_NoLock: OCP.OSD.OSD_LockType # value = <OSD_LockType.OSD_NoLock: 0>
+OSD_None: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_None: 0>
+OSD_OS2: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_OS2: 5>
+OSD_OSF: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_OSF: 6>
+OSD_PC: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_PC: 6>
+OSD_R: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_R: 1>
+OSD_RD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RD: 9>
+OSD_RTLD_LAZY: OCP.OSD.OSD_LoadMode # value = <OSD_LoadMode.OSD_RTLD_LAZY: 0>
+OSD_RTLD_NOW: OCP.OSD.OSD_LoadMode # value = <OSD_LoadMode.OSD_RTLD_NOW: 1>
+OSD_RW: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RW: 3>
+OSD_RWD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RWD: 11>
+OSD_RWX: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RWX: 7>
+OSD_RWXD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RWXD: 15>
+OSD_RX: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RX: 5>
+OSD_RXD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_RXD: 13>
+OSD_ReadLock: OCP.OSD.OSD_LockType # value = <OSD_LockType.OSD_ReadLock: 1>
+OSD_ReadOnly: OCP.OSD.OSD_OpenMode # value = <OSD_OpenMode.OSD_ReadOnly: 0>
+OSD_ReadWrite: OCP.OSD.OSD_OpenMode # value = <OSD_OpenMode.OSD_ReadWrite: 2>
+OSD_SGI: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_SGI: 3>
+OSD_SOCKET: OCP.OSD.OSD_KindFile # value = <OSD_KindFile.OSD_SOCKET: 3>
+OSD_SUN: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_SUN: 1>
+OSD_SignalMode_AsIs: OCP.OSD.OSD_SignalMode # value = <OSD_SignalMode.OSD_SignalMode_AsIs: 0>
+OSD_SignalMode_Set: OCP.OSD.OSD_SignalMode # value = <OSD_SignalMode.OSD_SignalMode_Set: 1>
+OSD_SignalMode_SetUnhandled: OCP.OSD.OSD_SignalMode # value = <OSD_SignalMode.OSD_SignalMode_SetUnhandled: 2>
+OSD_SignalMode_Unset: OCP.OSD.OSD_SignalMode # value = <OSD_SignalMode.OSD_SignalMode_Unset: 3>
+OSD_Taligent: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_Taligent: 8>
+OSD_UNKNOWN: OCP.OSD.OSD_KindFile # value = <OSD_KindFile.OSD_UNKNOWN: 4>
+OSD_Unavailable: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_Unavailable: 0>
+OSD_UnixBSD: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_UnixBSD: 2>
+OSD_UnixSystemV: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_UnixSystemV: 3>
+OSD_Unknown: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_Unknown: 0>
+OSD_VAX: OCP.OSD.OSD_OEMType # value = <OSD_OEMType.OSD_VAX: 9>
+OSD_VMS: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_VMS: 4>
+OSD_W: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_W: 2>
+OSD_WChronometer: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WChronometer: 11>
+OSD_WD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_WD: 10>
+OSD_WDirectory: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WDirectory: 0>
+OSD_WDirectoryIterator: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WDirectoryIterator: 1>
+OSD_WDisk: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WDisk: 10>
+OSD_WEnvironment: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WEnvironment: 2>
+OSD_WEnvironmentIterator: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WEnvironmentIterator: 14>
+OSD_WFile: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WFile: 3>
+OSD_WFileIterator: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WFileIterator: 5>
+OSD_WFileNode: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WFileNode: 4>
+OSD_WHost: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WHost: 9>
+OSD_WPackage: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WPackage: 13>
+OSD_WPath: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WPath: 6>
+OSD_WProcess: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WProcess: 7>
+OSD_WProtection: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WProtection: 8>
+OSD_WTimer: OCP.OSD.OSD_WhoAmI # value = <OSD_WhoAmI.OSD_WTimer: 12>
+OSD_WX: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_WX: 6>
+OSD_WXD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_WXD: 14>
+OSD_WindowsNT: OCP.OSD.OSD_SysType # value = <OSD_SysType.OSD_WindowsNT: 9>
+OSD_WriteLock: OCP.OSD.OSD_LockType # value = <OSD_LockType.OSD_WriteLock: 2>
+OSD_WriteOnly: OCP.OSD.OSD_OpenMode # value = <OSD_OpenMode.OSD_WriteOnly: 1>
+OSD_X: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_X: 4>
+OSD_XD: OCP.OSD.OSD_SingleProtection # value = <OSD_SingleProtection.OSD_XD: 12>

@@ -4,12 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.TCollection
 import OCP.Quantity
+import OCP.TCollection
+import OCP.TColStd
+import io
+import OCP.gp
 import OCP.TColgp
 import OCP.Standard
-import OCP.gp
 __all__  = [
 "Vrml",
 "Vrml_AsciiText",
@@ -113,12 +114,12 @@ class Vrml():
     Vrml package implements the specification of the VRML ( Virtual Reality Modeling Language ). VRML is a standard language for describing interactive 3-D objects and worlds delivered across Internet. Actual version of Vrml package have made for objects of VRML version 1.0. This package is used by VrmlConverter package. The developer should already be familiar with VRML specification before using this package.
     """
     @staticmethod
-    def CommentWriter_s(aComment : str,anOStream : Any) -> Any: 
+    def CommentWriter_s(aComment : str,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
     @staticmethod
-    def VrmlHeaderWriter_s(anOStream : Any) -> Any: 
+    def VrmlHeaderWriter_s(anOStream : io.BytesIO) -> io.BytesIO: 
         """
         Writes a header in anOStream (VRML file). Writes one line of commentary in anOStream (VRML file).
         """
@@ -170,7 +171,7 @@ class Vrml_AsciiText(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -233,21 +234,29 @@ class Vrml_AsciiTextJustification():
 
       Vrml_RIGHT
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_CENTER: OCP.Vrml.Vrml_AsciiTextJustification # value = Vrml_AsciiTextJustification.Vrml_CENTER
-    Vrml_LEFT: OCP.Vrml.Vrml_AsciiTextJustification # value = Vrml_AsciiTextJustification.Vrml_LEFT
-    Vrml_RIGHT: OCP.Vrml.Vrml_AsciiTextJustification # value = Vrml_AsciiTextJustification.Vrml_RIGHT
-    __entries: dict # value = {'Vrml_LEFT': (Vrml_AsciiTextJustification.Vrml_LEFT, None), 'Vrml_CENTER': (Vrml_AsciiTextJustification.Vrml_CENTER, None), 'Vrml_RIGHT': (Vrml_AsciiTextJustification.Vrml_RIGHT, None)}
-    __members__: dict # value = {'Vrml_LEFT': Vrml_AsciiTextJustification.Vrml_LEFT, 'Vrml_CENTER': Vrml_AsciiTextJustification.Vrml_CENTER, 'Vrml_RIGHT': Vrml_AsciiTextJustification.Vrml_RIGHT}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_CENTER: OCP.Vrml.Vrml_AsciiTextJustification # value = <Vrml_AsciiTextJustification.Vrml_CENTER: 1>
+    Vrml_LEFT: OCP.Vrml.Vrml_AsciiTextJustification # value = <Vrml_AsciiTextJustification.Vrml_LEFT: 0>
+    Vrml_RIGHT: OCP.Vrml.Vrml_AsciiTextJustification # value = <Vrml_AsciiTextJustification.Vrml_RIGHT: 2>
+    __entries: dict # value = {'Vrml_LEFT': (<Vrml_AsciiTextJustification.Vrml_LEFT: 0>, None), 'Vrml_CENTER': (<Vrml_AsciiTextJustification.Vrml_CENTER: 1>, None), 'Vrml_RIGHT': (<Vrml_AsciiTextJustification.Vrml_RIGHT: 2>, None)}
+    __members__: dict # value = {'Vrml_LEFT': <Vrml_AsciiTextJustification.Vrml_LEFT: 0>, 'Vrml_CENTER': <Vrml_AsciiTextJustification.Vrml_CENTER: 1>, 'Vrml_RIGHT': <Vrml_AsciiTextJustification.Vrml_RIGHT: 2>}
     pass
 class Vrml_Cone():
     """
@@ -265,7 +274,7 @@ class Vrml_Cone():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -295,21 +304,29 @@ class Vrml_ConeParts():
 
       Vrml_ConeALL
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_ConeALL: OCP.Vrml.Vrml_ConeParts # value = Vrml_ConeParts.Vrml_ConeALL
-    Vrml_ConeBOTTOM: OCP.Vrml.Vrml_ConeParts # value = Vrml_ConeParts.Vrml_ConeBOTTOM
-    Vrml_ConeSIDES: OCP.Vrml.Vrml_ConeParts # value = Vrml_ConeParts.Vrml_ConeSIDES
-    __entries: dict # value = {'Vrml_ConeSIDES': (Vrml_ConeParts.Vrml_ConeSIDES, None), 'Vrml_ConeBOTTOM': (Vrml_ConeParts.Vrml_ConeBOTTOM, None), 'Vrml_ConeALL': (Vrml_ConeParts.Vrml_ConeALL, None)}
-    __members__: dict # value = {'Vrml_ConeSIDES': Vrml_ConeParts.Vrml_ConeSIDES, 'Vrml_ConeBOTTOM': Vrml_ConeParts.Vrml_ConeBOTTOM, 'Vrml_ConeALL': Vrml_ConeParts.Vrml_ConeALL}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_ConeALL: OCP.Vrml.Vrml_ConeParts # value = <Vrml_ConeParts.Vrml_ConeALL: 2>
+    Vrml_ConeBOTTOM: OCP.Vrml.Vrml_ConeParts # value = <Vrml_ConeParts.Vrml_ConeBOTTOM: 1>
+    Vrml_ConeSIDES: OCP.Vrml.Vrml_ConeParts # value = <Vrml_ConeParts.Vrml_ConeSIDES: 0>
+    __entries: dict # value = {'Vrml_ConeSIDES': (<Vrml_ConeParts.Vrml_ConeSIDES: 0>, None), 'Vrml_ConeBOTTOM': (<Vrml_ConeParts.Vrml_ConeBOTTOM: 1>, None), 'Vrml_ConeALL': (<Vrml_ConeParts.Vrml_ConeALL: 2>, None)}
+    __members__: dict # value = {'Vrml_ConeSIDES': <Vrml_ConeParts.Vrml_ConeSIDES: 0>, 'Vrml_ConeBOTTOM': <Vrml_ConeParts.Vrml_ConeBOTTOM: 1>, 'Vrml_ConeALL': <Vrml_ConeParts.Vrml_ConeALL: 2>}
     pass
 class Vrml_Coordinate3(OCP.Standard.Standard_Transient):
     """
@@ -357,7 +374,7 @@ class Vrml_Coordinate3(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -370,9 +387,9 @@ class Vrml_Coordinate3(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aPoint : OCP.TColgp.TColgp_HArray1OfVec) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -396,7 +413,7 @@ class Vrml_Cube():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -430,7 +447,7 @@ class Vrml_Cylinder():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -466,22 +483,30 @@ class Vrml_CylinderParts():
 
       Vrml_CylinderALL
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_CylinderALL: OCP.Vrml.Vrml_CylinderParts # value = Vrml_CylinderParts.Vrml_CylinderALL
-    Vrml_CylinderBOTTOM: OCP.Vrml.Vrml_CylinderParts # value = Vrml_CylinderParts.Vrml_CylinderBOTTOM
-    Vrml_CylinderSIDES: OCP.Vrml.Vrml_CylinderParts # value = Vrml_CylinderParts.Vrml_CylinderSIDES
-    Vrml_CylinderTOP: OCP.Vrml.Vrml_CylinderParts # value = Vrml_CylinderParts.Vrml_CylinderTOP
-    __entries: dict # value = {'Vrml_CylinderSIDES': (Vrml_CylinderParts.Vrml_CylinderSIDES, None), 'Vrml_CylinderTOP': (Vrml_CylinderParts.Vrml_CylinderTOP, None), 'Vrml_CylinderBOTTOM': (Vrml_CylinderParts.Vrml_CylinderBOTTOM, None), 'Vrml_CylinderALL': (Vrml_CylinderParts.Vrml_CylinderALL, None)}
-    __members__: dict # value = {'Vrml_CylinderSIDES': Vrml_CylinderParts.Vrml_CylinderSIDES, 'Vrml_CylinderTOP': Vrml_CylinderParts.Vrml_CylinderTOP, 'Vrml_CylinderBOTTOM': Vrml_CylinderParts.Vrml_CylinderBOTTOM, 'Vrml_CylinderALL': Vrml_CylinderParts.Vrml_CylinderALL}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_CylinderALL: OCP.Vrml.Vrml_CylinderParts # value = <Vrml_CylinderParts.Vrml_CylinderALL: 3>
+    Vrml_CylinderBOTTOM: OCP.Vrml.Vrml_CylinderParts # value = <Vrml_CylinderParts.Vrml_CylinderBOTTOM: 2>
+    Vrml_CylinderSIDES: OCP.Vrml.Vrml_CylinderParts # value = <Vrml_CylinderParts.Vrml_CylinderSIDES: 0>
+    Vrml_CylinderTOP: OCP.Vrml.Vrml_CylinderParts # value = <Vrml_CylinderParts.Vrml_CylinderTOP: 1>
+    __entries: dict # value = {'Vrml_CylinderSIDES': (<Vrml_CylinderParts.Vrml_CylinderSIDES: 0>, None), 'Vrml_CylinderTOP': (<Vrml_CylinderParts.Vrml_CylinderTOP: 1>, None), 'Vrml_CylinderBOTTOM': (<Vrml_CylinderParts.Vrml_CylinderBOTTOM: 2>, None), 'Vrml_CylinderALL': (<Vrml_CylinderParts.Vrml_CylinderALL: 3>, None)}
+    __members__: dict # value = {'Vrml_CylinderSIDES': <Vrml_CylinderParts.Vrml_CylinderSIDES: 0>, 'Vrml_CylinderTOP': <Vrml_CylinderParts.Vrml_CylinderTOP: 1>, 'Vrml_CylinderBOTTOM': <Vrml_CylinderParts.Vrml_CylinderBOTTOM: 2>, 'Vrml_CylinderALL': <Vrml_CylinderParts.Vrml_CylinderALL: 3>}
     pass
 class Vrml_DirectionalLight():
     """
@@ -503,7 +528,7 @@ class Vrml_DirectionalLight():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -538,20 +563,28 @@ class Vrml_FaceType():
 
       Vrml_CONVEX
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_CONVEX: OCP.Vrml.Vrml_FaceType # value = Vrml_FaceType.Vrml_CONVEX
-    Vrml_UNKNOWN_FACE_TYPE: OCP.Vrml.Vrml_FaceType # value = Vrml_FaceType.Vrml_UNKNOWN_FACE_TYPE
-    __entries: dict # value = {'Vrml_UNKNOWN_FACE_TYPE': (Vrml_FaceType.Vrml_UNKNOWN_FACE_TYPE, None), 'Vrml_CONVEX': (Vrml_FaceType.Vrml_CONVEX, None)}
-    __members__: dict # value = {'Vrml_UNKNOWN_FACE_TYPE': Vrml_FaceType.Vrml_UNKNOWN_FACE_TYPE, 'Vrml_CONVEX': Vrml_FaceType.Vrml_CONVEX}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_CONVEX: OCP.Vrml.Vrml_FaceType # value = <Vrml_FaceType.Vrml_CONVEX: 1>
+    Vrml_UNKNOWN_FACE_TYPE: OCP.Vrml.Vrml_FaceType # value = <Vrml_FaceType.Vrml_UNKNOWN_FACE_TYPE: 0>
+    __entries: dict # value = {'Vrml_UNKNOWN_FACE_TYPE': (<Vrml_FaceType.Vrml_UNKNOWN_FACE_TYPE: 0>, None), 'Vrml_CONVEX': (<Vrml_FaceType.Vrml_CONVEX: 1>, None)}
+    __members__: dict # value = {'Vrml_UNKNOWN_FACE_TYPE': <Vrml_FaceType.Vrml_UNKNOWN_FACE_TYPE: 0>, 'Vrml_CONVEX': <Vrml_FaceType.Vrml_CONVEX: 1>}
     pass
 class Vrml_FontStyle():
     """
@@ -561,7 +594,7 @@ class Vrml_FontStyle():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -599,21 +632,29 @@ class Vrml_FontStyleFamily():
 
       Vrml_TYPEWRITER
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_SANS: OCP.Vrml.Vrml_FontStyleFamily # value = Vrml_FontStyleFamily.Vrml_SANS
-    Vrml_SERIF: OCP.Vrml.Vrml_FontStyleFamily # value = Vrml_FontStyleFamily.Vrml_SERIF
-    Vrml_TYPEWRITER: OCP.Vrml.Vrml_FontStyleFamily # value = Vrml_FontStyleFamily.Vrml_TYPEWRITER
-    __entries: dict # value = {'Vrml_SERIF': (Vrml_FontStyleFamily.Vrml_SERIF, None), 'Vrml_SANS': (Vrml_FontStyleFamily.Vrml_SANS, None), 'Vrml_TYPEWRITER': (Vrml_FontStyleFamily.Vrml_TYPEWRITER, None)}
-    __members__: dict # value = {'Vrml_SERIF': Vrml_FontStyleFamily.Vrml_SERIF, 'Vrml_SANS': Vrml_FontStyleFamily.Vrml_SANS, 'Vrml_TYPEWRITER': Vrml_FontStyleFamily.Vrml_TYPEWRITER}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_SANS: OCP.Vrml.Vrml_FontStyleFamily # value = <Vrml_FontStyleFamily.Vrml_SANS: 1>
+    Vrml_SERIF: OCP.Vrml.Vrml_FontStyleFamily # value = <Vrml_FontStyleFamily.Vrml_SERIF: 0>
+    Vrml_TYPEWRITER: OCP.Vrml.Vrml_FontStyleFamily # value = <Vrml_FontStyleFamily.Vrml_TYPEWRITER: 2>
+    __entries: dict # value = {'Vrml_SERIF': (<Vrml_FontStyleFamily.Vrml_SERIF: 0>, None), 'Vrml_SANS': (<Vrml_FontStyleFamily.Vrml_SANS: 1>, None), 'Vrml_TYPEWRITER': (<Vrml_FontStyleFamily.Vrml_TYPEWRITER: 2>, None)}
+    __members__: dict # value = {'Vrml_SERIF': <Vrml_FontStyleFamily.Vrml_SERIF: 0>, 'Vrml_SANS': <Vrml_FontStyleFamily.Vrml_SANS: 1>, 'Vrml_TYPEWRITER': <Vrml_FontStyleFamily.Vrml_TYPEWRITER: 2>}
     pass
 class Vrml_FontStyleStyle():
     """
@@ -627,27 +668,35 @@ class Vrml_FontStyleStyle():
 
       Vrml_ITALIC
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_BOLD: OCP.Vrml.Vrml_FontStyleStyle # value = Vrml_FontStyleStyle.Vrml_BOLD
-    Vrml_ITALIC: OCP.Vrml.Vrml_FontStyleStyle # value = Vrml_FontStyleStyle.Vrml_ITALIC
-    Vrml_NONE: OCP.Vrml.Vrml_FontStyleStyle # value = Vrml_FontStyleStyle.Vrml_NONE
-    __entries: dict # value = {'Vrml_NONE': (Vrml_FontStyleStyle.Vrml_NONE, None), 'Vrml_BOLD': (Vrml_FontStyleStyle.Vrml_BOLD, None), 'Vrml_ITALIC': (Vrml_FontStyleStyle.Vrml_ITALIC, None)}
-    __members__: dict # value = {'Vrml_NONE': Vrml_FontStyleStyle.Vrml_NONE, 'Vrml_BOLD': Vrml_FontStyleStyle.Vrml_BOLD, 'Vrml_ITALIC': Vrml_FontStyleStyle.Vrml_ITALIC}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_BOLD: OCP.Vrml.Vrml_FontStyleStyle # value = <Vrml_FontStyleStyle.Vrml_BOLD: 1>
+    Vrml_ITALIC: OCP.Vrml.Vrml_FontStyleStyle # value = <Vrml_FontStyleStyle.Vrml_ITALIC: 2>
+    Vrml_NONE: OCP.Vrml.Vrml_FontStyleStyle # value = <Vrml_FontStyleStyle.Vrml_NONE: 0>
+    __entries: dict # value = {'Vrml_NONE': (<Vrml_FontStyleStyle.Vrml_NONE: 0>, None), 'Vrml_BOLD': (<Vrml_FontStyleStyle.Vrml_BOLD: 1>, None), 'Vrml_ITALIC': (<Vrml_FontStyleStyle.Vrml_ITALIC: 2>, None)}
+    __members__: dict # value = {'Vrml_NONE': <Vrml_FontStyleStyle.Vrml_NONE: 0>, 'Vrml_BOLD': <Vrml_FontStyleStyle.Vrml_BOLD: 1>, 'Vrml_ITALIC': <Vrml_FontStyleStyle.Vrml_ITALIC: 2>}
     pass
 class Vrml_Group():
     """
     defines a Group node of VRML specifying group properties. This node defines the base class for all group nodes. Group is a node that contains an ordered list of child nodes. This node is simply a container for the child nodes and does not alter the traversal state in any way. During traversal, state accumulated for a child is passed on to each successive child and then to the parents of the group (Group does not push or pop traversal state as separator does).
     """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -707,7 +756,7 @@ class Vrml_IndexedFaceSet(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -804,7 +853,7 @@ class Vrml_IndexedLineSet(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -833,9 +882,9 @@ class Vrml_IndexedLineSet(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,aCoordIndex : OCP.TColStd.TColStd_HArray1OfInteger,aMaterialIndex : OCP.TColStd.TColStd_HArray1OfInteger,aNormalIndex : OCP.TColStd.TColStd_HArray1OfInteger,aTextureCoordIndex : OCP.TColStd.TColStd_HArray1OfInteger) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aCoordIndex : OCP.TColStd.TColStd_HArray1OfInteger,aMaterialIndex : OCP.TColStd.TColStd_HArray1OfInteger,aNormalIndex : OCP.TColStd.TColStd_HArray1OfInteger,aTextureCoordIndex : OCP.TColStd.TColStd_HArray1OfInteger) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -851,7 +900,7 @@ class Vrml_Info():
     """
     defines a Info node of VRML specifying properties of geometry and its appearance. It is used to store information in the scene graph, Typically for application-specific purposes, copyright messages, or other strings.
     """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -869,11 +918,11 @@ class Vrml_Instancing():
     """
     defines "instancing" - using the same instance of a node multiple times. It is accomplished by using the "DEF" and "USE" keywords. The DEF keyword both defines a named node, and creates a single instance of it. The USE keyword indicates that the most recently defined instance should be used again. If several nades were given the same name, then the last DEF encountered during parsing "wins". DEF/USE is limited to a single file.
     """
-    def DEF(self,anOStream : Any) -> Any: 
+    def DEF(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         Adds "USE <myName>" in anOStream (VRML file).
         """
-    def USE(self,anOStream : Any) -> Any: 
+    def USE(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -925,7 +974,7 @@ class Vrml_LOD(OCP.Standard.Standard_Transient):
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1014,7 +1063,7 @@ class Vrml_Material(OCP.Standard.Standard_Transient):
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1059,9 +1108,9 @@ class Vrml_Material(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self,aAmbientColor : OCP.Quantity.Quantity_HArray1OfColor,aDiffuseColor : OCP.Quantity.Quantity_HArray1OfColor,aSpecularColor : OCP.Quantity.Quantity_HArray1OfColor,aEmissiveColor : OCP.Quantity.Quantity_HArray1OfColor,aShininess : OCP.TColStd.TColStd_HArray1OfReal,aTransparency : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aAmbientColor : OCP.Quantity.Quantity_HArray1OfColor,aDiffuseColor : OCP.Quantity.Quantity_HArray1OfColor,aSpecularColor : OCP.Quantity.Quantity_HArray1OfColor,aEmissiveColor : OCP.Quantity.Quantity_HArray1OfColor,aShininess : OCP.TColStd.TColStd_HArray1OfReal,aTransparency : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1077,7 +1126,7 @@ class Vrml_MaterialBinding():
     """
     defines a MaterialBinding node of VRML specifying properties of geometry and its appearance. Material nodes may contain more than one material. This node specifies how the current materials are bound to shapes that follow in the scene graph. Each shape node may interpret bindings differently. For example, a Sphere node is always drawn using the first material in the material node, no matter what the current MaterialBinding, while a Cube node may use six different materials to draw each of its six faces, depending on the MaterialBinding.
     """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1090,9 +1139,9 @@ class Vrml_MaterialBinding():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aValue : Vrml_MaterialBindingAndNormalBinding) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Vrml_MaterialBindingAndNormalBinding():
     """
@@ -1116,26 +1165,34 @@ class Vrml_MaterialBindingAndNormalBinding():
 
       Vrml_PER_VERTEX_INDEXED
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_DEFAULT: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_DEFAULT
-    Vrml_OVERALL: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_OVERALL
-    Vrml_PER_FACE: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE
-    Vrml_PER_FACE_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE_INDEXED
-    Vrml_PER_PART: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART
-    Vrml_PER_PART_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART_INDEXED
-    Vrml_PER_VERTEX: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX
-    Vrml_PER_VERTEX_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX_INDEXED
-    __entries: dict # value = {'Vrml_DEFAULT': (Vrml_MaterialBindingAndNormalBinding.Vrml_DEFAULT, None), 'Vrml_OVERALL': (Vrml_MaterialBindingAndNormalBinding.Vrml_OVERALL, None), 'Vrml_PER_PART': (Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART, None), 'Vrml_PER_PART_INDEXED': (Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART_INDEXED, None), 'Vrml_PER_FACE': (Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE, None), 'Vrml_PER_FACE_INDEXED': (Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE_INDEXED, None), 'Vrml_PER_VERTEX': (Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX, None), 'Vrml_PER_VERTEX_INDEXED': (Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX_INDEXED, None)}
-    __members__: dict # value = {'Vrml_DEFAULT': Vrml_MaterialBindingAndNormalBinding.Vrml_DEFAULT, 'Vrml_OVERALL': Vrml_MaterialBindingAndNormalBinding.Vrml_OVERALL, 'Vrml_PER_PART': Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART, 'Vrml_PER_PART_INDEXED': Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART_INDEXED, 'Vrml_PER_FACE': Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE, 'Vrml_PER_FACE_INDEXED': Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE_INDEXED, 'Vrml_PER_VERTEX': Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX, 'Vrml_PER_VERTEX_INDEXED': Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX_INDEXED}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_DEFAULT: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_DEFAULT: 0>
+    Vrml_OVERALL: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_OVERALL: 1>
+    Vrml_PER_FACE: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE: 4>
+    Vrml_PER_FACE_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE_INDEXED: 5>
+    Vrml_PER_PART: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART: 2>
+    Vrml_PER_PART_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART_INDEXED: 3>
+    Vrml_PER_VERTEX: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX: 6>
+    Vrml_PER_VERTEX_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX_INDEXED: 7>
+    __entries: dict # value = {'Vrml_DEFAULT': (<Vrml_MaterialBindingAndNormalBinding.Vrml_DEFAULT: 0>, None), 'Vrml_OVERALL': (<Vrml_MaterialBindingAndNormalBinding.Vrml_OVERALL: 1>, None), 'Vrml_PER_PART': (<Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART: 2>, None), 'Vrml_PER_PART_INDEXED': (<Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART_INDEXED: 3>, None), 'Vrml_PER_FACE': (<Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE: 4>, None), 'Vrml_PER_FACE_INDEXED': (<Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE_INDEXED: 5>, None), 'Vrml_PER_VERTEX': (<Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX: 6>, None), 'Vrml_PER_VERTEX_INDEXED': (<Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX_INDEXED: 7>, None)}
+    __members__: dict # value = {'Vrml_DEFAULT': <Vrml_MaterialBindingAndNormalBinding.Vrml_DEFAULT: 0>, 'Vrml_OVERALL': <Vrml_MaterialBindingAndNormalBinding.Vrml_OVERALL: 1>, 'Vrml_PER_PART': <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART: 2>, 'Vrml_PER_PART_INDEXED': <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART_INDEXED: 3>, 'Vrml_PER_FACE': <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE: 4>, 'Vrml_PER_FACE_INDEXED': <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE_INDEXED: 5>, 'Vrml_PER_VERTEX': <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX: 6>, 'Vrml_PER_VERTEX_INDEXED': <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX_INDEXED: 7>}
     pass
 class Vrml_MatrixTransform():
     """
@@ -1145,7 +1202,7 @@ class Vrml_MatrixTransform():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1154,9 +1211,9 @@ class Vrml_MatrixTransform():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aMatrix : OCP.gp.gp_Trsf) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Vrml_Normal(OCP.Standard.Standard_Transient):
     """
@@ -1200,7 +1257,7 @@ class Vrml_Normal(OCP.Standard.Standard_Transient):
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1217,9 +1274,9 @@ class Vrml_Normal(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self,aVector : OCP.TColgp.TColgp_HArray1OfVec) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aVector : OCP.TColgp.TColgp_HArray1OfVec) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1235,7 +1292,7 @@ class Vrml_NormalBinding():
     """
     defines a NormalBinding node of VRML specifying properties of geometry and its appearance. This node specifies how the current normals are bound to shapes that follow in the scene graph. Each shape node may interpret bindings differently. The bindings for faces and vertices are meaningful only for shapes that are made from faces and vertices. Similarly, the indexed bindings are only used by the shapes that allow indexing. For bindings that require multiple normals, be sure to have at least as many normals defined as are necessary; otherwise, errors will occur.
     """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1272,7 +1329,7 @@ class Vrml_OrthographicCamera():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1317,7 +1374,7 @@ class Vrml_PerspectiveCamera():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1338,9 +1395,9 @@ class Vrml_PerspectiveCamera():
         None
         """
     @overload
-    def __init__(self,aPosition : OCP.gp.gp_Vec,aOrientation : Vrml_SFRotation,aFocalDistance : float,aHeightAngle : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aPosition : OCP.gp.gp_Vec,aOrientation : Vrml_SFRotation,aFocalDistance : float,aHeightAngle : float) -> None: ...
     pass
 class Vrml_PointLight():
     """
@@ -1362,7 +1419,7 @@ class Vrml_PointLight():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1383,9 +1440,9 @@ class Vrml_PointLight():
         None
         """
     @overload
-    def __init__(self,aOnOff : bool,aIntensity : float,aColor : OCP.Quantity.Quantity_Color,aLocation : OCP.gp.gp_Vec) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aOnOff : bool,aIntensity : float,aColor : OCP.Quantity.Quantity_Color,aLocation : OCP.gp.gp_Vec) -> None: ...
     pass
 class Vrml_PointSet():
     """
@@ -1395,7 +1452,7 @@ class Vrml_PointSet():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1417,7 +1474,7 @@ class Vrml_Rotation():
     """
     defines a Rotation node of VRML specifying matrix and transform properties. This node defines a 3D rotation about an arbitrary axis through the origin. By default : myRotation = (0 0 1 0)
     """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1430,9 +1487,9 @@ class Vrml_Rotation():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aRotation : Vrml_SFRotation) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Vrml_SFImage(OCP.Standard.Standard_Transient):
     """
@@ -1547,23 +1604,31 @@ class Vrml_SFImageNumber():
 
       Vrml_FOUR
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_FOUR: OCP.Vrml.Vrml_SFImageNumber # value = Vrml_SFImageNumber.Vrml_FOUR
-    Vrml_NULL: OCP.Vrml.Vrml_SFImageNumber # value = Vrml_SFImageNumber.Vrml_NULL
-    Vrml_ONE: OCP.Vrml.Vrml_SFImageNumber # value = Vrml_SFImageNumber.Vrml_ONE
-    Vrml_THREE: OCP.Vrml.Vrml_SFImageNumber # value = Vrml_SFImageNumber.Vrml_THREE
-    Vrml_TWO: OCP.Vrml.Vrml_SFImageNumber # value = Vrml_SFImageNumber.Vrml_TWO
-    __entries: dict # value = {'Vrml_NULL': (Vrml_SFImageNumber.Vrml_NULL, None), 'Vrml_ONE': (Vrml_SFImageNumber.Vrml_ONE, None), 'Vrml_TWO': (Vrml_SFImageNumber.Vrml_TWO, None), 'Vrml_THREE': (Vrml_SFImageNumber.Vrml_THREE, None), 'Vrml_FOUR': (Vrml_SFImageNumber.Vrml_FOUR, None)}
-    __members__: dict # value = {'Vrml_NULL': Vrml_SFImageNumber.Vrml_NULL, 'Vrml_ONE': Vrml_SFImageNumber.Vrml_ONE, 'Vrml_TWO': Vrml_SFImageNumber.Vrml_TWO, 'Vrml_THREE': Vrml_SFImageNumber.Vrml_THREE, 'Vrml_FOUR': Vrml_SFImageNumber.Vrml_FOUR}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_FOUR: OCP.Vrml.Vrml_SFImageNumber # value = <Vrml_SFImageNumber.Vrml_FOUR: 4>
+    Vrml_NULL: OCP.Vrml.Vrml_SFImageNumber # value = <Vrml_SFImageNumber.Vrml_NULL: 0>
+    Vrml_ONE: OCP.Vrml.Vrml_SFImageNumber # value = <Vrml_SFImageNumber.Vrml_ONE: 1>
+    Vrml_THREE: OCP.Vrml.Vrml_SFImageNumber # value = <Vrml_SFImageNumber.Vrml_THREE: 3>
+    Vrml_TWO: OCP.Vrml.Vrml_SFImageNumber # value = <Vrml_SFImageNumber.Vrml_TWO: 2>
+    __entries: dict # value = {'Vrml_NULL': (<Vrml_SFImageNumber.Vrml_NULL: 0>, None), 'Vrml_ONE': (<Vrml_SFImageNumber.Vrml_ONE: 1>, None), 'Vrml_TWO': (<Vrml_SFImageNumber.Vrml_TWO: 2>, None), 'Vrml_THREE': (<Vrml_SFImageNumber.Vrml_THREE: 3>, None), 'Vrml_FOUR': (<Vrml_SFImageNumber.Vrml_FOUR: 4>, None)}
+    __members__: dict # value = {'Vrml_NULL': <Vrml_SFImageNumber.Vrml_NULL: 0>, 'Vrml_ONE': <Vrml_SFImageNumber.Vrml_ONE: 1>, 'Vrml_TWO': <Vrml_SFImageNumber.Vrml_TWO: 2>, 'Vrml_THREE': <Vrml_SFImageNumber.Vrml_THREE: 3>, 'Vrml_FOUR': <Vrml_SFImageNumber.Vrml_FOUR: 4>}
     pass
 class Vrml_SFRotation():
     """
@@ -1602,15 +1667,15 @@ class Vrml_SFRotation():
         None
         """
     @overload
-    def __init__(self,aRotationX : float,aRotationY : float,aRotationZ : float,anAngle : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aRotationX : float,aRotationY : float,aRotationZ : float,anAngle : float) -> None: ...
     pass
 class Vrml_Scale():
     """
     defines a Scale node of VRML specifying transform properties. This node defines a 3D scaling about the origin. By default : myRotation = (1 1 1)
     """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1623,15 +1688,15 @@ class Vrml_Scale():
         None
         """
     @overload
-    def __init__(self,aScaleFactor : OCP.gp.gp_Vec) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aScaleFactor : OCP.gp.gp_Vec) -> None: ...
     pass
 class Vrml_Separator():
     """
     defines a Separator node of VRML specifying group properties. This group node performs a push (save) of the traversal state before traversing its children and a pop (restore) after traversing them. This isolates the separator's children from the rest of the scene graph. A separator can include lights, cameras, coordinates, normals, bindings, and all other properties. Separators can also perform render culling. Render culling skips over traversal of the separator's children if they are not going to be rendered, based on the comparison of the separator's bounding box with the current view volume. Culling is controlled by the renderCulling field. These are set to AUTO by default, allowing the implementation to decide whether or not to cull.
     """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1660,21 +1725,29 @@ class Vrml_SeparatorRenderCulling():
 
       Vrml_AUTO
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_AUTO: OCP.Vrml.Vrml_SeparatorRenderCulling # value = Vrml_SeparatorRenderCulling.Vrml_AUTO
-    Vrml_OFF: OCP.Vrml.Vrml_SeparatorRenderCulling # value = Vrml_SeparatorRenderCulling.Vrml_OFF
-    Vrml_ON: OCP.Vrml.Vrml_SeparatorRenderCulling # value = Vrml_SeparatorRenderCulling.Vrml_ON
-    __entries: dict # value = {'Vrml_OFF': (Vrml_SeparatorRenderCulling.Vrml_OFF, None), 'Vrml_ON': (Vrml_SeparatorRenderCulling.Vrml_ON, None), 'Vrml_AUTO': (Vrml_SeparatorRenderCulling.Vrml_AUTO, None)}
-    __members__: dict # value = {'Vrml_OFF': Vrml_SeparatorRenderCulling.Vrml_OFF, 'Vrml_ON': Vrml_SeparatorRenderCulling.Vrml_ON, 'Vrml_AUTO': Vrml_SeparatorRenderCulling.Vrml_AUTO}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_AUTO: OCP.Vrml.Vrml_SeparatorRenderCulling # value = <Vrml_SeparatorRenderCulling.Vrml_AUTO: 2>
+    Vrml_OFF: OCP.Vrml.Vrml_SeparatorRenderCulling # value = <Vrml_SeparatorRenderCulling.Vrml_OFF: 0>
+    Vrml_ON: OCP.Vrml.Vrml_SeparatorRenderCulling # value = <Vrml_SeparatorRenderCulling.Vrml_ON: 1>
+    __entries: dict # value = {'Vrml_OFF': (<Vrml_SeparatorRenderCulling.Vrml_OFF: 0>, None), 'Vrml_ON': (<Vrml_SeparatorRenderCulling.Vrml_ON: 1>, None), 'Vrml_AUTO': (<Vrml_SeparatorRenderCulling.Vrml_AUTO: 2>, None)}
+    __members__: dict # value = {'Vrml_OFF': <Vrml_SeparatorRenderCulling.Vrml_OFF: 0>, 'Vrml_ON': <Vrml_SeparatorRenderCulling.Vrml_ON: 1>, 'Vrml_AUTO': <Vrml_SeparatorRenderCulling.Vrml_AUTO: 2>}
     pass
 class Vrml_ShapeHints():
     """
@@ -1688,7 +1761,7 @@ class Vrml_ShapeHints():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1728,26 +1801,34 @@ class Vrml_ShapeType():
 
       Vrml_SOLID
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_SOLID: OCP.Vrml.Vrml_ShapeType # value = Vrml_ShapeType.Vrml_SOLID
-    Vrml_UNKNOWN_SHAPE_TYPE: OCP.Vrml.Vrml_ShapeType # value = Vrml_ShapeType.Vrml_UNKNOWN_SHAPE_TYPE
-    __entries: dict # value = {'Vrml_UNKNOWN_SHAPE_TYPE': (Vrml_ShapeType.Vrml_UNKNOWN_SHAPE_TYPE, None), 'Vrml_SOLID': (Vrml_ShapeType.Vrml_SOLID, None)}
-    __members__: dict # value = {'Vrml_UNKNOWN_SHAPE_TYPE': Vrml_ShapeType.Vrml_UNKNOWN_SHAPE_TYPE, 'Vrml_SOLID': Vrml_ShapeType.Vrml_SOLID}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_SOLID: OCP.Vrml.Vrml_ShapeType # value = <Vrml_ShapeType.Vrml_SOLID: 1>
+    Vrml_UNKNOWN_SHAPE_TYPE: OCP.Vrml.Vrml_ShapeType # value = <Vrml_ShapeType.Vrml_UNKNOWN_SHAPE_TYPE: 0>
+    __entries: dict # value = {'Vrml_UNKNOWN_SHAPE_TYPE': (<Vrml_ShapeType.Vrml_UNKNOWN_SHAPE_TYPE: 0>, None), 'Vrml_SOLID': (<Vrml_ShapeType.Vrml_SOLID: 1>, None)}
+    __members__: dict # value = {'Vrml_UNKNOWN_SHAPE_TYPE': <Vrml_ShapeType.Vrml_UNKNOWN_SHAPE_TYPE: 0>, 'Vrml_SOLID': <Vrml_ShapeType.Vrml_SOLID: 1>}
     pass
 class Vrml_Sphere():
     """
     defines a Sphere node of VRML specifying geometry shapes. This node represents a sphere. By default , the sphere is centred at (0,0,0) and has a radius of 1.
     """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1793,7 +1874,7 @@ class Vrml_SpotLight():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1834,7 +1915,7 @@ class Vrml_Switch():
     """
     defines a Switch node of VRML specifying group properties. This group node traverses one, none, or all of its children. One can use this node to switch on and off the effects of some properties or to switch between different properties. The whichChild field specifies the index of the child to traverse, where the first child has index 0. A value of -1 (the default) means do not traverse any children. A value of -3 traverses all children, making the switch behave exactly like a regular Group.
     """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1860,7 +1941,7 @@ class Vrml_Texture2():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1889,9 +1970,9 @@ class Vrml_Texture2():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aFilename : OCP.TCollection.TCollection_AsciiString,aImage : Vrml_SFImage,aWrapS : Vrml_Texture2Wrap,aWrapT : Vrml_Texture2Wrap) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Vrml_Texture2Transform():
     """
@@ -1901,7 +1982,7 @@ class Vrml_Texture2Transform():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1948,20 +2029,28 @@ class Vrml_Texture2Wrap():
 
       Vrml_CLAMP
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_CLAMP: OCP.Vrml.Vrml_Texture2Wrap # value = Vrml_Texture2Wrap.Vrml_CLAMP
-    Vrml_REPEAT: OCP.Vrml.Vrml_Texture2Wrap # value = Vrml_Texture2Wrap.Vrml_REPEAT
-    __entries: dict # value = {'Vrml_REPEAT': (Vrml_Texture2Wrap.Vrml_REPEAT, None), 'Vrml_CLAMP': (Vrml_Texture2Wrap.Vrml_CLAMP, None)}
-    __members__: dict # value = {'Vrml_REPEAT': Vrml_Texture2Wrap.Vrml_REPEAT, 'Vrml_CLAMP': Vrml_Texture2Wrap.Vrml_CLAMP}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_CLAMP: OCP.Vrml.Vrml_Texture2Wrap # value = <Vrml_Texture2Wrap.Vrml_CLAMP: 1>
+    Vrml_REPEAT: OCP.Vrml.Vrml_Texture2Wrap # value = <Vrml_Texture2Wrap.Vrml_REPEAT: 0>
+    __entries: dict # value = {'Vrml_REPEAT': (<Vrml_Texture2Wrap.Vrml_REPEAT: 0>, None), 'Vrml_CLAMP': (<Vrml_Texture2Wrap.Vrml_CLAMP: 1>, None)}
+    __members__: dict # value = {'Vrml_REPEAT': <Vrml_Texture2Wrap.Vrml_REPEAT: 0>, 'Vrml_CLAMP': <Vrml_Texture2Wrap.Vrml_CLAMP: 1>}
     pass
 class Vrml_TextureCoordinate2(OCP.Standard.Standard_Transient):
     """
@@ -2009,7 +2098,7 @@ class Vrml_TextureCoordinate2(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -2022,9 +2111,9 @@ class Vrml_TextureCoordinate2(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aPoint : OCP.TColgp.TColgp_HArray1OfVec2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2044,7 +2133,7 @@ class Vrml_Transform():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -2093,7 +2182,7 @@ class Vrml_TransformSeparator():
     """
     defines a TransformSeparator node of VRML specifying group properties. This group node is similar to separator node in that it saves state before traversing its children and restores it afterwards. This node can be used to isolate transformations to light sources or objects.
     """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -2103,7 +2192,7 @@ class Vrml_Translation():
     """
     defines a Translation of VRML specifying transform properties. This node defines a translation by 3D vector. By default : myTranslation (0,0,0)
     """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -2116,9 +2205,9 @@ class Vrml_Translation():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aTranslation : OCP.gp.gp_Vec) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Vrml_VertexOrdering():
     """
@@ -2132,21 +2221,29 @@ class Vrml_VertexOrdering():
 
       Vrml_COUNTERCLOCKWISE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_CLOCKWISE: OCP.Vrml.Vrml_VertexOrdering # value = Vrml_VertexOrdering.Vrml_CLOCKWISE
-    Vrml_COUNTERCLOCKWISE: OCP.Vrml.Vrml_VertexOrdering # value = Vrml_VertexOrdering.Vrml_COUNTERCLOCKWISE
-    Vrml_UNKNOWN_ORDERING: OCP.Vrml.Vrml_VertexOrdering # value = Vrml_VertexOrdering.Vrml_UNKNOWN_ORDERING
-    __entries: dict # value = {'Vrml_UNKNOWN_ORDERING': (Vrml_VertexOrdering.Vrml_UNKNOWN_ORDERING, None), 'Vrml_CLOCKWISE': (Vrml_VertexOrdering.Vrml_CLOCKWISE, None), 'Vrml_COUNTERCLOCKWISE': (Vrml_VertexOrdering.Vrml_COUNTERCLOCKWISE, None)}
-    __members__: dict # value = {'Vrml_UNKNOWN_ORDERING': Vrml_VertexOrdering.Vrml_UNKNOWN_ORDERING, 'Vrml_CLOCKWISE': Vrml_VertexOrdering.Vrml_CLOCKWISE, 'Vrml_COUNTERCLOCKWISE': Vrml_VertexOrdering.Vrml_COUNTERCLOCKWISE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_CLOCKWISE: OCP.Vrml.Vrml_VertexOrdering # value = <Vrml_VertexOrdering.Vrml_CLOCKWISE: 1>
+    Vrml_COUNTERCLOCKWISE: OCP.Vrml.Vrml_VertexOrdering # value = <Vrml_VertexOrdering.Vrml_COUNTERCLOCKWISE: 2>
+    Vrml_UNKNOWN_ORDERING: OCP.Vrml.Vrml_VertexOrdering # value = <Vrml_VertexOrdering.Vrml_UNKNOWN_ORDERING: 0>
+    __entries: dict # value = {'Vrml_UNKNOWN_ORDERING': (<Vrml_VertexOrdering.Vrml_UNKNOWN_ORDERING: 0>, None), 'Vrml_CLOCKWISE': (<Vrml_VertexOrdering.Vrml_CLOCKWISE: 1>, None), 'Vrml_COUNTERCLOCKWISE': (<Vrml_VertexOrdering.Vrml_COUNTERCLOCKWISE: 2>, None)}
+    __members__: dict # value = {'Vrml_UNKNOWN_ORDERING': <Vrml_VertexOrdering.Vrml_UNKNOWN_ORDERING: 0>, 'Vrml_CLOCKWISE': <Vrml_VertexOrdering.Vrml_CLOCKWISE: 1>, 'Vrml_COUNTERCLOCKWISE': <Vrml_VertexOrdering.Vrml_COUNTERCLOCKWISE: 2>}
     pass
 class Vrml_WWWAnchor():
     """
@@ -2164,7 +2261,7 @@ class Vrml_WWWAnchor():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -2192,20 +2289,28 @@ class Vrml_WWWAnchorMap():
 
       Vrml_POINT
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Vrml_MAP_NONE: OCP.Vrml.Vrml_WWWAnchorMap # value = Vrml_WWWAnchorMap.Vrml_MAP_NONE
-    Vrml_POINT: OCP.Vrml.Vrml_WWWAnchorMap # value = Vrml_WWWAnchorMap.Vrml_POINT
-    __entries: dict # value = {'Vrml_MAP_NONE': (Vrml_WWWAnchorMap.Vrml_MAP_NONE, None), 'Vrml_POINT': (Vrml_WWWAnchorMap.Vrml_POINT, None)}
-    __members__: dict # value = {'Vrml_MAP_NONE': Vrml_WWWAnchorMap.Vrml_MAP_NONE, 'Vrml_POINT': Vrml_WWWAnchorMap.Vrml_POINT}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Vrml_MAP_NONE: OCP.Vrml.Vrml_WWWAnchorMap # value = <Vrml_WWWAnchorMap.Vrml_MAP_NONE: 0>
+    Vrml_POINT: OCP.Vrml.Vrml_WWWAnchorMap # value = <Vrml_WWWAnchorMap.Vrml_POINT: 1>
+    __entries: dict # value = {'Vrml_MAP_NONE': (<Vrml_WWWAnchorMap.Vrml_MAP_NONE: 0>, None), 'Vrml_POINT': (<Vrml_WWWAnchorMap.Vrml_POINT: 1>, None)}
+    __members__: dict # value = {'Vrml_MAP_NONE': <Vrml_WWWAnchorMap.Vrml_MAP_NONE: 0>, 'Vrml_POINT': <Vrml_WWWAnchorMap.Vrml_POINT: 1>}
     pass
 class Vrml_WWWInline():
     """
@@ -2223,7 +2328,7 @@ class Vrml_WWWInline():
         """
         None
         """
-    def Print(self,anOStream : Any) -> Any: 
+    def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -2244,46 +2349,46 @@ class Vrml_WWWInline():
     @overload
     def __init__(self) -> None: ...
     pass
-Vrml_AUTO: OCP.Vrml.Vrml_SeparatorRenderCulling # value = Vrml_SeparatorRenderCulling.Vrml_AUTO
-Vrml_BOLD: OCP.Vrml.Vrml_FontStyleStyle # value = Vrml_FontStyleStyle.Vrml_BOLD
-Vrml_CENTER: OCP.Vrml.Vrml_AsciiTextJustification # value = Vrml_AsciiTextJustification.Vrml_CENTER
-Vrml_CLAMP: OCP.Vrml.Vrml_Texture2Wrap # value = Vrml_Texture2Wrap.Vrml_CLAMP
-Vrml_CLOCKWISE: OCP.Vrml.Vrml_VertexOrdering # value = Vrml_VertexOrdering.Vrml_CLOCKWISE
-Vrml_CONVEX: OCP.Vrml.Vrml_FaceType # value = Vrml_FaceType.Vrml_CONVEX
-Vrml_COUNTERCLOCKWISE: OCP.Vrml.Vrml_VertexOrdering # value = Vrml_VertexOrdering.Vrml_COUNTERCLOCKWISE
-Vrml_ConeALL: OCP.Vrml.Vrml_ConeParts # value = Vrml_ConeParts.Vrml_ConeALL
-Vrml_ConeBOTTOM: OCP.Vrml.Vrml_ConeParts # value = Vrml_ConeParts.Vrml_ConeBOTTOM
-Vrml_ConeSIDES: OCP.Vrml.Vrml_ConeParts # value = Vrml_ConeParts.Vrml_ConeSIDES
-Vrml_CylinderALL: OCP.Vrml.Vrml_CylinderParts # value = Vrml_CylinderParts.Vrml_CylinderALL
-Vrml_CylinderBOTTOM: OCP.Vrml.Vrml_CylinderParts # value = Vrml_CylinderParts.Vrml_CylinderBOTTOM
-Vrml_CylinderSIDES: OCP.Vrml.Vrml_CylinderParts # value = Vrml_CylinderParts.Vrml_CylinderSIDES
-Vrml_CylinderTOP: OCP.Vrml.Vrml_CylinderParts # value = Vrml_CylinderParts.Vrml_CylinderTOP
-Vrml_DEFAULT: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_DEFAULT
-Vrml_FOUR: OCP.Vrml.Vrml_SFImageNumber # value = Vrml_SFImageNumber.Vrml_FOUR
-Vrml_ITALIC: OCP.Vrml.Vrml_FontStyleStyle # value = Vrml_FontStyleStyle.Vrml_ITALIC
-Vrml_LEFT: OCP.Vrml.Vrml_AsciiTextJustification # value = Vrml_AsciiTextJustification.Vrml_LEFT
-Vrml_MAP_NONE: OCP.Vrml.Vrml_WWWAnchorMap # value = Vrml_WWWAnchorMap.Vrml_MAP_NONE
-Vrml_NONE: OCP.Vrml.Vrml_FontStyleStyle # value = Vrml_FontStyleStyle.Vrml_NONE
-Vrml_NULL: OCP.Vrml.Vrml_SFImageNumber # value = Vrml_SFImageNumber.Vrml_NULL
-Vrml_OFF: OCP.Vrml.Vrml_SeparatorRenderCulling # value = Vrml_SeparatorRenderCulling.Vrml_OFF
-Vrml_ON: OCP.Vrml.Vrml_SeparatorRenderCulling # value = Vrml_SeparatorRenderCulling.Vrml_ON
-Vrml_ONE: OCP.Vrml.Vrml_SFImageNumber # value = Vrml_SFImageNumber.Vrml_ONE
-Vrml_OVERALL: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_OVERALL
-Vrml_PER_FACE: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE
-Vrml_PER_FACE_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE_INDEXED
-Vrml_PER_PART: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART
-Vrml_PER_PART_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART_INDEXED
-Vrml_PER_VERTEX: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX
-Vrml_PER_VERTEX_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX_INDEXED
-Vrml_POINT: OCP.Vrml.Vrml_WWWAnchorMap # value = Vrml_WWWAnchorMap.Vrml_POINT
-Vrml_REPEAT: OCP.Vrml.Vrml_Texture2Wrap # value = Vrml_Texture2Wrap.Vrml_REPEAT
-Vrml_RIGHT: OCP.Vrml.Vrml_AsciiTextJustification # value = Vrml_AsciiTextJustification.Vrml_RIGHT
-Vrml_SANS: OCP.Vrml.Vrml_FontStyleFamily # value = Vrml_FontStyleFamily.Vrml_SANS
-Vrml_SERIF: OCP.Vrml.Vrml_FontStyleFamily # value = Vrml_FontStyleFamily.Vrml_SERIF
-Vrml_SOLID: OCP.Vrml.Vrml_ShapeType # value = Vrml_ShapeType.Vrml_SOLID
-Vrml_THREE: OCP.Vrml.Vrml_SFImageNumber # value = Vrml_SFImageNumber.Vrml_THREE
-Vrml_TWO: OCP.Vrml.Vrml_SFImageNumber # value = Vrml_SFImageNumber.Vrml_TWO
-Vrml_TYPEWRITER: OCP.Vrml.Vrml_FontStyleFamily # value = Vrml_FontStyleFamily.Vrml_TYPEWRITER
-Vrml_UNKNOWN_FACE_TYPE: OCP.Vrml.Vrml_FaceType # value = Vrml_FaceType.Vrml_UNKNOWN_FACE_TYPE
-Vrml_UNKNOWN_ORDERING: OCP.Vrml.Vrml_VertexOrdering # value = Vrml_VertexOrdering.Vrml_UNKNOWN_ORDERING
-Vrml_UNKNOWN_SHAPE_TYPE: OCP.Vrml.Vrml_ShapeType # value = Vrml_ShapeType.Vrml_UNKNOWN_SHAPE_TYPE
+Vrml_AUTO: OCP.Vrml.Vrml_SeparatorRenderCulling # value = <Vrml_SeparatorRenderCulling.Vrml_AUTO: 2>
+Vrml_BOLD: OCP.Vrml.Vrml_FontStyleStyle # value = <Vrml_FontStyleStyle.Vrml_BOLD: 1>
+Vrml_CENTER: OCP.Vrml.Vrml_AsciiTextJustification # value = <Vrml_AsciiTextJustification.Vrml_CENTER: 1>
+Vrml_CLAMP: OCP.Vrml.Vrml_Texture2Wrap # value = <Vrml_Texture2Wrap.Vrml_CLAMP: 1>
+Vrml_CLOCKWISE: OCP.Vrml.Vrml_VertexOrdering # value = <Vrml_VertexOrdering.Vrml_CLOCKWISE: 1>
+Vrml_CONVEX: OCP.Vrml.Vrml_FaceType # value = <Vrml_FaceType.Vrml_CONVEX: 1>
+Vrml_COUNTERCLOCKWISE: OCP.Vrml.Vrml_VertexOrdering # value = <Vrml_VertexOrdering.Vrml_COUNTERCLOCKWISE: 2>
+Vrml_ConeALL: OCP.Vrml.Vrml_ConeParts # value = <Vrml_ConeParts.Vrml_ConeALL: 2>
+Vrml_ConeBOTTOM: OCP.Vrml.Vrml_ConeParts # value = <Vrml_ConeParts.Vrml_ConeBOTTOM: 1>
+Vrml_ConeSIDES: OCP.Vrml.Vrml_ConeParts # value = <Vrml_ConeParts.Vrml_ConeSIDES: 0>
+Vrml_CylinderALL: OCP.Vrml.Vrml_CylinderParts # value = <Vrml_CylinderParts.Vrml_CylinderALL: 3>
+Vrml_CylinderBOTTOM: OCP.Vrml.Vrml_CylinderParts # value = <Vrml_CylinderParts.Vrml_CylinderBOTTOM: 2>
+Vrml_CylinderSIDES: OCP.Vrml.Vrml_CylinderParts # value = <Vrml_CylinderParts.Vrml_CylinderSIDES: 0>
+Vrml_CylinderTOP: OCP.Vrml.Vrml_CylinderParts # value = <Vrml_CylinderParts.Vrml_CylinderTOP: 1>
+Vrml_DEFAULT: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_DEFAULT: 0>
+Vrml_FOUR: OCP.Vrml.Vrml_SFImageNumber # value = <Vrml_SFImageNumber.Vrml_FOUR: 4>
+Vrml_ITALIC: OCP.Vrml.Vrml_FontStyleStyle # value = <Vrml_FontStyleStyle.Vrml_ITALIC: 2>
+Vrml_LEFT: OCP.Vrml.Vrml_AsciiTextJustification # value = <Vrml_AsciiTextJustification.Vrml_LEFT: 0>
+Vrml_MAP_NONE: OCP.Vrml.Vrml_WWWAnchorMap # value = <Vrml_WWWAnchorMap.Vrml_MAP_NONE: 0>
+Vrml_NONE: OCP.Vrml.Vrml_FontStyleStyle # value = <Vrml_FontStyleStyle.Vrml_NONE: 0>
+Vrml_NULL: OCP.Vrml.Vrml_SFImageNumber # value = <Vrml_SFImageNumber.Vrml_NULL: 0>
+Vrml_OFF: OCP.Vrml.Vrml_SeparatorRenderCulling # value = <Vrml_SeparatorRenderCulling.Vrml_OFF: 0>
+Vrml_ON: OCP.Vrml.Vrml_SeparatorRenderCulling # value = <Vrml_SeparatorRenderCulling.Vrml_ON: 1>
+Vrml_ONE: OCP.Vrml.Vrml_SFImageNumber # value = <Vrml_SFImageNumber.Vrml_ONE: 1>
+Vrml_OVERALL: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_OVERALL: 1>
+Vrml_PER_FACE: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE: 4>
+Vrml_PER_FACE_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_FACE_INDEXED: 5>
+Vrml_PER_PART: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART: 2>
+Vrml_PER_PART_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_PART_INDEXED: 3>
+Vrml_PER_VERTEX: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX: 6>
+Vrml_PER_VERTEX_INDEXED: OCP.Vrml.Vrml_MaterialBindingAndNormalBinding # value = <Vrml_MaterialBindingAndNormalBinding.Vrml_PER_VERTEX_INDEXED: 7>
+Vrml_POINT: OCP.Vrml.Vrml_WWWAnchorMap # value = <Vrml_WWWAnchorMap.Vrml_POINT: 1>
+Vrml_REPEAT: OCP.Vrml.Vrml_Texture2Wrap # value = <Vrml_Texture2Wrap.Vrml_REPEAT: 0>
+Vrml_RIGHT: OCP.Vrml.Vrml_AsciiTextJustification # value = <Vrml_AsciiTextJustification.Vrml_RIGHT: 2>
+Vrml_SANS: OCP.Vrml.Vrml_FontStyleFamily # value = <Vrml_FontStyleFamily.Vrml_SANS: 1>
+Vrml_SERIF: OCP.Vrml.Vrml_FontStyleFamily # value = <Vrml_FontStyleFamily.Vrml_SERIF: 0>
+Vrml_SOLID: OCP.Vrml.Vrml_ShapeType # value = <Vrml_ShapeType.Vrml_SOLID: 1>
+Vrml_THREE: OCP.Vrml.Vrml_SFImageNumber # value = <Vrml_SFImageNumber.Vrml_THREE: 3>
+Vrml_TWO: OCP.Vrml.Vrml_SFImageNumber # value = <Vrml_SFImageNumber.Vrml_TWO: 2>
+Vrml_TYPEWRITER: OCP.Vrml.Vrml_FontStyleFamily # value = <Vrml_FontStyleFamily.Vrml_TYPEWRITER: 2>
+Vrml_UNKNOWN_FACE_TYPE: OCP.Vrml.Vrml_FaceType # value = <Vrml_FaceType.Vrml_UNKNOWN_FACE_TYPE: 0>
+Vrml_UNKNOWN_ORDERING: OCP.Vrml.Vrml_VertexOrdering # value = <Vrml_VertexOrdering.Vrml_UNKNOWN_ORDERING: 0>
+Vrml_UNKNOWN_SHAPE_TYPE: OCP.Vrml.Vrml_ShapeType # value = <Vrml_ShapeType.Vrml_UNKNOWN_SHAPE_TYPE: 0>

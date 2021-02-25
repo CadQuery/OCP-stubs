@@ -5,10 +5,10 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
+import OCP.TDocStd
 import OCP.TCollection
 import OCP.Storage
 import OCP.Standard
-import OCP.TDocStd
 __all__  = [
 "StdObjMgt_MapOfInstantiators",
 "StdObjMgt_Persistent",
@@ -105,14 +105,14 @@ class StdObjMgt_Persistent(OCP.Standard.Standard_Transient):
         Read persistent data from a file.
         """
     @overload
-    def RefNum(self) -> int: 
+    def RefNum(self,theRefNum : int) -> None: 
         """
         Returns the object reference number
 
         Sets an object reference number
         """
     @overload
-    def RefNum(self,theRefNum : int) -> None: ...
+    def RefNum(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

@@ -4,9 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Standard
-import OCP.TCollection
 import OCP.Quantity
+import OCP.TCollection
+import io
+import OCP.Standard
 import OCP.Aspect
 __all__  = [
 "Xw_Window",
@@ -39,6 +40,10 @@ class Xw_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
     def DoResize(self) -> OCP.Aspect.Aspect_TypeOfResize: 
         """
         Applies the resizing to the window <me>
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -111,7 +116,7 @@ class Xw_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
         Returns The Window RATIO equal to the physical WIDTH/HEIGHT dimensions
         """
     @overload
-    def SetBackground(self,ABack : OCP.Aspect.Aspect_Background) -> None: 
+    def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : OCP.Aspect.Aspect_GradientFillMethod) -> None: 
         """
         Modifies the window background.
 
@@ -122,7 +127,7 @@ class Xw_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
         Modifies the window gradient background.
         """
     @overload
-    def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : OCP.Aspect.Aspect_GradientFillMethod) -> None: ...
+    def SetBackground(self,ABack : OCP.Aspect.Aspect_Background) -> None: ...
     @overload
     def SetBackground(self,color : OCP.Quantity.Quantity_Color) -> None: ...
     @overload

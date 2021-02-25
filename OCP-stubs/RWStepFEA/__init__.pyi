@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepData
-import OCP.StepFEA
 import OCP.Interface
+import OCP.StepFEA
+import OCP.StepData
 __all__  = [
 "RWStepFEA_RWAlignedCurve3dElementCoordinateSystem",
 "RWStepFEA_RWAlignedSurface3dElementCoordinateSystem",

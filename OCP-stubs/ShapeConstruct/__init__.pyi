@@ -4,19 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.TopAbs
+import OCP.TopTools
 import OCP.TColStd
 import OCP.ShapeExtend
-import OCP.Geom2d
 import OCP.BRepBuilderAPI
-import OCP.ShapeAnalysis
-import OCP.TopTools
-import OCP.TColgp
-import OCP.Standard
-import OCP.TopoDS
-import OCP.Geom
+import OCP.GeomAbs
 import OCP.gp
+import OCP.Geom
+import OCP.TColgp
+import OCP.TopoDS
+import OCP.Geom2d
+import OCP.Standard
+import OCP.ShapeAnalysis
+import OCP.TopAbs
 __all__  = [
 "ShapeConstruct",
 "ShapeConstruct_Curve",
@@ -29,7 +29,7 @@ class ShapeConstruct():
     """
     @staticmethod
     @overload
-    def ConvertCurveToBSpline_s(C2D : OCP.Geom2d.Geom2d_Curve,First : float,Last : float,Tol2d : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> OCP.Geom2d.Geom2d_BSplineCurve: 
+    def ConvertCurveToBSpline_s(C3D : OCP.Geom.Geom_Curve,First : float,Last : float,Tol3d : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> OCP.Geom.Geom_BSplineCurve: 
         """
         Tool for wire triangulation
 
@@ -37,7 +37,7 @@ class ShapeConstruct():
         """
     @staticmethod
     @overload
-    def ConvertCurveToBSpline_s(C3D : OCP.Geom.Geom_Curve,First : float,Last : float,Tol3d : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> OCP.Geom.Geom_BSplineCurve: ...
+    def ConvertCurveToBSpline_s(C2D : OCP.Geom2d.Geom2d_Curve,First : float,Last : float,Tol2d : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
     @staticmethod
     def ConvertSurfaceToBSpline_s(surf : OCP.Geom.Geom_Surface,UF : float,UL : float,VF : float,VL : float,Tol3d : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> OCP.Geom.Geom_BSplineSurface: 
         """
@@ -78,14 +78,14 @@ class ShapeConstruct_Curve():
         Modifies a curve in order to make its bounds confused with given points. Works only on lines and B-Splines.
         """
     @overload
-    def ConvertToBSpline(self,C : OCP.Geom2d.Geom2d_Curve,first : float,last : float,prec : float) -> OCP.Geom2d.Geom2d_BSplineCurve: 
+    def ConvertToBSpline(self,C : OCP.Geom.Geom_Curve,first : float,last : float,prec : float) -> OCP.Geom.Geom_BSplineCurve: 
         """
         Converts a curve of any type (only part from first to last) to bspline. The method of conversion depends on the type of original curve: BSpline -> C.Segment(first,last) Bezier and Line -> GeomConvert::CurveToBSplineCurve(C).Segment(first,last) Conic and Other -> Approx_Curve3d(C[first,last],prec,C1,9,1000)
 
         Converts a curve of any type (only part from first to last) to bspline. The method of conversion depends on the type of original curve: BSpline -> C.Segment(first,last) Bezier and Line -> GeomConvert::CurveToBSplineCurve(C).Segment(first,last) Conic and Other -> Approx_Curve2d(C[first,last],prec,C1,9,1000)
         """
     @overload
-    def ConvertToBSpline(self,C : OCP.Geom.Geom_Curve,first : float,last : float,prec : float) -> OCP.Geom.Geom_BSplineCurve: ...
+    def ConvertToBSpline(self,C : OCP.Geom2d.Geom2d_Curve,first : float,last : float,prec : float) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
     @staticmethod
     @overload
     def FixKnots_s(knots : OCP.TColStd.TColStd_HArray1OfReal) -> bool: 
@@ -161,14 +161,14 @@ class ShapeConstruct_ProjectCurveOnSurface(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,surf : OCP.ShapeAnalysis.ShapeAnalysis_Surface,preci : float) -> None: 
+    def Init(self,surf : OCP.Geom.Geom_Surface,preci : float) -> None: 
         """
         Initializes the object with all necessary parameters, i.e. surface and precision
 
         Initializes the object with all necessary parameters, i.e. surface and precision
         """
     @overload
-    def Init(self,surf : OCP.Geom.Geom_Surface,preci : float) -> None: ...
+    def Init(self,surf : OCP.ShapeAnalysis.ShapeAnalysis_Surface,preci : float) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -200,14 +200,14 @@ class ShapeConstruct_ProjectCurveOnSurface(OCP.Standard.Standard_Transient):
         Sets value for current precision
         """
     @overload
-    def SetSurface(self,surf : OCP.ShapeAnalysis.ShapeAnalysis_Surface) -> None: 
+    def SetSurface(self,surf : OCP.Geom.Geom_Surface) -> None: 
         """
         Loads a surface (in the form of Geom_Surface) to project on
 
         Loads a surface (in the form of ShapeAnalysis_Surface) to project on
         """
     @overload
-    def SetSurface(self,surf : OCP.Geom.Geom_Surface) -> None: ...
+    def SetSurface(self,surf : OCP.ShapeAnalysis.ShapeAnalysis_Surface) -> None: ...
     def Status(self,theStatus : OCP.ShapeExtend.ShapeExtend_Status) -> bool: 
         """
         Returns the status of last Peform

@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
-import OCP.TCollection
 import OCP.TColStd
 import OCP.Standard
+import OCP.TCollection
 __all__  = [
 "Units",
 "Units_Dimensions",
@@ -102,7 +102,7 @@ class Units():
         """
     @staticmethod
     @overload
-    def ToSI_s(aData : float,aUnit : str,aDim : Units_Dimensions) -> float: 
+    def ToSI_s(aData : float,aUnit : str) -> float: 
         """
         None
 
@@ -110,7 +110,7 @@ class Units():
         """
     @staticmethod
     @overload
-    def ToSI_s(aData : float,aUnit : str) -> float: ...
+    def ToSI_s(aData : float,aUnit : str,aDim : Units_Dimensions) -> float: ...
     @staticmethod
     def UnitsFile_s(afile : str) -> None: 
         """
@@ -313,7 +313,7 @@ class Units_Explorer():
     This class provides all the services to explore UnitsSystem or UnitsDictionary.
     """
     @overload
-    def Init(self,aunitsdictionary : Units_UnitsDictionary,aquantity : str) -> None: 
+    def Init(self,aunitssystem : Units_UnitsSystem,aquantity : str) -> None: 
         """
         Initializes the instance of the class with the UnitsSystem <aunitssystem>.
 
@@ -324,9 +324,9 @@ class Units_Explorer():
         Initializes the instance of the class with the UnitsDictionary <aunitsdictionary> and positioned at the quantity <aquantity>.
         """
     @overload
-    def Init(self,aunitssystem : Units_UnitsSystem) -> None: ...
+    def Init(self,aunitsdictionary : Units_UnitsDictionary,aquantity : str) -> None: ...
     @overload
-    def Init(self,aunitssystem : Units_UnitsSystem,aquantity : str) -> None: ...
+    def Init(self,aunitssystem : Units_UnitsSystem) -> None: ...
     @overload
     def Init(self,aunitsdictionary : Units_UnitsDictionary) -> None: ...
     def IsActive(self) -> bool: 
@@ -358,15 +358,15 @@ class Units_Explorer():
         Returns the name of the current unit.
         """
     @overload
-    def __init__(self,aunitssystem : Units_UnitsSystem) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aunitsdictionary : Units_UnitsDictionary) -> None: ...
     @overload
     def __init__(self,aunitsdictionary : Units_UnitsDictionary,aquantity : str) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,aunitssystem : Units_UnitsSystem) -> None: ...
     @overload
     def __init__(self,aunitssystem : Units_UnitsSystem,aquantity : str) -> None: ...
-    @overload
-    def __init__(self,aunitsdictionary : Units_UnitsDictionary) -> None: ...
     pass
 class Units_Lexicon(OCP.Standard.Standard_Transient):
     """
@@ -492,14 +492,14 @@ class Units_Measurement():
     def Add(self,ameasurement : Units_Measurement) -> Units_Measurement: ...
     def Convert(self,aunit : str) -> None: ...
     @overload
-    def Divide(self,avalue : float) -> Units_Measurement: 
+    def Divide(self,ameasurement : Units_Measurement) -> Units_Measurement: 
         """
         Returns a measurement which is the division of <me> by <ameasurement>.
 
         Returns a measurement which is the division of <me> by the constant <avalue>.
         """
     @overload
-    def Divide(self,ameasurement : Units_Measurement) -> Units_Measurement: ...
+    def Divide(self,avalue : float) -> Units_Measurement: ...
     def Dump(self) -> None: 
         """
         Useful for debugging.
@@ -521,14 +521,14 @@ class Units_Measurement():
         Returns the value of the measurement.
         """
     @overload
-    def Multiply(self,avalue : float) -> Units_Measurement: 
+    def Multiply(self,ameasurement : Units_Measurement) -> Units_Measurement: 
         """
         Returns a measurement which is the multiplication of <me> and <ameasurement>.
 
         Returns a measurement which is the multiplication of <me> with the value <avalue>.
         """
     @overload
-    def Multiply(self,ameasurement : Units_Measurement) -> Units_Measurement: ...
+    def Multiply(self,avalue : float) -> Units_Measurement: ...
     def Power(self,anexponent : float) -> Units_Measurement: 
         """
         Returns a measurement which is <me> powered <anexponent>.
@@ -543,11 +543,11 @@ class Units_Measurement():
         None
         """
     @overload
+    def __init__(self,avalue : float,atoken : Units_Token) -> None: ...
+    @overload
     def __init__(self,avalue : float,aunit : str) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,avalue : float,atoken : Units_Token) -> None: ...
     @overload
     def __mul__(self,avalue : float) -> Units_Measurement: 
         """
@@ -571,14 +571,14 @@ class Units_Measurement():
         None
         """
     @overload
-    def __truediv__(self,ameasurement : Units_Measurement) -> Units_Measurement: 
+    def __truediv__(self,avalue : float) -> Units_Measurement: 
         """
         None
 
         None
         """
     @overload
-    def __truediv__(self,avalue : float) -> Units_Measurement: ...
+    def __truediv__(self,ameasurement : Units_Measurement) -> Units_Measurement: ...
     pass
 class Units_NoSuchType(Exception, BaseException):
     class type():
@@ -611,14 +611,14 @@ class Units_QtsSequence(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Units_QtsSequence) -> None: 
+    def Append(self,theItem : Units_Quantity) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Units_Quantity) -> None: ...
+    def Append(self,theSeq : Units_QtsSequence) -> None: ...
     def Assign(self,theOther : Units_QtsSequence) -> Units_QtsSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -691,14 +691,14 @@ class Units_QtsSequence(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : Units_Quantity) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -724,12 +724,12 @@ class Units_QtsSequence(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : Units_QtsSequence) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -742,14 +742,14 @@ class Units_QuantitiesSequence(Units_QtsSequence, OCP.NCollection.NCollection_Ba
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Units_Quantity) -> None: 
+    def Append(self,theSequence : Units_QtsSequence) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : Units_QtsSequence) -> None: ...
+    def Append(self,theItem : Units_Quantity) -> None: ...
     def Assign(self,theOther : Units_QtsSequence) -> Units_QtsSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -864,14 +864,14 @@ class Units_QuantitiesSequence(Units_QtsSequence, OCP.NCollection.NCollection_Ba
     @overload
     def Prepend(self,theItem : Units_Quantity) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -905,10 +905,10 @@ class Units_QuantitiesSequence(Units_QtsSequence, OCP.NCollection.NCollection_Ba
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Units_QtsSequence) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1074,7 +1074,7 @@ class Units_Token(OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Dimensions(self) -> Units_Dimensions: 
+    def Dimensions(self,adimensions : Units_Dimensions) -> None: 
         """
         Returns the dimensions of the token <thedimensions>.
 
@@ -1083,7 +1083,7 @@ class Units_Token(OCP.Standard.Standard_Transient):
         Returns the dimensions of the token <thedimensions>.
         """
     @overload
-    def Dimensions(self,adimensions : Units_Dimensions) -> None: ...
+    def Dimensions(self) -> Units_Dimensions: ...
     def Divide(self,atoken : Units_Token) -> Units_Token: 
         """
         Returns a token which is the division of <me> by another token <atoken>.
@@ -1109,14 +1109,14 @@ class Units_Token(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsEqual(self,astring : str) -> bool: 
+    def IsEqual(self,atoken : Units_Token) -> bool: 
         """
         Returns true if the field <theword> and the string <astring> are the same, false otherwise.
 
         Returns true if the field <theword> and the string <theword> contained in the token <atoken> are the same, false otherwise.
         """
     @overload
-    def IsEqual(self,atoken : Units_Token) -> bool: ...
+    def IsEqual(self,astring : str) -> bool: ...
     @overload
     def IsGreater(self,astring : str) -> bool: 
         """
@@ -1199,14 +1199,14 @@ class Units_Token(OCP.Standard.Standard_Transient):
         Returns a token which is the product of <me> and another token <atoken>.
         """
     @overload
-    def Power(self,atoken : Units_Token) -> Units_Token: 
+    def Power(self,anexponent : float) -> Units_Token: 
         """
         Returns a token which is <me> to the power of another token <atoken>. The computation is possible only if <atoken> is a dimensionless constant.
 
         Returns a token which is <me> to the power of <anexponent>.
         """
     @overload
-    def Power(self,anexponent : float) -> Units_Token: ...
+    def Power(self,atoken : Units_Token) -> Units_Token: ...
     def Subtract(self,atoken : Units_Token) -> Units_Token: 
         """
         Returns a token which is the subtraction of <me> and another token <atoken>. The subtraction is possible if and only if the dimensions are the same.
@@ -1233,7 +1233,7 @@ class Units_Token(OCP.Standard.Standard_Transient):
     @overload
     def Value(self,avalue : float) -> None: ...
     @overload
-    def Word(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def Word(self,aword : str) -> None: 
         """
         Returns the string <theword>
 
@@ -1244,19 +1244,19 @@ class Units_Token(OCP.Standard.Standard_Transient):
         Sets the field <theword> to <aword>.
         """
     @overload
-    def Word(self,aword : str) -> None: ...
-    @overload
-    def __init__(self,atoken : Units_Token) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,aword : str) -> None: ...
-    @overload
-    def __init__(self,aword : str,amean : str) -> None: ...
+    def Word(self) -> OCP.TCollection.TCollection_AsciiString: ...
     @overload
     def __init__(self,aword : str,amean : str,avalue : float) -> None: ...
     @overload
+    def __init__(self,aword : str,amean : str) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,aword : str,amean : str,avalue : float,adimension : Units_Dimensions) -> None: ...
+    @overload
+    def __init__(self,aword : str) -> None: ...
+    @overload
+    def __init__(self,atoken : Units_Token) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1394,14 +1394,14 @@ class Units_TksSequence(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Units_TksSequence) -> None: 
+    def Append(self,theItem : Units_Token) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Units_Token) -> None: ...
+    def Append(self,theSeq : Units_TksSequence) -> None: ...
     def Assign(self,theOther : Units_TksSequence) -> Units_TksSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1431,14 +1431,14 @@ class Units_TksSequence(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Units_TksSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Units_Token) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Units_Token) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Units_TksSequence) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Units_Token) -> None: 
         """
@@ -1465,14 +1465,14 @@ class Units_TksSequence(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Units_Token) -> None: 
+    def Prepend(self,theSeq : Units_TksSequence) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Units_TksSequence) -> None: ...
+    def Prepend(self,theItem : Units_Token) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1507,12 +1507,12 @@ class Units_TksSequence(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Units_TksSequence) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
+    def __init__(self,theOther : Units_TksSequence) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1545,7 +1545,7 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Dimensions(self) -> Units_Dimensions: 
+    def Dimensions(self,adimensions : Units_Dimensions) -> None: 
         """
         Returns the dimensions of the token <thedimensions>.
 
@@ -1554,7 +1554,7 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
         Returns the dimensions of the token <thedimensions>.
         """
     @overload
-    def Dimensions(self,adimensions : Units_Dimensions) -> None: ...
+    def Dimensions(self) -> Units_Dimensions: ...
     def Divide(self,atoken : Units_Token) -> Units_Token: 
         """
         Returns a token which is the division of <me> by another token <atoken>.
@@ -1580,14 +1580,14 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsEqual(self,astring : str) -> bool: 
+    def IsEqual(self,atoken : Units_Token) -> bool: 
         """
         Returns true if the field <theword> and the string <astring> are the same, false otherwise.
 
         Returns true if the field <theword> and the string <theword> contained in the token <atoken> are the same, false otherwise.
         """
     @overload
-    def IsEqual(self,atoken : Units_Token) -> bool: ...
+    def IsEqual(self,astring : str) -> bool: ...
     @overload
     def IsGreater(self,astring : str) -> bool: 
         """
@@ -1674,14 +1674,14 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
         Returns a token which is the product of <me> and another token <atoken>.
         """
     @overload
-    def Power(self,atoken : Units_Token) -> Units_Token: 
+    def Power(self,anexponent : float) -> Units_Token: 
         """
         Returns a token which is <me> to the power of another token <atoken>. The computation is possible only if <atoken> is a dimensionless constant.
 
         Returns a token which is <me> to the power of <anexponent>.
         """
     @overload
-    def Power(self,anexponent : float) -> Units_Token: ...
+    def Power(self,atoken : Units_Token) -> Units_Token: ...
     def Subtract(self,atoken : Units_Token) -> Units_Token: 
         """
         Returns a token which is the subtraction of <me> and another token <atoken>. The subtraction is possible if and only if the dimensions are the same.
@@ -1708,7 +1708,7 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
     @overload
     def Value(self,avalue : float) -> None: ...
     @overload
-    def Word(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def Word(self,aword : str) -> None: 
         """
         Returns the string <theword>
 
@@ -1719,7 +1719,7 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
         Sets the field <theword> to <aword>.
         """
     @overload
-    def Word(self,aword : str) -> None: ...
+    def Word(self) -> OCP.TCollection.TCollection_AsciiString: ...
     def __init__(self,aword : str,amean : str,avalue : float,amove : float,adimensions : Units_Dimensions) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1738,14 +1738,14 @@ class Units_TokensSequence(Units_TksSequence, OCP.NCollection.NCollection_BaseSe
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : Units_TksSequence) -> None: 
+    def Append(self,theItem : Units_Token) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : Units_Token) -> None: ...
+    def Append(self,theSequence : Units_TksSequence) -> None: ...
     def Assign(self,theOther : Units_TksSequence) -> Units_TksSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1799,14 +1799,14 @@ class Units_TokensSequence(Units_TksSequence, OCP.NCollection.NCollection_BaseSe
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Units_TksSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Units_Token) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Units_Token) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Units_TksSequence) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Units_Token) -> None: 
         """
@@ -1851,14 +1851,14 @@ class Units_TokensSequence(Units_TksSequence, OCP.NCollection.NCollection_BaseSe
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Units_Token) -> None: 
+    def Prepend(self,theSeq : Units_TksSequence) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Units_TksSequence) -> None: ...
+    def Prepend(self,theItem : Units_Token) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1904,7 +1904,7 @@ class Units_TokensSequence(Units_TksSequence, OCP.NCollection.NCollection_BaseSe
     def __init__(self,theOther : Units_TksSequence) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2031,11 +2031,11 @@ class Units_ShiftedUnit(Units_Unit, OCP.Standard.Standard_Transient):
     @overload
     def Value(self) -> float: ...
     @overload
-    def __init__(self,aname : str) -> None: ...
-    @overload
     def __init__(self,aname : str,asymbol : str,avalue : float,amove : float,aquantity : Units_Quantity) -> None: ...
     @overload
     def __init__(self,aname : str,asymbol : str) -> None: ...
+    @overload
+    def __init__(self,aname : str) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2093,9 +2093,9 @@ class Units_UnitSentence(Units_Sentence):
         For each token which represents a unit, finds in the sequence of physical quantities all the characteristics of the unit found.
         """
     @overload
-    def __init__(self,astring : str,aquantitiessequence : Units_QuantitiesSequence) -> None: ...
-    @overload
     def __init__(self,astring : str) -> None: ...
+    @overload
+    def __init__(self,astring : str,aquantitiessequence : Units_QuantitiesSequence) -> None: ...
     pass
 class Units_UnitsDictionary(OCP.Standard.Standard_Transient):
     """
@@ -2306,23 +2306,23 @@ class Units_UtsSequence(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Units_UtsSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Units_Unit) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Units_Unit) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Units_UtsSequence) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Units_UtsSequence) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Units_Unit) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Units_Unit) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Units_UtsSequence) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2387,7 +2387,7 @@ class Units_UtsSequence(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : Units_UtsSequence) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2489,9 +2489,9 @@ class Units_UnitsSystem(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,aName : str,Verbose : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aName : str,Verbose : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2509,14 +2509,14 @@ class Units_UnitsSequence(Units_UtsSequence, OCP.NCollection.NCollection_BaseSeq
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : Units_UtsSequence) -> None: 
+    def Append(self,theItem : Units_Unit) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : Units_Unit) -> None: ...
+    def Append(self,theSequence : Units_UtsSequence) -> None: ...
     def Assign(self,theOther : Units_UtsSequence) -> Units_UtsSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2570,23 +2570,23 @@ class Units_UnitsSequence(Units_UtsSequence, OCP.NCollection.NCollection_BaseSeq
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Units_UtsSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Units_Unit) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Units_Unit) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Units_UtsSequence) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Units_UtsSequence) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Units_Unit) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Units_Unit) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Units_UtsSequence) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2675,7 +2675,7 @@ class Units_UnitsSequence(Units_UtsSequence, OCP.NCollection.NCollection_BaseSeq
     def __init__(self,theOther : Units_UtsSequence) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2727,17 +2727,17 @@ def __sub__(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
     None
     """
 @overload
-def __truediv__(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
+def __truediv__(arg0 : Units_Dimensions,arg1 : Units_Dimensions) -> Units_Dimensions:
     """
     None
 
     None
     """
 @overload
-def __truediv__(arg0 : Units_Dimensions,arg1 : Units_Dimensions) -> Units_Dimensions:
+def __truediv__(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
     pass
 @overload
-def pow(arg0 : Units_Dimensions,arg1 : float) -> Units_Dimensions:
+def pow(arg0 : Units_Token,arg1 : float) -> Units_Token:
     """
     None
 
@@ -2749,5 +2749,5 @@ def pow(arg0 : Units_Dimensions,arg1 : float) -> Units_Dimensions:
 def pow(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
     pass
 @overload
-def pow(arg0 : Units_Token,arg1 : float) -> Units_Token:
+def pow(arg0 : Units_Dimensions,arg1 : float) -> Units_Dimensions:
     pass

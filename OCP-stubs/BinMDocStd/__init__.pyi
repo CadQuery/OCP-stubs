@@ -5,12 +5,12 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
-import OCP.TCollection
 import OCP.TColStd
-import OCP.Message
-import OCP.Standard
+import OCP.TCollection
 import OCP.BinObjMgt
+import OCP.Message
 import OCP.BinMDF
+import OCP.Standard
 __all__  = [
 "BinMDocStd",
 "BinMDocStd_XLinkDriver"
@@ -68,23 +68,25 @@ class BinMDocStd_XLinkDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard_Tr
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the type of source object, inheriting from Attribute from TDF.
-
         Returns the type of source object, inheriting from Attribute from TDF.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 

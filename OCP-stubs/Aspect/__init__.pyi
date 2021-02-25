@@ -4,24 +4,31 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.Quantity
+import OCP.TCollection
+import io
+import OCP.NCollection
+import OCP.gp
+import OCP.Image
+import Aspect_XRSession
 import OCP.Graphic3d
 import OCP.Standard
-import OCP.NCollection
 __all__  = [
 "Aspect_AspectFillAreaDefinitionError",
 "Aspect_AspectLineDefinitionError",
 "Aspect_AspectMarkerDefinitionError",
 "Aspect_Background",
 "Aspect_Grid",
+"Aspect_ColorSpace",
 "Aspect_DisplayConnection",
 "Aspect_DisplayConnectionDefinitionError",
+"Aspect_Eye",
 "Aspect_FillMethod",
 "Aspect_GenId",
 "Aspect_GradientBackground",
 "Aspect_GradientFillMethod",
 "Aspect_GraphicDeviceDefinitionError",
+"Aspect_GraphicsLibrary",
 "Aspect_CircularGrid",
 "Aspect_GridDrawMode",
 "Aspect_GridType",
@@ -29,12 +36,15 @@ __all__  = [
 "Aspect_IdentDefinitionError",
 "Aspect_InteriorStyle",
 "Aspect_Window",
+"Aspect_XRSession",
 "Aspect_PolygonOffsetMode",
 "Aspect_RectangularGrid",
 "Aspect_ScrollDelta",
 "Aspect_SequenceOfColor",
 "Aspect_Touch",
 "Aspect_TouchMap",
+"Aspect_TrackedDevicePose",
+"Aspect_TrackedDevicePoseArray",
 "Aspect_TypeOfColorScaleData",
 "Aspect_TypeOfColorScaleOrientation",
 "Aspect_TypeOfColorScalePosition",
@@ -53,7 +63,21 @@ __all__  = [
 "Aspect_WindowDefinitionError",
 "Aspect_WindowError",
 "Aspect_XAtom",
+"Aspect_XRAction",
+"Aspect_XRActionSet",
+"Aspect_XRActionType",
+"Aspect_XRAnalogActionData",
+"Aspect_XRDigitalActionData",
+"Aspect_XRGenericAction",
+"Aspect_XRHapticActionData",
+"Aspect_XRPoseActionData",
+"Aspect_OpenVRSession",
+"Aspect_XRTrackedDeviceRole",
 "Aspect_VKey2Modifier",
+"Aspect_ColorSpace_Linear",
+"Aspect_ColorSpace_sRGB",
+"Aspect_Eye_Left",
+"Aspect_Eye_Right",
 "Aspect_FM_CENTERED",
 "Aspect_FM_NONE",
 "Aspect_FM_STRETCH",
@@ -72,6 +96,8 @@ __all__  = [
 "Aspect_GFM_VER",
 "Aspect_GT_Circular",
 "Aspect_GT_Rectangular",
+"Aspect_GraphicsLibrary_OpenGL",
+"Aspect_GraphicsLibrary_OpenGLES",
 "Aspect_HS_DIAGONAL_135",
 "Aspect_HS_DIAGONAL_135_WIDE",
 "Aspect_HS_DIAGONAL_45",
@@ -308,6 +334,18 @@ __all__  = [
 "Aspect_VKey_Up",
 "Aspect_VKey_Upper",
 "Aspect_VKey_V",
+"Aspect_VKey_ViewAxoLeftProj",
+"Aspect_VKey_ViewAxoRightProj",
+"Aspect_VKey_ViewBack",
+"Aspect_VKey_ViewBottom",
+"Aspect_VKey_ViewFitAll",
+"Aspect_VKey_ViewFront",
+"Aspect_VKey_ViewLeft",
+"Aspect_VKey_ViewRight",
+"Aspect_VKey_ViewRoll90CCW",
+"Aspect_VKey_ViewRoll90CW",
+"Aspect_VKey_ViewSwitchRotate",
+"Aspect_VKey_ViewTop",
 "Aspect_VKey_VolumeDown",
 "Aspect_VKey_VolumeMute",
 "Aspect_VKey_VolumeUp",
@@ -320,7 +358,35 @@ __all__  = [
 "Aspect_WOL_THIN",
 "Aspect_WOL_USERDEFINED",
 "Aspect_WOL_VERYTHICK",
-"Aspect_XA_DELETE_WINDOW"
+"Aspect_XA_DELETE_WINDOW",
+"Aspect_XRActionType_InputAnalog",
+"Aspect_XRActionType_InputDigital",
+"Aspect_XRActionType_InputPose",
+"Aspect_XRActionType_InputSkeletal",
+"Aspect_XRActionType_OutputHaptic",
+"Aspect_XRGenericAction_InputAppMenu",
+"Aspect_XRGenericAction_InputGripClick",
+"Aspect_XRGenericAction_InputPoseBase",
+"Aspect_XRGenericAction_InputPoseFingerTip",
+"Aspect_XRGenericAction_InputPoseFront",
+"Aspect_XRGenericAction_InputPoseHandGrip",
+"Aspect_XRGenericAction_InputSysMenu",
+"Aspect_XRGenericAction_InputThumbstickClick",
+"Aspect_XRGenericAction_InputThumbstickPosition",
+"Aspect_XRGenericAction_InputThumbstickTouch",
+"Aspect_XRGenericAction_InputTrackPadClick",
+"Aspect_XRGenericAction_InputTrackPadPosition",
+"Aspect_XRGenericAction_InputTrackPadTouch",
+"Aspect_XRGenericAction_InputTriggerClick",
+"Aspect_XRGenericAction_InputTriggerPull",
+"Aspect_XRGenericAction_IsHeadsetOn",
+"Aspect_XRGenericAction_NB",
+"Aspect_XRGenericAction_OutputHaptic",
+"Aspect_XRTrackedDeviceRole_Head",
+"Aspect_XRTrackedDeviceRole_LeftHand",
+"Aspect_XRTrackedDeviceRole_NB",
+"Aspect_XRTrackedDeviceRole_Other",
+"Aspect_XRTrackedDeviceRole_RightHand"
 ]
 class Aspect_AspectFillAreaDefinitionError(Exception, BaseException):
     class type():
@@ -331,10 +397,7 @@ class Aspect_AspectFillAreaDefinitionError(Exception, BaseException):
         """
         class object():
             """
-            The base class of the class hierarchy.
-
-            When called, it accepts no arguments and returns a new featureless
-            instance that has no instance attributes and cannot be given any.
+            The most base type
             """
             class type():
                 pass
@@ -345,8 +408,8 @@ class Aspect_AspectFillAreaDefinitionError(Exception, BaseException):
         def __prepare__() -> dict: ...
         __abstractmethods__: getset_descriptor # value = <attribute '__abstractmethods__' of 'type' objects>
         __bases__: tuple # value = (<class 'object'>,)
-        __basicsize__ = 880
-        __dict__: mappingproxy # value = mappingproxy({'__repr__': <slot wrapper '__repr__' of 'type' objects>, '__call__': <slot wrapper '__call__' of 'type' objects>, '__getattribute__': <slot wrapper '__getattribute__' of 'type' objects>, '__setattr__': <slot wrapper '__setattr__' of 'type' objects>, '__delattr__': <slot wrapper '__delattr__' of 'type' objects>, '__init__': <slot wrapper '__init__' of 'type' objects>, '__new__': <built-in method __new__ of type object at 0x55f8b277bac0>, 'mro': <method 'mro' of 'type' objects>, '__subclasses__': <method '__subclasses__' of 'type' objects>, '__prepare__': <method '__prepare__' of 'type' objects>, '__instancecheck__': <method '__instancecheck__' of 'type' objects>, '__subclasscheck__': <method '__subclasscheck__' of 'type' objects>, '__dir__': <method '__dir__' of 'type' objects>, '__sizeof__': <method '__sizeof__' of 'type' objects>, '__basicsize__': <member '__basicsize__' of 'type' objects>, '__itemsize__': <member '__itemsize__' of 'type' objects>, '__flags__': <member '__flags__' of 'type' objects>, '__weakrefoffset__': <member '__weakrefoffset__' of 'type' objects>, '__base__': <member '__base__' of 'type' objects>, '__dictoffset__': <member '__dictoffset__' of 'type' objects>, '__mro__': <member '__mro__' of 'type' objects>, '__name__': <attribute '__name__' of 'type' objects>, '__qualname__': <attribute '__qualname__' of 'type' objects>, '__bases__': <attribute '__bases__' of 'type' objects>, '__module__': <attribute '__module__' of 'type' objects>, '__abstractmethods__': <attribute '__abstractmethods__' of 'type' objects>, '__dict__': <attribute '__dict__' of 'type' objects>, '__doc__': <attribute '__doc__' of 'type' objects>, '__text_signature__': <attribute '__text_signature__' of 'type' objects>})
+        __basicsize__ = 864
+        __dict__: mappingproxy # value = mappingproxy({'__repr__': <slot wrapper '__repr__' of 'type' objects>, '__call__': <slot wrapper '__call__' of 'type' objects>, '__getattribute__': <slot wrapper '__getattribute__' of 'type' objects>, '__setattr__': <slot wrapper '__setattr__' of 'type' objects>, '__delattr__': <slot wrapper '__delattr__' of 'type' objects>, '__init__': <slot wrapper '__init__' of 'type' objects>, '__new__': <built-in method __new__ of type object at 0x55f0e5d3f8e0>, 'mro': <method 'mro' of 'type' objects>, '__subclasses__': <method '__subclasses__' of 'type' objects>, '__prepare__': <method '__prepare__' of 'type' objects>, '__instancecheck__': <method '__instancecheck__' of 'type' objects>, '__subclasscheck__': <method '__subclasscheck__' of 'type' objects>, '__dir__': <method '__dir__' of 'type' objects>, '__sizeof__': <method '__sizeof__' of 'type' objects>, '__basicsize__': <member '__basicsize__' of 'type' objects>, '__itemsize__': <member '__itemsize__' of 'type' objects>, '__flags__': <member '__flags__' of 'type' objects>, '__weakrefoffset__': <member '__weakrefoffset__' of 'type' objects>, '__base__': <member '__base__' of 'type' objects>, '__dictoffset__': <member '__dictoffset__' of 'type' objects>, '__mro__': <member '__mro__' of 'type' objects>, '__name__': <attribute '__name__' of 'type' objects>, '__qualname__': <attribute '__qualname__' of 'type' objects>, '__bases__': <attribute '__bases__' of 'type' objects>, '__module__': <attribute '__module__' of 'type' objects>, '__abstractmethods__': <attribute '__abstractmethods__' of 'type' objects>, '__dict__': <attribute '__dict__' of 'type' objects>, '__doc__': <attribute '__doc__' of 'type' objects>, '__text_signature__': <attribute '__text_signature__' of 'type' objects>})
         __dictoffset__ = 264
         __flags__ = 2148291584
         __itemsize__ = 40
@@ -393,14 +456,18 @@ class Aspect_Background():
         """
         Returns the colour of the window background <me>.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def SetColor(self,AColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Modifies the colour of the window background <me>.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,AColor : OCP.Quantity.Quantity_Color) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Aspect_Grid(OCP.Standard.Standard_Transient):
     def Activate(self) -> None: 
@@ -434,6 +501,10 @@ class Aspect_Grid(OCP.Standard.Standard_Transient):
     def DrawMode(self) -> Aspect_GridDrawMode: 
         """
         Returns the grid aspect.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -540,6 +611,39 @@ class Aspect_Grid(OCP.Standard.Standard_Transient):
         None
         """
     pass
+class Aspect_ColorSpace():
+    """
+    Texture color spaces accepted by XR composer.
+
+    Members:
+
+      Aspect_ColorSpace_sRGB
+
+      Aspect_ColorSpace_Linear
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_ColorSpace_Linear: OCP.Aspect.Aspect_ColorSpace # value = <Aspect_ColorSpace.Aspect_ColorSpace_Linear: 1>
+    Aspect_ColorSpace_sRGB: OCP.Aspect.Aspect_ColorSpace # value = <Aspect_ColorSpace.Aspect_ColorSpace_sRGB: 0>
+    __entries: dict # value = {'Aspect_ColorSpace_sRGB': (<Aspect_ColorSpace.Aspect_ColorSpace_sRGB: 0>, None), 'Aspect_ColorSpace_Linear': (<Aspect_ColorSpace.Aspect_ColorSpace_Linear: 1>, None)}
+    __members__: dict # value = {'Aspect_ColorSpace_sRGB': <Aspect_ColorSpace.Aspect_ColorSpace_sRGB: 0>, 'Aspect_ColorSpace_Linear': <Aspect_ColorSpace.Aspect_ColorSpace_Linear: 1>}
+    pass
 class Aspect_DisplayConnection(OCP.Standard.Standard_Transient):
     """
     This class creates and provides connection with X server. Raises exception if can not connect to X server. On Windows and Mac OS X (in case when Cocoa used) platforms this class do nothing. WARRNING: Do not close display connection manualy!This class creates and provides connection with X server. Raises exception if can not connect to X server. On Windows and Mac OS X (in case when Cocoa used) platforms this class do nothing. WARRNING: Do not close display connection manualy!
@@ -595,9 +699,9 @@ class Aspect_DisplayConnection(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theDisplayName : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theDisplayName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -620,6 +724,39 @@ class Aspect_DisplayConnectionDefinitionError(Exception, BaseException):
     __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'Aspect_DisplayConnectionDefinitionError' objects>
     args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
     pass
+class Aspect_Eye():
+    """
+    Camera eye index within stereoscopic pair.
+
+    Members:
+
+      Aspect_Eye_Left
+
+      Aspect_Eye_Right
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_Eye_Left: OCP.Aspect.Aspect_Eye # value = <Aspect_Eye.Aspect_Eye_Left: 0>
+    Aspect_Eye_Right: OCP.Aspect.Aspect_Eye # value = <Aspect_Eye.Aspect_Eye_Right: 1>
+    __entries: dict # value = {'Aspect_Eye_Left': (<Aspect_Eye.Aspect_Eye_Left: 0>, None), 'Aspect_Eye_Right': (<Aspect_Eye.Aspect_Eye_Right: 1>, None)}
+    __members__: dict # value = {'Aspect_Eye_Left': <Aspect_Eye.Aspect_Eye_Left: 0>, 'Aspect_Eye_Right': <Aspect_Eye.Aspect_Eye_Right: 1>}
+    pass
 class Aspect_FillMethod():
     """
     Defines the fill methods to write bitmaps in a window.
@@ -634,22 +771,30 @@ class Aspect_FillMethod():
 
       Aspect_FM_STRETCH
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_FM_CENTERED: OCP.Aspect.Aspect_FillMethod # value = Aspect_FillMethod.Aspect_FM_CENTERED
-    Aspect_FM_NONE: OCP.Aspect.Aspect_FillMethod # value = Aspect_FillMethod.Aspect_FM_NONE
-    Aspect_FM_STRETCH: OCP.Aspect.Aspect_FillMethod # value = Aspect_FillMethod.Aspect_FM_STRETCH
-    Aspect_FM_TILED: OCP.Aspect.Aspect_FillMethod # value = Aspect_FillMethod.Aspect_FM_TILED
-    __entries: dict # value = {'Aspect_FM_NONE': (Aspect_FillMethod.Aspect_FM_NONE, None), 'Aspect_FM_CENTERED': (Aspect_FillMethod.Aspect_FM_CENTERED, None), 'Aspect_FM_TILED': (Aspect_FillMethod.Aspect_FM_TILED, None), 'Aspect_FM_STRETCH': (Aspect_FillMethod.Aspect_FM_STRETCH, None)}
-    __members__: dict # value = {'Aspect_FM_NONE': Aspect_FillMethod.Aspect_FM_NONE, 'Aspect_FM_CENTERED': Aspect_FillMethod.Aspect_FM_CENTERED, 'Aspect_FM_TILED': Aspect_FillMethod.Aspect_FM_TILED, 'Aspect_FM_STRETCH': Aspect_FillMethod.Aspect_FM_STRETCH}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_FM_CENTERED: OCP.Aspect.Aspect_FillMethod # value = <Aspect_FillMethod.Aspect_FM_CENTERED: 1>
+    Aspect_FM_NONE: OCP.Aspect.Aspect_FillMethod # value = <Aspect_FillMethod.Aspect_FM_NONE: 0>
+    Aspect_FM_STRETCH: OCP.Aspect.Aspect_FillMethod # value = <Aspect_FillMethod.Aspect_FM_STRETCH: 3>
+    Aspect_FM_TILED: OCP.Aspect.Aspect_FillMethod # value = <Aspect_FillMethod.Aspect_FM_TILED: 2>
+    __entries: dict # value = {'Aspect_FM_NONE': (<Aspect_FillMethod.Aspect_FM_NONE: 0>, None), 'Aspect_FM_CENTERED': (<Aspect_FillMethod.Aspect_FM_CENTERED: 1>, None), 'Aspect_FM_TILED': (<Aspect_FillMethod.Aspect_FM_TILED: 2>, None), 'Aspect_FM_STRETCH': (<Aspect_FillMethod.Aspect_FM_STRETCH: 3>, None)}
+    __members__: dict # value = {'Aspect_FM_NONE': <Aspect_FillMethod.Aspect_FM_NONE: 0>, 'Aspect_FM_CENTERED': <Aspect_FillMethod.Aspect_FM_CENTERED: 1>, 'Aspect_FM_TILED': <Aspect_FillMethod.Aspect_FM_TILED: 2>, 'Aspect_FM_STRETCH': <Aspect_FillMethod.Aspect_FM_STRETCH: 3>}
     pass
 class Aspect_GenId():
     """
@@ -659,15 +804,19 @@ class Aspect_GenId():
         """
         Returns the number of available identifiers.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     @overload
-    def Free(self,theId : int) -> None: 
+    def Free(self) -> None: 
         """
         Free all identifiers - make the whole range available again.
 
         Free specified identifier. Warning - method has no protection against double-freeing!
         """
     @overload
-    def Free(self) -> None: ...
+    def Free(self,theId : int) -> None: ...
     def HasFree(self) -> bool: 
         """
         Returns true if there are available identifiers in range.
@@ -677,22 +826,22 @@ class Aspect_GenId():
         Returns the lower identifier in range.
         """
     @overload
-    def Next(self) -> int: 
+    def Next(self,theId : int) -> bool: 
         """
         Returns the next available identifier. Warning: Raises IdentDefinitionError if all identifiers are busy.
 
         Generates the next available identifier.
         """
     @overload
-    def Next(self,theId : int) -> bool: ...
+    def Next(self) -> int: ...
     def Upper(self) -> int: 
         """
         Returns the upper identifier in range.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLow : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Aspect_GradientBackground(Aspect_Background):
     """
@@ -709,6 +858,10 @@ class Aspect_GradientBackground(Aspect_Background):
     def Colors(self,AColor1 : OCP.Quantity.Quantity_Color,AColor2 : OCP.Quantity.Quantity_Color) -> None: 
         """
         Returns colours of the window gradient background <me>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def SetColor(self,AColor : OCP.Quantity.Quantity_Color) -> None: 
         """
@@ -747,27 +900,35 @@ class Aspect_GradientFillMethod():
 
       Aspect_GFM_CORNER4
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_GFM_CORNER1: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_CORNER1
-    Aspect_GFM_CORNER2: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_CORNER2
-    Aspect_GFM_CORNER3: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_CORNER3
-    Aspect_GFM_CORNER4: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_CORNER4
-    Aspect_GFM_DIAG1: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_DIAG1
-    Aspect_GFM_DIAG2: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_DIAG2
-    Aspect_GFM_HOR: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_HOR
-    Aspect_GFM_NONE: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_NONE
-    Aspect_GFM_VER: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_VER
-    __entries: dict # value = {'Aspect_GFM_NONE': (Aspect_GradientFillMethod.Aspect_GFM_NONE, None), 'Aspect_GFM_HOR': (Aspect_GradientFillMethod.Aspect_GFM_HOR, None), 'Aspect_GFM_VER': (Aspect_GradientFillMethod.Aspect_GFM_VER, None), 'Aspect_GFM_DIAG1': (Aspect_GradientFillMethod.Aspect_GFM_DIAG1, None), 'Aspect_GFM_DIAG2': (Aspect_GradientFillMethod.Aspect_GFM_DIAG2, None), 'Aspect_GFM_CORNER1': (Aspect_GradientFillMethod.Aspect_GFM_CORNER1, None), 'Aspect_GFM_CORNER2': (Aspect_GradientFillMethod.Aspect_GFM_CORNER2, None), 'Aspect_GFM_CORNER3': (Aspect_GradientFillMethod.Aspect_GFM_CORNER3, None), 'Aspect_GFM_CORNER4': (Aspect_GradientFillMethod.Aspect_GFM_CORNER4, None)}
-    __members__: dict # value = {'Aspect_GFM_NONE': Aspect_GradientFillMethod.Aspect_GFM_NONE, 'Aspect_GFM_HOR': Aspect_GradientFillMethod.Aspect_GFM_HOR, 'Aspect_GFM_VER': Aspect_GradientFillMethod.Aspect_GFM_VER, 'Aspect_GFM_DIAG1': Aspect_GradientFillMethod.Aspect_GFM_DIAG1, 'Aspect_GFM_DIAG2': Aspect_GradientFillMethod.Aspect_GFM_DIAG2, 'Aspect_GFM_CORNER1': Aspect_GradientFillMethod.Aspect_GFM_CORNER1, 'Aspect_GFM_CORNER2': Aspect_GradientFillMethod.Aspect_GFM_CORNER2, 'Aspect_GFM_CORNER3': Aspect_GradientFillMethod.Aspect_GFM_CORNER3, 'Aspect_GFM_CORNER4': Aspect_GradientFillMethod.Aspect_GFM_CORNER4}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_GFM_CORNER1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER1: 5>
+    Aspect_GFM_CORNER2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER2: 6>
+    Aspect_GFM_CORNER3: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER3: 7>
+    Aspect_GFM_CORNER4: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER4: 8>
+    Aspect_GFM_DIAG1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_DIAG1: 3>
+    Aspect_GFM_DIAG2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_DIAG2: 4>
+    Aspect_GFM_HOR: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_HOR: 1>
+    Aspect_GFM_NONE: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_NONE: 0>
+    Aspect_GFM_VER: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_VER: 2>
+    __entries: dict # value = {'Aspect_GFM_NONE': (<Aspect_GradientFillMethod.Aspect_GFM_NONE: 0>, None), 'Aspect_GFM_HOR': (<Aspect_GradientFillMethod.Aspect_GFM_HOR: 1>, None), 'Aspect_GFM_VER': (<Aspect_GradientFillMethod.Aspect_GFM_VER: 2>, None), 'Aspect_GFM_DIAG1': (<Aspect_GradientFillMethod.Aspect_GFM_DIAG1: 3>, None), 'Aspect_GFM_DIAG2': (<Aspect_GradientFillMethod.Aspect_GFM_DIAG2: 4>, None), 'Aspect_GFM_CORNER1': (<Aspect_GradientFillMethod.Aspect_GFM_CORNER1: 5>, None), 'Aspect_GFM_CORNER2': (<Aspect_GradientFillMethod.Aspect_GFM_CORNER2: 6>, None), 'Aspect_GFM_CORNER3': (<Aspect_GradientFillMethod.Aspect_GFM_CORNER3: 7>, None), 'Aspect_GFM_CORNER4': (<Aspect_GradientFillMethod.Aspect_GFM_CORNER4: 8>, None)}
+    __members__: dict # value = {'Aspect_GFM_NONE': <Aspect_GradientFillMethod.Aspect_GFM_NONE: 0>, 'Aspect_GFM_HOR': <Aspect_GradientFillMethod.Aspect_GFM_HOR: 1>, 'Aspect_GFM_VER': <Aspect_GradientFillMethod.Aspect_GFM_VER: 2>, 'Aspect_GFM_DIAG1': <Aspect_GradientFillMethod.Aspect_GFM_DIAG1: 3>, 'Aspect_GFM_DIAG2': <Aspect_GradientFillMethod.Aspect_GFM_DIAG2: 4>, 'Aspect_GFM_CORNER1': <Aspect_GradientFillMethod.Aspect_GFM_CORNER1: 5>, 'Aspect_GFM_CORNER2': <Aspect_GradientFillMethod.Aspect_GFM_CORNER2: 6>, 'Aspect_GFM_CORNER3': <Aspect_GradientFillMethod.Aspect_GFM_CORNER3: 7>, 'Aspect_GFM_CORNER4': <Aspect_GradientFillMethod.Aspect_GFM_CORNER4: 8>}
     pass
 class Aspect_GraphicDeviceDefinitionError(Exception, BaseException):
     class type():
@@ -779,6 +940,39 @@ class Aspect_GraphicDeviceDefinitionError(Exception, BaseException):
     __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
     __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'Aspect_GraphicDeviceDefinitionError' objects>
     args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
+    pass
+class Aspect_GraphicsLibrary():
+    """
+    Graphics API enumeration.
+
+    Members:
+
+      Aspect_GraphicsLibrary_OpenGL
+
+      Aspect_GraphicsLibrary_OpenGLES
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_GraphicsLibrary_OpenGL: OCP.Aspect.Aspect_GraphicsLibrary # value = <Aspect_GraphicsLibrary.Aspect_GraphicsLibrary_OpenGL: 0>
+    Aspect_GraphicsLibrary_OpenGLES: OCP.Aspect.Aspect_GraphicsLibrary # value = <Aspect_GraphicsLibrary.Aspect_GraphicsLibrary_OpenGLES: 1>
+    __entries: dict # value = {'Aspect_GraphicsLibrary_OpenGL': (<Aspect_GraphicsLibrary.Aspect_GraphicsLibrary_OpenGL: 0>, None), 'Aspect_GraphicsLibrary_OpenGLES': (<Aspect_GraphicsLibrary.Aspect_GraphicsLibrary_OpenGLES: 1>, None)}
+    __members__: dict # value = {'Aspect_GraphicsLibrary_OpenGL': <Aspect_GraphicsLibrary.Aspect_GraphicsLibrary_OpenGL: 0>, 'Aspect_GraphicsLibrary_OpenGLES': <Aspect_GraphicsLibrary.Aspect_GraphicsLibrary_OpenGLES: 1>}
     pass
 class Aspect_CircularGrid(Aspect_Grid, OCP.Standard.Standard_Transient):
     def Activate(self) -> None: 
@@ -816,6 +1010,10 @@ class Aspect_CircularGrid(Aspect_Grid, OCP.Standard.Standard_Transient):
     def DrawMode(self) -> Aspect_GridDrawMode: 
         """
         Returns the grid aspect.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -951,21 +1149,29 @@ class Aspect_GridDrawMode():
 
       Aspect_GDM_None
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_GDM_Lines: OCP.Aspect.Aspect_GridDrawMode # value = Aspect_GridDrawMode.Aspect_GDM_Lines
-    Aspect_GDM_None: OCP.Aspect.Aspect_GridDrawMode # value = Aspect_GridDrawMode.Aspect_GDM_None
-    Aspect_GDM_Points: OCP.Aspect.Aspect_GridDrawMode # value = Aspect_GridDrawMode.Aspect_GDM_Points
-    __entries: dict # value = {'Aspect_GDM_Lines': (Aspect_GridDrawMode.Aspect_GDM_Lines, None), 'Aspect_GDM_Points': (Aspect_GridDrawMode.Aspect_GDM_Points, None), 'Aspect_GDM_None': (Aspect_GridDrawMode.Aspect_GDM_None, None)}
-    __members__: dict # value = {'Aspect_GDM_Lines': Aspect_GridDrawMode.Aspect_GDM_Lines, 'Aspect_GDM_Points': Aspect_GridDrawMode.Aspect_GDM_Points, 'Aspect_GDM_None': Aspect_GridDrawMode.Aspect_GDM_None}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_GDM_Lines: OCP.Aspect.Aspect_GridDrawMode # value = <Aspect_GridDrawMode.Aspect_GDM_Lines: 0>
+    Aspect_GDM_None: OCP.Aspect.Aspect_GridDrawMode # value = <Aspect_GridDrawMode.Aspect_GDM_None: 2>
+    Aspect_GDM_Points: OCP.Aspect.Aspect_GridDrawMode # value = <Aspect_GridDrawMode.Aspect_GDM_Points: 1>
+    __entries: dict # value = {'Aspect_GDM_Lines': (<Aspect_GridDrawMode.Aspect_GDM_Lines: 0>, None), 'Aspect_GDM_Points': (<Aspect_GridDrawMode.Aspect_GDM_Points: 1>, None), 'Aspect_GDM_None': (<Aspect_GridDrawMode.Aspect_GDM_None: 2>, None)}
+    __members__: dict # value = {'Aspect_GDM_Lines': <Aspect_GridDrawMode.Aspect_GDM_Lines: 0>, 'Aspect_GDM_Points': <Aspect_GridDrawMode.Aspect_GDM_Points: 1>, 'Aspect_GDM_None': <Aspect_GridDrawMode.Aspect_GDM_None: 2>}
     pass
 class Aspect_GridType():
     """
@@ -977,20 +1183,28 @@ class Aspect_GridType():
 
       Aspect_GT_Circular
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_GT_Circular: OCP.Aspect.Aspect_GridType # value = Aspect_GridType.Aspect_GT_Circular
-    Aspect_GT_Rectangular: OCP.Aspect.Aspect_GridType # value = Aspect_GridType.Aspect_GT_Rectangular
-    __entries: dict # value = {'Aspect_GT_Rectangular': (Aspect_GridType.Aspect_GT_Rectangular, None), 'Aspect_GT_Circular': (Aspect_GridType.Aspect_GT_Circular, None)}
-    __members__: dict # value = {'Aspect_GT_Rectangular': Aspect_GridType.Aspect_GT_Rectangular, 'Aspect_GT_Circular': Aspect_GridType.Aspect_GT_Circular}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_GT_Circular: OCP.Aspect.Aspect_GridType # value = <Aspect_GridType.Aspect_GT_Circular: 1>
+    Aspect_GT_Rectangular: OCP.Aspect.Aspect_GridType # value = <Aspect_GridType.Aspect_GT_Rectangular: 0>
+    __entries: dict # value = {'Aspect_GT_Rectangular': (<Aspect_GridType.Aspect_GT_Rectangular: 0>, None), 'Aspect_GT_Circular': (<Aspect_GridType.Aspect_GT_Circular: 1>, None)}
+    __members__: dict # value = {'Aspect_GT_Rectangular': <Aspect_GridType.Aspect_GT_Rectangular: 0>, 'Aspect_GT_Circular': <Aspect_GridType.Aspect_GT_Circular: 1>}
     pass
 class Aspect_HatchStyle():
     """
@@ -1026,32 +1240,40 @@ class Aspect_HatchStyle():
 
       Aspect_HS_NB
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_HS_DIAGONAL_135: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_DIAGONAL_135
-    Aspect_HS_DIAGONAL_135_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_DIAGONAL_135_WIDE
-    Aspect_HS_DIAGONAL_45: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_DIAGONAL_45
-    Aspect_HS_DIAGONAL_45_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_DIAGONAL_45_WIDE
-    Aspect_HS_GRID: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_GRID
-    Aspect_HS_GRID_DIAGONAL: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL
-    Aspect_HS_GRID_DIAGONAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL_WIDE
-    Aspect_HS_GRID_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_GRID_WIDE
-    Aspect_HS_HORIZONTAL: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_HORIZONTAL
-    Aspect_HS_HORIZONTAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_HORIZONTAL_WIDE
-    Aspect_HS_NB: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_NB
-    Aspect_HS_SOLID: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_SOLID
-    Aspect_HS_VERTICAL: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_VERTICAL
-    Aspect_HS_VERTICAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_VERTICAL_WIDE
-    __entries: dict # value = {'Aspect_HS_SOLID': (Aspect_HatchStyle.Aspect_HS_SOLID, None), 'Aspect_HS_HORIZONTAL': (Aspect_HatchStyle.Aspect_HS_HORIZONTAL, None), 'Aspect_HS_HORIZONTAL_WIDE': (Aspect_HatchStyle.Aspect_HS_HORIZONTAL_WIDE, None), 'Aspect_HS_VERTICAL': (Aspect_HatchStyle.Aspect_HS_VERTICAL, None), 'Aspect_HS_VERTICAL_WIDE': (Aspect_HatchStyle.Aspect_HS_VERTICAL_WIDE, None), 'Aspect_HS_DIAGONAL_45': (Aspect_HatchStyle.Aspect_HS_DIAGONAL_45, None), 'Aspect_HS_DIAGONAL_45_WIDE': (Aspect_HatchStyle.Aspect_HS_DIAGONAL_45_WIDE, None), 'Aspect_HS_DIAGONAL_135': (Aspect_HatchStyle.Aspect_HS_DIAGONAL_135, None), 'Aspect_HS_DIAGONAL_135_WIDE': (Aspect_HatchStyle.Aspect_HS_DIAGONAL_135_WIDE, None), 'Aspect_HS_GRID': (Aspect_HatchStyle.Aspect_HS_GRID, None), 'Aspect_HS_GRID_WIDE': (Aspect_HatchStyle.Aspect_HS_GRID_WIDE, None), 'Aspect_HS_GRID_DIAGONAL': (Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL, None), 'Aspect_HS_GRID_DIAGONAL_WIDE': (Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL_WIDE, None), 'Aspect_HS_NB': (Aspect_HatchStyle.Aspect_HS_NB, None)}
-    __members__: dict # value = {'Aspect_HS_SOLID': Aspect_HatchStyle.Aspect_HS_SOLID, 'Aspect_HS_HORIZONTAL': Aspect_HatchStyle.Aspect_HS_HORIZONTAL, 'Aspect_HS_HORIZONTAL_WIDE': Aspect_HatchStyle.Aspect_HS_HORIZONTAL_WIDE, 'Aspect_HS_VERTICAL': Aspect_HatchStyle.Aspect_HS_VERTICAL, 'Aspect_HS_VERTICAL_WIDE': Aspect_HatchStyle.Aspect_HS_VERTICAL_WIDE, 'Aspect_HS_DIAGONAL_45': Aspect_HatchStyle.Aspect_HS_DIAGONAL_45, 'Aspect_HS_DIAGONAL_45_WIDE': Aspect_HatchStyle.Aspect_HS_DIAGONAL_45_WIDE, 'Aspect_HS_DIAGONAL_135': Aspect_HatchStyle.Aspect_HS_DIAGONAL_135, 'Aspect_HS_DIAGONAL_135_WIDE': Aspect_HatchStyle.Aspect_HS_DIAGONAL_135_WIDE, 'Aspect_HS_GRID': Aspect_HatchStyle.Aspect_HS_GRID, 'Aspect_HS_GRID_WIDE': Aspect_HatchStyle.Aspect_HS_GRID_WIDE, 'Aspect_HS_GRID_DIAGONAL': Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL, 'Aspect_HS_GRID_DIAGONAL_WIDE': Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL_WIDE, 'Aspect_HS_NB': Aspect_HatchStyle.Aspect_HS_NB}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_HS_DIAGONAL_135: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_DIAGONAL_135: 6>
+    Aspect_HS_DIAGONAL_135_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_DIAGONAL_135_WIDE: 10>
+    Aspect_HS_DIAGONAL_45: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_DIAGONAL_45: 5>
+    Aspect_HS_DIAGONAL_45_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_DIAGONAL_45_WIDE: 9>
+    Aspect_HS_GRID: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_GRID: 3>
+    Aspect_HS_GRID_DIAGONAL: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL: 1>
+    Aspect_HS_GRID_DIAGONAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL_WIDE: 2>
+    Aspect_HS_GRID_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_GRID_WIDE: 4>
+    Aspect_HS_HORIZONTAL: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_HORIZONTAL: 7>
+    Aspect_HS_HORIZONTAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_HORIZONTAL_WIDE: 11>
+    Aspect_HS_NB: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_NB: 13>
+    Aspect_HS_SOLID: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_SOLID: 0>
+    Aspect_HS_VERTICAL: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_VERTICAL: 8>
+    Aspect_HS_VERTICAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_VERTICAL_WIDE: 12>
+    __entries: dict # value = {'Aspect_HS_SOLID': (<Aspect_HatchStyle.Aspect_HS_SOLID: 0>, None), 'Aspect_HS_HORIZONTAL': (<Aspect_HatchStyle.Aspect_HS_HORIZONTAL: 7>, None), 'Aspect_HS_HORIZONTAL_WIDE': (<Aspect_HatchStyle.Aspect_HS_HORIZONTAL_WIDE: 11>, None), 'Aspect_HS_VERTICAL': (<Aspect_HatchStyle.Aspect_HS_VERTICAL: 8>, None), 'Aspect_HS_VERTICAL_WIDE': (<Aspect_HatchStyle.Aspect_HS_VERTICAL_WIDE: 12>, None), 'Aspect_HS_DIAGONAL_45': (<Aspect_HatchStyle.Aspect_HS_DIAGONAL_45: 5>, None), 'Aspect_HS_DIAGONAL_45_WIDE': (<Aspect_HatchStyle.Aspect_HS_DIAGONAL_45_WIDE: 9>, None), 'Aspect_HS_DIAGONAL_135': (<Aspect_HatchStyle.Aspect_HS_DIAGONAL_135: 6>, None), 'Aspect_HS_DIAGONAL_135_WIDE': (<Aspect_HatchStyle.Aspect_HS_DIAGONAL_135_WIDE: 10>, None), 'Aspect_HS_GRID': (<Aspect_HatchStyle.Aspect_HS_GRID: 3>, None), 'Aspect_HS_GRID_WIDE': (<Aspect_HatchStyle.Aspect_HS_GRID_WIDE: 4>, None), 'Aspect_HS_GRID_DIAGONAL': (<Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL: 1>, None), 'Aspect_HS_GRID_DIAGONAL_WIDE': (<Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL_WIDE: 2>, None), 'Aspect_HS_NB': (<Aspect_HatchStyle.Aspect_HS_NB: 13>, None)}
+    __members__: dict # value = {'Aspect_HS_SOLID': <Aspect_HatchStyle.Aspect_HS_SOLID: 0>, 'Aspect_HS_HORIZONTAL': <Aspect_HatchStyle.Aspect_HS_HORIZONTAL: 7>, 'Aspect_HS_HORIZONTAL_WIDE': <Aspect_HatchStyle.Aspect_HS_HORIZONTAL_WIDE: 11>, 'Aspect_HS_VERTICAL': <Aspect_HatchStyle.Aspect_HS_VERTICAL: 8>, 'Aspect_HS_VERTICAL_WIDE': <Aspect_HatchStyle.Aspect_HS_VERTICAL_WIDE: 12>, 'Aspect_HS_DIAGONAL_45': <Aspect_HatchStyle.Aspect_HS_DIAGONAL_45: 5>, 'Aspect_HS_DIAGONAL_45_WIDE': <Aspect_HatchStyle.Aspect_HS_DIAGONAL_45_WIDE: 9>, 'Aspect_HS_DIAGONAL_135': <Aspect_HatchStyle.Aspect_HS_DIAGONAL_135: 6>, 'Aspect_HS_DIAGONAL_135_WIDE': <Aspect_HatchStyle.Aspect_HS_DIAGONAL_135_WIDE: 10>, 'Aspect_HS_GRID': <Aspect_HatchStyle.Aspect_HS_GRID: 3>, 'Aspect_HS_GRID_WIDE': <Aspect_HatchStyle.Aspect_HS_GRID_WIDE: 4>, 'Aspect_HS_GRID_DIAGONAL': <Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL: 1>, 'Aspect_HS_GRID_DIAGONAL_WIDE': <Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL_WIDE: 2>, 'Aspect_HS_NB': <Aspect_HatchStyle.Aspect_HS_NB: 13>}
     pass
 class Aspect_IdentDefinitionError(Exception, BaseException):
     class type():
@@ -1082,24 +1304,32 @@ class Aspect_InteriorStyle():
 
       Aspect_IS_HOLLOW
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_IS_EMPTY: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_EMPTY
-    Aspect_IS_HATCH: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_HATCH
-    Aspect_IS_HIDDENLINE: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_HIDDENLINE
-    Aspect_IS_HOLLOW: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_EMPTY
-    Aspect_IS_POINT: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_POINT
-    Aspect_IS_SOLID: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_SOLID
-    __entries: dict # value = {'Aspect_IS_EMPTY': (Aspect_InteriorStyle.Aspect_IS_EMPTY, None), 'Aspect_IS_SOLID': (Aspect_InteriorStyle.Aspect_IS_SOLID, None), 'Aspect_IS_HATCH': (Aspect_InteriorStyle.Aspect_IS_HATCH, None), 'Aspect_IS_HIDDENLINE': (Aspect_InteriorStyle.Aspect_IS_HIDDENLINE, None), 'Aspect_IS_POINT': (Aspect_InteriorStyle.Aspect_IS_POINT, None), 'Aspect_IS_HOLLOW': (Aspect_InteriorStyle.Aspect_IS_EMPTY, None)}
-    __members__: dict # value = {'Aspect_IS_EMPTY': Aspect_InteriorStyle.Aspect_IS_EMPTY, 'Aspect_IS_SOLID': Aspect_InteriorStyle.Aspect_IS_SOLID, 'Aspect_IS_HATCH': Aspect_InteriorStyle.Aspect_IS_HATCH, 'Aspect_IS_HIDDENLINE': Aspect_InteriorStyle.Aspect_IS_HIDDENLINE, 'Aspect_IS_POINT': Aspect_InteriorStyle.Aspect_IS_POINT, 'Aspect_IS_HOLLOW': Aspect_InteriorStyle.Aspect_IS_EMPTY}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_IS_EMPTY: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_EMPTY: -1>
+    Aspect_IS_HATCH: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_HATCH: 1>
+    Aspect_IS_HIDDENLINE: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_HIDDENLINE: 2>
+    Aspect_IS_HOLLOW: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_EMPTY: -1>
+    Aspect_IS_POINT: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_POINT: 3>
+    Aspect_IS_SOLID: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_SOLID: 0>
+    __entries: dict # value = {'Aspect_IS_EMPTY': (<Aspect_InteriorStyle.Aspect_IS_EMPTY: -1>, None), 'Aspect_IS_SOLID': (<Aspect_InteriorStyle.Aspect_IS_SOLID: 0>, None), 'Aspect_IS_HATCH': (<Aspect_InteriorStyle.Aspect_IS_HATCH: 1>, None), 'Aspect_IS_HIDDENLINE': (<Aspect_InteriorStyle.Aspect_IS_HIDDENLINE: 2>, None), 'Aspect_IS_POINT': (<Aspect_InteriorStyle.Aspect_IS_POINT: 3>, None), 'Aspect_IS_HOLLOW': (<Aspect_InteriorStyle.Aspect_IS_EMPTY: -1>, None)}
+    __members__: dict # value = {'Aspect_IS_EMPTY': <Aspect_InteriorStyle.Aspect_IS_EMPTY: -1>, 'Aspect_IS_SOLID': <Aspect_InteriorStyle.Aspect_IS_SOLID: 0>, 'Aspect_IS_HATCH': <Aspect_InteriorStyle.Aspect_IS_HATCH: 1>, 'Aspect_IS_HIDDENLINE': <Aspect_InteriorStyle.Aspect_IS_HIDDENLINE: 2>, 'Aspect_IS_POINT': <Aspect_InteriorStyle.Aspect_IS_POINT: 3>, 'Aspect_IS_HOLLOW': <Aspect_InteriorStyle.Aspect_IS_EMPTY: -1>}
     pass
 class Aspect_Window(OCP.Standard.Standard_Transient):
     """
@@ -1128,6 +1358,10 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
     def DoResize(self) -> Aspect_TypeOfResize: 
         """
         Apply the resizing to the window <me>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1207,11 +1441,11 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
         Modifies the window gradient background.
         """
     @overload
-    def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : Aspect_GradientFillMethod) -> None: ...
+    def SetBackground(self,ABackground : Aspect_GradientBackground) -> None: ...
     @overload
     def SetBackground(self,ABack : Aspect_Background) -> None: ...
     @overload
-    def SetBackground(self,ABackground : Aspect_GradientBackground) -> None: ...
+    def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : Aspect_GradientFillMethod) -> None: ...
     def SetTitle(self,theTitle : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Sets window title.
@@ -1243,6 +1477,214 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
         None
         """
     pass
+class Aspect_XRSession(OCP.Standard.Standard_Transient):
+    """
+    Extended Reality (XR) Session interface.
+    """
+    class InfoString_e():
+        pass
+    class TrackingUniverseOrigin_e():
+        pass
+    def AbortHapticVibrationAction(self,theAction : Aspect_XRAction) -> None: 
+        """
+        Abort vibration.
+        """
+    def Aspect(self) -> float: 
+        """
+        Return aspect ratio.
+        """
+    def Close(self) -> None: 
+        """
+        Release session.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DisplayFrequency(self) -> float: 
+        """
+        Return display frequency or 0 if unknown.
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def EyeToHeadTransform(self,theEye : Aspect_Eye) -> OCP.Graphic3d.Graphic3d_Mat4d: 
+        """
+        Return transformation from eye to head.
+        """
+    def FieldOfView(self) -> float: 
+        """
+        Return field of view.
+        """
+    def GenericAction(self,theDevice : Aspect_XRTrackedDeviceRole,theAction : Aspect_XRGenericAction) -> Aspect_XRAction: 
+        """
+        Return generic action for specific hand or NULL if undefined.
+        """
+    def GetAnalogActionData(self,theAction : Aspect_XRAction) -> Aspect_XRAnalogActionData: 
+        """
+        Fetch data for digital input action (like axis).
+        """
+    def GetDigitalActionData(self,theAction : Aspect_XRAction) -> Aspect_XRDigitalActionData: 
+        """
+        Fetch data for digital input action (like button).
+        """
+    def GetPoseActionDataForNextFrame(self,theAction : Aspect_XRAction) -> Aspect_XRPoseActionData: 
+        """
+        Fetch data for pose input action (like fingertip position). The returned values will match the values returned by the last call to WaitPoses().
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def GetString(self,theInfo : Aspect_XRSession.InfoString_e) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Query information.
+        """
+    def HasProjectionFrustums(self) -> bool: 
+        """
+        Return FALSE if projection frustums are unsupported and general 4x4 projection matrix should be fetched instead
+        """
+    def HasTrackedPose(self,theDevice : int) -> bool: 
+        """
+        Return TRUE if device orientation is defined.
+        """
+    def HeadPose(self) -> OCP.gp.gp_Trsf: 
+        """
+        Return head orientation in right-handed system: +y is up +x is to the right -z is forward Distance unit is meters by default (
+        """
+    def HeadToEyeTransform(self,theEye : Aspect_Eye) -> OCP.Graphic3d.Graphic3d_Mat4d: 
+        """
+        Return transformation from head to eye.
+        """
+    def IOD(self) -> float: 
+        """
+        Return Intra-ocular Distance (IOD); also known as Interpupillary Distance (IPD). Defined in meters by default (
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsOpen(self) -> bool: 
+        """
+        Return TRUE if session is opened.
+        """
+    def LeftHandPose(self) -> OCP.gp.gp_Trsf: 
+        """
+        Return left hand orientation.
+        """
+    @overload
+    def LoadRenderModel(self,theDevice : int,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
+        """
+        Load model for displaying device.
+
+        Load model for displaying device.
+        """
+    @overload
+    def LoadRenderModel(self,theDevice : int,theToApplyUnitFactor : bool,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: ...
+    def NamedTrackedDevice(self,theDevice : Aspect_XRTrackedDeviceRole) -> int: 
+        """
+        Return index of tracked device of known role, or -1 if undefined.
+        """
+    def Open(self) -> bool: 
+        """
+        Initialize session.
+        """
+    def ProcessEvents(self) -> None: 
+        """
+        Receive XR events.
+        """
+    def ProjectionFrustum(self,theEye : Aspect_Eye) -> Any: 
+        """
+        Return projection frustum.
+        """
+    def ProjectionMatrix(self,theEye : Aspect_Eye,theZNear : float,theZFar : float) -> OCP.Graphic3d.Graphic3d_Mat4d: 
+        """
+        Return projection matrix.
+        """
+    def RecommendedViewport(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Return recommended viewport Width x Height for rendering into VR.
+        """
+    def RightHandPose(self) -> OCP.gp.gp_Trsf: 
+        """
+        Return right hand orientation.
+        """
+    def SetTrackingOrigin(self,theOrigin : Aspect_XRSession.TrackingUniverseOrigin_e) -> None: 
+        """
+        Set tracking origin.
+        """
+    def SetUnitFactor(self,theFactor : float) -> None: 
+        """
+        Set unit scale factor.
+        """
+    def SubmitEye(self,theTexture : capsule,theGraphicsLib : Aspect_GraphicsLibrary,theColorSpace : Aspect_ColorSpace,theEye : Aspect_Eye) -> bool: 
+        """
+        Submit texture eye to XR Composer.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TrackedPoses(self) -> Aspect_TrackedDevicePoseArray: 
+        """
+        Return number of tracked poses array.
+        """
+    def TrackingOrigin(self) -> Aspect_XRSession.TrackingUniverseOrigin_e: 
+        """
+        Return tracking origin.
+        """
+    def TriggerHapticVibrationAction(self,theAction : Aspect_XRAction,theParams : Aspect_XRHapticActionData) -> None: 
+        """
+        Trigger vibration.
+        """
+    def UnitFactor(self) -> float: 
+        """
+        Return unit scale factor defined as scale factor for m (meters); 1.0 by default.
+        """
+    def WaitPoses(self) -> bool: 
+        """
+        Fetch actual poses of tracked devices.
+        """
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    InfoString_Device: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_Device: 1>
+    InfoString_SerialNumber: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_SerialNumber: 3>
+    InfoString_Tracker: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_Tracker: 2>
+    InfoString_Vendor: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_Vendor: 0>
+    TrackingUniverseOrigin_Seated: OCP.Aspect.TrackingUniverseOrigin_e # value = <TrackingUniverseOrigin_e.TrackingUniverseOrigin_Seated: 0>
+    TrackingUniverseOrigin_Standing: OCP.Aspect.TrackingUniverseOrigin_e # value = <TrackingUniverseOrigin_e.TrackingUniverseOrigin_Standing: 1>
+    pass
 class Aspect_PolygonOffsetMode():
     """
     None
@@ -1263,25 +1705,33 @@ class Aspect_PolygonOffsetMode():
 
       Aspect_POM_Mask
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_POM_All: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_All
-    Aspect_POM_Fill: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_Fill
-    Aspect_POM_Line: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_Line
-    Aspect_POM_Mask: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_Mask
-    Aspect_POM_None: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_None
-    Aspect_POM_Off: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_Off
-    Aspect_POM_Point: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_Point
-    __entries: dict # value = {'Aspect_POM_Off': (Aspect_PolygonOffsetMode.Aspect_POM_Off, None), 'Aspect_POM_Fill': (Aspect_PolygonOffsetMode.Aspect_POM_Fill, None), 'Aspect_POM_Line': (Aspect_PolygonOffsetMode.Aspect_POM_Line, None), 'Aspect_POM_Point': (Aspect_PolygonOffsetMode.Aspect_POM_Point, None), 'Aspect_POM_All': (Aspect_PolygonOffsetMode.Aspect_POM_All, None), 'Aspect_POM_None': (Aspect_PolygonOffsetMode.Aspect_POM_None, None), 'Aspect_POM_Mask': (Aspect_PolygonOffsetMode.Aspect_POM_Mask, None)}
-    __members__: dict # value = {'Aspect_POM_Off': Aspect_PolygonOffsetMode.Aspect_POM_Off, 'Aspect_POM_Fill': Aspect_PolygonOffsetMode.Aspect_POM_Fill, 'Aspect_POM_Line': Aspect_PolygonOffsetMode.Aspect_POM_Line, 'Aspect_POM_Point': Aspect_PolygonOffsetMode.Aspect_POM_Point, 'Aspect_POM_All': Aspect_PolygonOffsetMode.Aspect_POM_All, 'Aspect_POM_None': Aspect_PolygonOffsetMode.Aspect_POM_None, 'Aspect_POM_Mask': Aspect_PolygonOffsetMode.Aspect_POM_Mask}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_POM_All: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_All: 7>
+    Aspect_POM_Fill: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_Fill: 1>
+    Aspect_POM_Line: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_Line: 2>
+    Aspect_POM_Mask: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_Mask: 15>
+    Aspect_POM_None: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_None: 8>
+    Aspect_POM_Off: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_Off: 0>
+    Aspect_POM_Point: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_Point: 4>
+    __entries: dict # value = {'Aspect_POM_Off': (<Aspect_PolygonOffsetMode.Aspect_POM_Off: 0>, None), 'Aspect_POM_Fill': (<Aspect_PolygonOffsetMode.Aspect_POM_Fill: 1>, None), 'Aspect_POM_Line': (<Aspect_PolygonOffsetMode.Aspect_POM_Line: 2>, None), 'Aspect_POM_Point': (<Aspect_PolygonOffsetMode.Aspect_POM_Point: 4>, None), 'Aspect_POM_All': (<Aspect_PolygonOffsetMode.Aspect_POM_All: 7>, None), 'Aspect_POM_None': (<Aspect_PolygonOffsetMode.Aspect_POM_None: 8>, None), 'Aspect_POM_Mask': (<Aspect_PolygonOffsetMode.Aspect_POM_Mask: 15>, None)}
+    __members__: dict # value = {'Aspect_POM_Off': <Aspect_PolygonOffsetMode.Aspect_POM_Off: 0>, 'Aspect_POM_Fill': <Aspect_PolygonOffsetMode.Aspect_POM_Fill: 1>, 'Aspect_POM_Line': <Aspect_PolygonOffsetMode.Aspect_POM_Line: 2>, 'Aspect_POM_Point': <Aspect_PolygonOffsetMode.Aspect_POM_Point: 4>, 'Aspect_POM_All': <Aspect_PolygonOffsetMode.Aspect_POM_All: 7>, 'Aspect_POM_None': <Aspect_PolygonOffsetMode.Aspect_POM_None: 8>, 'Aspect_POM_Mask': <Aspect_PolygonOffsetMode.Aspect_POM_Mask: 15>}
     pass
 class Aspect_RectangularGrid(Aspect_Grid, OCP.Standard.Standard_Transient):
     def Activate(self) -> None: 
@@ -1315,6 +1765,10 @@ class Aspect_RectangularGrid(Aspect_Grid, OCP.Standard.Standard_Transient):
     def DrawMode(self) -> Aspect_GridDrawMode: 
         """
         Returns the grid aspect.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1467,11 +1921,11 @@ class Aspect_ScrollDelta():
         Reset at point.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theValue : float,theFlags : int=0) -> None: ...
     @overload
     def __init__(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2i,theValue : float,theFlags : int=0) -> None: ...
     @overload
-    def __init__(self,theValue : float,theFlags : int=0) -> None: ...
+    def __init__(self) -> None: ...
     @property
     def Delta(self) -> float:
         """
@@ -1498,14 +1952,14 @@ class Aspect_SequenceOfColor(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.Quantity.Quantity_Color) -> None: 
+    def Append(self,theSeq : Aspect_SequenceOfColor) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Aspect_SequenceOfColor) -> None: ...
+    def Append(self,theItem : OCP.Quantity.Quantity_Color) -> None: ...
     def Assign(self,theOther : Aspect_SequenceOfColor) -> Aspect_SequenceOfColor: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1535,14 +1989,14 @@ class Aspect_SequenceOfColor(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.Quantity.Quantity_Color) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Aspect_SequenceOfColor) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Aspect_SequenceOfColor) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : OCP.Quantity.Quantity_Color) -> None: 
         """
@@ -1569,14 +2023,14 @@ class Aspect_SequenceOfColor(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Aspect_SequenceOfColor) -> None: 
+    def Prepend(self,theItem : OCP.Quantity.Quantity_Color) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.Quantity.Quantity_Color) -> None: ...
+    def Prepend(self,theSeq : Aspect_SequenceOfColor) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1611,12 +2065,12 @@ class Aspect_SequenceOfColor(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Aspect_SequenceOfColor) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1632,11 +2086,11 @@ class Aspect_Touch():
         Return values delta.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2d,theIsPreciseDevice : bool) -> None: ...
     @overload
     def __init__(self,theX : float,theY : float,theIsPreciseDevice : bool) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @property
     def IsPreciseDevice(self) -> bool:
         """
@@ -1700,14 +2154,14 @@ class Aspect_TouchMap(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : int,theValue : Aspect_Touch) -> bool: 
+    def FindFromKey(self,theKey1 : int) -> Aspect_Touch: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : int) -> Aspect_Touch: ...
+    def FindFromKey(self,theKey1 : int,theValue : Aspect_Touch) -> bool: ...
     def FindIndex(self,theKey1 : int) -> int: 
         """
         FindIndex
@@ -1748,7 +2202,7 @@ class Aspect_TouchMap(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1761,12 +2215,128 @@ class Aspect_TouchMap(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theOther : Aspect_TouchMap) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : Aspect_TouchMap) -> None: ...
+    def __iter__(self) -> Iterator: ...
+    pass
+class Aspect_TrackedDevicePose():
+    """
+    Describes a single pose for a tracked object (for XR).
+    """
+    def __init__(self) -> None: ...
+    @property
+    def AngularVelocity(self) -> OCP.gp.gp_Vec:
+        """
+        :type: OCP.gp.gp_Vec
+        """
+    @AngularVelocity.setter
+    def AngularVelocity(self, arg0: OCP.gp.gp_Vec) -> None:
+        pass
+    @property
+    def Orientation(self) -> OCP.gp.gp_Trsf:
+        """
+        :type: OCP.gp.gp_Trsf
+        """
+    @Orientation.setter
+    def Orientation(self, arg0: OCP.gp.gp_Trsf) -> None:
+        pass
+    @property
+    def Velocity(self) -> OCP.gp.gp_Vec:
+        """
+        :type: OCP.gp.gp_Vec
+        """
+    @Velocity.setter
+    def Velocity(self, arg0: OCP.gp.gp_Vec) -> None:
+        pass
+    pass
+class Aspect_TrackedDevicePoseArray():
+    """
+    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    """
+    def Assign(self,theOther : Aspect_TrackedDevicePoseArray) -> Aspect_TrackedDevicePoseArray: 
+        """
+        Copies data of theOther array to this. This array should be pre-allocated and have the same length as theOther; otherwise exception Standard_DimensionMismatch is thrown.
+        """
+    def ChangeFirst(self) -> Aspect_TrackedDevicePose: 
+        """
+        Returns first element
+        """
+    def ChangeLast(self) -> Aspect_TrackedDevicePose: 
+        """
+        Returns last element
+        """
+    def ChangeValue(self,theIndex : int) -> Aspect_TrackedDevicePose: 
+        """
+        Variable value access
+        """
+    def First(self) -> Aspect_TrackedDevicePose: 
+        """
+        Returns first element
+        """
+    def Init(self,theValue : Aspect_TrackedDevicePose) -> None: 
+        """
+        Initialise the items with theValue
+        """
+    def IsAllocated(self) -> bool: 
+        """
+        IsAllocated flag - for naming compatibility
+        """
+    def IsDeletable(self) -> bool: 
+        """
+        myDeletable flag
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        Return TRUE if array has zero length.
+        """
+    def Last(self) -> Aspect_TrackedDevicePose: 
+        """
+        Returns last element
+        """
+    def Length(self) -> int: 
+        """
+        Length query (the same)
+        """
+    def Lower(self) -> int: 
+        """
+        Lower bound
+        """
+    def Move(self,theOther : Aspect_TrackedDevicePoseArray) -> Aspect_TrackedDevicePoseArray: 
+        """
+        Move assignment. This array will borrow all the data from theOther. The moved object will keep pointer to the memory buffer and range, but it will not free the buffer on destruction.
+        """
+    def Resize(self,theLower : int,theUpper : int,theToCopyData : bool) -> None: 
+        """
+        Resizes the array to specified bounds. No re-allocation will be done if length of array does not change, but existing values will not be discarded if theToCopyData set to FALSE.
+        """
+    def SetValue(self,theIndex : int,theItem : Aspect_TrackedDevicePose) -> None: 
+        """
+        Set value
+        """
+    def Size(self) -> int: 
+        """
+        Size query
+        """
+    def Upper(self) -> int: 
+        """
+        Upper bound
+        """
+    def Value(self,theIndex : int) -> Aspect_TrackedDevicePose: 
+        """
+        Constant value access
+        """
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : Aspect_TrackedDevicePose,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Aspect_TrackedDevicePoseArray) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Aspect_TypeOfColorScaleData():
     """
@@ -1778,20 +2348,28 @@ class Aspect_TypeOfColorScaleData():
 
       Aspect_TOCSD_USER
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TOCSD_AUTO: OCP.Aspect.Aspect_TypeOfColorScaleData # value = Aspect_TypeOfColorScaleData.Aspect_TOCSD_AUTO
-    Aspect_TOCSD_USER: OCP.Aspect.Aspect_TypeOfColorScaleData # value = Aspect_TypeOfColorScaleData.Aspect_TOCSD_USER
-    __entries: dict # value = {'Aspect_TOCSD_AUTO': (Aspect_TypeOfColorScaleData.Aspect_TOCSD_AUTO, None), 'Aspect_TOCSD_USER': (Aspect_TypeOfColorScaleData.Aspect_TOCSD_USER, None)}
-    __members__: dict # value = {'Aspect_TOCSD_AUTO': Aspect_TypeOfColorScaleData.Aspect_TOCSD_AUTO, 'Aspect_TOCSD_USER': Aspect_TypeOfColorScaleData.Aspect_TOCSD_USER}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TOCSD_AUTO: OCP.Aspect.Aspect_TypeOfColorScaleData # value = <Aspect_TypeOfColorScaleData.Aspect_TOCSD_AUTO: 0>
+    Aspect_TOCSD_USER: OCP.Aspect.Aspect_TypeOfColorScaleData # value = <Aspect_TypeOfColorScaleData.Aspect_TOCSD_USER: 1>
+    __entries: dict # value = {'Aspect_TOCSD_AUTO': (<Aspect_TypeOfColorScaleData.Aspect_TOCSD_AUTO: 0>, None), 'Aspect_TOCSD_USER': (<Aspect_TypeOfColorScaleData.Aspect_TOCSD_USER: 1>, None)}
+    __members__: dict # value = {'Aspect_TOCSD_AUTO': <Aspect_TypeOfColorScaleData.Aspect_TOCSD_AUTO: 0>, 'Aspect_TOCSD_USER': <Aspect_TypeOfColorScaleData.Aspect_TOCSD_USER: 1>}
     pass
 class Aspect_TypeOfColorScaleOrientation():
     """
@@ -1807,22 +2385,30 @@ class Aspect_TypeOfColorScaleOrientation():
 
       Aspect_TOCSO_CENTER
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TOCSO_CENTER: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_CENTER
-    Aspect_TOCSO_LEFT: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_LEFT
-    Aspect_TOCSO_NONE: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_NONE
-    Aspect_TOCSO_RIGHT: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_RIGHT
-    __entries: dict # value = {'Aspect_TOCSO_NONE': (Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_NONE, None), 'Aspect_TOCSO_LEFT': (Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_LEFT, None), 'Aspect_TOCSO_RIGHT': (Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_RIGHT, None), 'Aspect_TOCSO_CENTER': (Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_CENTER, None)}
-    __members__: dict # value = {'Aspect_TOCSO_NONE': Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_NONE, 'Aspect_TOCSO_LEFT': Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_LEFT, 'Aspect_TOCSO_RIGHT': Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_RIGHT, 'Aspect_TOCSO_CENTER': Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_CENTER}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TOCSO_CENTER: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_CENTER: 3>
+    Aspect_TOCSO_LEFT: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_LEFT: 1>
+    Aspect_TOCSO_NONE: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_NONE: 0>
+    Aspect_TOCSO_RIGHT: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_RIGHT: 2>
+    __entries: dict # value = {'Aspect_TOCSO_NONE': (<Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_NONE: 0>, None), 'Aspect_TOCSO_LEFT': (<Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_LEFT: 1>, None), 'Aspect_TOCSO_RIGHT': (<Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_RIGHT: 2>, None), 'Aspect_TOCSO_CENTER': (<Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_CENTER: 3>, None)}
+    __members__: dict # value = {'Aspect_TOCSO_NONE': <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_NONE: 0>, 'Aspect_TOCSO_LEFT': <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_LEFT: 1>, 'Aspect_TOCSO_RIGHT': <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_RIGHT: 2>, 'Aspect_TOCSO_CENTER': <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_CENTER: 3>}
     pass
 class Aspect_TypeOfColorScalePosition():
     """
@@ -1838,22 +2424,30 @@ class Aspect_TypeOfColorScalePosition():
 
       Aspect_TOCSP_CENTER
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TOCSP_CENTER: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = Aspect_TypeOfColorScalePosition.Aspect_TOCSP_CENTER
-    Aspect_TOCSP_LEFT: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = Aspect_TypeOfColorScalePosition.Aspect_TOCSP_LEFT
-    Aspect_TOCSP_NONE: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = Aspect_TypeOfColorScalePosition.Aspect_TOCSP_NONE
-    Aspect_TOCSP_RIGHT: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = Aspect_TypeOfColorScalePosition.Aspect_TOCSP_RIGHT
-    __entries: dict # value = {'Aspect_TOCSP_NONE': (Aspect_TypeOfColorScalePosition.Aspect_TOCSP_NONE, None), 'Aspect_TOCSP_LEFT': (Aspect_TypeOfColorScalePosition.Aspect_TOCSP_LEFT, None), 'Aspect_TOCSP_RIGHT': (Aspect_TypeOfColorScalePosition.Aspect_TOCSP_RIGHT, None), 'Aspect_TOCSP_CENTER': (Aspect_TypeOfColorScalePosition.Aspect_TOCSP_CENTER, None)}
-    __members__: dict # value = {'Aspect_TOCSP_NONE': Aspect_TypeOfColorScalePosition.Aspect_TOCSP_NONE, 'Aspect_TOCSP_LEFT': Aspect_TypeOfColorScalePosition.Aspect_TOCSP_LEFT, 'Aspect_TOCSP_RIGHT': Aspect_TypeOfColorScalePosition.Aspect_TOCSP_RIGHT, 'Aspect_TOCSP_CENTER': Aspect_TypeOfColorScalePosition.Aspect_TOCSP_CENTER}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TOCSP_CENTER: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_CENTER: 3>
+    Aspect_TOCSP_LEFT: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_LEFT: 1>
+    Aspect_TOCSP_NONE: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_NONE: 0>
+    Aspect_TOCSP_RIGHT: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_RIGHT: 2>
+    __entries: dict # value = {'Aspect_TOCSP_NONE': (<Aspect_TypeOfColorScalePosition.Aspect_TOCSP_NONE: 0>, None), 'Aspect_TOCSP_LEFT': (<Aspect_TypeOfColorScalePosition.Aspect_TOCSP_LEFT: 1>, None), 'Aspect_TOCSP_RIGHT': (<Aspect_TypeOfColorScalePosition.Aspect_TOCSP_RIGHT: 2>, None), 'Aspect_TOCSP_CENTER': (<Aspect_TypeOfColorScalePosition.Aspect_TOCSP_CENTER: 3>, None)}
+    __members__: dict # value = {'Aspect_TOCSP_NONE': <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_NONE: 0>, 'Aspect_TOCSP_LEFT': <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_LEFT: 1>, 'Aspect_TOCSP_RIGHT': <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_RIGHT: 2>, 'Aspect_TOCSP_CENTER': <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_CENTER: 3>}
     pass
 class Aspect_TypeOfDeflection():
     """
@@ -1865,20 +2459,28 @@ class Aspect_TypeOfDeflection():
 
       Aspect_TOD_ABSOLUTE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TOD_ABSOLUTE: OCP.Aspect.Aspect_TypeOfDeflection # value = Aspect_TypeOfDeflection.Aspect_TOD_ABSOLUTE
-    Aspect_TOD_RELATIVE: OCP.Aspect.Aspect_TypeOfDeflection # value = Aspect_TypeOfDeflection.Aspect_TOD_RELATIVE
-    __entries: dict # value = {'Aspect_TOD_RELATIVE': (Aspect_TypeOfDeflection.Aspect_TOD_RELATIVE, None), 'Aspect_TOD_ABSOLUTE': (Aspect_TypeOfDeflection.Aspect_TOD_ABSOLUTE, None)}
-    __members__: dict # value = {'Aspect_TOD_RELATIVE': Aspect_TypeOfDeflection.Aspect_TOD_RELATIVE, 'Aspect_TOD_ABSOLUTE': Aspect_TypeOfDeflection.Aspect_TOD_ABSOLUTE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TOD_ABSOLUTE: OCP.Aspect.Aspect_TypeOfDeflection # value = <Aspect_TypeOfDeflection.Aspect_TOD_ABSOLUTE: 1>
+    Aspect_TOD_RELATIVE: OCP.Aspect.Aspect_TypeOfDeflection # value = <Aspect_TypeOfDeflection.Aspect_TOD_RELATIVE: 0>
+    __entries: dict # value = {'Aspect_TOD_RELATIVE': (<Aspect_TypeOfDeflection.Aspect_TOD_RELATIVE: 0>, None), 'Aspect_TOD_ABSOLUTE': (<Aspect_TypeOfDeflection.Aspect_TOD_ABSOLUTE: 1>, None)}
+    __members__: dict # value = {'Aspect_TOD_RELATIVE': <Aspect_TypeOfDeflection.Aspect_TOD_RELATIVE: 0>, 'Aspect_TOD_ABSOLUTE': <Aspect_TypeOfDeflection.Aspect_TOD_ABSOLUTE: 1>}
     pass
 class Aspect_TypeOfDisplayText():
     """
@@ -1898,24 +2500,32 @@ class Aspect_TypeOfDisplayText():
 
       Aspect_TODT_SHADOW
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TODT_BLEND: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_BLEND
-    Aspect_TODT_DEKALE: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_DEKALE
-    Aspect_TODT_DIMENSION: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_DIMENSION
-    Aspect_TODT_NORMAL: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_NORMAL
-    Aspect_TODT_SHADOW: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_SHADOW
-    Aspect_TODT_SUBTITLE: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_SUBTITLE
-    __entries: dict # value = {'Aspect_TODT_NORMAL': (Aspect_TypeOfDisplayText.Aspect_TODT_NORMAL, None), 'Aspect_TODT_SUBTITLE': (Aspect_TypeOfDisplayText.Aspect_TODT_SUBTITLE, None), 'Aspect_TODT_DEKALE': (Aspect_TypeOfDisplayText.Aspect_TODT_DEKALE, None), 'Aspect_TODT_BLEND': (Aspect_TypeOfDisplayText.Aspect_TODT_BLEND, None), 'Aspect_TODT_DIMENSION': (Aspect_TypeOfDisplayText.Aspect_TODT_DIMENSION, None), 'Aspect_TODT_SHADOW': (Aspect_TypeOfDisplayText.Aspect_TODT_SHADOW, None)}
-    __members__: dict # value = {'Aspect_TODT_NORMAL': Aspect_TypeOfDisplayText.Aspect_TODT_NORMAL, 'Aspect_TODT_SUBTITLE': Aspect_TypeOfDisplayText.Aspect_TODT_SUBTITLE, 'Aspect_TODT_DEKALE': Aspect_TypeOfDisplayText.Aspect_TODT_DEKALE, 'Aspect_TODT_BLEND': Aspect_TypeOfDisplayText.Aspect_TODT_BLEND, 'Aspect_TODT_DIMENSION': Aspect_TypeOfDisplayText.Aspect_TODT_DIMENSION, 'Aspect_TODT_SHADOW': Aspect_TypeOfDisplayText.Aspect_TODT_SHADOW}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TODT_BLEND: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_BLEND: 3>
+    Aspect_TODT_DEKALE: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_DEKALE: 2>
+    Aspect_TODT_DIMENSION: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_DIMENSION: 4>
+    Aspect_TODT_NORMAL: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_NORMAL: 0>
+    Aspect_TODT_SHADOW: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_SHADOW: 5>
+    Aspect_TODT_SUBTITLE: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_SUBTITLE: 1>
+    __entries: dict # value = {'Aspect_TODT_NORMAL': (<Aspect_TypeOfDisplayText.Aspect_TODT_NORMAL: 0>, None), 'Aspect_TODT_SUBTITLE': (<Aspect_TypeOfDisplayText.Aspect_TODT_SUBTITLE: 1>, None), 'Aspect_TODT_DEKALE': (<Aspect_TypeOfDisplayText.Aspect_TODT_DEKALE: 2>, None), 'Aspect_TODT_BLEND': (<Aspect_TypeOfDisplayText.Aspect_TODT_BLEND: 3>, None), 'Aspect_TODT_DIMENSION': (<Aspect_TypeOfDisplayText.Aspect_TODT_DIMENSION: 4>, None), 'Aspect_TODT_SHADOW': (<Aspect_TypeOfDisplayText.Aspect_TODT_SHADOW: 5>, None)}
+    __members__: dict # value = {'Aspect_TODT_NORMAL': <Aspect_TypeOfDisplayText.Aspect_TODT_NORMAL: 0>, 'Aspect_TODT_SUBTITLE': <Aspect_TypeOfDisplayText.Aspect_TODT_SUBTITLE: 1>, 'Aspect_TODT_DEKALE': <Aspect_TypeOfDisplayText.Aspect_TODT_DEKALE: 2>, 'Aspect_TODT_BLEND': <Aspect_TypeOfDisplayText.Aspect_TODT_BLEND: 3>, 'Aspect_TODT_DIMENSION': <Aspect_TypeOfDisplayText.Aspect_TODT_DIMENSION: 4>, 'Aspect_TODT_SHADOW': <Aspect_TypeOfDisplayText.Aspect_TODT_SHADOW: 5>}
     pass
 class Aspect_TypeOfFacingModel():
     """
@@ -1929,21 +2539,29 @@ class Aspect_TypeOfFacingModel():
 
       Aspect_TOFM_FRONT_SIDE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TOFM_BACK_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = Aspect_TypeOfFacingModel.Aspect_TOFM_BACK_SIDE
-    Aspect_TOFM_BOTH_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = Aspect_TypeOfFacingModel.Aspect_TOFM_BOTH_SIDE
-    Aspect_TOFM_FRONT_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = Aspect_TypeOfFacingModel.Aspect_TOFM_FRONT_SIDE
-    __entries: dict # value = {'Aspect_TOFM_BOTH_SIDE': (Aspect_TypeOfFacingModel.Aspect_TOFM_BOTH_SIDE, None), 'Aspect_TOFM_BACK_SIDE': (Aspect_TypeOfFacingModel.Aspect_TOFM_BACK_SIDE, None), 'Aspect_TOFM_FRONT_SIDE': (Aspect_TypeOfFacingModel.Aspect_TOFM_FRONT_SIDE, None)}
-    __members__: dict # value = {'Aspect_TOFM_BOTH_SIDE': Aspect_TypeOfFacingModel.Aspect_TOFM_BOTH_SIDE, 'Aspect_TOFM_BACK_SIDE': Aspect_TypeOfFacingModel.Aspect_TOFM_BACK_SIDE, 'Aspect_TOFM_FRONT_SIDE': Aspect_TypeOfFacingModel.Aspect_TOFM_FRONT_SIDE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TOFM_BACK_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = <Aspect_TypeOfFacingModel.Aspect_TOFM_BACK_SIDE: 1>
+    Aspect_TOFM_BOTH_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = <Aspect_TypeOfFacingModel.Aspect_TOFM_BOTH_SIDE: 0>
+    Aspect_TOFM_FRONT_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = <Aspect_TypeOfFacingModel.Aspect_TOFM_FRONT_SIDE: 2>
+    __entries: dict # value = {'Aspect_TOFM_BOTH_SIDE': (<Aspect_TypeOfFacingModel.Aspect_TOFM_BOTH_SIDE: 0>, None), 'Aspect_TOFM_BACK_SIDE': (<Aspect_TypeOfFacingModel.Aspect_TOFM_BACK_SIDE: 1>, None), 'Aspect_TOFM_FRONT_SIDE': (<Aspect_TypeOfFacingModel.Aspect_TOFM_FRONT_SIDE: 2>, None)}
+    __members__: dict # value = {'Aspect_TOFM_BOTH_SIDE': <Aspect_TypeOfFacingModel.Aspect_TOFM_BOTH_SIDE: 0>, 'Aspect_TOFM_BACK_SIDE': <Aspect_TypeOfFacingModel.Aspect_TOFM_BACK_SIDE: 1>, 'Aspect_TOFM_FRONT_SIDE': <Aspect_TypeOfFacingModel.Aspect_TOFM_FRONT_SIDE: 2>}
     pass
 class Aspect_TypeOfHighlightMethod():
     """
@@ -1955,20 +2573,28 @@ class Aspect_TypeOfHighlightMethod():
 
       Aspect_TOHM_BOUNDBOX
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TOHM_BOUNDBOX: OCP.Aspect.Aspect_TypeOfHighlightMethod # value = Aspect_TypeOfHighlightMethod.Aspect_TOHM_BOUNDBOX
-    Aspect_TOHM_COLOR: OCP.Aspect.Aspect_TypeOfHighlightMethod # value = Aspect_TypeOfHighlightMethod.Aspect_TOHM_COLOR
-    __entries: dict # value = {'Aspect_TOHM_COLOR': (Aspect_TypeOfHighlightMethod.Aspect_TOHM_COLOR, None), 'Aspect_TOHM_BOUNDBOX': (Aspect_TypeOfHighlightMethod.Aspect_TOHM_BOUNDBOX, None)}
-    __members__: dict # value = {'Aspect_TOHM_COLOR': Aspect_TypeOfHighlightMethod.Aspect_TOHM_COLOR, 'Aspect_TOHM_BOUNDBOX': Aspect_TypeOfHighlightMethod.Aspect_TOHM_BOUNDBOX}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TOHM_BOUNDBOX: OCP.Aspect.Aspect_TypeOfHighlightMethod # value = <Aspect_TypeOfHighlightMethod.Aspect_TOHM_BOUNDBOX: 1>
+    Aspect_TOHM_COLOR: OCP.Aspect.Aspect_TypeOfHighlightMethod # value = <Aspect_TypeOfHighlightMethod.Aspect_TOHM_COLOR: 0>
+    __entries: dict # value = {'Aspect_TOHM_COLOR': (<Aspect_TypeOfHighlightMethod.Aspect_TOHM_COLOR: 0>, None), 'Aspect_TOHM_BOUNDBOX': (<Aspect_TypeOfHighlightMethod.Aspect_TOHM_BOUNDBOX: 1>, None)}
+    __members__: dict # value = {'Aspect_TOHM_COLOR': <Aspect_TypeOfHighlightMethod.Aspect_TOHM_COLOR: 0>, 'Aspect_TOHM_BOUNDBOX': <Aspect_TypeOfHighlightMethod.Aspect_TOHM_BOUNDBOX: 1>}
     pass
 class Aspect_TypeOfLine():
     """
@@ -1988,24 +2614,32 @@ class Aspect_TypeOfLine():
 
       Aspect_TOL_USERDEFINED
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TOL_DASH: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_DASH
-    Aspect_TOL_DOT: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_DOT
-    Aspect_TOL_DOTDASH: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_DOTDASH
-    Aspect_TOL_EMPTY: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_EMPTY
-    Aspect_TOL_SOLID: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_SOLID
-    Aspect_TOL_USERDEFINED: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_USERDEFINED
-    __entries: dict # value = {'Aspect_TOL_EMPTY': (Aspect_TypeOfLine.Aspect_TOL_EMPTY, None), 'Aspect_TOL_SOLID': (Aspect_TypeOfLine.Aspect_TOL_SOLID, None), 'Aspect_TOL_DASH': (Aspect_TypeOfLine.Aspect_TOL_DASH, None), 'Aspect_TOL_DOT': (Aspect_TypeOfLine.Aspect_TOL_DOT, None), 'Aspect_TOL_DOTDASH': (Aspect_TypeOfLine.Aspect_TOL_DOTDASH, None), 'Aspect_TOL_USERDEFINED': (Aspect_TypeOfLine.Aspect_TOL_USERDEFINED, None)}
-    __members__: dict # value = {'Aspect_TOL_EMPTY': Aspect_TypeOfLine.Aspect_TOL_EMPTY, 'Aspect_TOL_SOLID': Aspect_TypeOfLine.Aspect_TOL_SOLID, 'Aspect_TOL_DASH': Aspect_TypeOfLine.Aspect_TOL_DASH, 'Aspect_TOL_DOT': Aspect_TypeOfLine.Aspect_TOL_DOT, 'Aspect_TOL_DOTDASH': Aspect_TypeOfLine.Aspect_TOL_DOTDASH, 'Aspect_TOL_USERDEFINED': Aspect_TypeOfLine.Aspect_TOL_USERDEFINED}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TOL_DASH: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_DASH: 1>
+    Aspect_TOL_DOT: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_DOT: 2>
+    Aspect_TOL_DOTDASH: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_DOTDASH: 3>
+    Aspect_TOL_EMPTY: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_EMPTY: -1>
+    Aspect_TOL_SOLID: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_SOLID: 0>
+    Aspect_TOL_USERDEFINED: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_USERDEFINED: 4>
+    __entries: dict # value = {'Aspect_TOL_EMPTY': (<Aspect_TypeOfLine.Aspect_TOL_EMPTY: -1>, None), 'Aspect_TOL_SOLID': (<Aspect_TypeOfLine.Aspect_TOL_SOLID: 0>, None), 'Aspect_TOL_DASH': (<Aspect_TypeOfLine.Aspect_TOL_DASH: 1>, None), 'Aspect_TOL_DOT': (<Aspect_TypeOfLine.Aspect_TOL_DOT: 2>, None), 'Aspect_TOL_DOTDASH': (<Aspect_TypeOfLine.Aspect_TOL_DOTDASH: 3>, None), 'Aspect_TOL_USERDEFINED': (<Aspect_TypeOfLine.Aspect_TOL_USERDEFINED: 4>, None)}
+    __members__: dict # value = {'Aspect_TOL_EMPTY': <Aspect_TypeOfLine.Aspect_TOL_EMPTY: -1>, 'Aspect_TOL_SOLID': <Aspect_TypeOfLine.Aspect_TOL_SOLID: 0>, 'Aspect_TOL_DASH': <Aspect_TypeOfLine.Aspect_TOL_DASH: 1>, 'Aspect_TOL_DOT': <Aspect_TypeOfLine.Aspect_TOL_DOT: 2>, 'Aspect_TOL_DOTDASH': <Aspect_TypeOfLine.Aspect_TOL_DOTDASH: 3>, 'Aspect_TOL_USERDEFINED': <Aspect_TypeOfLine.Aspect_TOL_USERDEFINED: 4>}
     pass
 class Aspect_TypeOfMarker():
     """
@@ -2043,33 +2677,41 @@ class Aspect_TypeOfMarker():
 
       Aspect_TOM_USERDEFINED
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TOM_BALL: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_BALL
-    Aspect_TOM_EMPTY: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_EMPTY
-    Aspect_TOM_O: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_O
-    Aspect_TOM_O_PLUS: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_O_PLUS
-    Aspect_TOM_O_POINT: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_O_POINT
-    Aspect_TOM_O_STAR: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_O_STAR
-    Aspect_TOM_O_X: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_O_X
-    Aspect_TOM_PLUS: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_PLUS
-    Aspect_TOM_POINT: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_POINT
-    Aspect_TOM_RING1: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_RING1
-    Aspect_TOM_RING2: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_RING2
-    Aspect_TOM_RING3: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_RING3
-    Aspect_TOM_STAR: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_STAR
-    Aspect_TOM_USERDEFINED: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_USERDEFINED
-    Aspect_TOM_X: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_X
-    __entries: dict # value = {'Aspect_TOM_EMPTY': (Aspect_TypeOfMarker.Aspect_TOM_EMPTY, None), 'Aspect_TOM_POINT': (Aspect_TypeOfMarker.Aspect_TOM_POINT, None), 'Aspect_TOM_PLUS': (Aspect_TypeOfMarker.Aspect_TOM_PLUS, None), 'Aspect_TOM_STAR': (Aspect_TypeOfMarker.Aspect_TOM_STAR, None), 'Aspect_TOM_X': (Aspect_TypeOfMarker.Aspect_TOM_X, None), 'Aspect_TOM_O': (Aspect_TypeOfMarker.Aspect_TOM_O, None), 'Aspect_TOM_O_POINT': (Aspect_TypeOfMarker.Aspect_TOM_O_POINT, None), 'Aspect_TOM_O_PLUS': (Aspect_TypeOfMarker.Aspect_TOM_O_PLUS, None), 'Aspect_TOM_O_STAR': (Aspect_TypeOfMarker.Aspect_TOM_O_STAR, None), 'Aspect_TOM_O_X': (Aspect_TypeOfMarker.Aspect_TOM_O_X, None), 'Aspect_TOM_RING1': (Aspect_TypeOfMarker.Aspect_TOM_RING1, None), 'Aspect_TOM_RING2': (Aspect_TypeOfMarker.Aspect_TOM_RING2, None), 'Aspect_TOM_RING3': (Aspect_TypeOfMarker.Aspect_TOM_RING3, None), 'Aspect_TOM_BALL': (Aspect_TypeOfMarker.Aspect_TOM_BALL, None), 'Aspect_TOM_USERDEFINED': (Aspect_TypeOfMarker.Aspect_TOM_USERDEFINED, None)}
-    __members__: dict # value = {'Aspect_TOM_EMPTY': Aspect_TypeOfMarker.Aspect_TOM_EMPTY, 'Aspect_TOM_POINT': Aspect_TypeOfMarker.Aspect_TOM_POINT, 'Aspect_TOM_PLUS': Aspect_TypeOfMarker.Aspect_TOM_PLUS, 'Aspect_TOM_STAR': Aspect_TypeOfMarker.Aspect_TOM_STAR, 'Aspect_TOM_X': Aspect_TypeOfMarker.Aspect_TOM_X, 'Aspect_TOM_O': Aspect_TypeOfMarker.Aspect_TOM_O, 'Aspect_TOM_O_POINT': Aspect_TypeOfMarker.Aspect_TOM_O_POINT, 'Aspect_TOM_O_PLUS': Aspect_TypeOfMarker.Aspect_TOM_O_PLUS, 'Aspect_TOM_O_STAR': Aspect_TypeOfMarker.Aspect_TOM_O_STAR, 'Aspect_TOM_O_X': Aspect_TypeOfMarker.Aspect_TOM_O_X, 'Aspect_TOM_RING1': Aspect_TypeOfMarker.Aspect_TOM_RING1, 'Aspect_TOM_RING2': Aspect_TypeOfMarker.Aspect_TOM_RING2, 'Aspect_TOM_RING3': Aspect_TypeOfMarker.Aspect_TOM_RING3, 'Aspect_TOM_BALL': Aspect_TypeOfMarker.Aspect_TOM_BALL, 'Aspect_TOM_USERDEFINED': Aspect_TypeOfMarker.Aspect_TOM_USERDEFINED}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TOM_BALL: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_BALL: 12>
+    Aspect_TOM_EMPTY: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_EMPTY: -1>
+    Aspect_TOM_O: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_O: 4>
+    Aspect_TOM_O_PLUS: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_O_PLUS: 6>
+    Aspect_TOM_O_POINT: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_O_POINT: 5>
+    Aspect_TOM_O_STAR: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_O_STAR: 7>
+    Aspect_TOM_O_X: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_O_X: 8>
+    Aspect_TOM_PLUS: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_PLUS: 1>
+    Aspect_TOM_POINT: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_POINT: 0>
+    Aspect_TOM_RING1: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_RING1: 9>
+    Aspect_TOM_RING2: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_RING2: 10>
+    Aspect_TOM_RING3: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_RING3: 11>
+    Aspect_TOM_STAR: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_STAR: 2>
+    Aspect_TOM_USERDEFINED: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_USERDEFINED: 13>
+    Aspect_TOM_X: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_X: 3>
+    __entries: dict # value = {'Aspect_TOM_EMPTY': (<Aspect_TypeOfMarker.Aspect_TOM_EMPTY: -1>, None), 'Aspect_TOM_POINT': (<Aspect_TypeOfMarker.Aspect_TOM_POINT: 0>, None), 'Aspect_TOM_PLUS': (<Aspect_TypeOfMarker.Aspect_TOM_PLUS: 1>, None), 'Aspect_TOM_STAR': (<Aspect_TypeOfMarker.Aspect_TOM_STAR: 2>, None), 'Aspect_TOM_X': (<Aspect_TypeOfMarker.Aspect_TOM_X: 3>, None), 'Aspect_TOM_O': (<Aspect_TypeOfMarker.Aspect_TOM_O: 4>, None), 'Aspect_TOM_O_POINT': (<Aspect_TypeOfMarker.Aspect_TOM_O_POINT: 5>, None), 'Aspect_TOM_O_PLUS': (<Aspect_TypeOfMarker.Aspect_TOM_O_PLUS: 6>, None), 'Aspect_TOM_O_STAR': (<Aspect_TypeOfMarker.Aspect_TOM_O_STAR: 7>, None), 'Aspect_TOM_O_X': (<Aspect_TypeOfMarker.Aspect_TOM_O_X: 8>, None), 'Aspect_TOM_RING1': (<Aspect_TypeOfMarker.Aspect_TOM_RING1: 9>, None), 'Aspect_TOM_RING2': (<Aspect_TypeOfMarker.Aspect_TOM_RING2: 10>, None), 'Aspect_TOM_RING3': (<Aspect_TypeOfMarker.Aspect_TOM_RING3: 11>, None), 'Aspect_TOM_BALL': (<Aspect_TypeOfMarker.Aspect_TOM_BALL: 12>, None), 'Aspect_TOM_USERDEFINED': (<Aspect_TypeOfMarker.Aspect_TOM_USERDEFINED: 13>, None)}
+    __members__: dict # value = {'Aspect_TOM_EMPTY': <Aspect_TypeOfMarker.Aspect_TOM_EMPTY: -1>, 'Aspect_TOM_POINT': <Aspect_TypeOfMarker.Aspect_TOM_POINT: 0>, 'Aspect_TOM_PLUS': <Aspect_TypeOfMarker.Aspect_TOM_PLUS: 1>, 'Aspect_TOM_STAR': <Aspect_TypeOfMarker.Aspect_TOM_STAR: 2>, 'Aspect_TOM_X': <Aspect_TypeOfMarker.Aspect_TOM_X: 3>, 'Aspect_TOM_O': <Aspect_TypeOfMarker.Aspect_TOM_O: 4>, 'Aspect_TOM_O_POINT': <Aspect_TypeOfMarker.Aspect_TOM_O_POINT: 5>, 'Aspect_TOM_O_PLUS': <Aspect_TypeOfMarker.Aspect_TOM_O_PLUS: 6>, 'Aspect_TOM_O_STAR': <Aspect_TypeOfMarker.Aspect_TOM_O_STAR: 7>, 'Aspect_TOM_O_X': <Aspect_TypeOfMarker.Aspect_TOM_O_X: 8>, 'Aspect_TOM_RING1': <Aspect_TypeOfMarker.Aspect_TOM_RING1: 9>, 'Aspect_TOM_RING2': <Aspect_TypeOfMarker.Aspect_TOM_RING2: 10>, 'Aspect_TOM_RING3': <Aspect_TypeOfMarker.Aspect_TOM_RING3: 11>, 'Aspect_TOM_BALL': <Aspect_TypeOfMarker.Aspect_TOM_BALL: 12>, 'Aspect_TOM_USERDEFINED': <Aspect_TypeOfMarker.Aspect_TOM_USERDEFINED: 13>}
     pass
 class Aspect_TypeOfResize():
     """
@@ -2097,28 +2739,36 @@ class Aspect_TypeOfResize():
 
       Aspect_TOR_LEFT_AND_TOP_BORDER
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TOR_BOTTOM_AND_LEFT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_BOTTOM_AND_LEFT_BORDER
-    Aspect_TOR_BOTTOM_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_BOTTOM_BORDER
-    Aspect_TOR_LEFT_AND_TOP_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_LEFT_AND_TOP_BORDER
-    Aspect_TOR_LEFT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_LEFT_BORDER
-    Aspect_TOR_NO_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_NO_BORDER
-    Aspect_TOR_RIGHT_AND_BOTTOM_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_RIGHT_AND_BOTTOM_BORDER
-    Aspect_TOR_RIGHT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_RIGHT_BORDER
-    Aspect_TOR_TOP_AND_RIGHT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_TOP_AND_RIGHT_BORDER
-    Aspect_TOR_TOP_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_TOP_BORDER
-    Aspect_TOR_UNKNOWN: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_UNKNOWN
-    __entries: dict # value = {'Aspect_TOR_UNKNOWN': (Aspect_TypeOfResize.Aspect_TOR_UNKNOWN, None), 'Aspect_TOR_NO_BORDER': (Aspect_TypeOfResize.Aspect_TOR_NO_BORDER, None), 'Aspect_TOR_TOP_BORDER': (Aspect_TypeOfResize.Aspect_TOR_TOP_BORDER, None), 'Aspect_TOR_RIGHT_BORDER': (Aspect_TypeOfResize.Aspect_TOR_RIGHT_BORDER, None), 'Aspect_TOR_BOTTOM_BORDER': (Aspect_TypeOfResize.Aspect_TOR_BOTTOM_BORDER, None), 'Aspect_TOR_LEFT_BORDER': (Aspect_TypeOfResize.Aspect_TOR_LEFT_BORDER, None), 'Aspect_TOR_TOP_AND_RIGHT_BORDER': (Aspect_TypeOfResize.Aspect_TOR_TOP_AND_RIGHT_BORDER, None), 'Aspect_TOR_RIGHT_AND_BOTTOM_BORDER': (Aspect_TypeOfResize.Aspect_TOR_RIGHT_AND_BOTTOM_BORDER, None), 'Aspect_TOR_BOTTOM_AND_LEFT_BORDER': (Aspect_TypeOfResize.Aspect_TOR_BOTTOM_AND_LEFT_BORDER, None), 'Aspect_TOR_LEFT_AND_TOP_BORDER': (Aspect_TypeOfResize.Aspect_TOR_LEFT_AND_TOP_BORDER, None)}
-    __members__: dict # value = {'Aspect_TOR_UNKNOWN': Aspect_TypeOfResize.Aspect_TOR_UNKNOWN, 'Aspect_TOR_NO_BORDER': Aspect_TypeOfResize.Aspect_TOR_NO_BORDER, 'Aspect_TOR_TOP_BORDER': Aspect_TypeOfResize.Aspect_TOR_TOP_BORDER, 'Aspect_TOR_RIGHT_BORDER': Aspect_TypeOfResize.Aspect_TOR_RIGHT_BORDER, 'Aspect_TOR_BOTTOM_BORDER': Aspect_TypeOfResize.Aspect_TOR_BOTTOM_BORDER, 'Aspect_TOR_LEFT_BORDER': Aspect_TypeOfResize.Aspect_TOR_LEFT_BORDER, 'Aspect_TOR_TOP_AND_RIGHT_BORDER': Aspect_TypeOfResize.Aspect_TOR_TOP_AND_RIGHT_BORDER, 'Aspect_TOR_RIGHT_AND_BOTTOM_BORDER': Aspect_TypeOfResize.Aspect_TOR_RIGHT_AND_BOTTOM_BORDER, 'Aspect_TOR_BOTTOM_AND_LEFT_BORDER': Aspect_TypeOfResize.Aspect_TOR_BOTTOM_AND_LEFT_BORDER, 'Aspect_TOR_LEFT_AND_TOP_BORDER': Aspect_TypeOfResize.Aspect_TOR_LEFT_AND_TOP_BORDER}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TOR_BOTTOM_AND_LEFT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_BOTTOM_AND_LEFT_BORDER: 8>
+    Aspect_TOR_BOTTOM_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_BOTTOM_BORDER: 4>
+    Aspect_TOR_LEFT_AND_TOP_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_LEFT_AND_TOP_BORDER: 9>
+    Aspect_TOR_LEFT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_LEFT_BORDER: 5>
+    Aspect_TOR_NO_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_NO_BORDER: 1>
+    Aspect_TOR_RIGHT_AND_BOTTOM_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_RIGHT_AND_BOTTOM_BORDER: 7>
+    Aspect_TOR_RIGHT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_RIGHT_BORDER: 3>
+    Aspect_TOR_TOP_AND_RIGHT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_TOP_AND_RIGHT_BORDER: 6>
+    Aspect_TOR_TOP_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_TOP_BORDER: 2>
+    Aspect_TOR_UNKNOWN: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_UNKNOWN: 0>
+    __entries: dict # value = {'Aspect_TOR_UNKNOWN': (<Aspect_TypeOfResize.Aspect_TOR_UNKNOWN: 0>, None), 'Aspect_TOR_NO_BORDER': (<Aspect_TypeOfResize.Aspect_TOR_NO_BORDER: 1>, None), 'Aspect_TOR_TOP_BORDER': (<Aspect_TypeOfResize.Aspect_TOR_TOP_BORDER: 2>, None), 'Aspect_TOR_RIGHT_BORDER': (<Aspect_TypeOfResize.Aspect_TOR_RIGHT_BORDER: 3>, None), 'Aspect_TOR_BOTTOM_BORDER': (<Aspect_TypeOfResize.Aspect_TOR_BOTTOM_BORDER: 4>, None), 'Aspect_TOR_LEFT_BORDER': (<Aspect_TypeOfResize.Aspect_TOR_LEFT_BORDER: 5>, None), 'Aspect_TOR_TOP_AND_RIGHT_BORDER': (<Aspect_TypeOfResize.Aspect_TOR_TOP_AND_RIGHT_BORDER: 6>, None), 'Aspect_TOR_RIGHT_AND_BOTTOM_BORDER': (<Aspect_TypeOfResize.Aspect_TOR_RIGHT_AND_BOTTOM_BORDER: 7>, None), 'Aspect_TOR_BOTTOM_AND_LEFT_BORDER': (<Aspect_TypeOfResize.Aspect_TOR_BOTTOM_AND_LEFT_BORDER: 8>, None), 'Aspect_TOR_LEFT_AND_TOP_BORDER': (<Aspect_TypeOfResize.Aspect_TOR_LEFT_AND_TOP_BORDER: 9>, None)}
+    __members__: dict # value = {'Aspect_TOR_UNKNOWN': <Aspect_TypeOfResize.Aspect_TOR_UNKNOWN: 0>, 'Aspect_TOR_NO_BORDER': <Aspect_TypeOfResize.Aspect_TOR_NO_BORDER: 1>, 'Aspect_TOR_TOP_BORDER': <Aspect_TypeOfResize.Aspect_TOR_TOP_BORDER: 2>, 'Aspect_TOR_RIGHT_BORDER': <Aspect_TypeOfResize.Aspect_TOR_RIGHT_BORDER: 3>, 'Aspect_TOR_BOTTOM_BORDER': <Aspect_TypeOfResize.Aspect_TOR_BOTTOM_BORDER: 4>, 'Aspect_TOR_LEFT_BORDER': <Aspect_TypeOfResize.Aspect_TOR_LEFT_BORDER: 5>, 'Aspect_TOR_TOP_AND_RIGHT_BORDER': <Aspect_TypeOfResize.Aspect_TOR_TOP_AND_RIGHT_BORDER: 6>, 'Aspect_TOR_RIGHT_AND_BOTTOM_BORDER': <Aspect_TypeOfResize.Aspect_TOR_RIGHT_AND_BOTTOM_BORDER: 7>, 'Aspect_TOR_BOTTOM_AND_LEFT_BORDER': <Aspect_TypeOfResize.Aspect_TOR_BOTTOM_AND_LEFT_BORDER: 8>, 'Aspect_TOR_LEFT_AND_TOP_BORDER': <Aspect_TypeOfResize.Aspect_TOR_LEFT_AND_TOP_BORDER: 9>}
     pass
 class Aspect_TypeOfStyleText():
     """
@@ -2130,20 +2780,28 @@ class Aspect_TypeOfStyleText():
 
       Aspect_TOST_ANNOTATION
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TOST_ANNOTATION: OCP.Aspect.Aspect_TypeOfStyleText # value = Aspect_TypeOfStyleText.Aspect_TOST_ANNOTATION
-    Aspect_TOST_NORMAL: OCP.Aspect.Aspect_TypeOfStyleText # value = Aspect_TypeOfStyleText.Aspect_TOST_NORMAL
-    __entries: dict # value = {'Aspect_TOST_NORMAL': (Aspect_TypeOfStyleText.Aspect_TOST_NORMAL, None), 'Aspect_TOST_ANNOTATION': (Aspect_TypeOfStyleText.Aspect_TOST_ANNOTATION, None)}
-    __members__: dict # value = {'Aspect_TOST_NORMAL': Aspect_TypeOfStyleText.Aspect_TOST_NORMAL, 'Aspect_TOST_ANNOTATION': Aspect_TypeOfStyleText.Aspect_TOST_ANNOTATION}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TOST_ANNOTATION: OCP.Aspect.Aspect_TypeOfStyleText # value = <Aspect_TypeOfStyleText.Aspect_TOST_ANNOTATION: 1>
+    Aspect_TOST_NORMAL: OCP.Aspect.Aspect_TypeOfStyleText # value = <Aspect_TypeOfStyleText.Aspect_TOST_NORMAL: 0>
+    __entries: dict # value = {'Aspect_TOST_NORMAL': (<Aspect_TypeOfStyleText.Aspect_TOST_NORMAL: 0>, None), 'Aspect_TOST_ANNOTATION': (<Aspect_TypeOfStyleText.Aspect_TOST_ANNOTATION: 1>, None)}
+    __members__: dict # value = {'Aspect_TOST_NORMAL': <Aspect_TypeOfStyleText.Aspect_TOST_NORMAL: 0>, 'Aspect_TOST_ANNOTATION': <Aspect_TypeOfStyleText.Aspect_TOST_ANNOTATION: 1>}
     pass
 class Aspect_TypeOfTriedronPosition():
     """
@@ -2169,27 +2827,35 @@ class Aspect_TypeOfTriedronPosition():
 
       Aspect_TOTP_RIGHT_UPPER
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_TOTP_BOTTOM: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_BOTTOM
-    Aspect_TOTP_CENTER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_CENTER
-    Aspect_TOTP_LEFT: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT
-    Aspect_TOTP_LEFT_LOWER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_LOWER
-    Aspect_TOTP_LEFT_UPPER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_UPPER
-    Aspect_TOTP_RIGHT: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT
-    Aspect_TOTP_RIGHT_LOWER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_LOWER
-    Aspect_TOTP_RIGHT_UPPER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_UPPER
-    Aspect_TOTP_TOP: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_TOP
-    __entries: dict # value = {'Aspect_TOTP_CENTER': (Aspect_TypeOfTriedronPosition.Aspect_TOTP_CENTER, None), 'Aspect_TOTP_TOP': (Aspect_TypeOfTriedronPosition.Aspect_TOTP_TOP, None), 'Aspect_TOTP_BOTTOM': (Aspect_TypeOfTriedronPosition.Aspect_TOTP_BOTTOM, None), 'Aspect_TOTP_LEFT': (Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT, None), 'Aspect_TOTP_RIGHT': (Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT, None), 'Aspect_TOTP_LEFT_LOWER': (Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_LOWER, None), 'Aspect_TOTP_LEFT_UPPER': (Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_UPPER, None), 'Aspect_TOTP_RIGHT_LOWER': (Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_LOWER, None), 'Aspect_TOTP_RIGHT_UPPER': (Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_UPPER, None)}
-    __members__: dict # value = {'Aspect_TOTP_CENTER': Aspect_TypeOfTriedronPosition.Aspect_TOTP_CENTER, 'Aspect_TOTP_TOP': Aspect_TypeOfTriedronPosition.Aspect_TOTP_TOP, 'Aspect_TOTP_BOTTOM': Aspect_TypeOfTriedronPosition.Aspect_TOTP_BOTTOM, 'Aspect_TOTP_LEFT': Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT, 'Aspect_TOTP_RIGHT': Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT, 'Aspect_TOTP_LEFT_LOWER': Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_LOWER, 'Aspect_TOTP_LEFT_UPPER': Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_UPPER, 'Aspect_TOTP_RIGHT_LOWER': Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_LOWER, 'Aspect_TOTP_RIGHT_UPPER': Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_UPPER}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_TOTP_BOTTOM: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_BOTTOM: 2>
+    Aspect_TOTP_CENTER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_CENTER: 0>
+    Aspect_TOTP_LEFT: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT: 4>
+    Aspect_TOTP_LEFT_LOWER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_LOWER: 6>
+    Aspect_TOTP_LEFT_UPPER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_UPPER: 5>
+    Aspect_TOTP_RIGHT: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT: 8>
+    Aspect_TOTP_RIGHT_LOWER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_LOWER: 10>
+    Aspect_TOTP_RIGHT_UPPER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_UPPER: 9>
+    Aspect_TOTP_TOP: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_TOP: 1>
+    __entries: dict # value = {'Aspect_TOTP_CENTER': (<Aspect_TypeOfTriedronPosition.Aspect_TOTP_CENTER: 0>, None), 'Aspect_TOTP_TOP': (<Aspect_TypeOfTriedronPosition.Aspect_TOTP_TOP: 1>, None), 'Aspect_TOTP_BOTTOM': (<Aspect_TypeOfTriedronPosition.Aspect_TOTP_BOTTOM: 2>, None), 'Aspect_TOTP_LEFT': (<Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT: 4>, None), 'Aspect_TOTP_RIGHT': (<Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT: 8>, None), 'Aspect_TOTP_LEFT_LOWER': (<Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_LOWER: 6>, None), 'Aspect_TOTP_LEFT_UPPER': (<Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_UPPER: 5>, None), 'Aspect_TOTP_RIGHT_LOWER': (<Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_LOWER: 10>, None), 'Aspect_TOTP_RIGHT_UPPER': (<Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_UPPER: 9>, None)}
+    __members__: dict # value = {'Aspect_TOTP_CENTER': <Aspect_TypeOfTriedronPosition.Aspect_TOTP_CENTER: 0>, 'Aspect_TOTP_TOP': <Aspect_TypeOfTriedronPosition.Aspect_TOTP_TOP: 1>, 'Aspect_TOTP_BOTTOM': <Aspect_TypeOfTriedronPosition.Aspect_TOTP_BOTTOM: 2>, 'Aspect_TOTP_LEFT': <Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT: 4>, 'Aspect_TOTP_RIGHT': <Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT: 8>, 'Aspect_TOTP_LEFT_LOWER': <Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_LOWER: 6>, 'Aspect_TOTP_LEFT_UPPER': <Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_UPPER: 5>, 'Aspect_TOTP_RIGHT_LOWER': <Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_LOWER: 10>, 'Aspect_TOTP_RIGHT_UPPER': <Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_UPPER: 9>}
     pass
 class Aspect_VKeyBasic():
     """
@@ -2409,6 +3075,30 @@ class Aspect_VKeyBasic():
 
       Aspect_VKey_BrowserHome
 
+      Aspect_VKey_ViewTop
+
+      Aspect_VKey_ViewBottom
+
+      Aspect_VKey_ViewLeft
+
+      Aspect_VKey_ViewRight
+
+      Aspect_VKey_ViewFront
+
+      Aspect_VKey_ViewBack
+
+      Aspect_VKey_ViewAxoLeftProj
+
+      Aspect_VKey_ViewAxoRightProj
+
+      Aspect_VKey_ViewFitAll
+
+      Aspect_VKey_ViewRoll90CW
+
+      Aspect_VKey_ViewRoll90CCW
+
+      Aspect_VKey_ViewSwitchRotate
+
       Aspect_VKey_Shift
 
       Aspect_VKey_Control
@@ -2459,149 +3149,169 @@ class Aspect_VKeyBasic():
 
       Aspect_VKey_NavSpeedDecrease
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_VKey_0: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_0
-    Aspect_VKey_1: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_1
-    Aspect_VKey_2: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_2
-    Aspect_VKey_3: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_3
-    Aspect_VKey_4: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_4
-    Aspect_VKey_5: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_5
-    Aspect_VKey_6: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_6
-    Aspect_VKey_7: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_7
-    Aspect_VKey_8: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_8
-    Aspect_VKey_9: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_9
-    Aspect_VKey_A: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_A
-    Aspect_VKey_Alt: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Alt
-    Aspect_VKey_Apostrophe: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Apostrophe
-    Aspect_VKey_B: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_B
-    Aspect_VKey_Back: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Back
-    Aspect_VKey_Backslash: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Backslash
-    Aspect_VKey_Backspace: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Backspace
-    Aspect_VKey_BracketLeft: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BracketLeft
-    Aspect_VKey_BracketRight: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BracketRight
-    Aspect_VKey_BrowserBack: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserBack
-    Aspect_VKey_BrowserFavorites: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserFavorites
-    Aspect_VKey_BrowserForward: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserForward
-    Aspect_VKey_BrowserHome: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserHome
-    Aspect_VKey_BrowserRefresh: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserRefresh
-    Aspect_VKey_BrowserSearch: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserSearch
-    Aspect_VKey_BrowserStop: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserStop
-    Aspect_VKey_C: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_C
-    Aspect_VKey_Comma: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Comma
-    Aspect_VKey_Control: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Control
-    Aspect_VKey_D: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_D
-    Aspect_VKey_Delete: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Delete
-    Aspect_VKey_Down: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Down
-    Aspect_VKey_E: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_E
-    Aspect_VKey_End: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_End
-    Aspect_VKey_Enter: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Enter
-    Aspect_VKey_Equal: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Equal
-    Aspect_VKey_Escape: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Escape
-    Aspect_VKey_F: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F
-    Aspect_VKey_F1: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F1
-    Aspect_VKey_F10: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F10
-    Aspect_VKey_F11: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F11
-    Aspect_VKey_F12: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F12
-    Aspect_VKey_F2: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F2
-    Aspect_VKey_F3: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F3
-    Aspect_VKey_F4: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F4
-    Aspect_VKey_F5: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F5
-    Aspect_VKey_F6: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F6
-    Aspect_VKey_F7: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F7
-    Aspect_VKey_F8: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F8
-    Aspect_VKey_F9: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F9
-    Aspect_VKey_G: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_G
-    Aspect_VKey_H: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_H
-    Aspect_VKey_Home: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Home
-    Aspect_VKey_I: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_I
-    Aspect_VKey_J: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_J
-    Aspect_VKey_K: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_K
-    Aspect_VKey_L: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_L
-    Aspect_VKey_Left: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Left
-    Aspect_VKey_M: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_M
-    Aspect_VKey_MediaNextTrack: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_MediaNextTrack
-    Aspect_VKey_MediaPlayPause: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_MediaPlayPause
-    Aspect_VKey_MediaPreviousTrack: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_MediaPreviousTrack
-    Aspect_VKey_MediaStop: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_MediaStop
-    Aspect_VKey_Menu: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Menu
-    Aspect_VKey_Meta: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Meta
-    Aspect_VKey_Minus: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Minus
-    Aspect_VKey_N: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_N
-    Aspect_VKey_NavBackward: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavBackward
-    Aspect_VKey_NavCrouch: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavCrouch
-    Aspect_VKey_NavForward: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavForward
-    Aspect_VKey_NavInteract: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavInteract
-    Aspect_VKey_NavJump: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavJump
-    Aspect_VKey_NavLookDown: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavLookDown
-    Aspect_VKey_NavLookLeft: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavLookLeft
-    Aspect_VKey_NavLookRight: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavLookRight
-    Aspect_VKey_NavLookUp: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavLookUp
-    Aspect_VKey_NavRollCCW: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavRollCCW
-    Aspect_VKey_NavRollCW: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavRollCW
-    Aspect_VKey_NavSlideDown: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSlideDown
-    Aspect_VKey_NavSlideLeft: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSlideLeft
-    Aspect_VKey_NavSlideRight: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSlideRight
-    Aspect_VKey_NavSlideUp: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSlideUp
-    Aspect_VKey_NavSpeedDecrease: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSpeedDecrease
-    Aspect_VKey_NavSpeedIncrease: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSpeedIncrease
-    Aspect_VKey_NavThrustBackward: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavThrustBackward
-    Aspect_VKey_NavThrustForward: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavThrustForward
-    Aspect_VKey_NavThrustStop: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavThrustStop
-    Aspect_VKey_Numlock: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numlock
-    Aspect_VKey_Numpad0: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad0
-    Aspect_VKey_Numpad1: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad1
-    Aspect_VKey_Numpad2: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad2
-    Aspect_VKey_Numpad3: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad3
-    Aspect_VKey_Numpad4: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad4
-    Aspect_VKey_Numpad5: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad5
-    Aspect_VKey_Numpad6: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad6
-    Aspect_VKey_Numpad7: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad7
-    Aspect_VKey_Numpad8: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad8
-    Aspect_VKey_Numpad9: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad9
-    Aspect_VKey_NumpadAdd: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NumpadAdd
-    Aspect_VKey_NumpadDivide: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NumpadDivide
-    Aspect_VKey_NumpadMultiply: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NumpadMultiply
-    Aspect_VKey_NumpadSubtract: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NumpadSubtract
-    Aspect_VKey_O: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_O
-    Aspect_VKey_P: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_P
-    Aspect_VKey_PageDown: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_PageDown
-    Aspect_VKey_PageUp: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_PageUp
-    Aspect_VKey_Period: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Period
-    Aspect_VKey_Plus: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Plus
-    Aspect_VKey_Q: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Q
-    Aspect_VKey_R: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_R
-    Aspect_VKey_Right: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Right
-    Aspect_VKey_S: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_S
-    Aspect_VKey_Scroll: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Scroll
-    Aspect_VKey_Semicolon: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Semicolon
-    Aspect_VKey_Shift: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Shift
-    Aspect_VKey_Slash: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Slash
-    Aspect_VKey_Space: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Space
-    Aspect_VKey_T: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_T
-    Aspect_VKey_Tab: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Tab
-    Aspect_VKey_Tilde: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Tilde
-    Aspect_VKey_U: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_U
-    Aspect_VKey_UNKNOWN: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_UNKNOWN
-    Aspect_VKey_Up: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Up
-    Aspect_VKey_V: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_V
-    Aspect_VKey_VolumeDown: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_VolumeDown
-    Aspect_VKey_VolumeMute: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_VolumeMute
-    Aspect_VKey_VolumeUp: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_VolumeUp
-    Aspect_VKey_W: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_W
-    Aspect_VKey_X: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_X
-    Aspect_VKey_Y: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Y
-    Aspect_VKey_Z: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Z
-    __entries: dict # value = {'Aspect_VKey_UNKNOWN': (Aspect_VKeyBasic.Aspect_VKey_UNKNOWN, None), 'Aspect_VKey_A': (Aspect_VKeyBasic.Aspect_VKey_A, None), 'Aspect_VKey_B': (Aspect_VKeyBasic.Aspect_VKey_B, None), 'Aspect_VKey_C': (Aspect_VKeyBasic.Aspect_VKey_C, None), 'Aspect_VKey_D': (Aspect_VKeyBasic.Aspect_VKey_D, None), 'Aspect_VKey_E': (Aspect_VKeyBasic.Aspect_VKey_E, None), 'Aspect_VKey_F': (Aspect_VKeyBasic.Aspect_VKey_F, None), 'Aspect_VKey_G': (Aspect_VKeyBasic.Aspect_VKey_G, None), 'Aspect_VKey_H': (Aspect_VKeyBasic.Aspect_VKey_H, None), 'Aspect_VKey_I': (Aspect_VKeyBasic.Aspect_VKey_I, None), 'Aspect_VKey_J': (Aspect_VKeyBasic.Aspect_VKey_J, None), 'Aspect_VKey_K': (Aspect_VKeyBasic.Aspect_VKey_K, None), 'Aspect_VKey_L': (Aspect_VKeyBasic.Aspect_VKey_L, None), 'Aspect_VKey_M': (Aspect_VKeyBasic.Aspect_VKey_M, None), 'Aspect_VKey_N': (Aspect_VKeyBasic.Aspect_VKey_N, None), 'Aspect_VKey_O': (Aspect_VKeyBasic.Aspect_VKey_O, None), 'Aspect_VKey_P': (Aspect_VKeyBasic.Aspect_VKey_P, None), 'Aspect_VKey_Q': (Aspect_VKeyBasic.Aspect_VKey_Q, None), 'Aspect_VKey_R': (Aspect_VKeyBasic.Aspect_VKey_R, None), 'Aspect_VKey_S': (Aspect_VKeyBasic.Aspect_VKey_S, None), 'Aspect_VKey_T': (Aspect_VKeyBasic.Aspect_VKey_T, None), 'Aspect_VKey_U': (Aspect_VKeyBasic.Aspect_VKey_U, None), 'Aspect_VKey_V': (Aspect_VKeyBasic.Aspect_VKey_V, None), 'Aspect_VKey_W': (Aspect_VKeyBasic.Aspect_VKey_W, None), 'Aspect_VKey_X': (Aspect_VKeyBasic.Aspect_VKey_X, None), 'Aspect_VKey_Y': (Aspect_VKeyBasic.Aspect_VKey_Y, None), 'Aspect_VKey_Z': (Aspect_VKeyBasic.Aspect_VKey_Z, None), 'Aspect_VKey_0': (Aspect_VKeyBasic.Aspect_VKey_0, None), 'Aspect_VKey_1': (Aspect_VKeyBasic.Aspect_VKey_1, None), 'Aspect_VKey_2': (Aspect_VKeyBasic.Aspect_VKey_2, None), 'Aspect_VKey_3': (Aspect_VKeyBasic.Aspect_VKey_3, None), 'Aspect_VKey_4': (Aspect_VKeyBasic.Aspect_VKey_4, None), 'Aspect_VKey_5': (Aspect_VKeyBasic.Aspect_VKey_5, None), 'Aspect_VKey_6': (Aspect_VKeyBasic.Aspect_VKey_6, None), 'Aspect_VKey_7': (Aspect_VKeyBasic.Aspect_VKey_7, None), 'Aspect_VKey_8': (Aspect_VKeyBasic.Aspect_VKey_8, None), 'Aspect_VKey_9': (Aspect_VKeyBasic.Aspect_VKey_9, None), 'Aspect_VKey_F1': (Aspect_VKeyBasic.Aspect_VKey_F1, None), 'Aspect_VKey_F2': (Aspect_VKeyBasic.Aspect_VKey_F2, None), 'Aspect_VKey_F3': (Aspect_VKeyBasic.Aspect_VKey_F3, None), 'Aspect_VKey_F4': (Aspect_VKeyBasic.Aspect_VKey_F4, None), 'Aspect_VKey_F5': (Aspect_VKeyBasic.Aspect_VKey_F5, None), 'Aspect_VKey_F6': (Aspect_VKeyBasic.Aspect_VKey_F6, None), 'Aspect_VKey_F7': (Aspect_VKeyBasic.Aspect_VKey_F7, None), 'Aspect_VKey_F8': (Aspect_VKeyBasic.Aspect_VKey_F8, None), 'Aspect_VKey_F9': (Aspect_VKeyBasic.Aspect_VKey_F9, None), 'Aspect_VKey_F10': (Aspect_VKeyBasic.Aspect_VKey_F10, None), 'Aspect_VKey_F11': (Aspect_VKeyBasic.Aspect_VKey_F11, None), 'Aspect_VKey_F12': (Aspect_VKeyBasic.Aspect_VKey_F12, None), 'Aspect_VKey_Up': (Aspect_VKeyBasic.Aspect_VKey_Up, None), 'Aspect_VKey_Down': (Aspect_VKeyBasic.Aspect_VKey_Down, None), 'Aspect_VKey_Left': (Aspect_VKeyBasic.Aspect_VKey_Left, None), 'Aspect_VKey_Right': (Aspect_VKeyBasic.Aspect_VKey_Right, None), 'Aspect_VKey_Plus': (Aspect_VKeyBasic.Aspect_VKey_Plus, None), 'Aspect_VKey_Minus': (Aspect_VKeyBasic.Aspect_VKey_Minus, None), 'Aspect_VKey_Equal': (Aspect_VKeyBasic.Aspect_VKey_Equal, None), 'Aspect_VKey_PageUp': (Aspect_VKeyBasic.Aspect_VKey_PageUp, None), 'Aspect_VKey_PageDown': (Aspect_VKeyBasic.Aspect_VKey_PageDown, None), 'Aspect_VKey_Home': (Aspect_VKeyBasic.Aspect_VKey_Home, None), 'Aspect_VKey_End': (Aspect_VKeyBasic.Aspect_VKey_End, None), 'Aspect_VKey_Escape': (Aspect_VKeyBasic.Aspect_VKey_Escape, None), 'Aspect_VKey_Back': (Aspect_VKeyBasic.Aspect_VKey_Back, None), 'Aspect_VKey_Enter': (Aspect_VKeyBasic.Aspect_VKey_Enter, None), 'Aspect_VKey_Backspace': (Aspect_VKeyBasic.Aspect_VKey_Backspace, None), 'Aspect_VKey_Space': (Aspect_VKeyBasic.Aspect_VKey_Space, None), 'Aspect_VKey_Delete': (Aspect_VKeyBasic.Aspect_VKey_Delete, None), 'Aspect_VKey_Tilde': (Aspect_VKeyBasic.Aspect_VKey_Tilde, None), 'Aspect_VKey_Tab': (Aspect_VKeyBasic.Aspect_VKey_Tab, None), 'Aspect_VKey_Comma': (Aspect_VKeyBasic.Aspect_VKey_Comma, None), 'Aspect_VKey_Period': (Aspect_VKeyBasic.Aspect_VKey_Period, None), 'Aspect_VKey_Semicolon': (Aspect_VKeyBasic.Aspect_VKey_Semicolon, None), 'Aspect_VKey_Slash': (Aspect_VKeyBasic.Aspect_VKey_Slash, None), 'Aspect_VKey_BracketLeft': (Aspect_VKeyBasic.Aspect_VKey_BracketLeft, None), 'Aspect_VKey_Backslash': (Aspect_VKeyBasic.Aspect_VKey_Backslash, None), 'Aspect_VKey_BracketRight': (Aspect_VKeyBasic.Aspect_VKey_BracketRight, None), 'Aspect_VKey_Apostrophe': (Aspect_VKeyBasic.Aspect_VKey_Apostrophe, None), 'Aspect_VKey_Numlock': (Aspect_VKeyBasic.Aspect_VKey_Numlock, None), 'Aspect_VKey_Scroll': (Aspect_VKeyBasic.Aspect_VKey_Scroll, None), 'Aspect_VKey_Numpad0': (Aspect_VKeyBasic.Aspect_VKey_Numpad0, None), 'Aspect_VKey_Numpad1': (Aspect_VKeyBasic.Aspect_VKey_Numpad1, None), 'Aspect_VKey_Numpad2': (Aspect_VKeyBasic.Aspect_VKey_Numpad2, None), 'Aspect_VKey_Numpad3': (Aspect_VKeyBasic.Aspect_VKey_Numpad3, None), 'Aspect_VKey_Numpad4': (Aspect_VKeyBasic.Aspect_VKey_Numpad4, None), 'Aspect_VKey_Numpad5': (Aspect_VKeyBasic.Aspect_VKey_Numpad5, None), 'Aspect_VKey_Numpad6': (Aspect_VKeyBasic.Aspect_VKey_Numpad6, None), 'Aspect_VKey_Numpad7': (Aspect_VKeyBasic.Aspect_VKey_Numpad7, None), 'Aspect_VKey_Numpad8': (Aspect_VKeyBasic.Aspect_VKey_Numpad8, None), 'Aspect_VKey_Numpad9': (Aspect_VKeyBasic.Aspect_VKey_Numpad9, None), 'Aspect_VKey_NumpadMultiply': (Aspect_VKeyBasic.Aspect_VKey_NumpadMultiply, None), 'Aspect_VKey_NumpadAdd': (Aspect_VKeyBasic.Aspect_VKey_NumpadAdd, None), 'Aspect_VKey_NumpadSubtract': (Aspect_VKeyBasic.Aspect_VKey_NumpadSubtract, None), 'Aspect_VKey_NumpadDivide': (Aspect_VKeyBasic.Aspect_VKey_NumpadDivide, None), 'Aspect_VKey_MediaNextTrack': (Aspect_VKeyBasic.Aspect_VKey_MediaNextTrack, None), 'Aspect_VKey_MediaPreviousTrack': (Aspect_VKeyBasic.Aspect_VKey_MediaPreviousTrack, None), 'Aspect_VKey_MediaStop': (Aspect_VKeyBasic.Aspect_VKey_MediaStop, None), 'Aspect_VKey_MediaPlayPause': (Aspect_VKeyBasic.Aspect_VKey_MediaPlayPause, None), 'Aspect_VKey_VolumeMute': (Aspect_VKeyBasic.Aspect_VKey_VolumeMute, None), 'Aspect_VKey_VolumeDown': (Aspect_VKeyBasic.Aspect_VKey_VolumeDown, None), 'Aspect_VKey_VolumeUp': (Aspect_VKeyBasic.Aspect_VKey_VolumeUp, None), 'Aspect_VKey_BrowserBack': (Aspect_VKeyBasic.Aspect_VKey_BrowserBack, None), 'Aspect_VKey_BrowserForward': (Aspect_VKeyBasic.Aspect_VKey_BrowserForward, None), 'Aspect_VKey_BrowserRefresh': (Aspect_VKeyBasic.Aspect_VKey_BrowserRefresh, None), 'Aspect_VKey_BrowserStop': (Aspect_VKeyBasic.Aspect_VKey_BrowserStop, None), 'Aspect_VKey_BrowserSearch': (Aspect_VKeyBasic.Aspect_VKey_BrowserSearch, None), 'Aspect_VKey_BrowserFavorites': (Aspect_VKeyBasic.Aspect_VKey_BrowserFavorites, None), 'Aspect_VKey_BrowserHome': (Aspect_VKeyBasic.Aspect_VKey_BrowserHome, None), 'Aspect_VKey_Shift': (Aspect_VKeyBasic.Aspect_VKey_Shift, None), 'Aspect_VKey_Control': (Aspect_VKeyBasic.Aspect_VKey_Control, None), 'Aspect_VKey_Alt': (Aspect_VKeyBasic.Aspect_VKey_Alt, None), 'Aspect_VKey_Menu': (Aspect_VKeyBasic.Aspect_VKey_Menu, None), 'Aspect_VKey_Meta': (Aspect_VKeyBasic.Aspect_VKey_Meta, None), 'Aspect_VKey_NavInteract': (Aspect_VKeyBasic.Aspect_VKey_NavInteract, None), 'Aspect_VKey_NavForward': (Aspect_VKeyBasic.Aspect_VKey_NavForward, None), 'Aspect_VKey_NavBackward': (Aspect_VKeyBasic.Aspect_VKey_NavBackward, None), 'Aspect_VKey_NavSlideLeft': (Aspect_VKeyBasic.Aspect_VKey_NavSlideLeft, None), 'Aspect_VKey_NavSlideRight': (Aspect_VKeyBasic.Aspect_VKey_NavSlideRight, None), 'Aspect_VKey_NavSlideUp': (Aspect_VKeyBasic.Aspect_VKey_NavSlideUp, None), 'Aspect_VKey_NavSlideDown': (Aspect_VKeyBasic.Aspect_VKey_NavSlideDown, None), 'Aspect_VKey_NavRollCCW': (Aspect_VKeyBasic.Aspect_VKey_NavRollCCW, None), 'Aspect_VKey_NavRollCW': (Aspect_VKeyBasic.Aspect_VKey_NavRollCW, None), 'Aspect_VKey_NavLookLeft': (Aspect_VKeyBasic.Aspect_VKey_NavLookLeft, None), 'Aspect_VKey_NavLookRight': (Aspect_VKeyBasic.Aspect_VKey_NavLookRight, None), 'Aspect_VKey_NavLookUp': (Aspect_VKeyBasic.Aspect_VKey_NavLookUp, None), 'Aspect_VKey_NavLookDown': (Aspect_VKeyBasic.Aspect_VKey_NavLookDown, None), 'Aspect_VKey_NavCrouch': (Aspect_VKeyBasic.Aspect_VKey_NavCrouch, None), 'Aspect_VKey_NavJump': (Aspect_VKeyBasic.Aspect_VKey_NavJump, None), 'Aspect_VKey_NavThrustForward': (Aspect_VKeyBasic.Aspect_VKey_NavThrustForward, None), 'Aspect_VKey_NavThrustBackward': (Aspect_VKeyBasic.Aspect_VKey_NavThrustBackward, None), 'Aspect_VKey_NavThrustStop': (Aspect_VKeyBasic.Aspect_VKey_NavThrustStop, None), 'Aspect_VKey_NavSpeedIncrease': (Aspect_VKeyBasic.Aspect_VKey_NavSpeedIncrease, None), 'Aspect_VKey_NavSpeedDecrease': (Aspect_VKeyBasic.Aspect_VKey_NavSpeedDecrease, None)}
-    __members__: dict # value = {'Aspect_VKey_UNKNOWN': Aspect_VKeyBasic.Aspect_VKey_UNKNOWN, 'Aspect_VKey_A': Aspect_VKeyBasic.Aspect_VKey_A, 'Aspect_VKey_B': Aspect_VKeyBasic.Aspect_VKey_B, 'Aspect_VKey_C': Aspect_VKeyBasic.Aspect_VKey_C, 'Aspect_VKey_D': Aspect_VKeyBasic.Aspect_VKey_D, 'Aspect_VKey_E': Aspect_VKeyBasic.Aspect_VKey_E, 'Aspect_VKey_F': Aspect_VKeyBasic.Aspect_VKey_F, 'Aspect_VKey_G': Aspect_VKeyBasic.Aspect_VKey_G, 'Aspect_VKey_H': Aspect_VKeyBasic.Aspect_VKey_H, 'Aspect_VKey_I': Aspect_VKeyBasic.Aspect_VKey_I, 'Aspect_VKey_J': Aspect_VKeyBasic.Aspect_VKey_J, 'Aspect_VKey_K': Aspect_VKeyBasic.Aspect_VKey_K, 'Aspect_VKey_L': Aspect_VKeyBasic.Aspect_VKey_L, 'Aspect_VKey_M': Aspect_VKeyBasic.Aspect_VKey_M, 'Aspect_VKey_N': Aspect_VKeyBasic.Aspect_VKey_N, 'Aspect_VKey_O': Aspect_VKeyBasic.Aspect_VKey_O, 'Aspect_VKey_P': Aspect_VKeyBasic.Aspect_VKey_P, 'Aspect_VKey_Q': Aspect_VKeyBasic.Aspect_VKey_Q, 'Aspect_VKey_R': Aspect_VKeyBasic.Aspect_VKey_R, 'Aspect_VKey_S': Aspect_VKeyBasic.Aspect_VKey_S, 'Aspect_VKey_T': Aspect_VKeyBasic.Aspect_VKey_T, 'Aspect_VKey_U': Aspect_VKeyBasic.Aspect_VKey_U, 'Aspect_VKey_V': Aspect_VKeyBasic.Aspect_VKey_V, 'Aspect_VKey_W': Aspect_VKeyBasic.Aspect_VKey_W, 'Aspect_VKey_X': Aspect_VKeyBasic.Aspect_VKey_X, 'Aspect_VKey_Y': Aspect_VKeyBasic.Aspect_VKey_Y, 'Aspect_VKey_Z': Aspect_VKeyBasic.Aspect_VKey_Z, 'Aspect_VKey_0': Aspect_VKeyBasic.Aspect_VKey_0, 'Aspect_VKey_1': Aspect_VKeyBasic.Aspect_VKey_1, 'Aspect_VKey_2': Aspect_VKeyBasic.Aspect_VKey_2, 'Aspect_VKey_3': Aspect_VKeyBasic.Aspect_VKey_3, 'Aspect_VKey_4': Aspect_VKeyBasic.Aspect_VKey_4, 'Aspect_VKey_5': Aspect_VKeyBasic.Aspect_VKey_5, 'Aspect_VKey_6': Aspect_VKeyBasic.Aspect_VKey_6, 'Aspect_VKey_7': Aspect_VKeyBasic.Aspect_VKey_7, 'Aspect_VKey_8': Aspect_VKeyBasic.Aspect_VKey_8, 'Aspect_VKey_9': Aspect_VKeyBasic.Aspect_VKey_9, 'Aspect_VKey_F1': Aspect_VKeyBasic.Aspect_VKey_F1, 'Aspect_VKey_F2': Aspect_VKeyBasic.Aspect_VKey_F2, 'Aspect_VKey_F3': Aspect_VKeyBasic.Aspect_VKey_F3, 'Aspect_VKey_F4': Aspect_VKeyBasic.Aspect_VKey_F4, 'Aspect_VKey_F5': Aspect_VKeyBasic.Aspect_VKey_F5, 'Aspect_VKey_F6': Aspect_VKeyBasic.Aspect_VKey_F6, 'Aspect_VKey_F7': Aspect_VKeyBasic.Aspect_VKey_F7, 'Aspect_VKey_F8': Aspect_VKeyBasic.Aspect_VKey_F8, 'Aspect_VKey_F9': Aspect_VKeyBasic.Aspect_VKey_F9, 'Aspect_VKey_F10': Aspect_VKeyBasic.Aspect_VKey_F10, 'Aspect_VKey_F11': Aspect_VKeyBasic.Aspect_VKey_F11, 'Aspect_VKey_F12': Aspect_VKeyBasic.Aspect_VKey_F12, 'Aspect_VKey_Up': Aspect_VKeyBasic.Aspect_VKey_Up, 'Aspect_VKey_Down': Aspect_VKeyBasic.Aspect_VKey_Down, 'Aspect_VKey_Left': Aspect_VKeyBasic.Aspect_VKey_Left, 'Aspect_VKey_Right': Aspect_VKeyBasic.Aspect_VKey_Right, 'Aspect_VKey_Plus': Aspect_VKeyBasic.Aspect_VKey_Plus, 'Aspect_VKey_Minus': Aspect_VKeyBasic.Aspect_VKey_Minus, 'Aspect_VKey_Equal': Aspect_VKeyBasic.Aspect_VKey_Equal, 'Aspect_VKey_PageUp': Aspect_VKeyBasic.Aspect_VKey_PageUp, 'Aspect_VKey_PageDown': Aspect_VKeyBasic.Aspect_VKey_PageDown, 'Aspect_VKey_Home': Aspect_VKeyBasic.Aspect_VKey_Home, 'Aspect_VKey_End': Aspect_VKeyBasic.Aspect_VKey_End, 'Aspect_VKey_Escape': Aspect_VKeyBasic.Aspect_VKey_Escape, 'Aspect_VKey_Back': Aspect_VKeyBasic.Aspect_VKey_Back, 'Aspect_VKey_Enter': Aspect_VKeyBasic.Aspect_VKey_Enter, 'Aspect_VKey_Backspace': Aspect_VKeyBasic.Aspect_VKey_Backspace, 'Aspect_VKey_Space': Aspect_VKeyBasic.Aspect_VKey_Space, 'Aspect_VKey_Delete': Aspect_VKeyBasic.Aspect_VKey_Delete, 'Aspect_VKey_Tilde': Aspect_VKeyBasic.Aspect_VKey_Tilde, 'Aspect_VKey_Tab': Aspect_VKeyBasic.Aspect_VKey_Tab, 'Aspect_VKey_Comma': Aspect_VKeyBasic.Aspect_VKey_Comma, 'Aspect_VKey_Period': Aspect_VKeyBasic.Aspect_VKey_Period, 'Aspect_VKey_Semicolon': Aspect_VKeyBasic.Aspect_VKey_Semicolon, 'Aspect_VKey_Slash': Aspect_VKeyBasic.Aspect_VKey_Slash, 'Aspect_VKey_BracketLeft': Aspect_VKeyBasic.Aspect_VKey_BracketLeft, 'Aspect_VKey_Backslash': Aspect_VKeyBasic.Aspect_VKey_Backslash, 'Aspect_VKey_BracketRight': Aspect_VKeyBasic.Aspect_VKey_BracketRight, 'Aspect_VKey_Apostrophe': Aspect_VKeyBasic.Aspect_VKey_Apostrophe, 'Aspect_VKey_Numlock': Aspect_VKeyBasic.Aspect_VKey_Numlock, 'Aspect_VKey_Scroll': Aspect_VKeyBasic.Aspect_VKey_Scroll, 'Aspect_VKey_Numpad0': Aspect_VKeyBasic.Aspect_VKey_Numpad0, 'Aspect_VKey_Numpad1': Aspect_VKeyBasic.Aspect_VKey_Numpad1, 'Aspect_VKey_Numpad2': Aspect_VKeyBasic.Aspect_VKey_Numpad2, 'Aspect_VKey_Numpad3': Aspect_VKeyBasic.Aspect_VKey_Numpad3, 'Aspect_VKey_Numpad4': Aspect_VKeyBasic.Aspect_VKey_Numpad4, 'Aspect_VKey_Numpad5': Aspect_VKeyBasic.Aspect_VKey_Numpad5, 'Aspect_VKey_Numpad6': Aspect_VKeyBasic.Aspect_VKey_Numpad6, 'Aspect_VKey_Numpad7': Aspect_VKeyBasic.Aspect_VKey_Numpad7, 'Aspect_VKey_Numpad8': Aspect_VKeyBasic.Aspect_VKey_Numpad8, 'Aspect_VKey_Numpad9': Aspect_VKeyBasic.Aspect_VKey_Numpad9, 'Aspect_VKey_NumpadMultiply': Aspect_VKeyBasic.Aspect_VKey_NumpadMultiply, 'Aspect_VKey_NumpadAdd': Aspect_VKeyBasic.Aspect_VKey_NumpadAdd, 'Aspect_VKey_NumpadSubtract': Aspect_VKeyBasic.Aspect_VKey_NumpadSubtract, 'Aspect_VKey_NumpadDivide': Aspect_VKeyBasic.Aspect_VKey_NumpadDivide, 'Aspect_VKey_MediaNextTrack': Aspect_VKeyBasic.Aspect_VKey_MediaNextTrack, 'Aspect_VKey_MediaPreviousTrack': Aspect_VKeyBasic.Aspect_VKey_MediaPreviousTrack, 'Aspect_VKey_MediaStop': Aspect_VKeyBasic.Aspect_VKey_MediaStop, 'Aspect_VKey_MediaPlayPause': Aspect_VKeyBasic.Aspect_VKey_MediaPlayPause, 'Aspect_VKey_VolumeMute': Aspect_VKeyBasic.Aspect_VKey_VolumeMute, 'Aspect_VKey_VolumeDown': Aspect_VKeyBasic.Aspect_VKey_VolumeDown, 'Aspect_VKey_VolumeUp': Aspect_VKeyBasic.Aspect_VKey_VolumeUp, 'Aspect_VKey_BrowserBack': Aspect_VKeyBasic.Aspect_VKey_BrowserBack, 'Aspect_VKey_BrowserForward': Aspect_VKeyBasic.Aspect_VKey_BrowserForward, 'Aspect_VKey_BrowserRefresh': Aspect_VKeyBasic.Aspect_VKey_BrowserRefresh, 'Aspect_VKey_BrowserStop': Aspect_VKeyBasic.Aspect_VKey_BrowserStop, 'Aspect_VKey_BrowserSearch': Aspect_VKeyBasic.Aspect_VKey_BrowserSearch, 'Aspect_VKey_BrowserFavorites': Aspect_VKeyBasic.Aspect_VKey_BrowserFavorites, 'Aspect_VKey_BrowserHome': Aspect_VKeyBasic.Aspect_VKey_BrowserHome, 'Aspect_VKey_Shift': Aspect_VKeyBasic.Aspect_VKey_Shift, 'Aspect_VKey_Control': Aspect_VKeyBasic.Aspect_VKey_Control, 'Aspect_VKey_Alt': Aspect_VKeyBasic.Aspect_VKey_Alt, 'Aspect_VKey_Menu': Aspect_VKeyBasic.Aspect_VKey_Menu, 'Aspect_VKey_Meta': Aspect_VKeyBasic.Aspect_VKey_Meta, 'Aspect_VKey_NavInteract': Aspect_VKeyBasic.Aspect_VKey_NavInteract, 'Aspect_VKey_NavForward': Aspect_VKeyBasic.Aspect_VKey_NavForward, 'Aspect_VKey_NavBackward': Aspect_VKeyBasic.Aspect_VKey_NavBackward, 'Aspect_VKey_NavSlideLeft': Aspect_VKeyBasic.Aspect_VKey_NavSlideLeft, 'Aspect_VKey_NavSlideRight': Aspect_VKeyBasic.Aspect_VKey_NavSlideRight, 'Aspect_VKey_NavSlideUp': Aspect_VKeyBasic.Aspect_VKey_NavSlideUp, 'Aspect_VKey_NavSlideDown': Aspect_VKeyBasic.Aspect_VKey_NavSlideDown, 'Aspect_VKey_NavRollCCW': Aspect_VKeyBasic.Aspect_VKey_NavRollCCW, 'Aspect_VKey_NavRollCW': Aspect_VKeyBasic.Aspect_VKey_NavRollCW, 'Aspect_VKey_NavLookLeft': Aspect_VKeyBasic.Aspect_VKey_NavLookLeft, 'Aspect_VKey_NavLookRight': Aspect_VKeyBasic.Aspect_VKey_NavLookRight, 'Aspect_VKey_NavLookUp': Aspect_VKeyBasic.Aspect_VKey_NavLookUp, 'Aspect_VKey_NavLookDown': Aspect_VKeyBasic.Aspect_VKey_NavLookDown, 'Aspect_VKey_NavCrouch': Aspect_VKeyBasic.Aspect_VKey_NavCrouch, 'Aspect_VKey_NavJump': Aspect_VKeyBasic.Aspect_VKey_NavJump, 'Aspect_VKey_NavThrustForward': Aspect_VKeyBasic.Aspect_VKey_NavThrustForward, 'Aspect_VKey_NavThrustBackward': Aspect_VKeyBasic.Aspect_VKey_NavThrustBackward, 'Aspect_VKey_NavThrustStop': Aspect_VKeyBasic.Aspect_VKey_NavThrustStop, 'Aspect_VKey_NavSpeedIncrease': Aspect_VKeyBasic.Aspect_VKey_NavSpeedIncrease, 'Aspect_VKey_NavSpeedDecrease': Aspect_VKeyBasic.Aspect_VKey_NavSpeedDecrease}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_VKey_0: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_0: 27>
+    Aspect_VKey_1: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_1: 28>
+    Aspect_VKey_2: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_2: 29>
+    Aspect_VKey_3: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_3: 30>
+    Aspect_VKey_4: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_4: 31>
+    Aspect_VKey_5: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_5: 32>
+    Aspect_VKey_6: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_6: 33>
+    Aspect_VKey_7: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_7: 34>
+    Aspect_VKey_8: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_8: 35>
+    Aspect_VKey_9: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_9: 36>
+    Aspect_VKey_A: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_A: 1>
+    Aspect_VKey_Alt: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Alt: 120>
+    Aspect_VKey_Apostrophe: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Apostrophe: 75>
+    Aspect_VKey_B: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_B: 2>
+    Aspect_VKey_Back: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Back: 61>
+    Aspect_VKey_Backslash: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Backslash: 73>
+    Aspect_VKey_Backspace: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Backspace: 63>
+    Aspect_VKey_BracketLeft: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BracketLeft: 72>
+    Aspect_VKey_BracketRight: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BracketRight: 74>
+    Aspect_VKey_BrowserBack: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserBack: 99>
+    Aspect_VKey_BrowserFavorites: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserFavorites: 104>
+    Aspect_VKey_BrowserForward: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserForward: 100>
+    Aspect_VKey_BrowserHome: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserHome: 105>
+    Aspect_VKey_BrowserRefresh: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserRefresh: 101>
+    Aspect_VKey_BrowserSearch: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserSearch: 103>
+    Aspect_VKey_BrowserStop: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserStop: 102>
+    Aspect_VKey_C: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_C: 3>
+    Aspect_VKey_Comma: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Comma: 68>
+    Aspect_VKey_Control: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Control: 119>
+    Aspect_VKey_D: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_D: 4>
+    Aspect_VKey_Delete: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Delete: 65>
+    Aspect_VKey_Down: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Down: 50>
+    Aspect_VKey_E: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_E: 5>
+    Aspect_VKey_End: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_End: 59>
+    Aspect_VKey_Enter: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Enter: 62>
+    Aspect_VKey_Equal: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Equal: 55>
+    Aspect_VKey_Escape: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Escape: 60>
+    Aspect_VKey_F: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F: 6>
+    Aspect_VKey_F1: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F1: 37>
+    Aspect_VKey_F10: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F10: 46>
+    Aspect_VKey_F11: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F11: 47>
+    Aspect_VKey_F12: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F12: 48>
+    Aspect_VKey_F2: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F2: 38>
+    Aspect_VKey_F3: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F3: 39>
+    Aspect_VKey_F4: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F4: 40>
+    Aspect_VKey_F5: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F5: 41>
+    Aspect_VKey_F6: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F6: 42>
+    Aspect_VKey_F7: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F7: 43>
+    Aspect_VKey_F8: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F8: 44>
+    Aspect_VKey_F9: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F9: 45>
+    Aspect_VKey_G: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_G: 7>
+    Aspect_VKey_H: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_H: 8>
+    Aspect_VKey_Home: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Home: 58>
+    Aspect_VKey_I: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_I: 9>
+    Aspect_VKey_J: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_J: 10>
+    Aspect_VKey_K: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_K: 11>
+    Aspect_VKey_L: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_L: 12>
+    Aspect_VKey_Left: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Left: 51>
+    Aspect_VKey_M: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_M: 13>
+    Aspect_VKey_MediaNextTrack: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_MediaNextTrack: 92>
+    Aspect_VKey_MediaPlayPause: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_MediaPlayPause: 95>
+    Aspect_VKey_MediaPreviousTrack: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_MediaPreviousTrack: 93>
+    Aspect_VKey_MediaStop: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_MediaStop: 94>
+    Aspect_VKey_Menu: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Menu: 121>
+    Aspect_VKey_Meta: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Meta: 122>
+    Aspect_VKey_Minus: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Minus: 54>
+    Aspect_VKey_N: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_N: 14>
+    Aspect_VKey_NavBackward: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavBackward: 125>
+    Aspect_VKey_NavCrouch: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavCrouch: 136>
+    Aspect_VKey_NavForward: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavForward: 124>
+    Aspect_VKey_NavInteract: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavInteract: 123>
+    Aspect_VKey_NavJump: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavJump: 137>
+    Aspect_VKey_NavLookDown: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavLookDown: 135>
+    Aspect_VKey_NavLookLeft: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavLookLeft: 132>
+    Aspect_VKey_NavLookRight: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavLookRight: 133>
+    Aspect_VKey_NavLookUp: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavLookUp: 134>
+    Aspect_VKey_NavRollCCW: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavRollCCW: 130>
+    Aspect_VKey_NavRollCW: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavRollCW: 131>
+    Aspect_VKey_NavSlideDown: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSlideDown: 129>
+    Aspect_VKey_NavSlideLeft: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSlideLeft: 126>
+    Aspect_VKey_NavSlideRight: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSlideRight: 127>
+    Aspect_VKey_NavSlideUp: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSlideUp: 128>
+    Aspect_VKey_NavSpeedDecrease: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSpeedDecrease: 142>
+    Aspect_VKey_NavSpeedIncrease: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSpeedIncrease: 141>
+    Aspect_VKey_NavThrustBackward: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavThrustBackward: 139>
+    Aspect_VKey_NavThrustForward: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavThrustForward: 138>
+    Aspect_VKey_NavThrustStop: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavThrustStop: 140>
+    Aspect_VKey_Numlock: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numlock: 76>
+    Aspect_VKey_Numpad0: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad0: 78>
+    Aspect_VKey_Numpad1: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad1: 79>
+    Aspect_VKey_Numpad2: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad2: 80>
+    Aspect_VKey_Numpad3: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad3: 81>
+    Aspect_VKey_Numpad4: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad4: 82>
+    Aspect_VKey_Numpad5: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad5: 83>
+    Aspect_VKey_Numpad6: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad6: 84>
+    Aspect_VKey_Numpad7: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad7: 85>
+    Aspect_VKey_Numpad8: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad8: 86>
+    Aspect_VKey_Numpad9: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad9: 87>
+    Aspect_VKey_NumpadAdd: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NumpadAdd: 89>
+    Aspect_VKey_NumpadDivide: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NumpadDivide: 91>
+    Aspect_VKey_NumpadMultiply: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NumpadMultiply: 88>
+    Aspect_VKey_NumpadSubtract: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NumpadSubtract: 90>
+    Aspect_VKey_O: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_O: 15>
+    Aspect_VKey_P: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_P: 16>
+    Aspect_VKey_PageDown: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_PageDown: 57>
+    Aspect_VKey_PageUp: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_PageUp: 56>
+    Aspect_VKey_Period: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Period: 69>
+    Aspect_VKey_Plus: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Plus: 53>
+    Aspect_VKey_Q: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Q: 17>
+    Aspect_VKey_R: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_R: 18>
+    Aspect_VKey_Right: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Right: 52>
+    Aspect_VKey_S: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_S: 19>
+    Aspect_VKey_Scroll: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Scroll: 77>
+    Aspect_VKey_Semicolon: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Semicolon: 70>
+    Aspect_VKey_Shift: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Shift: 118>
+    Aspect_VKey_Slash: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Slash: 71>
+    Aspect_VKey_Space: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Space: 64>
+    Aspect_VKey_T: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_T: 20>
+    Aspect_VKey_Tab: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Tab: 67>
+    Aspect_VKey_Tilde: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Tilde: 66>
+    Aspect_VKey_U: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_U: 21>
+    Aspect_VKey_UNKNOWN: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_UNKNOWN: 0>
+    Aspect_VKey_Up: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Up: 49>
+    Aspect_VKey_V: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_V: 22>
+    Aspect_VKey_ViewAxoLeftProj: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewAxoLeftProj: 112>
+    Aspect_VKey_ViewAxoRightProj: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewAxoRightProj: 113>
+    Aspect_VKey_ViewBack: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewBack: 111>
+    Aspect_VKey_ViewBottom: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewBottom: 107>
+    Aspect_VKey_ViewFitAll: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewFitAll: 114>
+    Aspect_VKey_ViewFront: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewFront: 110>
+    Aspect_VKey_ViewLeft: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewLeft: 108>
+    Aspect_VKey_ViewRight: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewRight: 109>
+    Aspect_VKey_ViewRoll90CCW: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewRoll90CCW: 116>
+    Aspect_VKey_ViewRoll90CW: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewRoll90CW: 115>
+    Aspect_VKey_ViewSwitchRotate: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewSwitchRotate: 117>
+    Aspect_VKey_ViewTop: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewTop: 106>
+    Aspect_VKey_VolumeDown: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_VolumeDown: 97>
+    Aspect_VKey_VolumeMute: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_VolumeMute: 96>
+    Aspect_VKey_VolumeUp: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_VolumeUp: 98>
+    Aspect_VKey_W: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_W: 23>
+    Aspect_VKey_X: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_X: 24>
+    Aspect_VKey_Y: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Y: 25>
+    Aspect_VKey_Z: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Z: 26>
+    __entries: dict # value = {'Aspect_VKey_UNKNOWN': (<Aspect_VKeyBasic.Aspect_VKey_UNKNOWN: 0>, None), 'Aspect_VKey_A': (<Aspect_VKeyBasic.Aspect_VKey_A: 1>, None), 'Aspect_VKey_B': (<Aspect_VKeyBasic.Aspect_VKey_B: 2>, None), 'Aspect_VKey_C': (<Aspect_VKeyBasic.Aspect_VKey_C: 3>, None), 'Aspect_VKey_D': (<Aspect_VKeyBasic.Aspect_VKey_D: 4>, None), 'Aspect_VKey_E': (<Aspect_VKeyBasic.Aspect_VKey_E: 5>, None), 'Aspect_VKey_F': (<Aspect_VKeyBasic.Aspect_VKey_F: 6>, None), 'Aspect_VKey_G': (<Aspect_VKeyBasic.Aspect_VKey_G: 7>, None), 'Aspect_VKey_H': (<Aspect_VKeyBasic.Aspect_VKey_H: 8>, None), 'Aspect_VKey_I': (<Aspect_VKeyBasic.Aspect_VKey_I: 9>, None), 'Aspect_VKey_J': (<Aspect_VKeyBasic.Aspect_VKey_J: 10>, None), 'Aspect_VKey_K': (<Aspect_VKeyBasic.Aspect_VKey_K: 11>, None), 'Aspect_VKey_L': (<Aspect_VKeyBasic.Aspect_VKey_L: 12>, None), 'Aspect_VKey_M': (<Aspect_VKeyBasic.Aspect_VKey_M: 13>, None), 'Aspect_VKey_N': (<Aspect_VKeyBasic.Aspect_VKey_N: 14>, None), 'Aspect_VKey_O': (<Aspect_VKeyBasic.Aspect_VKey_O: 15>, None), 'Aspect_VKey_P': (<Aspect_VKeyBasic.Aspect_VKey_P: 16>, None), 'Aspect_VKey_Q': (<Aspect_VKeyBasic.Aspect_VKey_Q: 17>, None), 'Aspect_VKey_R': (<Aspect_VKeyBasic.Aspect_VKey_R: 18>, None), 'Aspect_VKey_S': (<Aspect_VKeyBasic.Aspect_VKey_S: 19>, None), 'Aspect_VKey_T': (<Aspect_VKeyBasic.Aspect_VKey_T: 20>, None), 'Aspect_VKey_U': (<Aspect_VKeyBasic.Aspect_VKey_U: 21>, None), 'Aspect_VKey_V': (<Aspect_VKeyBasic.Aspect_VKey_V: 22>, None), 'Aspect_VKey_W': (<Aspect_VKeyBasic.Aspect_VKey_W: 23>, None), 'Aspect_VKey_X': (<Aspect_VKeyBasic.Aspect_VKey_X: 24>, None), 'Aspect_VKey_Y': (<Aspect_VKeyBasic.Aspect_VKey_Y: 25>, None), 'Aspect_VKey_Z': (<Aspect_VKeyBasic.Aspect_VKey_Z: 26>, None), 'Aspect_VKey_0': (<Aspect_VKeyBasic.Aspect_VKey_0: 27>, None), 'Aspect_VKey_1': (<Aspect_VKeyBasic.Aspect_VKey_1: 28>, None), 'Aspect_VKey_2': (<Aspect_VKeyBasic.Aspect_VKey_2: 29>, None), 'Aspect_VKey_3': (<Aspect_VKeyBasic.Aspect_VKey_3: 30>, None), 'Aspect_VKey_4': (<Aspect_VKeyBasic.Aspect_VKey_4: 31>, None), 'Aspect_VKey_5': (<Aspect_VKeyBasic.Aspect_VKey_5: 32>, None), 'Aspect_VKey_6': (<Aspect_VKeyBasic.Aspect_VKey_6: 33>, None), 'Aspect_VKey_7': (<Aspect_VKeyBasic.Aspect_VKey_7: 34>, None), 'Aspect_VKey_8': (<Aspect_VKeyBasic.Aspect_VKey_8: 35>, None), 'Aspect_VKey_9': (<Aspect_VKeyBasic.Aspect_VKey_9: 36>, None), 'Aspect_VKey_F1': (<Aspect_VKeyBasic.Aspect_VKey_F1: 37>, None), 'Aspect_VKey_F2': (<Aspect_VKeyBasic.Aspect_VKey_F2: 38>, None), 'Aspect_VKey_F3': (<Aspect_VKeyBasic.Aspect_VKey_F3: 39>, None), 'Aspect_VKey_F4': (<Aspect_VKeyBasic.Aspect_VKey_F4: 40>, None), 'Aspect_VKey_F5': (<Aspect_VKeyBasic.Aspect_VKey_F5: 41>, None), 'Aspect_VKey_F6': (<Aspect_VKeyBasic.Aspect_VKey_F6: 42>, None), 'Aspect_VKey_F7': (<Aspect_VKeyBasic.Aspect_VKey_F7: 43>, None), 'Aspect_VKey_F8': (<Aspect_VKeyBasic.Aspect_VKey_F8: 44>, None), 'Aspect_VKey_F9': (<Aspect_VKeyBasic.Aspect_VKey_F9: 45>, None), 'Aspect_VKey_F10': (<Aspect_VKeyBasic.Aspect_VKey_F10: 46>, None), 'Aspect_VKey_F11': (<Aspect_VKeyBasic.Aspect_VKey_F11: 47>, None), 'Aspect_VKey_F12': (<Aspect_VKeyBasic.Aspect_VKey_F12: 48>, None), 'Aspect_VKey_Up': (<Aspect_VKeyBasic.Aspect_VKey_Up: 49>, None), 'Aspect_VKey_Down': (<Aspect_VKeyBasic.Aspect_VKey_Down: 50>, None), 'Aspect_VKey_Left': (<Aspect_VKeyBasic.Aspect_VKey_Left: 51>, None), 'Aspect_VKey_Right': (<Aspect_VKeyBasic.Aspect_VKey_Right: 52>, None), 'Aspect_VKey_Plus': (<Aspect_VKeyBasic.Aspect_VKey_Plus: 53>, None), 'Aspect_VKey_Minus': (<Aspect_VKeyBasic.Aspect_VKey_Minus: 54>, None), 'Aspect_VKey_Equal': (<Aspect_VKeyBasic.Aspect_VKey_Equal: 55>, None), 'Aspect_VKey_PageUp': (<Aspect_VKeyBasic.Aspect_VKey_PageUp: 56>, None), 'Aspect_VKey_PageDown': (<Aspect_VKeyBasic.Aspect_VKey_PageDown: 57>, None), 'Aspect_VKey_Home': (<Aspect_VKeyBasic.Aspect_VKey_Home: 58>, None), 'Aspect_VKey_End': (<Aspect_VKeyBasic.Aspect_VKey_End: 59>, None), 'Aspect_VKey_Escape': (<Aspect_VKeyBasic.Aspect_VKey_Escape: 60>, None), 'Aspect_VKey_Back': (<Aspect_VKeyBasic.Aspect_VKey_Back: 61>, None), 'Aspect_VKey_Enter': (<Aspect_VKeyBasic.Aspect_VKey_Enter: 62>, None), 'Aspect_VKey_Backspace': (<Aspect_VKeyBasic.Aspect_VKey_Backspace: 63>, None), 'Aspect_VKey_Space': (<Aspect_VKeyBasic.Aspect_VKey_Space: 64>, None), 'Aspect_VKey_Delete': (<Aspect_VKeyBasic.Aspect_VKey_Delete: 65>, None), 'Aspect_VKey_Tilde': (<Aspect_VKeyBasic.Aspect_VKey_Tilde: 66>, None), 'Aspect_VKey_Tab': (<Aspect_VKeyBasic.Aspect_VKey_Tab: 67>, None), 'Aspect_VKey_Comma': (<Aspect_VKeyBasic.Aspect_VKey_Comma: 68>, None), 'Aspect_VKey_Period': (<Aspect_VKeyBasic.Aspect_VKey_Period: 69>, None), 'Aspect_VKey_Semicolon': (<Aspect_VKeyBasic.Aspect_VKey_Semicolon: 70>, None), 'Aspect_VKey_Slash': (<Aspect_VKeyBasic.Aspect_VKey_Slash: 71>, None), 'Aspect_VKey_BracketLeft': (<Aspect_VKeyBasic.Aspect_VKey_BracketLeft: 72>, None), 'Aspect_VKey_Backslash': (<Aspect_VKeyBasic.Aspect_VKey_Backslash: 73>, None), 'Aspect_VKey_BracketRight': (<Aspect_VKeyBasic.Aspect_VKey_BracketRight: 74>, None), 'Aspect_VKey_Apostrophe': (<Aspect_VKeyBasic.Aspect_VKey_Apostrophe: 75>, None), 'Aspect_VKey_Numlock': (<Aspect_VKeyBasic.Aspect_VKey_Numlock: 76>, None), 'Aspect_VKey_Scroll': (<Aspect_VKeyBasic.Aspect_VKey_Scroll: 77>, None), 'Aspect_VKey_Numpad0': (<Aspect_VKeyBasic.Aspect_VKey_Numpad0: 78>, None), 'Aspect_VKey_Numpad1': (<Aspect_VKeyBasic.Aspect_VKey_Numpad1: 79>, None), 'Aspect_VKey_Numpad2': (<Aspect_VKeyBasic.Aspect_VKey_Numpad2: 80>, None), 'Aspect_VKey_Numpad3': (<Aspect_VKeyBasic.Aspect_VKey_Numpad3: 81>, None), 'Aspect_VKey_Numpad4': (<Aspect_VKeyBasic.Aspect_VKey_Numpad4: 82>, None), 'Aspect_VKey_Numpad5': (<Aspect_VKeyBasic.Aspect_VKey_Numpad5: 83>, None), 'Aspect_VKey_Numpad6': (<Aspect_VKeyBasic.Aspect_VKey_Numpad6: 84>, None), 'Aspect_VKey_Numpad7': (<Aspect_VKeyBasic.Aspect_VKey_Numpad7: 85>, None), 'Aspect_VKey_Numpad8': (<Aspect_VKeyBasic.Aspect_VKey_Numpad8: 86>, None), 'Aspect_VKey_Numpad9': (<Aspect_VKeyBasic.Aspect_VKey_Numpad9: 87>, None), 'Aspect_VKey_NumpadMultiply': (<Aspect_VKeyBasic.Aspect_VKey_NumpadMultiply: 88>, None), 'Aspect_VKey_NumpadAdd': (<Aspect_VKeyBasic.Aspect_VKey_NumpadAdd: 89>, None), 'Aspect_VKey_NumpadSubtract': (<Aspect_VKeyBasic.Aspect_VKey_NumpadSubtract: 90>, None), 'Aspect_VKey_NumpadDivide': (<Aspect_VKeyBasic.Aspect_VKey_NumpadDivide: 91>, None), 'Aspect_VKey_MediaNextTrack': (<Aspect_VKeyBasic.Aspect_VKey_MediaNextTrack: 92>, None), 'Aspect_VKey_MediaPreviousTrack': (<Aspect_VKeyBasic.Aspect_VKey_MediaPreviousTrack: 93>, None), 'Aspect_VKey_MediaStop': (<Aspect_VKeyBasic.Aspect_VKey_MediaStop: 94>, None), 'Aspect_VKey_MediaPlayPause': (<Aspect_VKeyBasic.Aspect_VKey_MediaPlayPause: 95>, None), 'Aspect_VKey_VolumeMute': (<Aspect_VKeyBasic.Aspect_VKey_VolumeMute: 96>, None), 'Aspect_VKey_VolumeDown': (<Aspect_VKeyBasic.Aspect_VKey_VolumeDown: 97>, None), 'Aspect_VKey_VolumeUp': (<Aspect_VKeyBasic.Aspect_VKey_VolumeUp: 98>, None), 'Aspect_VKey_BrowserBack': (<Aspect_VKeyBasic.Aspect_VKey_BrowserBack: 99>, None), 'Aspect_VKey_BrowserForward': (<Aspect_VKeyBasic.Aspect_VKey_BrowserForward: 100>, None), 'Aspect_VKey_BrowserRefresh': (<Aspect_VKeyBasic.Aspect_VKey_BrowserRefresh: 101>, None), 'Aspect_VKey_BrowserStop': (<Aspect_VKeyBasic.Aspect_VKey_BrowserStop: 102>, None), 'Aspect_VKey_BrowserSearch': (<Aspect_VKeyBasic.Aspect_VKey_BrowserSearch: 103>, None), 'Aspect_VKey_BrowserFavorites': (<Aspect_VKeyBasic.Aspect_VKey_BrowserFavorites: 104>, None), 'Aspect_VKey_BrowserHome': (<Aspect_VKeyBasic.Aspect_VKey_BrowserHome: 105>, None), 'Aspect_VKey_ViewTop': (<Aspect_VKeyBasic.Aspect_VKey_ViewTop: 106>, None), 'Aspect_VKey_ViewBottom': (<Aspect_VKeyBasic.Aspect_VKey_ViewBottom: 107>, None), 'Aspect_VKey_ViewLeft': (<Aspect_VKeyBasic.Aspect_VKey_ViewLeft: 108>, None), 'Aspect_VKey_ViewRight': (<Aspect_VKeyBasic.Aspect_VKey_ViewRight: 109>, None), 'Aspect_VKey_ViewFront': (<Aspect_VKeyBasic.Aspect_VKey_ViewFront: 110>, None), 'Aspect_VKey_ViewBack': (<Aspect_VKeyBasic.Aspect_VKey_ViewBack: 111>, None), 'Aspect_VKey_ViewAxoLeftProj': (<Aspect_VKeyBasic.Aspect_VKey_ViewAxoLeftProj: 112>, None), 'Aspect_VKey_ViewAxoRightProj': (<Aspect_VKeyBasic.Aspect_VKey_ViewAxoRightProj: 113>, None), 'Aspect_VKey_ViewFitAll': (<Aspect_VKeyBasic.Aspect_VKey_ViewFitAll: 114>, None), 'Aspect_VKey_ViewRoll90CW': (<Aspect_VKeyBasic.Aspect_VKey_ViewRoll90CW: 115>, None), 'Aspect_VKey_ViewRoll90CCW': (<Aspect_VKeyBasic.Aspect_VKey_ViewRoll90CCW: 116>, None), 'Aspect_VKey_ViewSwitchRotate': (<Aspect_VKeyBasic.Aspect_VKey_ViewSwitchRotate: 117>, None), 'Aspect_VKey_Shift': (<Aspect_VKeyBasic.Aspect_VKey_Shift: 118>, None), 'Aspect_VKey_Control': (<Aspect_VKeyBasic.Aspect_VKey_Control: 119>, None), 'Aspect_VKey_Alt': (<Aspect_VKeyBasic.Aspect_VKey_Alt: 120>, None), 'Aspect_VKey_Menu': (<Aspect_VKeyBasic.Aspect_VKey_Menu: 121>, None), 'Aspect_VKey_Meta': (<Aspect_VKeyBasic.Aspect_VKey_Meta: 122>, None), 'Aspect_VKey_NavInteract': (<Aspect_VKeyBasic.Aspect_VKey_NavInteract: 123>, None), 'Aspect_VKey_NavForward': (<Aspect_VKeyBasic.Aspect_VKey_NavForward: 124>, None), 'Aspect_VKey_NavBackward': (<Aspect_VKeyBasic.Aspect_VKey_NavBackward: 125>, None), 'Aspect_VKey_NavSlideLeft': (<Aspect_VKeyBasic.Aspect_VKey_NavSlideLeft: 126>, None), 'Aspect_VKey_NavSlideRight': (<Aspect_VKeyBasic.Aspect_VKey_NavSlideRight: 127>, None), 'Aspect_VKey_NavSlideUp': (<Aspect_VKeyBasic.Aspect_VKey_NavSlideUp: 128>, None), 'Aspect_VKey_NavSlideDown': (<Aspect_VKeyBasic.Aspect_VKey_NavSlideDown: 129>, None), 'Aspect_VKey_NavRollCCW': (<Aspect_VKeyBasic.Aspect_VKey_NavRollCCW: 130>, None), 'Aspect_VKey_NavRollCW': (<Aspect_VKeyBasic.Aspect_VKey_NavRollCW: 131>, None), 'Aspect_VKey_NavLookLeft': (<Aspect_VKeyBasic.Aspect_VKey_NavLookLeft: 132>, None), 'Aspect_VKey_NavLookRight': (<Aspect_VKeyBasic.Aspect_VKey_NavLookRight: 133>, None), 'Aspect_VKey_NavLookUp': (<Aspect_VKeyBasic.Aspect_VKey_NavLookUp: 134>, None), 'Aspect_VKey_NavLookDown': (<Aspect_VKeyBasic.Aspect_VKey_NavLookDown: 135>, None), 'Aspect_VKey_NavCrouch': (<Aspect_VKeyBasic.Aspect_VKey_NavCrouch: 136>, None), 'Aspect_VKey_NavJump': (<Aspect_VKeyBasic.Aspect_VKey_NavJump: 137>, None), 'Aspect_VKey_NavThrustForward': (<Aspect_VKeyBasic.Aspect_VKey_NavThrustForward: 138>, None), 'Aspect_VKey_NavThrustBackward': (<Aspect_VKeyBasic.Aspect_VKey_NavThrustBackward: 139>, None), 'Aspect_VKey_NavThrustStop': (<Aspect_VKeyBasic.Aspect_VKey_NavThrustStop: 140>, None), 'Aspect_VKey_NavSpeedIncrease': (<Aspect_VKeyBasic.Aspect_VKey_NavSpeedIncrease: 141>, None), 'Aspect_VKey_NavSpeedDecrease': (<Aspect_VKeyBasic.Aspect_VKey_NavSpeedDecrease: 142>, None)}
+    __members__: dict # value = {'Aspect_VKey_UNKNOWN': <Aspect_VKeyBasic.Aspect_VKey_UNKNOWN: 0>, 'Aspect_VKey_A': <Aspect_VKeyBasic.Aspect_VKey_A: 1>, 'Aspect_VKey_B': <Aspect_VKeyBasic.Aspect_VKey_B: 2>, 'Aspect_VKey_C': <Aspect_VKeyBasic.Aspect_VKey_C: 3>, 'Aspect_VKey_D': <Aspect_VKeyBasic.Aspect_VKey_D: 4>, 'Aspect_VKey_E': <Aspect_VKeyBasic.Aspect_VKey_E: 5>, 'Aspect_VKey_F': <Aspect_VKeyBasic.Aspect_VKey_F: 6>, 'Aspect_VKey_G': <Aspect_VKeyBasic.Aspect_VKey_G: 7>, 'Aspect_VKey_H': <Aspect_VKeyBasic.Aspect_VKey_H: 8>, 'Aspect_VKey_I': <Aspect_VKeyBasic.Aspect_VKey_I: 9>, 'Aspect_VKey_J': <Aspect_VKeyBasic.Aspect_VKey_J: 10>, 'Aspect_VKey_K': <Aspect_VKeyBasic.Aspect_VKey_K: 11>, 'Aspect_VKey_L': <Aspect_VKeyBasic.Aspect_VKey_L: 12>, 'Aspect_VKey_M': <Aspect_VKeyBasic.Aspect_VKey_M: 13>, 'Aspect_VKey_N': <Aspect_VKeyBasic.Aspect_VKey_N: 14>, 'Aspect_VKey_O': <Aspect_VKeyBasic.Aspect_VKey_O: 15>, 'Aspect_VKey_P': <Aspect_VKeyBasic.Aspect_VKey_P: 16>, 'Aspect_VKey_Q': <Aspect_VKeyBasic.Aspect_VKey_Q: 17>, 'Aspect_VKey_R': <Aspect_VKeyBasic.Aspect_VKey_R: 18>, 'Aspect_VKey_S': <Aspect_VKeyBasic.Aspect_VKey_S: 19>, 'Aspect_VKey_T': <Aspect_VKeyBasic.Aspect_VKey_T: 20>, 'Aspect_VKey_U': <Aspect_VKeyBasic.Aspect_VKey_U: 21>, 'Aspect_VKey_V': <Aspect_VKeyBasic.Aspect_VKey_V: 22>, 'Aspect_VKey_W': <Aspect_VKeyBasic.Aspect_VKey_W: 23>, 'Aspect_VKey_X': <Aspect_VKeyBasic.Aspect_VKey_X: 24>, 'Aspect_VKey_Y': <Aspect_VKeyBasic.Aspect_VKey_Y: 25>, 'Aspect_VKey_Z': <Aspect_VKeyBasic.Aspect_VKey_Z: 26>, 'Aspect_VKey_0': <Aspect_VKeyBasic.Aspect_VKey_0: 27>, 'Aspect_VKey_1': <Aspect_VKeyBasic.Aspect_VKey_1: 28>, 'Aspect_VKey_2': <Aspect_VKeyBasic.Aspect_VKey_2: 29>, 'Aspect_VKey_3': <Aspect_VKeyBasic.Aspect_VKey_3: 30>, 'Aspect_VKey_4': <Aspect_VKeyBasic.Aspect_VKey_4: 31>, 'Aspect_VKey_5': <Aspect_VKeyBasic.Aspect_VKey_5: 32>, 'Aspect_VKey_6': <Aspect_VKeyBasic.Aspect_VKey_6: 33>, 'Aspect_VKey_7': <Aspect_VKeyBasic.Aspect_VKey_7: 34>, 'Aspect_VKey_8': <Aspect_VKeyBasic.Aspect_VKey_8: 35>, 'Aspect_VKey_9': <Aspect_VKeyBasic.Aspect_VKey_9: 36>, 'Aspect_VKey_F1': <Aspect_VKeyBasic.Aspect_VKey_F1: 37>, 'Aspect_VKey_F2': <Aspect_VKeyBasic.Aspect_VKey_F2: 38>, 'Aspect_VKey_F3': <Aspect_VKeyBasic.Aspect_VKey_F3: 39>, 'Aspect_VKey_F4': <Aspect_VKeyBasic.Aspect_VKey_F4: 40>, 'Aspect_VKey_F5': <Aspect_VKeyBasic.Aspect_VKey_F5: 41>, 'Aspect_VKey_F6': <Aspect_VKeyBasic.Aspect_VKey_F6: 42>, 'Aspect_VKey_F7': <Aspect_VKeyBasic.Aspect_VKey_F7: 43>, 'Aspect_VKey_F8': <Aspect_VKeyBasic.Aspect_VKey_F8: 44>, 'Aspect_VKey_F9': <Aspect_VKeyBasic.Aspect_VKey_F9: 45>, 'Aspect_VKey_F10': <Aspect_VKeyBasic.Aspect_VKey_F10: 46>, 'Aspect_VKey_F11': <Aspect_VKeyBasic.Aspect_VKey_F11: 47>, 'Aspect_VKey_F12': <Aspect_VKeyBasic.Aspect_VKey_F12: 48>, 'Aspect_VKey_Up': <Aspect_VKeyBasic.Aspect_VKey_Up: 49>, 'Aspect_VKey_Down': <Aspect_VKeyBasic.Aspect_VKey_Down: 50>, 'Aspect_VKey_Left': <Aspect_VKeyBasic.Aspect_VKey_Left: 51>, 'Aspect_VKey_Right': <Aspect_VKeyBasic.Aspect_VKey_Right: 52>, 'Aspect_VKey_Plus': <Aspect_VKeyBasic.Aspect_VKey_Plus: 53>, 'Aspect_VKey_Minus': <Aspect_VKeyBasic.Aspect_VKey_Minus: 54>, 'Aspect_VKey_Equal': <Aspect_VKeyBasic.Aspect_VKey_Equal: 55>, 'Aspect_VKey_PageUp': <Aspect_VKeyBasic.Aspect_VKey_PageUp: 56>, 'Aspect_VKey_PageDown': <Aspect_VKeyBasic.Aspect_VKey_PageDown: 57>, 'Aspect_VKey_Home': <Aspect_VKeyBasic.Aspect_VKey_Home: 58>, 'Aspect_VKey_End': <Aspect_VKeyBasic.Aspect_VKey_End: 59>, 'Aspect_VKey_Escape': <Aspect_VKeyBasic.Aspect_VKey_Escape: 60>, 'Aspect_VKey_Back': <Aspect_VKeyBasic.Aspect_VKey_Back: 61>, 'Aspect_VKey_Enter': <Aspect_VKeyBasic.Aspect_VKey_Enter: 62>, 'Aspect_VKey_Backspace': <Aspect_VKeyBasic.Aspect_VKey_Backspace: 63>, 'Aspect_VKey_Space': <Aspect_VKeyBasic.Aspect_VKey_Space: 64>, 'Aspect_VKey_Delete': <Aspect_VKeyBasic.Aspect_VKey_Delete: 65>, 'Aspect_VKey_Tilde': <Aspect_VKeyBasic.Aspect_VKey_Tilde: 66>, 'Aspect_VKey_Tab': <Aspect_VKeyBasic.Aspect_VKey_Tab: 67>, 'Aspect_VKey_Comma': <Aspect_VKeyBasic.Aspect_VKey_Comma: 68>, 'Aspect_VKey_Period': <Aspect_VKeyBasic.Aspect_VKey_Period: 69>, 'Aspect_VKey_Semicolon': <Aspect_VKeyBasic.Aspect_VKey_Semicolon: 70>, 'Aspect_VKey_Slash': <Aspect_VKeyBasic.Aspect_VKey_Slash: 71>, 'Aspect_VKey_BracketLeft': <Aspect_VKeyBasic.Aspect_VKey_BracketLeft: 72>, 'Aspect_VKey_Backslash': <Aspect_VKeyBasic.Aspect_VKey_Backslash: 73>, 'Aspect_VKey_BracketRight': <Aspect_VKeyBasic.Aspect_VKey_BracketRight: 74>, 'Aspect_VKey_Apostrophe': <Aspect_VKeyBasic.Aspect_VKey_Apostrophe: 75>, 'Aspect_VKey_Numlock': <Aspect_VKeyBasic.Aspect_VKey_Numlock: 76>, 'Aspect_VKey_Scroll': <Aspect_VKeyBasic.Aspect_VKey_Scroll: 77>, 'Aspect_VKey_Numpad0': <Aspect_VKeyBasic.Aspect_VKey_Numpad0: 78>, 'Aspect_VKey_Numpad1': <Aspect_VKeyBasic.Aspect_VKey_Numpad1: 79>, 'Aspect_VKey_Numpad2': <Aspect_VKeyBasic.Aspect_VKey_Numpad2: 80>, 'Aspect_VKey_Numpad3': <Aspect_VKeyBasic.Aspect_VKey_Numpad3: 81>, 'Aspect_VKey_Numpad4': <Aspect_VKeyBasic.Aspect_VKey_Numpad4: 82>, 'Aspect_VKey_Numpad5': <Aspect_VKeyBasic.Aspect_VKey_Numpad5: 83>, 'Aspect_VKey_Numpad6': <Aspect_VKeyBasic.Aspect_VKey_Numpad6: 84>, 'Aspect_VKey_Numpad7': <Aspect_VKeyBasic.Aspect_VKey_Numpad7: 85>, 'Aspect_VKey_Numpad8': <Aspect_VKeyBasic.Aspect_VKey_Numpad8: 86>, 'Aspect_VKey_Numpad9': <Aspect_VKeyBasic.Aspect_VKey_Numpad9: 87>, 'Aspect_VKey_NumpadMultiply': <Aspect_VKeyBasic.Aspect_VKey_NumpadMultiply: 88>, 'Aspect_VKey_NumpadAdd': <Aspect_VKeyBasic.Aspect_VKey_NumpadAdd: 89>, 'Aspect_VKey_NumpadSubtract': <Aspect_VKeyBasic.Aspect_VKey_NumpadSubtract: 90>, 'Aspect_VKey_NumpadDivide': <Aspect_VKeyBasic.Aspect_VKey_NumpadDivide: 91>, 'Aspect_VKey_MediaNextTrack': <Aspect_VKeyBasic.Aspect_VKey_MediaNextTrack: 92>, 'Aspect_VKey_MediaPreviousTrack': <Aspect_VKeyBasic.Aspect_VKey_MediaPreviousTrack: 93>, 'Aspect_VKey_MediaStop': <Aspect_VKeyBasic.Aspect_VKey_MediaStop: 94>, 'Aspect_VKey_MediaPlayPause': <Aspect_VKeyBasic.Aspect_VKey_MediaPlayPause: 95>, 'Aspect_VKey_VolumeMute': <Aspect_VKeyBasic.Aspect_VKey_VolumeMute: 96>, 'Aspect_VKey_VolumeDown': <Aspect_VKeyBasic.Aspect_VKey_VolumeDown: 97>, 'Aspect_VKey_VolumeUp': <Aspect_VKeyBasic.Aspect_VKey_VolumeUp: 98>, 'Aspect_VKey_BrowserBack': <Aspect_VKeyBasic.Aspect_VKey_BrowserBack: 99>, 'Aspect_VKey_BrowserForward': <Aspect_VKeyBasic.Aspect_VKey_BrowserForward: 100>, 'Aspect_VKey_BrowserRefresh': <Aspect_VKeyBasic.Aspect_VKey_BrowserRefresh: 101>, 'Aspect_VKey_BrowserStop': <Aspect_VKeyBasic.Aspect_VKey_BrowserStop: 102>, 'Aspect_VKey_BrowserSearch': <Aspect_VKeyBasic.Aspect_VKey_BrowserSearch: 103>, 'Aspect_VKey_BrowserFavorites': <Aspect_VKeyBasic.Aspect_VKey_BrowserFavorites: 104>, 'Aspect_VKey_BrowserHome': <Aspect_VKeyBasic.Aspect_VKey_BrowserHome: 105>, 'Aspect_VKey_ViewTop': <Aspect_VKeyBasic.Aspect_VKey_ViewTop: 106>, 'Aspect_VKey_ViewBottom': <Aspect_VKeyBasic.Aspect_VKey_ViewBottom: 107>, 'Aspect_VKey_ViewLeft': <Aspect_VKeyBasic.Aspect_VKey_ViewLeft: 108>, 'Aspect_VKey_ViewRight': <Aspect_VKeyBasic.Aspect_VKey_ViewRight: 109>, 'Aspect_VKey_ViewFront': <Aspect_VKeyBasic.Aspect_VKey_ViewFront: 110>, 'Aspect_VKey_ViewBack': <Aspect_VKeyBasic.Aspect_VKey_ViewBack: 111>, 'Aspect_VKey_ViewAxoLeftProj': <Aspect_VKeyBasic.Aspect_VKey_ViewAxoLeftProj: 112>, 'Aspect_VKey_ViewAxoRightProj': <Aspect_VKeyBasic.Aspect_VKey_ViewAxoRightProj: 113>, 'Aspect_VKey_ViewFitAll': <Aspect_VKeyBasic.Aspect_VKey_ViewFitAll: 114>, 'Aspect_VKey_ViewRoll90CW': <Aspect_VKeyBasic.Aspect_VKey_ViewRoll90CW: 115>, 'Aspect_VKey_ViewRoll90CCW': <Aspect_VKeyBasic.Aspect_VKey_ViewRoll90CCW: 116>, 'Aspect_VKey_ViewSwitchRotate': <Aspect_VKeyBasic.Aspect_VKey_ViewSwitchRotate: 117>, 'Aspect_VKey_Shift': <Aspect_VKeyBasic.Aspect_VKey_Shift: 118>, 'Aspect_VKey_Control': <Aspect_VKeyBasic.Aspect_VKey_Control: 119>, 'Aspect_VKey_Alt': <Aspect_VKeyBasic.Aspect_VKey_Alt: 120>, 'Aspect_VKey_Menu': <Aspect_VKeyBasic.Aspect_VKey_Menu: 121>, 'Aspect_VKey_Meta': <Aspect_VKeyBasic.Aspect_VKey_Meta: 122>, 'Aspect_VKey_NavInteract': <Aspect_VKeyBasic.Aspect_VKey_NavInteract: 123>, 'Aspect_VKey_NavForward': <Aspect_VKeyBasic.Aspect_VKey_NavForward: 124>, 'Aspect_VKey_NavBackward': <Aspect_VKeyBasic.Aspect_VKey_NavBackward: 125>, 'Aspect_VKey_NavSlideLeft': <Aspect_VKeyBasic.Aspect_VKey_NavSlideLeft: 126>, 'Aspect_VKey_NavSlideRight': <Aspect_VKeyBasic.Aspect_VKey_NavSlideRight: 127>, 'Aspect_VKey_NavSlideUp': <Aspect_VKeyBasic.Aspect_VKey_NavSlideUp: 128>, 'Aspect_VKey_NavSlideDown': <Aspect_VKeyBasic.Aspect_VKey_NavSlideDown: 129>, 'Aspect_VKey_NavRollCCW': <Aspect_VKeyBasic.Aspect_VKey_NavRollCCW: 130>, 'Aspect_VKey_NavRollCW': <Aspect_VKeyBasic.Aspect_VKey_NavRollCW: 131>, 'Aspect_VKey_NavLookLeft': <Aspect_VKeyBasic.Aspect_VKey_NavLookLeft: 132>, 'Aspect_VKey_NavLookRight': <Aspect_VKeyBasic.Aspect_VKey_NavLookRight: 133>, 'Aspect_VKey_NavLookUp': <Aspect_VKeyBasic.Aspect_VKey_NavLookUp: 134>, 'Aspect_VKey_NavLookDown': <Aspect_VKeyBasic.Aspect_VKey_NavLookDown: 135>, 'Aspect_VKey_NavCrouch': <Aspect_VKeyBasic.Aspect_VKey_NavCrouch: 136>, 'Aspect_VKey_NavJump': <Aspect_VKeyBasic.Aspect_VKey_NavJump: 137>, 'Aspect_VKey_NavThrustForward': <Aspect_VKeyBasic.Aspect_VKey_NavThrustForward: 138>, 'Aspect_VKey_NavThrustBackward': <Aspect_VKeyBasic.Aspect_VKey_NavThrustBackward: 139>, 'Aspect_VKey_NavThrustStop': <Aspect_VKeyBasic.Aspect_VKey_NavThrustStop: 140>, 'Aspect_VKey_NavSpeedIncrease': <Aspect_VKeyBasic.Aspect_VKey_NavSpeedIncrease: 141>, 'Aspect_VKey_NavSpeedDecrease': <Aspect_VKeyBasic.Aspect_VKey_NavSpeedDecrease: 142>}
     pass
 class Aspect_WidthOfLine():
     """
@@ -2619,23 +3329,31 @@ class Aspect_WidthOfLine():
 
       Aspect_WOL_USERDEFINED
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Aspect_WOL_MEDIUM: OCP.Aspect.Aspect_WidthOfLine # value = Aspect_WidthOfLine.Aspect_WOL_MEDIUM
-    Aspect_WOL_THICK: OCP.Aspect.Aspect_WidthOfLine # value = Aspect_WidthOfLine.Aspect_WOL_THICK
-    Aspect_WOL_THIN: OCP.Aspect.Aspect_WidthOfLine # value = Aspect_WidthOfLine.Aspect_WOL_THIN
-    Aspect_WOL_USERDEFINED: OCP.Aspect.Aspect_WidthOfLine # value = Aspect_WidthOfLine.Aspect_WOL_USERDEFINED
-    Aspect_WOL_VERYTHICK: OCP.Aspect.Aspect_WidthOfLine # value = Aspect_WidthOfLine.Aspect_WOL_VERYTHICK
-    __entries: dict # value = {'Aspect_WOL_THIN': (Aspect_WidthOfLine.Aspect_WOL_THIN, None), 'Aspect_WOL_MEDIUM': (Aspect_WidthOfLine.Aspect_WOL_MEDIUM, None), 'Aspect_WOL_THICK': (Aspect_WidthOfLine.Aspect_WOL_THICK, None), 'Aspect_WOL_VERYTHICK': (Aspect_WidthOfLine.Aspect_WOL_VERYTHICK, None), 'Aspect_WOL_USERDEFINED': (Aspect_WidthOfLine.Aspect_WOL_USERDEFINED, None)}
-    __members__: dict # value = {'Aspect_WOL_THIN': Aspect_WidthOfLine.Aspect_WOL_THIN, 'Aspect_WOL_MEDIUM': Aspect_WidthOfLine.Aspect_WOL_MEDIUM, 'Aspect_WOL_THICK': Aspect_WidthOfLine.Aspect_WOL_THICK, 'Aspect_WOL_VERYTHICK': Aspect_WidthOfLine.Aspect_WOL_VERYTHICK, 'Aspect_WOL_USERDEFINED': Aspect_WidthOfLine.Aspect_WOL_USERDEFINED}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_WOL_MEDIUM: OCP.Aspect.Aspect_WidthOfLine # value = <Aspect_WidthOfLine.Aspect_WOL_MEDIUM: 1>
+    Aspect_WOL_THICK: OCP.Aspect.Aspect_WidthOfLine # value = <Aspect_WidthOfLine.Aspect_WOL_THICK: 2>
+    Aspect_WOL_THIN: OCP.Aspect.Aspect_WidthOfLine # value = <Aspect_WidthOfLine.Aspect_WOL_THIN: 0>
+    Aspect_WOL_USERDEFINED: OCP.Aspect.Aspect_WidthOfLine # value = <Aspect_WidthOfLine.Aspect_WOL_USERDEFINED: 4>
+    Aspect_WOL_VERYTHICK: OCP.Aspect.Aspect_WidthOfLine # value = <Aspect_WidthOfLine.Aspect_WOL_VERYTHICK: 3>
+    __entries: dict # value = {'Aspect_WOL_THIN': (<Aspect_WidthOfLine.Aspect_WOL_THIN: 0>, None), 'Aspect_WOL_MEDIUM': (<Aspect_WidthOfLine.Aspect_WOL_MEDIUM: 1>, None), 'Aspect_WOL_THICK': (<Aspect_WidthOfLine.Aspect_WOL_THICK: 2>, None), 'Aspect_WOL_VERYTHICK': (<Aspect_WidthOfLine.Aspect_WOL_VERYTHICK: 3>, None), 'Aspect_WOL_USERDEFINED': (<Aspect_WidthOfLine.Aspect_WOL_USERDEFINED: 4>, None)}
+    __members__: dict # value = {'Aspect_WOL_THIN': <Aspect_WidthOfLine.Aspect_WOL_THIN: 0>, 'Aspect_WOL_MEDIUM': <Aspect_WidthOfLine.Aspect_WOL_MEDIUM: 1>, 'Aspect_WOL_THICK': <Aspect_WidthOfLine.Aspect_WOL_THICK: 2>, 'Aspect_WOL_VERYTHICK': <Aspect_WidthOfLine.Aspect_WOL_VERYTHICK: 3>, 'Aspect_WOL_USERDEFINED': <Aspect_WidthOfLine.Aspect_WOL_USERDEFINED: 4>}
     pass
 class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
     """
@@ -2664,6 +3382,10 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
     def DoResize(self) -> Aspect_TypeOfResize: 
         """
         Resize window - do nothing.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2743,11 +3465,11 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
         Modifies the window gradient background.
         """
     @overload
-    def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : Aspect_GradientFillMethod) -> None: ...
+    def SetBackground(self,ABackground : Aspect_GradientBackground) -> None: ...
     @overload
     def SetBackground(self,ABack : Aspect_Background) -> None: ...
     @overload
-    def SetBackground(self,ABackground : Aspect_GradientBackground) -> None: ...
+    def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : Aspect_GradientFillMethod) -> None: ...
     def SetNativeHandle(self,theWindow : int) -> bool: 
         """
         Set native handle.
@@ -2827,134 +3549,785 @@ class Aspect_XAtom():
 
       Aspect_XA_DELETE_WINDOW
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_XA_DELETE_WINDOW: OCP.Aspect.Aspect_XAtom # value = <Aspect_XAtom.Aspect_XA_DELETE_WINDOW: 0>
+    __entries: dict # value = {'Aspect_XA_DELETE_WINDOW': (<Aspect_XAtom.Aspect_XA_DELETE_WINDOW: 0>, None)}
+    __members__: dict # value = {'Aspect_XA_DELETE_WINDOW': <Aspect_XAtom.Aspect_XA_DELETE_WINDOW: 0>}
+    pass
+class Aspect_XRAction(OCP.Standard.Standard_Transient):
+    """
+    XR action definition.
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def Id(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Return action id.
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
 
-        :type: str
+        Returns a true value if this is an instance of TypeName.
         """
-    Aspect_XA_DELETE_WINDOW: OCP.Aspect.Aspect_XAtom # value = Aspect_XAtom.Aspect_XA_DELETE_WINDOW
-    __entries: dict # value = {'Aspect_XA_DELETE_WINDOW': (Aspect_XAtom.Aspect_XA_DELETE_WINDOW, None)}
-    __members__: dict # value = {'Aspect_XA_DELETE_WINDOW': Aspect_XAtom.Aspect_XA_DELETE_WINDOW}
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsValid(self) -> bool: 
+        """
+        Return TRUE if action is defined.
+        """
+    def RawHandle(self) -> int: 
+        """
+        Return action handle.
+        """
+    def SetRawHandle(self,theHande : int) -> None: 
+        """
+        Set action handle.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Type(self) -> Aspect_XRActionType: 
+        """
+        Return action type.
+        """
+    def __init__(self,theId : OCP.TCollection.TCollection_AsciiString,theType : Aspect_XRActionType) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class Aspect_XRActionSet(OCP.Standard.Standard_Transient):
+    """
+    XR action set.
+    """
+    def Actions(self) -> Any: 
+        """
+        Return map of actions.
+        """
+    def AddAction(self,theAction : Aspect_XRAction) -> None: 
+        """
+        Add action.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def Id(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Return action id.
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def RawHandle(self) -> int: 
+        """
+        Return action handle.
+        """
+    def SetRawHandle(self,theHande : int) -> None: 
+        """
+        Set action handle.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self,theId : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class Aspect_XRActionType():
+    """
+    XR action type.
+
+    Members:
+
+      Aspect_XRActionType_InputDigital
+
+      Aspect_XRActionType_InputAnalog
+
+      Aspect_XRActionType_InputPose
+
+      Aspect_XRActionType_InputSkeletal
+
+      Aspect_XRActionType_OutputHaptic
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_XRActionType_InputAnalog: OCP.Aspect.Aspect_XRActionType # value = <Aspect_XRActionType.Aspect_XRActionType_InputAnalog: 1>
+    Aspect_XRActionType_InputDigital: OCP.Aspect.Aspect_XRActionType # value = <Aspect_XRActionType.Aspect_XRActionType_InputDigital: 0>
+    Aspect_XRActionType_InputPose: OCP.Aspect.Aspect_XRActionType # value = <Aspect_XRActionType.Aspect_XRActionType_InputPose: 2>
+    Aspect_XRActionType_InputSkeletal: OCP.Aspect.Aspect_XRActionType # value = <Aspect_XRActionType.Aspect_XRActionType_InputSkeletal: 3>
+    Aspect_XRActionType_OutputHaptic: OCP.Aspect.Aspect_XRActionType # value = <Aspect_XRActionType.Aspect_XRActionType_OutputHaptic: 4>
+    __entries: dict # value = {'Aspect_XRActionType_InputDigital': (<Aspect_XRActionType.Aspect_XRActionType_InputDigital: 0>, None), 'Aspect_XRActionType_InputAnalog': (<Aspect_XRActionType.Aspect_XRActionType_InputAnalog: 1>, None), 'Aspect_XRActionType_InputPose': (<Aspect_XRActionType.Aspect_XRActionType_InputPose: 2>, None), 'Aspect_XRActionType_InputSkeletal': (<Aspect_XRActionType.Aspect_XRActionType_InputSkeletal: 3>, None), 'Aspect_XRActionType_OutputHaptic': (<Aspect_XRActionType.Aspect_XRActionType_OutputHaptic: 4>, None)}
+    __members__: dict # value = {'Aspect_XRActionType_InputDigital': <Aspect_XRActionType.Aspect_XRActionType_InputDigital: 0>, 'Aspect_XRActionType_InputAnalog': <Aspect_XRActionType.Aspect_XRActionType_InputAnalog: 1>, 'Aspect_XRActionType_InputPose': <Aspect_XRActionType.Aspect_XRActionType_InputPose: 2>, 'Aspect_XRActionType_InputSkeletal': <Aspect_XRActionType.Aspect_XRActionType_InputSkeletal: 3>, 'Aspect_XRActionType_OutputHaptic': <Aspect_XRActionType.Aspect_XRActionType_OutputHaptic: 4>}
+    pass
+class Aspect_XRAnalogActionData():
+    """
+    Analog input XR action data.
+    """
+    def IsChanged(self) -> bool: 
+        """
+        Return TRUE if delta is non-zero.
+        """
+    def __init__(self) -> None: ...
+    pass
+class Aspect_XRDigitalActionData():
+    """
+    Digital input XR action data.
+    """
+    def __init__(self) -> None: ...
+    pass
+class Aspect_XRGenericAction():
+    """
+    Generic XR action.
+
+    Members:
+
+      Aspect_XRGenericAction_IsHeadsetOn
+
+      Aspect_XRGenericAction_InputAppMenu
+
+      Aspect_XRGenericAction_InputSysMenu
+
+      Aspect_XRGenericAction_InputTriggerPull
+
+      Aspect_XRGenericAction_InputTriggerClick
+
+      Aspect_XRGenericAction_InputGripClick
+
+      Aspect_XRGenericAction_InputTrackPadPosition
+
+      Aspect_XRGenericAction_InputTrackPadTouch
+
+      Aspect_XRGenericAction_InputTrackPadClick
+
+      Aspect_XRGenericAction_InputThumbstickPosition
+
+      Aspect_XRGenericAction_InputThumbstickTouch
+
+      Aspect_XRGenericAction_InputThumbstickClick
+
+      Aspect_XRGenericAction_InputPoseBase
+
+      Aspect_XRGenericAction_InputPoseFront
+
+      Aspect_XRGenericAction_InputPoseHandGrip
+
+      Aspect_XRGenericAction_InputPoseFingerTip
+
+      Aspect_XRGenericAction_OutputHaptic
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_XRGenericAction_InputAppMenu: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputAppMenu: 1>
+    Aspect_XRGenericAction_InputGripClick: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputGripClick: 5>
+    Aspect_XRGenericAction_InputPoseBase: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseBase: 12>
+    Aspect_XRGenericAction_InputPoseFingerTip: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseFingerTip: 15>
+    Aspect_XRGenericAction_InputPoseFront: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseFront: 13>
+    Aspect_XRGenericAction_InputPoseHandGrip: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseHandGrip: 14>
+    Aspect_XRGenericAction_InputSysMenu: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputSysMenu: 2>
+    Aspect_XRGenericAction_InputThumbstickClick: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickClick: 11>
+    Aspect_XRGenericAction_InputThumbstickPosition: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickPosition: 9>
+    Aspect_XRGenericAction_InputThumbstickTouch: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickTouch: 10>
+    Aspect_XRGenericAction_InputTrackPadClick: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadClick: 8>
+    Aspect_XRGenericAction_InputTrackPadPosition: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadPosition: 6>
+    Aspect_XRGenericAction_InputTrackPadTouch: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadTouch: 7>
+    Aspect_XRGenericAction_InputTriggerClick: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTriggerClick: 4>
+    Aspect_XRGenericAction_InputTriggerPull: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTriggerPull: 3>
+    Aspect_XRGenericAction_IsHeadsetOn: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_IsHeadsetOn: 0>
+    Aspect_XRGenericAction_OutputHaptic: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_OutputHaptic: 16>
+    __entries: dict # value = {'Aspect_XRGenericAction_IsHeadsetOn': (<Aspect_XRGenericAction.Aspect_XRGenericAction_IsHeadsetOn: 0>, None), 'Aspect_XRGenericAction_InputAppMenu': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputAppMenu: 1>, None), 'Aspect_XRGenericAction_InputSysMenu': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputSysMenu: 2>, None), 'Aspect_XRGenericAction_InputTriggerPull': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputTriggerPull: 3>, None), 'Aspect_XRGenericAction_InputTriggerClick': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputTriggerClick: 4>, None), 'Aspect_XRGenericAction_InputGripClick': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputGripClick: 5>, None), 'Aspect_XRGenericAction_InputTrackPadPosition': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadPosition: 6>, None), 'Aspect_XRGenericAction_InputTrackPadTouch': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadTouch: 7>, None), 'Aspect_XRGenericAction_InputTrackPadClick': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadClick: 8>, None), 'Aspect_XRGenericAction_InputThumbstickPosition': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickPosition: 9>, None), 'Aspect_XRGenericAction_InputThumbstickTouch': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickTouch: 10>, None), 'Aspect_XRGenericAction_InputThumbstickClick': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickClick: 11>, None), 'Aspect_XRGenericAction_InputPoseBase': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseBase: 12>, None), 'Aspect_XRGenericAction_InputPoseFront': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseFront: 13>, None), 'Aspect_XRGenericAction_InputPoseHandGrip': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseHandGrip: 14>, None), 'Aspect_XRGenericAction_InputPoseFingerTip': (<Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseFingerTip: 15>, None), 'Aspect_XRGenericAction_OutputHaptic': (<Aspect_XRGenericAction.Aspect_XRGenericAction_OutputHaptic: 16>, None)}
+    __members__: dict # value = {'Aspect_XRGenericAction_IsHeadsetOn': <Aspect_XRGenericAction.Aspect_XRGenericAction_IsHeadsetOn: 0>, 'Aspect_XRGenericAction_InputAppMenu': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputAppMenu: 1>, 'Aspect_XRGenericAction_InputSysMenu': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputSysMenu: 2>, 'Aspect_XRGenericAction_InputTriggerPull': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTriggerPull: 3>, 'Aspect_XRGenericAction_InputTriggerClick': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTriggerClick: 4>, 'Aspect_XRGenericAction_InputGripClick': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputGripClick: 5>, 'Aspect_XRGenericAction_InputTrackPadPosition': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadPosition: 6>, 'Aspect_XRGenericAction_InputTrackPadTouch': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadTouch: 7>, 'Aspect_XRGenericAction_InputTrackPadClick': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadClick: 8>, 'Aspect_XRGenericAction_InputThumbstickPosition': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickPosition: 9>, 'Aspect_XRGenericAction_InputThumbstickTouch': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickTouch: 10>, 'Aspect_XRGenericAction_InputThumbstickClick': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickClick: 11>, 'Aspect_XRGenericAction_InputPoseBase': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseBase: 12>, 'Aspect_XRGenericAction_InputPoseFront': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseFront: 13>, 'Aspect_XRGenericAction_InputPoseHandGrip': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseHandGrip: 14>, 'Aspect_XRGenericAction_InputPoseFingerTip': <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseFingerTip: 15>, 'Aspect_XRGenericAction_OutputHaptic': <Aspect_XRGenericAction.Aspect_XRGenericAction_OutputHaptic: 16>}
+    pass
+class Aspect_XRHapticActionData():
+    """
+    Haptic output XR action data.
+    """
+    def IsValid(self) -> bool: 
+        """
+        Return TRUE if data is not empty.
+        """
+    def __init__(self) -> None: ...
+    pass
+class Aspect_XRPoseActionData():
+    """
+    Pose input XR action data.
+    """
+    def __init__(self) -> None: ...
+    @property
+    def Pose(self) -> Aspect_TrackedDevicePose:
+        """
+        :type: Aspect_TrackedDevicePose
+        """
+    @Pose.setter
+    def Pose(self, arg0: Aspect_TrackedDevicePose) -> None:
+        pass
+    pass
+class Aspect_OpenVRSession(Aspect_XRSession, OCP.Standard.Standard_Transient):
+    """
+    OpenVR wrapper implementing Aspect_XRSession interface.
+    """
+    class InfoString_e():
+        """
+        Info string enumeration.
+
+        Members:
+
+          InfoString_Vendor
+
+          InfoString_Device
+
+          InfoString_Tracker
+
+          InfoString_SerialNumber
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        InfoString_Device: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_Device: 1>
+        InfoString_SerialNumber: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_SerialNumber: 3>
+        InfoString_Tracker: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_Tracker: 2>
+        InfoString_Vendor: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_Vendor: 0>
+        __entries: dict # value = {'InfoString_Vendor': (<InfoString_e.InfoString_Vendor: 0>, None), 'InfoString_Device': (<InfoString_e.InfoString_Device: 1>, None), 'InfoString_Tracker': (<InfoString_e.InfoString_Tracker: 2>, None), 'InfoString_SerialNumber': (<InfoString_e.InfoString_SerialNumber: 3>, None)}
+        __members__: dict # value = {'InfoString_Vendor': <InfoString_e.InfoString_Vendor: 0>, 'InfoString_Device': <InfoString_e.InfoString_Device: 1>, 'InfoString_Tracker': <InfoString_e.InfoString_Tracker: 2>, 'InfoString_SerialNumber': <InfoString_e.InfoString_SerialNumber: 3>}
+        pass
+    class TrackingUniverseOrigin_e():
+        """
+        Identifies which style of tracking origin the application wants to use for the poses it is requesting.
+
+        Members:
+
+          TrackingUniverseOrigin_Seated
+
+          TrackingUniverseOrigin_Standing
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        TrackingUniverseOrigin_Seated: OCP.Aspect.TrackingUniverseOrigin_e # value = <TrackingUniverseOrigin_e.TrackingUniverseOrigin_Seated: 0>
+        TrackingUniverseOrigin_Standing: OCP.Aspect.TrackingUniverseOrigin_e # value = <TrackingUniverseOrigin_e.TrackingUniverseOrigin_Standing: 1>
+        __entries: dict # value = {'TrackingUniverseOrigin_Seated': (<TrackingUniverseOrigin_e.TrackingUniverseOrigin_Seated: 0>, None), 'TrackingUniverseOrigin_Standing': (<TrackingUniverseOrigin_e.TrackingUniverseOrigin_Standing: 1>, None)}
+        __members__: dict # value = {'TrackingUniverseOrigin_Seated': <TrackingUniverseOrigin_e.TrackingUniverseOrigin_Seated: 0>, 'TrackingUniverseOrigin_Standing': <TrackingUniverseOrigin_e.TrackingUniverseOrigin_Standing: 1>}
+        pass
+    def AbortHapticVibrationAction(self,theAction : Aspect_XRAction) -> None: 
+        """
+        Abort vibration.
+        """
+    def Aspect(self) -> float: 
+        """
+        Return aspect ratio.
+        """
+    def Close(self) -> None: 
+        """
+        Release session.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DisplayFrequency(self) -> float: 
+        """
+        Return display frequency or 0 if unknown.
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def EyeToHeadTransform(self,theEye : Aspect_Eye) -> OCP.Graphic3d.Graphic3d_Mat4d: 
+        """
+        Return transformation from eye to head. vr::GetEyeToHeadTransform() wrapper.
+        """
+    def FieldOfView(self) -> float: 
+        """
+        Return field of view.
+        """
+    def GenericAction(self,theDevice : Aspect_XRTrackedDeviceRole,theAction : Aspect_XRGenericAction) -> Aspect_XRAction: 
+        """
+        Return generic action for specific hand or NULL if undefined.
+        """
+    def GetAnalogActionData(self,theAction : Aspect_XRAction) -> Aspect_XRAnalogActionData: 
+        """
+        Fetch data for analog input action (like axis).
+        """
+    def GetDigitalActionData(self,theAction : Aspect_XRAction) -> Aspect_XRDigitalActionData: 
+        """
+        Fetch data for digital input action (like button).
+        """
+    def GetPoseActionDataForNextFrame(self,theAction : Aspect_XRAction) -> Aspect_XRPoseActionData: 
+        """
+        Fetch data for pose input action (like fingertip position).
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def GetString(self,theInfo : Aspect_XRSession.InfoString_e) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Query information.
+        """
+    def HasProjectionFrustums(self) -> bool: 
+        """
+        Return TRUE.
+        """
+    def HasTrackedPose(self,theDevice : int) -> bool: 
+        """
+        Return TRUE if device orientation is defined.
+        """
+    def HeadPose(self) -> OCP.gp.gp_Trsf: 
+        """
+        Return head orientation in right-handed system: +y is up +x is to the right -z is forward Distance unit is meters by default (
+        """
+    def HeadToEyeTransform(self,theEye : Aspect_Eye) -> OCP.Graphic3d.Graphic3d_Mat4d: 
+        """
+        Return transformation from head to eye.
+        """
+    def IOD(self) -> float: 
+        """
+        Return Intra-ocular Distance (IOD); also known as Interpupillary Distance (IPD). Defined in meters by default (
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @staticmethod
+    def IsHmdPresent_s() -> bool: 
+        """
+        Return TRUE if an HMD may be presented on the system (e.g. to show VR checkbox in application GUI). This is fast check, and even if it returns TRUE, opening session may fail.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsOpen(self) -> bool: 
+        """
+        Return TRUE if session is opened.
+        """
+    def LeftHandPose(self) -> OCP.gp.gp_Trsf: 
+        """
+        Return left hand orientation.
+        """
+    @overload
+    def LoadRenderModel(self,theDevice : int,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
+        """
+        Load model for displaying device.
+
+        Load model for displaying device.
+        """
+    @overload
+    def LoadRenderModel(self,theDevice : int,theToApplyUnitFactor : bool,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: ...
+    def NamedTrackedDevice(self,theDevice : Aspect_XRTrackedDeviceRole) -> int: 
+        """
+        Return index of tracked device of known role.
+        """
+    def Open(self) -> bool: 
+        """
+        Initialize session.
+        """
+    def ProcessEvents(self) -> None: 
+        """
+        Receive XR events.
+        """
+    def ProjectionFrustum(self,theEye : Aspect_Eye) -> Any: 
+        """
+        Return projection frustum.
+        """
+    def ProjectionMatrix(self,theEye : Aspect_Eye,theZNear : float,theZFar : float) -> OCP.Graphic3d.Graphic3d_Mat4d: 
+        """
+        Return projection matrix.
+        """
+    def RecommendedViewport(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Return recommended viewport Width x Height for rendering into VR.
+        """
+    def RightHandPose(self) -> OCP.gp.gp_Trsf: 
+        """
+        Return right hand orientation.
+        """
+    def SetTrackingOrigin(self,theOrigin : Aspect_XRSession.TrackingUniverseOrigin_e) -> None: 
+        """
+        Set tracking origin.
+        """
+    def SetUnitFactor(self,theFactor : float) -> None: 
+        """
+        Set unit scale factor.
+        """
+    def SubmitEye(self,theTexture : capsule,theGraphicsLib : Aspect_GraphicsLibrary,theColorSpace : Aspect_ColorSpace,theEye : Aspect_Eye) -> bool: 
+        """
+        Submit texture eye to XR Composer.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TrackedPoses(self) -> Aspect_TrackedDevicePoseArray: 
+        """
+        Return number of tracked poses array.
+        """
+    def TrackingOrigin(self) -> Aspect_XRSession.TrackingUniverseOrigin_e: 
+        """
+        Return tracking origin.
+        """
+    def TriggerHapticVibrationAction(self,theAction : Aspect_XRAction,theParams : Aspect_XRHapticActionData) -> None: 
+        """
+        Trigger vibration.
+        """
+    def UnitFactor(self) -> float: 
+        """
+        Return unit scale factor defined as scale factor for m (meters); 1.0 by default.
+        """
+    def WaitPoses(self) -> bool: 
+        """
+        Fetch actual poses of tracked devices.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    InfoString_Device: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_Device: 1>
+    InfoString_SerialNumber: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_SerialNumber: 3>
+    InfoString_Tracker: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_Tracker: 2>
+    InfoString_Vendor: OCP.Aspect.InfoString_e # value = <InfoString_e.InfoString_Vendor: 0>
+    TrackingUniverseOrigin_Seated: OCP.Aspect.TrackingUniverseOrigin_e # value = <TrackingUniverseOrigin_e.TrackingUniverseOrigin_Seated: 0>
+    TrackingUniverseOrigin_Standing: OCP.Aspect.TrackingUniverseOrigin_e # value = <TrackingUniverseOrigin_e.TrackingUniverseOrigin_Standing: 1>
+    pass
+class Aspect_XRTrackedDeviceRole():
+    """
+    Predefined tracked devices.
+
+    Members:
+
+      Aspect_XRTrackedDeviceRole_Head
+
+      Aspect_XRTrackedDeviceRole_LeftHand
+
+      Aspect_XRTrackedDeviceRole_RightHand
+
+      Aspect_XRTrackedDeviceRole_Other
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Aspect_XRTrackedDeviceRole_Head: OCP.Aspect.Aspect_XRTrackedDeviceRole # value = <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_Head: 0>
+    Aspect_XRTrackedDeviceRole_LeftHand: OCP.Aspect.Aspect_XRTrackedDeviceRole # value = <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_LeftHand: 1>
+    Aspect_XRTrackedDeviceRole_Other: OCP.Aspect.Aspect_XRTrackedDeviceRole # value = <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_Other: 3>
+    Aspect_XRTrackedDeviceRole_RightHand: OCP.Aspect.Aspect_XRTrackedDeviceRole # value = <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_RightHand: 2>
+    __entries: dict # value = {'Aspect_XRTrackedDeviceRole_Head': (<Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_Head: 0>, None), 'Aspect_XRTrackedDeviceRole_LeftHand': (<Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_LeftHand: 1>, None), 'Aspect_XRTrackedDeviceRole_RightHand': (<Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_RightHand: 2>, None), 'Aspect_XRTrackedDeviceRole_Other': (<Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_Other: 3>, None)}
+    __members__: dict # value = {'Aspect_XRTrackedDeviceRole_Head': <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_Head: 0>, 'Aspect_XRTrackedDeviceRole_LeftHand': <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_LeftHand: 1>, 'Aspect_XRTrackedDeviceRole_RightHand': <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_RightHand: 2>, 'Aspect_XRTrackedDeviceRole_Other': <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_Other: 3>}
     pass
 def Aspect_VKey2Modifier(theKey : int) -> int:
     """
     Return modifier flags for specified modifier key.
     """
-Aspect_FM_CENTERED: OCP.Aspect.Aspect_FillMethod # value = Aspect_FillMethod.Aspect_FM_CENTERED
-Aspect_FM_NONE: OCP.Aspect.Aspect_FillMethod # value = Aspect_FillMethod.Aspect_FM_NONE
-Aspect_FM_STRETCH: OCP.Aspect.Aspect_FillMethod # value = Aspect_FillMethod.Aspect_FM_STRETCH
-Aspect_FM_TILED: OCP.Aspect.Aspect_FillMethod # value = Aspect_FillMethod.Aspect_FM_TILED
-Aspect_GDM_Lines: OCP.Aspect.Aspect_GridDrawMode # value = Aspect_GridDrawMode.Aspect_GDM_Lines
-Aspect_GDM_None: OCP.Aspect.Aspect_GridDrawMode # value = Aspect_GridDrawMode.Aspect_GDM_None
-Aspect_GDM_Points: OCP.Aspect.Aspect_GridDrawMode # value = Aspect_GridDrawMode.Aspect_GDM_Points
-Aspect_GFM_CORNER1: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_CORNER1
-Aspect_GFM_CORNER2: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_CORNER2
-Aspect_GFM_CORNER3: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_CORNER3
-Aspect_GFM_CORNER4: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_CORNER4
-Aspect_GFM_DIAG1: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_DIAG1
-Aspect_GFM_DIAG2: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_DIAG2
-Aspect_GFM_HOR: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_HOR
-Aspect_GFM_NONE: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_NONE
-Aspect_GFM_VER: OCP.Aspect.Aspect_GradientFillMethod # value = Aspect_GradientFillMethod.Aspect_GFM_VER
-Aspect_GT_Circular: OCP.Aspect.Aspect_GridType # value = Aspect_GridType.Aspect_GT_Circular
-Aspect_GT_Rectangular: OCP.Aspect.Aspect_GridType # value = Aspect_GridType.Aspect_GT_Rectangular
-Aspect_HS_DIAGONAL_135: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_DIAGONAL_135
-Aspect_HS_DIAGONAL_135_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_DIAGONAL_135_WIDE
-Aspect_HS_DIAGONAL_45: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_DIAGONAL_45
-Aspect_HS_DIAGONAL_45_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_DIAGONAL_45_WIDE
-Aspect_HS_GRID: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_GRID
-Aspect_HS_GRID_DIAGONAL: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL
-Aspect_HS_GRID_DIAGONAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL_WIDE
-Aspect_HS_GRID_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_GRID_WIDE
-Aspect_HS_HORIZONTAL: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_HORIZONTAL
-Aspect_HS_HORIZONTAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_HORIZONTAL_WIDE
-Aspect_HS_NB: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_NB
-Aspect_HS_SOLID: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_SOLID
-Aspect_HS_VERTICAL: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_VERTICAL
-Aspect_HS_VERTICAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = Aspect_HatchStyle.Aspect_HS_VERTICAL_WIDE
-Aspect_IS_EMPTY: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_EMPTY
-Aspect_IS_HATCH: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_HATCH
-Aspect_IS_HIDDENLINE: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_HIDDENLINE
-Aspect_IS_HOLLOW: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_EMPTY
-Aspect_IS_POINT: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_POINT
-Aspect_IS_SOLID: OCP.Aspect.Aspect_InteriorStyle # value = Aspect_InteriorStyle.Aspect_IS_SOLID
-Aspect_POM_All: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_All
-Aspect_POM_Fill: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_Fill
-Aspect_POM_Line: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_Line
-Aspect_POM_Mask: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_Mask
-Aspect_POM_None: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_None
-Aspect_POM_Off: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_Off
-Aspect_POM_Point: OCP.Aspect.Aspect_PolygonOffsetMode # value = Aspect_PolygonOffsetMode.Aspect_POM_Point
-Aspect_TOCSD_AUTO: OCP.Aspect.Aspect_TypeOfColorScaleData # value = Aspect_TypeOfColorScaleData.Aspect_TOCSD_AUTO
-Aspect_TOCSD_USER: OCP.Aspect.Aspect_TypeOfColorScaleData # value = Aspect_TypeOfColorScaleData.Aspect_TOCSD_USER
-Aspect_TOCSO_CENTER: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_CENTER
-Aspect_TOCSO_LEFT: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_LEFT
-Aspect_TOCSO_NONE: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_NONE
-Aspect_TOCSO_RIGHT: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_RIGHT
-Aspect_TOCSP_CENTER: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = Aspect_TypeOfColorScalePosition.Aspect_TOCSP_CENTER
-Aspect_TOCSP_LEFT: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = Aspect_TypeOfColorScalePosition.Aspect_TOCSP_LEFT
-Aspect_TOCSP_NONE: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = Aspect_TypeOfColorScalePosition.Aspect_TOCSP_NONE
-Aspect_TOCSP_RIGHT: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = Aspect_TypeOfColorScalePosition.Aspect_TOCSP_RIGHT
-Aspect_TODT_BLEND: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_BLEND
-Aspect_TODT_DEKALE: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_DEKALE
-Aspect_TODT_DIMENSION: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_DIMENSION
-Aspect_TODT_NORMAL: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_NORMAL
-Aspect_TODT_SHADOW: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_SHADOW
-Aspect_TODT_SUBTITLE: OCP.Aspect.Aspect_TypeOfDisplayText # value = Aspect_TypeOfDisplayText.Aspect_TODT_SUBTITLE
-Aspect_TOD_ABSOLUTE: OCP.Aspect.Aspect_TypeOfDeflection # value = Aspect_TypeOfDeflection.Aspect_TOD_ABSOLUTE
-Aspect_TOD_RELATIVE: OCP.Aspect.Aspect_TypeOfDeflection # value = Aspect_TypeOfDeflection.Aspect_TOD_RELATIVE
-Aspect_TOFM_BACK_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = Aspect_TypeOfFacingModel.Aspect_TOFM_BACK_SIDE
-Aspect_TOFM_BOTH_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = Aspect_TypeOfFacingModel.Aspect_TOFM_BOTH_SIDE
-Aspect_TOFM_FRONT_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = Aspect_TypeOfFacingModel.Aspect_TOFM_FRONT_SIDE
-Aspect_TOHM_BOUNDBOX: OCP.Aspect.Aspect_TypeOfHighlightMethod # value = Aspect_TypeOfHighlightMethod.Aspect_TOHM_BOUNDBOX
-Aspect_TOHM_COLOR: OCP.Aspect.Aspect_TypeOfHighlightMethod # value = Aspect_TypeOfHighlightMethod.Aspect_TOHM_COLOR
-Aspect_TOL_DASH: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_DASH
-Aspect_TOL_DOT: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_DOT
-Aspect_TOL_DOTDASH: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_DOTDASH
-Aspect_TOL_EMPTY: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_EMPTY
-Aspect_TOL_SOLID: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_SOLID
-Aspect_TOL_USERDEFINED: OCP.Aspect.Aspect_TypeOfLine # value = Aspect_TypeOfLine.Aspect_TOL_USERDEFINED
-Aspect_TOM_BALL: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_BALL
-Aspect_TOM_EMPTY: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_EMPTY
-Aspect_TOM_O: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_O
-Aspect_TOM_O_PLUS: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_O_PLUS
-Aspect_TOM_O_POINT: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_O_POINT
-Aspect_TOM_O_STAR: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_O_STAR
-Aspect_TOM_O_X: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_O_X
-Aspect_TOM_PLUS: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_PLUS
-Aspect_TOM_POINT: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_POINT
-Aspect_TOM_RING1: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_RING1
-Aspect_TOM_RING2: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_RING2
-Aspect_TOM_RING3: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_RING3
-Aspect_TOM_STAR: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_STAR
-Aspect_TOM_USERDEFINED: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_USERDEFINED
-Aspect_TOM_X: OCP.Aspect.Aspect_TypeOfMarker # value = Aspect_TypeOfMarker.Aspect_TOM_X
-Aspect_TOR_BOTTOM_AND_LEFT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_BOTTOM_AND_LEFT_BORDER
-Aspect_TOR_BOTTOM_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_BOTTOM_BORDER
-Aspect_TOR_LEFT_AND_TOP_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_LEFT_AND_TOP_BORDER
-Aspect_TOR_LEFT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_LEFT_BORDER
-Aspect_TOR_NO_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_NO_BORDER
-Aspect_TOR_RIGHT_AND_BOTTOM_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_RIGHT_AND_BOTTOM_BORDER
-Aspect_TOR_RIGHT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_RIGHT_BORDER
-Aspect_TOR_TOP_AND_RIGHT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_TOP_AND_RIGHT_BORDER
-Aspect_TOR_TOP_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_TOP_BORDER
-Aspect_TOR_UNKNOWN: OCP.Aspect.Aspect_TypeOfResize # value = Aspect_TypeOfResize.Aspect_TOR_UNKNOWN
-Aspect_TOST_ANNOTATION: OCP.Aspect.Aspect_TypeOfStyleText # value = Aspect_TypeOfStyleText.Aspect_TOST_ANNOTATION
-Aspect_TOST_NORMAL: OCP.Aspect.Aspect_TypeOfStyleText # value = Aspect_TypeOfStyleText.Aspect_TOST_NORMAL
-Aspect_TOTP_BOTTOM: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_BOTTOM
-Aspect_TOTP_CENTER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_CENTER
-Aspect_TOTP_LEFT: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT
-Aspect_TOTP_LEFT_LOWER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_LOWER
-Aspect_TOTP_LEFT_UPPER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_UPPER
-Aspect_TOTP_RIGHT: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT
-Aspect_TOTP_RIGHT_LOWER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_LOWER
-Aspect_TOTP_RIGHT_UPPER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_UPPER
-Aspect_TOTP_TOP: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = Aspect_TypeOfTriedronPosition.Aspect_TOTP_TOP
+Aspect_ColorSpace_Linear: OCP.Aspect.Aspect_ColorSpace # value = <Aspect_ColorSpace.Aspect_ColorSpace_Linear: 1>
+Aspect_ColorSpace_sRGB: OCP.Aspect.Aspect_ColorSpace # value = <Aspect_ColorSpace.Aspect_ColorSpace_sRGB: 0>
+Aspect_Eye_Left: OCP.Aspect.Aspect_Eye # value = <Aspect_Eye.Aspect_Eye_Left: 0>
+Aspect_Eye_Right: OCP.Aspect.Aspect_Eye # value = <Aspect_Eye.Aspect_Eye_Right: 1>
+Aspect_FM_CENTERED: OCP.Aspect.Aspect_FillMethod # value = <Aspect_FillMethod.Aspect_FM_CENTERED: 1>
+Aspect_FM_NONE: OCP.Aspect.Aspect_FillMethod # value = <Aspect_FillMethod.Aspect_FM_NONE: 0>
+Aspect_FM_STRETCH: OCP.Aspect.Aspect_FillMethod # value = <Aspect_FillMethod.Aspect_FM_STRETCH: 3>
+Aspect_FM_TILED: OCP.Aspect.Aspect_FillMethod # value = <Aspect_FillMethod.Aspect_FM_TILED: 2>
+Aspect_GDM_Lines: OCP.Aspect.Aspect_GridDrawMode # value = <Aspect_GridDrawMode.Aspect_GDM_Lines: 0>
+Aspect_GDM_None: OCP.Aspect.Aspect_GridDrawMode # value = <Aspect_GridDrawMode.Aspect_GDM_None: 2>
+Aspect_GDM_Points: OCP.Aspect.Aspect_GridDrawMode # value = <Aspect_GridDrawMode.Aspect_GDM_Points: 1>
+Aspect_GFM_CORNER1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER1: 5>
+Aspect_GFM_CORNER2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER2: 6>
+Aspect_GFM_CORNER3: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER3: 7>
+Aspect_GFM_CORNER4: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER4: 8>
+Aspect_GFM_DIAG1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_DIAG1: 3>
+Aspect_GFM_DIAG2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_DIAG2: 4>
+Aspect_GFM_HOR: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_HOR: 1>
+Aspect_GFM_NONE: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_NONE: 0>
+Aspect_GFM_VER: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_VER: 2>
+Aspect_GT_Circular: OCP.Aspect.Aspect_GridType # value = <Aspect_GridType.Aspect_GT_Circular: 1>
+Aspect_GT_Rectangular: OCP.Aspect.Aspect_GridType # value = <Aspect_GridType.Aspect_GT_Rectangular: 0>
+Aspect_GraphicsLibrary_OpenGL: OCP.Aspect.Aspect_GraphicsLibrary # value = <Aspect_GraphicsLibrary.Aspect_GraphicsLibrary_OpenGL: 0>
+Aspect_GraphicsLibrary_OpenGLES: OCP.Aspect.Aspect_GraphicsLibrary # value = <Aspect_GraphicsLibrary.Aspect_GraphicsLibrary_OpenGLES: 1>
+Aspect_HS_DIAGONAL_135: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_DIAGONAL_135: 6>
+Aspect_HS_DIAGONAL_135_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_DIAGONAL_135_WIDE: 10>
+Aspect_HS_DIAGONAL_45: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_DIAGONAL_45: 5>
+Aspect_HS_DIAGONAL_45_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_DIAGONAL_45_WIDE: 9>
+Aspect_HS_GRID: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_GRID: 3>
+Aspect_HS_GRID_DIAGONAL: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL: 1>
+Aspect_HS_GRID_DIAGONAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_GRID_DIAGONAL_WIDE: 2>
+Aspect_HS_GRID_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_GRID_WIDE: 4>
+Aspect_HS_HORIZONTAL: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_HORIZONTAL: 7>
+Aspect_HS_HORIZONTAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_HORIZONTAL_WIDE: 11>
+Aspect_HS_NB: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_NB: 13>
+Aspect_HS_SOLID: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_SOLID: 0>
+Aspect_HS_VERTICAL: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_VERTICAL: 8>
+Aspect_HS_VERTICAL_WIDE: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_VERTICAL_WIDE: 12>
+Aspect_IS_EMPTY: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_EMPTY: -1>
+Aspect_IS_HATCH: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_HATCH: 1>
+Aspect_IS_HIDDENLINE: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_HIDDENLINE: 2>
+Aspect_IS_HOLLOW: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_EMPTY: -1>
+Aspect_IS_POINT: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_POINT: 3>
+Aspect_IS_SOLID: OCP.Aspect.Aspect_InteriorStyle # value = <Aspect_InteriorStyle.Aspect_IS_SOLID: 0>
+Aspect_POM_All: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_All: 7>
+Aspect_POM_Fill: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_Fill: 1>
+Aspect_POM_Line: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_Line: 2>
+Aspect_POM_Mask: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_Mask: 15>
+Aspect_POM_None: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_None: 8>
+Aspect_POM_Off: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_Off: 0>
+Aspect_POM_Point: OCP.Aspect.Aspect_PolygonOffsetMode # value = <Aspect_PolygonOffsetMode.Aspect_POM_Point: 4>
+Aspect_TOCSD_AUTO: OCP.Aspect.Aspect_TypeOfColorScaleData # value = <Aspect_TypeOfColorScaleData.Aspect_TOCSD_AUTO: 0>
+Aspect_TOCSD_USER: OCP.Aspect.Aspect_TypeOfColorScaleData # value = <Aspect_TypeOfColorScaleData.Aspect_TOCSD_USER: 1>
+Aspect_TOCSO_CENTER: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_CENTER: 3>
+Aspect_TOCSO_LEFT: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_LEFT: 1>
+Aspect_TOCSO_NONE: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_NONE: 0>
+Aspect_TOCSO_RIGHT: OCP.Aspect.Aspect_TypeOfColorScaleOrientation # value = <Aspect_TypeOfColorScaleOrientation.Aspect_TOCSO_RIGHT: 2>
+Aspect_TOCSP_CENTER: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_CENTER: 3>
+Aspect_TOCSP_LEFT: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_LEFT: 1>
+Aspect_TOCSP_NONE: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_NONE: 0>
+Aspect_TOCSP_RIGHT: OCP.Aspect.Aspect_TypeOfColorScalePosition # value = <Aspect_TypeOfColorScalePosition.Aspect_TOCSP_RIGHT: 2>
+Aspect_TODT_BLEND: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_BLEND: 3>
+Aspect_TODT_DEKALE: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_DEKALE: 2>
+Aspect_TODT_DIMENSION: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_DIMENSION: 4>
+Aspect_TODT_NORMAL: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_NORMAL: 0>
+Aspect_TODT_SHADOW: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_SHADOW: 5>
+Aspect_TODT_SUBTITLE: OCP.Aspect.Aspect_TypeOfDisplayText # value = <Aspect_TypeOfDisplayText.Aspect_TODT_SUBTITLE: 1>
+Aspect_TOD_ABSOLUTE: OCP.Aspect.Aspect_TypeOfDeflection # value = <Aspect_TypeOfDeflection.Aspect_TOD_ABSOLUTE: 1>
+Aspect_TOD_RELATIVE: OCP.Aspect.Aspect_TypeOfDeflection # value = <Aspect_TypeOfDeflection.Aspect_TOD_RELATIVE: 0>
+Aspect_TOFM_BACK_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = <Aspect_TypeOfFacingModel.Aspect_TOFM_BACK_SIDE: 1>
+Aspect_TOFM_BOTH_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = <Aspect_TypeOfFacingModel.Aspect_TOFM_BOTH_SIDE: 0>
+Aspect_TOFM_FRONT_SIDE: OCP.Aspect.Aspect_TypeOfFacingModel # value = <Aspect_TypeOfFacingModel.Aspect_TOFM_FRONT_SIDE: 2>
+Aspect_TOHM_BOUNDBOX: OCP.Aspect.Aspect_TypeOfHighlightMethod # value = <Aspect_TypeOfHighlightMethod.Aspect_TOHM_BOUNDBOX: 1>
+Aspect_TOHM_COLOR: OCP.Aspect.Aspect_TypeOfHighlightMethod # value = <Aspect_TypeOfHighlightMethod.Aspect_TOHM_COLOR: 0>
+Aspect_TOL_DASH: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_DASH: 1>
+Aspect_TOL_DOT: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_DOT: 2>
+Aspect_TOL_DOTDASH: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_DOTDASH: 3>
+Aspect_TOL_EMPTY: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_EMPTY: -1>
+Aspect_TOL_SOLID: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_SOLID: 0>
+Aspect_TOL_USERDEFINED: OCP.Aspect.Aspect_TypeOfLine # value = <Aspect_TypeOfLine.Aspect_TOL_USERDEFINED: 4>
+Aspect_TOM_BALL: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_BALL: 12>
+Aspect_TOM_EMPTY: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_EMPTY: -1>
+Aspect_TOM_O: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_O: 4>
+Aspect_TOM_O_PLUS: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_O_PLUS: 6>
+Aspect_TOM_O_POINT: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_O_POINT: 5>
+Aspect_TOM_O_STAR: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_O_STAR: 7>
+Aspect_TOM_O_X: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_O_X: 8>
+Aspect_TOM_PLUS: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_PLUS: 1>
+Aspect_TOM_POINT: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_POINT: 0>
+Aspect_TOM_RING1: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_RING1: 9>
+Aspect_TOM_RING2: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_RING2: 10>
+Aspect_TOM_RING3: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_RING3: 11>
+Aspect_TOM_STAR: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_STAR: 2>
+Aspect_TOM_USERDEFINED: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_USERDEFINED: 13>
+Aspect_TOM_X: OCP.Aspect.Aspect_TypeOfMarker # value = <Aspect_TypeOfMarker.Aspect_TOM_X: 3>
+Aspect_TOR_BOTTOM_AND_LEFT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_BOTTOM_AND_LEFT_BORDER: 8>
+Aspect_TOR_BOTTOM_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_BOTTOM_BORDER: 4>
+Aspect_TOR_LEFT_AND_TOP_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_LEFT_AND_TOP_BORDER: 9>
+Aspect_TOR_LEFT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_LEFT_BORDER: 5>
+Aspect_TOR_NO_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_NO_BORDER: 1>
+Aspect_TOR_RIGHT_AND_BOTTOM_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_RIGHT_AND_BOTTOM_BORDER: 7>
+Aspect_TOR_RIGHT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_RIGHT_BORDER: 3>
+Aspect_TOR_TOP_AND_RIGHT_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_TOP_AND_RIGHT_BORDER: 6>
+Aspect_TOR_TOP_BORDER: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_TOP_BORDER: 2>
+Aspect_TOR_UNKNOWN: OCP.Aspect.Aspect_TypeOfResize # value = <Aspect_TypeOfResize.Aspect_TOR_UNKNOWN: 0>
+Aspect_TOST_ANNOTATION: OCP.Aspect.Aspect_TypeOfStyleText # value = <Aspect_TypeOfStyleText.Aspect_TOST_ANNOTATION: 1>
+Aspect_TOST_NORMAL: OCP.Aspect.Aspect_TypeOfStyleText # value = <Aspect_TypeOfStyleText.Aspect_TOST_NORMAL: 0>
+Aspect_TOTP_BOTTOM: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_BOTTOM: 2>
+Aspect_TOTP_CENTER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_CENTER: 0>
+Aspect_TOTP_LEFT: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT: 4>
+Aspect_TOTP_LEFT_LOWER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_LOWER: 6>
+Aspect_TOTP_LEFT_UPPER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_UPPER: 5>
+Aspect_TOTP_RIGHT: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT: 8>
+Aspect_TOTP_RIGHT_LOWER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_LOWER: 10>
+Aspect_TOTP_RIGHT_UPPER: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_RIGHT_UPPER: 9>
+Aspect_TOTP_TOP: OCP.Aspect.Aspect_TypeOfTriedronPosition # value = <Aspect_TypeOfTriedronPosition.Aspect_TOTP_TOP: 1>
 Aspect_VKeyFlags_ALL = 7936
 Aspect_VKeyFlags_ALT = 1024
 Aspect_VKeyFlags_CTRL = 512
@@ -2967,148 +4340,188 @@ Aspect_VKeyMouse_MainButtons = 57344
 Aspect_VKeyMouse_MiddleButton = 16384
 Aspect_VKeyMouse_NONE = 0
 Aspect_VKeyMouse_RightButton = 32768
-Aspect_VKey_0: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_0
-Aspect_VKey_1: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_1
-Aspect_VKey_2: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_2
-Aspect_VKey_3: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_3
-Aspect_VKey_4: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_4
-Aspect_VKey_5: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_5
-Aspect_VKey_6: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_6
-Aspect_VKey_7: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_7
-Aspect_VKey_8: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_8
-Aspect_VKey_9: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_9
-Aspect_VKey_A: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_A
-Aspect_VKey_Alt: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Alt
-Aspect_VKey_Apostrophe: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Apostrophe
-Aspect_VKey_B: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_B
-Aspect_VKey_Back: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Back
-Aspect_VKey_Backslash: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Backslash
-Aspect_VKey_Backspace: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Backspace
-Aspect_VKey_BracketLeft: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BracketLeft
-Aspect_VKey_BracketRight: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BracketRight
-Aspect_VKey_BrowserBack: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserBack
-Aspect_VKey_BrowserFavorites: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserFavorites
-Aspect_VKey_BrowserForward: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserForward
-Aspect_VKey_BrowserHome: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserHome
-Aspect_VKey_BrowserRefresh: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserRefresh
-Aspect_VKey_BrowserSearch: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserSearch
-Aspect_VKey_BrowserStop: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_BrowserStop
-Aspect_VKey_C: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_C
-Aspect_VKey_Comma: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Comma
-Aspect_VKey_Control: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Control
-Aspect_VKey_D: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_D
-Aspect_VKey_Delete: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Delete
-Aspect_VKey_Down: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Down
-Aspect_VKey_E: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_E
-Aspect_VKey_End: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_End
-Aspect_VKey_Enter: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Enter
-Aspect_VKey_Equal: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Equal
-Aspect_VKey_Escape: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Escape
-Aspect_VKey_F: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F
-Aspect_VKey_F1: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F1
-Aspect_VKey_F10: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F10
-Aspect_VKey_F11: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F11
-Aspect_VKey_F12: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F12
-Aspect_VKey_F2: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F2
-Aspect_VKey_F3: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F3
-Aspect_VKey_F4: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F4
-Aspect_VKey_F5: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F5
-Aspect_VKey_F6: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F6
-Aspect_VKey_F7: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F7
-Aspect_VKey_F8: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F8
-Aspect_VKey_F9: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_F9
-Aspect_VKey_G: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_G
-Aspect_VKey_H: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_H
-Aspect_VKey_Home: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Home
-Aspect_VKey_I: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_I
-Aspect_VKey_J: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_J
-Aspect_VKey_K: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_K
-Aspect_VKey_L: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_L
-Aspect_VKey_Left: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Left
+Aspect_VKey_0: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_0: 27>
+Aspect_VKey_1: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_1: 28>
+Aspect_VKey_2: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_2: 29>
+Aspect_VKey_3: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_3: 30>
+Aspect_VKey_4: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_4: 31>
+Aspect_VKey_5: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_5: 32>
+Aspect_VKey_6: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_6: 33>
+Aspect_VKey_7: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_7: 34>
+Aspect_VKey_8: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_8: 35>
+Aspect_VKey_9: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_9: 36>
+Aspect_VKey_A: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_A: 1>
+Aspect_VKey_Alt: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Alt: 120>
+Aspect_VKey_Apostrophe: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Apostrophe: 75>
+Aspect_VKey_B: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_B: 2>
+Aspect_VKey_Back: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Back: 61>
+Aspect_VKey_Backslash: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Backslash: 73>
+Aspect_VKey_Backspace: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Backspace: 63>
+Aspect_VKey_BracketLeft: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BracketLeft: 72>
+Aspect_VKey_BracketRight: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BracketRight: 74>
+Aspect_VKey_BrowserBack: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserBack: 99>
+Aspect_VKey_BrowserFavorites: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserFavorites: 104>
+Aspect_VKey_BrowserForward: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserForward: 100>
+Aspect_VKey_BrowserHome: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserHome: 105>
+Aspect_VKey_BrowserRefresh: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserRefresh: 101>
+Aspect_VKey_BrowserSearch: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserSearch: 103>
+Aspect_VKey_BrowserStop: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_BrowserStop: 102>
+Aspect_VKey_C: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_C: 3>
+Aspect_VKey_Comma: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Comma: 68>
+Aspect_VKey_Control: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Control: 119>
+Aspect_VKey_D: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_D: 4>
+Aspect_VKey_Delete: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Delete: 65>
+Aspect_VKey_Down: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Down: 50>
+Aspect_VKey_E: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_E: 5>
+Aspect_VKey_End: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_End: 59>
+Aspect_VKey_Enter: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Enter: 62>
+Aspect_VKey_Equal: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Equal: 55>
+Aspect_VKey_Escape: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Escape: 60>
+Aspect_VKey_F: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F: 6>
+Aspect_VKey_F1: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F1: 37>
+Aspect_VKey_F10: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F10: 46>
+Aspect_VKey_F11: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F11: 47>
+Aspect_VKey_F12: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F12: 48>
+Aspect_VKey_F2: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F2: 38>
+Aspect_VKey_F3: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F3: 39>
+Aspect_VKey_F4: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F4: 40>
+Aspect_VKey_F5: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F5: 41>
+Aspect_VKey_F6: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F6: 42>
+Aspect_VKey_F7: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F7: 43>
+Aspect_VKey_F8: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F8: 44>
+Aspect_VKey_F9: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_F9: 45>
+Aspect_VKey_G: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_G: 7>
+Aspect_VKey_H: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_H: 8>
+Aspect_VKey_Home: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Home: 58>
+Aspect_VKey_I: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_I: 9>
+Aspect_VKey_J: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_J: 10>
+Aspect_VKey_K: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_K: 11>
+Aspect_VKey_L: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_L: 12>
+Aspect_VKey_Left: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Left: 51>
 Aspect_VKey_Lower = 0
-Aspect_VKey_M: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_M
+Aspect_VKey_M: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_M: 13>
 Aspect_VKey_MAX = 255
-Aspect_VKey_MediaNextTrack: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_MediaNextTrack
-Aspect_VKey_MediaPlayPause: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_MediaPlayPause
-Aspect_VKey_MediaPreviousTrack: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_MediaPreviousTrack
-Aspect_VKey_MediaStop: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_MediaStop
-Aspect_VKey_Menu: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Menu
-Aspect_VKey_Meta: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Meta
-Aspect_VKey_Minus: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Minus
-Aspect_VKey_ModifiersLower = 106
-Aspect_VKey_ModifiersUpper = 110
-Aspect_VKey_N: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_N
-Aspect_VKey_NB = 131
-Aspect_VKey_NavBackward: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavBackward
-Aspect_VKey_NavCrouch: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavCrouch
-Aspect_VKey_NavForward: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavForward
-Aspect_VKey_NavInteract: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavInteract
-Aspect_VKey_NavJump: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavJump
-Aspect_VKey_NavLookDown: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavLookDown
-Aspect_VKey_NavLookLeft: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavLookLeft
-Aspect_VKey_NavLookRight: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavLookRight
-Aspect_VKey_NavLookUp: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavLookUp
-Aspect_VKey_NavRollCCW: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavRollCCW
-Aspect_VKey_NavRollCW: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavRollCW
-Aspect_VKey_NavSlideDown: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSlideDown
-Aspect_VKey_NavSlideLeft: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSlideLeft
-Aspect_VKey_NavSlideRight: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSlideRight
-Aspect_VKey_NavSlideUp: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSlideUp
-Aspect_VKey_NavSpeedDecrease: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSpeedDecrease
-Aspect_VKey_NavSpeedIncrease: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavSpeedIncrease
-Aspect_VKey_NavThrustBackward: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavThrustBackward
-Aspect_VKey_NavThrustForward: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavThrustForward
-Aspect_VKey_NavThrustStop: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NavThrustStop
-Aspect_VKey_NavigationKeysLower = 111
-Aspect_VKey_NavigationKeysUpper = 130
-Aspect_VKey_Numlock: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numlock
-Aspect_VKey_Numpad0: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad0
-Aspect_VKey_Numpad1: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad1
-Aspect_VKey_Numpad2: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad2
-Aspect_VKey_Numpad3: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad3
-Aspect_VKey_Numpad4: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad4
-Aspect_VKey_Numpad5: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad5
-Aspect_VKey_Numpad6: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad6
-Aspect_VKey_Numpad7: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad7
-Aspect_VKey_Numpad8: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad8
-Aspect_VKey_Numpad9: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Numpad9
-Aspect_VKey_NumpadAdd: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NumpadAdd
-Aspect_VKey_NumpadDivide: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NumpadDivide
-Aspect_VKey_NumpadMultiply: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NumpadMultiply
-Aspect_VKey_NumpadSubtract: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_NumpadSubtract
-Aspect_VKey_O: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_O
-Aspect_VKey_P: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_P
-Aspect_VKey_PageDown: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_PageDown
-Aspect_VKey_PageUp: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_PageUp
-Aspect_VKey_Period: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Period
-Aspect_VKey_Plus: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Plus
-Aspect_VKey_Q: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Q
-Aspect_VKey_R: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_R
-Aspect_VKey_Right: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Right
-Aspect_VKey_S: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_S
-Aspect_VKey_Scroll: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Scroll
-Aspect_VKey_Semicolon: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Semicolon
-Aspect_VKey_Shift: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Shift
-Aspect_VKey_Slash: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Slash
-Aspect_VKey_Space: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Space
-Aspect_VKey_T: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_T
-Aspect_VKey_Tab: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Tab
-Aspect_VKey_Tilde: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Tilde
-Aspect_VKey_U: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_U
-Aspect_VKey_UNKNOWN: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_UNKNOWN
-Aspect_VKey_Up: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Up
-Aspect_VKey_Upper = 130
-Aspect_VKey_V: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_V
-Aspect_VKey_VolumeDown: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_VolumeDown
-Aspect_VKey_VolumeMute: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_VolumeMute
-Aspect_VKey_VolumeUp: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_VolumeUp
-Aspect_VKey_W: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_W
-Aspect_VKey_X: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_X
-Aspect_VKey_Y: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Y
-Aspect_VKey_Z: OCP.Aspect.Aspect_VKeyBasic # value = Aspect_VKeyBasic.Aspect_VKey_Z
-Aspect_WOL_MEDIUM: OCP.Aspect.Aspect_WidthOfLine # value = Aspect_WidthOfLine.Aspect_WOL_MEDIUM
-Aspect_WOL_THICK: OCP.Aspect.Aspect_WidthOfLine # value = Aspect_WidthOfLine.Aspect_WOL_THICK
-Aspect_WOL_THIN: OCP.Aspect.Aspect_WidthOfLine # value = Aspect_WidthOfLine.Aspect_WOL_THIN
-Aspect_WOL_USERDEFINED: OCP.Aspect.Aspect_WidthOfLine # value = Aspect_WidthOfLine.Aspect_WOL_USERDEFINED
-Aspect_WOL_VERYTHICK: OCP.Aspect.Aspect_WidthOfLine # value = Aspect_WidthOfLine.Aspect_WOL_VERYTHICK
-Aspect_XA_DELETE_WINDOW: OCP.Aspect.Aspect_XAtom # value = Aspect_XAtom.Aspect_XA_DELETE_WINDOW
+Aspect_VKey_MediaNextTrack: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_MediaNextTrack: 92>
+Aspect_VKey_MediaPlayPause: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_MediaPlayPause: 95>
+Aspect_VKey_MediaPreviousTrack: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_MediaPreviousTrack: 93>
+Aspect_VKey_MediaStop: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_MediaStop: 94>
+Aspect_VKey_Menu: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Menu: 121>
+Aspect_VKey_Meta: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Meta: 122>
+Aspect_VKey_Minus: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Minus: 54>
+Aspect_VKey_ModifiersLower = 118
+Aspect_VKey_ModifiersUpper = 122
+Aspect_VKey_N: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_N: 14>
+Aspect_VKey_NB = 143
+Aspect_VKey_NavBackward: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavBackward: 125>
+Aspect_VKey_NavCrouch: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavCrouch: 136>
+Aspect_VKey_NavForward: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavForward: 124>
+Aspect_VKey_NavInteract: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavInteract: 123>
+Aspect_VKey_NavJump: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavJump: 137>
+Aspect_VKey_NavLookDown: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavLookDown: 135>
+Aspect_VKey_NavLookLeft: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavLookLeft: 132>
+Aspect_VKey_NavLookRight: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavLookRight: 133>
+Aspect_VKey_NavLookUp: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavLookUp: 134>
+Aspect_VKey_NavRollCCW: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavRollCCW: 130>
+Aspect_VKey_NavRollCW: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavRollCW: 131>
+Aspect_VKey_NavSlideDown: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSlideDown: 129>
+Aspect_VKey_NavSlideLeft: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSlideLeft: 126>
+Aspect_VKey_NavSlideRight: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSlideRight: 127>
+Aspect_VKey_NavSlideUp: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSlideUp: 128>
+Aspect_VKey_NavSpeedDecrease: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSpeedDecrease: 142>
+Aspect_VKey_NavSpeedIncrease: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavSpeedIncrease: 141>
+Aspect_VKey_NavThrustBackward: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavThrustBackward: 139>
+Aspect_VKey_NavThrustForward: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavThrustForward: 138>
+Aspect_VKey_NavThrustStop: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NavThrustStop: 140>
+Aspect_VKey_NavigationKeysLower = 123
+Aspect_VKey_NavigationKeysUpper = 142
+Aspect_VKey_Numlock: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numlock: 76>
+Aspect_VKey_Numpad0: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad0: 78>
+Aspect_VKey_Numpad1: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad1: 79>
+Aspect_VKey_Numpad2: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad2: 80>
+Aspect_VKey_Numpad3: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad3: 81>
+Aspect_VKey_Numpad4: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad4: 82>
+Aspect_VKey_Numpad5: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad5: 83>
+Aspect_VKey_Numpad6: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad6: 84>
+Aspect_VKey_Numpad7: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad7: 85>
+Aspect_VKey_Numpad8: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad8: 86>
+Aspect_VKey_Numpad9: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Numpad9: 87>
+Aspect_VKey_NumpadAdd: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NumpadAdd: 89>
+Aspect_VKey_NumpadDivide: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NumpadDivide: 91>
+Aspect_VKey_NumpadMultiply: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NumpadMultiply: 88>
+Aspect_VKey_NumpadSubtract: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_NumpadSubtract: 90>
+Aspect_VKey_O: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_O: 15>
+Aspect_VKey_P: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_P: 16>
+Aspect_VKey_PageDown: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_PageDown: 57>
+Aspect_VKey_PageUp: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_PageUp: 56>
+Aspect_VKey_Period: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Period: 69>
+Aspect_VKey_Plus: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Plus: 53>
+Aspect_VKey_Q: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Q: 17>
+Aspect_VKey_R: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_R: 18>
+Aspect_VKey_Right: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Right: 52>
+Aspect_VKey_S: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_S: 19>
+Aspect_VKey_Scroll: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Scroll: 77>
+Aspect_VKey_Semicolon: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Semicolon: 70>
+Aspect_VKey_Shift: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Shift: 118>
+Aspect_VKey_Slash: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Slash: 71>
+Aspect_VKey_Space: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Space: 64>
+Aspect_VKey_T: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_T: 20>
+Aspect_VKey_Tab: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Tab: 67>
+Aspect_VKey_Tilde: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Tilde: 66>
+Aspect_VKey_U: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_U: 21>
+Aspect_VKey_UNKNOWN: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_UNKNOWN: 0>
+Aspect_VKey_Up: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Up: 49>
+Aspect_VKey_Upper = 142
+Aspect_VKey_V: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_V: 22>
+Aspect_VKey_ViewAxoLeftProj: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewAxoLeftProj: 112>
+Aspect_VKey_ViewAxoRightProj: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewAxoRightProj: 113>
+Aspect_VKey_ViewBack: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewBack: 111>
+Aspect_VKey_ViewBottom: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewBottom: 107>
+Aspect_VKey_ViewFitAll: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewFitAll: 114>
+Aspect_VKey_ViewFront: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewFront: 110>
+Aspect_VKey_ViewLeft: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewLeft: 108>
+Aspect_VKey_ViewRight: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewRight: 109>
+Aspect_VKey_ViewRoll90CCW: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewRoll90CCW: 116>
+Aspect_VKey_ViewRoll90CW: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewRoll90CW: 115>
+Aspect_VKey_ViewSwitchRotate: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewSwitchRotate: 117>
+Aspect_VKey_ViewTop: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_ViewTop: 106>
+Aspect_VKey_VolumeDown: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_VolumeDown: 97>
+Aspect_VKey_VolumeMute: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_VolumeMute: 96>
+Aspect_VKey_VolumeUp: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_VolumeUp: 98>
+Aspect_VKey_W: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_W: 23>
+Aspect_VKey_X: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_X: 24>
+Aspect_VKey_Y: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Y: 25>
+Aspect_VKey_Z: OCP.Aspect.Aspect_VKeyBasic # value = <Aspect_VKeyBasic.Aspect_VKey_Z: 26>
+Aspect_WOL_MEDIUM: OCP.Aspect.Aspect_WidthOfLine # value = <Aspect_WidthOfLine.Aspect_WOL_MEDIUM: 1>
+Aspect_WOL_THICK: OCP.Aspect.Aspect_WidthOfLine # value = <Aspect_WidthOfLine.Aspect_WOL_THICK: 2>
+Aspect_WOL_THIN: OCP.Aspect.Aspect_WidthOfLine # value = <Aspect_WidthOfLine.Aspect_WOL_THIN: 0>
+Aspect_WOL_USERDEFINED: OCP.Aspect.Aspect_WidthOfLine # value = <Aspect_WidthOfLine.Aspect_WOL_USERDEFINED: 4>
+Aspect_WOL_VERYTHICK: OCP.Aspect.Aspect_WidthOfLine # value = <Aspect_WidthOfLine.Aspect_WOL_VERYTHICK: 3>
+Aspect_XA_DELETE_WINDOW: OCP.Aspect.Aspect_XAtom # value = <Aspect_XAtom.Aspect_XA_DELETE_WINDOW: 0>
+Aspect_XRActionType_InputAnalog: OCP.Aspect.Aspect_XRActionType # value = <Aspect_XRActionType.Aspect_XRActionType_InputAnalog: 1>
+Aspect_XRActionType_InputDigital: OCP.Aspect.Aspect_XRActionType # value = <Aspect_XRActionType.Aspect_XRActionType_InputDigital: 0>
+Aspect_XRActionType_InputPose: OCP.Aspect.Aspect_XRActionType # value = <Aspect_XRActionType.Aspect_XRActionType_InputPose: 2>
+Aspect_XRActionType_InputSkeletal: OCP.Aspect.Aspect_XRActionType # value = <Aspect_XRActionType.Aspect_XRActionType_InputSkeletal: 3>
+Aspect_XRActionType_OutputHaptic: OCP.Aspect.Aspect_XRActionType # value = <Aspect_XRActionType.Aspect_XRActionType_OutputHaptic: 4>
+Aspect_XRGenericAction_InputAppMenu: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputAppMenu: 1>
+Aspect_XRGenericAction_InputGripClick: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputGripClick: 5>
+Aspect_XRGenericAction_InputPoseBase: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseBase: 12>
+Aspect_XRGenericAction_InputPoseFingerTip: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseFingerTip: 15>
+Aspect_XRGenericAction_InputPoseFront: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseFront: 13>
+Aspect_XRGenericAction_InputPoseHandGrip: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputPoseHandGrip: 14>
+Aspect_XRGenericAction_InputSysMenu: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputSysMenu: 2>
+Aspect_XRGenericAction_InputThumbstickClick: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickClick: 11>
+Aspect_XRGenericAction_InputThumbstickPosition: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickPosition: 9>
+Aspect_XRGenericAction_InputThumbstickTouch: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputThumbstickTouch: 10>
+Aspect_XRGenericAction_InputTrackPadClick: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadClick: 8>
+Aspect_XRGenericAction_InputTrackPadPosition: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadPosition: 6>
+Aspect_XRGenericAction_InputTrackPadTouch: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTrackPadTouch: 7>
+Aspect_XRGenericAction_InputTriggerClick: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTriggerClick: 4>
+Aspect_XRGenericAction_InputTriggerPull: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_InputTriggerPull: 3>
+Aspect_XRGenericAction_IsHeadsetOn: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_IsHeadsetOn: 0>
+Aspect_XRGenericAction_NB = 17
+Aspect_XRGenericAction_OutputHaptic: OCP.Aspect.Aspect_XRGenericAction # value = <Aspect_XRGenericAction.Aspect_XRGenericAction_OutputHaptic: 16>
+Aspect_XRTrackedDeviceRole_Head: OCP.Aspect.Aspect_XRTrackedDeviceRole # value = <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_Head: 0>
+Aspect_XRTrackedDeviceRole_LeftHand: OCP.Aspect.Aspect_XRTrackedDeviceRole # value = <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_LeftHand: 1>
+Aspect_XRTrackedDeviceRole_NB = 4
+Aspect_XRTrackedDeviceRole_Other: OCP.Aspect.Aspect_XRTrackedDeviceRole # value = <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_Other: 3>
+Aspect_XRTrackedDeviceRole_RightHand: OCP.Aspect.Aspect_XRTrackedDeviceRole # value = <Aspect_XRTrackedDeviceRole.Aspect_XRTrackedDeviceRole_RightHand: 2>

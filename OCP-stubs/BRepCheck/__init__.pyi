@@ -4,11 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
 import OCP.Adaptor3d
-import OCP.Standard
-import OCP.TopoDS
+import OCP.TopTools
+import io
 import OCP.NCollection
+import OCP.TopoDS
+import OCP.Standard
 __all__  = [
 "BRepCheck",
 "BRepCheck_Analyzer",
@@ -80,7 +81,7 @@ class BRepCheck():
         Returns the resolution on the surface
         """
     @staticmethod
-    def Print_s(Stat : BRepCheck_Status,OS : Any) -> None: 
+    def Print_s(Stat : BRepCheck_Status,OS : io.BytesIO) -> None: 
         """
         None
         """
@@ -100,7 +101,7 @@ class BRepCheck_Analyzer():
         <S> is the shape to control. <GeomControls> If False only topological informaions are checked. The geometricals controls are For a Vertex : BRepCheck_InvalidTolerance NYI For an Edge : BRepCheck_InvalidCurveOnClosedSurface, BRepCheck_InvalidCurveOnSurface, BRepCheck_InvalidSameParameterFlag, BRepCheck_InvalidTolerance NYI For a face : BRepCheck_UnorientableShape, BRepCheck_IntersectingWires, BRepCheck_InvalidTolerance NYI For a wire : BRepCheck_SelfIntersectingWire
         """
     @overload
-    def IsValid(self) -> bool: 
+    def IsValid(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         <S> is a subshape of the original shape. Returns <STandard_True> if no default has been detected on <S> and any of its subshape.
 
@@ -109,16 +110,16 @@ class BRepCheck_Analyzer():
         Returns true if no defect is detected on the shape S or any of its subshapes. Returns true if the shape S is valid. This function checks whether a given shape is valid by checking that: - the topology is correct - parameterization of edges in particular is correct. For the topology to be correct, the following conditions must be satisfied: - edges should have at least two vertices if they are not degenerate edges. The vertices should be within the range of the bounding edges at the tolerance specified in the vertex, - edges should share at least one face. The representation of the edges should be within the tolerance criterion assigned to them. - wires defining a face should not self-intersect and should be closed, - there should be one wire which contains all other wires inside a face, - wires should be correctly oriented with respect to each of the edges, - faces should be correctly oriented, in particular with respect to adjacent faces if these faces define a solid, - shells defining a solid should be closed. There should be one enclosing shell if the shape is a solid; To check parameterization of edge, there are 2 approaches depending on the edge?s contextual situation. - if the edge is either single, or it is in the context of a wire or a compound, its parameterization is defined by the parameterization of its 3D curve and is considered as valid. - If the edge is in the context of a face, it should have SameParameter and SameRange flags set to Standard_True. To check these flags, you should call the function BRep_Tool::SameParameter and BRep_Tool::SameRange for an edge. If at least one of these flags is set to Standard_False, the edge is considered as invalid without any additional check. If the edge is contained by a face, and it has SameParameter and SameRange flags set to Standard_True, IsValid checks whether representation of the edge on face, in context of which the edge is considered, has the same parameterization up to the tolerance value coded on the edge. For a given parameter t on the edge having C as a 3D curve and one PCurve P on a surface S (base surface of the reference face), this checks that |C(t) - S(P(t))| is less than or equal to tolerance, where tolerance is the tolerance value coded on the edge.
         """
     @overload
-    def IsValid(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: ...
+    def IsValid(self) -> bool: ...
     @overload
-    def Result(self,SubS : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_Result: 
+    def Result(self,S : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_Result: 
         """
         None
 
         None
         """
     @overload
-    def Result(self,S : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_Result: ...
+    def Result(self,SubS : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_Result: ...
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape,GeomControls : bool=True) -> None: ...
     pass
 class BRepCheck_DataMapOfShapeListOfStatus(OCP.NCollection.NCollection_BaseMap):
@@ -199,7 +200,7 @@ class BRepCheck_DataMapOfShapeListOfStatus(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -208,12 +209,12 @@ class BRepCheck_DataMapOfShapeListOfStatus(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : BRepCheck_DataMapOfShapeListOfStatus) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : BRepCheck_DataMapOfShapeListOfStatus) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepCheck_Result(OCP.Standard.Standard_Transient):
     def Blind(self) -> None: 
@@ -513,9 +514,9 @@ class BRepCheck_ListOfStatus(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : BRepCheck_Status) -> BRepCheck_Status: ...
-    @overload
     def Append(self,theItem : BRepCheck_Status,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : BRepCheck_Status) -> BRepCheck_Status: ...
     def Assign(self,theOther : BRepCheck_ListOfStatus) -> BRepCheck_ListOfStatus: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -535,14 +536,14 @@ class BRepCheck_ListOfStatus(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : BRepCheck_Status,theIter : Any) -> BRepCheck_Status: 
+    def InsertAfter(self,theOther : BRepCheck_ListOfStatus,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : BRepCheck_ListOfStatus,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : BRepCheck_Status,theIter : Any) -> BRepCheck_Status: ...
     @overload
     def InsertBefore(self,theOther : BRepCheck_ListOfStatus,theIter : Any) -> None: 
         """
@@ -563,14 +564,14 @@ class BRepCheck_ListOfStatus(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : BRepCheck_ListOfStatus) -> None: 
+    def Prepend(self,theItem : BRepCheck_Status) -> BRepCheck_Status: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : BRepCheck_Status) -> BRepCheck_Status: ...
+    def Prepend(self,theOther : BRepCheck_ListOfStatus) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -593,7 +594,7 @@ class BRepCheck_ListOfStatus(OCP.NCollection.NCollection_BaseList):
     def __init__(self,theOther : BRepCheck_ListOfStatus) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepCheck_Edge(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def Blind(self) -> None: 
@@ -623,14 +624,14 @@ class BRepCheck_Edge(BRepCheck_Result, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def GeometricControls(self,B : bool) -> None: 
+    def GeometricControls(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def GeometricControls(self) -> bool: ...
+    def GeometricControls(self,B : bool) -> None: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -1091,55 +1092,63 @@ class BRepCheck_Status():
 
       BRepCheck_CheckFail
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepCheck_BadOrientation: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_BadOrientation
-    BRepCheck_BadOrientationOfSubshape: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_BadOrientationOfSubshape
-    BRepCheck_CheckFail: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_CheckFail
-    BRepCheck_EmptyShell: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_EmptyShell
-    BRepCheck_EmptyWire: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_EmptyWire
-    BRepCheck_EnclosedRegion: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_EnclosedRegion
-    BRepCheck_FreeEdge: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_FreeEdge
-    BRepCheck_IntersectingWires: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_IntersectingWires
-    BRepCheck_Invalid3DCurve: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_Invalid3DCurve
-    BRepCheck_InvalidCurveOnClosedSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidCurveOnClosedSurface
-    BRepCheck_InvalidCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidCurveOnSurface
-    BRepCheck_InvalidDegeneratedFlag: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidDegeneratedFlag
-    BRepCheck_InvalidImbricationOfShells: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidImbricationOfShells
-    BRepCheck_InvalidImbricationOfWires: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidImbricationOfWires
-    BRepCheck_InvalidMultiConnexity: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidMultiConnexity
-    BRepCheck_InvalidPointOnCurve: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidPointOnCurve
-    BRepCheck_InvalidPointOnCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidPointOnCurveOnSurface
-    BRepCheck_InvalidPointOnSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidPointOnSurface
-    BRepCheck_InvalidPolygonOnTriangulation: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidPolygonOnTriangulation
-    BRepCheck_InvalidRange: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidRange
-    BRepCheck_InvalidSameParameterFlag: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidSameParameterFlag
-    BRepCheck_InvalidSameRangeFlag: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidSameRangeFlag
-    BRepCheck_InvalidToleranceValue: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidToleranceValue
-    BRepCheck_InvalidWire: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidWire
-    BRepCheck_Multiple3DCurve: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_Multiple3DCurve
-    BRepCheck_No3DCurve: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_No3DCurve
-    BRepCheck_NoCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_NoCurveOnSurface
-    BRepCheck_NoError: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_NoError
-    BRepCheck_NoSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_NoSurface
-    BRepCheck_NotClosed: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_NotClosed
-    BRepCheck_NotConnected: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_NotConnected
-    BRepCheck_RedundantEdge: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_RedundantEdge
-    BRepCheck_RedundantFace: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_RedundantFace
-    BRepCheck_RedundantWire: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_RedundantWire
-    BRepCheck_SelfIntersectingWire: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_SelfIntersectingWire
-    BRepCheck_SubshapeNotInShape: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_SubshapeNotInShape
-    BRepCheck_UnorientableShape: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_UnorientableShape
-    __entries: dict # value = {'BRepCheck_NoError': (BRepCheck_Status.BRepCheck_NoError, None), 'BRepCheck_InvalidPointOnCurve': (BRepCheck_Status.BRepCheck_InvalidPointOnCurve, None), 'BRepCheck_InvalidPointOnCurveOnSurface': (BRepCheck_Status.BRepCheck_InvalidPointOnCurveOnSurface, None), 'BRepCheck_InvalidPointOnSurface': (BRepCheck_Status.BRepCheck_InvalidPointOnSurface, None), 'BRepCheck_No3DCurve': (BRepCheck_Status.BRepCheck_No3DCurve, None), 'BRepCheck_Multiple3DCurve': (BRepCheck_Status.BRepCheck_Multiple3DCurve, None), 'BRepCheck_Invalid3DCurve': (BRepCheck_Status.BRepCheck_Invalid3DCurve, None), 'BRepCheck_NoCurveOnSurface': (BRepCheck_Status.BRepCheck_NoCurveOnSurface, None), 'BRepCheck_InvalidCurveOnSurface': (BRepCheck_Status.BRepCheck_InvalidCurveOnSurface, None), 'BRepCheck_InvalidCurveOnClosedSurface': (BRepCheck_Status.BRepCheck_InvalidCurveOnClosedSurface, None), 'BRepCheck_InvalidSameRangeFlag': (BRepCheck_Status.BRepCheck_InvalidSameRangeFlag, None), 'BRepCheck_InvalidSameParameterFlag': (BRepCheck_Status.BRepCheck_InvalidSameParameterFlag, None), 'BRepCheck_InvalidDegeneratedFlag': (BRepCheck_Status.BRepCheck_InvalidDegeneratedFlag, None), 'BRepCheck_FreeEdge': (BRepCheck_Status.BRepCheck_FreeEdge, None), 'BRepCheck_InvalidMultiConnexity': (BRepCheck_Status.BRepCheck_InvalidMultiConnexity, None), 'BRepCheck_InvalidRange': (BRepCheck_Status.BRepCheck_InvalidRange, None), 'BRepCheck_EmptyWire': (BRepCheck_Status.BRepCheck_EmptyWire, None), 'BRepCheck_RedundantEdge': (BRepCheck_Status.BRepCheck_RedundantEdge, None), 'BRepCheck_SelfIntersectingWire': (BRepCheck_Status.BRepCheck_SelfIntersectingWire, None), 'BRepCheck_NoSurface': (BRepCheck_Status.BRepCheck_NoSurface, None), 'BRepCheck_InvalidWire': (BRepCheck_Status.BRepCheck_InvalidWire, None), 'BRepCheck_RedundantWire': (BRepCheck_Status.BRepCheck_RedundantWire, None), 'BRepCheck_IntersectingWires': (BRepCheck_Status.BRepCheck_IntersectingWires, None), 'BRepCheck_InvalidImbricationOfWires': (BRepCheck_Status.BRepCheck_InvalidImbricationOfWires, None), 'BRepCheck_EmptyShell': (BRepCheck_Status.BRepCheck_EmptyShell, None), 'BRepCheck_RedundantFace': (BRepCheck_Status.BRepCheck_RedundantFace, None), 'BRepCheck_InvalidImbricationOfShells': (BRepCheck_Status.BRepCheck_InvalidImbricationOfShells, None), 'BRepCheck_UnorientableShape': (BRepCheck_Status.BRepCheck_UnorientableShape, None), 'BRepCheck_NotClosed': (BRepCheck_Status.BRepCheck_NotClosed, None), 'BRepCheck_NotConnected': (BRepCheck_Status.BRepCheck_NotConnected, None), 'BRepCheck_SubshapeNotInShape': (BRepCheck_Status.BRepCheck_SubshapeNotInShape, None), 'BRepCheck_BadOrientation': (BRepCheck_Status.BRepCheck_BadOrientation, None), 'BRepCheck_BadOrientationOfSubshape': (BRepCheck_Status.BRepCheck_BadOrientationOfSubshape, None), 'BRepCheck_InvalidPolygonOnTriangulation': (BRepCheck_Status.BRepCheck_InvalidPolygonOnTriangulation, None), 'BRepCheck_InvalidToleranceValue': (BRepCheck_Status.BRepCheck_InvalidToleranceValue, None), 'BRepCheck_EnclosedRegion': (BRepCheck_Status.BRepCheck_EnclosedRegion, None), 'BRepCheck_CheckFail': (BRepCheck_Status.BRepCheck_CheckFail, None)}
-    __members__: dict # value = {'BRepCheck_NoError': BRepCheck_Status.BRepCheck_NoError, 'BRepCheck_InvalidPointOnCurve': BRepCheck_Status.BRepCheck_InvalidPointOnCurve, 'BRepCheck_InvalidPointOnCurveOnSurface': BRepCheck_Status.BRepCheck_InvalidPointOnCurveOnSurface, 'BRepCheck_InvalidPointOnSurface': BRepCheck_Status.BRepCheck_InvalidPointOnSurface, 'BRepCheck_No3DCurve': BRepCheck_Status.BRepCheck_No3DCurve, 'BRepCheck_Multiple3DCurve': BRepCheck_Status.BRepCheck_Multiple3DCurve, 'BRepCheck_Invalid3DCurve': BRepCheck_Status.BRepCheck_Invalid3DCurve, 'BRepCheck_NoCurveOnSurface': BRepCheck_Status.BRepCheck_NoCurveOnSurface, 'BRepCheck_InvalidCurveOnSurface': BRepCheck_Status.BRepCheck_InvalidCurveOnSurface, 'BRepCheck_InvalidCurveOnClosedSurface': BRepCheck_Status.BRepCheck_InvalidCurveOnClosedSurface, 'BRepCheck_InvalidSameRangeFlag': BRepCheck_Status.BRepCheck_InvalidSameRangeFlag, 'BRepCheck_InvalidSameParameterFlag': BRepCheck_Status.BRepCheck_InvalidSameParameterFlag, 'BRepCheck_InvalidDegeneratedFlag': BRepCheck_Status.BRepCheck_InvalidDegeneratedFlag, 'BRepCheck_FreeEdge': BRepCheck_Status.BRepCheck_FreeEdge, 'BRepCheck_InvalidMultiConnexity': BRepCheck_Status.BRepCheck_InvalidMultiConnexity, 'BRepCheck_InvalidRange': BRepCheck_Status.BRepCheck_InvalidRange, 'BRepCheck_EmptyWire': BRepCheck_Status.BRepCheck_EmptyWire, 'BRepCheck_RedundantEdge': BRepCheck_Status.BRepCheck_RedundantEdge, 'BRepCheck_SelfIntersectingWire': BRepCheck_Status.BRepCheck_SelfIntersectingWire, 'BRepCheck_NoSurface': BRepCheck_Status.BRepCheck_NoSurface, 'BRepCheck_InvalidWire': BRepCheck_Status.BRepCheck_InvalidWire, 'BRepCheck_RedundantWire': BRepCheck_Status.BRepCheck_RedundantWire, 'BRepCheck_IntersectingWires': BRepCheck_Status.BRepCheck_IntersectingWires, 'BRepCheck_InvalidImbricationOfWires': BRepCheck_Status.BRepCheck_InvalidImbricationOfWires, 'BRepCheck_EmptyShell': BRepCheck_Status.BRepCheck_EmptyShell, 'BRepCheck_RedundantFace': BRepCheck_Status.BRepCheck_RedundantFace, 'BRepCheck_InvalidImbricationOfShells': BRepCheck_Status.BRepCheck_InvalidImbricationOfShells, 'BRepCheck_UnorientableShape': BRepCheck_Status.BRepCheck_UnorientableShape, 'BRepCheck_NotClosed': BRepCheck_Status.BRepCheck_NotClosed, 'BRepCheck_NotConnected': BRepCheck_Status.BRepCheck_NotConnected, 'BRepCheck_SubshapeNotInShape': BRepCheck_Status.BRepCheck_SubshapeNotInShape, 'BRepCheck_BadOrientation': BRepCheck_Status.BRepCheck_BadOrientation, 'BRepCheck_BadOrientationOfSubshape': BRepCheck_Status.BRepCheck_BadOrientationOfSubshape, 'BRepCheck_InvalidPolygonOnTriangulation': BRepCheck_Status.BRepCheck_InvalidPolygonOnTriangulation, 'BRepCheck_InvalidToleranceValue': BRepCheck_Status.BRepCheck_InvalidToleranceValue, 'BRepCheck_EnclosedRegion': BRepCheck_Status.BRepCheck_EnclosedRegion, 'BRepCheck_CheckFail': BRepCheck_Status.BRepCheck_CheckFail}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepCheck_BadOrientation: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_BadOrientation: 31>
+    BRepCheck_BadOrientationOfSubshape: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_BadOrientationOfSubshape: 32>
+    BRepCheck_CheckFail: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_CheckFail: 36>
+    BRepCheck_EmptyShell: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_EmptyShell: 24>
+    BRepCheck_EmptyWire: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_EmptyWire: 16>
+    BRepCheck_EnclosedRegion: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_EnclosedRegion: 35>
+    BRepCheck_FreeEdge: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_FreeEdge: 13>
+    BRepCheck_IntersectingWires: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_IntersectingWires: 22>
+    BRepCheck_Invalid3DCurve: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_Invalid3DCurve: 6>
+    BRepCheck_InvalidCurveOnClosedSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidCurveOnClosedSurface: 9>
+    BRepCheck_InvalidCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidCurveOnSurface: 8>
+    BRepCheck_InvalidDegeneratedFlag: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidDegeneratedFlag: 12>
+    BRepCheck_InvalidImbricationOfShells: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidImbricationOfShells: 26>
+    BRepCheck_InvalidImbricationOfWires: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidImbricationOfWires: 23>
+    BRepCheck_InvalidMultiConnexity: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidMultiConnexity: 14>
+    BRepCheck_InvalidPointOnCurve: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidPointOnCurve: 1>
+    BRepCheck_InvalidPointOnCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidPointOnCurveOnSurface: 2>
+    BRepCheck_InvalidPointOnSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidPointOnSurface: 3>
+    BRepCheck_InvalidPolygonOnTriangulation: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidPolygonOnTriangulation: 33>
+    BRepCheck_InvalidRange: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidRange: 15>
+    BRepCheck_InvalidSameParameterFlag: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidSameParameterFlag: 11>
+    BRepCheck_InvalidSameRangeFlag: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidSameRangeFlag: 10>
+    BRepCheck_InvalidToleranceValue: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidToleranceValue: 34>
+    BRepCheck_InvalidWire: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidWire: 20>
+    BRepCheck_Multiple3DCurve: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_Multiple3DCurve: 5>
+    BRepCheck_No3DCurve: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_No3DCurve: 4>
+    BRepCheck_NoCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_NoCurveOnSurface: 7>
+    BRepCheck_NoError: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_NoError: 0>
+    BRepCheck_NoSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_NoSurface: 19>
+    BRepCheck_NotClosed: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_NotClosed: 28>
+    BRepCheck_NotConnected: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_NotConnected: 29>
+    BRepCheck_RedundantEdge: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_RedundantEdge: 17>
+    BRepCheck_RedundantFace: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_RedundantFace: 25>
+    BRepCheck_RedundantWire: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_RedundantWire: 21>
+    BRepCheck_SelfIntersectingWire: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_SelfIntersectingWire: 18>
+    BRepCheck_SubshapeNotInShape: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_SubshapeNotInShape: 30>
+    BRepCheck_UnorientableShape: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_UnorientableShape: 27>
+    __entries: dict # value = {'BRepCheck_NoError': (<BRepCheck_Status.BRepCheck_NoError: 0>, None), 'BRepCheck_InvalidPointOnCurve': (<BRepCheck_Status.BRepCheck_InvalidPointOnCurve: 1>, None), 'BRepCheck_InvalidPointOnCurveOnSurface': (<BRepCheck_Status.BRepCheck_InvalidPointOnCurveOnSurface: 2>, None), 'BRepCheck_InvalidPointOnSurface': (<BRepCheck_Status.BRepCheck_InvalidPointOnSurface: 3>, None), 'BRepCheck_No3DCurve': (<BRepCheck_Status.BRepCheck_No3DCurve: 4>, None), 'BRepCheck_Multiple3DCurve': (<BRepCheck_Status.BRepCheck_Multiple3DCurve: 5>, None), 'BRepCheck_Invalid3DCurve': (<BRepCheck_Status.BRepCheck_Invalid3DCurve: 6>, None), 'BRepCheck_NoCurveOnSurface': (<BRepCheck_Status.BRepCheck_NoCurveOnSurface: 7>, None), 'BRepCheck_InvalidCurveOnSurface': (<BRepCheck_Status.BRepCheck_InvalidCurveOnSurface: 8>, None), 'BRepCheck_InvalidCurveOnClosedSurface': (<BRepCheck_Status.BRepCheck_InvalidCurveOnClosedSurface: 9>, None), 'BRepCheck_InvalidSameRangeFlag': (<BRepCheck_Status.BRepCheck_InvalidSameRangeFlag: 10>, None), 'BRepCheck_InvalidSameParameterFlag': (<BRepCheck_Status.BRepCheck_InvalidSameParameterFlag: 11>, None), 'BRepCheck_InvalidDegeneratedFlag': (<BRepCheck_Status.BRepCheck_InvalidDegeneratedFlag: 12>, None), 'BRepCheck_FreeEdge': (<BRepCheck_Status.BRepCheck_FreeEdge: 13>, None), 'BRepCheck_InvalidMultiConnexity': (<BRepCheck_Status.BRepCheck_InvalidMultiConnexity: 14>, None), 'BRepCheck_InvalidRange': (<BRepCheck_Status.BRepCheck_InvalidRange: 15>, None), 'BRepCheck_EmptyWire': (<BRepCheck_Status.BRepCheck_EmptyWire: 16>, None), 'BRepCheck_RedundantEdge': (<BRepCheck_Status.BRepCheck_RedundantEdge: 17>, None), 'BRepCheck_SelfIntersectingWire': (<BRepCheck_Status.BRepCheck_SelfIntersectingWire: 18>, None), 'BRepCheck_NoSurface': (<BRepCheck_Status.BRepCheck_NoSurface: 19>, None), 'BRepCheck_InvalidWire': (<BRepCheck_Status.BRepCheck_InvalidWire: 20>, None), 'BRepCheck_RedundantWire': (<BRepCheck_Status.BRepCheck_RedundantWire: 21>, None), 'BRepCheck_IntersectingWires': (<BRepCheck_Status.BRepCheck_IntersectingWires: 22>, None), 'BRepCheck_InvalidImbricationOfWires': (<BRepCheck_Status.BRepCheck_InvalidImbricationOfWires: 23>, None), 'BRepCheck_EmptyShell': (<BRepCheck_Status.BRepCheck_EmptyShell: 24>, None), 'BRepCheck_RedundantFace': (<BRepCheck_Status.BRepCheck_RedundantFace: 25>, None), 'BRepCheck_InvalidImbricationOfShells': (<BRepCheck_Status.BRepCheck_InvalidImbricationOfShells: 26>, None), 'BRepCheck_UnorientableShape': (<BRepCheck_Status.BRepCheck_UnorientableShape: 27>, None), 'BRepCheck_NotClosed': (<BRepCheck_Status.BRepCheck_NotClosed: 28>, None), 'BRepCheck_NotConnected': (<BRepCheck_Status.BRepCheck_NotConnected: 29>, None), 'BRepCheck_SubshapeNotInShape': (<BRepCheck_Status.BRepCheck_SubshapeNotInShape: 30>, None), 'BRepCheck_BadOrientation': (<BRepCheck_Status.BRepCheck_BadOrientation: 31>, None), 'BRepCheck_BadOrientationOfSubshape': (<BRepCheck_Status.BRepCheck_BadOrientationOfSubshape: 32>, None), 'BRepCheck_InvalidPolygonOnTriangulation': (<BRepCheck_Status.BRepCheck_InvalidPolygonOnTriangulation: 33>, None), 'BRepCheck_InvalidToleranceValue': (<BRepCheck_Status.BRepCheck_InvalidToleranceValue: 34>, None), 'BRepCheck_EnclosedRegion': (<BRepCheck_Status.BRepCheck_EnclosedRegion: 35>, None), 'BRepCheck_CheckFail': (<BRepCheck_Status.BRepCheck_CheckFail: 36>, None)}
+    __members__: dict # value = {'BRepCheck_NoError': <BRepCheck_Status.BRepCheck_NoError: 0>, 'BRepCheck_InvalidPointOnCurve': <BRepCheck_Status.BRepCheck_InvalidPointOnCurve: 1>, 'BRepCheck_InvalidPointOnCurveOnSurface': <BRepCheck_Status.BRepCheck_InvalidPointOnCurveOnSurface: 2>, 'BRepCheck_InvalidPointOnSurface': <BRepCheck_Status.BRepCheck_InvalidPointOnSurface: 3>, 'BRepCheck_No3DCurve': <BRepCheck_Status.BRepCheck_No3DCurve: 4>, 'BRepCheck_Multiple3DCurve': <BRepCheck_Status.BRepCheck_Multiple3DCurve: 5>, 'BRepCheck_Invalid3DCurve': <BRepCheck_Status.BRepCheck_Invalid3DCurve: 6>, 'BRepCheck_NoCurveOnSurface': <BRepCheck_Status.BRepCheck_NoCurveOnSurface: 7>, 'BRepCheck_InvalidCurveOnSurface': <BRepCheck_Status.BRepCheck_InvalidCurveOnSurface: 8>, 'BRepCheck_InvalidCurveOnClosedSurface': <BRepCheck_Status.BRepCheck_InvalidCurveOnClosedSurface: 9>, 'BRepCheck_InvalidSameRangeFlag': <BRepCheck_Status.BRepCheck_InvalidSameRangeFlag: 10>, 'BRepCheck_InvalidSameParameterFlag': <BRepCheck_Status.BRepCheck_InvalidSameParameterFlag: 11>, 'BRepCheck_InvalidDegeneratedFlag': <BRepCheck_Status.BRepCheck_InvalidDegeneratedFlag: 12>, 'BRepCheck_FreeEdge': <BRepCheck_Status.BRepCheck_FreeEdge: 13>, 'BRepCheck_InvalidMultiConnexity': <BRepCheck_Status.BRepCheck_InvalidMultiConnexity: 14>, 'BRepCheck_InvalidRange': <BRepCheck_Status.BRepCheck_InvalidRange: 15>, 'BRepCheck_EmptyWire': <BRepCheck_Status.BRepCheck_EmptyWire: 16>, 'BRepCheck_RedundantEdge': <BRepCheck_Status.BRepCheck_RedundantEdge: 17>, 'BRepCheck_SelfIntersectingWire': <BRepCheck_Status.BRepCheck_SelfIntersectingWire: 18>, 'BRepCheck_NoSurface': <BRepCheck_Status.BRepCheck_NoSurface: 19>, 'BRepCheck_InvalidWire': <BRepCheck_Status.BRepCheck_InvalidWire: 20>, 'BRepCheck_RedundantWire': <BRepCheck_Status.BRepCheck_RedundantWire: 21>, 'BRepCheck_IntersectingWires': <BRepCheck_Status.BRepCheck_IntersectingWires: 22>, 'BRepCheck_InvalidImbricationOfWires': <BRepCheck_Status.BRepCheck_InvalidImbricationOfWires: 23>, 'BRepCheck_EmptyShell': <BRepCheck_Status.BRepCheck_EmptyShell: 24>, 'BRepCheck_RedundantFace': <BRepCheck_Status.BRepCheck_RedundantFace: 25>, 'BRepCheck_InvalidImbricationOfShells': <BRepCheck_Status.BRepCheck_InvalidImbricationOfShells: 26>, 'BRepCheck_UnorientableShape': <BRepCheck_Status.BRepCheck_UnorientableShape: 27>, 'BRepCheck_NotClosed': <BRepCheck_Status.BRepCheck_NotClosed: 28>, 'BRepCheck_NotConnected': <BRepCheck_Status.BRepCheck_NotConnected: 29>, 'BRepCheck_SubshapeNotInShape': <BRepCheck_Status.BRepCheck_SubshapeNotInShape: 30>, 'BRepCheck_BadOrientation': <BRepCheck_Status.BRepCheck_BadOrientation: 31>, 'BRepCheck_BadOrientationOfSubshape': <BRepCheck_Status.BRepCheck_BadOrientationOfSubshape: 32>, 'BRepCheck_InvalidPolygonOnTriangulation': <BRepCheck_Status.BRepCheck_InvalidPolygonOnTriangulation: 33>, 'BRepCheck_InvalidToleranceValue': <BRepCheck_Status.BRepCheck_InvalidToleranceValue: 34>, 'BRepCheck_EnclosedRegion': <BRepCheck_Status.BRepCheck_EnclosedRegion: 35>, 'BRepCheck_CheckFail': <BRepCheck_Status.BRepCheck_CheckFail: 36>}
     pass
 class BRepCheck_Vertex(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def Blind(self) -> None: 
@@ -1422,40 +1431,40 @@ class BRepCheck_Wire(BRepCheck_Result, OCP.Standard.Standard_Transient):
         None
         """
     pass
-BRepCheck_BadOrientation: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_BadOrientation
-BRepCheck_BadOrientationOfSubshape: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_BadOrientationOfSubshape
-BRepCheck_CheckFail: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_CheckFail
-BRepCheck_EmptyShell: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_EmptyShell
-BRepCheck_EmptyWire: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_EmptyWire
-BRepCheck_EnclosedRegion: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_EnclosedRegion
-BRepCheck_FreeEdge: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_FreeEdge
-BRepCheck_IntersectingWires: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_IntersectingWires
-BRepCheck_Invalid3DCurve: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_Invalid3DCurve
-BRepCheck_InvalidCurveOnClosedSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidCurveOnClosedSurface
-BRepCheck_InvalidCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidCurveOnSurface
-BRepCheck_InvalidDegeneratedFlag: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidDegeneratedFlag
-BRepCheck_InvalidImbricationOfShells: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidImbricationOfShells
-BRepCheck_InvalidImbricationOfWires: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidImbricationOfWires
-BRepCheck_InvalidMultiConnexity: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidMultiConnexity
-BRepCheck_InvalidPointOnCurve: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidPointOnCurve
-BRepCheck_InvalidPointOnCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidPointOnCurveOnSurface
-BRepCheck_InvalidPointOnSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidPointOnSurface
-BRepCheck_InvalidPolygonOnTriangulation: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidPolygonOnTriangulation
-BRepCheck_InvalidRange: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidRange
-BRepCheck_InvalidSameParameterFlag: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidSameParameterFlag
-BRepCheck_InvalidSameRangeFlag: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidSameRangeFlag
-BRepCheck_InvalidToleranceValue: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidToleranceValue
-BRepCheck_InvalidWire: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_InvalidWire
-BRepCheck_Multiple3DCurve: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_Multiple3DCurve
-BRepCheck_No3DCurve: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_No3DCurve
-BRepCheck_NoCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_NoCurveOnSurface
-BRepCheck_NoError: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_NoError
-BRepCheck_NoSurface: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_NoSurface
-BRepCheck_NotClosed: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_NotClosed
-BRepCheck_NotConnected: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_NotConnected
-BRepCheck_RedundantEdge: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_RedundantEdge
-BRepCheck_RedundantFace: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_RedundantFace
-BRepCheck_RedundantWire: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_RedundantWire
-BRepCheck_SelfIntersectingWire: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_SelfIntersectingWire
-BRepCheck_SubshapeNotInShape: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_SubshapeNotInShape
-BRepCheck_UnorientableShape: OCP.BRepCheck.BRepCheck_Status # value = BRepCheck_Status.BRepCheck_UnorientableShape
+BRepCheck_BadOrientation: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_BadOrientation: 31>
+BRepCheck_BadOrientationOfSubshape: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_BadOrientationOfSubshape: 32>
+BRepCheck_CheckFail: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_CheckFail: 36>
+BRepCheck_EmptyShell: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_EmptyShell: 24>
+BRepCheck_EmptyWire: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_EmptyWire: 16>
+BRepCheck_EnclosedRegion: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_EnclosedRegion: 35>
+BRepCheck_FreeEdge: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_FreeEdge: 13>
+BRepCheck_IntersectingWires: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_IntersectingWires: 22>
+BRepCheck_Invalid3DCurve: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_Invalid3DCurve: 6>
+BRepCheck_InvalidCurveOnClosedSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidCurveOnClosedSurface: 9>
+BRepCheck_InvalidCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidCurveOnSurface: 8>
+BRepCheck_InvalidDegeneratedFlag: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidDegeneratedFlag: 12>
+BRepCheck_InvalidImbricationOfShells: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidImbricationOfShells: 26>
+BRepCheck_InvalidImbricationOfWires: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidImbricationOfWires: 23>
+BRepCheck_InvalidMultiConnexity: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidMultiConnexity: 14>
+BRepCheck_InvalidPointOnCurve: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidPointOnCurve: 1>
+BRepCheck_InvalidPointOnCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidPointOnCurveOnSurface: 2>
+BRepCheck_InvalidPointOnSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidPointOnSurface: 3>
+BRepCheck_InvalidPolygonOnTriangulation: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidPolygonOnTriangulation: 33>
+BRepCheck_InvalidRange: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidRange: 15>
+BRepCheck_InvalidSameParameterFlag: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidSameParameterFlag: 11>
+BRepCheck_InvalidSameRangeFlag: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidSameRangeFlag: 10>
+BRepCheck_InvalidToleranceValue: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidToleranceValue: 34>
+BRepCheck_InvalidWire: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_InvalidWire: 20>
+BRepCheck_Multiple3DCurve: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_Multiple3DCurve: 5>
+BRepCheck_No3DCurve: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_No3DCurve: 4>
+BRepCheck_NoCurveOnSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_NoCurveOnSurface: 7>
+BRepCheck_NoError: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_NoError: 0>
+BRepCheck_NoSurface: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_NoSurface: 19>
+BRepCheck_NotClosed: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_NotClosed: 28>
+BRepCheck_NotConnected: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_NotConnected: 29>
+BRepCheck_RedundantEdge: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_RedundantEdge: 17>
+BRepCheck_RedundantFace: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_RedundantFace: 25>
+BRepCheck_RedundantWire: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_RedundantWire: 21>
+BRepCheck_SelfIntersectingWire: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_SelfIntersectingWire: 18>
+BRepCheck_SubshapeNotInShape: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_SubshapeNotInShape: 30>
+BRepCheck_UnorientableShape: OCP.BRepCheck.BRepCheck_Status # value = <BRepCheck_Status.BRepCheck_UnorientableShape: 27>

@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.PCDM
-import OCP.BinLDrivers
-import OCP.Message
-import OCP.Storage
-import OCP.Standard
 import OCP.TDocStd
-import OCP.CDM
+import OCP.TCollection
+import io
+import OCP.Message
 import OCP.BinMDF
+import OCP.CDM
+import OCP.PCDM
+import OCP.Storage
+import OCP.BinLDrivers
+import OCP.Standard
 __all__  = [
 "BinDrivers",
 "BinDrivers_DocumentRetrievalDriver",
@@ -52,7 +53,7 @@ class BinDrivers_DocumentRetrievalDriver(OCP.BinLDrivers.BinLDrivers_DocumentRet
         """
         None
         """
-    def CheckShapeSection(self,thePos : int,theIS : Any) -> None: 
+    def CheckShapeSection(self,thePos : int,theIS : io.BytesIO) -> None: 
         """
         None
         """
@@ -118,15 +119,15 @@ class BinDrivers_DocumentRetrievalDriver(OCP.BinLDrivers.BinLDrivers_DocumentRet
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: 
+    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         retrieves the content of the file into a new Document.
 
         None
         """
     @overload
-    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: ...
-    def ReadShapeSection(self,theSection : OCP.BinLDrivers.BinLDrivers_DocumentSection,theIS : Any,isMess : bool=False) -> None: 
+    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def ReadShapeSection(self,theSection : OCP.BinLDrivers.BinLDrivers_DocumentSection,theIS : io.BytesIO,isMess : bool=False,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
         """
@@ -222,14 +223,14 @@ class BinDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentStora
         Return true if shape should be stored with triangles.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -251,15 +252,15 @@ class BinDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentStora
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString) -> None: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Write <theDocument> to the binary file <theFileName>
 
         Write <theDocument> to theOStream
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : Any) -> None: ...
-    def WriteShapeSection(self,theDocSection : OCP.BinLDrivers.BinLDrivers_DocumentSection,theOS : Any) -> None: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def WriteShapeSection(self,theDocSection : OCP.BinLDrivers.BinLDrivers_DocumentSection,theOS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         implements the procedure of writing a shape section to file
         """
@@ -285,20 +286,28 @@ class BinDrivers_Marker():
 
       BinDrivers_ENDLABEL
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BinDrivers_ENDATTRLIST: OCP.BinDrivers.BinDrivers_Marker # value = BinDrivers_Marker.BinDrivers_ENDATTRLIST
-    BinDrivers_ENDLABEL: OCP.BinDrivers.BinDrivers_Marker # value = BinDrivers_Marker.BinDrivers_ENDLABEL
-    __entries: dict # value = {'BinDrivers_ENDATTRLIST': (BinDrivers_Marker.BinDrivers_ENDATTRLIST, None), 'BinDrivers_ENDLABEL': (BinDrivers_Marker.BinDrivers_ENDLABEL, None)}
-    __members__: dict # value = {'BinDrivers_ENDATTRLIST': BinDrivers_Marker.BinDrivers_ENDATTRLIST, 'BinDrivers_ENDLABEL': BinDrivers_Marker.BinDrivers_ENDLABEL}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BinDrivers_ENDATTRLIST: OCP.BinDrivers.BinDrivers_Marker # value = <BinDrivers_Marker.BinDrivers_ENDATTRLIST: -1>
+    BinDrivers_ENDLABEL: OCP.BinDrivers.BinDrivers_Marker # value = <BinDrivers_Marker.BinDrivers_ENDLABEL: -2>
+    __entries: dict # value = {'BinDrivers_ENDATTRLIST': (<BinDrivers_Marker.BinDrivers_ENDATTRLIST: -1>, None), 'BinDrivers_ENDLABEL': (<BinDrivers_Marker.BinDrivers_ENDLABEL: -2>, None)}
+    __members__: dict # value = {'BinDrivers_ENDATTRLIST': <BinDrivers_Marker.BinDrivers_ENDATTRLIST: -1>, 'BinDrivers_ENDLABEL': <BinDrivers_Marker.BinDrivers_ENDLABEL: -2>}
     pass
-BinDrivers_ENDATTRLIST: OCP.BinDrivers.BinDrivers_Marker # value = BinDrivers_Marker.BinDrivers_ENDATTRLIST
-BinDrivers_ENDLABEL: OCP.BinDrivers.BinDrivers_Marker # value = BinDrivers_Marker.BinDrivers_ENDLABEL
+BinDrivers_ENDATTRLIST: OCP.BinDrivers.BinDrivers_Marker # value = <BinDrivers_Marker.BinDrivers_ENDATTRLIST: -1>
+BinDrivers_ENDLABEL: OCP.BinDrivers.BinDrivers_Marker # value = <BinDrivers_Marker.BinDrivers_ENDLABEL: -2>

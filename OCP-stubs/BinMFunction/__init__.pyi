@@ -5,12 +5,12 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
-import OCP.TCollection
 import OCP.TColStd
-import OCP.Message
-import OCP.Standard
+import OCP.TCollection
 import OCP.BinObjMgt
+import OCP.Message
 import OCP.BinMDF
+import OCP.Standard
 __all__  = [
 "BinMFunction",
 "BinMFunction_FunctionDriver",
@@ -70,6 +70,10 @@ class BinMFunction_FunctionDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -85,8 +89,6 @@ class BinMFunction_FunctionDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
     def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the type of source object, inheriting from Attribute from TDF.
-
         Returns the type of source object, inheriting from Attribute from TDF.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
@@ -153,6 +155,10 @@ class BinMFunction_GraphNodeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Stand
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -168,8 +174,6 @@ class BinMFunction_GraphNodeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Stand
     def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the type of source object, inheriting from Attribute from TDF.
-
         Returns the type of source object, inheriting from Attribute from TDF.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
@@ -236,6 +240,10 @@ class BinMFunction_ScopeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard_
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -251,8 +259,6 @@ class BinMFunction_ScopeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard_
     def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the type of source object, inheriting from Attribute from TDF.
-
         Returns the type of source object, inheriting from Attribute from TDF.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 

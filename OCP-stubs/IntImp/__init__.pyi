@@ -28,22 +28,30 @@ class IntImp_ConstIsoparametric():
 
       IntImp_VIsoparametricOnCaro2
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IntImp_UIsoparametricOnCaro1: OCP.IntImp.IntImp_ConstIsoparametric # value = IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro1
-    IntImp_UIsoparametricOnCaro2: OCP.IntImp.IntImp_ConstIsoparametric # value = IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro2
-    IntImp_VIsoparametricOnCaro1: OCP.IntImp.IntImp_ConstIsoparametric # value = IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro1
-    IntImp_VIsoparametricOnCaro2: OCP.IntImp.IntImp_ConstIsoparametric # value = IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro2
-    __entries: dict # value = {'IntImp_UIsoparametricOnCaro1': (IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro1, None), 'IntImp_VIsoparametricOnCaro1': (IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro1, None), 'IntImp_UIsoparametricOnCaro2': (IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro2, None), 'IntImp_VIsoparametricOnCaro2': (IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro2, None)}
-    __members__: dict # value = {'IntImp_UIsoparametricOnCaro1': IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro1, 'IntImp_VIsoparametricOnCaro1': IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro1, 'IntImp_UIsoparametricOnCaro2': IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro2, 'IntImp_VIsoparametricOnCaro2': IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro2}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IntImp_UIsoparametricOnCaro1: OCP.IntImp.IntImp_ConstIsoparametric # value = <IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro1: 0>
+    IntImp_UIsoparametricOnCaro2: OCP.IntImp.IntImp_ConstIsoparametric # value = <IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro2: 2>
+    IntImp_VIsoparametricOnCaro1: OCP.IntImp.IntImp_ConstIsoparametric # value = <IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro1: 1>
+    IntImp_VIsoparametricOnCaro2: OCP.IntImp.IntImp_ConstIsoparametric # value = <IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro2: 3>
+    __entries: dict # value = {'IntImp_UIsoparametricOnCaro1': (<IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro1: 0>, None), 'IntImp_VIsoparametricOnCaro1': (<IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro1: 1>, None), 'IntImp_UIsoparametricOnCaro2': (<IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro2: 2>, None), 'IntImp_VIsoparametricOnCaro2': (<IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro2: 3>, None)}
+    __members__: dict # value = {'IntImp_UIsoparametricOnCaro1': <IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro1: 0>, 'IntImp_VIsoparametricOnCaro1': <IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro1: 1>, 'IntImp_UIsoparametricOnCaro2': <IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro2: 2>, 'IntImp_VIsoparametricOnCaro2': <IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro2: 3>}
     pass
 def ChoixRef(theIndex : int) -> IntImp_ConstIsoparametric:
     """
@@ -53,7 +61,7 @@ def IntImp_ComputeTangence(DPuv : OCP.gp.gp_Vec,EpsUV : float,Tgduv : float,TabI
     """
     None
     """
-IntImp_UIsoparametricOnCaro1: OCP.IntImp.IntImp_ConstIsoparametric # value = IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro1
-IntImp_UIsoparametricOnCaro2: OCP.IntImp.IntImp_ConstIsoparametric # value = IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro2
-IntImp_VIsoparametricOnCaro1: OCP.IntImp.IntImp_ConstIsoparametric # value = IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro1
-IntImp_VIsoparametricOnCaro2: OCP.IntImp.IntImp_ConstIsoparametric # value = IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro2
+IntImp_UIsoparametricOnCaro1: OCP.IntImp.IntImp_ConstIsoparametric # value = <IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro1: 0>
+IntImp_UIsoparametricOnCaro2: OCP.IntImp.IntImp_ConstIsoparametric # value = <IntImp_ConstIsoparametric.IntImp_UIsoparametricOnCaro2: 2>
+IntImp_VIsoparametricOnCaro1: OCP.IntImp.IntImp_ConstIsoparametric # value = <IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro1: 1>
+IntImp_VIsoparametricOnCaro2: OCP.IntImp.IntImp_ConstIsoparametric # value = <IntImp_ConstIsoparametric.IntImp_VIsoparametricOnCaro2: 3>

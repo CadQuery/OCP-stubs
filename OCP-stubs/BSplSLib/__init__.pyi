@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
+import OCP.gp
 import OCP.TColgp
 import OCP.Standard
-import OCP.gp
+import OCP.TColStd
 __all__  = [
 "BSplSLib",
 "BSplSLib_Cache",
@@ -152,7 +152,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,CachePoles : OCP.TColgp.TColgp_Array2OfPnt) -> None: 
+    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
         Warning! To be used for BezierSurfaces ONLY!!!
 
@@ -160,7 +160,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
+    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,CachePoles : OCP.TColgp.TColgp_Array2OfPnt) -> None: ...
     @staticmethod
     def RationalDerivative_s(UDeg : int,VDeg : int,N : int,M : int,All : bool=True) -> Tuple[float, float]: 
         """
@@ -178,7 +178,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def Reverse_s(Weights : OCP.TColStd.TColStd_Array2OfReal,Last : int,UDirection : bool) -> None: 
+    def Reverse_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Last : int,UDirection : bool) -> None: 
         """
         Reverses the array of poles. Last is the Index of the new first Row( Col) of Poles. On a non periodic surface Last is Poles.Upper(). On a periodic curve last is (number of flat knots - degree - 1) or (sum of multiplicities(but for the last) + degree - 1)
 
@@ -186,7 +186,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def Reverse_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Last : int,UDirection : bool) -> None: ...
+    def Reverse_s(Weights : OCP.TColStd.TColStd_Array2OfReal,Last : int,UDirection : bool) -> None: ...
     @staticmethod
     @overload
     def SetPoles_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,FP : OCP.TColStd.TColStd_Array1OfReal,UDirection : bool) -> None: 

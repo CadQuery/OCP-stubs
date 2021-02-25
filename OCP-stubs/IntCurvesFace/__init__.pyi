@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
+import OCP.Adaptor3d
+import OCP.gp
 import OCP.GeomAbs
 import OCP.Bnd
-import OCP.Adaptor3d
 import OCP.TopoDS
 import OCP.IntCurveSurface
-import OCP.gp
+import OCP.TopAbs
 __all__  = [
 "IntCurvesFace_Intersector",
 "IntCurvesFace_ShapeIntersector"
@@ -122,14 +122,14 @@ class IntCurvesFace_Intersector():
     @overload
     def VParameter(self,i : int) -> float: ...
     @overload
-    def WParameter(self,I : int) -> float: 
+    def WParameter(self,i : int) -> float: 
         """
         Returns the parameter of the ith intersection point on the line.
 
         Returns the parameter of the ith intersection point on the line.
         """
     @overload
-    def WParameter(self,i : int) -> float: ...
+    def WParameter(self,I : int) -> float: ...
     def __init__(self,F : OCP.TopoDS.TopoDS_Face,aTol : float,aRestr : bool=True,UseBToler : bool=True) -> None: ...
     pass
 class IntCurvesFace_ShapeIntersector():
@@ -141,14 +141,14 @@ class IntCurvesFace_ShapeIntersector():
         None
         """
     @overload
-    def Face(self,I : int) -> OCP.TopoDS.TopoDS_Face: 
+    def Face(self,i : int) -> OCP.TopoDS.TopoDS_Face: 
         """
         Returns the significant face used to determine the intersection.
 
         Returns the significant face used to determine the intersection.
         """
     @overload
-    def Face(self,i : int) -> OCP.TopoDS.TopoDS_Face: ...
+    def Face(self,I : int) -> OCP.TopoDS.TopoDS_Face: ...
     def IsDone(self) -> bool: 
         """
         True is returned when the intersection have been computed.
@@ -179,14 +179,14 @@ class IntCurvesFace_ShapeIntersector():
         Perform the intersection between the segment L and the loaded shape.
         """
     @overload
-    def Pnt(self,I : int) -> OCP.gp.gp_Pnt: 
+    def Pnt(self,i : int) -> OCP.gp.gp_Pnt: 
         """
         Returns the geometric point of the ith intersection between the line and the surface.
 
         Returns the geometric point of the ith intersection between the line and the surface.
         """
     @overload
-    def Pnt(self,i : int) -> OCP.gp.gp_Pnt: ...
+    def Pnt(self,I : int) -> OCP.gp.gp_Pnt: ...
     def SortResult(self) -> None: 
         """
         Internal method. Sort the result on the Curve parameter.
@@ -201,32 +201,32 @@ class IntCurvesFace_ShapeIntersector():
     @overload
     def State(self,i : int) -> OCP.TopAbs.TopAbs_State: ...
     @overload
-    def Transition(self,i : int) -> OCP.IntCurveSurface.IntCurveSurface_TransitionOnCurve: 
+    def Transition(self,I : int) -> OCP.IntCurveSurface.IntCurveSurface_TransitionOnCurve: 
         """
         Returns the ith transition of the line on the surface.
 
         Returns the ith transition of the line on the surface.
         """
     @overload
-    def Transition(self,I : int) -> OCP.IntCurveSurface.IntCurveSurface_TransitionOnCurve: ...
+    def Transition(self,i : int) -> OCP.IntCurveSurface.IntCurveSurface_TransitionOnCurve: ...
     @overload
-    def UParameter(self,i : int) -> float: 
+    def UParameter(self,I : int) -> float: 
         """
         Returns the U parameter of the ith intersection point on the surface.
 
         Returns the U parameter of the ith intersection point on the surface.
         """
     @overload
-    def UParameter(self,I : int) -> float: ...
+    def UParameter(self,i : int) -> float: ...
     @overload
-    def VParameter(self,I : int) -> float: 
+    def VParameter(self,i : int) -> float: 
         """
         Returns the V parameter of the ith intersection point on the surface.
 
         Returns the V parameter of the ith intersection point on the surface.
         """
     @overload
-    def VParameter(self,i : int) -> float: ...
+    def VParameter(self,I : int) -> float: ...
     @overload
     def WParameter(self,I : int) -> float: 
         """

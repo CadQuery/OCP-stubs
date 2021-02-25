@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Geom2d
-import OCP.Contap
 import OCP.TopTools
-import OCP.HLRAlgo
-import OCP.Standard
-import OCP.TopoDS
-import OCP.NCollection
 import OCP.BRepTopAdaptor
+import io
+import OCP.NCollection
 import OCP.gp
+import OCP.TopoDS
+import OCP.HLRAlgo
+import OCP.Contap
+import OCP.Geom2d
+import OCP.Standard
 __all__  = [
 "HLRTopoBRep_DSFiller",
 "HLRTopoBRep_Data",
@@ -251,14 +252,14 @@ class HLRTopoBRep_DataMapOfShapeFaceData(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : HLRTopoBRep_FaceData) -> bool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> HLRTopoBRep_FaceData: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> HLRTopoBRep_FaceData: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : HLRTopoBRep_FaceData) -> bool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -283,7 +284,7 @@ class HLRTopoBRep_DataMapOfShapeFaceData(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -292,12 +293,12 @@ class HLRTopoBRep_DataMapOfShapeFaceData(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : HLRTopoBRep_DataMapOfShapeFaceData) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class HLRTopoBRep_FaceData():
     """
@@ -371,7 +372,7 @@ class HLRTopoBRep_ListOfVData(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : HLRTopoBRep_VData,theIter : Any) -> None: 
+    def Append(self,theItem : HLRTopoBRep_VData) -> HLRTopoBRep_VData: 
         """
         Append one item at the end
 
@@ -382,7 +383,7 @@ class HLRTopoBRep_ListOfVData(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theOther : HLRTopoBRep_ListOfVData) -> None: ...
     @overload
-    def Append(self,theItem : HLRTopoBRep_VData) -> HLRTopoBRep_VData: ...
+    def Append(self,theItem : HLRTopoBRep_VData,theIter : Any) -> None: ...
     def Assign(self,theOther : HLRTopoBRep_ListOfVData) -> HLRTopoBRep_ListOfVData: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -402,14 +403,14 @@ class HLRTopoBRep_ListOfVData(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : HLRTopoBRep_ListOfVData,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : HLRTopoBRep_VData,theIter : Any) -> HLRTopoBRep_VData: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : HLRTopoBRep_VData,theIter : Any) -> HLRTopoBRep_VData: ...
+    def InsertAfter(self,theOther : HLRTopoBRep_ListOfVData,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theOther : HLRTopoBRep_ListOfVData,theIter : Any) -> None: 
         """
@@ -455,12 +456,12 @@ class HLRTopoBRep_ListOfVData(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : HLRTopoBRep_ListOfVData) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class HLRTopoBRep_MapOfShapeListOfVData(OCP.NCollection.NCollection_BaseMap):
     """
@@ -508,14 +509,14 @@ class HLRTopoBRep_MapOfShapeListOfVData(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> HLRTopoBRep_ListOfVData: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : HLRTopoBRep_ListOfVData) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : HLRTopoBRep_ListOfVData) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> HLRTopoBRep_ListOfVData: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -540,7 +541,7 @@ class HLRTopoBRep_MapOfShapeListOfVData(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -549,12 +550,12 @@ class HLRTopoBRep_MapOfShapeListOfVData(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : HLRTopoBRep_MapOfShapeListOfVData) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : HLRTopoBRep_MapOfShapeListOfVData) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class HLRTopoBRep_OutLiner(OCP.Standard.Standard_Transient):
     def DataStructure(self) -> HLRTopoBRep_Data: 
@@ -638,9 +639,9 @@ class HLRTopoBRep_OutLiner(OCP.Standard.Standard_Transient):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,OriSh : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
     def __init__(self,OriS : OCP.TopoDS.TopoDS_Shape,OutS : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self,OriSh : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -669,7 +670,7 @@ class HLRTopoBRep_VData():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P : float,V : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass

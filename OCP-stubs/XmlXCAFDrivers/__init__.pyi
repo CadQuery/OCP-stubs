@@ -4,17 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.PCDM
-import OCP.XmlMDF
-import OCP.Message
-import OCP.Storage
-import OCP.XmlLDrivers
-import OCP.Standard
 import OCP.TDocStd
-import OCP.CDM
 import OCP.LDOM
+import OCP.TCollection
+import OCP.XmlMDF
+import io
+import OCP.Message
+import OCP.XmlLDrivers
+import OCP.CDM
+import OCP.PCDM
+import OCP.Storage
 import OCP.XmlDrivers
+import OCP.Standard
 __all__  = [
 "XmlXCAFDrivers",
 "XmlXCAFDrivers_DocumentRetrievalDriver",
@@ -102,15 +103,15 @@ class XmlXCAFDrivers_DocumentRetrievalDriver(OCP.XmlDrivers.XmlDrivers_DocumentR
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: 
+    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: ...
-    def ReadShapeSection(self,thePDoc : OCP.LDOM.LDOM_Element,theMsgDriver : OCP.Message.Message_Messenger) -> OCP.XmlMDF.XmlMDF_ADriver: 
+    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def ReadShapeSection(self,thePDoc : OCP.LDOM.LDOM_Element,theMsgDriver : OCP.Message.Message_Messenger,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.XmlMDF.XmlMDF_ADriver: 
         """
         None
         """
@@ -202,14 +203,14 @@ class XmlXCAFDrivers_DocumentStorageDriver(OCP.XmlDrivers.XmlDrivers_DocumentSto
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -227,15 +228,15 @@ class XmlXCAFDrivers_DocumentStorageDriver(OCP.XmlDrivers.XmlDrivers_DocumentSto
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : Any) -> None: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString) -> None: ...
-    def WriteShapeSection(self,thePDoc : OCP.LDOM.LDOM_Element) -> bool: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def WriteShapeSection(self,thePDoc : OCP.LDOM.LDOM_Element,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         None
         """

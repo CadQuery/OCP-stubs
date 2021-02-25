@@ -4,6 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import io
+import OCP.TColStd
 import OCP.TCollection
 __all__  = [
 "GUID",
@@ -18,12 +20,13 @@ __all__  = [
 "Standard_DivideByZero",
 "Standard_DomainError",
 "Standard_Dump",
-"Standard_DumpSentry",
+"Standard_DumpValue",
 "Standard_ErrorHandler",
 "Standard_Failure",
 "Standard_GUID",
 "Standard_HandlerStatus",
 "Standard_ImmutableObject",
+"Standard_JsonKey",
 "Standard_LicenseError",
 "Standard_LicenseNotFound",
 "Standard_MMgrRoot",
@@ -137,7 +140,15 @@ __all__  = [
 "UpperCase",
 "Standard_HandlerJumped",
 "Standard_HandlerProcessed",
-"Standard_HandlerVoid"
+"Standard_HandlerVoid",
+"Standard_JsonKey_CloseChild",
+"Standard_JsonKey_CloseContainer",
+"Standard_JsonKey_None",
+"Standard_JsonKey_OpenChild",
+"Standard_JsonKey_OpenContainer",
+"Standard_JsonKey_Quote",
+"Standard_JsonKey_SeparatorKeyToValue",
+"Standard_JsonKey_SeparatorValueToValue"
 ]
 class GUID():
     """
@@ -233,14 +244,14 @@ class Standard_Condition():
         Set event into signaling state.
         """
     @overload
-    def Wait(self) -> None: 
+    def Wait(self,theTimeMilliseconds : int) -> bool: 
         """
         Wait for Event (infinity).
 
         Wait for signal requested time.
         """
     @overload
-    def Wait(self,theTimeMilliseconds : int) -> bool: ...
+    def Wait(self) -> None: ...
     def __init__(self,theIsSet : bool) -> None: ...
     pass
 class Standard_ConstructionError(Exception, BaseException):
@@ -303,17 +314,14 @@ class Standard_Dump():
     This interface has some tool methods for stream (in JSON format) processing.
     """
     @staticmethod
-    def AddValuesSeparator_s(theOStream : Any) -> None: 
-        """
-        Add Json values separator if the stream last symbol is not an open brace.
-        """
+    def AddValuesSeparator_s(theOStream : io.BytesIO) -> None: ...
     @staticmethod
-    def DumpFieldToName_s(theField : str) -> str: 
+    def DumpFieldToName_s(theField : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Convert field name into dump text value, removes "&" and "my" prefixes An example, for field myValue, theName is Value, for &myCLass, the name is Class
         """
     @staticmethod
-    def DumpKeyToClass_s(theOStream : Any,theKey : str,theField : OCP.TCollection.TCollection_AsciiString) -> None: 
+    def DumpKeyToClass_s(theOStream : io.BytesIO,theKey : OCP.TCollection.TCollection_AsciiString,theField : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Append into output value: "Name": { Field }
         """
@@ -324,7 +332,7 @@ class Standard_Dump():
         """
     @staticmethod
     @overload
-    def GetPointerInfo_s(thePointer : Standard_Transient,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: 
+    def GetPointerInfo_s(thePointer : capsule,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Convert handle pointer to address of the pointer. If the handle is NULL, the result is an empty string.
 
@@ -332,11 +340,51 @@ class Standard_Dump():
         """
     @staticmethod
     @overload
-    def GetPointerInfo_s(thePointer : capsule,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: ...
+    def GetPointerInfo_s(thePointer : Standard_Transient,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: ...
     @staticmethod
     def GetPointerPrefix_s() -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns default prefix added for each pointer info string if short presentation of pointer used
+        """
+    @staticmethod
+    def HasChildKey_s(theSourceValue : OCP.TCollection.TCollection_AsciiString) -> bool: 
+        """
+        Returns true if the value has bracket key
+        """
+    @staticmethod
+    def HierarchicalValueIndices_s(theValues : Any) -> OCP.TColStd.TColStd_ListOfInteger: 
+        """
+        Returns container of indices in values, that has hierarchical value
+        """
+    @staticmethod
+    def InitValue_s(theStreamStr : OCP.TCollection.TCollection_AsciiString,theStreamPos : int,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: 
+        """
+        Returns real value
+        """
+    @staticmethod
+    def JsonKeyLength_s(theKey : Standard_JsonKey) -> int: 
+        """
+        Returns length value for enum type
+        """
+    @staticmethod
+    def JsonKeyToString_s(theKey : Standard_JsonKey) -> str: 
+        """
+        Returns key value for enum type
+        """
+    @staticmethod
+    def ProcessFieldName_s(theStreamStr : OCP.TCollection.TCollection_AsciiString,theName : OCP.TCollection.TCollection_AsciiString,theStreamPos : int) -> bool: 
+        """
+        Check whether the field name is equal to the name in the stream at position
+        """
+    @staticmethod
+    def ProcessStreamName_s(theStreamStr : OCP.TCollection.TCollection_AsciiString,theName : OCP.TCollection.TCollection_AsciiString,theStreamPos : int) -> bool: 
+        """
+        Check whether the parameter name is equal to the name in the stream at position
+        """
+    @staticmethod
+    def SplitJson_s(theStreamStr : OCP.TCollection.TCollection_AsciiString,theKeyToValues : Any) -> bool: 
+        """
+        Converts stream into map of values.
         """
     @staticmethod
     def Text_s(theStream : Any) -> OCP.TCollection.TCollection_AsciiString: 
@@ -345,11 +393,30 @@ class Standard_Dump():
         """
     def __init__(self) -> None: ...
     pass
-class Standard_DumpSentry():
+class Standard_DumpValue():
     """
-    Simple sentry class providing convenient interface to dump. Appends start and last rows in dump with class name key. An example of the using: for ClassName, the result is: "ClassName" { ... } Create instance of that class in the first row of Dump.Simple sentry class providing convenient interface to dump. Appends start and last rows in dump with class name key. An example of the using: for ClassName, the result is: "ClassName" { ... } Create instance of that class in the first row of Dump.
+    Type for storing a dump value with the stream position
     """
-    def __init__(self,theOStream : Any,theClassName : str) -> None: ...
+    @overload
+    def __init__(self,theValue : OCP.TCollection.TCollection_AsciiString,theStartPos : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @property
+    def myStartPosition(self) -> int:
+        """
+        :type: int
+        """
+    @myStartPosition.setter
+    def myStartPosition(self, arg0: int) -> None:
+        pass
+    @property
+    def myValue(self) -> OCP.TCollection.TCollection_AsciiString:
+        """
+        :type: OCP.TCollection.TCollection_AsciiString
+        """
+    @myValue.setter
+    def myValue(self, arg0: OCP.TCollection.TCollection_AsciiString) -> None:
+        pass
     pass
 class Standard_ErrorHandler():
     """
@@ -438,7 +505,7 @@ class Standard_GUID():
         """
         None
         """
-    def ShallowDump(self,aStream : Any) -> None: 
+    def ShallowDump(self,aStream : io.BytesIO) -> None: 
         """
         Display the GUID with the following format:
         """
@@ -455,15 +522,15 @@ class Standard_GUID():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,aGuid : str) -> None: ...
-    @overload
     def __init__(self,a32b : int,a16b1 : str,a16b2 : str,a16b3 : str,a8b1 : int,a8b2 : int,a8b3 : int,a8b4 : int,a8b5 : int,a8b6 : int) -> None: ...
     @overload
     def __init__(self,aGuid : Standard_GUID) -> None: ...
     @overload
     def __init__(self,aGuid : GUID) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aGuid : str) -> None: ...
     pass
 class Standard_HandlerStatus():
     """
@@ -477,21 +544,29 @@ class Standard_HandlerStatus():
 
       Standard_HandlerProcessed
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Standard_HandlerJumped: OCP.Standard.Standard_HandlerStatus # value = Standard_HandlerStatus.Standard_HandlerJumped
-    Standard_HandlerProcessed: OCP.Standard.Standard_HandlerStatus # value = Standard_HandlerStatus.Standard_HandlerProcessed
-    Standard_HandlerVoid: OCP.Standard.Standard_HandlerStatus # value = Standard_HandlerStatus.Standard_HandlerVoid
-    __entries: dict # value = {'Standard_HandlerVoid': (Standard_HandlerStatus.Standard_HandlerVoid, None), 'Standard_HandlerJumped': (Standard_HandlerStatus.Standard_HandlerJumped, None), 'Standard_HandlerProcessed': (Standard_HandlerStatus.Standard_HandlerProcessed, None)}
-    __members__: dict # value = {'Standard_HandlerVoid': Standard_HandlerStatus.Standard_HandlerVoid, 'Standard_HandlerJumped': Standard_HandlerStatus.Standard_HandlerJumped, 'Standard_HandlerProcessed': Standard_HandlerStatus.Standard_HandlerProcessed}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Standard_HandlerJumped: OCP.Standard.Standard_HandlerStatus # value = <Standard_HandlerStatus.Standard_HandlerJumped: 1>
+    Standard_HandlerProcessed: OCP.Standard.Standard_HandlerStatus # value = <Standard_HandlerStatus.Standard_HandlerProcessed: 2>
+    Standard_HandlerVoid: OCP.Standard.Standard_HandlerStatus # value = <Standard_HandlerStatus.Standard_HandlerVoid: 0>
+    __entries: dict # value = {'Standard_HandlerVoid': (<Standard_HandlerStatus.Standard_HandlerVoid: 0>, None), 'Standard_HandlerJumped': (<Standard_HandlerStatus.Standard_HandlerJumped: 1>, None), 'Standard_HandlerProcessed': (<Standard_HandlerStatus.Standard_HandlerProcessed: 2>, None)}
+    __members__: dict # value = {'Standard_HandlerVoid': <Standard_HandlerStatus.Standard_HandlerVoid: 0>, 'Standard_HandlerJumped': <Standard_HandlerStatus.Standard_HandlerJumped: 1>, 'Standard_HandlerProcessed': <Standard_HandlerStatus.Standard_HandlerProcessed: 2>}
     pass
 class Standard_ImmutableObject(Exception, BaseException):
     class type():
@@ -503,6 +578,57 @@ class Standard_ImmutableObject(Exception, BaseException):
     __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
     __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'Standard_ImmutableObject' objects>
     args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
+    pass
+class Standard_JsonKey():
+    """
+    Kind of key in Json string
+
+    Members:
+
+      Standard_JsonKey_None
+
+      Standard_JsonKey_OpenChild
+
+      Standard_JsonKey_CloseChild
+
+      Standard_JsonKey_OpenContainer
+
+      Standard_JsonKey_CloseContainer
+
+      Standard_JsonKey_Quote
+
+      Standard_JsonKey_SeparatorKeyToValue
+
+      Standard_JsonKey_SeparatorValueToValue
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Standard_JsonKey_CloseChild: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_CloseChild: 2>
+    Standard_JsonKey_CloseContainer: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_CloseContainer: 4>
+    Standard_JsonKey_None: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_None: 0>
+    Standard_JsonKey_OpenChild: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_OpenChild: 1>
+    Standard_JsonKey_OpenContainer: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_OpenContainer: 3>
+    Standard_JsonKey_Quote: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_Quote: 5>
+    Standard_JsonKey_SeparatorKeyToValue: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_SeparatorKeyToValue: 6>
+    Standard_JsonKey_SeparatorValueToValue: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_SeparatorValueToValue: 7>
+    __entries: dict # value = {'Standard_JsonKey_None': (<Standard_JsonKey.Standard_JsonKey_None: 0>, None), 'Standard_JsonKey_OpenChild': (<Standard_JsonKey.Standard_JsonKey_OpenChild: 1>, None), 'Standard_JsonKey_CloseChild': (<Standard_JsonKey.Standard_JsonKey_CloseChild: 2>, None), 'Standard_JsonKey_OpenContainer': (<Standard_JsonKey.Standard_JsonKey_OpenContainer: 3>, None), 'Standard_JsonKey_CloseContainer': (<Standard_JsonKey.Standard_JsonKey_CloseContainer: 4>, None), 'Standard_JsonKey_Quote': (<Standard_JsonKey.Standard_JsonKey_Quote: 5>, None), 'Standard_JsonKey_SeparatorKeyToValue': (<Standard_JsonKey.Standard_JsonKey_SeparatorKeyToValue: 6>, None), 'Standard_JsonKey_SeparatorValueToValue': (<Standard_JsonKey.Standard_JsonKey_SeparatorValueToValue: 7>, None)}
+    __members__: dict # value = {'Standard_JsonKey_None': <Standard_JsonKey.Standard_JsonKey_None: 0>, 'Standard_JsonKey_OpenChild': <Standard_JsonKey.Standard_JsonKey_OpenChild: 1>, 'Standard_JsonKey_CloseChild': <Standard_JsonKey.Standard_JsonKey_CloseChild: 2>, 'Standard_JsonKey_OpenContainer': <Standard_JsonKey.Standard_JsonKey_OpenContainer: 3>, 'Standard_JsonKey_CloseContainer': <Standard_JsonKey.Standard_JsonKey_CloseContainer: 4>, 'Standard_JsonKey_Quote': <Standard_JsonKey.Standard_JsonKey_Quote: 5>, 'Standard_JsonKey_SeparatorKeyToValue': <Standard_JsonKey.Standard_JsonKey_SeparatorKeyToValue: 6>, 'Standard_JsonKey_SeparatorValueToValue': <Standard_JsonKey.Standard_JsonKey_SeparatorValueToValue: 7>}
     pass
 class Standard_LicenseError(Exception, BaseException):
     class type():
@@ -848,7 +974,7 @@ class Standard_ReadBuffer():
     """
     Auxiliary tool for buffered reading from input stream within chunks of constant size.
     """
-    def Init(self,theDataLen : int,theChunkLen : int) -> None: 
+    def Init(self,theDataLen : int,theChunkLen : int,theIsPartialPayload : bool=False) -> None: 
         """
         Initialize the buffer.
         """
@@ -856,7 +982,7 @@ class Standard_ReadBuffer():
         """
         Return TRUE if amount of read bytes is equal to requested length of entire data.
         """
-    def __init__(self,theDataLen : int,theChunkLen : int) -> None: ...
+    def __init__(self,theDataLen : int,theChunkLen : int,theIsPartialPayload : bool=False) -> None: ...
     pass
 class Standard_ReadLineBuffer():
     """
@@ -865,6 +991,18 @@ class Standard_ReadLineBuffer():
     def Clear(self) -> None: 
         """
         Clear buffer and cached values.
+        """
+    def IsMultilineMode(self) -> bool: 
+        """
+        Returns TRUE when the Multiline Mode is on; FALSE by default. Multiline modes joins several lines in file having \ at the end of line:
+        """
+    def SetMultilineMode(self,theMultilineMode : bool,theToPutGap : bool=True) -> None: 
+        """
+        Sets or unsets the multi-line mode.
+        """
+    def ToPutGapInMultiline(self) -> bool: 
+        """
+        Put gap space while merging lines within multiline syntax, so that the following sample: Will become "1/2/3 4/5/6" when flag is TRUE, and "1/2/35/5/6" otherwise.
         """
     def __init__(self,theMaxBufferSizeBytes : int) -> None: ...
     pass
@@ -1010,7 +1148,7 @@ class Standard_Type(Standard_Transient):
         """
         Returns descriptor of the base class in the hierarchy
         """
-    def Print(self,theStream : Any) -> None: 
+    def Print(self,theStream : io.BytesIO) -> None: 
         """
         Prints type (address of descriptor + name) to a stream
         """
@@ -1024,14 +1162,14 @@ class Standard_Type(Standard_Transient):
         Returns the size of the class instance in bytes
         """
     @overload
-    def SubType(self,theOther : Standard_Type) -> bool: 
+    def SubType(self,theOther : str) -> bool: 
         """
         Returns True if this type is the same as theOther, or inherits from theOther. Note that multiple inheritance is not supported.
 
         Returns True if this type is the same as theOther, or inherits from theOther. Note that multiple inheritance is not supported.
         """
     @overload
-    def SubType(self,theOther : str) -> bool: ...
+    def SubType(self,theOther : Standard_Type) -> bool: ...
     def SystemName(self) -> str: 
         """
         Returns the system type name of the class (typeinfo.name)
@@ -1106,7 +1244,7 @@ def ATanh(arg0 : float) -> float:
     None
     """
 @overload
-def Abs(Value : int) -> int:
+def Abs(Value : float) -> float:
     """
     None
 
@@ -1115,7 +1253,7 @@ def Abs(Value : int) -> int:
     None
     """
 @overload
-def Abs(Value : float) -> float:
+def Abs(Value : int) -> int:
     pass
 def Ceiling(Value : float) -> float:
     """
@@ -1186,20 +1324,8 @@ def IsDigit(me : str) -> bool:
     None
     """
 @overload
-def IsEqual(theOne : str,theTwo : str) -> bool:
+def IsEqual(Value1 : float,Value2 : float) -> bool:
     """
-    None
-
-    None
-
-    None
-
-    None
-
-    None
-
-    None
-
     None
 
     Returns Standard_True if two strings are equal
@@ -1207,21 +1333,33 @@ def IsEqual(theOne : str,theTwo : str) -> bool:
     None
 
     None
+
+    None
+
+    None
+
+    None
+
+    None
+
+    None
+
+    None
     """
 @overload
-def IsEqual(One : str,Two : str) -> bool:
+def IsEqual(theOne : int,theTwo : int) -> bool:
+    pass
+@overload
+def IsEqual(theOne : str,theTwo : str) -> bool:
     pass
 @overload
 def IsEqual(One : int,Two : int) -> bool:
     pass
 @overload
-def IsEqual(theOne : int,theTwo : int) -> bool:
+def IsEqual(One : str,Two : str) -> bool:
     pass
 @overload
 def IsEqual(One : capsule,Two : capsule) -> bool:
-    pass
-@overload
-def IsEqual(Value1 : float,Value2 : float) -> bool:
     pass
 def IsEven(Value : int) -> bool:
     """
@@ -1284,7 +1422,7 @@ def Max(Val1 : float,Val2 : float) -> float:
 def Max(Val1 : int,Val2 : int) -> int:
     pass
 @overload
-def Min(Val1 : float,Val2 : float) -> float:
+def Min(Val1 : int,Val2 : int) -> int:
     """
     None
 
@@ -1293,7 +1431,7 @@ def Min(Val1 : float,Val2 : float) -> float:
     None
     """
 @overload
-def Min(Val1 : int,Val2 : int) -> int:
+def Min(Val1 : float,Val2 : float) -> float:
     pass
 def Modulus(Value : int,Divisor : int) -> int:
     """
@@ -1420,14 +1558,14 @@ def Sqrt(arg0 : float) -> float:
     None
     """
 @overload
-def Square(Value : int) -> int:
+def Square(Value : float) -> float:
     """
     None
 
     None
     """
 @overload
-def Square(Value : float) -> float:
+def Square(Value : int) -> int:
     pass
 def Standard_ASSERT_DO_NOTHING() -> None:
     """
@@ -1471,6 +1609,14 @@ def UpperCase(me : str) -> str:
     """
     None
     """
-Standard_HandlerJumped: OCP.Standard.Standard_HandlerStatus # value = Standard_HandlerStatus.Standard_HandlerJumped
-Standard_HandlerProcessed: OCP.Standard.Standard_HandlerStatus # value = Standard_HandlerStatus.Standard_HandlerProcessed
-Standard_HandlerVoid: OCP.Standard.Standard_HandlerStatus # value = Standard_HandlerStatus.Standard_HandlerVoid
+Standard_HandlerJumped: OCP.Standard.Standard_HandlerStatus # value = <Standard_HandlerStatus.Standard_HandlerJumped: 1>
+Standard_HandlerProcessed: OCP.Standard.Standard_HandlerStatus # value = <Standard_HandlerStatus.Standard_HandlerProcessed: 2>
+Standard_HandlerVoid: OCP.Standard.Standard_HandlerStatus # value = <Standard_HandlerStatus.Standard_HandlerVoid: 0>
+Standard_JsonKey_CloseChild: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_CloseChild: 2>
+Standard_JsonKey_CloseContainer: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_CloseContainer: 4>
+Standard_JsonKey_None: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_None: 0>
+Standard_JsonKey_OpenChild: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_OpenChild: 1>
+Standard_JsonKey_OpenContainer: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_OpenContainer: 3>
+Standard_JsonKey_Quote: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_Quote: 5>
+Standard_JsonKey_SeparatorKeyToValue: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_SeparatorKeyToValue: 6>
+Standard_JsonKey_SeparatorValueToValue: OCP.Standard.Standard_JsonKey # value = <Standard_JsonKey.Standard_JsonKey_SeparatorValueToValue: 7>

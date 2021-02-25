@@ -4,27 +4,28 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomPlate
-import OCP.BRepMAT2d
-import OCP.Geom2d
-import OCP.Law
-import OCP.MAT
-import OCP.TColgp
-import OCP.Adaptor3d
-import OCP.TopoDS
 import OCP.Bisector
 import OCP.NCollection
-import OCP.GeomFill
+import OCP.MAT
+import OCP.Law
 import OCP.AppParCurves
-import OCP.Adaptor2d
 import OCP.AppCont
-import OCP.gp
-import OCP.TColStd
-import OCP.GeomAbs
-import OCP.TopTools
-import OCP.Standard
 import OCP.Geom
+import OCP.TColgp
+import OCP.TopoDS
+import OCP.GeomFill
+import OCP.GeomPlate
+import OCP.Standard
+import OCP.Adaptor3d
+import OCP.TopTools
+import OCP.TColStd
+import io
+import OCP.Adaptor2d
+import OCP.gp
+import OCP.GeomAbs
 import OCP.GeomLProp
+import OCP.BRepMAT2d
+import OCP.Geom2d
 __all__  = [
 "BRepFill",
 "BRepFill_LocationLaw",
@@ -370,6 +371,10 @@ class BRepFill_ComputeCLine():
         """
         changes the degrees of the approximation.
         """
+    def SetHangChecking(self,theHangChecking : bool) -> None: 
+        """
+        Set value of hang checking flag if this flag = true, possible hang of algorithm is checked and algorithm is forced to stop. By default hang checking is used.
+        """
     def SetInvOrder(self,theInvOrder : bool) -> None: 
         """
         Set inverse order of degree selection: if theInvOrdr = true, current degree is chosen by inverse order - from maxdegree to mindegree. By default inverse order is used.
@@ -569,14 +574,14 @@ class BRepFill_DataMapOfNodeDataMapOfShapeShape(OCP.NCollection.NCollection_Base
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : BRepFill_DataMapOfNodeDataMapOfShapeShape) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -618,7 +623,7 @@ class BRepFill_DataMapOfNodeDataMapOfShapeShape(OCP.NCollection.NCollection_Base
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -632,7 +637,7 @@ class BRepFill_DataMapOfNodeDataMapOfShapeShape(OCP.NCollection.NCollection_Base
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : BRepFill_DataMapOfNodeDataMapOfShapeShape) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_DataMapOfNodeShape(OCP.NCollection.NCollection_BaseMap):
     """
@@ -712,7 +717,7 @@ class BRepFill_DataMapOfNodeShape(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -721,12 +726,12 @@ class BRepFill_DataMapOfNodeShape(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : BRepFill_DataMapOfNodeShape) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : BRepFill_DataMapOfNodeShape) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_DataMapOfOrientedShapeListOfShape(OCP.NCollection.NCollection_BaseMap):
     """
@@ -806,7 +811,7 @@ class BRepFill_DataMapOfOrientedShapeListOfShape(OCP.NCollection.NCollection_Bas
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -815,12 +820,12 @@ class BRepFill_DataMapOfOrientedShapeListOfShape(OCP.NCollection.NCollection_Bas
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : BRepFill_DataMapOfOrientedShapeListOfShape) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_DataMapOfShapeDataMapOfShapeListOfShape(OCP.NCollection.NCollection_BaseMap):
     """
@@ -900,7 +905,7 @@ class BRepFill_DataMapOfShapeDataMapOfShapeListOfShape(OCP.NCollection.NCollecti
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -909,12 +914,12 @@ class BRepFill_DataMapOfShapeDataMapOfShapeListOfShape(OCP.NCollection.NCollecti
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : BRepFill_DataMapOfShapeDataMapOfShapeListOfShape) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_DataMapOfShapeSequenceOfPnt(OCP.NCollection.NCollection_BaseMap):
     """
@@ -994,7 +999,7 @@ class BRepFill_DataMapOfShapeSequenceOfPnt(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1003,12 +1008,12 @@ class BRepFill_DataMapOfShapeSequenceOfPnt(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : BRepFill_DataMapOfShapeSequenceOfPnt) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_DataMapOfShapeSequenceOfReal(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1088,7 +1093,7 @@ class BRepFill_DataMapOfShapeSequenceOfReal(OCP.NCollection.NCollection_BaseMap)
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1097,12 +1102,12 @@ class BRepFill_DataMapOfShapeSequenceOfReal(OCP.NCollection.NCollection_BaseMap)
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BRepFill_DataMapOfShapeSequenceOfReal) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_Draft():
     """
@@ -1117,7 +1122,7 @@ class BRepFill_Draft():
         None
         """
     @overload
-    def Perform(self,StopShape : OCP.TopoDS.TopoDS_Shape,KeepOutSide : bool=True) -> None: 
+    def Perform(self,LengthMax : float) -> None: 
         """
         None
 
@@ -1126,7 +1131,7 @@ class BRepFill_Draft():
         None
         """
     @overload
-    def Perform(self,LengthMax : float) -> None: ...
+    def Perform(self,StopShape : OCP.TopoDS.TopoDS_Shape,KeepOutSide : bool=True) -> None: ...
     @overload
     def Perform(self,Surface : OCP.Geom.Geom_Surface,KeepInsideSurface : bool=True) -> None: ...
     def SetDraft(self,IsInternal : bool=False) -> None: 
@@ -1575,14 +1580,14 @@ class BRepFill_Evolved():
         None
         """
     @overload
-    def Perform(self,Spine : OCP.TopoDS.TopoDS_Wire,Profile : OCP.TopoDS.TopoDS_Wire,AxeProf : OCP.gp.gp_Ax3,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,Solid : bool=False) -> None: 
+    def Perform(self,Spine : OCP.TopoDS.TopoDS_Face,Profile : OCP.TopoDS.TopoDS_Wire,AxeProf : OCP.gp.gp_Ax3,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,Solid : bool=False) -> None: 
         """
         Performs an evolved shape by sweeping the <Profile> along the <Spine>
 
         Performs an evolved shape by sweeping the <Profile> along the <Spine>
         """
     @overload
-    def Perform(self,Spine : OCP.TopoDS.TopoDS_Face,Profile : OCP.TopoDS.TopoDS_Wire,AxeProf : OCP.gp.gp_Ax3,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,Solid : bool=False) -> None: ...
+    def Perform(self,Spine : OCP.TopoDS.TopoDS_Wire,Profile : OCP.TopoDS.TopoDS_Wire,AxeProf : OCP.gp.gp_Ax3,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,Solid : bool=False) -> None: ...
     def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         returns the generated shape.
@@ -1592,27 +1597,27 @@ class BRepFill_Evolved():
         Return the face Top if <Solid> is True in the constructor.
         """
     @overload
-    def __init__(self,Spine : OCP.TopoDS.TopoDS_Wire,Profile : OCP.TopoDS.TopoDS_Wire,AxeProf : OCP.gp.gp_Ax3,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,Solid : bool=False) -> None: ...
+    def __init__(self,Spine : OCP.TopoDS.TopoDS_Face,Profile : OCP.TopoDS.TopoDS_Wire,AxeProf : OCP.gp.gp_Ax3,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,Solid : bool=False) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,Spine : OCP.TopoDS.TopoDS_Face,Profile : OCP.TopoDS.TopoDS_Wire,AxeProf : OCP.gp.gp_Ax3,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,Solid : bool=False) -> None: ...
+    def __init__(self,Spine : OCP.TopoDS.TopoDS_Wire,Profile : OCP.TopoDS.TopoDS_Wire,AxeProf : OCP.gp.gp_Ax3,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,Solid : bool=False) -> None: ...
     pass
 class BRepFill_FaceAndOrder():
     """
     A structure containing Face and Order of constraint
     """
     @overload
-    def __init__(self,aFace : OCP.TopoDS.TopoDS_Face,anOrder : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aFace : OCP.TopoDS.TopoDS_Face,anOrder : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
     pass
 class BRepFill_Filling():
     """
     N-Side Filling This algorithm avoids to build a face from: * a set of edges defining the bounds of the face and some constraints the surface support has to satisfy * a set of edges and points defining some constraints the support surface has to satisfy * an initial surface to deform for satisfying the constraints * a set of parameters to control the constraints.
     """
     @overload
-    def Add(self,Point : OCP.gp.gp_Pnt) -> int: 
+    def Add(self,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Adds a new constraint which also defines an edge of the wire of the face Order: Order of the constraint: GeomAbs_C0 : the surface has to pass by 3D representation of the edge GeomAbs_G1 : the surface has to pass by 3D representation of the edge and to respect tangency with the first face of the edge GeomAbs_G2 : the surface has to pass by 3D representation of the edge and to respect tangency and curvature with the first face of the edge.
 
@@ -1625,13 +1630,13 @@ class BRepFill_Filling():
         Adds a punctual constraint.
         """
     @overload
-    def Add(self,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape) -> int: ...
+    def Add(self,Point : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def Add(self,anEdge : OCP.TopoDS.TopoDS_Edge,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape,IsBound : bool=True) -> int: ...
     @overload
     def Add(self,U : float,V : float,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape) -> int: ...
     @overload
     def Add(self,anEdge : OCP.TopoDS.TopoDS_Edge,Order : OCP.GeomAbs.GeomAbs_Shape,IsBound : bool=True) -> int: ...
-    @overload
-    def Add(self,anEdge : OCP.TopoDS.TopoDS_Edge,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape,IsBound : bool=True) -> int: ...
     def Build(self) -> None: 
         """
         Builds the resulting faces
@@ -1650,14 +1655,14 @@ class BRepFill_Filling():
     @overload
     def G0Error(self,Index : int) -> float: ...
     @overload
-    def G1Error(self) -> float: 
+    def G1Error(self,Index : int) -> float: 
         """
         None
 
         None
         """
     @overload
-    def G1Error(self,Index : int) -> float: ...
+    def G1Error(self) -> float: ...
     @overload
     def G2Error(self) -> float: 
         """
@@ -1775,14 +1780,14 @@ class BRepFill_IndexedDataMapOfOrientedShapeListOfShape(OCP.NCollection.NCollect
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TopTools.TopTools_ListOfShape) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TopTools.TopTools_ListOfShape) -> bool: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         FindIndex
@@ -1823,7 +1828,7 @@ class BRepFill_IndexedDataMapOfOrientedShapeListOfShape(OCP.NCollection.NCollect
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1838,10 +1843,10 @@ class BRepFill_IndexedDataMapOfOrientedShapeListOfShape(OCP.NCollection.NCollect
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : BRepFill_IndexedDataMapOfOrientedShapeListOfShape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : BRepFill_IndexedDataMapOfOrientedShapeListOfShape) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_ListOfOffsetWire(OCP.NCollection.NCollection_BaseList):
     """
@@ -1852,7 +1857,7 @@ class BRepFill_ListOfOffsetWire(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : BRepFill_OffsetWire) -> BRepFill_OffsetWire: 
+    def Append(self,theItem : BRepFill_OffsetWire,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -1861,9 +1866,9 @@ class BRepFill_ListOfOffsetWire(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : BRepFill_OffsetWire,theIter : Any) -> None: ...
-    @overload
     def Append(self,theOther : BRepFill_ListOfOffsetWire) -> None: ...
+    @overload
+    def Append(self,theItem : BRepFill_OffsetWire) -> BRepFill_OffsetWire: ...
     def Assign(self,theOther : BRepFill_ListOfOffsetWire) -> BRepFill_ListOfOffsetWire: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1892,14 +1897,14 @@ class BRepFill_ListOfOffsetWire(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theOther : BRepFill_ListOfOffsetWire,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theItem : BRepFill_OffsetWire,theIter : Any) -> BRepFill_OffsetWire: 
+    def InsertBefore(self,theOther : BRepFill_ListOfOffsetWire,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : BRepFill_ListOfOffsetWire,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : BRepFill_OffsetWire,theIter : Any) -> BRepFill_OffsetWire: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1938,10 +1943,10 @@ class BRepFill_ListOfOffsetWire(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : BRepFill_ListOfOffsetWire) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_ACRLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transient):
     """
@@ -2277,9 +2282,9 @@ class BRepFill_OffsetAncestors():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Paral : BRepFill_OffsetWire) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepFill_OffsetWire():
     """
@@ -2318,9 +2323,9 @@ class BRepFill_OffsetWire():
         None
         """
     @overload
-    def __init__(self,Spine : OCP.TopoDS.TopoDS_Face,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,IsOpenResult : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Spine : OCP.TopoDS.TopoDS_Face,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,IsOpenResult : bool=False) -> None: ...
     pass
 class BRepFill_Pipe():
     """
@@ -2384,14 +2389,14 @@ class BRepFill_PipeShell(OCP.Standard.Standard_Transient):
     Computes a topological shell using some wires (spines and profiles) and diplacement option Perform general sweeping constructionComputes a topological shell using some wires (spines and profiles) and diplacement option Perform general sweeping constructionComputes a topological shell using some wires (spines and profiles) and diplacement option Perform general sweeping construction
     """
     @overload
-    def Add(self,Profile : OCP.TopoDS.TopoDS_Shape,WithContact : bool=False,WithCorrection : bool=False) -> None: 
+    def Add(self,Profile : OCP.TopoDS.TopoDS_Shape,Location : OCP.TopoDS.TopoDS_Vertex,WithContact : bool=False,WithCorrection : bool=False) -> None: 
         """
         Set an section. The corespondance with the spine, will be automaticaly performed.
 
         Set an section. The corespondance with the spine, is given by <Location>
         """
     @overload
-    def Add(self,Profile : OCP.TopoDS.TopoDS_Shape,Location : OCP.TopoDS.TopoDS_Vertex,WithContact : bool=False,WithCorrection : bool=False) -> None: ...
+    def Add(self,Profile : OCP.TopoDS.TopoDS_Shape,WithContact : bool=False,WithCorrection : bool=False) -> None: ...
     def Build(self) -> bool: 
         """
         Builds the resulting shape (redefined from MakeShape).
@@ -2471,7 +2476,7 @@ class BRepFill_PipeShell(OCP.Standard.Standard_Transient):
         Returns the list of original profiles
         """
     @overload
-    def Set(self,BiNormal : OCP.gp.gp_Dir) -> None: 
+    def Set(self,Axe : OCP.gp.gp_Ax2) -> None: 
         """
         Set an Frenet or an CorrectedFrenet trihedron to perform the sweeping
 
@@ -2484,13 +2489,13 @@ class BRepFill_PipeShell(OCP.Standard.Standard_Transient):
         Set an auxiliary spine to define the Normal For each Point of the Spine P, an Point Q is evalued on <AuxiliarySpine> If <CurvilinearEquivalence> Q split <AuxiliarySpine> with the same length ratio than P split <Spline>. Else the plan define by P and the tangent to the <Spine> intersect <AuxiliarySpine> in Q. If <KeepContact> equals BRepFill_NoContact: The Normal is defined by the vector PQ. If <KeepContact> equals BRepFill_Contact: The Normal is defined to achieve that the sweeped section is in contact to the auxiliarySpine. The width of section is constant all along the path. In other words, the auxiliary spine lies on the swept surface, but not necessarily is a boundary of this surface. However, the auxiliary spine has to be close enough to the main spine to provide intersection with any section all along the path. If <KeepContact> equals BRepFill_ContactOnBorder: The auxiliary spine becomes a boundary of the swept surface and the width of section varies along the path.
         """
     @overload
-    def Set(self,Axe : OCP.gp.gp_Ax2) -> None: ...
+    def Set(self,BiNormal : OCP.gp.gp_Dir) -> None: ...
+    @overload
+    def Set(self,AuxiliarySpine : OCP.TopoDS.TopoDS_Wire,CurvilinearEquivalence : bool=True,KeepContact : BRepFill_TypeOfContact=BRepFill_TypeOfContact.BRepFill_NoContact) -> None: ...
     @overload
     def Set(self,Frenet : bool=False) -> None: ...
     @overload
     def Set(self,SpineSupport : OCP.TopoDS.TopoDS_Shape) -> bool: ...
-    @overload
-    def Set(self,AuxiliarySpine : OCP.TopoDS.TopoDS_Wire,CurvilinearEquivalence : bool=True,KeepContact : BRepFill_TypeOfContact=BRepFill_TypeOfContact.BRepFill_NoContact) -> None: ...
     def SetDiscrete(self) -> None: 
         """
         Set a Discrete trihedron to perform the sweeping
@@ -2607,9 +2612,9 @@ class BRepFill_Section():
         None
         """
     @overload
-    def __init__(self,Profile : OCP.TopoDS.TopoDS_Shape,V : OCP.TopoDS.TopoDS_Vertex,WithContact : bool,WithCorrection : bool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Profile : OCP.TopoDS.TopoDS_Shape,V : OCP.TopoDS.TopoDS_Vertex,WithContact : bool,WithCorrection : bool) -> None: ...
     pass
 class BRepFill_NSections(BRepFill_SectionLaw, OCP.Standard.Standard_Transient):
     """
@@ -2718,9 +2723,9 @@ class BRepFill_NSections(BRepFill_SectionLaw, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self,S : OCP.TopTools.TopTools_SequenceOfShape,Trsfs : OCP.GeomFill.GeomFill_SequenceOfTrsf,P : OCP.TColStd.TColStd_SequenceOfReal,VF : float,VL : float,Build : bool=True) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopTools.TopTools_SequenceOfShape,Build : bool=True) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopTools.TopTools_SequenceOfShape,Trsfs : OCP.GeomFill.GeomFill_SequenceOfTrsf,P : OCP.TColStd.TColStd_SequenceOfReal,VF : float,VL : float,Build : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2745,9 +2750,9 @@ class BRepFill_SectionPlacement():
         None
         """
     @overload
-    def __init__(self,Law : BRepFill_LocationLaw,Section : OCP.TopoDS.TopoDS_Shape,Vertex : OCP.TopoDS.TopoDS_Shape,WithContact : bool=False,WithCorrection : bool=False) -> None: ...
-    @overload
     def __init__(self,Law : BRepFill_LocationLaw,Section : OCP.TopoDS.TopoDS_Shape,WithContact : bool=False,WithCorrection : bool=False) -> None: ...
+    @overload
+    def __init__(self,Law : BRepFill_LocationLaw,Section : OCP.TopoDS.TopoDS_Shape,Vertex : OCP.TopoDS.TopoDS_Shape,WithContact : bool=False,WithCorrection : bool=False) -> None: ...
     pass
 class BRepFill_SequenceOfEdgeFaceAndOrder(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -2758,14 +2763,14 @@ class BRepFill_SequenceOfEdgeFaceAndOrder(OCP.NCollection.NCollection_BaseSequen
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : BRepFill_SequenceOfEdgeFaceAndOrder) -> None: 
+    def Append(self,theItem : BRepFill_EdgeFaceAndOrder) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : BRepFill_EdgeFaceAndOrder) -> None: ...
+    def Append(self,theSeq : BRepFill_SequenceOfEdgeFaceAndOrder) -> None: ...
     def Assign(self,theOther : BRepFill_SequenceOfEdgeFaceAndOrder) -> BRepFill_SequenceOfEdgeFaceAndOrder: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2871,12 +2876,12 @@ class BRepFill_SequenceOfEdgeFaceAndOrder(OCP.NCollection.NCollection_BaseSequen
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : BRepFill_SequenceOfEdgeFaceAndOrder) -> None: ...
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -3010,7 +3015,7 @@ class BRepFill_SequenceOfFaceAndOrder(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -3097,23 +3102,23 @@ class BRepFill_SequenceOfSection(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : BRepFill_Section) -> None: 
+    def Prepend(self,theSeq : BRepFill_SequenceOfSection) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : BRepFill_SequenceOfSection) -> None: ...
+    def Prepend(self,theItem : BRepFill_Section) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -3139,12 +3144,12 @@ class BRepFill_SequenceOfSection(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : BRepFill_SequenceOfSection) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -3264,11 +3269,11 @@ class BRepFill_ShapeLaw(BRepFill_SectionLaw, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,L : OCP.Law.Law_Function,Build : bool=True) -> None: ...
+    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,Build : bool=True) -> None: ...
     @overload
     def __init__(self,V : OCP.TopoDS.TopoDS_Vertex,Build : bool=True) -> None: ...
     @overload
-    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,Build : bool=True) -> None: ...
+    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,L : OCP.Law.Law_Function,Build : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3346,21 +3351,29 @@ class BRepFill_TransitionStyle():
 
       BRepFill_Round
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepFill_Modified: OCP.BRepFill.BRepFill_TransitionStyle # value = BRepFill_TransitionStyle.BRepFill_Modified
-    BRepFill_Right: OCP.BRepFill.BRepFill_TransitionStyle # value = BRepFill_TransitionStyle.BRepFill_Right
-    BRepFill_Round: OCP.BRepFill.BRepFill_TransitionStyle # value = BRepFill_TransitionStyle.BRepFill_Round
-    __entries: dict # value = {'BRepFill_Modified': (BRepFill_TransitionStyle.BRepFill_Modified, None), 'BRepFill_Right': (BRepFill_TransitionStyle.BRepFill_Right, None), 'BRepFill_Round': (BRepFill_TransitionStyle.BRepFill_Round, None)}
-    __members__: dict # value = {'BRepFill_Modified': BRepFill_TransitionStyle.BRepFill_Modified, 'BRepFill_Right': BRepFill_TransitionStyle.BRepFill_Right, 'BRepFill_Round': BRepFill_TransitionStyle.BRepFill_Round}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepFill_Modified: OCP.BRepFill.BRepFill_TransitionStyle # value = <BRepFill_TransitionStyle.BRepFill_Modified: 0>
+    BRepFill_Right: OCP.BRepFill.BRepFill_TransitionStyle # value = <BRepFill_TransitionStyle.BRepFill_Right: 1>
+    BRepFill_Round: OCP.BRepFill.BRepFill_TransitionStyle # value = <BRepFill_TransitionStyle.BRepFill_Round: 2>
+    __entries: dict # value = {'BRepFill_Modified': (<BRepFill_TransitionStyle.BRepFill_Modified: 0>, None), 'BRepFill_Right': (<BRepFill_TransitionStyle.BRepFill_Right: 1>, None), 'BRepFill_Round': (<BRepFill_TransitionStyle.BRepFill_Round: 2>, None)}
+    __members__: dict # value = {'BRepFill_Modified': <BRepFill_TransitionStyle.BRepFill_Modified: 0>, 'BRepFill_Right': <BRepFill_TransitionStyle.BRepFill_Right: 1>, 'BRepFill_Round': <BRepFill_TransitionStyle.BRepFill_Round: 2>}
     pass
 class BRepFill_TrimEdgeTool():
     """
@@ -3451,25 +3464,33 @@ class BRepFill_TypeOfContact():
 
       BRepFill_ContactOnBorder
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepFill_Contact: OCP.BRepFill.BRepFill_TypeOfContact # value = BRepFill_TypeOfContact.BRepFill_Contact
-    BRepFill_ContactOnBorder: OCP.BRepFill.BRepFill_TypeOfContact # value = BRepFill_TypeOfContact.BRepFill_ContactOnBorder
-    BRepFill_NoContact: OCP.BRepFill.BRepFill_TypeOfContact # value = BRepFill_TypeOfContact.BRepFill_NoContact
-    __entries: dict # value = {'BRepFill_NoContact': (BRepFill_TypeOfContact.BRepFill_NoContact, None), 'BRepFill_Contact': (BRepFill_TypeOfContact.BRepFill_Contact, None), 'BRepFill_ContactOnBorder': (BRepFill_TypeOfContact.BRepFill_ContactOnBorder, None)}
-    __members__: dict # value = {'BRepFill_NoContact': BRepFill_TypeOfContact.BRepFill_NoContact, 'BRepFill_Contact': BRepFill_TypeOfContact.BRepFill_Contact, 'BRepFill_ContactOnBorder': BRepFill_TypeOfContact.BRepFill_ContactOnBorder}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepFill_Contact: OCP.BRepFill.BRepFill_TypeOfContact # value = <BRepFill_TypeOfContact.BRepFill_Contact: 1>
+    BRepFill_ContactOnBorder: OCP.BRepFill.BRepFill_TypeOfContact # value = <BRepFill_TypeOfContact.BRepFill_ContactOnBorder: 2>
+    BRepFill_NoContact: OCP.BRepFill.BRepFill_TypeOfContact # value = <BRepFill_TypeOfContact.BRepFill_NoContact: 0>
+    __entries: dict # value = {'BRepFill_NoContact': (<BRepFill_TypeOfContact.BRepFill_NoContact: 0>, None), 'BRepFill_Contact': (<BRepFill_TypeOfContact.BRepFill_Contact: 1>, None), 'BRepFill_ContactOnBorder': (<BRepFill_TypeOfContact.BRepFill_ContactOnBorder: 2>, None)}
+    __members__: dict # value = {'BRepFill_NoContact': <BRepFill_TypeOfContact.BRepFill_NoContact: 0>, 'BRepFill_Contact': <BRepFill_TypeOfContact.BRepFill_Contact: 1>, 'BRepFill_ContactOnBorder': <BRepFill_TypeOfContact.BRepFill_ContactOnBorder: 2>}
     pass
-BRepFill_Contact: OCP.BRepFill.BRepFill_TypeOfContact # value = BRepFill_TypeOfContact.BRepFill_Contact
-BRepFill_ContactOnBorder: OCP.BRepFill.BRepFill_TypeOfContact # value = BRepFill_TypeOfContact.BRepFill_ContactOnBorder
-BRepFill_Modified: OCP.BRepFill.BRepFill_TransitionStyle # value = BRepFill_TransitionStyle.BRepFill_Modified
-BRepFill_NoContact: OCP.BRepFill.BRepFill_TypeOfContact # value = BRepFill_TypeOfContact.BRepFill_NoContact
-BRepFill_Right: OCP.BRepFill.BRepFill_TransitionStyle # value = BRepFill_TransitionStyle.BRepFill_Right
-BRepFill_Round: OCP.BRepFill.BRepFill_TransitionStyle # value = BRepFill_TransitionStyle.BRepFill_Round
+BRepFill_Contact: OCP.BRepFill.BRepFill_TypeOfContact # value = <BRepFill_TypeOfContact.BRepFill_Contact: 1>
+BRepFill_ContactOnBorder: OCP.BRepFill.BRepFill_TypeOfContact # value = <BRepFill_TypeOfContact.BRepFill_ContactOnBorder: 2>
+BRepFill_Modified: OCP.BRepFill.BRepFill_TransitionStyle # value = <BRepFill_TransitionStyle.BRepFill_Modified: 0>
+BRepFill_NoContact: OCP.BRepFill.BRepFill_TypeOfContact # value = <BRepFill_TypeOfContact.BRepFill_NoContact: 0>
+BRepFill_Right: OCP.BRepFill.BRepFill_TransitionStyle # value = <BRepFill_TransitionStyle.BRepFill_Right: 1>
+BRepFill_Round: OCP.BRepFill.BRepFill_TransitionStyle # value = <BRepFill_TransitionStyle.BRepFill_Round: 2>

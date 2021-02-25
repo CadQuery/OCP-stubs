@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.math
+import OCP.GccEnt
+import OCP.gp
+import OCP.GccAna
 import OCP.Geom2dAdaptor
 import OCP.Geom2d
-import OCP.GccEnt
-import OCP.GccAna
-import OCP.math
-import OCP.gp
 __all__  = [
 "Geom2dGcc",
 "Geom2dGcc_Circ2d2TanOn",
@@ -112,14 +112,14 @@ class Geom2dGcc_Circ2d2TanOn():
         This method returns the number of solutions. NotDone is raised if the algorithm failed.
         """
     @overload
-    def Results(self,Circ : OCP.GccAna.GccAna_Circ2d2TanOn) -> None: 
+    def Results(self,Circ : Geom2dGcc_Circ2d2TanOnGeo) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Results(self,Circ : Geom2dGcc_Circ2d2TanOnGeo) -> None: ...
+    def Results(self,Circ : OCP.GccAna.GccAna_Circ2d2TanOn) -> None: ...
     def Tangency1(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
         Returns informations about the tangency point between the result and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution curv. ParArg is the intrinsic parameter of the point PntSol on the argument curv.
@@ -137,11 +137,11 @@ class Geom2dGcc_Circ2d2TanOn():
         It returns the informations about the qualifiers of the tangency arguments concerning the solution number Index. It returns the real qualifiers (the qualifiers given to the constructor method in case of enclosed, enclosing and outside and the qualifiers computedin case of unqualified). Exceptions Standard_OutOfRange if Index is less than zero or greater than the number of solutions computed by this algorithm. StdFail_NotDone if the construction fails.
         """
     @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Point : OCP.Geom2d.Geom2d_Point,OnCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float,Param1 : float,ParamOn : float) -> None: ...
+    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Qualified2 : Geom2dGcc_QualifiedCurve,OnCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float,Param1 : float,Param2 : float,ParamOn : float) -> None: ...
     @overload
     def __init__(self,Point1 : OCP.Geom2d.Geom2d_Point,Point2 : OCP.Geom2d.Geom2d_Point,OnCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Qualified2 : Geom2dGcc_QualifiedCurve,OnCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float,Param1 : float,Param2 : float,ParamOn : float) -> None: ...
+    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Point : OCP.Geom2d.Geom2d_Point,OnCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float,Param1 : float,ParamOn : float) -> None: ...
     pass
 class Geom2dGcc_Circ2d2TanOnGeo():
     """
@@ -186,15 +186,15 @@ class Geom2dGcc_Circ2d2TanOnGeo():
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Point2 : OCP.gp.gp_Pnt2d,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,Point1 : OCP.gp.gp_Pnt2d,Point2 : OCP.gp.gp_Pnt2d,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : OCP.gp.gp_Pnt2d,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Point2 : OCP.gp.gp_Pnt2d,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Tolerance : float) -> None: ...
     pass
 class Geom2dGcc_Circ2d2TanOnIter():
     """
@@ -233,29 +233,29 @@ class Geom2dGcc_Circ2d2TanOnIter():
         None
         """
     @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : Geom2dGcc_QCurve,OnCirc : OCP.gp.gp_Circ2d,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Param1 : float,Param2 : float,ParamOn : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,OnCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Param1 : float,Param2 : float,ParamOn : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : Geom2dGcc_QCurve,OnCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Param1 : float,Param2 : float,ParamOn : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,OnLine : OCP.gp.gp_Lin2d,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Point2 : OCP.gp.gp_Pnt2d,OnLine : OCP.gp.gp_Lin2d,Param1 : float,Param2 : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,OnCirc : OCP.gp.gp_Circ2d,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : Geom2dGcc_QCurve,OnLine : OCP.gp.gp_Lin2d,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
+    @overload
     def __init__(self,Qualified1 : Geom2dGcc_QCurve,Point2 : OCP.gp.gp_Pnt2d,OnCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Param1 : float,ParamOn : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : Geom2dGcc_QCurve,Point2 : OCP.gp.gp_Pnt2d,OnCirc : OCP.gp.gp_Circ2d,Param1 : float,Param2 : float,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : Geom2dGcc_QCurve,OnCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Param1 : float,Param2 : float,ParamOn : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Point2 : OCP.gp.gp_Pnt2d,OnLine : OCP.gp.gp_Lin2d,Param1 : float,Param2 : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,OnLine : OCP.gp.gp_Lin2d,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,OnCirc : OCP.gp.gp_Circ2d,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : Geom2dGcc_QCurve,OnLine : OCP.gp.gp_Lin2d,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Param1 : float,Param2 : float,ParamOn : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,OnLine : OCP.gp.gp_Lin2d,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,OnCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Param1 : float,Param2 : float,ParamOn : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : Geom2dGcc_QCurve,OnCirc : OCP.gp.gp_Circ2d,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,OnCirc : OCP.gp.gp_Circ2d,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,OnLine : OCP.gp.gp_Lin2d,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
     pass
 class Geom2dGcc_Circ2d2TanRad():
     """
@@ -303,11 +303,11 @@ class Geom2dGcc_Circ2d2TanRad():
         Returns the qualifiers Qualif1 and Qualif2 of the tangency arguments for the solution of index Index computed by this algorithm. The returned qualifiers are: - those specified at the start of construction when the solutions are defined as enclosed, enclosing or outside with respect to the arguments, or - those computed during construction (i.e. enclosed, enclosing or outside) when the solutions are defined as unqualified with respect to the arguments, or - GccEnt_noqualifier if the tangency argument is a point, or - GccEnt_unqualified in certain limit cases where it is impossible to qualify the solution as enclosed, enclosing or outside. Exceptions Standard_OutOfRange if Index is less than zero or greater than the number of solutions computed by this algorithm. StdFail_NotDone if the construction fails.
         """
     @overload
+    def __init__(self,Point1 : OCP.Geom2d.Geom2d_Point,Point2 : OCP.Geom2d.Geom2d_Point,Radius : float,Tolerance : float) -> None: ...
+    @overload
     def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Point : OCP.Geom2d.Geom2d_Point,Radius : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Qualified2 : Geom2dGcc_QualifiedCurve,Radius : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Point1 : OCP.Geom2d.Geom2d_Point,Point2 : OCP.Geom2d.Geom2d_Point,Radius : float,Tolerance : float) -> None: ...
     pass
 class Geom2dGcc_Circ2d2TanRadGeo():
     """
@@ -346,13 +346,13 @@ class Geom2dGcc_Circ2d2TanRadGeo():
         It returns the information about the qualifiers of the tangency arguments concerning the solution number Index. It returns the real qualifiers (the qualifiers given to the constructor method in case of enclosed, enclosing and outside and the qualifiers computedin case of unqualified).
         """
     @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,Radius : float,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : Geom2dGcc_QCurve,Radius : float,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,Radius : float,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,Radius : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : Geom2dGcc_QCurve,Point2 : OCP.gp.gp_Pnt2d,Radius : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,Radius : float,Tolerance : float) -> None: ...
     pass
 class Geom2dGcc_Circ2d3Tan():
     """
@@ -405,11 +405,11 @@ class Geom2dGcc_Circ2d3Tan():
     @overload
     def __init__(self,Point1 : OCP.Geom2d.Geom2d_Point,Point2 : OCP.Geom2d.Geom2d_Point,Point3 : OCP.Geom2d.Geom2d_Point,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Qualified2 : Geom2dGcc_QualifiedCurve,Point : OCP.Geom2d.Geom2d_Point,Tolerance : float,Param1 : float,Param2 : float) -> None: ...
+    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Point1 : OCP.Geom2d.Geom2d_Point,Point2 : OCP.Geom2d.Geom2d_Point,Tolerance : float,Param1 : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Qualified2 : Geom2dGcc_QualifiedCurve,Qualified3 : Geom2dGcc_QualifiedCurve,Tolerance : float,Param1 : float,Param2 : float,Param3 : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Point1 : OCP.Geom2d.Geom2d_Point,Point2 : OCP.Geom2d.Geom2d_Point,Tolerance : float,Param1 : float) -> None: ...
+    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Qualified2 : Geom2dGcc_QualifiedCurve,Point : OCP.Geom2d.Geom2d_Point,Tolerance : float,Param1 : float,Param2 : float) -> None: ...
     pass
 class Geom2dGcc_Circ2d3TanIter():
     """
@@ -452,23 +452,23 @@ class Geom2dGcc_Circ2d3TanIter():
         None
         """
     @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,Point3 : OCP.gp.gp_Pnt2d,Param1 : float,Param2 : float,Tolerance : float) -> None: ...
+    @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified3 : Geom2dGcc_QCurve,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : Geom2dGcc_QCurve,Point1 : OCP.gp.gp_Pnt2d,Point2 : OCP.gp.gp_Pnt2d,Param1 : float,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,Point2 : OCP.gp.gp_Pnt2d,Param1 : float,Param2 : float,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified3 : Geom2dGcc_QCurve,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,Qualified3 : Geom2dGcc_QCurve,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified3 : Geom2dGcc_QCurve,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,Qualified3 : Geom2dGcc_QCurve,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : Geom2dGcc_QCurve,Qualified3 : Geom2dGcc_QCurve,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
     @overload
+    def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,Point2 : OCP.gp.gp_Pnt2d,Param1 : float,Param2 : float,Tolerance : float) -> None: ...
+    @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified3 : Geom2dGcc_QCurve,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,Point3 : OCP.gp.gp_Pnt2d,Param1 : float,Param2 : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,Qualified3 : Geom2dGcc_QCurve,Param1 : float,Param2 : float,Param3 : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : Geom2dGcc_QCurve,Point3 : OCP.gp.gp_Pnt2d,Param1 : float,Param2 : float,Tolerance : float) -> None: ...
     pass
@@ -607,17 +607,17 @@ class Geom2dGcc_Circ2dTanOnRadGeo():
         None
         """
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Radius : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QCurve,OnLine : OCP.gp.gp_Lin2d,Radius : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Point1 : OCP.gp.gp_Pnt2d,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Radius : float,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Radius : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : Geom2dGcc_QCurve,OnCirc : OCP.gp.gp_Circ2d,Radius : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : Geom2dGcc_QCurve,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Radius : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Point1 : OCP.gp.gp_Pnt2d,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Radius : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,OnCurv : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Radius : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : Geom2dGcc_QCurve,OnLine : OCP.gp.gp_Lin2d,Radius : float,Tolerance : float) -> None: ...
     pass
 class Geom2dGcc_CurveTool():
     """
@@ -757,17 +757,17 @@ class Geom2dGcc_FunctionTanCuCuCu(OCP.math.math_FunctionSetWithDerivatives, OCP.
         Returns the values of the functions and the derivatives for the variable <X>.
         """
     @overload
-    def __init__(self,C1 : OCP.gp.gp_Circ2d,L2 : OCP.gp.gp_Lin2d,C3 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve) -> None: ...
+    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,C3 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve) -> None: ...
     @overload
-    def __init__(self,L1 : OCP.gp.gp_Lin2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,C3 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve) -> None: ...
+    def __init__(self,C1 : OCP.gp.gp_Circ2d,L2 : OCP.gp.gp_Lin2d,C3 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,C3 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve) -> None: ...
     @overload
     def __init__(self,L1 : OCP.gp.gp_Lin2d,L2 : OCP.gp.gp_Lin2d,C3 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.gp.gp_Circ2d,C3 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve) -> None: ...
+    def __init__(self,L1 : OCP.gp.gp_Lin2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,C3 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,C3 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve) -> None: ...
+    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.gp.gp_Circ2d,C3 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve) -> None: ...
     pass
 class Geom2dGcc_FunctionTanCuCuOnCu(OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -802,29 +802,29 @@ class Geom2dGcc_FunctionTanCuCuOnCu(OCP.math.math_FunctionSetWithDerivatives, OC
         Returns the values of the functions and the derivatives for the variable <X>.
         """
     @overload
-    def __init__(self,L1 : OCP.gp.gp_Lin2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnCi : OCP.gp.gp_Circ2d,Rad : float) -> None: ...
-    @overload
-    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnLi : OCP.gp.gp_Lin2d,Rad : float) -> None: ...
-    @overload
     def __init__(self,L1 : OCP.gp.gp_Lin2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnLi : OCP.gp.gp_Lin2d,Rad : float) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,P1 : OCP.gp.gp_Pnt2d,OnCu : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Rad : float) -> None: ...
-    @overload
-    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnCi : OCP.gp.gp_Circ2d,Rad : float) -> None: ...
-    @overload
-    def __init__(self,C1 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnLi : OCP.gp.gp_Lin2d,Rad : float) -> None: ...
+    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnLi : OCP.gp.gp_Lin2d,Rad : float) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnCu : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Rad : float) -> None: ...
     @overload
     def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnCu : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Rad : float) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnCi : OCP.gp.gp_Circ2d,Rad : float) -> None: ...
-    @overload
-    def __init__(self,L1 : OCP.gp.gp_Lin2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnCu : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Rad : float) -> None: ...
+    def __init__(self,C1 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,P1 : OCP.gp.gp_Pnt2d,OnCu : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Rad : float) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,P2 : OCP.gp.gp_Pnt2d,OnCi : OCP.gp.gp_Circ2d,Rad : float) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,P2 : OCP.gp.gp_Pnt2d,OnLi : OCP.gp.gp_Lin2d,Rad : float) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnCi : OCP.gp.gp_Circ2d,Rad : float) -> None: ...
+    @overload
+    def __init__(self,L1 : OCP.gp.gp_Lin2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnCu : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,Rad : float) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnCi : OCP.gp.gp_Circ2d,Rad : float) -> None: ...
+    @overload
+    def __init__(self,L1 : OCP.gp.gp_Lin2d,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnCi : OCP.gp.gp_Circ2d,Rad : float) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,C2 : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,OnLi : OCP.gp.gp_Lin2d,Rad : float) -> None: ...
     pass
 class Geom2dGcc_FunctionTanCuPnt(OCP.math.math_FunctionWithDerivative, OCP.math.math_Function):
     """
@@ -910,13 +910,13 @@ class Geom2dGcc_Lin2d2Tan():
         Returns the qualifiers Qualif1 and Qualif2 of the tangency arguments for the solution of index Index computed by this algorithm. The returned qualifiers are: - those specified at the start of construction when the solutions are defined as enclosing or outside with respect to the arguments, or - those computed during construction (i.e. enclosing or outside) when the solutions are defined as unqualified with respect to the arguments, or - GccEnt_noqualifier if the tangency argument is a point. Exceptions Standard_OutOfRange if Index is less than zero or greater than the number of solutions computed by this algorithm. StdFail_NotDone if the construction fails.
         """
     @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Qualified2 : Geom2dGcc_QualifiedCurve,Tolang : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Qualified2 : Geom2dGcc_QualifiedCurve,Tolang : float,Param1 : float,Param2 : float) -> None: ...
+    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,ThePoint : OCP.gp.gp_Pnt2d,Tolang : float,Param1 : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,ThePoint : OCP.gp.gp_Pnt2d,Tolang : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,ThePoint : OCP.gp.gp_Pnt2d,Tolang : float,Param1 : float) -> None: ...
+    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Qualified2 : Geom2dGcc_QualifiedCurve,Tolang : float,Param1 : float,Param2 : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : Geom2dGcc_QualifiedCurve,Qualified2 : Geom2dGcc_QualifiedCurve,Tolang : float) -> None: ...
     pass
 class Geom2dGcc_Lin2d2TanIter():
     """
@@ -943,11 +943,11 @@ class Geom2dGcc_Lin2d2TanIter():
         None
         """
     @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,Param2 : float,Tolang : float) -> None: ...
+    @overload
     def __init__(self,Qualified1 : Geom2dGcc_QCurve,Qualified2 : Geom2dGcc_QCurve,Param1 : float,Param2 : float,Tolang : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : Geom2dGcc_QCurve,ThePoint : OCP.gp.gp_Pnt2d,Param1 : float,Tolang : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : Geom2dGcc_QCurve,Param2 : float,Tolang : float) -> None: ...
     pass
 class Geom2dGcc_Lin2dTanObl():
     """
@@ -1090,24 +1090,32 @@ class Geom2dGcc_Type1():
 
       Geom2dGcc_LiCuCu
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Geom2dGcc_CiCiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_CiCiCu
-    Geom2dGcc_CiCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_CiCuCu
-    Geom2dGcc_CiLiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_CiLiCu
-    Geom2dGcc_CuCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_CuCuCu
-    Geom2dGcc_LiCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_LiCuCu
-    Geom2dGcc_LiLiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_LiLiCu
-    __entries: dict # value = {'Geom2dGcc_CuCuCu': (Geom2dGcc_Type1.Geom2dGcc_CuCuCu, None), 'Geom2dGcc_CiCuCu': (Geom2dGcc_Type1.Geom2dGcc_CiCuCu, None), 'Geom2dGcc_CiCiCu': (Geom2dGcc_Type1.Geom2dGcc_CiCiCu, None), 'Geom2dGcc_CiLiCu': (Geom2dGcc_Type1.Geom2dGcc_CiLiCu, None), 'Geom2dGcc_LiLiCu': (Geom2dGcc_Type1.Geom2dGcc_LiLiCu, None), 'Geom2dGcc_LiCuCu': (Geom2dGcc_Type1.Geom2dGcc_LiCuCu, None)}
-    __members__: dict # value = {'Geom2dGcc_CuCuCu': Geom2dGcc_Type1.Geom2dGcc_CuCuCu, 'Geom2dGcc_CiCuCu': Geom2dGcc_Type1.Geom2dGcc_CiCuCu, 'Geom2dGcc_CiCiCu': Geom2dGcc_Type1.Geom2dGcc_CiCiCu, 'Geom2dGcc_CiLiCu': Geom2dGcc_Type1.Geom2dGcc_CiLiCu, 'Geom2dGcc_LiLiCu': Geom2dGcc_Type1.Geom2dGcc_LiLiCu, 'Geom2dGcc_LiCuCu': Geom2dGcc_Type1.Geom2dGcc_LiCuCu}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Geom2dGcc_CiCiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_CiCiCu: 2>
+    Geom2dGcc_CiCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_CiCuCu: 1>
+    Geom2dGcc_CiLiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_CiLiCu: 3>
+    Geom2dGcc_CuCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_CuCuCu: 0>
+    Geom2dGcc_LiCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_LiCuCu: 5>
+    Geom2dGcc_LiLiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_LiLiCu: 4>
+    __entries: dict # value = {'Geom2dGcc_CuCuCu': (<Geom2dGcc_Type1.Geom2dGcc_CuCuCu: 0>, None), 'Geom2dGcc_CiCuCu': (<Geom2dGcc_Type1.Geom2dGcc_CiCuCu: 1>, None), 'Geom2dGcc_CiCiCu': (<Geom2dGcc_Type1.Geom2dGcc_CiCiCu: 2>, None), 'Geom2dGcc_CiLiCu': (<Geom2dGcc_Type1.Geom2dGcc_CiLiCu: 3>, None), 'Geom2dGcc_LiLiCu': (<Geom2dGcc_Type1.Geom2dGcc_LiLiCu: 4>, None), 'Geom2dGcc_LiCuCu': (<Geom2dGcc_Type1.Geom2dGcc_LiCuCu: 5>, None)}
+    __members__: dict # value = {'Geom2dGcc_CuCuCu': <Geom2dGcc_Type1.Geom2dGcc_CuCuCu: 0>, 'Geom2dGcc_CiCuCu': <Geom2dGcc_Type1.Geom2dGcc_CiCuCu: 1>, 'Geom2dGcc_CiCiCu': <Geom2dGcc_Type1.Geom2dGcc_CiCiCu: 2>, 'Geom2dGcc_CiLiCu': <Geom2dGcc_Type1.Geom2dGcc_CiLiCu: 3>, 'Geom2dGcc_LiLiCu': <Geom2dGcc_Type1.Geom2dGcc_LiLiCu: 4>, 'Geom2dGcc_LiCuCu': <Geom2dGcc_Type1.Geom2dGcc_LiCuCu: 5>}
     pass
 class Geom2dGcc_Type2():
     """
@@ -1139,30 +1147,38 @@ class Geom2dGcc_Type2():
 
       Geom2dGcc_CuPtOnCi
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Geom2dGcc_CiCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CiCuOnCi
-    Geom2dGcc_CiCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CiCuOnCu
-    Geom2dGcc_CiCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CiCuOnLi
-    Geom2dGcc_CuCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuCuOnCi
-    Geom2dGcc_CuCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuCuOnCu
-    Geom2dGcc_CuCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuCuOnLi
-    Geom2dGcc_CuPtOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuPtOnCi
-    Geom2dGcc_CuPtOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuPtOnCu
-    Geom2dGcc_CuPtOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuPtOnLi
-    Geom2dGcc_LiCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_LiCuOnCi
-    Geom2dGcc_LiCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_LiCuOnCu
-    Geom2dGcc_LiCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_LiCuOnLi
-    __entries: dict # value = {'Geom2dGcc_CuCuOnCu': (Geom2dGcc_Type2.Geom2dGcc_CuCuOnCu, None), 'Geom2dGcc_CiCuOnCu': (Geom2dGcc_Type2.Geom2dGcc_CiCuOnCu, None), 'Geom2dGcc_LiCuOnCu': (Geom2dGcc_Type2.Geom2dGcc_LiCuOnCu, None), 'Geom2dGcc_CuPtOnCu': (Geom2dGcc_Type2.Geom2dGcc_CuPtOnCu, None), 'Geom2dGcc_CuCuOnLi': (Geom2dGcc_Type2.Geom2dGcc_CuCuOnLi, None), 'Geom2dGcc_CiCuOnLi': (Geom2dGcc_Type2.Geom2dGcc_CiCuOnLi, None), 'Geom2dGcc_LiCuOnLi': (Geom2dGcc_Type2.Geom2dGcc_LiCuOnLi, None), 'Geom2dGcc_CuPtOnLi': (Geom2dGcc_Type2.Geom2dGcc_CuPtOnLi, None), 'Geom2dGcc_CuCuOnCi': (Geom2dGcc_Type2.Geom2dGcc_CuCuOnCi, None), 'Geom2dGcc_CiCuOnCi': (Geom2dGcc_Type2.Geom2dGcc_CiCuOnCi, None), 'Geom2dGcc_LiCuOnCi': (Geom2dGcc_Type2.Geom2dGcc_LiCuOnCi, None), 'Geom2dGcc_CuPtOnCi': (Geom2dGcc_Type2.Geom2dGcc_CuPtOnCi, None)}
-    __members__: dict # value = {'Geom2dGcc_CuCuOnCu': Geom2dGcc_Type2.Geom2dGcc_CuCuOnCu, 'Geom2dGcc_CiCuOnCu': Geom2dGcc_Type2.Geom2dGcc_CiCuOnCu, 'Geom2dGcc_LiCuOnCu': Geom2dGcc_Type2.Geom2dGcc_LiCuOnCu, 'Geom2dGcc_CuPtOnCu': Geom2dGcc_Type2.Geom2dGcc_CuPtOnCu, 'Geom2dGcc_CuCuOnLi': Geom2dGcc_Type2.Geom2dGcc_CuCuOnLi, 'Geom2dGcc_CiCuOnLi': Geom2dGcc_Type2.Geom2dGcc_CiCuOnLi, 'Geom2dGcc_LiCuOnLi': Geom2dGcc_Type2.Geom2dGcc_LiCuOnLi, 'Geom2dGcc_CuPtOnLi': Geom2dGcc_Type2.Geom2dGcc_CuPtOnLi, 'Geom2dGcc_CuCuOnCi': Geom2dGcc_Type2.Geom2dGcc_CuCuOnCi, 'Geom2dGcc_CiCuOnCi': Geom2dGcc_Type2.Geom2dGcc_CiCuOnCi, 'Geom2dGcc_LiCuOnCi': Geom2dGcc_Type2.Geom2dGcc_LiCuOnCi, 'Geom2dGcc_CuPtOnCi': Geom2dGcc_Type2.Geom2dGcc_CuPtOnCi}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Geom2dGcc_CiCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CiCuOnCi: 9>
+    Geom2dGcc_CiCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CiCuOnCu: 1>
+    Geom2dGcc_CiCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CiCuOnLi: 5>
+    Geom2dGcc_CuCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuCuOnCi: 8>
+    Geom2dGcc_CuCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuCuOnCu: 0>
+    Geom2dGcc_CuCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuCuOnLi: 4>
+    Geom2dGcc_CuPtOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuPtOnCi: 11>
+    Geom2dGcc_CuPtOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuPtOnCu: 3>
+    Geom2dGcc_CuPtOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuPtOnLi: 7>
+    Geom2dGcc_LiCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_LiCuOnCi: 10>
+    Geom2dGcc_LiCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_LiCuOnCu: 2>
+    Geom2dGcc_LiCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_LiCuOnLi: 6>
+    __entries: dict # value = {'Geom2dGcc_CuCuOnCu': (<Geom2dGcc_Type2.Geom2dGcc_CuCuOnCu: 0>, None), 'Geom2dGcc_CiCuOnCu': (<Geom2dGcc_Type2.Geom2dGcc_CiCuOnCu: 1>, None), 'Geom2dGcc_LiCuOnCu': (<Geom2dGcc_Type2.Geom2dGcc_LiCuOnCu: 2>, None), 'Geom2dGcc_CuPtOnCu': (<Geom2dGcc_Type2.Geom2dGcc_CuPtOnCu: 3>, None), 'Geom2dGcc_CuCuOnLi': (<Geom2dGcc_Type2.Geom2dGcc_CuCuOnLi: 4>, None), 'Geom2dGcc_CiCuOnLi': (<Geom2dGcc_Type2.Geom2dGcc_CiCuOnLi: 5>, None), 'Geom2dGcc_LiCuOnLi': (<Geom2dGcc_Type2.Geom2dGcc_LiCuOnLi: 6>, None), 'Geom2dGcc_CuPtOnLi': (<Geom2dGcc_Type2.Geom2dGcc_CuPtOnLi: 7>, None), 'Geom2dGcc_CuCuOnCi': (<Geom2dGcc_Type2.Geom2dGcc_CuCuOnCi: 8>, None), 'Geom2dGcc_CiCuOnCi': (<Geom2dGcc_Type2.Geom2dGcc_CiCuOnCi: 9>, None), 'Geom2dGcc_LiCuOnCi': (<Geom2dGcc_Type2.Geom2dGcc_LiCuOnCi: 10>, None), 'Geom2dGcc_CuPtOnCi': (<Geom2dGcc_Type2.Geom2dGcc_CuPtOnCi: 11>, None)}
+    __members__: dict # value = {'Geom2dGcc_CuCuOnCu': <Geom2dGcc_Type2.Geom2dGcc_CuCuOnCu: 0>, 'Geom2dGcc_CiCuOnCu': <Geom2dGcc_Type2.Geom2dGcc_CiCuOnCu: 1>, 'Geom2dGcc_LiCuOnCu': <Geom2dGcc_Type2.Geom2dGcc_LiCuOnCu: 2>, 'Geom2dGcc_CuPtOnCu': <Geom2dGcc_Type2.Geom2dGcc_CuPtOnCu: 3>, 'Geom2dGcc_CuCuOnLi': <Geom2dGcc_Type2.Geom2dGcc_CuCuOnLi: 4>, 'Geom2dGcc_CiCuOnLi': <Geom2dGcc_Type2.Geom2dGcc_CiCuOnLi: 5>, 'Geom2dGcc_LiCuOnLi': <Geom2dGcc_Type2.Geom2dGcc_LiCuOnLi: 6>, 'Geom2dGcc_CuPtOnLi': <Geom2dGcc_Type2.Geom2dGcc_CuPtOnLi: 7>, 'Geom2dGcc_CuCuOnCi': <Geom2dGcc_Type2.Geom2dGcc_CuCuOnCi: 8>, 'Geom2dGcc_CiCuOnCi': <Geom2dGcc_Type2.Geom2dGcc_CiCuOnCi: 9>, 'Geom2dGcc_LiCuOnCi': <Geom2dGcc_Type2.Geom2dGcc_LiCuOnCi: 10>, 'Geom2dGcc_CuPtOnCi': <Geom2dGcc_Type2.Geom2dGcc_CuPtOnCi: 11>}
     pass
 class Geom2dGcc_Type3():
     """
@@ -1174,38 +1190,46 @@ class Geom2dGcc_Type3():
 
       Geom2dGcc_CiCu
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Geom2dGcc_CiCu: OCP.Geom2dGcc.Geom2dGcc_Type3 # value = Geom2dGcc_Type3.Geom2dGcc_CiCu
-    Geom2dGcc_CuCu: OCP.Geom2dGcc.Geom2dGcc_Type3 # value = Geom2dGcc_Type3.Geom2dGcc_CuCu
-    __entries: dict # value = {'Geom2dGcc_CuCu': (Geom2dGcc_Type3.Geom2dGcc_CuCu, None), 'Geom2dGcc_CiCu': (Geom2dGcc_Type3.Geom2dGcc_CiCu, None)}
-    __members__: dict # value = {'Geom2dGcc_CuCu': Geom2dGcc_Type3.Geom2dGcc_CuCu, 'Geom2dGcc_CiCu': Geom2dGcc_Type3.Geom2dGcc_CiCu}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Geom2dGcc_CiCu: OCP.Geom2dGcc.Geom2dGcc_Type3 # value = <Geom2dGcc_Type3.Geom2dGcc_CiCu: 1>
+    Geom2dGcc_CuCu: OCP.Geom2dGcc.Geom2dGcc_Type3 # value = <Geom2dGcc_Type3.Geom2dGcc_CuCu: 0>
+    __entries: dict # value = {'Geom2dGcc_CuCu': (<Geom2dGcc_Type3.Geom2dGcc_CuCu: 0>, None), 'Geom2dGcc_CiCu': (<Geom2dGcc_Type3.Geom2dGcc_CiCu: 1>, None)}
+    __members__: dict # value = {'Geom2dGcc_CuCu': <Geom2dGcc_Type3.Geom2dGcc_CuCu: 0>, 'Geom2dGcc_CiCu': <Geom2dGcc_Type3.Geom2dGcc_CiCu: 1>}
     pass
-Geom2dGcc_CiCiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_CiCiCu
-Geom2dGcc_CiCu: OCP.Geom2dGcc.Geom2dGcc_Type3 # value = Geom2dGcc_Type3.Geom2dGcc_CiCu
-Geom2dGcc_CiCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_CiCuCu
-Geom2dGcc_CiCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CiCuOnCi
-Geom2dGcc_CiCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CiCuOnCu
-Geom2dGcc_CiCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CiCuOnLi
-Geom2dGcc_CiLiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_CiLiCu
-Geom2dGcc_CuCu: OCP.Geom2dGcc.Geom2dGcc_Type3 # value = Geom2dGcc_Type3.Geom2dGcc_CuCu
-Geom2dGcc_CuCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_CuCuCu
-Geom2dGcc_CuCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuCuOnCi
-Geom2dGcc_CuCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuCuOnCu
-Geom2dGcc_CuCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuCuOnLi
-Geom2dGcc_CuPtOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuPtOnCi
-Geom2dGcc_CuPtOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuPtOnCu
-Geom2dGcc_CuPtOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_CuPtOnLi
-Geom2dGcc_LiCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_LiCuCu
-Geom2dGcc_LiCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_LiCuOnCi
-Geom2dGcc_LiCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_LiCuOnCu
-Geom2dGcc_LiCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = Geom2dGcc_Type2.Geom2dGcc_LiCuOnLi
-Geom2dGcc_LiLiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = Geom2dGcc_Type1.Geom2dGcc_LiLiCu
+Geom2dGcc_CiCiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_CiCiCu: 2>
+Geom2dGcc_CiCu: OCP.Geom2dGcc.Geom2dGcc_Type3 # value = <Geom2dGcc_Type3.Geom2dGcc_CiCu: 1>
+Geom2dGcc_CiCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_CiCuCu: 1>
+Geom2dGcc_CiCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CiCuOnCi: 9>
+Geom2dGcc_CiCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CiCuOnCu: 1>
+Geom2dGcc_CiCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CiCuOnLi: 5>
+Geom2dGcc_CiLiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_CiLiCu: 3>
+Geom2dGcc_CuCu: OCP.Geom2dGcc.Geom2dGcc_Type3 # value = <Geom2dGcc_Type3.Geom2dGcc_CuCu: 0>
+Geom2dGcc_CuCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_CuCuCu: 0>
+Geom2dGcc_CuCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuCuOnCi: 8>
+Geom2dGcc_CuCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuCuOnCu: 0>
+Geom2dGcc_CuCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuCuOnLi: 4>
+Geom2dGcc_CuPtOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuPtOnCi: 11>
+Geom2dGcc_CuPtOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuPtOnCu: 3>
+Geom2dGcc_CuPtOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_CuPtOnLi: 7>
+Geom2dGcc_LiCuCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_LiCuCu: 5>
+Geom2dGcc_LiCuOnCi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_LiCuOnCi: 10>
+Geom2dGcc_LiCuOnCu: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_LiCuOnCu: 2>
+Geom2dGcc_LiCuOnLi: OCP.Geom2dGcc.Geom2dGcc_Type2 # value = <Geom2dGcc_Type2.Geom2dGcc_LiCuOnLi: 6>
+Geom2dGcc_LiLiCu: OCP.Geom2dGcc.Geom2dGcc_Type1 # value = <Geom2dGcc_Type1.Geom2dGcc_LiLiCu: 4>

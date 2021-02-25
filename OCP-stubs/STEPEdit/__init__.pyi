@@ -6,11 +6,11 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
 import OCP.TColStd
+import io
 import OCP.IFSelect
-import OCP.Message
+import OCP.Interface
 import OCP.Standard
 import OCP.StepData
-import OCP.Interface
 __all__  = [
 "STEPEdit",
 "STEPEdit_EditContext",
@@ -146,11 +146,11 @@ class STEPEdit_EditContext(OCP.IFSelect.IFSelect_Editor, OCP.Standard.Standard_T
         """
         Returns the count of Typed Values
         """
-    def PrintDefs(self,S : OCP.Message.Message_Messenger,labels : bool=False) -> None: 
+    def PrintDefs(self,S : io.BytesIO,labels : bool=False) -> None: 
         """
         None
         """
-    def PrintNames(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintNames(self,S : io.BytesIO) -> None: 
         """
         None
         """
@@ -292,11 +292,11 @@ class STEPEdit_EditSDR(OCP.IFSelect.IFSelect_Editor, OCP.Standard.Standard_Trans
         """
         Returns the count of Typed Values
         """
-    def PrintDefs(self,S : OCP.Message.Message_Messenger,labels : bool=False) -> None: 
+    def PrintDefs(self,S : io.BytesIO,labels : bool=False) -> None: 
         """
         None
         """
-    def PrintNames(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintNames(self,S : io.BytesIO) -> None: 
         """
         None
         """

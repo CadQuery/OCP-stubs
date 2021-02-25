@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.TopoDS
 import OCP.TopTools
+import OCP.TopoDS
+import OCP.TopAbs
 __all__  = [
 "TopExp",
 "TopExp_Explorer"
@@ -42,7 +42,7 @@ class TopExp():
         """
     @staticmethod
     @overload
-    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: 
+    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: 
         """
         Tool to explore a topological data structure. Stores in the map <M> all the sub-shapes of <S> of type <T>.
 
@@ -55,7 +55,7 @@ class TopExp():
     def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_MapOfShape) -> None: ...
     @staticmethod
     @overload
-    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: ...
+    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: ...
     @staticmethod
     @overload
     def Vertices_s(W : OCP.TopoDS.TopoDS_Wire,Vfirst : OCP.TopoDS.TopoDS_Vertex,Vlast : OCP.TopoDS.TopoDS_Vertex) -> None: 
@@ -116,7 +116,7 @@ class TopExp_Explorer():
         Returns the current shape in the exploration. Exceptions Standard_NoSuchObject if this explorer has no more shapes to explore.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape,ToFind : OCP.TopAbs.TopAbs_ShapeEnum,ToAvoid : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass

@@ -4,6 +4,7 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import io
 __all__  = [
 "TopAbs",
 "TopAbs_Orientation",
@@ -43,7 +44,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def Print_s(theShapeType : TopAbs_ShapeEnum,theStream : Any) -> Any: 
+    def Print_s(theShapeType : TopAbs_ShapeEnum,theStream : io.BytesIO) -> io.BytesIO: 
         """
         Prints the name of Shape type as a String on the Stream.
 
@@ -53,10 +54,10 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def Print_s(theOrientation : TopAbs_Orientation,theStream : Any) -> Any: ...
+    def Print_s(theOrientation : TopAbs_Orientation,theStream : io.BytesIO) -> io.BytesIO: ...
     @staticmethod
     @overload
-    def Print_s(St : TopAbs_State,S : Any) -> Any: ...
+    def Print_s(St : TopAbs_State,S : io.BytesIO) -> io.BytesIO: ...
     @staticmethod
     def Reverse_s(Or : TopAbs_Orientation) -> TopAbs_Orientation: 
         """
@@ -64,7 +65,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def ShapeOrientationFromString_s(theOrientationString : str,theOrientation : TopAbs_Orientation) -> bool: 
+    def ShapeOrientationFromString_s(theOrientationString : str) -> TopAbs_Orientation: 
         """
         Returns the shape orientation from the given string identifier (using case-insensitive comparison).
 
@@ -72,7 +73,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def ShapeOrientationFromString_s(theOrientationString : str) -> TopAbs_Orientation: ...
+    def ShapeOrientationFromString_s(theOrientationString : str,theOrientation : TopAbs_Orientation) -> bool: ...
     @staticmethod
     def ShapeOrientationToString_s(theOrientation : TopAbs_Orientation) -> str: 
         """
@@ -80,7 +81,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def ShapeTypeFromString_s(theTypeString : str,theType : TopAbs_ShapeEnum) -> bool: 
+    def ShapeTypeFromString_s(theTypeString : str) -> TopAbs_ShapeEnum: 
         """
         Returns the shape type from the given string identifier (using case-insensitive comparison).
 
@@ -88,7 +89,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def ShapeTypeFromString_s(theTypeString : str) -> TopAbs_ShapeEnum: ...
+    def ShapeTypeFromString_s(theTypeString : str,theType : TopAbs_ShapeEnum) -> bool: ...
     @staticmethod
     def ShapeTypeToString_s(theType : TopAbs_ShapeEnum) -> str: 
         """
@@ -110,22 +111,30 @@ class TopAbs_Orientation():
 
       TopAbs_EXTERNAL
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TopAbs_EXTERNAL: OCP.TopAbs.TopAbs_Orientation # value = TopAbs_Orientation.TopAbs_EXTERNAL
-    TopAbs_FORWARD: OCP.TopAbs.TopAbs_Orientation # value = TopAbs_Orientation.TopAbs_FORWARD
-    TopAbs_INTERNAL: OCP.TopAbs.TopAbs_Orientation # value = TopAbs_Orientation.TopAbs_INTERNAL
-    TopAbs_REVERSED: OCP.TopAbs.TopAbs_Orientation # value = TopAbs_Orientation.TopAbs_REVERSED
-    __entries: dict # value = {'TopAbs_FORWARD': (TopAbs_Orientation.TopAbs_FORWARD, None), 'TopAbs_REVERSED': (TopAbs_Orientation.TopAbs_REVERSED, None), 'TopAbs_INTERNAL': (TopAbs_Orientation.TopAbs_INTERNAL, None), 'TopAbs_EXTERNAL': (TopAbs_Orientation.TopAbs_EXTERNAL, None)}
-    __members__: dict # value = {'TopAbs_FORWARD': TopAbs_Orientation.TopAbs_FORWARD, 'TopAbs_REVERSED': TopAbs_Orientation.TopAbs_REVERSED, 'TopAbs_INTERNAL': TopAbs_Orientation.TopAbs_INTERNAL, 'TopAbs_EXTERNAL': TopAbs_Orientation.TopAbs_EXTERNAL}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TopAbs_EXTERNAL: OCP.TopAbs.TopAbs_Orientation # value = <TopAbs_Orientation.TopAbs_EXTERNAL: 3>
+    TopAbs_FORWARD: OCP.TopAbs.TopAbs_Orientation # value = <TopAbs_Orientation.TopAbs_FORWARD: 0>
+    TopAbs_INTERNAL: OCP.TopAbs.TopAbs_Orientation # value = <TopAbs_Orientation.TopAbs_INTERNAL: 2>
+    TopAbs_REVERSED: OCP.TopAbs.TopAbs_Orientation # value = <TopAbs_Orientation.TopAbs_REVERSED: 1>
+    __entries: dict # value = {'TopAbs_FORWARD': (<TopAbs_Orientation.TopAbs_FORWARD: 0>, None), 'TopAbs_REVERSED': (<TopAbs_Orientation.TopAbs_REVERSED: 1>, None), 'TopAbs_INTERNAL': (<TopAbs_Orientation.TopAbs_INTERNAL: 2>, None), 'TopAbs_EXTERNAL': (<TopAbs_Orientation.TopAbs_EXTERNAL: 3>, None)}
+    __members__: dict # value = {'TopAbs_FORWARD': <TopAbs_Orientation.TopAbs_FORWARD: 0>, 'TopAbs_REVERSED': <TopAbs_Orientation.TopAbs_REVERSED: 1>, 'TopAbs_INTERNAL': <TopAbs_Orientation.TopAbs_INTERNAL: 2>, 'TopAbs_EXTERNAL': <TopAbs_Orientation.TopAbs_EXTERNAL: 3>}
     pass
 class TopAbs_ShapeEnum():
     """
@@ -151,27 +160,35 @@ class TopAbs_ShapeEnum():
 
       TopAbs_SHAPE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TopAbs_COMPOUND: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_COMPOUND
-    TopAbs_COMPSOLID: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_COMPSOLID
-    TopAbs_EDGE: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_EDGE
-    TopAbs_FACE: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_FACE
-    TopAbs_SHAPE: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_SHAPE
-    TopAbs_SHELL: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_SHELL
-    TopAbs_SOLID: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_SOLID
-    TopAbs_VERTEX: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_VERTEX
-    TopAbs_WIRE: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_WIRE
-    __entries: dict # value = {'TopAbs_COMPOUND': (TopAbs_ShapeEnum.TopAbs_COMPOUND, None), 'TopAbs_COMPSOLID': (TopAbs_ShapeEnum.TopAbs_COMPSOLID, None), 'TopAbs_SOLID': (TopAbs_ShapeEnum.TopAbs_SOLID, None), 'TopAbs_SHELL': (TopAbs_ShapeEnum.TopAbs_SHELL, None), 'TopAbs_FACE': (TopAbs_ShapeEnum.TopAbs_FACE, None), 'TopAbs_WIRE': (TopAbs_ShapeEnum.TopAbs_WIRE, None), 'TopAbs_EDGE': (TopAbs_ShapeEnum.TopAbs_EDGE, None), 'TopAbs_VERTEX': (TopAbs_ShapeEnum.TopAbs_VERTEX, None), 'TopAbs_SHAPE': (TopAbs_ShapeEnum.TopAbs_SHAPE, None)}
-    __members__: dict # value = {'TopAbs_COMPOUND': TopAbs_ShapeEnum.TopAbs_COMPOUND, 'TopAbs_COMPSOLID': TopAbs_ShapeEnum.TopAbs_COMPSOLID, 'TopAbs_SOLID': TopAbs_ShapeEnum.TopAbs_SOLID, 'TopAbs_SHELL': TopAbs_ShapeEnum.TopAbs_SHELL, 'TopAbs_FACE': TopAbs_ShapeEnum.TopAbs_FACE, 'TopAbs_WIRE': TopAbs_ShapeEnum.TopAbs_WIRE, 'TopAbs_EDGE': TopAbs_ShapeEnum.TopAbs_EDGE, 'TopAbs_VERTEX': TopAbs_ShapeEnum.TopAbs_VERTEX, 'TopAbs_SHAPE': TopAbs_ShapeEnum.TopAbs_SHAPE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TopAbs_COMPOUND: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_COMPOUND: 0>
+    TopAbs_COMPSOLID: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_COMPSOLID: 1>
+    TopAbs_EDGE: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_EDGE: 6>
+    TopAbs_FACE: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_FACE: 4>
+    TopAbs_SHAPE: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_SHAPE: 8>
+    TopAbs_SHELL: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_SHELL: 3>
+    TopAbs_SOLID: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_SOLID: 2>
+    TopAbs_VERTEX: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_VERTEX: 7>
+    TopAbs_WIRE: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_WIRE: 5>
+    __entries: dict # value = {'TopAbs_COMPOUND': (<TopAbs_ShapeEnum.TopAbs_COMPOUND: 0>, None), 'TopAbs_COMPSOLID': (<TopAbs_ShapeEnum.TopAbs_COMPSOLID: 1>, None), 'TopAbs_SOLID': (<TopAbs_ShapeEnum.TopAbs_SOLID: 2>, None), 'TopAbs_SHELL': (<TopAbs_ShapeEnum.TopAbs_SHELL: 3>, None), 'TopAbs_FACE': (<TopAbs_ShapeEnum.TopAbs_FACE: 4>, None), 'TopAbs_WIRE': (<TopAbs_ShapeEnum.TopAbs_WIRE: 5>, None), 'TopAbs_EDGE': (<TopAbs_ShapeEnum.TopAbs_EDGE: 6>, None), 'TopAbs_VERTEX': (<TopAbs_ShapeEnum.TopAbs_VERTEX: 7>, None), 'TopAbs_SHAPE': (<TopAbs_ShapeEnum.TopAbs_SHAPE: 8>, None)}
+    __members__: dict # value = {'TopAbs_COMPOUND': <TopAbs_ShapeEnum.TopAbs_COMPOUND: 0>, 'TopAbs_COMPSOLID': <TopAbs_ShapeEnum.TopAbs_COMPSOLID: 1>, 'TopAbs_SOLID': <TopAbs_ShapeEnum.TopAbs_SOLID: 2>, 'TopAbs_SHELL': <TopAbs_ShapeEnum.TopAbs_SHELL: 3>, 'TopAbs_FACE': <TopAbs_ShapeEnum.TopAbs_FACE: 4>, 'TopAbs_WIRE': <TopAbs_ShapeEnum.TopAbs_WIRE: 5>, 'TopAbs_EDGE': <TopAbs_ShapeEnum.TopAbs_EDGE: 6>, 'TopAbs_VERTEX': <TopAbs_ShapeEnum.TopAbs_VERTEX: 7>, 'TopAbs_SHAPE': <TopAbs_ShapeEnum.TopAbs_SHAPE: 8>}
     pass
 class TopAbs_State():
     """
@@ -187,37 +204,45 @@ class TopAbs_State():
 
       TopAbs_UNKNOWN
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TopAbs_IN: OCP.TopAbs.TopAbs_State # value = TopAbs_State.TopAbs_IN
-    TopAbs_ON: OCP.TopAbs.TopAbs_State # value = TopAbs_State.TopAbs_ON
-    TopAbs_OUT: OCP.TopAbs.TopAbs_State # value = TopAbs_State.TopAbs_OUT
-    TopAbs_UNKNOWN: OCP.TopAbs.TopAbs_State # value = TopAbs_State.TopAbs_UNKNOWN
-    __entries: dict # value = {'TopAbs_IN': (TopAbs_State.TopAbs_IN, None), 'TopAbs_OUT': (TopAbs_State.TopAbs_OUT, None), 'TopAbs_ON': (TopAbs_State.TopAbs_ON, None), 'TopAbs_UNKNOWN': (TopAbs_State.TopAbs_UNKNOWN, None)}
-    __members__: dict # value = {'TopAbs_IN': TopAbs_State.TopAbs_IN, 'TopAbs_OUT': TopAbs_State.TopAbs_OUT, 'TopAbs_ON': TopAbs_State.TopAbs_ON, 'TopAbs_UNKNOWN': TopAbs_State.TopAbs_UNKNOWN}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TopAbs_IN: OCP.TopAbs.TopAbs_State # value = <TopAbs_State.TopAbs_IN: 0>
+    TopAbs_ON: OCP.TopAbs.TopAbs_State # value = <TopAbs_State.TopAbs_ON: 2>
+    TopAbs_OUT: OCP.TopAbs.TopAbs_State # value = <TopAbs_State.TopAbs_OUT: 1>
+    TopAbs_UNKNOWN: OCP.TopAbs.TopAbs_State # value = <TopAbs_State.TopAbs_UNKNOWN: 3>
+    __entries: dict # value = {'TopAbs_IN': (<TopAbs_State.TopAbs_IN: 0>, None), 'TopAbs_OUT': (<TopAbs_State.TopAbs_OUT: 1>, None), 'TopAbs_ON': (<TopAbs_State.TopAbs_ON: 2>, None), 'TopAbs_UNKNOWN': (<TopAbs_State.TopAbs_UNKNOWN: 3>, None)}
+    __members__: dict # value = {'TopAbs_IN': <TopAbs_State.TopAbs_IN: 0>, 'TopAbs_OUT': <TopAbs_State.TopAbs_OUT: 1>, 'TopAbs_ON': <TopAbs_State.TopAbs_ON: 2>, 'TopAbs_UNKNOWN': <TopAbs_State.TopAbs_UNKNOWN: 3>}
     pass
-TopAbs_COMPOUND: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_COMPOUND
-TopAbs_COMPSOLID: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_COMPSOLID
-TopAbs_EDGE: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_EDGE
-TopAbs_EXTERNAL: OCP.TopAbs.TopAbs_Orientation # value = TopAbs_Orientation.TopAbs_EXTERNAL
-TopAbs_FACE: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_FACE
-TopAbs_FORWARD: OCP.TopAbs.TopAbs_Orientation # value = TopAbs_Orientation.TopAbs_FORWARD
-TopAbs_IN: OCP.TopAbs.TopAbs_State # value = TopAbs_State.TopAbs_IN
-TopAbs_INTERNAL: OCP.TopAbs.TopAbs_Orientation # value = TopAbs_Orientation.TopAbs_INTERNAL
-TopAbs_ON: OCP.TopAbs.TopAbs_State # value = TopAbs_State.TopAbs_ON
-TopAbs_OUT: OCP.TopAbs.TopAbs_State # value = TopAbs_State.TopAbs_OUT
-TopAbs_REVERSED: OCP.TopAbs.TopAbs_Orientation # value = TopAbs_Orientation.TopAbs_REVERSED
-TopAbs_SHAPE: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_SHAPE
-TopAbs_SHELL: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_SHELL
-TopAbs_SOLID: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_SOLID
-TopAbs_UNKNOWN: OCP.TopAbs.TopAbs_State # value = TopAbs_State.TopAbs_UNKNOWN
-TopAbs_VERTEX: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_VERTEX
-TopAbs_WIRE: OCP.TopAbs.TopAbs_ShapeEnum # value = TopAbs_ShapeEnum.TopAbs_WIRE
+TopAbs_COMPOUND: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_COMPOUND: 0>
+TopAbs_COMPSOLID: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_COMPSOLID: 1>
+TopAbs_EDGE: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_EDGE: 6>
+TopAbs_EXTERNAL: OCP.TopAbs.TopAbs_Orientation # value = <TopAbs_Orientation.TopAbs_EXTERNAL: 3>
+TopAbs_FACE: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_FACE: 4>
+TopAbs_FORWARD: OCP.TopAbs.TopAbs_Orientation # value = <TopAbs_Orientation.TopAbs_FORWARD: 0>
+TopAbs_IN: OCP.TopAbs.TopAbs_State # value = <TopAbs_State.TopAbs_IN: 0>
+TopAbs_INTERNAL: OCP.TopAbs.TopAbs_Orientation # value = <TopAbs_Orientation.TopAbs_INTERNAL: 2>
+TopAbs_ON: OCP.TopAbs.TopAbs_State # value = <TopAbs_State.TopAbs_ON: 2>
+TopAbs_OUT: OCP.TopAbs.TopAbs_State # value = <TopAbs_State.TopAbs_OUT: 1>
+TopAbs_REVERSED: OCP.TopAbs.TopAbs_Orientation # value = <TopAbs_Orientation.TopAbs_REVERSED: 1>
+TopAbs_SHAPE: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_SHAPE: 8>
+TopAbs_SHELL: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_SHELL: 3>
+TopAbs_SOLID: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_SOLID: 2>
+TopAbs_UNKNOWN: OCP.TopAbs.TopAbs_State # value = <TopAbs_State.TopAbs_UNKNOWN: 3>
+TopAbs_VERTEX: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_VERTEX: 7>
+TopAbs_WIRE: OCP.TopAbs.TopAbs_ShapeEnum # value = <TopAbs_ShapeEnum.TopAbs_WIRE: 5>

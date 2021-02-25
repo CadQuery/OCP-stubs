@@ -4,21 +4,23 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.XCAFDimTolObjects
-import OCP.TopoDS
-import OCP.TDocStd
-import OCP.NCollection
-import OCP.XCAFNoteObjects
-import OCP.gp
 import OCP.TDF
-import OCP.TColStd
-import OCP.OSD
+import OCP.XCAFView
+import OCP.NCollection
+import OCP.TDataStd
+import OCP.TopoDS
+import OCP.Standard
 import OCP.Quantity
 import OCP.TopTools
-import OCP.Standard
-import OCP.XCAFView
-import OCP.TDataStd
+import OCP.TDocStd
+import OCP.TCollection
+import OCP.TColStd
+import io
+import OCP.XCAFNoteObjects
+import OCP.OSD
+import OCP.XCAFDimTolObjects
+import OCP.gp
+import OCP.Graphic3d
 import OCP.TopLoc
 __all__  = [
 "XCAFDoc",
@@ -53,6 +55,10 @@ __all__  = [
 "XCAFDoc_ShapeTool",
 "XCAFDoc_View",
 "XCAFDoc_ViewTool",
+"XCAFDoc_VisMaterial",
+"XCAFDoc_VisMaterialCommon",
+"XCAFDoc_VisMaterialPBR",
+"XCAFDoc_VisMaterialTool",
 "XCAFDoc_Volume",
 "XCAFDoc_ColorCurv",
 "XCAFDoc_ColorGen",
@@ -177,9 +183,14 @@ class XCAFDoc():
         """
         Return GUIDs for TreeNode representing specified types of View
         """
+    @staticmethod
+    def VisMaterialRefGUID_s() -> OCP.Standard.Standard_GUID: 
+        """
+        Return GUID for TreeNode representing Visualization Material.
+        """
     def __init__(self) -> None: ...
     pass
-class XCAFDoc_Area(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_Area(OCP.TDataStd.TDataStd_Real, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     attribute to store areaattribute to store areaattribute to store area
     """
@@ -244,14 +255,14 @@ class XCAFDoc_Area(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -260,15 +271,19 @@ class XCAFDoc_Area(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -291,6 +306,10 @@ class XCAFDoc_Area(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def Get(self) -> float: 
         """
         None
+        """
+    def GetDimension(self) -> OCP.TDataStd.TDataStd_RealEnum: 
+        """
+        Obsolete method that will be removed in next versions. This field is not supported in the persistence mechanism.
         """
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
@@ -323,6 +342,10 @@ class XCAFDoc_Area(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
 
         Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
+        """
+    def IsCaptured(self) -> bool: 
+        """
+        Returns True if there is a reference on the same label
         """
     def IsForgotten(self) -> bool: 
         """
@@ -384,15 +407,19 @@ class XCAFDoc_Area(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Sets a value of volume
         """
-    @overload
-    def SetID(self) -> None: 
+    def SetDimension(self,DIM : OCP.TDataStd.TDataStd_RealEnum) -> None: 
         """
-        Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
+        Obsolete method that will be removed in next versions. This field is not supported in the persistence mechanism.
+        """
+    @overload
+    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: 
+        """
+        Sets the explicit GUID for the attribute.
 
-        Sets default ID defined in nested class (to be used for attributes having User ID feature).
+        Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     def Set_s(label : OCP.TDF.TDF_Label,area : float) -> XCAFDoc_Area: 
         """
@@ -428,19 +455,23 @@ class XCAFDoc_AssemblyItemId():
     """
     Unique item identifier in the hierarchical product structure. A full path to an assembly component in the "part-of" graph starting from the root node.
     """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def GetPath(self) -> OCP.TColStd.TColStd_ListOfAsciiString: 
         """
         Returns the full path as a list of label entries.
         """
     @overload
-    def Init(self,thePath : OCP.TColStd.TColStd_ListOfAsciiString) -> None: 
+    def Init(self,theString : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Initializes the item ID from a list of strings, where every string is a label entry.
 
         Initializes the item ID from a formatted path, where label entries are separated by '/' symbol.
         """
     @overload
-    def Init(self,theString : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def Init(self,thePath : OCP.TColStd.TColStd_ListOfAsciiString) -> None: ...
     def IsChild(self,theOther : XCAFDoc_AssemblyItemId) -> bool: 
         """
         Checks if this item is a child of the given item.
@@ -541,14 +572,14 @@ class XCAFDoc_AssemblyItemRef(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -557,15 +588,19 @@ class XCAFDoc_AssemblyItemRef(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,theOS : Any) -> Any: 
+    def Dump(self,theOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -715,7 +750,7 @@ class XCAFDoc_AssemblyItemRef(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
     @overload
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @overload
-    def SetItem(self,theString : OCP.TCollection.TCollection_AsciiString) -> None: 
+    def SetItem(self,theItemId : XCAFDoc_AssemblyItemId) -> None: 
         """
         Sets the assembly item ID that the reference points to. Extra reference data (if any) will be cleared.
 
@@ -724,22 +759,22 @@ class XCAFDoc_AssemblyItemRef(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Trans
         Sets the assembly item ID from a formatted path that the reference points to. Extra reference data (if any) will be cleared.
         """
     @overload
-    def SetItem(self,thePath : OCP.TColStd.TColStd_ListOfAsciiString) -> None: ...
+    def SetItem(self,theString : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def SetItem(self,theItemId : XCAFDoc_AssemblyItemId) -> None: ...
+    def SetItem(self,thePath : OCP.TColStd.TColStd_ListOfAsciiString) -> None: ...
     def SetSubshapeIndex(self,theShapeIndex : int) -> None: 
         """
         Sets the assembly item's subshape that the reference points to. The base assembly item will not change.
         """
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId) -> XCAFDoc_AssemblyItemRef: ...
-    @staticmethod
-    @overload
     def Set_s(theLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theShapeIndex : int) -> XCAFDoc_AssemblyItemRef: ...
     @staticmethod
     @overload
     def Set_s(theLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID) -> XCAFDoc_AssemblyItemRef: ...
+    @staticmethod
+    @overload
+    def Set_s(theLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId) -> XCAFDoc_AssemblyItemRef: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -831,14 +866,14 @@ class XCAFDoc_Centroid(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -847,15 +882,19 @@ class XCAFDoc_Centroid(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1011,7 +1050,7 @@ class XCAFDoc_Centroid(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_ClippingPlaneTool(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Provide tool for management of ClippingPlane section of document. Provide tool to store, retrieve, remove and modify clipping planes. Each clipping plane consists of gp_Pln and its name.Provide tool for management of ClippingPlane section of document. Provide tool to store, retrieve, remove and modify clipping planes. Each clipping plane consists of gp_Pln and its name.Provide tool for management of ClippingPlane section of document. Provide tool to store, retrieve, remove and modify clipping planes. Each clipping plane consists of gp_Pln and its name.
     """
@@ -1020,7 +1059,7 @@ class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Tra
         Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
         """
     @overload
-    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_HAsciiString,theCapping : bool) -> OCP.TDF.TDF_Label: 
+    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_ExtendedString) -> OCP.TDF.TDF_Label: 
         """
         Adds a clipping plane definition to a ClippingPlane table and returns its label (returns existing label if the same clipping plane is already defined)
 
@@ -1030,12 +1069,12 @@ class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Tra
 
         Adds a clipping plane definition to a ClippingPlane table and returns its label (returns existing label if the same clipping plane is already defined)
         """
-    @overload
-    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: ...
     @overload
     def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_ExtendedString,theCapping : bool) -> OCP.TDF.TDF_Label: ...
     @overload
-    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_ExtendedString) -> OCP.TDF.TDF_Label: ...
+    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: ...
+    @overload
+    def AddClippingPlane(self,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_HAsciiString,theCapping : bool) -> OCP.TDF.TDF_Label: ...
     def AfterAddition(self) -> None: 
         """
         Something to do after adding an Attribute to a label.
@@ -1097,14 +1136,14 @@ class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Tra
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1113,15 +1152,19 @@ class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Tra
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1151,14 +1194,14 @@ class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Tra
     @overload
     def GetCapping(self,theClippingPlaneL : OCP.TDF.TDF_Label,theCapping : bool) -> bool: ...
     @overload
-    def GetClippingPlane(self,theLabel : OCP.TDF.TDF_Label,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_ExtendedString,theCapping : bool) -> bool: 
+    def GetClippingPlane(self,theLabel : OCP.TDF.TDF_Label,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_HAsciiString,theCapping : bool) -> bool: 
         """
         Returns ClippingPlane defined by label lab Returns False if the label is not in ClippingPlane table or does not define a ClippingPlane
 
         Returns ClippingPlane defined by label lab Returns False if the label is not in ClippingPlane table or does not define a ClippingPlane
         """
     @overload
-    def GetClippingPlane(self,theLabel : OCP.TDF.TDF_Label,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_HAsciiString,theCapping : bool) -> bool: ...
+    def GetClippingPlane(self,theLabel : OCP.TDF.TDF_Label,thePlane : OCP.gp.gp_Pln,theName : OCP.TCollection.TCollection_ExtendedString,theCapping : bool) -> bool: ...
     def GetClippingPlanes(self,Labels : OCP.TDF.TDF_LabelSequence) -> None: 
         """
         Returns a sequence of clipping planes currently stored in the ClippingPlane table
@@ -1238,7 +1281,7 @@ class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Tra
         """
         None
         """
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -1250,7 +1293,7 @@ class XCAFDoc_ClippingPlaneTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Tra
         """
         Removes clipping plane from the ClippingPlane table Return false and do nothing if clipping plane is referenced in at least one View
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -1364,14 +1407,14 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1380,15 +1423,19 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1512,7 +1559,7 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Set(self,C : OCP.Quantity.Quantity_Color) -> None: 
+    def Set(self,C : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         None
 
@@ -1525,7 +1572,7 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def Set(self,C : OCP.Quantity.Quantity_NameOfColor) -> None: ...
     @overload
-    def Set(self,C : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def Set(self,C : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
     def Set(self,R : float,G : float,B : float,alpha : float=1.0) -> None: ...
     @overload
@@ -1539,7 +1586,7 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,C : OCP.Quantity.Quantity_Color) -> XCAFDoc_Color: 
+    def Set_s(label : OCP.TDF.TDF_Label,R : float,G : float,B : float,alpha : float=1.0) -> XCAFDoc_Color: 
         """
         None
 
@@ -1554,10 +1601,10 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def Set_s(label : OCP.TDF.TDF_Label,C : OCP.Quantity.Quantity_ColorRGBA) -> XCAFDoc_Color: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,R : float,G : float,B : float,alpha : float=1.0) -> XCAFDoc_Color: ...
+    def Set_s(label : OCP.TDF.TDF_Label,C : OCP.Quantity.Quantity_NameOfColor) -> XCAFDoc_Color: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,C : OCP.Quantity.Quantity_NameOfColor) -> XCAFDoc_Color: ...
+    def Set_s(label : OCP.TDF.TDF_Label,C : OCP.Quantity.Quantity_Color) -> XCAFDoc_Color: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1584,7 +1631,7 @@ class XCAFDoc_Color(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_ColorTool(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Provides tools to store and retrieve attributes (colors) of TopoDS_Shape in and from TDocStd_Document A Document is intended to hold different attributes of ONE shape and it's sub-shapes Provide tools for management of Colors section of document.Provides tools to store and retrieve attributes (colors) of TopoDS_Shape in and from TDocStd_Document A Document is intended to hold different attributes of ONE shape and it's sub-shapes Provide tools for management of Colors section of document.Provides tools to store and retrieve attributes (colors) of TopoDS_Shape in and from TDocStd_Document A Document is intended to hold different attributes of ONE shape and it's sub-shapes Provide tools for management of Colors section of document.
     """
@@ -1593,14 +1640,14 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
         """
     @overload
-    def AddColor(self,col : OCP.Quantity.Quantity_Color) -> OCP.TDF.TDF_Label: 
+    def AddColor(self,col : OCP.Quantity.Quantity_ColorRGBA) -> OCP.TDF.TDF_Label: 
         """
         Adds a color definition to a colortable and returns its label (returns existing label if the same color is already defined)
 
         Adds a color definition to a colortable and returns its label (returns existing label if the same color is already defined)
         """
     @overload
-    def AddColor(self,col : OCP.Quantity.Quantity_ColorRGBA) -> OCP.TDF.TDF_Label: ...
+    def AddColor(self,col : OCP.Quantity.Quantity_Color) -> OCP.TDF.TDF_Label: ...
     def AfterAddition(self) -> None: 
         """
         Something to do after adding an Attribute to a label.
@@ -1616,6 +1663,11 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def AfterUndo(self,anAttDelta : OCP.TDF.TDF_AttributeDelta,forceIt : bool=False) -> bool: 
         """
         Something to do after applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    @staticmethod
+    def AutoNaming_s() -> bool: 
+        """
+        Returns current auto-naming mode; TRUE by default. If TRUE then for added colors the TDataStd_Name attribute will be automatically added. This setting is global.
         """
     def Backup(self) -> None: 
         """
@@ -1662,14 +1714,14 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1678,15 +1730,19 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1695,7 +1751,7 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Finds an associated attribute of <me>, according to <anID>. the returned <anAttribute> is a valid one. The method returns True if found, False otherwise. A removed attribute cannot be found using this method.
         """
     @overload
-    def FindColor(self,col : OCP.Quantity.Quantity_ColorRGBA,lab : OCP.TDF.TDF_Label) -> bool: 
+    def FindColor(self,col : OCP.Quantity.Quantity_Color) -> OCP.TDF.TDF_Label: 
         """
         Finds a color definition in a colortable and returns its label if found Returns False if color is not found in colortable
 
@@ -1705,12 +1761,12 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
 
         Finds a color definition in a colortable and returns its label if found (or Null label else)
         """
-    @overload
-    def FindColor(self,col : OCP.Quantity.Quantity_Color) -> OCP.TDF.TDF_Label: ...
-    @overload
-    def FindColor(self,col : OCP.Quantity.Quantity_ColorRGBA) -> OCP.TDF.TDF_Label: ...
     @overload
     def FindColor(self,col : OCP.Quantity.Quantity_Color,lab : OCP.TDF.TDF_Label) -> bool: ...
+    @overload
+    def FindColor(self,col : OCP.Quantity.Quantity_ColorRGBA,lab : OCP.TDF.TDF_Label) -> bool: ...
+    @overload
+    def FindColor(self,col : OCP.Quantity.Quantity_ColorRGBA) -> OCP.TDF.TDF_Label: ...
     def Forget(self,aTransaction : int) -> None: 
         """
         Forgets the attribute. <aTransaction> is the current transaction in which the forget is done. A forgotten attribute is also flagged not "Valid".
@@ -1724,7 +1780,7 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     @overload
-    def GetColor(self,S : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_ColorRGBA) -> bool: 
+    def GetColor(self,L : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color) -> bool: 
         """
         Returns color defined by label lab Returns False if the label is not in colortable or does not define a color
 
@@ -1741,17 +1797,17 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns color assigned to <L> as <type> Returns False if no such color is assigned
         """
     @overload
-    def GetColor(self,S : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,colorL : OCP.TDF.TDF_Label) -> bool: ...
+    def GetColor(self,L : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_ColorRGBA) -> bool: ...
     @overload
     def GetColor(self,lab : OCP.TDF.TDF_Label,col : OCP.Quantity.Quantity_Color) -> bool: ...
     @overload
-    def GetColor(self,lab : OCP.TDF.TDF_Label,col : OCP.Quantity.Quantity_ColorRGBA) -> bool: ...
+    def GetColor(self,S : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_ColorRGBA) -> bool: ...
     @overload
     def GetColor(self,S : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color) -> bool: ...
     @overload
-    def GetColor(self,L : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_ColorRGBA) -> bool: ...
+    def GetColor(self,S : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,colorL : OCP.TDF.TDF_Label) -> bool: ...
     @overload
-    def GetColor(self,L : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color) -> bool: ...
+    def GetColor(self,lab : OCP.TDF.TDF_Label,col : OCP.Quantity.Quantity_ColorRGBA) -> bool: ...
     @staticmethod
     def GetColor_s(L : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType,colorL : OCP.TDF.TDF_Label) -> bool: 
         """
@@ -1767,14 +1823,14 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def GetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_ColorRGBA) -> bool: 
+    def GetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color) -> bool: 
         """
         Gets the color of component that styled with SHUO structure Returns FALSE if no sush component or color type
 
         Gets the color of component that styled with SHUO structure Returns FALSE if no sush component or color type
         """
     @overload
-    def GetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_Color) -> bool: ...
+    def GetInstanceColor(self,theShape : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType,color : OCP.Quantity.Quantity_ColorRGBA) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -1866,7 +1922,7 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -1878,7 +1934,7 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Removes color from the colortable
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -1886,8 +1942,13 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Reverses order in chains of TreeNodes (from Last to First) under each Color Label since we became to use function ::Prepend() instead of ::Append() in method SetColor() for acceleration
         """
+    @staticmethod
+    def SetAutoNaming_s(theIsAutoNaming : bool) -> None: 
+        """
+        See also AutoNaming().
+        """
     @overload
-    def SetColor(self,L : OCP.TDF.TDF_Label,Color : OCP.Quantity.Quantity_ColorRGBA,type : XCAFDoc_ColorType) -> None: 
+    def SetColor(self,L : OCP.TDF.TDF_Label,colorL : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType) -> None: 
         """
         Sets a link with GUID defined by <type> (see XCAFDoc::ColorRefGUID()) from label <L> to color defined by <colorL>. Color of shape is defined following way in dependance with type of color. If type of color is XCAFDoc_ColorGen - then this color defines default color for surfaces and curves. If for shape color with types XCAFDoc_ColorSurf or XCAFDoc_ColorCurv is specified then such color overrides generic color.
 
@@ -1902,15 +1963,15 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Sets a link with GUID defined by <type> (see XCAFDoc::ColorRefGUID()) from label <L> to color <Color> in the colortable Adds a color as necessary Returns False if cannot find a label for shape S
         """
     @overload
-    def SetColor(self,L : OCP.TDF.TDF_Label,Color : OCP.Quantity.Quantity_Color,type : XCAFDoc_ColorType) -> None: ...
-    @overload
-    def SetColor(self,L : OCP.TDF.TDF_Label,colorL : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType) -> None: ...
+    def SetColor(self,L : OCP.TDF.TDF_Label,Color : OCP.Quantity.Quantity_ColorRGBA,type : XCAFDoc_ColorType) -> None: ...
     @overload
     def SetColor(self,S : OCP.TopoDS.TopoDS_Shape,Color : OCP.Quantity.Quantity_Color,type : XCAFDoc_ColorType) -> bool: ...
     @overload
-    def SetColor(self,S : OCP.TopoDS.TopoDS_Shape,Color : OCP.Quantity.Quantity_ColorRGBA,type : XCAFDoc_ColorType) -> bool: ...
-    @overload
     def SetColor(self,S : OCP.TopoDS.TopoDS_Shape,colorL : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType) -> bool: ...
+    @overload
+    def SetColor(self,L : OCP.TDF.TDF_Label,Color : OCP.Quantity.Quantity_Color,type : XCAFDoc_ColorType) -> None: ...
+    @overload
+    def SetColor(self,S : OCP.TopoDS.TopoDS_Shape,Color : OCP.Quantity.Quantity_ColorRGBA,type : XCAFDoc_ColorType) -> bool: ...
     def SetColorByLayer(self,shapeLabel : OCP.TDF.TDF_Label,isColorByLayer : bool=False) -> None: 
         """
         Set the Color defined by Layer flag on label. Do nothing if there no any object. Set UAttribute with corresponding GUID.
@@ -1954,14 +2015,14 @@ class XCAFDoc_ColorTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the transaction index in which the attribute has been created or modified.
         """
     @overload
-    def UnSetColor(self,S : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType) -> bool: 
+    def UnSetColor(self,L : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType) -> None: 
         """
         Removes a link with GUID defined by <type> (see XCAFDoc::ColorRefGUID()) from label <L> to color
 
         Removes a link with GUID defined by <type> (see XCAFDoc::ColorRefGUID()) from label <L> to color Returns True if such link existed
         """
     @overload
-    def UnSetColor(self,L : OCP.TDF.TDF_Label,type : XCAFDoc_ColorType) -> None: ...
+    def UnSetColor(self,S : OCP.TopoDS.TopoDS_Shape,type : XCAFDoc_ColorType) -> bool: ...
     def UntilTransaction(self) -> int: 
         """
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
@@ -1990,21 +2051,29 @@ class XCAFDoc_ColorType():
 
       XCAFDoc_ColorCurv
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFDoc_ColorCurv: OCP.XCAFDoc.XCAFDoc_ColorType # value = XCAFDoc_ColorType.XCAFDoc_ColorCurv
-    XCAFDoc_ColorGen: OCP.XCAFDoc.XCAFDoc_ColorType # value = XCAFDoc_ColorType.XCAFDoc_ColorGen
-    XCAFDoc_ColorSurf: OCP.XCAFDoc.XCAFDoc_ColorType # value = XCAFDoc_ColorType.XCAFDoc_ColorSurf
-    __entries: dict # value = {'XCAFDoc_ColorGen': (XCAFDoc_ColorType.XCAFDoc_ColorGen, None), 'XCAFDoc_ColorSurf': (XCAFDoc_ColorType.XCAFDoc_ColorSurf, None), 'XCAFDoc_ColorCurv': (XCAFDoc_ColorType.XCAFDoc_ColorCurv, None)}
-    __members__: dict # value = {'XCAFDoc_ColorGen': XCAFDoc_ColorType.XCAFDoc_ColorGen, 'XCAFDoc_ColorSurf': XCAFDoc_ColorType.XCAFDoc_ColorSurf, 'XCAFDoc_ColorCurv': XCAFDoc_ColorType.XCAFDoc_ColorCurv}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDoc_ColorCurv: OCP.XCAFDoc.XCAFDoc_ColorType # value = <XCAFDoc_ColorType.XCAFDoc_ColorCurv: 2>
+    XCAFDoc_ColorGen: OCP.XCAFDoc.XCAFDoc_ColorType # value = <XCAFDoc_ColorType.XCAFDoc_ColorGen: 0>
+    XCAFDoc_ColorSurf: OCP.XCAFDoc.XCAFDoc_ColorType # value = <XCAFDoc_ColorType.XCAFDoc_ColorSurf: 1>
+    __entries: dict # value = {'XCAFDoc_ColorGen': (<XCAFDoc_ColorType.XCAFDoc_ColorGen: 0>, None), 'XCAFDoc_ColorSurf': (<XCAFDoc_ColorType.XCAFDoc_ColorSurf: 1>, None), 'XCAFDoc_ColorCurv': (<XCAFDoc_ColorType.XCAFDoc_ColorCurv: 2>, None)}
+    __members__: dict # value = {'XCAFDoc_ColorGen': <XCAFDoc_ColorType.XCAFDoc_ColorGen: 0>, 'XCAFDoc_ColorSurf': <XCAFDoc_ColorType.XCAFDoc_ColorSurf: 1>, 'XCAFDoc_ColorCurv': <XCAFDoc_ColorType.XCAFDoc_ColorCurv: 2>}
     pass
 class XCAFDoc_DataMapOfShapeLabel(OCP.NCollection.NCollection_BaseMap):
     """
@@ -2084,7 +2153,7 @@ class XCAFDoc_DataMapOfShapeLabel(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -2093,12 +2162,12 @@ class XCAFDoc_DataMapOfShapeLabel(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : XCAFDoc_DataMapOfShapeLabel) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : XCAFDoc_DataMapOfShapeLabel) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class XCAFDoc_Datum(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
@@ -2165,14 +2234,14 @@ class XCAFDoc_Datum(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2181,15 +2250,19 @@ class XCAFDoc_Datum(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -2327,7 +2400,7 @@ class XCAFDoc_Datum(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label) -> XCAFDoc_Datum: 
+    def Set_s(label : OCP.TDF.TDF_Label,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,anIdentification : OCP.TCollection.TCollection_HAsciiString) -> XCAFDoc_Datum: 
         """
         None
 
@@ -2335,7 +2408,7 @@ class XCAFDoc_Datum(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,anIdentification : OCP.TCollection.TCollection_HAsciiString) -> XCAFDoc_Datum: ...
+    def Set_s(theLabel : OCP.TDF.TDF_Label) -> XCAFDoc_Datum: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -2427,14 +2500,14 @@ class XCAFDoc_DimTol(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2443,15 +2516,19 @@ class XCAFDoc_DimTol(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -2614,7 +2691,7 @@ class XCAFDoc_DimTol(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_DimTolTool(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Attribute containing GD&T section of XCAF document. Provide tools for GD&T section management.Attribute containing GD&T section of XCAF document. Provide tools for GD&T section management.Attribute containing GD&T section of XCAF document. Provide tools for GD&T section management.
     """
@@ -2623,14 +2700,14 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
         """
     @overload
-    def AddDatum(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theIdentification : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: 
+    def AddDatum(self) -> OCP.TDF.TDF_Label: 
         """
         Adds a datum definition to the GD&T table and returns its label.
 
         Adds a datum definition to the GD&T table and returns its label.
         """
     @overload
-    def AddDatum(self) -> OCP.TDF.TDF_Label: ...
+    def AddDatum(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theIdentification : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: ...
     def AddDimTol(self,theKind : int,theVal : OCP.TColStd.TColStd_HArray1OfReal,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: 
         """
         Adds a a dimension tolerance definition with the specified kind, value, name and description to the GD&T table and returns its label.
@@ -2704,14 +2781,14 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -2720,15 +2797,19 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -2741,14 +2822,14 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Finds a datum sutisfying the specified name, description and identification and returns its label if found.
         """
     @overload
-    def FindDimTol(self,theKind : int,theVal : OCP.TColStd.TColStd_HArray1OfReal,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: 
+    def FindDimTol(self,theKind : int,theVal : OCP.TColStd.TColStd_HArray1OfReal,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,lab : OCP.TDF.TDF_Label) -> bool: 
         """
         Finds a dimension tolerance definition in the GD&T table sutisfying the specified kind, values, name and description and returns its label if found. Returns False if dimension tolerance is not found in DGTtable.
 
         Finds a dimension tolerance in the GD&T table sutisfying the specified kind, values, name and description and returns its label if found (or Null label else).
         """
     @overload
-    def FindDimTol(self,theKind : int,theVal : OCP.TColStd.TColStd_HArray1OfReal,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,lab : OCP.TDF.TDF_Label) -> bool: ...
+    def FindDimTol(self,theKind : int,theVal : OCP.TColStd.TColStd_HArray1OfReal,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: ...
     def Forget(self,aTransaction : int) -> None: 
         """
         Forgets the attribute. <aTransaction> is the current transaction in which the forget is done. A forgotten attribute is also flagged not "Valid".
@@ -2912,7 +2993,7 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         None
         """
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -2920,7 +3001,7 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -2938,16 +3019,16 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Sets a datum from theDatumL label to theToletL label.
         """
     @overload
-    def SetDimTol(self,theL : OCP.TDF.TDF_Label,theDimTolL : OCP.TDF.TDF_Label) -> None: 
+    def SetDimTol(self,theL : OCP.TDF.TDF_Label,theKind : int,theVal : OCP.TColStd.TColStd_HArray1OfReal,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: 
         """
         Sets existing dimension tolerance to theL label.
 
         Creates a dimension tolerance and sets it to theL label.
         """
     @overload
-    def SetDimTol(self,theL : OCP.TDF.TDF_Label,theKind : int,theVal : OCP.TColStd.TColStd_HArray1OfReal,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString) -> OCP.TDF.TDF_Label: ...
+    def SetDimTol(self,theL : OCP.TDF.TDF_Label,theDimTolL : OCP.TDF.TDF_Label) -> None: ...
     @overload
-    def SetDimension(self,theFirstL : OCP.TDF.TDF_Label,theSecondL : OCP.TDF.TDF_Label,theDimL : OCP.TDF.TDF_Label) -> None: 
+    def SetDimension(self,theFirstLS : OCP.TDF.TDF_LabelSequence,theSecondLS : OCP.TDF.TDF_LabelSequence,theDimL : OCP.TDF.TDF_Label) -> None: 
         """
         Sets a dimension to sequences target labels.
 
@@ -2956,9 +3037,9 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Sets a dimension to the target label.
         """
     @overload
-    def SetDimension(self,theFirstLS : OCP.TDF.TDF_LabelSequence,theSecondLS : OCP.TDF.TDF_LabelSequence,theDimL : OCP.TDF.TDF_Label) -> None: ...
-    @overload
     def SetDimension(self,theL : OCP.TDF.TDF_Label,theDimL : OCP.TDF.TDF_Label) -> None: ...
+    @overload
+    def SetDimension(self,theFirstL : OCP.TDF.TDF_Label,theSecondL : OCP.TDF.TDF_Label,theDimL : OCP.TDF.TDF_Label) -> None: ...
     def SetGDTPresentations(self,theGDTLabelToPrs : Any) -> None: 
         """
         Set shape presentation for GDT labels according to given map (theGDTLabelToPrs) theGDTLabelToPrsName map is an additional argument, can be used to set presentation names. If label is not in the theGDTLabelToPrsName map, the presentation name will be empty
@@ -3017,7 +3098,7 @@ class XCAFDoc_DimTolTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         None
         """
     pass
-class XCAFDoc_Dimension(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_Dimension(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Attribute that identifies a dimension in the GD&T table. Its parent label is used as a container to store data provided by XCAFDimTolObjects_DimensionObject.Attribute that identifies a dimension in the GD&T table. Its parent label is used as a container to store data provided by XCAFDimTolObjects_DimensionObject.Attribute that identifies a dimension in the GD&T table. Its parent label is used as a container to store data provided by XCAFDimTolObjects_DimensionObject.
     """
@@ -3082,14 +3163,14 @@ class XCAFDoc_Dimension(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3098,15 +3179,19 @@ class XCAFDoc_Dimension(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3133,7 +3218,7 @@ class XCAFDoc_Dimension(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def GetObject(self) -> OCP.XCAFDimTolObjects.XCAFDimTolObjects_DimensionObject: 
         """
-        Returns dimension object data taken from the paren's label and its sub-labels.
+        Returns dimension object data taken from the parent's label and its sub-labels.
         """
     def GetRefCount(self) -> int: 
         """
@@ -3201,7 +3286,7 @@ class XCAFDoc_Dimension(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Paste(self,Into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -3209,7 +3294,7 @@ class XCAFDoc_Dimension(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,With : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -3257,7 +3342,7 @@ class XCAFDoc_Dimension(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class XCAFDoc_DocumentTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_DocumentTool(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Defines sections structure of an XDE document. attribute marking CAF document as being DECAF document. Creates the sections structure of the document.Defines sections structure of an XDE document. attribute marking CAF document as being DECAF document. Creates the sections structure of the document.Defines sections structure of an XDE document. attribute marking CAF document as being DECAF document. Creates the sections structure of the document.
     """
@@ -3275,7 +3360,7 @@ class XCAFDoc_DocumentTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
     def AfterRetrieval(self,forceIt : bool=False) -> bool: 
         """
-        Something to do AFTER creation of an attribute by persistent-transient translation. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        To init this derived attribute after the attribute restore using the base restore-methods
         """
     def AfterUndo(self,anAttDelta : OCP.TDF.TDF_AttributeDelta,forceIt : bool=False) -> bool: 
         """
@@ -3341,14 +3426,14 @@ class XCAFDoc_DocumentTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3364,15 +3449,19 @@ class XCAFDoc_DocumentTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
         Returns label where the DocumentTool attribute is or 0.1 if DocumentTool is not yet set.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3493,7 +3582,7 @@ class XCAFDoc_DocumentTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
     @staticmethod
     def NotesTool_s(acces : OCP.TDF.TDF_Label) -> XCAFDoc_NotesTool: ...
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -3501,7 +3590,7 @@ class XCAFDoc_DocumentTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -3544,6 +3633,13 @@ class XCAFDoc_DocumentTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
         Returns sub-label of DocLabel() with tag 7.
         """
+    @staticmethod
+    def VisMaterialLabel_s(theLabel : OCP.TDF.TDF_Label) -> OCP.TDF.TDF_Label: 
+        """
+        Returns sub-label of DocLabel() with tag 10.
+        """
+    @staticmethod
+    def VisMaterialTool_s(theLabel : OCP.TDF.TDF_Label) -> XCAFDoc_VisMaterialTool: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3573,7 +3669,7 @@ class XCAFDoc_Editor():
     def Expand_s(Doc : OCP.TDF.TDF_Label,Shape : OCP.TDF.TDF_Label,recursively : bool=True) -> bool: ...
     def __init__(self) -> None: ...
     pass
-class XCAFDoc_GeomTolerance(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_GeomTolerance(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Attribute to store dimension and toleranceAttribute to store dimension and toleranceAttribute to store dimension and tolerance
     """
@@ -3638,14 +3734,14 @@ class XCAFDoc_GeomTolerance(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3654,15 +3750,19 @@ class XCAFDoc_GeomTolerance(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -3757,7 +3857,7 @@ class XCAFDoc_GeomTolerance(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         """
         None
         """
-    def Paste(self,Into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -3765,7 +3865,7 @@ class XCAFDoc_GeomTolerance(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,With : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -3882,14 +3982,14 @@ class XCAFDoc_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -3898,15 +3998,19 @@ class XCAFDoc_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -4085,14 +4189,14 @@ class XCAFDoc_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the transaction index in which the attribute has been created or modified.
         """
     @overload
-    def UnSetChild(self,Ch : XCAFDoc_GraphNode) -> None: 
+    def UnSetChild(self,Chindex : int) -> None: 
         """
         Remove <Ch> from GraphNodeSequence. and remove link between father and child.
 
         Remove Child GraphNode by index from Children GraphNodeSequence. and remove link between father and child.
         """
     @overload
-    def UnSetChild(self,Chindex : int) -> None: ...
+    def UnSetChild(self,Ch : XCAFDoc_GraphNode) -> None: ...
     @overload
     def UnSetFather(self,Findex : int) -> None: 
         """
@@ -4207,14 +4311,14 @@ class XCAFDoc_GraphNodeSequence(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : XCAFDoc_GraphNodeSequence) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4240,19 +4344,19 @@ class XCAFDoc_GraphNodeSequence(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : XCAFDoc_GraphNodeSequence) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Static deleter to be passed to BaseSequence
         """
     pass
-class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_LayerTool(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Provides tools to store and retrieve attributes (Layers) of TopoDS_Shape in and from TDocStd_Document A Document is intended to hold different attributes of ONE shape and it's sub-shapes Provide tools for management of Layers section of document.Provides tools to store and retrieve attributes (Layers) of TopoDS_Shape in and from TDocStd_Document A Document is intended to hold different attributes of ONE shape and it's sub-shapes Provide tools for management of Layers section of document.Provides tools to store and retrieve attributes (Layers) of TopoDS_Shape in and from TDocStd_Document A Document is intended to hold different attributes of ONE shape and it's sub-shapes Provide tools for management of Layers section of document.
     """
@@ -4325,14 +4429,14 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -4341,15 +4445,19 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -4358,14 +4466,14 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Finds an associated attribute of <me>, according to <anID>. the returned <anAttribute> is a valid one. The method returns True if found, False otherwise. A removed attribute cannot be found using this method.
         """
     @overload
-    def FindLayer(self,aLayer : OCP.TCollection.TCollection_ExtendedString,lab : OCP.TDF.TDF_Label) -> bool: 
+    def FindLayer(self,aLayer : OCP.TCollection.TCollection_ExtendedString) -> OCP.TDF.TDF_Label: 
         """
         Finds a Layer definition in a Layertable and returns its label if found Returns False if Layer is not found in Layertable
 
         Finds a Layer definition in a Layertable and returns its label if found (or Null label else)
         """
     @overload
-    def FindLayer(self,aLayer : OCP.TCollection.TCollection_ExtendedString) -> OCP.TDF.TDF_Label: ...
+    def FindLayer(self,aLayer : OCP.TCollection.TCollection_ExtendedString,lab : OCP.TDF.TDF_Label) -> bool: ...
     def Forget(self,aTransaction : int) -> None: 
         """
         Forgets the attribute. <aTransaction> is the current transaction in which the forget is done. A forgotten attribute is also flagged not "Valid".
@@ -4407,15 +4515,15 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Return sequence of strings that assosiated with shape <Sh>.
         """
     @overload
-    def GetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerS : OCP.TColStd.TColStd_HSequenceOfExtendedString) -> bool: ...
-    @overload
-    def GetLayers(self,L : OCP.TDF.TDF_Label,aLayerS : OCP.TColStd.TColStd_HSequenceOfExtendedString) -> bool: ...
-    @overload
     def GetLayers(self,L : OCP.TDF.TDF_Label,aLayerLS : OCP.TDF.TDF_LabelSequence) -> bool: ...
+    @overload
+    def GetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape) -> OCP.TColStd.TColStd_HSequenceOfExtendedString: ...
+    @overload
+    def GetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerS : OCP.TColStd.TColStd_HSequenceOfExtendedString) -> bool: ...
     @overload
     def GetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerLS : OCP.TDF.TDF_LabelSequence) -> bool: ...
     @overload
-    def GetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape) -> OCP.TColStd.TColStd_HSequenceOfExtendedString: ...
+    def GetLayers(self,L : OCP.TDF.TDF_Label,aLayerS : OCP.TColStd.TColStd_HSequenceOfExtendedString) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -4477,7 +4585,7 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute has no backup
         """
     @overload
-    def IsSet(self,L : OCP.TDF.TDF_Label,aLayer : OCP.TCollection.TCollection_ExtendedString) -> bool: 
+    def IsSet(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayer : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         Returns True if label <L> has a Layer assosiated with the <aLayer>.
 
@@ -4488,11 +4596,11 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns True if shape <Sh> has a Layer assosiated with the <aLayerL>.
         """
     @overload
-    def IsSet(self,L : OCP.TDF.TDF_Label,aLayerL : OCP.TDF.TDF_Label) -> bool: ...
-    @overload
     def IsSet(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerL : OCP.TDF.TDF_Label) -> bool: ...
     @overload
-    def IsSet(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayer : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def IsSet(self,L : OCP.TDF.TDF_Label,aLayerL : OCP.TDF.TDF_Label) -> bool: ...
+    @overload
+    def IsSet(self,L : OCP.TDF.TDF_Label,aLayer : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns true if the attribute is valid; i.e. not a backuped or removed one.
@@ -4511,7 +4619,7 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -4523,7 +4631,7 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Removes Layer from the Layertable
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -4537,7 +4645,7 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @overload
-    def SetLayer(self,Sh : OCP.TopoDS.TopoDS_Shape,LayerL : OCP.TDF.TDF_Label,shapeInOneLayer : bool=False) -> bool: 
+    def SetLayer(self,L : OCP.TDF.TDF_Label,LayerL : OCP.TDF.TDF_Label,shapeInOneLayer : bool=False) -> None: 
         """
         Sets a link from label <L> to Layer defined by <LayerL> optional parametr <shapeInOneLayer> show could shape be in number of layers or only in one.
 
@@ -4552,7 +4660,7 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def SetLayer(self,L : OCP.TDF.TDF_Label,aLayer : OCP.TCollection.TCollection_ExtendedString,shapeInOneLayer : bool=False) -> None: ...
     @overload
-    def SetLayer(self,L : OCP.TDF.TDF_Label,LayerL : OCP.TDF.TDF_Label,shapeInOneLayer : bool=False) -> None: ...
+    def SetLayer(self,Sh : OCP.TopoDS.TopoDS_Shape,LayerL : OCP.TDF.TDF_Label,shapeInOneLayer : bool=False) -> bool: ...
     def SetVisibility(self,layerL : OCP.TDF.TDF_Label,isvisible : bool=True) -> None: 
         """
         Set the visibility of layer. If layer is invisible when on it's layer will set UAttribute with corresponding GUID.
@@ -4574,16 +4682,16 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the transaction index in which the attribute has been created or modified.
         """
     @overload
-    def UnSetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape) -> bool: 
+    def UnSetLayers(self,L : OCP.TDF.TDF_Label) -> None: 
         """
         Removes a link from label <L> to all layers
 
         Remove link between shape <Sh> and all Layers at LayerTable. return FALSE if no such shape <Sh> in XCAF Document.
         """
     @overload
-    def UnSetLayers(self,L : OCP.TDF.TDF_Label) -> None: ...
+    def UnSetLayers(self,Sh : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     @overload
-    def UnSetOneLayer(self,L : OCP.TDF.TDF_Label,aLayer : OCP.TCollection.TCollection_ExtendedString) -> bool: 
+    def UnSetOneLayer(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerL : OCP.TDF.TDF_Label) -> bool: 
         """
         Remove link from label <L> and Layer <aLayer>. returns FALSE if no such layer.
 
@@ -4594,11 +4702,11 @@ class XCAFDoc_LayerTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Remove link between shape <Sh> and layer <aLayerL>. returns FALSE if no such layer <aLayerL> or shape <Sh>.
         """
     @overload
-    def UnSetOneLayer(self,L : OCP.TDF.TDF_Label,aLayerL : OCP.TDF.TDF_Label) -> bool: ...
-    @overload
     def UnSetOneLayer(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayer : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     @overload
-    def UnSetOneLayer(self,Sh : OCP.TopoDS.TopoDS_Shape,aLayerL : OCP.TDF.TDF_Label) -> bool: ...
+    def UnSetOneLayer(self,L : OCP.TDF.TDF_Label,aLayerL : OCP.TDF.TDF_Label) -> bool: ...
+    @overload
+    def UnSetOneLayer(self,L : OCP.TDF.TDF_Label,aLayer : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     def UntilTransaction(self) -> int: 
         """
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
@@ -4680,14 +4788,14 @@ class XCAFDoc_Location(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -4696,15 +4804,19 @@ class XCAFDoc_Location(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -4920,14 +5032,14 @@ class XCAFDoc_Material(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -4936,15 +5048,19 @@ class XCAFDoc_Material(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -5111,7 +5227,7 @@ class XCAFDoc_Material(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class XCAFDoc_MaterialTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_MaterialTool(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Provides tools to store and retrieve attributes (materials) of TopoDS_Shape in and from TDocStd_Document A Document is intended to hold different attributes of ONE shape and it's sub-shapes Provide tools for management of Materialss section of document.Provides tools to store and retrieve attributes (materials) of TopoDS_Shape in and from TDocStd_Document A Document is intended to hold different attributes of ONE shape and it's sub-shapes Provide tools for management of Materialss section of document.Provides tools to store and retrieve attributes (materials) of TopoDS_Shape in and from TDocStd_Document A Document is intended to hold different attributes of ONE shape and it's sub-shapes Provide tools for management of Materialss section of document.
     """
@@ -5184,14 +5300,14 @@ class XCAFDoc_MaterialTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -5200,15 +5316,19 @@ class XCAFDoc_MaterialTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -5316,7 +5436,7 @@ class XCAFDoc_MaterialTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
         None
         """
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -5324,7 +5444,7 @@ class XCAFDoc_MaterialTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -5443,14 +5563,14 @@ class XCAFDoc_Note(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -5459,15 +5579,19 @@ class XCAFDoc_Note(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,theOS : Any) -> Any: 
+    def Dump(self,theOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -5702,14 +5826,14 @@ class XCAFDoc_NoteComment(XCAFDoc_Note, OCP.TDF.TDF_Attribute, OCP.Standard.Stan
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -5718,15 +5842,19 @@ class XCAFDoc_NoteComment(XCAFDoc_Note, OCP.TDF.TDF_Attribute, OCP.Standard.Stan
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,theOS : Any) -> Any: 
+    def Dump(self,theOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -5966,14 +6094,14 @@ class XCAFDoc_NoteBinData(XCAFDoc_Note, OCP.TDF.TDF_Attribute, OCP.Standard.Stan
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -5982,15 +6110,19 @@ class XCAFDoc_NoteBinData(XCAFDoc_Note, OCP.TDF.TDF_Attribute, OCP.Standard.Stan
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,theOS : Any) -> Any: 
+    def Dump(self,theOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -6139,10 +6271,10 @@ class XCAFDoc_NoteBinData(XCAFDoc_Note, OCP.TDF.TDF_Attribute, OCP.Standard.Stan
         """
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theData : OCP.TColStd.TColStd_HArray1OfByte) -> XCAFDoc_NoteBinData: ...
+    def Set_s(theLabel : OCP.TDF.TDF_Label,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theFile : OCP.OSD.OSD_File) -> XCAFDoc_NoteBinData: ...
     @staticmethod
     @overload
-    def Set_s(theLabel : OCP.TDF.TDF_Label,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theFile : OCP.OSD.OSD_File) -> XCAFDoc_NoteBinData: ...
+    def Set_s(theLabel : OCP.TDF.TDF_Label,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theData : OCP.TColStd.TColStd_HArray1OfByte) -> XCAFDoc_NoteBinData: ...
     def Size(self) -> int: 
         """
         Size of data in bytes.
@@ -6254,14 +6386,14 @@ class XCAFDoc_NoteBalloon(XCAFDoc_NoteComment, XCAFDoc_Note, OCP.TDF.TDF_Attribu
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -6270,15 +6402,19 @@ class XCAFDoc_NoteBalloon(XCAFDoc_NoteComment, XCAFDoc_Note, OCP.TDF.TDF_Attribu
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,theOS : Any) -> Any: 
+    def Dump(self,theOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -6452,7 +6588,7 @@ class XCAFDoc_NoteBalloon(XCAFDoc_NoteComment, XCAFDoc_Note, OCP.TDF.TDF_Attribu
         None
         """
     pass
-class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_NotesTool(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     A tool to annotate items in the hierarchical product structure. There are two basic entities, which operates the notes tool: notes and annotated items. A note is a user defined data structure derived from the notes hive. An annotated item is represented by attribute attached to a separate label under the annotated items hive. Notes are linked with annotated items by means of attribute. Notes play parent roles and annotated items - child roles.A tool to annotate items in the hierarchical product structure. There are two basic entities, which operates the notes tool: notes and annotated items. A note is a user defined data structure derived from the notes hive. An annotated item is represented by attribute attached to a separate label under the annotated items hive. Notes are linked with annotated items by means of attribute. Notes play parent roles and annotated items - child roles.
     """
@@ -6479,14 +6615,14 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def AddNoteToAttr(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID) -> XCAFDoc_AssemblyItemRef: ...
     @overload
-    def AddNoteToSubshape(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theSubshapeIndex : int) -> XCAFDoc_AssemblyItemRef: 
+    def AddNoteToSubshape(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theSubshapeIndex : int) -> XCAFDoc_AssemblyItemRef: 
         """
         Adds the given note to the assembly item's subshape.
 
         Adds the given note to the labeled item's subshape.
         """
     @overload
-    def AddNoteToSubshape(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theSubshapeIndex : int) -> XCAFDoc_AssemblyItemRef: ...
+    def AddNoteToSubshape(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theSubshapeIndex : int) -> XCAFDoc_AssemblyItemRef: ...
     def AfterAddition(self) -> None: 
         """
         Something to do after adding an Attribute to a label.
@@ -6532,14 +6668,14 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Create a new 'balloon' note. Creates a new label under the notes hive and attaches attribute (derived ftom
         """
     @overload
-    def CreateBinData(self,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theFile : OCP.OSD.OSD_File) -> XCAFDoc_Note: 
+    def CreateBinData(self,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theData : OCP.TColStd.TColStd_HArray1OfByte) -> XCAFDoc_Note: 
         """
         Create a new note with data loaded from a binary file. Creates a new label under the notes hive and attaches attribute (derived ftom
 
         Create a new note with data loaded from a byte data array. Creates a new label under the notes hive and attaches attribute (derived ftom
         """
     @overload
-    def CreateBinData(self,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theData : OCP.TColStd.TColStd_HArray1OfByte) -> XCAFDoc_Note: ...
+    def CreateBinData(self,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theTitle : OCP.TCollection.TCollection_ExtendedString,theMIMEtype : OCP.TCollection.TCollection_AsciiString,theFile : OCP.OSD.OSD_File) -> XCAFDoc_Note: ...
     def CreateComment(self,theUserName : OCP.TCollection.TCollection_ExtendedString,theTimeStamp : OCP.TCollection.TCollection_ExtendedString,theComment : OCP.TCollection.TCollection_ExtendedString) -> XCAFDoc_Note: 
         """
         Create a new comment note. Creates a new label under the notes hive and attaches attribute (derived ftom
@@ -6577,14 +6713,14 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -6593,15 +6729,19 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,theOS : Any) -> Any: 
+    def Dump(self,theOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -6615,14 +6755,14 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def FindAnnotatedItem(self,theItemLabel : OCP.TDF.TDF_Label) -> OCP.TDF.TDF_Label: ...
     @overload
-    def FindAnnotatedItemAttr(self,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID) -> OCP.TDF.TDF_Label: 
+    def FindAnnotatedItemAttr(self,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID) -> OCP.TDF.TDF_Label: 
         """
         Finds a label of the given assembly item's attribute in the annotated items hive.
 
         Finds a label of the given labeled item's attribute in the annotated items hive.
         """
     @overload
-    def FindAnnotatedItemAttr(self,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID) -> OCP.TDF.TDF_Label: ...
+    def FindAnnotatedItemAttr(self,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID) -> OCP.TDF.TDF_Label: ...
     @overload
     def FindAnnotatedItemSubshape(self,theItemLabel : OCP.TDF.TDF_Label,theSubshapeIndex : int) -> OCP.TDF.TDF_Label: 
         """
@@ -6657,21 +6797,21 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the label of the annotated items hive.
         """
     @overload
-    def GetAttrNotes(self,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: 
+    def GetAttrNotes(self,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: 
         """
         Gets all note labels of the assembly item's attribute. Notes linked to the item itself or to item's subshapes aren't taken into account. The label sequence isn't cleared beforehand.
 
         Gets all note labels of the labeled item's attribute. Notes linked to the item itself or to item's subshapes aren't taken into account. The label sequence isn't cleared beforehand.
         """
     @overload
-    def GetAttrNotes(self,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: ...
+    def GetAttrNotes(self,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: ...
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
         """
         Returns default attribute GUID
         """
     @overload
-    def GetNotes(self,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> None: 
+    def GetNotes(self,theItemId : XCAFDoc_AssemblyItemId,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: 
         """
         Returns all labels from the notes hive. The label sequence isn't cleared beforehand.
 
@@ -6680,7 +6820,7 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Gets all note labels of the labeled item. Notes linked to item's attributes aren't taken into account. The label sequence isn't cleared beforehand.
         """
     @overload
-    def GetNotes(self,theItemId : XCAFDoc_AssemblyItemId,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: ...
+    def GetNotes(self,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> None: ...
     @overload
     def GetNotes(self,theItemLabel : OCP.TDF.TDF_Label,theNoteLabels : OCP.TDF.TDF_LabelSequence) -> int: ...
     def GetNotesLabel(self) -> OCP.TDF.TDF_Label: 
@@ -6782,7 +6922,7 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Paste(self,theAttrInto : OCP.TDF.TDF_Attribute,theRT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -6813,14 +6953,14 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Removes all notes from the assembly item's subshape.
         """
     @overload
-    def RemoveAttrNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID,theDelIfOrphan : bool=False) -> bool: 
+    def RemoveAttrNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID,theDelIfOrphan : bool=False) -> bool: 
         """
         Removes a note from the assembly item's attribute.
 
         Removes a note from the labeled item's attribute.
         """
     @overload
-    def RemoveAttrNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemLabel : OCP.TDF.TDF_Label,theGUID : OCP.Standard.Standard_GUID,theDelIfOrphan : bool=False) -> bool: ...
+    def RemoveAttrNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theGUID : OCP.Standard.Standard_GUID,theDelIfOrphan : bool=False) -> bool: ...
     @overload
     def RemoveNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theDelIfOrphan : bool=False) -> bool: 
         """
@@ -6839,7 +6979,7 @@ class XCAFDoc_NotesTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @overload
     def RemoveSubshapeNote(self,theNoteLabel : OCP.TDF.TDF_Label,theItemId : XCAFDoc_AssemblyItemId,theSubshapeIndex : int,theDelIfOrphan : bool=False) -> bool: ...
-    def Restore(self,theAttrFrom : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -6945,14 +7085,14 @@ class XCAFDoc_ShapeMapTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -6961,15 +7101,19 @@ class XCAFDoc_ShapeMapTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -7121,7 +7265,7 @@ class XCAFDoc_ShapeMapTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         None
         """
     pass
-class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_ShapeTool(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     A tool to store shapes in an XDE document in the form of assembly structure, and to maintain this structure. Attribute containing Shapes section of DECAF document. Provide tools for management of Shapes section. The API provided by this class allows to work with this structure regardless of its low-level implementation. All the shapes are stored on child labels of a main label which is XCAFDoc_DocumentTool::LabelShapes(). The label for assembly also has sub-labels, each of which represents the instance of another shape in that assembly (component). Such sub-label stores reference to the label of the original shape in the form of TDataStd_TreeNode with GUID XCAFDoc::ShapeRefGUID(), and its location encapsulated into the NamedShape. For correct work with an XDE document, it is necessary to use methods for analysis and methods for working with shapes. For example: if ( STool->IsAssembly(aLabel) ) { Standard_Boolean subchilds = Standard_False; (default) Standard_Integer nbc = STool->NbComponents (aLabel[,subchilds]); } If subchilds is True, commands also consider sub-levels. By default, only level one is checked. In this example, number of children from the first level of assembly will be returned. Methods for creation and initialization: Constructor: XCAFDoc_ShapeTool::XCAFDoc_ShapeTool() Getting a guid: Standard_GUID GetID (); Creation (if does not exist) of ShapeTool on label L: Handle(XCAFDoc_ShapeTool) XCAFDoc_ShapeTool::Set(const TDF_Label& L) Analyze whether shape is a simple shape or an instance or a component of an assembly or it is an assembly ( methods of analysis). For example: STool->IsShape(aLabel) ; Analyze that the label represents a shape (simple shape, assembly or reference) or STool->IsTopLevel(aLabel); Analyze that the label is a label of a top-level shape. Work with simple shapes, assemblies and instances ( methods for work with shapes). For example: Add shape: Standard_Boolean makeAssembly; // True to interpret a Compound as an Assembly, False to take it as a whole aLabel = STool->AddShape(aShape, makeAssembly); Get shape: TDF_Label aLabel... // A label must be present if (aLabel.IsNull()) { ... no such label : abandon .. } TopoDS_Shape aShape; aShape = STool->GetShape(aLabel); if (aShape.IsNull()) { ... this label is not for a Shape ... } To get a label from shape. Standard_Boolean findInstance = Standard_False; (this is default value) aLabel = STool->FindShape(aShape [,findInstance]); if (aLabel.IsNull()) { ... no label found for this shape ... }A tool to store shapes in an XDE document in the form of assembly structure, and to maintain this structure. Attribute containing Shapes section of DECAF document. Provide tools for management of Shapes section. The API provided by this class allows to work with this structure regardless of its low-level implementation. All the shapes are stored on child labels of a main label which is XCAFDoc_DocumentTool::LabelShapes(). The label for assembly also has sub-labels, each of which represents the instance of another shape in that assembly (component). Such sub-label stores reference to the label of the original shape in the form of TDataStd_TreeNode with GUID XCAFDoc::ShapeRefGUID(), and its location encapsulated into the NamedShape. For correct work with an XDE document, it is necessary to use methods for analysis and methods for working with shapes. For example: if ( STool->IsAssembly(aLabel) ) { Standard_Boolean subchilds = Standard_False; (default) Standard_Integer nbc = STool->NbComponents (aLabel[,subchilds]); } If subchilds is True, commands also consider sub-levels. By default, only level one is checked. In this example, number of children from the first level of assembly will be returned. Methods for creation and initialization: Constructor: XCAFDoc_ShapeTool::XCAFDoc_ShapeTool() Getting a guid: Standard_GUID GetID (); Creation (if does not exist) of ShapeTool on label L: Handle(XCAFDoc_ShapeTool) XCAFDoc_ShapeTool::Set(const TDF_Label& L) Analyze whether shape is a simple shape or an instance or a component of an assembly or it is an assembly ( methods of analysis). For example: STool->IsShape(aLabel) ; Analyze that the label represents a shape (simple shape, assembly or reference) or STool->IsTopLevel(aLabel); Analyze that the label is a label of a top-level shape. Work with simple shapes, assemblies and instances ( methods for work with shapes). For example: Add shape: Standard_Boolean makeAssembly; // True to interpret a Compound as an Assembly, False to take it as a whole aLabel = STool->AddShape(aShape, makeAssembly); Get shape: TDF_Label aLabel... // A label must be present if (aLabel.IsNull()) { ... no such label : abandon .. } TopoDS_Shape aShape; aShape = STool->GetShape(aLabel); if (aShape.IsNull()) { ... this label is not for a Shape ... } To get a label from shape. Standard_Boolean findInstance = Standard_False; (this is default value) aLabel = STool->FindShape(aShape [,findInstance]); if (aLabel.IsNull()) { ... no label found for this shape ... }A tool to store shapes in an XDE document in the form of assembly structure, and to maintain this structure. Attribute containing Shapes section of DECAF document. Provide tools for management of Shapes section. The API provided by this class allows to work with this structure regardless of its low-level implementation. All the shapes are stored on child labels of a main label which is XCAFDoc_DocumentTool::LabelShapes(). The label for assembly also has sub-labels, each of which represents the instance of another shape in that assembly (component). Such sub-label stores reference to the label of the original shape in the form of TDataStd_TreeNode with GUID XCAFDoc::ShapeRefGUID(), and its location encapsulated into the NamedShape. For correct work with an XDE document, it is necessary to use methods for analysis and methods for working with shapes. For example: if ( STool->IsAssembly(aLabel) ) { Standard_Boolean subchilds = Standard_False; (default) Standard_Integer nbc = STool->NbComponents (aLabel[,subchilds]); } If subchilds is True, commands also consider sub-levels. By default, only level one is checked. In this example, number of children from the first level of assembly will be returned. Methods for creation and initialization: Constructor: XCAFDoc_ShapeTool::XCAFDoc_ShapeTool() Getting a guid: Standard_GUID GetID (); Creation (if does not exist) of ShapeTool on label L: Handle(XCAFDoc_ShapeTool) XCAFDoc_ShapeTool::Set(const TDF_Label& L) Analyze whether shape is a simple shape or an instance or a component of an assembly or it is an assembly ( methods of analysis). For example: STool->IsShape(aLabel) ; Analyze that the label represents a shape (simple shape, assembly or reference) or STool->IsTopLevel(aLabel); Analyze that the label is a label of a top-level shape. Work with simple shapes, assemblies and instances ( methods for work with shapes). For example: Add shape: Standard_Boolean makeAssembly; // True to interpret a Compound as an Assembly, False to take it as a whole aLabel = STool->AddShape(aShape, makeAssembly); Get shape: TDF_Label aLabel... // A label must be present if (aLabel.IsNull()) { ... no such label : abandon .. } TopoDS_Shape aShape; aShape = STool->GetShape(aLabel); if (aShape.IsNull()) { ... this label is not for a Shape ... } To get a label from shape. Standard_Boolean findInstance = Standard_False; (this is default value) aLabel = STool->FindShape(aShape [,findInstance]); if (aLabel.IsNull()) { ... no label found for this shape ... }
     """
@@ -7223,14 +7367,14 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -7240,16 +7384,20 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been resumed.
         """
     @overload
-    def Dump(self,theDumpLog : Any) -> Any: 
+    def Dump(self,theDumpLog : io.BytesIO,deep : bool) -> io.BytesIO: 
         """
         None
 
         None
         """
     @overload
-    def Dump(self,theDumpLog : Any,deep : bool) -> Any: ...
+    def Dump(self,theDumpLog : io.BytesIO) -> io.BytesIO: ...
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     @staticmethod
-    def DumpShape_s(theDumpLog : Any,L : OCP.TDF.TDF_Label,level : int=0,deep : bool=False) -> None: 
+    def DumpShape_s(theDumpLog : io.BytesIO,L : OCP.TDF.TDF_Label,level : int=0,deep : bool=False) -> None: 
         """
         Print to std::ostream <theDumpLog> type of shape found on <L> label and the entry of <L>, with <level> tabs before. If <deep>, print also TShape and Location addresses
         """
@@ -7261,7 +7409,7 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Convert Shape (compound/compsolid/shell/wire) to assembly
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -7287,14 +7435,14 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Searchs the SHUO by labels of components from upper_usage componet to next_usage Returns null attribute if no SHUO found
         """
     @overload
-    def FindShape(self,S : OCP.TopoDS.TopoDS_Shape,findInstance : bool=False) -> OCP.TDF.TDF_Label: 
+    def FindShape(self,S : OCP.TopoDS.TopoDS_Shape,L : OCP.TDF.TDF_Label,findInstance : bool=False) -> bool: 
         """
         Returns the label corresponding to shape S (searches among top-level shapes, not including subcomponents of assemblies and subshapes) If findInstance is False (default), seach for the input shape without location If findInstance is True, searches for the input shape as is. Return True if <S> is found.
 
         Does the same as previous method Returns Null label if not found
         """
     @overload
-    def FindShape(self,S : OCP.TopoDS.TopoDS_Shape,L : OCP.TDF.TDF_Label,findInstance : bool=False) -> bool: ...
+    def FindShape(self,S : OCP.TopoDS.TopoDS_Shape,findInstance : bool=False) -> OCP.TDF.TDF_Label: ...
     def FindSubShape(self,shapeL : OCP.TDF.TDF_Label,sub : OCP.TopoDS.TopoDS_Shape,L : OCP.TDF.TDF_Label) -> bool: 
         """
         Finds a label for subshape of shape stored on label shapeL Returns Null label if it is not found
@@ -7383,7 +7531,7 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def GetShape_s(L : OCP.TDF.TDF_Label,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
+    def GetShape_s(L : OCP.TDF.TDF_Label) -> OCP.TopoDS.TopoDS_Shape: 
         """
         To get TopoDS_Shape from shape's label For component, returns new shape with correct location Returns False if label does not contain shape
 
@@ -7391,7 +7539,7 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def GetShape_s(L : OCP.TDF.TDF_Label) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetShape_s(L : OCP.TDF.TDF_Label,S : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     def GetShapes(self,Labels : OCP.TDF.TDF_LabelSequence) -> None: 
         """
         Returns a sequence of all top-level shapes
@@ -7534,7 +7682,7 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Creates new (empty) top-level shape. Initially it holds empty TopoDS_Compound
         """
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -7554,7 +7702,7 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Removes shape (whole label and all its sublabels) If removeCompletely is true, removes complete shape If removeCompletely is false, removes instance(location) only Returns False (and does nothing) if shape is not free or is not top-level shape
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -7572,14 +7720,14 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Sets auto-naming mode to <V>. If True then for added shapes, links, assemblies and SHUO's, the TDataStd_Name attribute is automatically added. For shapes it contains a shape type (e.g. "SOLID", "SHELL", etc); for links it has a form "=>[0:1:1:2]" (where a tag is a label containing a shape without a location); for assemblies it is "ASSEMBLY", and "SHUO" for SHUO's. This setting is global; it cannot be made a member function as it is used by static methods as well. By default, auto-naming is enabled. See also AutoNaming().
         """
     @overload
-    def SetExternRefs(self,L : OCP.TDF.TDF_Label,SHAS : OCP.TColStd.TColStd_SequenceOfHAsciiString) -> None: 
+    def SetExternRefs(self,SHAS : OCP.TColStd.TColStd_SequenceOfHAsciiString) -> OCP.TDF.TDF_Label: 
         """
         Sets the names of references on the no-step files
 
         Sets the names of references on the no-step files
         """
     @overload
-    def SetExternRefs(self,SHAS : OCP.TColStd.TColStd_SequenceOfHAsciiString) -> OCP.TDF.TDF_Label: ...
+    def SetExternRefs(self,L : OCP.TDF.TDF_Label,SHAS : OCP.TColStd.TColStd_SequenceOfHAsciiString) -> None: ...
     @overload
     def SetID(self) -> None: 
         """
@@ -7633,7 +7781,7 @@ class XCAFDoc_ShapeTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class XCAFDoc_View(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_View(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Attribute to store viewAttribute to store viewAttribute to store view
     """
@@ -7698,14 +7846,14 @@ class XCAFDoc_View(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -7714,15 +7862,19 @@ class XCAFDoc_View(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -7817,7 +7969,7 @@ class XCAFDoc_View(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Paste(self,Into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -7825,7 +7977,7 @@ class XCAFDoc_View(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Adds the first level referenced attributes and labels to <aDataSet>.
         """
-    def Restore(self,With : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -7873,7 +8025,7 @@ class XCAFDoc_View(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class XCAFDoc_ViewTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_ViewTool(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     Provides tools to store and retrieve Views in and from TDocStd_Document Each View contains parts XCAFDoc_View attribute with all information about camera and view window. Also each view contain information of displayed shapes and GDTs as sets of shape and GDT labels.Provides tools to store and retrieve Views in and from TDocStd_Document Each View contains parts XCAFDoc_View attribute with all information about camera and view window. Also each view contain information of displayed shapes and GDTs as sets of shape and GDT labels.Provides tools to store and retrieve Views in and from TDocStd_Document Each View contains parts XCAFDoc_View attribute with all information about camera and view window. Also each view contain information of displayed shapes and GDTs as sets of shape and GDT labels.
     """
@@ -7946,14 +8098,14 @@ class XCAFDoc_ViewTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -7962,15 +8114,19 @@ class XCAFDoc_ViewTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -8117,7 +8273,7 @@ class XCAFDoc_ViewTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Paste(self,into : OCP.TDF.TDF_Attribute,RT : OCP.TDF.TDF_RelocationTable) -> None: 
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
         """
@@ -8129,7 +8285,7 @@ class XCAFDoc_ViewTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Remove View
         """
-    def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
@@ -8156,9 +8312,9 @@ class XCAFDoc_ViewTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Sets a link with GUID
         """
     @overload
-    def SetView(self,theShapes : OCP.TDF.TDF_LabelSequence,theGDTs : OCP.TDF.TDF_LabelSequence,theViewL : OCP.TDF.TDF_Label) -> None: ...
-    @overload
     def SetView(self,theShapes : OCP.TDF.TDF_LabelSequence,theGDTs : OCP.TDF.TDF_LabelSequence,theClippingPlanes : OCP.TDF.TDF_LabelSequence,theNotes : OCP.TDF.TDF_LabelSequence,theAnnotations : OCP.TDF.TDF_LabelSequence,theViewL : OCP.TDF.TDF_Label) -> None: ...
+    @overload
+    def SetView(self,theShapes : OCP.TDF.TDF_LabelSequence,theGDTs : OCP.TDF.TDF_LabelSequence,theViewL : OCP.TDF.TDF_Label) -> None: ...
     @staticmethod
     def Set_s(L : OCP.TDF.TDF_Label) -> XCAFDoc_ViewTool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
@@ -8191,7 +8347,769 @@ class XCAFDoc_ViewTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class XCAFDoc_Volume(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+class XCAFDoc_VisMaterial(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+    """
+    Attribute storing Material definition for visualization purposes.Attribute storing Material definition for visualization purposes.
+    """
+    def AddAttribute(self,other : OCP.TDF.TDF_Attribute) -> None: 
+        """
+        Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
+        """
+    def AfterAddition(self) -> None: 
+        """
+        Something to do after adding an Attribute to a label.
+        """
+    def AfterResume(self) -> None: 
+        """
+        Something to do after resuming an Attribute from a label.
+        """
+    def AfterRetrieval(self,forceIt : bool=False) -> bool: 
+        """
+        Something to do AFTER creation of an attribute by persistent-transient translation. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def AfterUndo(self,anAttDelta : OCP.TDF.TDF_AttributeDelta,forceIt : bool=False) -> bool: 
+        """
+        Something to do after applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def AlphaCutOff(self) -> float: 
+        """
+        Return alpha cutoff value; 0.5 by default.
+        """
+    def AlphaMode(self) -> OCP.Graphic3d.Graphic3d_AlphaMode: 
+        """
+        Return alpha mode; Graphic3d_AlphaMode_BlendAuto by default.
+        """
+    def Backup(self) -> None: 
+        """
+        Backups the attribute. The backuped attribute is flagged "Backuped" and not "Valid".
+        """
+    def BackupCopy(self) -> OCP.TDF.TDF_Attribute: 
+        """
+        Copies the attribute contents into a new other attribute. It is used by Backup().
+        """
+    def BaseColor(self) -> OCP.Quantity.Quantity_ColorRGBA: 
+        """
+        Return base color.
+        """
+    def BeforeCommitTransaction(self) -> None: 
+        """
+        A callback. By default does nothing. It is called by TDF_Data::CommitTransaction() method.
+        """
+    def BeforeForget(self) -> None: 
+        """
+        Something to do before forgetting an Attribute to a label.
+        """
+    def BeforeRemoval(self) -> None: 
+        """
+        Something to do before removing an Attribute from a label.
+        """
+    def BeforeUndo(self,anAttDelta : OCP.TDF.TDF_AttributeDelta,forceIt : bool=False) -> bool: 
+        """
+        Something to do before applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def CommonMaterial(self) -> XCAFDoc_VisMaterialCommon: 
+        """
+        Return common material.
+        """
+    def ConvertToCommonMaterial(self) -> XCAFDoc_VisMaterialCommon: 
+        """
+        Return Common material or convert PBR into Common material.
+        """
+    def ConvertToPbrMaterial(self) -> XCAFDoc_VisMaterialPBR: 
+        """
+        Return PBR material or convert Common into PBR material.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DeltaOnAddition(self) -> OCP.TDF.TDF_DeltaOnAddition: 
+        """
+        Makes an AttributeDelta because <me> appeared. The only known use of a redefinition of this method is to return a null handle (no delta).
+        """
+    def DeltaOnForget(self) -> OCP.TDF.TDF_DeltaOnForget: 
+        """
+        Makes an AttributeDelta because <me> has been forgotten.
+        """
+    @overload
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
+        """
+        Makes a DeltaOnModification between <me> and <anOldAttribute.
+
+        Applies a DeltaOnModification to <me>.
+        """
+    @overload
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
+    def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
+        """
+        Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
+        """
+    def DeltaOnResume(self) -> OCP.TDF.TDF_DeltaOnResume: 
+        """
+        Makes an AttributeDelta because <me> has been resumed.
+        """
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
+        """
+        Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+        """
+        Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
+        """
+    def FillAspect(self,theAspect : OCP.Graphic3d.Graphic3d_Aspects) -> None: 
+        """
+        Fill in graphic aspects.
+        """
+    def FillMaterialAspect(self,theAspect : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
+        """
+        Fill in material aspect.
+        """
+    def FindAttribute(self,anID : OCP.Standard.Standard_GUID,anAttribute : OCP.TDF.TDF_Attribute) -> bool: 
+        """
+        Finds an associated attribute of <me>, according to <anID>. the returned <anAttribute> is a valid one. The method returns True if found, False otherwise. A removed attribute cannot be found using this method.
+        """
+    def Forget(self,aTransaction : int) -> None: 
+        """
+        Forgets the attribute. <aTransaction> is the current transaction in which the forget is done. A forgotten attribute is also flagged not "Valid".
+        """
+    def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
+        """
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        """
+    def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
+        """
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        """
+    @staticmethod
+    def GetID_s() -> OCP.Standard.Standard_GUID: 
+        """
+        Return attribute GUID.
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasCommonMaterial(self) -> bool: 
+        """
+        Return TRUE if common material is defined.
+        """
+    def HasPbrMaterial(self) -> bool: 
+        """
+        Return TRUE if metal-roughness PBR material is defined.
+        """
+    def ID(self) -> OCP.Standard.Standard_GUID: 
+        """
+        Return GUID of this attribute type.
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def IsAttribute(self,anID : OCP.Standard.Standard_GUID) -> bool: 
+        """
+        Returns true if it exists an associated attribute of <me> with <anID> as ID.
+        """
+    def IsBackuped(self) -> bool: 
+        """
+        Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
+
+        Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
+        """
+    def IsDoubleSided(self) -> bool: 
+        """
+        Specifies whether the material is double sided; TRUE by default.
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        Return TRUE if material definition is empty.
+        """
+    def IsEqual(self,theOther : XCAFDoc_VisMaterial) -> bool: 
+        """
+        Compare two materials. Performs deep comparison by actual values - e.g. can be useful for merging materials.
+        """
+    def IsForgotten(self) -> bool: 
+        """
+        Returns true if the attribute forgotten status is set.
+
+        Returns true if the attribute forgotten status is set.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsNew(self) -> bool: 
+        """
+        Returns true if the attribute has no backup
+
+        Returns true if the attribute has no backup
+        """
+    def IsValid(self) -> bool: 
+        """
+        Returns true if the attribute is valid; i.e. not a backuped or removed one.
+
+        Returns true if the attribute is valid; i.e. not a backuped or removed one.
+        """
+    def Label(self) -> OCP.TDF.TDF_Label: 
+        """
+        Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
+        """
+    def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
+        """
+        Create a new empty attribute.
+        """
+    def Paste(self,theInto : OCP.TDF.TDF_Attribute,theRelTable : OCP.TDF.TDF_RelocationTable) -> None: 
+        """
+        Paste this attribute into another one.
+        """
+    def PbrMaterial(self) -> XCAFDoc_VisMaterialPBR: 
+        """
+        Return metal-roughness PBR material.
+        """
+    def RawName(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        Return material name / tag (transient data, not stored in the document).
+        """
+    def References(self,aDataSet : OCP.TDF.TDF_DataSet) -> None: 
+        """
+        Adds the first level referenced attributes and labels to <aDataSet>.
+        """
+    def Restore(self,theWith : OCP.TDF.TDF_Attribute) -> None: 
+        """
+        Restore attribute from specified state.
+        """
+    def SetAlphaMode(self,theMode : OCP.Graphic3d.Graphic3d_AlphaMode,theCutOff : float=0.5) -> None: 
+        """
+        Set alpha mode.
+        """
+    def SetCommonMaterial(self,theMaterial : XCAFDoc_VisMaterialCommon) -> None: 
+        """
+        Setup common material.
+        """
+    def SetDoubleSided(self,theIsDoubleSided : bool) -> None: 
+        """
+        Specifies whether the material is double sided.
+        """
+    @overload
+    def SetID(self) -> None: 
+        """
+        Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
+
+        Sets default ID defined in nested class (to be used for attributes having User ID feature).
+        """
+    @overload
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetPbrMaterial(self,theMaterial : XCAFDoc_VisMaterialPBR) -> None: 
+        """
+        Setup metal-roughness PBR material.
+        """
+    def SetRawName(self,theName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        Set material name / tag (transient data, not stored in the document).
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Transaction(self) -> int: 
+        """
+        Returns the transaction index in which the attribute has been created or modified.
+
+        Returns the transaction index in which the attribute has been created or modified.
+        """
+    def UnsetCommonMaterial(self) -> None: 
+        """
+        Setup undefined common material.
+        """
+    def UnsetPbrMaterial(self) -> None: 
+        """
+        Setup undefined metal-roughness PBR material.
+        """
+    def UntilTransaction(self) -> int: 
+        """
+        Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class XCAFDoc_VisMaterialCommon():
+    """
+    Common (obsolete) material definition.
+    """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def IsEqual(self,theOther : XCAFDoc_VisMaterialCommon) -> bool: 
+        """
+        Compare two materials.
+        """
+    def __init__(self) -> None: ...
+    @property
+    def AmbientColor(self) -> OCP.Quantity.Quantity_Color:
+        """
+        :type: OCP.Quantity.Quantity_Color
+        """
+    @AmbientColor.setter
+    def AmbientColor(self, arg0: OCP.Quantity.Quantity_Color) -> None:
+        pass
+    @property
+    def DiffuseColor(self) -> OCP.Quantity.Quantity_Color:
+        """
+        :type: OCP.Quantity.Quantity_Color
+        """
+    @DiffuseColor.setter
+    def DiffuseColor(self, arg0: OCP.Quantity.Quantity_Color) -> None:
+        pass
+    @property
+    def EmissiveColor(self) -> OCP.Quantity.Quantity_Color:
+        """
+        :type: OCP.Quantity.Quantity_Color
+        """
+    @EmissiveColor.setter
+    def EmissiveColor(self, arg0: OCP.Quantity.Quantity_Color) -> None:
+        pass
+    @property
+    def IsDefined(self) -> bool:
+        """
+        :type: bool
+        """
+    @IsDefined.setter
+    def IsDefined(self, arg0: bool) -> None:
+        pass
+    @property
+    def Shininess(self) -> float:
+        """
+        :type: float
+        """
+    @Shininess.setter
+    def Shininess(self, arg0: float) -> None:
+        pass
+    @property
+    def SpecularColor(self) -> OCP.Quantity.Quantity_Color:
+        """
+        :type: OCP.Quantity.Quantity_Color
+        """
+    @SpecularColor.setter
+    def SpecularColor(self, arg0: OCP.Quantity.Quantity_Color) -> None:
+        pass
+    @property
+    def Transparency(self) -> float:
+        """
+        :type: float
+        """
+    @Transparency.setter
+    def Transparency(self, arg0: float) -> None:
+        pass
+    pass
+class XCAFDoc_VisMaterialPBR():
+    """
+    Metallic-roughness PBR material definition.
+    """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def IsEqual(self,theOther : XCAFDoc_VisMaterialPBR) -> bool: 
+        """
+        Compare two materials.
+        """
+    def __init__(self) -> None: ...
+    @property
+    def BaseColor(self) -> OCP.Quantity.Quantity_ColorRGBA:
+        """
+        :type: OCP.Quantity.Quantity_ColorRGBA
+        """
+    @BaseColor.setter
+    def BaseColor(self, arg0: OCP.Quantity.Quantity_ColorRGBA) -> None:
+        pass
+    @property
+    def EmissiveFactor(self) -> OCP.Graphic3d.Graphic3d_Vec3:
+        """
+        :type: OCP.Graphic3d.Graphic3d_Vec3
+        """
+    @EmissiveFactor.setter
+    def EmissiveFactor(self, arg0: OCP.Graphic3d.Graphic3d_Vec3) -> None:
+        pass
+    @property
+    def IsDefined(self) -> bool:
+        """
+        :type: bool
+        """
+    @IsDefined.setter
+    def IsDefined(self, arg0: bool) -> None:
+        pass
+    @property
+    def Metallic(self) -> float:
+        """
+        :type: float
+        """
+    @Metallic.setter
+    def Metallic(self, arg0: float) -> None:
+        pass
+    @property
+    def RefractionIndex(self) -> float:
+        """
+        :type: float
+        """
+    @RefractionIndex.setter
+    def RefractionIndex(self, arg0: float) -> None:
+        pass
+    @property
+    def Roughness(self) -> float:
+        """
+        :type: float
+        """
+    @Roughness.setter
+    def Roughness(self, arg0: float) -> None:
+        pass
+    pass
+class XCAFDoc_VisMaterialTool(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
+    """
+    Provides tools to store and retrieve attributes (visualization materials) of TopoDS_Shape in and from TDocStd_Document.Provides tools to store and retrieve attributes (visualization materials) of TopoDS_Shape in and from TDocStd_Document.
+    """
+    def AddAttribute(self,other : OCP.TDF.TDF_Attribute) -> None: 
+        """
+        Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
+        """
+    @overload
+    def AddMaterial(self,theMat : XCAFDoc_VisMaterial,theName : OCP.TCollection.TCollection_AsciiString) -> OCP.TDF.TDF_Label: 
+        """
+        Adds Material definition to a Material Table and returns its Label.
+
+        Adds Material definition to a Material Table and returns its Label.
+        """
+    @overload
+    def AddMaterial(self,theName : OCP.TCollection.TCollection_AsciiString) -> OCP.TDF.TDF_Label: ...
+    def AfterAddition(self) -> None: 
+        """
+        Something to do after adding an Attribute to a label.
+        """
+    def AfterResume(self) -> None: 
+        """
+        Something to do after resuming an Attribute from a label.
+        """
+    def AfterRetrieval(self,forceIt : bool=False) -> bool: 
+        """
+        Something to do AFTER creation of an attribute by persistent-transient translation. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def AfterUndo(self,anAttDelta : OCP.TDF.TDF_AttributeDelta,forceIt : bool=False) -> bool: 
+        """
+        Something to do after applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def Backup(self) -> None: 
+        """
+        Backups the attribute. The backuped attribute is flagged "Backuped" and not "Valid".
+        """
+    def BackupCopy(self) -> OCP.TDF.TDF_Attribute: 
+        """
+        Copies the attribute contents into a new other attribute. It is used by Backup().
+        """
+    def BaseLabel(self) -> OCP.TDF.TDF_Label: 
+        """
+        returns the label under which colors are stored
+        """
+    def BeforeCommitTransaction(self) -> None: 
+        """
+        A callback. By default does nothing. It is called by TDF_Data::CommitTransaction() method.
+        """
+    def BeforeForget(self) -> None: 
+        """
+        Something to do before forgetting an Attribute to a label.
+        """
+    def BeforeRemoval(self) -> None: 
+        """
+        Something to do before removing an Attribute from a label.
+        """
+    def BeforeUndo(self,anAttDelta : OCP.TDF.TDF_AttributeDelta,forceIt : bool=False) -> bool: 
+        """
+        Something to do before applying <anAttDelta>. The returned status says if AfterUndo has been performed (true) or if this callback must be called once again further (false). If <forceIt> is set to true, the method MUST perform and return true. Does nothing by default and returns true.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DeltaOnAddition(self) -> OCP.TDF.TDF_DeltaOnAddition: 
+        """
+        Makes an AttributeDelta because <me> appeared. The only known use of a redefinition of this method is to return a null handle (no delta).
+        """
+    def DeltaOnForget(self) -> OCP.TDF.TDF_DeltaOnForget: 
+        """
+        Makes an AttributeDelta because <me> has been forgotten.
+        """
+    @overload
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
+        """
+        Makes a DeltaOnModification between <me> and <anOldAttribute.
+
+        Applies a DeltaOnModification to <me>.
+        """
+    @overload
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
+    def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
+        """
+        Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
+        """
+    def DeltaOnResume(self) -> OCP.TDF.TDF_DeltaOnResume: 
+        """
+        Makes an AttributeDelta because <me> has been resumed.
+        """
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
+        """
+        Dumps the minimum information about <me> on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+        """
+        Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
+        """
+    def FindAttribute(self,anID : OCP.Standard.Standard_GUID,anAttribute : OCP.TDF.TDF_Attribute) -> bool: 
+        """
+        Finds an associated attribute of <me>, according to <anID>. the returned <anAttribute> is a valid one. The method returns True if found, False otherwise. A removed attribute cannot be found using this method.
+        """
+    def Forget(self,aTransaction : int) -> None: 
+        """
+        Forgets the attribute. <aTransaction> is the current transaction in which the forget is done. A forgotten attribute is also flagged not "Valid".
+        """
+    def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
+        """
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        """
+    def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
+        """
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        """
+    @staticmethod
+    def GetID_s() -> OCP.Standard.Standard_GUID: 
+        """
+        None
+        """
+    def GetMaterial(self,theMatLabel : OCP.TDF.TDF_Label) -> XCAFDoc_VisMaterial: 
+        """
+        Returns Material defined by specified Label, or NULL if the label is not in Material Table.
+        """
+    def GetMaterials(self,Labels : OCP.TDF.TDF_LabelSequence) -> None: 
+        """
+        Returns a sequence of Materials currently stored in the Material Table.
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    @overload
+    def GetShapeMaterial(self,theShapeLabel : OCP.TDF.TDF_Label) -> XCAFDoc_VisMaterial: 
+        """
+        Returns material assigned to the shape label.
+
+        Returns label with material assigned to shape.
+
+        Returns material assigned to shape or NULL if not assigned.
+        """
+    @overload
+    def GetShapeMaterial(self,theShape : OCP.TopoDS.TopoDS_Shape,theMaterialLabel : OCP.TDF.TDF_Label) -> bool: ...
+    @overload
+    def GetShapeMaterial(self,theShape : OCP.TopoDS.TopoDS_Shape) -> XCAFDoc_VisMaterial: ...
+    @staticmethod
+    def GetShapeMaterial_s(theShapeLabel : OCP.TDF.TDF_Label,theMaterialLabel : OCP.TDF.TDF_Label) -> bool: 
+        """
+        Returns label with material assigned to shape label.
+        """
+    def ID(self) -> OCP.Standard.Standard_GUID: 
+        """
+        Returns GUID of this attribute type.
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def IsAttribute(self,anID : OCP.Standard.Standard_GUID) -> bool: 
+        """
+        Returns true if it exists an associated attribute of <me> with <anID> as ID.
+        """
+    def IsBackuped(self) -> bool: 
+        """
+        Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
+
+        Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
+        """
+    def IsForgotten(self) -> bool: 
+        """
+        Returns true if the attribute forgotten status is set.
+
+        Returns true if the attribute forgotten status is set.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsMaterial(self,theLabel : OCP.TDF.TDF_Label) -> bool: 
+        """
+        Returns TRUE if Label belongs to a Material Table.
+        """
+    def IsNew(self) -> bool: 
+        """
+        Returns true if the attribute has no backup
+
+        Returns true if the attribute has no backup
+        """
+    @overload
+    def IsSetShapeMaterial(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
+        Returns TRUE if label has a material assignment.
+
+        Returns TRUE if shape has a material assignment.
+        """
+    @overload
+    def IsSetShapeMaterial(self,theLabel : OCP.TDF.TDF_Label) -> bool: ...
+    def IsValid(self) -> bool: 
+        """
+        Returns true if the attribute is valid; i.e. not a backuped or removed one.
+
+        Returns true if the attribute is valid; i.e. not a backuped or removed one.
+        """
+    def Label(self) -> OCP.TDF.TDF_Label: 
+        """
+        Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
+        """
+    def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
+        """
+        Creates new instance of this tool.
+        """
+    def Paste(self,arg1 : OCP.TDF.TDF_Attribute,arg2 : OCP.TDF.TDF_RelocationTable) -> None: 
+        """
+        Does nothing.
+        """
+    def References(self,aDataSet : OCP.TDF.TDF_DataSet) -> None: 
+        """
+        Adds the first level referenced attributes and labels to <aDataSet>.
+        """
+    def RemoveMaterial(self,theLabel : OCP.TDF.TDF_Label) -> None: 
+        """
+        Removes Material from the Material Table
+        """
+    def Restore(self,arg1 : OCP.TDF.TDF_Attribute) -> None: 
+        """
+        Does nothing.
+        """
+    @overload
+    def SetID(self) -> None: 
+        """
+        Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
+
+        Sets default ID defined in nested class (to be used for attributes having User ID feature).
+        """
+    @overload
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    @overload
+    def SetShapeMaterial(self,theShape : OCP.TopoDS.TopoDS_Shape,theMaterialLabel : OCP.TDF.TDF_Label) -> bool: 
+        """
+        Sets new material to the shape.
+
+        Sets a link with GUID XCAFDoc::VisMaterialRefGUID() from shape label to material label.
+        """
+    @overload
+    def SetShapeMaterial(self,theShapeLabel : OCP.TDF.TDF_Label,theMaterialLabel : OCP.TDF.TDF_Label) -> None: ...
+    @staticmethod
+    def Set_s(L : OCP.TDF.TDF_Label) -> XCAFDoc_VisMaterialTool: ...
+    def ShapeTool(self) -> XCAFDoc_ShapeTool: 
+        """
+        Returns internal XCAFDoc_ShapeTool tool
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Transaction(self) -> int: 
+        """
+        Returns the transaction index in which the attribute has been created or modified.
+
+        Returns the transaction index in which the attribute has been created or modified.
+        """
+    @overload
+    def UnSetShapeMaterial(self,theShapeLabel : OCP.TDF.TDF_Label) -> None: 
+        """
+        Removes a link with GUID XCAFDoc::VisMaterialRefGUID() from shape label to material.
+
+        Removes a link with GUID XCAFDoc::VisMaterialRefGUID() from shape label to material.
+        """
+    @overload
+    def UnSetShapeMaterial(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: ...
+    def UntilTransaction(self) -> int: 
+        """
+        Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class XCAFDoc_Volume(OCP.TDataStd.TDataStd_Real, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
     attribute to store volumeattribute to store volumeattribute to store volume
     """
@@ -8256,14 +9174,14 @@ class XCAFDoc_Volume(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -8272,15 +9190,19 @@ class XCAFDoc_Volume(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -8303,6 +9225,10 @@ class XCAFDoc_Volume(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     def Get(self) -> float: 
         """
         None
+        """
+    def GetDimension(self) -> OCP.TDataStd.TDataStd_RealEnum: 
+        """
+        Obsolete method that will be removed in next versions. This field is not supported in the persistence mechanism.
         """
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
@@ -8335,6 +9261,10 @@ class XCAFDoc_Volume(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
 
         Returns true if the attribute backup status is set. This status is set/unset by the Backup() method.
+        """
+    def IsCaptured(self) -> bool: 
+        """
+        Returns True if there is a reference on the same label
         """
     def IsForgotten(self) -> bool: 
         """
@@ -8396,15 +9326,19 @@ class XCAFDoc_Volume(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Sets a value of volume
         """
-    @overload
-    def SetID(self) -> None: 
+    def SetDimension(self,DIM : OCP.TDataStd.TDataStd_RealEnum) -> None: 
         """
-        Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
+        Obsolete method that will be removed in next versions. This field is not supported in the persistence mechanism.
+        """
+    @overload
+    def SetID(self,guid : OCP.Standard.Standard_GUID) -> None: 
+        """
+        Sets the explicit GUID for the attribute.
 
-        Sets default ID defined in nested class (to be used for attributes having User ID feature).
+        Sets default GUID for the attribute.
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     def Set_s(label : OCP.TDF.TDF_Label,vol : float) -> XCAFDoc_Volume: 
         """
@@ -8436,6 +9370,6 @@ class XCAFDoc_Volume(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     pass
-XCAFDoc_ColorCurv: OCP.XCAFDoc.XCAFDoc_ColorType # value = XCAFDoc_ColorType.XCAFDoc_ColorCurv
-XCAFDoc_ColorGen: OCP.XCAFDoc.XCAFDoc_ColorType # value = XCAFDoc_ColorType.XCAFDoc_ColorGen
-XCAFDoc_ColorSurf: OCP.XCAFDoc.XCAFDoc_ColorType # value = XCAFDoc_ColorType.XCAFDoc_ColorSurf
+XCAFDoc_ColorCurv: OCP.XCAFDoc.XCAFDoc_ColorType # value = <XCAFDoc_ColorType.XCAFDoc_ColorCurv: 2>
+XCAFDoc_ColorGen: OCP.XCAFDoc.XCAFDoc_ColorType # value = <XCAFDoc_ColorType.XCAFDoc_ColorGen: 0>
+XCAFDoc_ColorSurf: OCP.XCAFDoc.XCAFDoc_ColorType # value = <XCAFDoc_ColorType.XCAFDoc_ColorSurf: 1>

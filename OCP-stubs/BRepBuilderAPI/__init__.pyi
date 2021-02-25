@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.Geom2d
-import OCP.Bnd
 import OCP.TopTools
-import OCP.Standard
-import OCP.TopoDS
-import OCP.Geom
+import OCP.TColStd
 import OCP.NCollection
-import OCP.BRepTools
 import OCP.gp
+import OCP.BRepTools
+import OCP.Geom
+import OCP.Bnd
+import OCP.TopoDS
+import OCP.Geom2d
+import OCP.Standard
 __all__  = [
 "BRepBuilderAPI",
 "BRepBuilderAPI_BndBoxTreeSelector",
@@ -95,7 +95,7 @@ class BRepBuilderAPI():
     def Plane_s(P : OCP.Geom.Geom_Plane) -> None: ...
     @staticmethod
     @overload
-    def Precision_s() -> float: 
+    def Precision_s(P : float) -> None: 
         """
         Sets the default precision. The current Precision is returned.
 
@@ -103,7 +103,7 @@ class BRepBuilderAPI():
         """
     @staticmethod
     @overload
-    def Precision_s(P : float) -> None: ...
+    def Precision_s() -> float: ...
     def __init__(self) -> None: ...
     pass
 class BRepBuilderAPI_BndBoxTreeSelector():
@@ -228,25 +228,33 @@ class BRepBuilderAPI_EdgeError():
 
       BRepBuilderAPI_LineThroughIdenticPoints
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepBuilderAPI_DifferentPointsOnClosedCurve: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentPointsOnClosedCurve
-    BRepBuilderAPI_DifferentsPointAndParameter: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentsPointAndParameter
-    BRepBuilderAPI_EdgeDone: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_EdgeDone
-    BRepBuilderAPI_LineThroughIdenticPoints: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_LineThroughIdenticPoints
-    BRepBuilderAPI_ParameterOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_ParameterOutOfRange
-    BRepBuilderAPI_PointProjectionFailed: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointProjectionFailed
-    BRepBuilderAPI_PointWithInfiniteParameter: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointWithInfiniteParameter
-    __entries: dict # value = {'BRepBuilderAPI_EdgeDone': (BRepBuilderAPI_EdgeError.BRepBuilderAPI_EdgeDone, None), 'BRepBuilderAPI_PointProjectionFailed': (BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointProjectionFailed, None), 'BRepBuilderAPI_ParameterOutOfRange': (BRepBuilderAPI_EdgeError.BRepBuilderAPI_ParameterOutOfRange, None), 'BRepBuilderAPI_DifferentPointsOnClosedCurve': (BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentPointsOnClosedCurve, None), 'BRepBuilderAPI_PointWithInfiniteParameter': (BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointWithInfiniteParameter, None), 'BRepBuilderAPI_DifferentsPointAndParameter': (BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentsPointAndParameter, None), 'BRepBuilderAPI_LineThroughIdenticPoints': (BRepBuilderAPI_EdgeError.BRepBuilderAPI_LineThroughIdenticPoints, None)}
-    __members__: dict # value = {'BRepBuilderAPI_EdgeDone': BRepBuilderAPI_EdgeError.BRepBuilderAPI_EdgeDone, 'BRepBuilderAPI_PointProjectionFailed': BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointProjectionFailed, 'BRepBuilderAPI_ParameterOutOfRange': BRepBuilderAPI_EdgeError.BRepBuilderAPI_ParameterOutOfRange, 'BRepBuilderAPI_DifferentPointsOnClosedCurve': BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentPointsOnClosedCurve, 'BRepBuilderAPI_PointWithInfiniteParameter': BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointWithInfiniteParameter, 'BRepBuilderAPI_DifferentsPointAndParameter': BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentsPointAndParameter, 'BRepBuilderAPI_LineThroughIdenticPoints': BRepBuilderAPI_EdgeError.BRepBuilderAPI_LineThroughIdenticPoints}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepBuilderAPI_DifferentPointsOnClosedCurve: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentPointsOnClosedCurve: 3>
+    BRepBuilderAPI_DifferentsPointAndParameter: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentsPointAndParameter: 5>
+    BRepBuilderAPI_EdgeDone: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_EdgeDone: 0>
+    BRepBuilderAPI_LineThroughIdenticPoints: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_LineThroughIdenticPoints: 6>
+    BRepBuilderAPI_ParameterOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_ParameterOutOfRange: 2>
+    BRepBuilderAPI_PointProjectionFailed: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointProjectionFailed: 1>
+    BRepBuilderAPI_PointWithInfiniteParameter: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointWithInfiniteParameter: 4>
+    __entries: dict # value = {'BRepBuilderAPI_EdgeDone': (<BRepBuilderAPI_EdgeError.BRepBuilderAPI_EdgeDone: 0>, None), 'BRepBuilderAPI_PointProjectionFailed': (<BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointProjectionFailed: 1>, None), 'BRepBuilderAPI_ParameterOutOfRange': (<BRepBuilderAPI_EdgeError.BRepBuilderAPI_ParameterOutOfRange: 2>, None), 'BRepBuilderAPI_DifferentPointsOnClosedCurve': (<BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentPointsOnClosedCurve: 3>, None), 'BRepBuilderAPI_PointWithInfiniteParameter': (<BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointWithInfiniteParameter: 4>, None), 'BRepBuilderAPI_DifferentsPointAndParameter': (<BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentsPointAndParameter: 5>, None), 'BRepBuilderAPI_LineThroughIdenticPoints': (<BRepBuilderAPI_EdgeError.BRepBuilderAPI_LineThroughIdenticPoints: 6>, None)}
+    __members__: dict # value = {'BRepBuilderAPI_EdgeDone': <BRepBuilderAPI_EdgeError.BRepBuilderAPI_EdgeDone: 0>, 'BRepBuilderAPI_PointProjectionFailed': <BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointProjectionFailed: 1>, 'BRepBuilderAPI_ParameterOutOfRange': <BRepBuilderAPI_EdgeError.BRepBuilderAPI_ParameterOutOfRange: 2>, 'BRepBuilderAPI_DifferentPointsOnClosedCurve': <BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentPointsOnClosedCurve: 3>, 'BRepBuilderAPI_PointWithInfiniteParameter': <BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointWithInfiniteParameter: 4>, 'BRepBuilderAPI_DifferentsPointAndParameter': <BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentsPointAndParameter: 5>, 'BRepBuilderAPI_LineThroughIdenticPoints': <BRepBuilderAPI_EdgeError.BRepBuilderAPI_LineThroughIdenticPoints: 6>}
     pass
 class BRepBuilderAPI_FaceError():
     """
@@ -264,37 +272,99 @@ class BRepBuilderAPI_FaceError():
 
       BRepBuilderAPI_ParametersOutOfRange
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepBuilderAPI_CurveProjectionFailed: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = BRepBuilderAPI_FaceError.BRepBuilderAPI_CurveProjectionFailed
-    BRepBuilderAPI_FaceDone: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = BRepBuilderAPI_FaceError.BRepBuilderAPI_FaceDone
-    BRepBuilderAPI_NoFace: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = BRepBuilderAPI_FaceError.BRepBuilderAPI_NoFace
-    BRepBuilderAPI_NotPlanar: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = BRepBuilderAPI_FaceError.BRepBuilderAPI_NotPlanar
-    BRepBuilderAPI_ParametersOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = BRepBuilderAPI_FaceError.BRepBuilderAPI_ParametersOutOfRange
-    __entries: dict # value = {'BRepBuilderAPI_FaceDone': (BRepBuilderAPI_FaceError.BRepBuilderAPI_FaceDone, None), 'BRepBuilderAPI_NoFace': (BRepBuilderAPI_FaceError.BRepBuilderAPI_NoFace, None), 'BRepBuilderAPI_NotPlanar': (BRepBuilderAPI_FaceError.BRepBuilderAPI_NotPlanar, None), 'BRepBuilderAPI_CurveProjectionFailed': (BRepBuilderAPI_FaceError.BRepBuilderAPI_CurveProjectionFailed, None), 'BRepBuilderAPI_ParametersOutOfRange': (BRepBuilderAPI_FaceError.BRepBuilderAPI_ParametersOutOfRange, None)}
-    __members__: dict # value = {'BRepBuilderAPI_FaceDone': BRepBuilderAPI_FaceError.BRepBuilderAPI_FaceDone, 'BRepBuilderAPI_NoFace': BRepBuilderAPI_FaceError.BRepBuilderAPI_NoFace, 'BRepBuilderAPI_NotPlanar': BRepBuilderAPI_FaceError.BRepBuilderAPI_NotPlanar, 'BRepBuilderAPI_CurveProjectionFailed': BRepBuilderAPI_FaceError.BRepBuilderAPI_CurveProjectionFailed, 'BRepBuilderAPI_ParametersOutOfRange': BRepBuilderAPI_FaceError.BRepBuilderAPI_ParametersOutOfRange}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepBuilderAPI_CurveProjectionFailed: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = <BRepBuilderAPI_FaceError.BRepBuilderAPI_CurveProjectionFailed: 3>
+    BRepBuilderAPI_FaceDone: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = <BRepBuilderAPI_FaceError.BRepBuilderAPI_FaceDone: 0>
+    BRepBuilderAPI_NoFace: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = <BRepBuilderAPI_FaceError.BRepBuilderAPI_NoFace: 1>
+    BRepBuilderAPI_NotPlanar: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = <BRepBuilderAPI_FaceError.BRepBuilderAPI_NotPlanar: 2>
+    BRepBuilderAPI_ParametersOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = <BRepBuilderAPI_FaceError.BRepBuilderAPI_ParametersOutOfRange: 4>
+    __entries: dict # value = {'BRepBuilderAPI_FaceDone': (<BRepBuilderAPI_FaceError.BRepBuilderAPI_FaceDone: 0>, None), 'BRepBuilderAPI_NoFace': (<BRepBuilderAPI_FaceError.BRepBuilderAPI_NoFace: 1>, None), 'BRepBuilderAPI_NotPlanar': (<BRepBuilderAPI_FaceError.BRepBuilderAPI_NotPlanar: 2>, None), 'BRepBuilderAPI_CurveProjectionFailed': (<BRepBuilderAPI_FaceError.BRepBuilderAPI_CurveProjectionFailed: 3>, None), 'BRepBuilderAPI_ParametersOutOfRange': (<BRepBuilderAPI_FaceError.BRepBuilderAPI_ParametersOutOfRange: 4>, None)}
+    __members__: dict # value = {'BRepBuilderAPI_FaceDone': <BRepBuilderAPI_FaceError.BRepBuilderAPI_FaceDone: 0>, 'BRepBuilderAPI_NoFace': <BRepBuilderAPI_FaceError.BRepBuilderAPI_NoFace: 1>, 'BRepBuilderAPI_NotPlanar': <BRepBuilderAPI_FaceError.BRepBuilderAPI_NotPlanar: 2>, 'BRepBuilderAPI_CurveProjectionFailed': <BRepBuilderAPI_FaceError.BRepBuilderAPI_CurveProjectionFailed: 3>, 'BRepBuilderAPI_ParametersOutOfRange': <BRepBuilderAPI_FaceError.BRepBuilderAPI_ParametersOutOfRange: 4>}
     pass
 class BRepBuilderAPI_FastSewing(OCP.Standard.Standard_Transient):
     """
     This class performs fast sewing of surfaces (faces). It supposes that all surfaces are finite and are naturally restricted by their bounds. Moreover, it supposes that stitched together surfaces have the same parameterization along common boundaries, therefore it does not perform time-consuming check for SameParameter property of edges.This class performs fast sewing of surfaces (faces). It supposes that all surfaces are finite and are naturally restricted by their bounds. Moreover, it supposes that stitched together surfaces have the same parameterization along common boundaries, therefore it does not perform time-consuming check for SameParameter property of edges.
     """
+    class FS_Statuses_e():
+        """
+        Enumeration of result statuses
+
+        Members:
+
+          FS_OK
+
+          FS_Degenerated
+
+          FS_FindVertexError
+
+          FS_FindEdgeError
+
+          FS_FaceWithNullSurface
+
+          FS_NotNaturalBoundsFace
+
+          FS_InfiniteSurface
+
+          FS_EmptyInput
+
+          FS_Exception
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        FS_Degenerated: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_Degenerated: 1>
+        FS_EmptyInput: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_EmptyInput: 64>
+        FS_Exception: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_Exception: 128>
+        FS_FaceWithNullSurface: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_FaceWithNullSurface: 8>
+        FS_FindEdgeError: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_FindEdgeError: 4>
+        FS_FindVertexError: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_FindVertexError: 2>
+        FS_InfiniteSurface: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_InfiniteSurface: 32>
+        FS_NotNaturalBoundsFace: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_NotNaturalBoundsFace: 16>
+        FS_OK: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_OK: 0>
+        __entries: dict # value = {'FS_OK': (<FS_Statuses_e.FS_OK: 0>, None), 'FS_Degenerated': (<FS_Statuses_e.FS_Degenerated: 1>, None), 'FS_FindVertexError': (<FS_Statuses_e.FS_FindVertexError: 2>, None), 'FS_FindEdgeError': (<FS_Statuses_e.FS_FindEdgeError: 4>, None), 'FS_FaceWithNullSurface': (<FS_Statuses_e.FS_FaceWithNullSurface: 8>, None), 'FS_NotNaturalBoundsFace': (<FS_Statuses_e.FS_NotNaturalBoundsFace: 16>, None), 'FS_InfiniteSurface': (<FS_Statuses_e.FS_InfiniteSurface: 32>, None), 'FS_EmptyInput': (<FS_Statuses_e.FS_EmptyInput: 64>, None), 'FS_Exception': (<FS_Statuses_e.FS_Exception: 128>, None)}
+        __members__: dict # value = {'FS_OK': <FS_Statuses_e.FS_OK: 0>, 'FS_Degenerated': <FS_Statuses_e.FS_Degenerated: 1>, 'FS_FindVertexError': <FS_Statuses_e.FS_FindVertexError: 2>, 'FS_FindEdgeError': <FS_Statuses_e.FS_FindEdgeError: 4>, 'FS_FaceWithNullSurface': <FS_Statuses_e.FS_FaceWithNullSurface: 8>, 'FS_NotNaturalBoundsFace': <FS_Statuses_e.FS_NotNaturalBoundsFace: 16>, 'FS_InfiniteSurface': <FS_Statuses_e.FS_InfiniteSurface: 32>, 'FS_EmptyInput': <FS_Statuses_e.FS_EmptyInput: 64>, 'FS_Exception': <FS_Statuses_e.FS_Exception: 128>}
+        pass
     @overload
-    def Add(self,theSurface : OCP.Geom.Geom_Surface) -> bool: 
+    def Add(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Adds faces of a shape
 
         Adds a surface
         """
     @overload
-    def Add(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: ...
+    def Add(self,theSurface : OCP.Geom.Geom_Surface) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -364,6 +434,15 @@ class BRepBuilderAPI_FastSewing(OCP.Standard.Standard_Transient):
         """
         None
         """
+    FS_Degenerated: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_Degenerated: 1>
+    FS_EmptyInput: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_EmptyInput: 64>
+    FS_Exception: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_Exception: 128>
+    FS_FaceWithNullSurface: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_FaceWithNullSurface: 8>
+    FS_FindEdgeError: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_FindEdgeError: 4>
+    FS_FindVertexError: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_FindVertexError: 2>
+    FS_InfiniteSurface: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_InfiniteSurface: 32>
+    FS_NotNaturalBoundsFace: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_NotNaturalBoundsFace: 16>
+    FS_OK: OCP.BRepBuilderAPI.FS_Statuses_e # value = <FS_Statuses_e.FS_OK: 0>
     pass
 class BRepBuilderAPI_FindPlane():
     """
@@ -448,7 +527,7 @@ class BRepBuilderAPI_MakeEdge(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
         Returns the list of shapes generated from the shape <S>.
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
+    def Init(self,C : OCP.Geom.Geom_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: 
         """
         None
 
@@ -475,27 +554,27 @@ class BRepBuilderAPI_MakeEdge(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
         Defines or redefines the arguments for the construction of an edge. This function is currently used after the empty constructor BRepAPI_MakeEdge().
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,p1 : float,p2 : float) -> None: ...
-    @overload
-    def Init(self,C : OCP.Geom.Geom_Curve) -> None: ...
-    @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,p1 : float,p2 : float) -> None: ...
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
     def Init(self,C : OCP.Geom.Geom_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,p1 : float,p2 : float) -> None: ...
     @overload
+    def Init(self,C : OCP.Geom.Geom_Curve,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,p1 : float,p2 : float) -> None: ...
+    @overload
     def Init(self,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,p1 : float,p2 : float) -> None: ...
-    @overload
-    def Init(self,C : OCP.Geom.Geom_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface) -> None: ...
-    @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
     def Init(self,C : OCP.Geom.Geom_Curve,p1 : float,p2 : float) -> None: ...
     @overload
+    def Init(self,C : OCP.Geom.Geom_Curve,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,p1 : float,p2 : float) -> None: ...
+    @overload
+    def Init(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    @overload
     def Init(self,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,p1 : float,p2 : float) -> None: ...
+    @overload
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,p1 : float,p2 : float) -> None: ...
+    @overload
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     def IsDeleted(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Returns true if the shape S has been deleted.
@@ -521,75 +600,75 @@ class BRepBuilderAPI_MakeEdge(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
         Returns the second vertex of the edge. May be Null.
         """
     @overload
-    def __init__(self,L : OCP.Geom.Geom_Curve,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def __init__(self,L : OCP.gp.gp_Elips) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Parab,p1 : float,p2 : float) -> None: ...
     @overload
-    def __init__(self,L : OCP.gp.gp_Circ,p1 : float,p2 : float) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Circ,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @overload
-    def __init__(self,L : OCP.Geom.Geom_Curve,p1 : float,p2 : float) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Elips,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Lin) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Hypr,p1 : float,p2 : float) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Parab) -> None: ...
-    @overload
-    def __init__(self,L : OCP.Geom.Geom_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def __init__(self,L : OCP.Geom.Geom_Curve,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,L : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,p1 : float,p2 : float) -> None: ...
     @overload
-    def __init__(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Elips) -> None: ...
-    @overload
     def __init__(self,L : OCP.gp.gp_Hypr) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Hypr,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @overload
-    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,L : OCP.Geom.Geom_Curve) -> None: ...
     @overload
-    def __init__(self,L : OCP.gp.gp_Lin,p1 : float,p2 : float) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Parab,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Hypr,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def __init__(self,L : OCP.gp.gp_Lin,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
     def __init__(self,L : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,p1 : float,p2 : float) -> None: ...
     @overload
-    def __init__(self,L : OCP.Geom.Geom_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,p1 : float,p2 : float) -> None: ...
+    def __init__(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def __init__(self,L : OCP.gp.gp_Lin,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def __init__(self,L : OCP.gp.gp_Lin,p1 : float,p2 : float) -> None: ...
     @overload
-    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,p1 : float,p2 : float) -> None: ...
-    @overload
-    def __init__(self,L : OCP.Geom.Geom_Curve,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,p1 : float,p2 : float) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Elips,p1 : float,p2 : float) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Lin,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Circ) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Circ,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def __init__(self,L : OCP.gp.gp_Lin) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Parab,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
+    def __init__(self,L : OCP.Geom.Geom_Curve,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,p1 : float,p2 : float) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Parab,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,L : OCP.Geom.Geom_Curve,p1 : float,p2 : float) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Circ) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Lin,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Circ,p1 : float,p2 : float) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Circ,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    @overload
     def __init__(self,L : OCP.gp.gp_Elips,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
+    def __init__(self,L : OCP.gp.gp_Parab) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Elips,p1 : float,p2 : float) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Hypr,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def __init__(self,L : OCP.Geom.Geom_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,p1 : float,p2 : float) -> None: ...
+    @overload
     def __init__(self,L : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface) -> None: ...
+    @overload
+    def __init__(self,L : OCP.Geom.Geom_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Elips,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Circ,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def __init__(self,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Hypr,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,p1 : float,p2 : float) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Hypr,p1 : float,p2 : float) -> None: ...
     pass
 class BRepBuilderAPI_MakeEdge2d(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
     """
@@ -616,7 +695,7 @@ class BRepBuilderAPI_MakeEdge2d(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command
         Returns the list of shapes generated from the shape <S>.
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d,p1 : float,p2 : float) -> None: 
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: 
         """
         None
 
@@ -630,12 +709,12 @@ class BRepBuilderAPI_MakeEdge2d(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command
 
         None
         """
-    @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,p1 : float,p2 : float) -> None: ...
     @overload
     def Init(self,C : OCP.Geom2d.Geom2d_Curve,p1 : float,p2 : float) -> None: ...
+    @overload
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d,p1 : float,p2 : float) -> None: ...
+    @overload
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,p1 : float,p2 : float) -> None: ...
     @overload
     def Init(self,C : OCP.Geom2d.Geom2d_Curve,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
@@ -665,61 +744,61 @@ class BRepBuilderAPI_MakeEdge2d(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command
         Returns the second vertex of the edge. May be Null.
         """
     @overload
-    def __init__(self,L : OCP.gp.gp_Lin2d,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @overload
-    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,p1 : float,p2 : float) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Parab2d,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Elips2d,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
-    def __init__(self,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Circ2d,p1 : float,p2 : float) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Circ2d,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Lin2d) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Hypr2d,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Circ2d,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def __init__(self,L : OCP.gp.gp_Lin2d,p1 : float,p2 : float) -> None: ...
     @overload
     def __init__(self,L : OCP.Geom2d.Geom2d_Curve,p1 : float,p2 : float) -> None: ...
     @overload
-    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Elips2d) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Circ2d) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Parab2d,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Hypr2d,p1 : float,p2 : float) -> None: ...
-    @overload
-    def __init__(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Lin2d,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
+    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Elips2d,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
+    def __init__(self,L : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    @overload
     def __init__(self,L : OCP.gp.gp_Hypr2d,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
-    def __init__(self,L : OCP.gp.gp_Parab2d) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Lin2d,p1 : float,p2 : float) -> None: ...
+    def __init__(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Elips2d,p1 : float,p2 : float) -> None: ...
     @overload
-    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def __init__(self,L : OCP.gp.gp_Hypr2d,p1 : float,p2 : float) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Hypr2d,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Parab2d,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Parab2d,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Circ2d,p1 : float,p2 : float) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Lin2d,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Lin2d) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Elips2d) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Circ2d,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def __init__(self,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Elips2d,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d,p1 : float,p2 : float) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Parab2d,p1 : float,p2 : float) -> None: ...
     @overload
-    def __init__(self,L : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,p1 : float,p2 : float) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Hypr2d) -> None: ...
     @overload
-    def __init__(self,L : OCP.Geom2d.Geom2d_Curve,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d,p1 : float,p2 : float) -> None: ...
+    def __init__(self,L : OCP.gp.gp_Circ2d,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Lin2d,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Circ2d) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Parab2d) -> None: ...
     pass
 class BRepBuilderAPI_MakeFace(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
     """
@@ -752,9 +831,9 @@ class BRepBuilderAPI_MakeFace(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
     @overload
     def Init(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UMin : float,UMax : float,VMin : float,VMax : float,TolDegen : float) -> None: ...
-    @overload
     def Init(self,S : OCP.Geom.Geom_Surface,Bound : bool,TolDegen : float) -> None: ...
+    @overload
+    def Init(self,S : OCP.Geom.Geom_Surface,UMin : float,UMax : float,VMin : float,VMax : float,TolDegen : float) -> None: ...
     def IsDeleted(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Returns true if the shape S has been deleted.
@@ -772,49 +851,49 @@ class BRepBuilderAPI_MakeFace(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
         Returns a shape built by the shape construction algorithm. Raises exception StdFail_NotDone if the shape was not built.
         """
     @overload
+    def __init__(self,C : OCP.gp.gp_Torus,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Cone,W : OCP.TopoDS.TopoDS_Wire,Inside : bool=True) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Cylinder) -> None: ...
+    @overload
     def __init__(self,S : OCP.gp.gp_Sphere,W : OCP.TopoDS.TopoDS_Wire,Inside : bool=True) -> None: ...
     @overload
-    def __init__(self,C : OCP.gp.gp_Cone) -> None: ...
-    @overload
-    def __init__(self,S : OCP.Geom.Geom_Surface,TolDegen : float) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Pln,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
     @overload
     def __init__(self,S : OCP.Geom.Geom_Surface,UMin : float,UMax : float,VMin : float,VMax : float,TolDegen : float) -> None: ...
     @overload
     def __init__(self,S : OCP.gp.gp_Sphere) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Cone,W : OCP.TopoDS.TopoDS_Wire,Inside : bool=True) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Cylinder,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
+    def __init__(self,C : OCP.gp.gp_Cone,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
     @overload
     def __init__(self,F : OCP.TopoDS.TopoDS_Face,W : OCP.TopoDS.TopoDS_Wire) -> None: ...
     @overload
-    def __init__(self,P : OCP.gp.gp_Pln,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Cylinder) -> None: ...
-    @overload
-    def __init__(self,S : OCP.Geom.Geom_Surface,W : OCP.TopoDS.TopoDS_Wire,Inside : bool=True) -> None: ...
-    @overload
-    def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Torus,W : OCP.TopoDS.TopoDS_Wire,Inside : bool=True) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Cylinder,W : OCP.TopoDS.TopoDS_Wire,Inside : bool=True) -> None: ...
-    @overload
-    def __init__(self,S : OCP.gp.gp_Sphere,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
-    @overload
-    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,OnlyPlane : bool=False) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Cone,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pln,W : OCP.TopoDS.TopoDS_Wire,Inside : bool=True) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pln) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Cylinder,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Torus) -> None: ...
     @overload
-    def __init__(self,C : OCP.gp.gp_Torus,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
+    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,OnlyPlane : bool=False) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Cone) -> None: ...
+    @overload
+    def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def __init__(self,S : OCP.gp.gp_Sphere,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pln,W : OCP.TopoDS.TopoDS_Wire,Inside : bool=True) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Torus,W : OCP.TopoDS.TopoDS_Wire,Inside : bool=True) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.Geom.Geom_Surface,W : OCP.TopoDS.TopoDS_Wire,Inside : bool=True) -> None: ...
+    @overload
+    def __init__(self,S : OCP.Geom.Geom_Surface,TolDegen : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Cylinder,W : OCP.TopoDS.TopoDS_Wire,Inside : bool=True) -> None: ...
     pass
 class BRepBuilderAPI_MakePolygon(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
     """
@@ -882,17 +961,17 @@ class BRepBuilderAPI_MakePolygon(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Comman
         Returns the constructed polygonal wire, or the already built part of the polygonal wire under construction. Exceptions StdFail_NotDone if the wire is not built, i.e. if fewer than two vertices have been chained together by this construction algorithm.
         """
     @overload
+    def __init__(self,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
     def __init__(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,P3 : OCP.gp.gp_Pnt,P4 : OCP.gp.gp_Pnt,Close : bool=False) -> None: ...
     @overload
     def __init__(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,P3 : OCP.gp.gp_Pnt,Close : bool=False) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,V3 : OCP.TopoDS.TopoDS_Vertex,V4 : OCP.TopoDS.TopoDS_Vertex,Close : bool=False) -> None: ...
     @overload
-    def __init__(self,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @overload
     def __init__(self,V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex,V3 : OCP.TopoDS.TopoDS_Vertex,Close : bool=False) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     @overload
     def __init__(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
     pass
@@ -937,9 +1016,9 @@ class BRepBuilderAPI_Copy(BRepBuilderAPI_ModifyShape, BRepBuilderAPI_MakeShape, 
         Returns a shape built by the shape construction algorithm. Raises exception StdFail_NotDone if the shape was not built.
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,copyGeom : bool=True,copyMesh : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,copyGeom : bool=True,copyMesh : bool=False) -> None: ...
     pass
 class BRepBuilderAPI_MakeShell(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
     """
@@ -986,11 +1065,11 @@ class BRepBuilderAPI_MakeShell(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command)
         Returns the new Shell.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,S : OCP.Geom.Geom_Surface,Segment : bool=False) -> None: ...
     @overload
     def __init__(self,S : OCP.Geom.Geom_Surface,UMin : float,UMax : float,VMin : float,VMax : float,Segment : bool=False) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class BRepBuilderAPI_MakeSolid(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
     """
@@ -1033,17 +1112,17 @@ class BRepBuilderAPI_MakeSolid(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command)
         Returns the new Solid.
         """
     @overload
-    def __init__(self,So : OCP.TopoDS.TopoDS_Solid,S : OCP.TopoDS.TopoDS_Shell) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shell,S2 : OCP.TopoDS.TopoDS_Shell,S3 : OCP.TopoDS.TopoDS_Shell) -> None: ...
     @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_CompSolid) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shell) -> None: ...
     @overload
-    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shell,S2 : OCP.TopoDS.TopoDS_Shell) -> None: ...
+    def __init__(self,So : OCP.TopoDS.TopoDS_Solid,S : OCP.TopoDS.TopoDS_Shell) -> None: ...
     @overload
-    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shell,S2 : OCP.TopoDS.TopoDS_Shell,S3 : OCP.TopoDS.TopoDS_Shell) -> None: ...
+    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shell,S2 : OCP.TopoDS.TopoDS_Shell) -> None: ...
     @overload
     def __init__(self,So : OCP.TopoDS.TopoDS_Solid) -> None: ...
     pass
@@ -1090,7 +1169,7 @@ class BRepBuilderAPI_MakeWire(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
     Describes functions to build wires from edges. A wire can be built from any number of edges. To build a wire you first initialize the construction, then add edges in sequence. An unlimited number of edges can be added. The initialization of construction is done with: - no edge (an empty wire), or - edges of an existing wire, or - up to four connectable edges. In order to be added to a wire under construction, an edge (unless it is the first one) must satisfy the following condition: one of its vertices must be geometrically coincident with one of the vertices of the wire (provided that the highest tolerance factor is assigned to the two vertices). It could also be the same vertex. - The given edge is shared by the wire if it contains: - two vertices, identical to two vertices of the wire under construction (a general case of the wire closure), or - one vertex, identical to a vertex of the wire under construction; the other vertex not being geometrically coincident with another vertex of the wire. - In other cases, when one of the vertices of the edge is simply geometrically coincident with a vertex of the wire under construction (provided that the highest tolerance factor is assigned to the two vertices), the given edge is first copied and the coincident vertex is replaced in this new edge, by the coincident vertex of the wire. Note: it is possible to build non manifold wires using this construction tool. A MakeWire object provides a framework for: - initializing the construction of a wire, - adding edges to the wire under construction, and - consulting the result.
     """
     @overload
-    def Add(self,E : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def Add(self,L : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         Adds the edge E to the wire under construction. E must be connectable to the wire under construction, and, unless it is the first edge of the wire, must satisfy the following condition: one of its vertices must be geometrically coincident with one of the vertices of the wire (provided that the highest tolerance factor is assigned to the two vertices). It could also be the same vertex. Warning If E is not connectable to the wire under construction it is not added. The function Error will return BRepBuilderAPI_DisconnectedWire, the function IsDone will return false and the function Wire will raise an error, until a new connectable edge is added.
 
@@ -1099,9 +1178,9 @@ class BRepBuilderAPI_MakeWire(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
         Adds the edges of <L> to the current wire. The edges are not to be consecutive. But they are to be all connected geometrically or topologically. If some of them are not connected the Status give DisconnectedWire but the "Maker" is Done() and you can get the partial result. (ie connected to the first edgeof the list <L>)
         """
     @overload
-    def Add(self,W : OCP.TopoDS.TopoDS_Wire) -> None: ...
+    def Add(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
-    def Add(self,L : OCP.TopTools.TopTools_ListOfShape) -> None: ...
+    def Add(self,W : OCP.TopoDS.TopoDS_Wire) -> None: ...
     def Build(self) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
@@ -1147,19 +1226,19 @@ class BRepBuilderAPI_MakeWire(BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
         Returns the constructed wire; or the part of the wire under construction already built. Exceptions StdFail_NotDone if a wire is not built.
         """
     @overload
+    def __init__(self,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,E3 : OCP.TopoDS.TopoDS_Edge,E4 : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    @overload
+    def __init__(self,W : OCP.TopoDS.TopoDS_Wire) -> None: ...
+    @overload
+    def __init__(self,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    @overload
+    def __init__(self,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,E3 : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
     def __init__(self,W : OCP.TopoDS.TopoDS_Wire,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
-    @overload
-    def __init__(self,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,E3 : OCP.TopoDS.TopoDS_Edge,E4 : OCP.TopoDS.TopoDS_Edge) -> None: ...
-    @overload
-    def __init__(self,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge) -> None: ...
-    @overload
-    def __init__(self,W : OCP.TopoDS.TopoDS_Wire) -> None: ...
-    @overload
-    def __init__(self,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,E3 : OCP.TopoDS.TopoDS_Edge) -> None: ...
     pass
 class BRepBuilderAPI_GTransform(BRepBuilderAPI_ModifyShape, BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
     """
@@ -1247,9 +1326,9 @@ class BRepBuilderAPI_NurbsConvert(BRepBuilderAPI_ModifyShape, BRepBuilderAPI_Mak
         Returns a shape built by the shape construction algorithm. Raises exception StdFail_NotDone if the shape was not built.
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,Copy : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,Copy : bool=False) -> None: ...
     pass
 class BRepBuilderAPI_PipeError():
     """
@@ -1265,22 +1344,30 @@ class BRepBuilderAPI_PipeError():
 
       BRepBuilderAPI_ImpossibleContact
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepBuilderAPI_ImpossibleContact: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = BRepBuilderAPI_PipeError.BRepBuilderAPI_ImpossibleContact
-    BRepBuilderAPI_PipeDone: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeDone
-    BRepBuilderAPI_PipeNotDone: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeNotDone
-    BRepBuilderAPI_PlaneNotIntersectGuide: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = BRepBuilderAPI_PipeError.BRepBuilderAPI_PlaneNotIntersectGuide
-    __entries: dict # value = {'BRepBuilderAPI_PipeDone': (BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeDone, None), 'BRepBuilderAPI_PipeNotDone': (BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeNotDone, None), 'BRepBuilderAPI_PlaneNotIntersectGuide': (BRepBuilderAPI_PipeError.BRepBuilderAPI_PlaneNotIntersectGuide, None), 'BRepBuilderAPI_ImpossibleContact': (BRepBuilderAPI_PipeError.BRepBuilderAPI_ImpossibleContact, None)}
-    __members__: dict # value = {'BRepBuilderAPI_PipeDone': BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeDone, 'BRepBuilderAPI_PipeNotDone': BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeNotDone, 'BRepBuilderAPI_PlaneNotIntersectGuide': BRepBuilderAPI_PipeError.BRepBuilderAPI_PlaneNotIntersectGuide, 'BRepBuilderAPI_ImpossibleContact': BRepBuilderAPI_PipeError.BRepBuilderAPI_ImpossibleContact}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepBuilderAPI_ImpossibleContact: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = <BRepBuilderAPI_PipeError.BRepBuilderAPI_ImpossibleContact: 3>
+    BRepBuilderAPI_PipeDone: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = <BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeDone: 0>
+    BRepBuilderAPI_PipeNotDone: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = <BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeNotDone: 1>
+    BRepBuilderAPI_PlaneNotIntersectGuide: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = <BRepBuilderAPI_PipeError.BRepBuilderAPI_PlaneNotIntersectGuide: 2>
+    __entries: dict # value = {'BRepBuilderAPI_PipeDone': (<BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeDone: 0>, None), 'BRepBuilderAPI_PipeNotDone': (<BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeNotDone: 1>, None), 'BRepBuilderAPI_PlaneNotIntersectGuide': (<BRepBuilderAPI_PipeError.BRepBuilderAPI_PlaneNotIntersectGuide: 2>, None), 'BRepBuilderAPI_ImpossibleContact': (<BRepBuilderAPI_PipeError.BRepBuilderAPI_ImpossibleContact: 3>, None)}
+    __members__: dict # value = {'BRepBuilderAPI_PipeDone': <BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeDone: 0>, 'BRepBuilderAPI_PipeNotDone': <BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeNotDone: 1>, 'BRepBuilderAPI_PlaneNotIntersectGuide': <BRepBuilderAPI_PipeError.BRepBuilderAPI_PlaneNotIntersectGuide: 2>, 'BRepBuilderAPI_ImpossibleContact': <BRepBuilderAPI_PipeError.BRepBuilderAPI_ImpossibleContact: 3>}
     pass
 class BRepBuilderAPI_Sewing(OCP.Standard.Standard_Transient):
     """
@@ -1448,9 +1535,9 @@ class BRepBuilderAPI_Sewing(OCP.Standard.Standard_Transient):
 
         Gets mode for non-manifold sewing.
         """
-    def Perform(self,thePI : OCP.Message.Message_ProgressIndicator=None) -> None: 
+    def Perform(self,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
-        Computing thePI - progress indicator of algorithm
+        Computing theProgress - progress indicator of algorithm
         """
     def SameParameterMode(self) -> bool: 
         """
@@ -1560,23 +1647,31 @@ class BRepBuilderAPI_ShapeModification():
 
       BRepBuilderAPI_BoundaryModified
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepBuilderAPI_BoundaryModified: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = BRepBuilderAPI_ShapeModification.BRepBuilderAPI_BoundaryModified
-    BRepBuilderAPI_Deleted: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Deleted
-    BRepBuilderAPI_Merged: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Merged
-    BRepBuilderAPI_Preserved: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Preserved
-    BRepBuilderAPI_Trimmed: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Trimmed
-    __entries: dict # value = {'BRepBuilderAPI_Preserved': (BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Preserved, None), 'BRepBuilderAPI_Deleted': (BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Deleted, None), 'BRepBuilderAPI_Trimmed': (BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Trimmed, None), 'BRepBuilderAPI_Merged': (BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Merged, None), 'BRepBuilderAPI_BoundaryModified': (BRepBuilderAPI_ShapeModification.BRepBuilderAPI_BoundaryModified, None)}
-    __members__: dict # value = {'BRepBuilderAPI_Preserved': BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Preserved, 'BRepBuilderAPI_Deleted': BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Deleted, 'BRepBuilderAPI_Trimmed': BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Trimmed, 'BRepBuilderAPI_Merged': BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Merged, 'BRepBuilderAPI_BoundaryModified': BRepBuilderAPI_ShapeModification.BRepBuilderAPI_BoundaryModified}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepBuilderAPI_BoundaryModified: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_BoundaryModified: 4>
+    BRepBuilderAPI_Deleted: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Deleted: 1>
+    BRepBuilderAPI_Merged: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Merged: 3>
+    BRepBuilderAPI_Preserved: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Preserved: 0>
+    BRepBuilderAPI_Trimmed: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Trimmed: 2>
+    __entries: dict # value = {'BRepBuilderAPI_Preserved': (<BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Preserved: 0>, None), 'BRepBuilderAPI_Deleted': (<BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Deleted: 1>, None), 'BRepBuilderAPI_Trimmed': (<BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Trimmed: 2>, None), 'BRepBuilderAPI_Merged': (<BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Merged: 3>, None), 'BRepBuilderAPI_BoundaryModified': (<BRepBuilderAPI_ShapeModification.BRepBuilderAPI_BoundaryModified: 4>, None)}
+    __members__: dict # value = {'BRepBuilderAPI_Preserved': <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Preserved: 0>, 'BRepBuilderAPI_Deleted': <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Deleted: 1>, 'BRepBuilderAPI_Trimmed': <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Trimmed: 2>, 'BRepBuilderAPI_Merged': <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Merged: 3>, 'BRepBuilderAPI_BoundaryModified': <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_BoundaryModified: 4>}
     pass
 class BRepBuilderAPI_ShellError():
     """
@@ -1592,22 +1687,30 @@ class BRepBuilderAPI_ShellError():
 
       BRepBuilderAPI_ShellParametersOutOfRange
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepBuilderAPI_DisconnectedShell: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = BRepBuilderAPI_ShellError.BRepBuilderAPI_DisconnectedShell
-    BRepBuilderAPI_EmptyShell: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = BRepBuilderAPI_ShellError.BRepBuilderAPI_EmptyShell
-    BRepBuilderAPI_ShellDone: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellDone
-    BRepBuilderAPI_ShellParametersOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellParametersOutOfRange
-    __entries: dict # value = {'BRepBuilderAPI_ShellDone': (BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellDone, None), 'BRepBuilderAPI_EmptyShell': (BRepBuilderAPI_ShellError.BRepBuilderAPI_EmptyShell, None), 'BRepBuilderAPI_DisconnectedShell': (BRepBuilderAPI_ShellError.BRepBuilderAPI_DisconnectedShell, None), 'BRepBuilderAPI_ShellParametersOutOfRange': (BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellParametersOutOfRange, None)}
-    __members__: dict # value = {'BRepBuilderAPI_ShellDone': BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellDone, 'BRepBuilderAPI_EmptyShell': BRepBuilderAPI_ShellError.BRepBuilderAPI_EmptyShell, 'BRepBuilderAPI_DisconnectedShell': BRepBuilderAPI_ShellError.BRepBuilderAPI_DisconnectedShell, 'BRepBuilderAPI_ShellParametersOutOfRange': BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellParametersOutOfRange}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepBuilderAPI_DisconnectedShell: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = <BRepBuilderAPI_ShellError.BRepBuilderAPI_DisconnectedShell: 2>
+    BRepBuilderAPI_EmptyShell: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = <BRepBuilderAPI_ShellError.BRepBuilderAPI_EmptyShell: 1>
+    BRepBuilderAPI_ShellDone: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = <BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellDone: 0>
+    BRepBuilderAPI_ShellParametersOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = <BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellParametersOutOfRange: 3>
+    __entries: dict # value = {'BRepBuilderAPI_ShellDone': (<BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellDone: 0>, None), 'BRepBuilderAPI_EmptyShell': (<BRepBuilderAPI_ShellError.BRepBuilderAPI_EmptyShell: 1>, None), 'BRepBuilderAPI_DisconnectedShell': (<BRepBuilderAPI_ShellError.BRepBuilderAPI_DisconnectedShell: 2>, None), 'BRepBuilderAPI_ShellParametersOutOfRange': (<BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellParametersOutOfRange: 3>, None)}
+    __members__: dict # value = {'BRepBuilderAPI_ShellDone': <BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellDone: 0>, 'BRepBuilderAPI_EmptyShell': <BRepBuilderAPI_ShellError.BRepBuilderAPI_EmptyShell: 1>, 'BRepBuilderAPI_DisconnectedShell': <BRepBuilderAPI_ShellError.BRepBuilderAPI_DisconnectedShell: 2>, 'BRepBuilderAPI_ShellParametersOutOfRange': <BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellParametersOutOfRange: 3>}
     pass
 class BRepBuilderAPI_Transform(BRepBuilderAPI_ModifyShape, BRepBuilderAPI_MakeShape, BRepBuilderAPI_Command):
     """
@@ -1650,9 +1753,9 @@ class BRepBuilderAPI_Transform(BRepBuilderAPI_ModifyShape, BRepBuilderAPI_MakeSh
         Returns a shape built by the shape construction algorithm. Raises exception StdFail_NotDone if the shape was not built.
         """
     @overload
-    def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.gp.gp_Trsf,Copy : bool=False) -> None: ...
+    @overload
+    def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
     pass
 class BRepBuilderAPI_TransitionMode():
     """
@@ -1666,21 +1769,29 @@ class BRepBuilderAPI_TransitionMode():
 
       BRepBuilderAPI_RoundCorner
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepBuilderAPI_RightCorner: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RightCorner
-    BRepBuilderAPI_RoundCorner: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RoundCorner
-    BRepBuilderAPI_Transformed: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = BRepBuilderAPI_TransitionMode.BRepBuilderAPI_Transformed
-    __entries: dict # value = {'BRepBuilderAPI_Transformed': (BRepBuilderAPI_TransitionMode.BRepBuilderAPI_Transformed, None), 'BRepBuilderAPI_RightCorner': (BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RightCorner, None), 'BRepBuilderAPI_RoundCorner': (BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RoundCorner, None)}
-    __members__: dict # value = {'BRepBuilderAPI_Transformed': BRepBuilderAPI_TransitionMode.BRepBuilderAPI_Transformed, 'BRepBuilderAPI_RightCorner': BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RightCorner, 'BRepBuilderAPI_RoundCorner': BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RoundCorner}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepBuilderAPI_RightCorner: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = <BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RightCorner: 1>
+    BRepBuilderAPI_RoundCorner: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = <BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RoundCorner: 2>
+    BRepBuilderAPI_Transformed: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = <BRepBuilderAPI_TransitionMode.BRepBuilderAPI_Transformed: 0>
+    __entries: dict # value = {'BRepBuilderAPI_Transformed': (<BRepBuilderAPI_TransitionMode.BRepBuilderAPI_Transformed: 0>, None), 'BRepBuilderAPI_RightCorner': (<BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RightCorner: 1>, None), 'BRepBuilderAPI_RoundCorner': (<BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RoundCorner: 2>, None)}
+    __members__: dict # value = {'BRepBuilderAPI_Transformed': <BRepBuilderAPI_TransitionMode.BRepBuilderAPI_Transformed: 0>, 'BRepBuilderAPI_RightCorner': <BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RightCorner: 1>, 'BRepBuilderAPI_RoundCorner': <BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RoundCorner: 2>}
     pass
 class BRepBuilderAPI_VertexInspector(OCP.NCollection.NCollection_CellFilter_InspectorXYZ):
     """
@@ -1716,6 +1827,7 @@ class BRepBuilderAPI_VertexInspector(OCP.NCollection.NCollection_CellFilter_Insp
         Auxiliary method to shift point by each coordinate on given value; useful for preparing a points range for Inspect with tolerance
         """
     def __init__(self,theTol : float) -> None: ...
+    Dimension = 3
     pass
 class BRepBuilderAPI_WireError():
     """
@@ -1731,22 +1843,30 @@ class BRepBuilderAPI_WireError():
 
       BRepBuilderAPI_NonManifoldWire
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepBuilderAPI_DisconnectedWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = BRepBuilderAPI_WireError.BRepBuilderAPI_DisconnectedWire
-    BRepBuilderAPI_EmptyWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = BRepBuilderAPI_WireError.BRepBuilderAPI_EmptyWire
-    BRepBuilderAPI_NonManifoldWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = BRepBuilderAPI_WireError.BRepBuilderAPI_NonManifoldWire
-    BRepBuilderAPI_WireDone: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = BRepBuilderAPI_WireError.BRepBuilderAPI_WireDone
-    __entries: dict # value = {'BRepBuilderAPI_WireDone': (BRepBuilderAPI_WireError.BRepBuilderAPI_WireDone, None), 'BRepBuilderAPI_EmptyWire': (BRepBuilderAPI_WireError.BRepBuilderAPI_EmptyWire, None), 'BRepBuilderAPI_DisconnectedWire': (BRepBuilderAPI_WireError.BRepBuilderAPI_DisconnectedWire, None), 'BRepBuilderAPI_NonManifoldWire': (BRepBuilderAPI_WireError.BRepBuilderAPI_NonManifoldWire, None)}
-    __members__: dict # value = {'BRepBuilderAPI_WireDone': BRepBuilderAPI_WireError.BRepBuilderAPI_WireDone, 'BRepBuilderAPI_EmptyWire': BRepBuilderAPI_WireError.BRepBuilderAPI_EmptyWire, 'BRepBuilderAPI_DisconnectedWire': BRepBuilderAPI_WireError.BRepBuilderAPI_DisconnectedWire, 'BRepBuilderAPI_NonManifoldWire': BRepBuilderAPI_WireError.BRepBuilderAPI_NonManifoldWire}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepBuilderAPI_DisconnectedWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = <BRepBuilderAPI_WireError.BRepBuilderAPI_DisconnectedWire: 2>
+    BRepBuilderAPI_EmptyWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = <BRepBuilderAPI_WireError.BRepBuilderAPI_EmptyWire: 1>
+    BRepBuilderAPI_NonManifoldWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = <BRepBuilderAPI_WireError.BRepBuilderAPI_NonManifoldWire: 3>
+    BRepBuilderAPI_WireDone: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = <BRepBuilderAPI_WireError.BRepBuilderAPI_WireDone: 0>
+    __entries: dict # value = {'BRepBuilderAPI_WireDone': (<BRepBuilderAPI_WireError.BRepBuilderAPI_WireDone: 0>, None), 'BRepBuilderAPI_EmptyWire': (<BRepBuilderAPI_WireError.BRepBuilderAPI_EmptyWire: 1>, None), 'BRepBuilderAPI_DisconnectedWire': (<BRepBuilderAPI_WireError.BRepBuilderAPI_DisconnectedWire: 2>, None), 'BRepBuilderAPI_NonManifoldWire': (<BRepBuilderAPI_WireError.BRepBuilderAPI_NonManifoldWire: 3>, None)}
+    __members__: dict # value = {'BRepBuilderAPI_WireDone': <BRepBuilderAPI_WireError.BRepBuilderAPI_WireDone: 0>, 'BRepBuilderAPI_EmptyWire': <BRepBuilderAPI_WireError.BRepBuilderAPI_EmptyWire: 1>, 'BRepBuilderAPI_DisconnectedWire': <BRepBuilderAPI_WireError.BRepBuilderAPI_DisconnectedWire: 2>, 'BRepBuilderAPI_NonManifoldWire': <BRepBuilderAPI_WireError.BRepBuilderAPI_NonManifoldWire: 3>}
     pass
 class VectorOfPoint(OCP.NCollection.NCollection_BaseVector):
     """
@@ -1825,37 +1945,37 @@ class VectorOfPoint(OCP.NCollection.NCollection_BaseVector):
     def __init__(self,theOther : VectorOfPoint) -> None: ...
     @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
-BRepBuilderAPI_BoundaryModified: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = BRepBuilderAPI_ShapeModification.BRepBuilderAPI_BoundaryModified
-BRepBuilderAPI_CurveProjectionFailed: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = BRepBuilderAPI_FaceError.BRepBuilderAPI_CurveProjectionFailed
-BRepBuilderAPI_Deleted: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Deleted
-BRepBuilderAPI_DifferentPointsOnClosedCurve: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentPointsOnClosedCurve
-BRepBuilderAPI_DifferentsPointAndParameter: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentsPointAndParameter
-BRepBuilderAPI_DisconnectedShell: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = BRepBuilderAPI_ShellError.BRepBuilderAPI_DisconnectedShell
-BRepBuilderAPI_DisconnectedWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = BRepBuilderAPI_WireError.BRepBuilderAPI_DisconnectedWire
-BRepBuilderAPI_EdgeDone: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_EdgeDone
-BRepBuilderAPI_EmptyShell: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = BRepBuilderAPI_ShellError.BRepBuilderAPI_EmptyShell
-BRepBuilderAPI_EmptyWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = BRepBuilderAPI_WireError.BRepBuilderAPI_EmptyWire
-BRepBuilderAPI_FaceDone: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = BRepBuilderAPI_FaceError.BRepBuilderAPI_FaceDone
-BRepBuilderAPI_ImpossibleContact: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = BRepBuilderAPI_PipeError.BRepBuilderAPI_ImpossibleContact
-BRepBuilderAPI_LineThroughIdenticPoints: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_LineThroughIdenticPoints
-BRepBuilderAPI_Merged: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Merged
-BRepBuilderAPI_NoFace: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = BRepBuilderAPI_FaceError.BRepBuilderAPI_NoFace
-BRepBuilderAPI_NonManifoldWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = BRepBuilderAPI_WireError.BRepBuilderAPI_NonManifoldWire
-BRepBuilderAPI_NotPlanar: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = BRepBuilderAPI_FaceError.BRepBuilderAPI_NotPlanar
-BRepBuilderAPI_ParameterOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_ParameterOutOfRange
-BRepBuilderAPI_ParametersOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = BRepBuilderAPI_FaceError.BRepBuilderAPI_ParametersOutOfRange
-BRepBuilderAPI_PipeDone: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeDone
-BRepBuilderAPI_PipeNotDone: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeNotDone
-BRepBuilderAPI_PlaneNotIntersectGuide: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = BRepBuilderAPI_PipeError.BRepBuilderAPI_PlaneNotIntersectGuide
-BRepBuilderAPI_PointProjectionFailed: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointProjectionFailed
-BRepBuilderAPI_PointWithInfiniteParameter: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointWithInfiniteParameter
-BRepBuilderAPI_Preserved: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Preserved
-BRepBuilderAPI_RightCorner: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RightCorner
-BRepBuilderAPI_RoundCorner: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RoundCorner
-BRepBuilderAPI_ShellDone: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellDone
-BRepBuilderAPI_ShellParametersOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellParametersOutOfRange
-BRepBuilderAPI_Transformed: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = BRepBuilderAPI_TransitionMode.BRepBuilderAPI_Transformed
-BRepBuilderAPI_Trimmed: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Trimmed
-BRepBuilderAPI_WireDone: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = BRepBuilderAPI_WireError.BRepBuilderAPI_WireDone
+BRepBuilderAPI_BoundaryModified: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_BoundaryModified: 4>
+BRepBuilderAPI_CurveProjectionFailed: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = <BRepBuilderAPI_FaceError.BRepBuilderAPI_CurveProjectionFailed: 3>
+BRepBuilderAPI_Deleted: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Deleted: 1>
+BRepBuilderAPI_DifferentPointsOnClosedCurve: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentPointsOnClosedCurve: 3>
+BRepBuilderAPI_DifferentsPointAndParameter: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_DifferentsPointAndParameter: 5>
+BRepBuilderAPI_DisconnectedShell: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = <BRepBuilderAPI_ShellError.BRepBuilderAPI_DisconnectedShell: 2>
+BRepBuilderAPI_DisconnectedWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = <BRepBuilderAPI_WireError.BRepBuilderAPI_DisconnectedWire: 2>
+BRepBuilderAPI_EdgeDone: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_EdgeDone: 0>
+BRepBuilderAPI_EmptyShell: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = <BRepBuilderAPI_ShellError.BRepBuilderAPI_EmptyShell: 1>
+BRepBuilderAPI_EmptyWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = <BRepBuilderAPI_WireError.BRepBuilderAPI_EmptyWire: 1>
+BRepBuilderAPI_FaceDone: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = <BRepBuilderAPI_FaceError.BRepBuilderAPI_FaceDone: 0>
+BRepBuilderAPI_ImpossibleContact: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = <BRepBuilderAPI_PipeError.BRepBuilderAPI_ImpossibleContact: 3>
+BRepBuilderAPI_LineThroughIdenticPoints: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_LineThroughIdenticPoints: 6>
+BRepBuilderAPI_Merged: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Merged: 3>
+BRepBuilderAPI_NoFace: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = <BRepBuilderAPI_FaceError.BRepBuilderAPI_NoFace: 1>
+BRepBuilderAPI_NonManifoldWire: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = <BRepBuilderAPI_WireError.BRepBuilderAPI_NonManifoldWire: 3>
+BRepBuilderAPI_NotPlanar: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = <BRepBuilderAPI_FaceError.BRepBuilderAPI_NotPlanar: 2>
+BRepBuilderAPI_ParameterOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_ParameterOutOfRange: 2>
+BRepBuilderAPI_ParametersOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_FaceError # value = <BRepBuilderAPI_FaceError.BRepBuilderAPI_ParametersOutOfRange: 4>
+BRepBuilderAPI_PipeDone: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = <BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeDone: 0>
+BRepBuilderAPI_PipeNotDone: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = <BRepBuilderAPI_PipeError.BRepBuilderAPI_PipeNotDone: 1>
+BRepBuilderAPI_PlaneNotIntersectGuide: OCP.BRepBuilderAPI.BRepBuilderAPI_PipeError # value = <BRepBuilderAPI_PipeError.BRepBuilderAPI_PlaneNotIntersectGuide: 2>
+BRepBuilderAPI_PointProjectionFailed: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointProjectionFailed: 1>
+BRepBuilderAPI_PointWithInfiniteParameter: OCP.BRepBuilderAPI.BRepBuilderAPI_EdgeError # value = <BRepBuilderAPI_EdgeError.BRepBuilderAPI_PointWithInfiniteParameter: 4>
+BRepBuilderAPI_Preserved: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Preserved: 0>
+BRepBuilderAPI_RightCorner: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = <BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RightCorner: 1>
+BRepBuilderAPI_RoundCorner: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = <BRepBuilderAPI_TransitionMode.BRepBuilderAPI_RoundCorner: 2>
+BRepBuilderAPI_ShellDone: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = <BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellDone: 0>
+BRepBuilderAPI_ShellParametersOutOfRange: OCP.BRepBuilderAPI.BRepBuilderAPI_ShellError # value = <BRepBuilderAPI_ShellError.BRepBuilderAPI_ShellParametersOutOfRange: 3>
+BRepBuilderAPI_Transformed: OCP.BRepBuilderAPI.BRepBuilderAPI_TransitionMode # value = <BRepBuilderAPI_TransitionMode.BRepBuilderAPI_Transformed: 0>
+BRepBuilderAPI_Trimmed: OCP.BRepBuilderAPI.BRepBuilderAPI_ShapeModification # value = <BRepBuilderAPI_ShapeModification.BRepBuilderAPI_Trimmed: 2>
+BRepBuilderAPI_WireDone: OCP.BRepBuilderAPI.BRepBuilderAPI_WireError # value = <BRepBuilderAPI_WireError.BRepBuilderAPI_WireDone: 0>

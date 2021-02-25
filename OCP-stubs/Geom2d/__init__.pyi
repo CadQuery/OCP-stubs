@@ -4,11 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
 import OCP.TColStd
+import io
+import OCP.gp
+import OCP.GeomAbs
 import OCP.TColgp
 import OCP.Standard
-import OCP.gp
 __all__  = [
 "Geom2d_Geometry",
 "Geom2d_Curve",
@@ -48,6 +49,10 @@ class Geom2d_Geometry(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -126,14 +131,14 @@ class Geom2d_Geometry(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -193,6 +198,10 @@ class Geom2d_Curve(Geom2d_Geometry, OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -315,14 +324,14 @@ class Geom2d_Curve(Geom2d_Geometry, OCP.Standard.Standard_Transient):
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -386,6 +395,10 @@ class Geom2d_BoundedCurve(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_T
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -516,14 +529,14 @@ class Geom2d_BoundedCurve(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_T
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -592,6 +605,10 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -617,14 +634,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Increases the degree of this BSpline curve to Degree. As a result, the poles, weights and multiplicities tables are modified; the knots table is not changed. Nothing is done if Degree is less than or equal to the current degree. Exceptions Standard_ConstructionError if Degree is greater than Geom2d_BSplineCurve::MaxDegree().
         """
     @overload
-    def IncreaseMultiplicity(self,Index : int,M : int) -> None: 
+    def IncreaseMultiplicity(self,I1 : int,I2 : int,M : int) -> None: 
         """
         Increases the multiplicity of the knot <Index> to <M>.
 
         Increases the multiplicities of the knots in [I1,I2] to <M>.
         """
     @overload
-    def IncreaseMultiplicity(self,I1 : int,I2 : int,M : int) -> None: ...
+    def IncreaseMultiplicity(self,Index : int,M : int) -> None: ...
     def IncrementMultiplicity(self,I1 : int,I2 : int,M : int) -> None: 
         """
         Increases by M the multiplicity of the knots of indexes I1 to I2 in the knots table of this BSpline curve. For each knot, the resulting multiplicity is limited to the degree of this curve. If M is negative, nothing is done. As a result, the poles and weights tables of this BSpline curve are modified. Warning It is forbidden to modify the multiplicity of the first or last knot of a non-periodic curve. Be careful as Geom2d does not protect against this. Exceptions Standard_OutOfRange if I1 or I2 is outside the bounds of the knots table.
@@ -696,14 +713,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Returns NonUniform or Uniform or QuasiUniform or PiecewiseBezier. If all the knots differ by a positive constant from the preceding knot the BSpline Curve can be : - Uniform if all the knots are of multiplicity 1, - QuasiUniform if all the knots are of multiplicity 1 except for the first and last knot which are of multiplicity Degree + 1, - PiecewiseBezier if the first and last knots have multiplicity Degree + 1 and if interior knots have multiplicity Degree A piecewise Bezier with only two knots is a BezierCurve. else the curve is non uniform. The tolerance criterion is Epsilon from class Real.
         """
     @overload
-    def KnotSequence(self) -> OCP.TColStd.TColStd_Array1OfReal: 
+    def KnotSequence(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Returns the knots sequence. In this sequence the knots with a multiplicity greater than 1 are repeated. Example : K = {k1, k1, k1, k2, k3, k3, k4, k4, k4}
 
         Returns the knots sequence. In this sequence the knots with a multiplicity greater than 1 are repeated. Example : K = {k1, k1, k1, k2, k3, k3, k4, k4, k4}
         """
     @overload
-    def KnotSequence(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def KnotSequence(self) -> OCP.TColStd.TColStd_Array1OfReal: ...
     @overload
     def Knots(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -818,14 +835,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Returns the pole of range Index. Raised if Index < 1 or Index > NbPoles.
         """
     @overload
-    def Poles(self,P : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
+    def Poles(self) -> OCP.TColgp.TColgp_Array1OfPnt2d: 
         """
         Returns the poles of the B-spline curve;
 
         Returns the poles of the B-spline curve;
         """
     @overload
-    def Poles(self) -> OCP.TColgp.TColgp_Array1OfPnt2d: ...
+    def Poles(self,P : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     def RemoveKnot(self,Index : int,M : int,Tolerance : float) -> bool: 
         """
         Reduces the multiplicity of the knot of index Index to M. If M is equal to 0, the knot is removed. With a modification of this type, the array of poles is also modified. Two different algorithms are systematically used to compute the new poles of the curve. If, for each pole, the distance between the pole calculated using the first algorithm and the same pole calculated using the second algorithm, is less than Tolerance, this ensures that the curve is not modified by more than Tolerance. Under these conditions, true is returned; otherwise, false is returned. A low tolerance is used to prevent modification of the curve. A high tolerance is used to "smooth" the curve. Exceptions Standard_OutOfRange if Index is outside the bounds of the knots table.
@@ -896,14 +913,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Changes this BSpline curve into a periodic curve. To become periodic, the curve must first be closed. Next, the knot sequence must be periodic. For this, FirstUKnotIndex and LastUKnotIndex are used to compute I1 and I2, the indexes in the knots array of the knots corresponding to the first and last parameters of this BSpline curve. The period is therefore Knot(I2) - Knot(I1). Consequently, the knots and poles tables are modified. Exceptions Standard_ConstructionError if this BSpline curve is not closed.
         """
     @overload
-    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d) -> None: 
+    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d,Weight : float) -> None: 
         """
         Modifies this BSpline curve by assigning P to the pole of index Index in the poles table. Exceptions Standard_OutOfRange if Index is outside the bounds of the poles table. Standard_ConstructionError if Weight is negative or null.
 
         Modifies this BSpline curve by assigning P to the pole of index Index in the poles table. The second syntax also allows you to modify the weight of the modified pole, which becomes Weight. In this case, if this BSpline curve is non-rational, it can become rational and vice versa. Exceptions Standard_OutOfRange if Index is outside the bounds of the poles table. Standard_ConstructionError if Weight is negative or null.
         """
     @overload
-    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d,Weight : float) -> None: ...
+    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d) -> None: ...
     def SetWeight(self,Index : int,Weight : float) -> None: 
         """
         Assigns the weight Weight to the pole of index Index of the poles table. If the curve was non rational it can become rational. If the curve was rational it can become non rational. Exceptions Standard_OutOfRange if Index is outside the bounds of the poles table. Standard_ConstructionError if Weight is negative or null.
@@ -929,14 +946,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -955,14 +972,14 @@ class Geom2d_BSplineCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Returns the weight of the pole of range Index . Raised if Index < 1 or Index > NbPoles.
         """
     @overload
-    def Weights(self,W : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Weights(self) -> OCP.TColStd.TColStd_Array1OfReal: 
         """
         Returns the weights of the B-spline curve;
 
         Returns the weights of the B-spline curve;
         """
     @overload
-    def Weights(self) -> OCP.TColStd.TColStd_Array1OfReal: ...
+    def Weights(self,W : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def __init__(self,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Multiplicities : OCP.TColStd.TColStd_Array1OfInteger,Degree : int,Periodic : bool=False) -> None: ...
     @overload
@@ -1001,6 +1018,10 @@ class Geom2d_Point(Geom2d_Geometry, OCP.Standard.Standard_Transient):
     def Distance(self,Other : Geom2d_Point) -> float: 
         """
         computes the distance between <me> and <Other>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1087,14 +1108,14 @@ class Geom2d_Point(Geom2d_Geometry, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -1162,6 +1183,10 @@ class Geom2d_Conic(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_Transien
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1279,21 +1304,21 @@ class Geom2d_Conic(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_Transien
         """
         None
         """
-    def SetAxis(self,A : OCP.gp.gp_Ax22d) -> None: 
+    def SetAxis(self,theA : OCP.gp.gp_Ax22d) -> None: 
         """
-        Modifies this conic, redefining its local coordinate system partially, by assigning P as its origin
+        Modifies this conic, redefining its local coordinate system partially, by assigning theA as its axis
         """
-    def SetLocation(self,P : OCP.gp.gp_Pnt2d) -> None: 
+    def SetLocation(self,theP : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Modifies this conic, redefining its local coordinate system fully, by assigning A as this coordinate system.
+        Modifies this conic, redefining its local coordinate system partially, by assigning theP as its origin.
         """
-    def SetXAxis(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def SetXAxis(self,theAX : OCP.gp.gp_Ax2d) -> None: 
         """
-        None
+        Assigns the origin and unit vector of axis theA to the origin of the local coordinate system of this conic and X Direction. The other unit vector of the local coordinate system of this conic is recomputed normal to theA, without changing the orientation of the local coordinate system (right-handed or left-handed).
         """
-    def SetYAxis(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def SetYAxis(self,theAY : OCP.gp.gp_Ax2d) -> None: 
         """
-        Assigns the origin and unit vector of axis A to the origin of the local coordinate system of this conic and either: - its "X Direction", or - its "Y Direction". The other unit vector of the local coordinate system of this conic is recomputed normal to A, without changing the orientation of the local coordinate system (right-handed or left-handed).
+        Assigns the origin and unit vector of axis theA to the origin of the local coordinate system of this conic and Y Direction. The other unit vector of the local coordinate system of this conic is recomputed normal to theA, without changing the orientation of the local coordinate system (right-handed or left-handed).
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -1312,14 +1337,14 @@ class Geom2d_Conic(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_Transien
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -1395,6 +1420,10 @@ class Geom2d_Circle(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.St
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1516,29 +1545,29 @@ class Geom2d_Circle(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.St
         """
         None
         """
-    def SetAxis(self,A : OCP.gp.gp_Ax22d) -> None: 
+    def SetAxis(self,theA : OCP.gp.gp_Ax22d) -> None: 
         """
-        Modifies this conic, redefining its local coordinate system partially, by assigning P as its origin
+        Modifies this conic, redefining its local coordinate system partially, by assigning theA as its axis
         """
     def SetCirc2d(self,C : OCP.gp.gp_Circ2d) -> None: 
         """
         Converts the gp_Circ2d circle C into this circle.
         """
-    def SetLocation(self,P : OCP.gp.gp_Pnt2d) -> None: 
+    def SetLocation(self,theP : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Modifies this conic, redefining its local coordinate system fully, by assigning A as this coordinate system.
+        Modifies this conic, redefining its local coordinate system partially, by assigning theP as its origin.
         """
     def SetRadius(self,R : float) -> None: 
         """
         None
         """
-    def SetXAxis(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def SetXAxis(self,theAX : OCP.gp.gp_Ax2d) -> None: 
         """
-        None
+        Assigns the origin and unit vector of axis theA to the origin of the local coordinate system of this conic and X Direction. The other unit vector of the local coordinate system of this conic is recomputed normal to theA, without changing the orientation of the local coordinate system (right-handed or left-handed).
         """
-    def SetYAxis(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def SetYAxis(self,theAY : OCP.gp.gp_Ax2d) -> None: 
         """
-        Assigns the origin and unit vector of axis A to the origin of the local coordinate system of this conic and either: - its "X Direction", or - its "Y Direction". The other unit vector of the local coordinate system of this conic is recomputed normal to A, without changing the orientation of the local coordinate system (right-handed or left-handed).
+        Assigns the origin and unit vector of axis theA to the origin of the local coordinate system of this conic and Y Direction. The other unit vector of the local coordinate system of this conic is recomputed normal to theA, without changing the orientation of the local coordinate system (right-handed or left-handed).
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -1557,14 +1586,14 @@ class Geom2d_Circle(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.St
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -1587,11 +1616,11 @@ class Geom2d_Circle(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.St
         Returns the "YAxis" of the conic. The "YAxis" is perpendicular to the "Xaxis".
         """
     @overload
-    def __init__(self,A : OCP.gp.gp_Ax2d,Radius : float,Sense : bool=True) -> None: ...
+    def __init__(self,A : OCP.gp.gp_Ax22d,Radius : float) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Circ2d) -> None: ...
     @overload
-    def __init__(self,A : OCP.gp.gp_Ax22d,Radius : float) -> None: ...
+    def __init__(self,A : OCP.gp.gp_Ax2d,Radius : float,Sense : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1646,6 +1675,10 @@ class Geom2d_BezierCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OCP
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1757,14 +1790,14 @@ class Geom2d_BezierCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OCP
         Returns the pole of range Index. Raised if Index is not in the range [1, NbPoles]
         """
     @overload
-    def Poles(self,P : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
+    def Poles(self) -> OCP.TColgp.TColgp_Array1OfPnt2d: 
         """
         Returns all the poles of the curve.
 
         Returns all the poles of the curve.
         """
     @overload
-    def Poles(self) -> OCP.TColgp.TColgp_Array1OfPnt2d: ...
+    def Poles(self,P : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     def RemovePole(self,Index : int) -> None: 
         """
         Removes the pole of range Index. If the curve was rational it can become non rational. Raised if Index is not in the range [1, NbPoles]
@@ -1806,14 +1839,14 @@ class Geom2d_BezierCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OCP
         Segments the curve between U1 and U2 which can be out of the bounds of the curve. The curve is oriented from U1 to U2. The control points are modified, the first and the last point are not the same but the parametrization range is [0, 1] else it could not be a Bezier curve. Warnings : Even if <me> is not closed it can become closed after the segmentation for example if U1 or U2 are out of the bounds of the curve <me> or if the curve makes loop. After the segmentation the length of a curve can be null.
         """
     @overload
-    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d) -> None: 
+    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d,Weight : float) -> None: 
         """
         Substitutes the pole of range index with P. If the curve <me> is rational the weight of range Index is not modified. raiseD if Index is not in the range [1, NbPoles]
 
         Substitutes the pole and the weights of range Index. If the curve <me> is not rational it can become rational if all the weights are not identical. If the curve was rational it can become non rational if all the weights are identical. Raised if Index is not in the range [1, NbPoles] Raised if Weight <= Resolution from package gp
         """
     @overload
-    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d,Weight : float) -> None: ...
+    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt2d) -> None: ...
     def SetWeight(self,Index : int,Weight : float) -> None: 
         """
         Changes the weight of the pole of range Index. If the curve <me> is not rational it can become rational if all the weights are not identical. If the curve was rational it can become non rational if all the weights are identical. Raised if Index is not in the range [1, NbPoles] Raised if Weight <= Resolution from package gp
@@ -1839,14 +1872,14 @@ class Geom2d_BezierCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OCP
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -1865,18 +1898,18 @@ class Geom2d_BezierCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OCP
         Returns the weight of range Index. Raised if Index is not in the range [1, NbPoles]
         """
     @overload
-    def Weights(self,W : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Weights(self) -> OCP.TColStd.TColStd_Array1OfReal: 
         """
         Returns all the weights of the curve.
 
         Returns all the weights of the curve.
         """
     @overload
-    def Weights(self) -> OCP.TColStd.TColStd_Array1OfReal: ...
-    @overload
-    def __init__(self,CurvePoles : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    def Weights(self,W : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def __init__(self,CurvePoles : OCP.TColgp.TColgp_Array1OfPnt2d,PoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
+    def __init__(self,CurvePoles : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1919,6 +1952,10 @@ class Geom2d_Vector(Geom2d_Geometry, OCP.Standard.Standard_Transient):
     def Dot(self,Other : Geom2d_Vector) -> float: 
         """
         Returns the scalar product of 2 Vectors.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2013,14 +2050,14 @@ class Geom2d_Vector(Geom2d_Geometry, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -2100,6 +2137,10 @@ class Geom2d_Ellipse(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.S
     def Directrix2(self) -> OCP.gp.gp_Ax2d: 
         """
         This line is obtained by the symmetrical transformation of "Directrix1" with respect to the "YAxis" of the ellipse. Raises ConstructionError if Eccentricity = 0.0. (The ellipse degenerates into a circle).
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2245,17 +2286,17 @@ class Geom2d_Ellipse(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.S
         """
         None
         """
-    def SetAxis(self,A : OCP.gp.gp_Ax22d) -> None: 
+    def SetAxis(self,theA : OCP.gp.gp_Ax22d) -> None: 
         """
-        Modifies this conic, redefining its local coordinate system partially, by assigning P as its origin
+        Modifies this conic, redefining its local coordinate system partially, by assigning theA as its axis
         """
     def SetElips2d(self,E : OCP.gp.gp_Elips2d) -> None: 
         """
         Converts the gp_Elips2d ellipse E into this ellipse.
         """
-    def SetLocation(self,P : OCP.gp.gp_Pnt2d) -> None: 
+    def SetLocation(self,theP : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Modifies this conic, redefining its local coordinate system fully, by assigning A as this coordinate system.
+        Modifies this conic, redefining its local coordinate system partially, by assigning theP as its origin.
         """
     def SetMajorRadius(self,MajorRadius : float) -> None: 
         """
@@ -2265,13 +2306,13 @@ class Geom2d_Ellipse(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.S
         """
         Assigns a value to the minor radius of this ellipse. Exceptions Standard_ConstructionError if: - the major radius of this ellipse becomes less than the minor radius, or - MinorRadius is less than 0.
         """
-    def SetXAxis(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def SetXAxis(self,theAX : OCP.gp.gp_Ax2d) -> None: 
         """
-        None
+        Assigns the origin and unit vector of axis theA to the origin of the local coordinate system of this conic and X Direction. The other unit vector of the local coordinate system of this conic is recomputed normal to theA, without changing the orientation of the local coordinate system (right-handed or left-handed).
         """
-    def SetYAxis(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def SetYAxis(self,theAY : OCP.gp.gp_Ax2d) -> None: 
         """
-        Assigns the origin and unit vector of axis A to the origin of the local coordinate system of this conic and either: - its "X Direction", or - its "Y Direction". The other unit vector of the local coordinate system of this conic is recomputed normal to A, without changing the orientation of the local coordinate system (right-handed or left-handed).
+        Assigns the origin and unit vector of axis theA to the origin of the local coordinate system of this conic and Y Direction. The other unit vector of the local coordinate system of this conic is recomputed normal to theA, without changing the orientation of the local coordinate system (right-handed or left-handed).
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -2290,14 +2331,14 @@ class Geom2d_Ellipse(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.S
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -2363,6 +2404,10 @@ class Geom2d_AxisPlacement(Geom2d_Geometry, OCP.Standard.Standard_Transient):
     def Direction(self) -> OCP.gp.gp_Dir2d: 
         """
         Returns the "Direction" of <me>. -C++: return const&
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2465,14 +2510,14 @@ class Geom2d_AxisPlacement(Geom2d_Geometry, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -2560,6 +2605,10 @@ class Geom2d_Hyperbola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard
     def Directrix2(self) -> OCP.gp.gp_Ax2d: 
         """
         This line is obtained by the symmetrical transformation of "Directrix1" with respect to the "YAxis" of the hyperbola.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2709,17 +2758,17 @@ class Geom2d_Hyperbola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard
         """
         None
         """
-    def SetAxis(self,A : OCP.gp.gp_Ax22d) -> None: 
+    def SetAxis(self,theA : OCP.gp.gp_Ax22d) -> None: 
         """
-        Modifies this conic, redefining its local coordinate system partially, by assigning P as its origin
+        Modifies this conic, redefining its local coordinate system partially, by assigning theA as its axis
         """
     def SetHypr2d(self,H : OCP.gp.gp_Hypr2d) -> None: 
         """
         Converts the gp_Hypr2d hyperbola H into this hyperbola.
         """
-    def SetLocation(self,P : OCP.gp.gp_Pnt2d) -> None: 
+    def SetLocation(self,theP : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Modifies this conic, redefining its local coordinate system fully, by assigning A as this coordinate system.
+        Modifies this conic, redefining its local coordinate system partially, by assigning theP as its origin.
         """
     def SetMajorRadius(self,MajorRadius : float) -> None: 
         """
@@ -2729,13 +2778,13 @@ class Geom2d_Hyperbola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard
         """
         Assigns a value to the major or minor radius of this hyperbola. Exceptions Standard_ConstructionError if: - MajorRadius is less than 0.0, - MinorRadius is less than 0.0.
         """
-    def SetXAxis(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def SetXAxis(self,theAX : OCP.gp.gp_Ax2d) -> None: 
         """
-        None
+        Assigns the origin and unit vector of axis theA to the origin of the local coordinate system of this conic and X Direction. The other unit vector of the local coordinate system of this conic is recomputed normal to theA, without changing the orientation of the local coordinate system (right-handed or left-handed).
         """
-    def SetYAxis(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def SetYAxis(self,theAY : OCP.gp.gp_Ax2d) -> None: 
         """
-        Assigns the origin and unit vector of axis A to the origin of the local coordinate system of this conic and either: - its "X Direction", or - its "Y Direction". The other unit vector of the local coordinate system of this conic is recomputed normal to A, without changing the orientation of the local coordinate system (right-handed or left-handed).
+        Assigns the origin and unit vector of axis theA to the origin of the local coordinate system of this conic and Y Direction. The other unit vector of the local coordinate system of this conic is recomputed normal to theA, without changing the orientation of the local coordinate system (right-handed or left-handed).
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -2754,14 +2803,14 @@ class Geom2d_Hyperbola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard
         Computes the parameter on the curve transformed by T for the point of parameter U on this curve. Note: this function generally returns U but it can be redefined (for example, on a line).
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -2786,9 +2835,9 @@ class Geom2d_Hyperbola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard
     @overload
     def __init__(self,Axis : OCP.gp.gp_Ax22d,MajorRadius : float,MinorRadius : float) -> None: ...
     @overload
-    def __init__(self,MajorAxis : OCP.gp.gp_Ax2d,MajorRadius : float,MinorRadius : float,Sense : bool=True) -> None: ...
-    @overload
     def __init__(self,H : OCP.gp.gp_Hypr2d) -> None: ...
+    @overload
+    def __init__(self,MajorAxis : OCP.gp.gp_Ax2d,MajorRadius : float,MinorRadius : float,Sense : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2847,6 +2896,10 @@ class Geom2d_Line(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_Transient
     def Distance(self,P : OCP.gp.gp_Pnt2d) -> float: 
         """
         Computes the distance between <me> and the point P.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2997,14 +3050,14 @@ class Geom2d_Line(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_Transient
         Computes the parameter on the line transformed by T for the point of parameter U on this line. For a line, the returned value is equal to U multiplied by the scale factor of transformation T.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -3021,9 +3074,9 @@ class Geom2d_Line(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_Transient
     @overload
     def __init__(self,A : OCP.gp.gp_Ax2d) -> None: ...
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,V : OCP.gp.gp_Dir2d) -> None: ...
-    @overload
     def __init__(self,L : OCP.gp.gp_Lin2d) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,V : OCP.gp.gp_Dir2d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3078,6 +3131,10 @@ class Geom2d_OffsetCurve(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_Tr
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -3216,14 +3273,14 @@ class Geom2d_OffsetCurve(Geom2d_Curve, Geom2d_Geometry, OCP.Standard.Standard_Tr
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -3292,6 +3349,10 @@ class Geom2d_Parabola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.
     def Directrix(self) -> OCP.gp.gp_Ax2d: 
         """
         The directrix is parallel to the "YAxis" of the parabola. The "Location" point of the directrix is the intersection point between the directrix and the symmetry axis ("XAxis") of the parabola.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -3425,29 +3486,29 @@ class Geom2d_Parabola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.
         """
         None
         """
-    def SetAxis(self,A : OCP.gp.gp_Ax22d) -> None: 
+    def SetAxis(self,theA : OCP.gp.gp_Ax22d) -> None: 
         """
-        Modifies this conic, redefining its local coordinate system partially, by assigning P as its origin
+        Modifies this conic, redefining its local coordinate system partially, by assigning theA as its axis
         """
     def SetFocal(self,Focal : float) -> None: 
         """
         Assigns the value Focal to the focal length of this parabola. Exceptions Standard_ConstructionError if Focal is negative.
         """
-    def SetLocation(self,P : OCP.gp.gp_Pnt2d) -> None: 
+    def SetLocation(self,theP : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Modifies this conic, redefining its local coordinate system fully, by assigning A as this coordinate system.
+        Modifies this conic, redefining its local coordinate system partially, by assigning theP as its origin.
         """
     def SetParab2d(self,Prb : OCP.gp.gp_Parab2d) -> None: 
         """
         Converts the gp_Parab2d parabola Prb into this parabola.
         """
-    def SetXAxis(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def SetXAxis(self,theAX : OCP.gp.gp_Ax2d) -> None: 
         """
-        None
+        Assigns the origin and unit vector of axis theA to the origin of the local coordinate system of this conic and X Direction. The other unit vector of the local coordinate system of this conic is recomputed normal to theA, without changing the orientation of the local coordinate system (right-handed or left-handed).
         """
-    def SetYAxis(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def SetYAxis(self,theAY : OCP.gp.gp_Ax2d) -> None: 
         """
-        Assigns the origin and unit vector of axis A to the origin of the local coordinate system of this conic and either: - its "X Direction", or - its "Y Direction". The other unit vector of the local coordinate system of this conic is recomputed normal to A, without changing the orientation of the local coordinate system (right-handed or left-handed).
+        Assigns the origin and unit vector of axis theA to the origin of the local coordinate system of this conic and Y Direction. The other unit vector of the local coordinate system of this conic is recomputed normal to theA, without changing the orientation of the local coordinate system (right-handed or left-handed).
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -3466,14 +3527,14 @@ class Geom2d_Parabola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.
         Computes the parameter on the transformed parabola, for the point of parameter U on this parabola. For a parabola, the returned value is equal to U multiplied by the scale factor of transformation T.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -3496,13 +3557,13 @@ class Geom2d_Parabola(Geom2d_Conic, Geom2d_Curve, Geom2d_Geometry, OCP.Standard.
         Returns the "YAxis" of the conic. The "YAxis" is perpendicular to the "Xaxis".
         """
     @overload
-    def __init__(self,Prb : OCP.gp.gp_Parab2d) -> None: ...
+    def __init__(self,MirrorAxis : OCP.gp.gp_Ax2d,Focal : float,Sense : bool=True) -> None: ...
     @overload
     def __init__(self,D : OCP.gp.gp_Ax2d,F : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def __init__(self,Axis : OCP.gp.gp_Ax22d,Focal : float) -> None: ...
     @overload
-    def __init__(self,MirrorAxis : OCP.gp.gp_Ax2d,Focal : float,Sense : bool=True) -> None: ...
+    def __init__(self,Prb : OCP.gp.gp_Parab2d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3537,6 +3598,10 @@ class Geom2d_CartesianPoint(Geom2d_Point, Geom2d_Geometry, OCP.Standard.Standard
     def Distance(self,Other : Geom2d_Point) -> float: 
         """
         computes the distance between <me> and <Other>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -3639,14 +3704,14 @@ class Geom2d_CartesianPoint(Geom2d_Point, Geom2d_Geometry, OCP.Standard.Standard
         None
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -3665,9 +3730,9 @@ class Geom2d_CartesianPoint(Geom2d_Point, Geom2d_Geometry, OCP.Standard.Standard
         Returns the Y coordinate of <me>.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
     def __init__(self,X : float,Y : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3783,14 +3848,14 @@ class Geom2d_Transformation(OCP.Standard.Standard_Transient):
         Makes the transformation into a scale. P is the center of the scale and S is the scaling value.
         """
     @overload
-    def SetTransformation(self,ToSystem : OCP.gp.gp_Ax2d) -> None: 
+    def SetTransformation(self,FromSystem1 : OCP.gp.gp_Ax2d,ToSystem2 : OCP.gp.gp_Ax2d) -> None: 
         """
         Makes a transformation allowing passage from the coordinate system "FromSystem1" to the coordinate system "ToSystem2".
 
         Makes the transformation allowing passage from the basic coordinate system {P(0.,0.,0.), VX (1.,0.,0.), VY (0.,1.,0.)} to the local coordinate system defined with the Ax2d ToSystem.
         """
     @overload
-    def SetTransformation(self,FromSystem1 : OCP.gp.gp_Ax2d,ToSystem2 : OCP.gp.gp_Ax2d) -> None: ...
+    def SetTransformation(self,ToSystem : OCP.gp.gp_Ax2d) -> None: ...
     @overload
     def SetTranslation(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
@@ -3890,6 +3955,10 @@ class Geom2d_TrimmedCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -4024,14 +4093,14 @@ class Geom2d_TrimmedCurve(Geom2d_BoundedCurve, Geom2d_Curve, Geom2d_Geometry, OC
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -4114,6 +4183,10 @@ class Geom2d_Direction(Geom2d_Vector, Geom2d_Geometry, OCP.Standard.Standard_Tra
     def Dot(self,Other : Geom2d_Vector) -> float: 
         """
         Returns the scalar product of 2 Vectors.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -4224,14 +4297,14 @@ class Geom2d_Direction(Geom2d_Vector, Geom2d_Geometry, OCP.Standard.Standard_Tra
         None
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -4254,9 +4327,9 @@ class Geom2d_Direction(Geom2d_Vector, Geom2d_Geometry, OCP.Standard.Standard_Tra
         Returns the Y coordinate of <me>.
         """
     @overload
-    def __init__(self,V : OCP.gp.gp_Dir2d) -> None: ...
-    @overload
     def __init__(self,X : float,Y : float) -> None: ...
+    @overload
+    def __init__(self,V : OCP.gp.gp_Dir2d) -> None: ...
     def __pow__(self,Other : Geom2d_Vector) -> float: 
         """
         None
@@ -4319,6 +4392,10 @@ class Geom2d_VectorWithMagnitude(Geom2d_Vector, Geom2d_Geometry, OCP.Standard.St
     def Dot(self,Other : Geom2d_Vector) -> float: 
         """
         Returns the scalar product of 2 Vectors.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -4453,14 +4530,14 @@ class Geom2d_VectorWithMagnitude(Geom2d_Vector, Geom2d_Geometry, OCP.Standard.St
         None
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> Geom2d_Geometry: 
         """
@@ -4495,11 +4572,11 @@ class Geom2d_VectorWithMagnitude(Geom2d_Vector, Geom2d_Geometry, OCP.Standard.St
         None
         """
     @overload
-    def __init__(self,X : float,Y : float) -> None: ...
+    def __init__(self,V : OCP.gp.gp_Vec2d) -> None: ...
     @overload
     def __init__(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def __init__(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    def __init__(self,X : float,Y : float) -> None: ...
     def __isub__(self,Other : Geom2d_Vector) -> None: 
         """
         None

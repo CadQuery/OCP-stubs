@@ -5,13 +5,14 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
-import OCP.TCollection
-import OCP.TColStd
-import OCP.Message
-import OCP.Standard
-import OCP.BinObjMgt
-import OCP.BinMDF
 import OCP.BinTools
+import OCP.TColStd
+import OCP.TCollection
+import OCP.BinObjMgt
+import io
+import OCP.Message
+import OCP.BinMDF
+import OCP.Standard
 __all__  = [
 "BinMNaming",
 "BinMNaming_NamedShapeDriver",
@@ -90,20 +91,24 @@ class BinMNaming_NamedShapeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         """
         Return true if shape should be stored with triangles.
         """
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
-    def ReadShapeSection(self,theIS : Any) -> None: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def ReadShapeSection(self,theIS : io.BytesIO,therange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Input the shapes from Bin Document file
         """
@@ -125,8 +130,6 @@ class BinMNaming_NamedShapeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
-
-        Returns the type of source object, inheriting from Attribute from TDF.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -138,7 +141,7 @@ class BinMNaming_NamedShapeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
 
         Returns the type name of the attribute object
         """
-    def WriteShapeSection(self,theOS : Any) -> None: 
+    def WriteShapeSection(self,theOS : io.BytesIO,therange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Output the shapes into Bin Document file
         """
@@ -196,23 +199,25 @@ class BinMNaming_NamingDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard_T
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the type of source object, inheriting from Attribute from TDF.
-
         Returns the type of source object, inheriting from Attribute from TDF.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 

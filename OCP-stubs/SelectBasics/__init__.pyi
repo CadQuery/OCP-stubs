@@ -4,9 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColgp
-import OCP.SelectMgr
+import io
 import OCP.gp
+import OCP.TColgp
+import OCP.Graphic3d
+import OCP.SelectMgr
 __all__  = [
 "SelectBasics",
 "SelectBasics_PickResult",
@@ -74,14 +76,63 @@ class SelectBasics_PickResult():
         Set picked point.
         """
     @overload
-    def __init__(self) -> None: ...
+    def SetSurfaceNormal(self,theNormal : OCP.Graphic3d.Graphic3d_Vec3) -> None: 
+        """
+        Set surface normal at picked point.
+
+        Set surface normal at picked point.
+        """
+    @overload
+    def SetSurfaceNormal(self,theNormal : OCP.gp.gp_Vec) -> None: ...
+    def SurfaceNormal(self) -> OCP.Graphic3d.Graphic3d_Vec3: ...
     @overload
     def __init__(self,theDepth : float,theDistToCenter : float,theObjPickedPnt : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class SelectBasics_SelectingVolumeManager():
     """
     This class provides an interface for selecting volume manager, which is responsible for all overlap detection methods and calculation of minimum depth, distance to center of geometry and detected closest point on entity.
     """
+    class SelectionType_e():
+        """
+        Available selection types
+
+        Members:
+
+          Point
+
+          Box
+
+          Polyline
+
+          Unknown
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        Box: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Box: 1>
+        Point: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Point: 0>
+        Polyline: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Polyline: 2>
+        Unknown: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Unknown: 3>
+        __entries: dict # value = {'Point': (<SelectionType_e.Point: 0>, None), 'Box': (<SelectionType_e.Box: 1>, None), 'Polyline': (<SelectionType_e.Polyline: 2>, None), 'Unknown': (<SelectionType_e.Unknown: 3>, None)}
+        __members__: dict # value = {'Point': <SelectionType_e.Point: 0>, 'Box': <SelectionType_e.Box: 1>, 'Polyline': <SelectionType_e.Polyline: 2>, 'Unknown': <SelectionType_e.Unknown: 3>}
+        pass
     def DetectedPoint(self,theDepth : float) -> OCP.gp.gp_Pnt: 
         """
         None
@@ -89,6 +140,10 @@ class SelectBasics_SelectingVolumeManager():
     def DistToGeometryCenter(self,theCOG : OCP.gp.gp_Pnt) -> float: 
         """
         Calculates distance from 3d projection of user-defined selection point to the given point theCOG
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def GetActiveSelectionType(self) -> int: 
         """
@@ -115,7 +170,7 @@ class SelectBasics_SelectingVolumeManager():
         None
         """
     @overload
-    def Overlaps(self,thePnt : OCP.gp.gp_Pnt) -> bool: 
+    def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_HArray1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: 
         """
         Returns true if selecting volume is overlapped by box theBox
 
@@ -134,18 +189,22 @@ class SelectBasics_SelectingVolumeManager():
         Returns true if selecting volume is overlapped by triangle with vertices thePt1, thePt2 and thePt3, taking into account sensitivity type theSensType
         """
     @overload
-    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_HArray1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
+    def Overlaps(self,thePt1 : OCP.gp.gp_Pnt,thePt2 : OCP.gp.gp_Pnt,thePt3 : OCP.gp.gp_Pnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
     @overload
     def Overlaps(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,theInside : bool=None) -> bool: ...
     @overload
     def Overlaps(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,thePickResult : SelectBasics_PickResult) -> bool: ...
     @overload
-    def Overlaps(self,thePt1 : OCP.gp.gp_Pnt,thePt2 : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
+    def Overlaps(self,thePnt : OCP.gp.gp_Pnt) -> bool: ...
     @overload
     def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
     @overload
-    def Overlaps(self,thePt1 : OCP.gp.gp_Pnt,thePt2 : OCP.gp.gp_Pnt,thePt3 : OCP.gp.gp_Pnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
+    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,thePt1 : OCP.gp.gp_Pnt,thePt2 : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
     def __init__(self) -> None: ...
+    Box: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Box: 1>
+    Point: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Point: 0>
+    Polyline: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Polyline: 2>
+    Unknown: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Unknown: 3>
     pass

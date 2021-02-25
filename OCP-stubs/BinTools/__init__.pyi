@@ -4,11 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.Geom2d
-import OCP.TopoDS
+import io
 import OCP.Geom
+import OCP.TopoDS
 import OCP.TopLoc
+import OCP.Geom2d
+import OCP.TopAbs
 __all__  = [
 "BinTools",
 "BinTools_Curve2dSet",
@@ -22,48 +23,58 @@ class BinTools():
     Tool to keep shapes in binary format
     """
     @staticmethod
-    def GetBool_s(IS : Any,theValue : bool) -> Any: 
+    def GetBool_s(IS : io.BytesIO,theValue : bool) -> io.BytesIO: 
         """
         None
         """
     @staticmethod
-    def GetExtChar_s(IS : Any,theValue : str) -> Any: 
+    def GetExtChar_s(IS : io.BytesIO,theValue : str) -> io.BytesIO: 
         """
         None
         """
     @staticmethod
-    def GetInteger_s(IS : Any,theValue : int) -> Any: 
+    def GetInteger_s(IS : io.BytesIO,theValue : int) -> io.BytesIO: 
         """
         None
         """
     @staticmethod
-    def GetReal_s(IS : Any,theValue : float) -> Any: 
+    def GetReal_s(IS : io.BytesIO,theValue : float) -> io.BytesIO: 
         """
         None
         """
     @staticmethod
-    def PutBool_s(OS : Any,theValue : bool) -> Any: 
+    def GetShortReal_s(IS : io.BytesIO,theValue : float) -> io.BytesIO: 
         """
         None
         """
     @staticmethod
-    def PutExtChar_s(OS : Any,theValue : str) -> Any: 
+    def PutBool_s(OS : io.BytesIO,theValue : bool) -> io.BytesIO: 
         """
         None
         """
     @staticmethod
-    def PutInteger_s(OS : Any,theValue : int) -> Any: 
+    def PutExtChar_s(OS : io.BytesIO,theValue : str) -> io.BytesIO: 
         """
         None
         """
     @staticmethod
-    def PutReal_s(OS : Any,theValue : float) -> Any: 
+    def PutInteger_s(OS : io.BytesIO,theValue : int) -> io.BytesIO: 
+        """
+        None
+        """
+    @staticmethod
+    def PutReal_s(OS : io.BytesIO,theValue : float) -> io.BytesIO: 
+        """
+        None
+        """
+    @staticmethod
+    def PutShortReal_s(OS : io.BytesIO,theValue : float) -> io.BytesIO: 
         """
         None
         """
     @staticmethod
     @overload
-    def Read_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str) -> bool: 
+    def Read_s(theShape : OCP.TopoDS.TopoDS_Shape,theStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads a shape from <theStream> and returns it in <theShape>.
 
@@ -71,10 +82,10 @@ class BinTools():
         """
     @staticmethod
     @overload
-    def Read_s(theShape : OCP.TopoDS.TopoDS_Shape,theStream : Any) -> None: ...
+    def Read_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
     @staticmethod
     @overload
-    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str) -> bool: 
+    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Writes <theShape> on <theStream> in binary format.
 
@@ -82,7 +93,7 @@ class BinTools():
         """
     @staticmethod
     @overload
-    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theStream : Any) -> None: ...
+    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     def __init__(self) -> None: ...
     pass
 class BinTools_Curve2dSet():
@@ -105,21 +116,21 @@ class BinTools_Curve2dSet():
         """
         Returns the index of <L>.
         """
-    def Read(self,IS : Any) -> None: 
+    def Read(self,IS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the content of me from the stream <IS>. me is first cleared.
         """
     @staticmethod
-    def ReadCurve2d_s(IS : Any,C : OCP.Geom2d.Geom2d_Curve) -> Any: 
+    def ReadCurve2d_s(IS : io.BytesIO,C : OCP.Geom2d.Geom2d_Curve) -> io.BytesIO: 
         """
         Reads the curve from the stream. The curve is assumed to have been written with the Write method.
         """
-    def Write(self,OS : Any) -> None: 
+    def Write(self,OS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the content of me on the stream <OS> in a format that can be read back by Read.
         """
     @staticmethod
-    def WriteCurve2d_s(C : OCP.Geom2d.Geom2d_Curve,OS : Any) -> None: 
+    def WriteCurve2d_s(C : OCP.Geom2d.Geom2d_Curve,OS : io.BytesIO) -> None: 
         """
         Dumps the curve on the binary stream, that can be read back.
         """
@@ -145,21 +156,21 @@ class BinTools_CurveSet():
         """
         Returns the index of <L>.
         """
-    def Read(self,IS : Any) -> None: 
+    def Read(self,IS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the content of me from the stream <IS>. me is first cleared.
         """
     @staticmethod
-    def ReadCurve_s(IS : Any,C : OCP.Geom.Geom_Curve) -> Any: 
+    def ReadCurve_s(IS : io.BytesIO,C : OCP.Geom.Geom_Curve) -> io.BytesIO: 
         """
         Reads the curve from the stream. The curve is assumed to have been written with the Write method
         """
-    def Write(self,OS : Any) -> None: 
+    def Write(self,OS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the content of me on the stream <OS> in a format that can be read back by Read.
         """
     @staticmethod
-    def WriteCurve_s(C : OCP.Geom.Geom_Curve,OS : Any) -> None: 
+    def WriteCurve_s(C : OCP.Geom.Geom_Curve,OS : io.BytesIO) -> None: 
         """
         Dumps the curve on the stream in binary format that can be read back.
         """
@@ -189,11 +200,11 @@ class BinTools_LocationSet():
         """
         Returns number of locations.
         """
-    def Read(self,IS : Any) -> None: 
+    def Read(self,IS : io.BytesIO) -> None: 
         """
         Reads the content of me from the stream <IS>. me is first cleared.
         """
-    def Write(self,OS : Any) -> None: 
+    def Write(self,OS : io.BytesIO) -> None: 
         """
         Writes the content of me on the stream <OS> in a format that can be read back by Read.
         """
@@ -244,32 +255,32 @@ class BinTools_ShapeSet():
         Returns number of shapes read from file.
         """
     @overload
-    def Read(self,IS : Any) -> None: 
+    def Read(self,IS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the content of me from the binary stream <IS>. me is first cleared.
 
         Reads from <IS> a shape and returns it in S. <NbShapes> is the number of tshapes in the set.
         """
     @overload
-    def Read(self,S : OCP.TopoDS.TopoDS_Shape,IS : Any,NbShapes : int) -> None: ...
+    def Read(self,S : OCP.TopoDS.TopoDS_Shape,IS : io.BytesIO,NbShapes : int) -> None: ...
     @overload
-    def ReadGeometry(self,IS : Any) -> None: 
+    def ReadGeometry(self,T : OCP.TopAbs.TopAbs_ShapeEnum,IS : io.BytesIO,S : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Reads the geometry of me from the stream <IS>.
 
         Reads the geometry of a shape of type <T> from the stream <IS> and returns it in <S>.
         """
     @overload
-    def ReadGeometry(self,T : OCP.TopAbs.TopAbs_ShapeEnum,IS : Any,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    def ReadPolygon3D(self,IS : Any) -> None: 
+    def ReadGeometry(self,IS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def ReadPolygon3D(self,IS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the 3d polygons of me from the stream <IS>.
         """
-    def ReadPolygonOnTriangulation(self,IS : Any) -> None: 
+    def ReadPolygonOnTriangulation(self,IS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the polygons on triangulation of me from the stream <IS>.
         """
-    def ReadTriangulation(self,IS : Any) -> None: 
+    def ReadTriangulation(self,IS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the triangulation of me from the stream <IS>.
         """
@@ -286,32 +297,32 @@ class BinTools_ShapeSet():
         Returns the sub-shape of index <I>.
         """
     @overload
-    def Write(self,OS : Any) -> None: 
+    def Write(self,OS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the content of me on the stream <OS> in binary format that can be read back by Read.
 
         Writes on <OS> the shape <S>. Writes the orientation, the index of the TShape and the index of the Location.
         """
     @overload
-    def Write(self,S : OCP.TopoDS.TopoDS_Shape,OS : Any) -> None: ...
+    def Write(self,S : OCP.TopoDS.TopoDS_Shape,OS : io.BytesIO) -> None: ...
     @overload
-    def WriteGeometry(self,OS : Any) -> None: 
+    def WriteGeometry(self,S : OCP.TopoDS.TopoDS_Shape,OS : io.BytesIO) -> None: 
         """
         Writes the geometry of me on the stream <OS> in a binary format that can be read back by Read.
 
         Writes the geometry of <S> on the stream <OS> in a binary format that can be read back by Read.
         """
     @overload
-    def WriteGeometry(self,S : OCP.TopoDS.TopoDS_Shape,OS : Any) -> None: ...
-    def WritePolygon3D(self,OS : Any) -> None: 
+    def WriteGeometry(self,OS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def WritePolygon3D(self,OS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the 3d polygons on the stream <OS> in a format that can be read back by Read.
         """
-    def WritePolygonOnTriangulation(self,OS : Any) -> None: 
+    def WritePolygonOnTriangulation(self,OS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the polygons on triangulation on the stream <OS> in a format that can be read back by Read.
         """
-    def WriteTriangulation(self,OS : Any) -> None: 
+    def WriteTriangulation(self,OS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the triangulation on the stream <OS> in a format that can be read back by Read.
         """
@@ -333,12 +344,12 @@ class BinTools_SurfaceSet():
         """
         Returns the index of <L>.
         """
-    def Read(self,IS : Any) -> None: 
+    def Read(self,IS : io.BytesIO,therange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the content of me from the stream <IS>. me is first cleared.
         """
     @staticmethod
-    def ReadSurface_s(IS : Any,S : OCP.Geom.Geom_Surface) -> Any: 
+    def ReadSurface_s(IS : io.BytesIO,S : OCP.Geom.Geom_Surface) -> io.BytesIO: 
         """
         Reads the surface from the stream. The surface is assumed to have been written with the Write method.
         """
@@ -346,12 +357,12 @@ class BinTools_SurfaceSet():
         """
         Returns the Surface of index <I>.
         """
-    def Write(self,OS : Any) -> None: 
+    def Write(self,OS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the content of me on the stream <OS> in binary format that can be read back by Read.
         """
     @staticmethod
-    def WriteSurface_s(S : OCP.Geom.Geom_Surface,OS : Any) -> None: 
+    def WriteSurface_s(S : OCP.Geom.Geom_Surface,OS : io.BytesIO) -> None: 
         """
         Dumps the surface on the stream in binary format that can be read back.
         """

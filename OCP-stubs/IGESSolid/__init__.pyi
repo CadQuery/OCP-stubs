@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TColStd
-import OCP.IGESData
-import OCP.IGESBasic
-import OCP.Message
-import OCP.TColgp
-import OCP.Standard
+import OCP.TCollection
+import io
 import OCP.IGESGeom
-import OCP.Interface
+import OCP.IGESData
 import OCP.gp
+import OCP.TColgp
+import OCP.Interface
+import OCP.Standard
+import OCP.IGESBasic
 __all__  = [
 "IGESSolid",
 "IGESSolid_Array1OfFace",
@@ -171,14 +171,14 @@ class IGESSolid_Array1OfFace():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : IGESSolid_Face,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : IGESSolid_Array1OfFace) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESSolid_Array1OfLoop():
     """
@@ -257,14 +257,14 @@ class IGESSolid_Array1OfLoop():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : IGESSolid_Array1OfLoop) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : IGESSolid_Loop,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : IGESSolid_Array1OfLoop) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESSolid_Array1OfShell():
     """
@@ -345,12 +345,12 @@ class IGESSolid_Array1OfShell():
     @overload
     def __init__(self,theOther : IGESSolid_Array1OfShell) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : IGESSolid_Shell,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESSolid_Array1OfVertexList():
     """
@@ -429,14 +429,14 @@ class IGESSolid_Array1OfVertexList():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : IGESSolid_VertexList,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : IGESSolid_Array1OfVertexList) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theBegin : IGESSolid_VertexList,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESSolid_Block(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Standard_Transient):
     """
@@ -3851,14 +3851,14 @@ class IGESSolid_HArray1OfFace(IGESSolid_Array1OfFace, OCP.Standard.Standard_Tran
         Constant value access
         """
     @overload
-    def __init__(self,theOther : IGESSolid_Array1OfFace) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : IGESSolid_Array1OfFace) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : IGESSolid_Face) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3996,12 +3996,12 @@ class IGESSolid_HArray1OfLoop(IGESSolid_Array1OfLoop, OCP.Standard.Standard_Tran
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESSolid_Loop) -> None: ...
+    @overload
     def __init__(self,theOther : IGESSolid_Array1OfLoop) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESSolid_Loop) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4137,14 +4137,14 @@ class IGESSolid_HArray1OfShell(IGESSolid_Array1OfShell, OCP.Standard.Standard_Tr
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : IGESSolid_Shell) -> None: ...
     @overload
     def __init__(self,theOther : IGESSolid_Array1OfShell) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4280,14 +4280,14 @@ class IGESSolid_HArray1OfVertexList(IGESSolid_Array1OfVertexList, OCP.Standard.S
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESSolid_VertexList) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : IGESSolid_Array1OfVertexList) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESSolid_VertexList) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -8008,7 +8008,7 @@ class IGESSolid_SpecificModule(OCP.IGESData.IGESData_SpecificModule, OCP.Standar
         """
         Specific Automatic Correction on own Parameters of an Entity. It works by setting in accordance redundant data, if there are when there is no ambiguity (else, it does nothing). Remark that classic Corrections on Directory Entry (to set void data) are taken into account alsewhere.
         """
-    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Specific Dump (own parameters) for IGESSolid
         """
@@ -8724,7 +8724,7 @@ class IGESSolid_ToolBlock():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_Block,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_Block,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8758,7 +8758,7 @@ class IGESSolid_ToolBooleanTree():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_BooleanTree,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_BooleanTree,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8792,7 +8792,7 @@ class IGESSolid_ToolConeFrustum():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_ConeFrustum,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_ConeFrustum,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8826,7 +8826,7 @@ class IGESSolid_ToolConicalSurface():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_ConicalSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_ConicalSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8860,7 +8860,7 @@ class IGESSolid_ToolCylinder():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_Cylinder,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_Cylinder,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8894,7 +8894,7 @@ class IGESSolid_ToolCylindricalSurface():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_CylindricalSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_CylindricalSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8928,7 +8928,7 @@ class IGESSolid_ToolEdgeList():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_EdgeList,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_EdgeList,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8962,7 +8962,7 @@ class IGESSolid_ToolEllipsoid():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_Ellipsoid,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_Ellipsoid,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8996,7 +8996,7 @@ class IGESSolid_ToolFace():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_Face,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_Face,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9030,7 +9030,7 @@ class IGESSolid_ToolLoop():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_Loop,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_Loop,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9064,7 +9064,7 @@ class IGESSolid_ToolManifoldSolid():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_ManifoldSolid,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_ManifoldSolid,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9098,7 +9098,7 @@ class IGESSolid_ToolPlaneSurface():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_PlaneSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_PlaneSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9132,7 +9132,7 @@ class IGESSolid_ToolRightAngularWedge():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_RightAngularWedge,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_RightAngularWedge,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9166,7 +9166,7 @@ class IGESSolid_ToolSelectedComponent():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_SelectedComponent,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_SelectedComponent,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9200,7 +9200,7 @@ class IGESSolid_ToolShell():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_Shell,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_Shell,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9234,7 +9234,7 @@ class IGESSolid_ToolSolidAssembly():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_SolidAssembly,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_SolidAssembly,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9268,7 +9268,7 @@ class IGESSolid_ToolSolidInstance():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_SolidInstance,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_SolidInstance,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9302,7 +9302,7 @@ class IGESSolid_ToolSolidOfLinearExtrusion():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_SolidOfLinearExtrusion,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_SolidOfLinearExtrusion,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9336,7 +9336,7 @@ class IGESSolid_ToolSolidOfRevolution():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_SolidOfRevolution,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_SolidOfRevolution,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9370,7 +9370,7 @@ class IGESSolid_ToolSphere():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_Sphere,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_Sphere,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9404,7 +9404,7 @@ class IGESSolid_ToolSphericalSurface():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_SphericalSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_SphericalSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9438,7 +9438,7 @@ class IGESSolid_ToolToroidalSurface():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_ToroidalSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_ToroidalSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9472,7 +9472,7 @@ class IGESSolid_ToolTorus():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_Torus,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_Torus,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9506,7 +9506,7 @@ class IGESSolid_ToolVertexList():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESSolid_VertexList,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESSolid_VertexList,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """

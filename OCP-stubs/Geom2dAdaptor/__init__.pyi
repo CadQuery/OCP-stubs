@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
 import OCP.TColStd
-import OCP.Geom2d
-import OCP.Standard
 import OCP.Adaptor2d
 import OCP.gp
+import OCP.GeomAbs
+import OCP.Geom2d
+import OCP.Standard
 __all__  = [
 "Geom2dAdaptor",
 "Geom2dAdaptor_Curve",
@@ -124,7 +124,7 @@ class Geom2dAdaptor_Curve(OCP.Adaptor2d.Adaptor2d_Curve2d):
         None
         """
     @overload
-    def Load(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def Load(self,C : OCP.Geom2d.Geom2d_Curve,UFirst : float,ULast : float) -> None: 
         """
         None
 
@@ -135,7 +135,7 @@ class Geom2dAdaptor_Curve(OCP.Adaptor2d.Adaptor2d_Curve2d):
         ConstructionError is raised if Ufirst>Ulast
         """
     @overload
-    def Load(self,C : OCP.Geom2d.Geom2d_Curve,UFirst : float,ULast : float) -> None: ...
+    def Load(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <S>. And returns the number of intervals.
@@ -648,13 +648,13 @@ class Geom2dAdaptor_HCurve(Geom2dAdaptor_GHCurve, OCP.Adaptor2d.Adaptor2d_HCurve
         None
         """
     @overload
-    def __init__(self,AS : Geom2dAdaptor_Curve) -> None: ...
-    @overload
-    def __init__(self,S : OCP.Geom2d.Geom2d_Curve) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,S : OCP.Geom2d.Geom2d_Curve,UFirst : float,ULast : float) -> None: ...
+    @overload
+    def __init__(self,S : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    @overload
+    def __init__(self,AS : Geom2dAdaptor_Curve) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

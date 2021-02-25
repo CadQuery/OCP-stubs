@@ -5,6 +5,7 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
+import io
 __all__  = [
 "NCollection_Lerp_gp_Trsf",
 "gp",
@@ -205,6 +206,14 @@ class gp_Ax1():
 
         Returns the direction of <me>.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def InitFromJson(self,theSStream : Any,theStreamPos : int) -> bool: 
+        """
+        Inits the content of me from the stream
+        """
     def IsCoaxial(self,Other : gp_Ax1,AngularTolerance : float,LinearTolerance : float) -> bool: 
         """
         Returns True if : . the angle between <me> and <Other> is lower or equal to <AngularTolerance> and . the distance between <me>.Location() and <Other> is lower or equal to <LinearTolerance> and . the distance between <Other>.Location() and <me> is lower or equal to LinearTolerance.
@@ -234,7 +243,7 @@ class gp_Ax1():
         Returns the location point of <me>.
         """
     @overload
-    def Mirror(self,A1 : gp_Ax1) -> None: 
+    def Mirror(self,A2 : gp_Ax2) -> None: 
         """
         Performs the symmetrical transformation of an axis placement with respect to the point P which is the center of the symmetry and assigns the result to this axis.
 
@@ -245,7 +254,7 @@ class gp_Ax1():
     @overload
     def Mirror(self,P : gp_Pnt) -> None: ...
     @overload
-    def Mirror(self,A2 : gp_Ax2) -> None: ...
+    def Mirror(self,A1 : gp_Ax1) -> None: ...
     @overload
     def Mirrored(self,A2 : gp_Ax2) -> gp_Ax1: 
         """
@@ -320,7 +329,7 @@ class gp_Ax1():
         Applies the transformation T to this axis and creates a new one.
         """
     @overload
-    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: 
+    def Translate(self,V : gp_Vec) -> None: 
         """
         Translates this axis by the vector V, and assigns the result to this axis.
 
@@ -331,9 +340,9 @@ class gp_Ax1():
         Translates this axis by: the vector (P1, P2) defined from point P1 to point P2. and assigns the result to this axis.
         """
     @overload
-    def Translate(self,V : gp_Vec) -> None: ...
+    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
     @overload
-    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Ax1: 
+    def Translated(self,V : gp_Vec) -> gp_Ax1: 
         """
         Translates this axis by the vector V, and creates a new one.
 
@@ -344,11 +353,11 @@ class gp_Ax1():
         Translates this axis by: the vector (P1, P2) defined from point P1 to point P2. and creates a new one.
         """
     @overload
-    def Translated(self,V : gp_Vec) -> gp_Ax1: ...
-    @overload
-    def __init__(self,P : gp_Pnt,V : gp_Dir) -> None: ...
+    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Ax1: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : gp_Pnt,V : gp_Dir) -> None: ...
     pass
 class gp_Ax2():
     """
@@ -372,6 +381,14 @@ class gp_Ax2():
 
         Returns the main direction of <me>.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def InitFromJson(self,theSStream : Any,theStreamPos : int) -> bool: 
+        """
+        Inits the content of me from the stream
+        """
     @overload
     def IsCoplanar(self,A : gp_Ax1,LinearTolerance : float,AngularTolerance : float) -> bool: 
         """
@@ -384,9 +401,9 @@ class gp_Ax2():
         Returns True if . the distance between <me> and the "Location" point of A1 is lower of equal to LinearTolerance and . the main direction of <me> and the direction of A1 are normal. Note: the tolerance criterion for angular equality is given by AngularTolerance.
         """
     @overload
-    def IsCoplanar(self,Other : gp_Ax2,LinearTolerance : float,AngularTolerance : float) -> bool: ...
-    @overload
     def IsCoplanar(self,A1 : gp_Ax1,LinearTolerance : float,AngularTolerance : float) -> bool: ...
+    @overload
+    def IsCoplanar(self,Other : gp_Ax2,LinearTolerance : float,AngularTolerance : float) -> bool: ...
     def Location(self) -> gp_Pnt: 
         """
         Returns the "Location" point (origin) of <me>.
@@ -394,7 +411,7 @@ class gp_Ax2():
         Returns the "Location" point (origin) of <me>.
         """
     @overload
-    def Mirror(self,A2 : gp_Ax2) -> None: 
+    def Mirror(self,P : gp_Pnt) -> None: 
         """
         Performs a symmetrical transformation of this coordinate system with respect to: - the point P, and assigns the result to this coordinate system. Warning This transformation is always performed on the origin. In case of a reflection with respect to a point: - the main direction of the coordinate system is not changed, and - the "X Direction" and the "Y Direction" are simply reversed In case of a reflection with respect to an axis or a plane: - the transformation is applied to the "X Direction" and the "Y Direction", then - the "main Direction" is recomputed as the cross product "X Direction" ^ "Y Direction". This maintains the right-handed property of the coordinate system.
 
@@ -403,7 +420,7 @@ class gp_Ax2():
         Performs a symmetrical transformation of this coordinate system with respect to: - the plane defined by the origin, "X Direction" and "Y Direction" of coordinate system A2 and assigns the result to this coordinate systeme. Warning This transformation is always performed on the origin. In case of a reflection with respect to a point: - the main direction of the coordinate system is not changed, and - the "X Direction" and the "Y Direction" are simply reversed In case of a reflection with respect to an axis or a plane: - the transformation is applied to the "X Direction" and the "Y Direction", then - the "main Direction" is recomputed as the cross product "X Direction" ^ "Y Direction". This maintains the right-handed property of the coordinate system.
         """
     @overload
-    def Mirror(self,P : gp_Pnt) -> None: ...
+    def Mirror(self,A2 : gp_Ax2) -> None: ...
     @overload
     def Mirror(self,A1 : gp_Ax1) -> None: ...
     @overload
@@ -486,7 +503,7 @@ class gp_Ax2():
         Transforms an axis placement with a Trsf. The "Location" point, the "XDirection" and the "YDirection" are transformed with T. The resulting main "Direction" of <me> is the cross product between the "XDirection" and the "YDirection" after transformation.
         """
     @overload
-    def Translate(self,V : gp_Vec) -> None: 
+    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: 
         """
         None
 
@@ -497,7 +514,7 @@ class gp_Ax2():
         None
         """
     @overload
-    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
+    def Translate(self,V : gp_Vec) -> None: ...
     @overload
     def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Ax2: 
         """
@@ -524,9 +541,9 @@ class gp_Ax2():
         Returns the "YDirection" of <me>.
         """
     @overload
-    def __init__(self,P : gp_Pnt,V : gp_Dir) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : gp_Pnt,V : gp_Dir) -> None: ...
     @overload
     def __init__(self,P : gp_Pnt,N : gp_Dir,Vx : gp_Dir) -> None: ...
     pass
@@ -534,6 +551,10 @@ class gp_Ax22d():
     """
     Describes a coordinate system in a plane (2D space). A coordinate system is defined by: - its origin (also referred to as its "Location point"), and - two orthogonal unit vectors, respectively, called the "X Direction" and the "Y Direction". A gp_Ax22d may be right-handed ("direct sense") or left-handed ("inverse" or "indirect sense"). You use a gp_Ax22d to: - describe 2D geometric entities, in particular to position them. The local coordinate system of a geometric entity serves for the same purpose as the STEP function "axis placement two axes", or - define geometric transformations. Note: we refer to the "X Axis" and "Y Axis" as the axes having: - the origin of the coordinate system as their origin, and - the unit vectors "X Direction" and "Y Direction", respectively, as their unit vectors.
     """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def Location(self) -> gp_Pnt2d: 
         """
         Returns the "Location" point (origin) of <me>.
@@ -550,14 +571,14 @@ class gp_Ax22d():
     @overload
     def Mirror(self,A : gp_Ax2d) -> None: ...
     @overload
-    def Mirrored(self,A : gp_Ax2d) -> gp_Ax22d: 
+    def Mirrored(self,P : gp_Pnt2d) -> gp_Ax22d: 
         """
         Performs the symmetrical transformation of an axis placement with respect to the point P which is the center of the symmetry. Warnings : The main direction of the axis placement is not changed. The "XDirection" and the "YDirection" are reversed. So the axis placement stay right handed.
 
         Performs the symmetrical transformation of an axis placement with respect to an axis placement which is the axis of the symmetry. The transformation is performed on the "Location" point, on the "XDirection" and "YDirection". The resulting main "Direction" is the cross product between the "XDirection" and the "YDirection" after transformation.
         """
     @overload
-    def Mirrored(self,P : gp_Pnt2d) -> gp_Ax22d: ...
+    def Mirrored(self,A : gp_Ax2d) -> gp_Ax22d: ...
     def Rotate(self,P : gp_Pnt2d,Ang : float) -> None: 
         """
         None
@@ -631,7 +652,7 @@ class gp_Ax22d():
         Transforms an axis placement with a Trsf. The "Location" point, the "XDirection" and the "YDirection" are transformed with T. The resulting main "Direction" of <me> is the cross product between the "XDirection" and the "YDirection" after transformation.
         """
     @overload
-    def Translate(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: 
+    def Translate(self,V : gp_Vec2d) -> None: 
         """
         None
 
@@ -642,9 +663,9 @@ class gp_Ax22d():
         None
         """
     @overload
-    def Translate(self,V : gp_Vec2d) -> None: ...
+    def Translate(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: ...
     @overload
-    def Translated(self,V : gp_Vec2d) -> gp_Ax22d: 
+    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Ax22d: 
         """
         Translates an axis plaxement in the direction of the vector <V>. The magnitude of the translation is the vector's magnitude.
 
@@ -655,7 +676,7 @@ class gp_Ax22d():
         Translates an axis placement from the point <P1> to the point <P2>.
         """
     @overload
-    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Ax22d: ...
+    def Translated(self,V : gp_Vec2d) -> gp_Ax22d: ...
     def XAxis(self) -> gp_Ax2d: 
         """
         Returns an axis, for which - the origin is that of this coordinate system, and - the unit vector is either the "X Direction" of this coordinate system. Note: the result is the "X Axis" of this coordinate system.
@@ -681,13 +702,13 @@ class gp_Ax22d():
         Returns the "YDirection" of <me>.
         """
     @overload
-    def __init__(self,P : gp_Pnt2d,Vx : gp_Dir2d,Vy : gp_Dir2d) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,A : gp_Ax2d,Sense : bool=True) -> None: ...
     @overload
     def __init__(self,P : gp_Pnt2d,V : gp_Dir2d,Sense : bool=True) -> None: ...
     @overload
-    def __init__(self,A : gp_Ax2d,Sense : bool=True) -> None: ...
+    def __init__(self,P : gp_Pnt2d,Vx : gp_Dir2d,Vy : gp_Dir2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class gp_Ax2d():
     """
@@ -704,6 +725,10 @@ class gp_Ax2d():
         Returns the direction of <me>.
 
         Returns the direction of <me>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def IsCoaxial(self,Other : gp_Ax2d,AngularTolerance : float,LinearTolerance : float) -> bool: 
         """
@@ -734,23 +759,23 @@ class gp_Ax2d():
         Returns the origin of <me>.
         """
     @overload
-    def Mirror(self,A : gp_Ax2d) -> None: 
+    def Mirror(self,P : gp_Pnt2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Mirror(self,P : gp_Pnt2d) -> None: ...
+    def Mirror(self,A : gp_Ax2d) -> None: ...
     @overload
-    def Mirrored(self,A : gp_Ax2d) -> gp_Ax2d: 
+    def Mirrored(self,P : gp_Pnt2d) -> gp_Ax2d: 
         """
         Performs the symmetrical transformation of an axis placement with respect to the point P which is the center of the symmetry.
 
         Performs the symmetrical transformation of an axis placement with respect to an axis placement which is the axis of the symmetry.
         """
     @overload
-    def Mirrored(self,P : gp_Pnt2d) -> gp_Ax2d: ...
+    def Mirrored(self,A : gp_Ax2d) -> gp_Ax2d: ...
     def Reverse(self) -> None: 
         """
         Reverses the direction of <me> and assigns the result to this axis.
@@ -792,14 +817,14 @@ class gp_Ax2d():
         Changes the direction of <me>.
         """
     @overload
-    def SetLocation(self,Locat : gp_Pnt2d) -> None: 
+    def SetLocation(self,P : gp_Pnt2d) -> None: 
         """
         Changes the "Location" point (origin) of <me>.
 
         Changes the "Location" point (origin) of <me>.
         """
     @overload
-    def SetLocation(self,P : gp_Pnt2d) -> None: ...
+    def SetLocation(self,Locat : gp_Pnt2d) -> None: ...
     def Transform(self,T : gp_Trsf2d) -> None: 
         """
         None
@@ -839,9 +864,9 @@ class gp_Ax2d():
     @overload
     def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Ax2d: ...
     @overload
-    def __init__(self,P : gp_Pnt2d,V : gp_Dir2d) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : gp_Pnt2d,V : gp_Dir2d) -> None: ...
     pass
 class gp_Ax3():
     """
@@ -877,8 +902,16 @@ class gp_Ax3():
 
         Returns the main direction of <me>.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def InitFromJson(self,theSStream : Any,theStreamPos : int) -> bool: 
+        """
+        Inits the content of me from the stream
+        """
     @overload
-    def IsCoplanar(self,Other : gp_Ax3,LinearTolerance : float,AngularTolerance : float) -> bool: 
+    def IsCoplanar(self,A1 : gp_Ax1,LinearTolerance : float,AngularTolerance : float) -> bool: 
         """
         Returns True if . the distance between the "Location" point of <me> and <Other> is lower or equal to LinearTolerance and . the distance between the "Location" point of <Other> and <me> is lower or equal to LinearTolerance and . the main direction of <me> and the main direction of <Other> are parallel (same or opposite orientation).
 
@@ -889,7 +922,7 @@ class gp_Ax3():
         Returns True if . the distance between <me> and the "Location" point of A1 is lower of equal to LinearTolerance and . the distance between A1 and the "Location" point of <me> is lower or equal to LinearTolerance and . the main direction of <me> and the direction of A1 are normal.
         """
     @overload
-    def IsCoplanar(self,A1 : gp_Ax1,LinearTolerance : float,AngularTolerance : float) -> bool: ...
+    def IsCoplanar(self,Other : gp_Ax3,LinearTolerance : float,AngularTolerance : float) -> bool: ...
     def Location(self) -> gp_Pnt: 
         """
         Returns the "Location" point (origin) of <me>.
@@ -906,9 +939,9 @@ class gp_Ax3():
         None
         """
     @overload
-    def Mirror(self,A1 : gp_Ax1) -> None: ...
-    @overload
     def Mirror(self,P : gp_Pnt) -> None: ...
+    @overload
+    def Mirror(self,A1 : gp_Ax1) -> None: ...
     @overload
     def Mirrored(self,A2 : gp_Ax2) -> gp_Ax3: 
         """
@@ -1002,7 +1035,7 @@ class gp_Ax3():
     @overload
     def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
     @overload
-    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Ax3: 
+    def Translated(self,V : gp_Vec) -> gp_Ax3: 
         """
         Translates an axis plaxement in the direction of the vector <V>. The magnitude of the translation is the vector's magnitude.
 
@@ -1013,7 +1046,7 @@ class gp_Ax3():
         Translates an axis placement from the point <P1> to the point <P2>.
         """
     @overload
-    def Translated(self,V : gp_Vec) -> gp_Ax3: ...
+    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Ax3: ...
     def XDirection(self) -> gp_Dir: 
         """
         Returns the "XDirection" of <me>.
@@ -1045,13 +1078,13 @@ class gp_Ax3():
         Reverses the Z direction of <me>.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,P : gp_Pnt,V : gp_Dir) -> None: ...
     @overload
     def __init__(self,P : gp_Pnt,N : gp_Dir,Vx : gp_Dir) -> None: ...
     @overload
-    def __init__(self,P : gp_Pnt,V : gp_Dir) -> None: ...
-    @overload
     def __init__(self,A : gp_Ax2) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class gp_Circ():
     """
@@ -1094,7 +1127,7 @@ class gp_Circ():
         Returns the center of the circle. It is the "Location" point of the local coordinate system of the circle
         """
     @overload
-    def Mirror(self,P : gp_Pnt) -> None: 
+    def Mirror(self,A2 : gp_Ax2) -> None: 
         """
         None
 
@@ -1103,11 +1136,11 @@ class gp_Circ():
         None
         """
     @overload
-    def Mirror(self,A2 : gp_Ax2) -> None: ...
+    def Mirror(self,P : gp_Pnt) -> None: ...
     @overload
     def Mirror(self,A1 : gp_Ax1) -> None: ...
     @overload
-    def Mirrored(self,P : gp_Pnt) -> gp_Circ: 
+    def Mirrored(self,A1 : gp_Ax1) -> gp_Circ: 
         """
         Performs the symmetrical transformation of a circle with respect to the point P which is the center of the symmetry.
 
@@ -1116,9 +1149,9 @@ class gp_Circ():
         Performs the symmetrical transformation of a circle with respect to a plane. The axis placement A2 locates the plane of the of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirrored(self,A2 : gp_Ax2) -> gp_Circ: ...
+    def Mirrored(self,P : gp_Pnt) -> gp_Circ: ...
     @overload
-    def Mirrored(self,A1 : gp_Ax1) -> gp_Circ: ...
+    def Mirrored(self,A2 : gp_Ax2) -> gp_Circ: ...
     def Position(self) -> gp_Ax2: 
         """
         Returns the position of the circle. It is the local coordinate system of the circle.
@@ -1174,14 +1207,14 @@ class gp_Circ():
         Changes the position of the circle.
         """
     @overload
-    def SetRadius(self,R : float) -> None: 
+    def SetRadius(self,Radius : float) -> None: 
         """
         Modifies the radius of this circle. Warning. This class does not prevent the creation of a circle where Radius is null. Exceptions Standard_ConstructionError if Radius is negative.
 
         Modifies the radius of this circle. Warning. This class does not prevent the creation of a circle where Radius is null. Exceptions Standard_ConstructionError if Radius is negative.
         """
     @overload
-    def SetRadius(self,Radius : float) -> None: ...
+    def SetRadius(self,R : float) -> None: ...
     def SquareDistance(self,P : gp_Pnt) -> float: 
         """
         Computes the square distance between <me> and the point P.
@@ -1201,7 +1234,7 @@ class gp_Circ():
         Transforms a circle with the transformation T from class Trsf.
         """
     @overload
-    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: 
+    def Translate(self,V : gp_Vec) -> None: 
         """
         None
 
@@ -1212,9 +1245,9 @@ class gp_Circ():
         None
         """
     @overload
-    def Translate(self,V : gp_Vec) -> None: ...
+    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
     @overload
-    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Circ: 
+    def Translated(self,V : gp_Vec) -> gp_Circ: 
         """
         Translates a circle in the direction of the vector V. The magnitude of the translation is the vector's magnitude.
 
@@ -1225,7 +1258,7 @@ class gp_Circ():
         Translates a circle from the point P1 to the point P2.
         """
     @overload
-    def Translated(self,V : gp_Vec) -> gp_Circ: ...
+    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Circ: ...
     def XAxis(self) -> gp_Ax1: 
         """
         Returns the "XAxis" of the circle. This axis is perpendicular to the axis of the conic. This axis and the "Yaxis" define the plane of the conic.
@@ -1239,9 +1272,9 @@ class gp_Circ():
         Returns the "YAxis" of the circle. This axis and the "Xaxis" define the plane of the conic. The "YAxis" is perpendicular to the "Xaxis".
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,A2 : gp_Ax2,Radius : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class gp_Circ2d():
     """
@@ -1296,14 +1329,14 @@ class gp_Circ2d():
         Returns the location point (center) of the circle.
         """
     @overload
-    def Mirror(self,A : gp_Ax2d) -> None: 
+    def Mirror(self,P : gp_Pnt2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Mirror(self,P : gp_Pnt2d) -> None: ...
+    def Mirror(self,A : gp_Ax2d) -> None: ...
     @overload
     def Mirrored(self,A : gp_Ax2d) -> gp_Circ2d: 
         """
@@ -1487,7 +1520,7 @@ class gp_Cone():
         returns the "Location" point of the cone.
         """
     @overload
-    def Mirror(self,P : gp_Pnt) -> None: 
+    def Mirror(self,A1 : gp_Ax1) -> None: 
         """
         None
 
@@ -1496,11 +1529,11 @@ class gp_Cone():
         None
         """
     @overload
-    def Mirror(self,A1 : gp_Ax1) -> None: ...
+    def Mirror(self,P : gp_Pnt) -> None: ...
     @overload
     def Mirror(self,A2 : gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A2 : gp_Ax2) -> gp_Cone: 
+    def Mirrored(self,P : gp_Pnt) -> gp_Cone: 
         """
         Performs the symmetrical transformation of a cone with respect to the point P which is the center of the symmetry.
 
@@ -1509,7 +1542,7 @@ class gp_Cone():
         Performs the symmetrical transformation of a cone with respect to a plane. The axis placement A2 locates the plane of the of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirrored(self,P : gp_Pnt) -> gp_Cone: ...
+    def Mirrored(self,A2 : gp_Ax2) -> gp_Cone: ...
     @overload
     def Mirrored(self,A1 : gp_Ax1) -> gp_Cone: ...
     def Position(self) -> gp_Ax3: 
@@ -1610,7 +1643,7 @@ class gp_Cone():
     @overload
     def Translate(self,V : gp_Vec) -> None: ...
     @overload
-    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Cone: 
+    def Translated(self,V : gp_Vec) -> gp_Cone: 
         """
         Translates a cone in the direction of the vector V. The magnitude of the translation is the vector's magnitude.
 
@@ -1621,7 +1654,7 @@ class gp_Cone():
         Translates a cone from the point P1 to the point P2.
         """
     @overload
-    def Translated(self,V : gp_Vec) -> gp_Cone: ...
+    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Cone: ...
     def UReverse(self) -> None: 
         """
         Reverses the U parametrization of the cone reversing the YAxis.
@@ -1678,7 +1711,7 @@ class gp_Cylinder():
         Returns the "Location" point of the cylinder.
         """
     @overload
-    def Mirror(self,P : gp_Pnt) -> None: 
+    def Mirror(self,A2 : gp_Ax2) -> None: 
         """
         None
 
@@ -1689,7 +1722,7 @@ class gp_Cylinder():
     @overload
     def Mirror(self,A1 : gp_Ax1) -> None: ...
     @overload
-    def Mirror(self,A2 : gp_Ax2) -> None: ...
+    def Mirror(self,P : gp_Pnt) -> None: ...
     @overload
     def Mirrored(self,A2 : gp_Ax2) -> gp_Cylinder: 
         """
@@ -1776,7 +1809,7 @@ class gp_Cylinder():
         Transforms a cylinder with the transformation T from class Trsf.
         """
     @overload
-    def Translate(self,V : gp_Vec) -> None: 
+    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: 
         """
         None
 
@@ -1787,9 +1820,9 @@ class gp_Cylinder():
         None
         """
     @overload
-    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
+    def Translate(self,V : gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : gp_Vec) -> gp_Cylinder: 
+    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Cylinder: 
         """
         Translates a cylinder in the direction of the vector V. The magnitude of the translation is the vector's magnitude.
 
@@ -1800,7 +1833,7 @@ class gp_Cylinder():
         Translates a cylinder from the point P1 to the point P2.
         """
     @overload
-    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Cylinder: ...
+    def Translated(self,V : gp_Vec) -> gp_Cylinder: ...
     def UReverse(self) -> None: 
         """
         Reverses the U parametrization of the cylinder reversing the YAxis.
@@ -1843,7 +1876,7 @@ class gp_Dir():
         Computes the angular value between <me> and <Other>. <VRef> is the direction of reference normal to <me> and <Other> and its orientation gives the positive sense of rotation. If the cross product <me> ^ <Other> has the same orientation as <VRef> the angular value is positive else negative. Returns the angular value in the range -PI and PI (in radians). Raises DomainError if <me> and <Other> are not parallel this exception is raised when <VRef> is in the same plane as <me> and <Other> The tolerance criterion is Resolution from package gp.
         """
     @overload
-    def Coord(self) -> Tuple[float, float, float]: 
+    def Coord(self,Index : int) -> float: 
         """
         Returns the coordinate of range Index : Index = 1 => X is returned Index = 2 => Y is returned Index = 3 => Z is returned Exceptions Standard_OutOfRange if Index is not 1, 2, or 3.
 
@@ -1854,7 +1887,7 @@ class gp_Dir():
         Returns for the unit vector its three coordinates Xv, Yv, and Zv.
         """
     @overload
-    def Coord(self,Index : int) -> float: ...
+    def Coord(self) -> Tuple[float, float, float]: ...
     def Cross(self,Right : gp_Dir) -> None: 
         """
         Computes the cross product between two directions Raises the exception ConstructionError if the two directions are parallel because the computed vector cannot be normalized to create a direction.
@@ -1890,6 +1923,14 @@ class gp_Dir():
         Computes the triple scalar product <me> * (V1 ^ V2). Warnings : The computed vector V1' = V1 ^ V2 is not normalized to create a unitary vector. So this method never raises an exception even if V1 and V2 are parallel.
 
         Computes the triple scalar product <me> * (V1 ^ V2). Warnings : The computed vector V1' = V1 ^ V2 is not normalized to create a unitary vector. So this method never raises an exception even if V1 and V2 are parallel.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def InitFromJson(self,theSStream : Any,theStreamPos : int) -> bool: 
+        """
+        Inits the content of me from the stream
         """
     def IsEqual(self,Other : gp_Dir,AngularTolerance : float) -> bool: 
         """
@@ -1929,7 +1970,7 @@ class gp_Dir():
     @overload
     def Mirror(self,V : gp_Dir) -> None: ...
     @overload
-    def Mirrored(self,V : gp_Dir) -> gp_Dir: 
+    def Mirrored(self,A2 : gp_Ax2) -> gp_Dir: 
         """
         Performs the symmetrical transformation of a direction with respect to the direction V which is the center of the symmetry.
 
@@ -1938,9 +1979,9 @@ class gp_Dir():
         Performs the symmetrical transformation of a direction with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirrored(self,A1 : gp_Ax1) -> gp_Dir: ...
+    def Mirrored(self,V : gp_Dir) -> gp_Dir: ...
     @overload
-    def Mirrored(self,A2 : gp_Ax2) -> gp_Dir: ...
+    def Mirrored(self,A1 : gp_Ax1) -> gp_Dir: ...
     def Reverse(self) -> None: 
         """
         None
@@ -2040,13 +2081,13 @@ class gp_Dir():
         Returns the Z coordinate for a unit vector.
         """
     @overload
-    def __init__(self,Xv : float,Yv : float,Zv : float) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,Coord : gp_XYZ) -> None: ...
+    def __init__(self,Xv : float,Yv : float,Zv : float) -> None: ...
     @overload
     def __init__(self,V : gp_Vec) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,Coord : gp_XYZ) -> None: ...
     def __ipow__(self,Right : gp_Dir) -> None: 
         """
         None
@@ -2100,6 +2141,10 @@ class gp_Dir2d():
         Computes the scalar product
 
         Computes the scalar product
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def IsEqual(self,Other : gp_Dir2d,AngularTolerance : float) -> bool: 
         """
@@ -2232,11 +2277,11 @@ class gp_Dir2d():
     @overload
     def __init__(self,V : gp_Vec2d) -> None: ...
     @overload
-    def __init__(self,Coord : gp_XY) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Xv : float,Yv : float) -> None: ...
+    @overload
+    def __init__(self,Coord : gp_XY) -> None: ...
     def __mul__(self,Other : gp_Dir2d) -> float: 
         """
         None
@@ -2325,7 +2370,7 @@ class gp_Elips():
         Returns the minor radius of the ellipse.
         """
     @overload
-    def Mirror(self,P : gp_Pnt) -> None: 
+    def Mirror(self,A1 : gp_Ax1) -> None: 
         """
         None
 
@@ -2333,12 +2378,12 @@ class gp_Elips():
 
         None
         """
+    @overload
+    def Mirror(self,P : gp_Pnt) -> None: ...
     @overload
     def Mirror(self,A2 : gp_Ax2) -> None: ...
     @overload
-    def Mirror(self,A1 : gp_Ax1) -> None: ...
-    @overload
-    def Mirrored(self,P : gp_Pnt) -> gp_Elips: 
+    def Mirrored(self,A2 : gp_Ax2) -> gp_Elips: 
         """
         Performs the symmetrical transformation of an ellipse with respect to the point P which is the center of the symmetry.
 
@@ -2347,9 +2392,9 @@ class gp_Elips():
         Performs the symmetrical transformation of an ellipse with respect to a plane. The axis placement A2 locates the plane of the symmetry (Location, XDirection, YDirection).
         """
     @overload
-    def Mirrored(self,A1 : gp_Ax1) -> gp_Elips: ...
+    def Mirrored(self,P : gp_Pnt) -> gp_Elips: ...
     @overload
-    def Mirrored(self,A2 : gp_Ax2) -> gp_Elips: ...
+    def Mirrored(self,A1 : gp_Ax1) -> gp_Elips: ...
     def Parameter(self) -> float: 
         """
         Returns p = (1 - e * e) * MajorRadius where e is the eccentricity of the ellipse. Returns 0 if MajorRadius = 0
@@ -2408,14 +2453,14 @@ class gp_Elips():
     @overload
     def SetMajorRadius(self,R : float) -> None: ...
     @overload
-    def SetMinorRadius(self,R : float) -> None: 
+    def SetMinorRadius(self,MinorRadius : float) -> None: 
         """
         The minor radius of the ellipse is on the "YAxis" (minor axis) of the ellipse. Raises ConstructionError if MinorRadius > MajorRadius or MinorRadius < 0.
 
         The minor radius of the ellipse is on the "YAxis" (minor axis) of the ellipse. Raises ConstructionError if MinorRadius > MajorRadius or MinorRadius < 0.
         """
     @overload
-    def SetMinorRadius(self,MinorRadius : float) -> None: ...
+    def SetMinorRadius(self,R : float) -> None: ...
     def SetPosition(self,A2 : gp_Ax2) -> None: 
         """
         Modifies this ellipse, by redefining its local coordinate so that it becomes A2e.
@@ -2473,9 +2518,9 @@ class gp_Elips():
         Returns the "YAxis" of the ellipse whose unit vector is the "X Direction" or the "Y Direction" of the local coordinate system of this ellipse. This is the minor axis of the ellipse.
         """
     @overload
-    def __init__(self,A2 : gp_Ax2,MajorRadius : float,MinorRadius : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,A2 : gp_Ax2,MajorRadius : float,MinorRadius : float) -> None: ...
     pass
 class gp_Elips2d():
     """
@@ -2679,7 +2724,7 @@ class gp_Elips2d():
     @overload
     def Translate(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: ...
     @overload
-    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Elips2d: 
+    def Translated(self,V : gp_Vec2d) -> gp_Elips2d: 
         """
         Translates a ellipse in the direction of the vector V. The magnitude of the translation is the vector's magnitude.
 
@@ -2690,7 +2735,7 @@ class gp_Elips2d():
         Translates a ellipse from the point P1 to the point P2.
         """
     @overload
-    def Translated(self,V : gp_Vec2d) -> gp_Elips2d: ...
+    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Elips2d: ...
     def XAxis(self) -> gp_Ax2d: 
         """
         Returns the major axis of the ellipse.
@@ -2704,9 +2749,9 @@ class gp_Elips2d():
         Returns the minor axis of the ellipse. Reverses the direction of the circle.
         """
     @overload
-    def __init__(self,MajorAxis : gp_Ax2d,MajorRadius : float,MinorRadius : float,Sense : bool=True) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,MajorAxis : gp_Ax2d,MajorRadius : float,MinorRadius : float,Sense : bool=True) -> None: ...
     @overload
     def __init__(self,A : gp_Ax22d,MajorRadius : float,MinorRadius : float) -> None: ...
     pass
@@ -2768,49 +2813,61 @@ class gp_EulerSequence():
 
       gp_Intrinsic_ZYZ
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    __entries: dict # value = {'gp_EulerAngles': (gp_EulerSequence.gp_EulerAngles, None), 'gp_YawPitchRoll': (gp_EulerSequence.gp_YawPitchRoll, None), 'gp_Extrinsic_XYZ': (gp_EulerSequence.gp_Extrinsic_XYZ, None), 'gp_Extrinsic_XZY': (gp_EulerSequence.gp_Extrinsic_XZY, None), 'gp_Extrinsic_YZX': (gp_EulerSequence.gp_Extrinsic_YZX, None), 'gp_Extrinsic_YXZ': (gp_EulerSequence.gp_Extrinsic_YXZ, None), 'gp_Extrinsic_ZXY': (gp_EulerSequence.gp_Extrinsic_ZXY, None), 'gp_Extrinsic_ZYX': (gp_EulerSequence.gp_Extrinsic_ZYX, None), 'gp_Intrinsic_XYZ': (gp_EulerSequence.gp_Intrinsic_XYZ, None), 'gp_Intrinsic_XZY': (gp_EulerSequence.gp_Intrinsic_XZY, None), 'gp_Intrinsic_YZX': (gp_EulerSequence.gp_Intrinsic_YZX, None), 'gp_Intrinsic_YXZ': (gp_EulerSequence.gp_Intrinsic_YXZ, None), 'gp_Intrinsic_ZXY': (gp_EulerSequence.gp_Intrinsic_ZXY, None), 'gp_Intrinsic_ZYX': (gp_EulerSequence.gp_Intrinsic_ZYX, None), 'gp_Extrinsic_XYX': (gp_EulerSequence.gp_Extrinsic_XYX, None), 'gp_Extrinsic_XZX': (gp_EulerSequence.gp_Extrinsic_XZX, None), 'gp_Extrinsic_YZY': (gp_EulerSequence.gp_Extrinsic_YZY, None), 'gp_Extrinsic_YXY': (gp_EulerSequence.gp_Extrinsic_YXY, None), 'gp_Extrinsic_ZYZ': (gp_EulerSequence.gp_Extrinsic_ZYZ, None), 'gp_Extrinsic_ZXZ': (gp_EulerSequence.gp_Extrinsic_ZXZ, None), 'gp_Intrinsic_XYX': (gp_EulerSequence.gp_Intrinsic_XYX, None), 'gp_Intrinsic_XZX': (gp_EulerSequence.gp_Intrinsic_XZX, None), 'gp_Intrinsic_YZY': (gp_EulerSequence.gp_Intrinsic_YZY, None), 'gp_Intrinsic_YXY': (gp_EulerSequence.gp_Intrinsic_YXY, None), 'gp_Intrinsic_ZXZ': (gp_EulerSequence.gp_Intrinsic_ZXZ, None), 'gp_Intrinsic_ZYZ': (gp_EulerSequence.gp_Intrinsic_ZYZ, None)}
-    __members__: dict # value = {'gp_EulerAngles': gp_EulerSequence.gp_EulerAngles, 'gp_YawPitchRoll': gp_EulerSequence.gp_YawPitchRoll, 'gp_Extrinsic_XYZ': gp_EulerSequence.gp_Extrinsic_XYZ, 'gp_Extrinsic_XZY': gp_EulerSequence.gp_Extrinsic_XZY, 'gp_Extrinsic_YZX': gp_EulerSequence.gp_Extrinsic_YZX, 'gp_Extrinsic_YXZ': gp_EulerSequence.gp_Extrinsic_YXZ, 'gp_Extrinsic_ZXY': gp_EulerSequence.gp_Extrinsic_ZXY, 'gp_Extrinsic_ZYX': gp_EulerSequence.gp_Extrinsic_ZYX, 'gp_Intrinsic_XYZ': gp_EulerSequence.gp_Intrinsic_XYZ, 'gp_Intrinsic_XZY': gp_EulerSequence.gp_Intrinsic_XZY, 'gp_Intrinsic_YZX': gp_EulerSequence.gp_Intrinsic_YZX, 'gp_Intrinsic_YXZ': gp_EulerSequence.gp_Intrinsic_YXZ, 'gp_Intrinsic_ZXY': gp_EulerSequence.gp_Intrinsic_ZXY, 'gp_Intrinsic_ZYX': gp_EulerSequence.gp_Intrinsic_ZYX, 'gp_Extrinsic_XYX': gp_EulerSequence.gp_Extrinsic_XYX, 'gp_Extrinsic_XZX': gp_EulerSequence.gp_Extrinsic_XZX, 'gp_Extrinsic_YZY': gp_EulerSequence.gp_Extrinsic_YZY, 'gp_Extrinsic_YXY': gp_EulerSequence.gp_Extrinsic_YXY, 'gp_Extrinsic_ZYZ': gp_EulerSequence.gp_Extrinsic_ZYZ, 'gp_Extrinsic_ZXZ': gp_EulerSequence.gp_Extrinsic_ZXZ, 'gp_Intrinsic_XYX': gp_EulerSequence.gp_Intrinsic_XYX, 'gp_Intrinsic_XZX': gp_EulerSequence.gp_Intrinsic_XZX, 'gp_Intrinsic_YZY': gp_EulerSequence.gp_Intrinsic_YZY, 'gp_Intrinsic_YXY': gp_EulerSequence.gp_Intrinsic_YXY, 'gp_Intrinsic_ZXZ': gp_EulerSequence.gp_Intrinsic_ZXZ, 'gp_Intrinsic_ZYZ': gp_EulerSequence.gp_Intrinsic_ZYZ}
-    gp_EulerAngles: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_EulerAngles
-    gp_Extrinsic_XYX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_XYX
-    gp_Extrinsic_XYZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_XYZ
-    gp_Extrinsic_XZX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_XZX
-    gp_Extrinsic_XZY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_XZY
-    gp_Extrinsic_YXY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_YXY
-    gp_Extrinsic_YXZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_YXZ
-    gp_Extrinsic_YZX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_YZX
-    gp_Extrinsic_YZY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_YZY
-    gp_Extrinsic_ZXY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_ZXY
-    gp_Extrinsic_ZXZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_ZXZ
-    gp_Extrinsic_ZYX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_ZYX
-    gp_Extrinsic_ZYZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_ZYZ
-    gp_Intrinsic_XYX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_XYX
-    gp_Intrinsic_XYZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_XYZ
-    gp_Intrinsic_XZX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_XZX
-    gp_Intrinsic_XZY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_XZY
-    gp_Intrinsic_YXY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_YXY
-    gp_Intrinsic_YXZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_YXZ
-    gp_Intrinsic_YZX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_YZX
-    gp_Intrinsic_YZY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_YZY
-    gp_Intrinsic_ZXY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_ZXY
-    gp_Intrinsic_ZXZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_ZXZ
-    gp_Intrinsic_ZYX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_ZYX
-    gp_Intrinsic_ZYZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_ZYZ
-    gp_YawPitchRoll: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_YawPitchRoll
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    __entries: dict # value = {'gp_EulerAngles': (<gp_EulerSequence.gp_EulerAngles: 0>, None), 'gp_YawPitchRoll': (<gp_EulerSequence.gp_YawPitchRoll: 1>, None), 'gp_Extrinsic_XYZ': (<gp_EulerSequence.gp_Extrinsic_XYZ: 2>, None), 'gp_Extrinsic_XZY': (<gp_EulerSequence.gp_Extrinsic_XZY: 3>, None), 'gp_Extrinsic_YZX': (<gp_EulerSequence.gp_Extrinsic_YZX: 4>, None), 'gp_Extrinsic_YXZ': (<gp_EulerSequence.gp_Extrinsic_YXZ: 5>, None), 'gp_Extrinsic_ZXY': (<gp_EulerSequence.gp_Extrinsic_ZXY: 6>, None), 'gp_Extrinsic_ZYX': (<gp_EulerSequence.gp_Extrinsic_ZYX: 7>, None), 'gp_Intrinsic_XYZ': (<gp_EulerSequence.gp_Intrinsic_XYZ: 8>, None), 'gp_Intrinsic_XZY': (<gp_EulerSequence.gp_Intrinsic_XZY: 9>, None), 'gp_Intrinsic_YZX': (<gp_EulerSequence.gp_Intrinsic_YZX: 10>, None), 'gp_Intrinsic_YXZ': (<gp_EulerSequence.gp_Intrinsic_YXZ: 11>, None), 'gp_Intrinsic_ZXY': (<gp_EulerSequence.gp_Intrinsic_ZXY: 12>, None), 'gp_Intrinsic_ZYX': (<gp_EulerSequence.gp_Intrinsic_ZYX: 13>, None), 'gp_Extrinsic_XYX': (<gp_EulerSequence.gp_Extrinsic_XYX: 14>, None), 'gp_Extrinsic_XZX': (<gp_EulerSequence.gp_Extrinsic_XZX: 15>, None), 'gp_Extrinsic_YZY': (<gp_EulerSequence.gp_Extrinsic_YZY: 16>, None), 'gp_Extrinsic_YXY': (<gp_EulerSequence.gp_Extrinsic_YXY: 17>, None), 'gp_Extrinsic_ZYZ': (<gp_EulerSequence.gp_Extrinsic_ZYZ: 18>, None), 'gp_Extrinsic_ZXZ': (<gp_EulerSequence.gp_Extrinsic_ZXZ: 19>, None), 'gp_Intrinsic_XYX': (<gp_EulerSequence.gp_Intrinsic_XYX: 20>, None), 'gp_Intrinsic_XZX': (<gp_EulerSequence.gp_Intrinsic_XZX: 21>, None), 'gp_Intrinsic_YZY': (<gp_EulerSequence.gp_Intrinsic_YZY: 22>, None), 'gp_Intrinsic_YXY': (<gp_EulerSequence.gp_Intrinsic_YXY: 23>, None), 'gp_Intrinsic_ZXZ': (<gp_EulerSequence.gp_Intrinsic_ZXZ: 24>, None), 'gp_Intrinsic_ZYZ': (<gp_EulerSequence.gp_Intrinsic_ZYZ: 25>, None)}
+    __members__: dict # value = {'gp_EulerAngles': <gp_EulerSequence.gp_EulerAngles: 0>, 'gp_YawPitchRoll': <gp_EulerSequence.gp_YawPitchRoll: 1>, 'gp_Extrinsic_XYZ': <gp_EulerSequence.gp_Extrinsic_XYZ: 2>, 'gp_Extrinsic_XZY': <gp_EulerSequence.gp_Extrinsic_XZY: 3>, 'gp_Extrinsic_YZX': <gp_EulerSequence.gp_Extrinsic_YZX: 4>, 'gp_Extrinsic_YXZ': <gp_EulerSequence.gp_Extrinsic_YXZ: 5>, 'gp_Extrinsic_ZXY': <gp_EulerSequence.gp_Extrinsic_ZXY: 6>, 'gp_Extrinsic_ZYX': <gp_EulerSequence.gp_Extrinsic_ZYX: 7>, 'gp_Intrinsic_XYZ': <gp_EulerSequence.gp_Intrinsic_XYZ: 8>, 'gp_Intrinsic_XZY': <gp_EulerSequence.gp_Intrinsic_XZY: 9>, 'gp_Intrinsic_YZX': <gp_EulerSequence.gp_Intrinsic_YZX: 10>, 'gp_Intrinsic_YXZ': <gp_EulerSequence.gp_Intrinsic_YXZ: 11>, 'gp_Intrinsic_ZXY': <gp_EulerSequence.gp_Intrinsic_ZXY: 12>, 'gp_Intrinsic_ZYX': <gp_EulerSequence.gp_Intrinsic_ZYX: 13>, 'gp_Extrinsic_XYX': <gp_EulerSequence.gp_Extrinsic_XYX: 14>, 'gp_Extrinsic_XZX': <gp_EulerSequence.gp_Extrinsic_XZX: 15>, 'gp_Extrinsic_YZY': <gp_EulerSequence.gp_Extrinsic_YZY: 16>, 'gp_Extrinsic_YXY': <gp_EulerSequence.gp_Extrinsic_YXY: 17>, 'gp_Extrinsic_ZYZ': <gp_EulerSequence.gp_Extrinsic_ZYZ: 18>, 'gp_Extrinsic_ZXZ': <gp_EulerSequence.gp_Extrinsic_ZXZ: 19>, 'gp_Intrinsic_XYX': <gp_EulerSequence.gp_Intrinsic_XYX: 20>, 'gp_Intrinsic_XZX': <gp_EulerSequence.gp_Intrinsic_XZX: 21>, 'gp_Intrinsic_YZY': <gp_EulerSequence.gp_Intrinsic_YZY: 22>, 'gp_Intrinsic_YXY': <gp_EulerSequence.gp_Intrinsic_YXY: 23>, 'gp_Intrinsic_ZXZ': <gp_EulerSequence.gp_Intrinsic_ZXZ: 24>, 'gp_Intrinsic_ZYZ': <gp_EulerSequence.gp_Intrinsic_ZYZ: 25>}
+    gp_EulerAngles: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_EulerAngles: 0>
+    gp_Extrinsic_XYX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_XYX: 14>
+    gp_Extrinsic_XYZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_XYZ: 2>
+    gp_Extrinsic_XZX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_XZX: 15>
+    gp_Extrinsic_XZY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_XZY: 3>
+    gp_Extrinsic_YXY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_YXY: 17>
+    gp_Extrinsic_YXZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_YXZ: 5>
+    gp_Extrinsic_YZX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_YZX: 4>
+    gp_Extrinsic_YZY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_YZY: 16>
+    gp_Extrinsic_ZXY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_ZXY: 6>
+    gp_Extrinsic_ZXZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_ZXZ: 19>
+    gp_Extrinsic_ZYX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_ZYX: 7>
+    gp_Extrinsic_ZYZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_ZYZ: 18>
+    gp_Intrinsic_XYX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_XYX: 20>
+    gp_Intrinsic_XYZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_XYZ: 8>
+    gp_Intrinsic_XZX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_XZX: 21>
+    gp_Intrinsic_XZY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_XZY: 9>
+    gp_Intrinsic_YXY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_YXY: 23>
+    gp_Intrinsic_YXZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_YXZ: 11>
+    gp_Intrinsic_YZX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_YZX: 10>
+    gp_Intrinsic_YZY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_YZY: 22>
+    gp_Intrinsic_ZXY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_ZXY: 12>
+    gp_Intrinsic_ZXZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_ZXZ: 24>
+    gp_Intrinsic_ZYX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_ZYX: 13>
+    gp_Intrinsic_ZYZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_ZYZ: 25>
+    gp_YawPitchRoll: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_YawPitchRoll: 1>
     pass
 class gp_GTrsf():
     """
     Defines a non-persistent transformation in 3D space. This transformation is a general transformation. It can be a Trsf from gp, an affinity, or you can define your own transformation giving the matrix of transformation.
     """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def Form(self) -> gp_TrsfForm: 
         """
         Returns the nature of the transformation. It can be an identity transformation, a rotation, a translation, a mirror transformation (relative to a point, an axis or a plane), a scaling transformation, a compound transformation or some other type of transformation.
@@ -2903,7 +2960,7 @@ class gp_GTrsf():
         Replaces the vectorial part of this transformation by Matrix.
         """
     @overload
-    def Transforms(self,Coord : gp_XYZ) -> None: 
+    def Transforms(self) -> Tuple[float, float, float]: 
         """
         None
 
@@ -2914,7 +2971,7 @@ class gp_GTrsf():
         Transforms a triplet XYZ with a GTrsf.
         """
     @overload
-    def Transforms(self) -> Tuple[float, float, float]: ...
+    def Transforms(self,Coord : gp_XYZ) -> None: ...
     def TranslationPart(self) -> gp_XYZ: 
         """
         Returns the translation part of the GTrsf.
@@ -2946,9 +3003,9 @@ class gp_GTrsf():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,M : gp_Mat,V : gp_XYZ) -> None: ...
-    @overload
     def __init__(self,T : gp_Trsf) -> None: ...
+    @overload
+    def __init__(self,M : gp_Mat,V : gp_XYZ) -> None: ...
     def __mul__(self,T : gp_GTrsf) -> gp_GTrsf: 
         """
         None
@@ -3086,11 +3143,11 @@ class gp_GTrsf2d():
         None
         """
     @overload
+    def __init__(self,M : gp_Mat2d,V : gp_XY) -> None: ...
+    @overload
     def __init__(self,T : gp_Trsf2d) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,M : gp_Mat2d,V : gp_XY) -> None: ...
     def __mul__(self,T : gp_GTrsf2d) -> gp_GTrsf2d: 
         """
         None
@@ -3305,7 +3362,7 @@ class gp_Hypr():
         Transforms an hyperbola with the transformation T from class Trsf.
         """
     @overload
-    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: 
+    def Translate(self,V : gp_Vec) -> None: 
         """
         None
 
@@ -3316,7 +3373,7 @@ class gp_Hypr():
         None
         """
     @overload
-    def Translate(self,V : gp_Vec) -> None: ...
+    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
     @overload
     def Translated(self,V : gp_Vec) -> gp_Hypr: 
         """
@@ -3343,9 +3400,9 @@ class gp_Hypr():
         Computes an axis, whose - the origin is the center of this hyperbola, and - the unit vector is the "Y Direction" of the local coordinate system of this hyperbola. These axes are the minor axis (the "Y Axis") of this hyperbola
         """
     @overload
-    def __init__(self,A2 : gp_Ax2,MajorRadius : float,MinorRadius : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,A2 : gp_Ax2,MajorRadius : float,MinorRadius : float) -> None: ...
     pass
 class gp_Hypr2d():
     """
@@ -3560,7 +3617,7 @@ class gp_Hypr2d():
         Transforms an hyperbola with the transformation T from class Trsf2d.
         """
     @overload
-    def Translate(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: 
+    def Translate(self,V : gp_Vec2d) -> None: 
         """
         None
 
@@ -3571,9 +3628,9 @@ class gp_Hypr2d():
         None
         """
     @overload
-    def Translate(self,V : gp_Vec2d) -> None: ...
+    def Translate(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: ...
     @overload
-    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Hypr2d: 
+    def Translated(self,V : gp_Vec2d) -> gp_Hypr2d: 
         """
         Translates an hyperbola in the direction of the vector V. The magnitude of the translation is the vector's magnitude.
 
@@ -3584,7 +3641,7 @@ class gp_Hypr2d():
         Translates an hyperbola from the point P1 to the point P2.
         """
     @overload
-    def Translated(self,V : gp_Vec2d) -> gp_Hypr2d: ...
+    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Hypr2d: ...
     def XAxis(self) -> gp_Ax2d: 
         """
         Computes an axis whose - the origin is the center of this hyperbola, and - the unit vector is the "X Direction" or "Y Direction" respectively of the local coordinate system of this hyperbola Returns the major axis of the hyperbola.
@@ -3598,11 +3655,11 @@ class gp_Hypr2d():
         Computes an axis whose - the origin is the center of this hyperbola, and - the unit vector is the "X Direction" or "Y Direction" respectively of the local coordinate system of this hyperbola Returns the minor axis of the hyperbola.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,A : gp_Ax22d,MajorRadius : float,MinorRadius : float) -> None: ...
     @overload
     def __init__(self,MajorAxis : gp_Ax2d,MajorRadius : float,MinorRadius : float,Sense : bool=True) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class gp_Lin():
     """
@@ -3644,7 +3701,7 @@ class gp_Lin():
         Returns the location point (origin) of the line.
         """
     @overload
-    def Mirror(self,A1 : gp_Ax1) -> None: 
+    def Mirror(self,A2 : gp_Ax2) -> None: 
         """
         None
 
@@ -3653,7 +3710,7 @@ class gp_Lin():
         None
         """
     @overload
-    def Mirror(self,A2 : gp_Ax2) -> None: ...
+    def Mirror(self,A1 : gp_Ax1) -> None: ...
     @overload
     def Mirror(self,P : gp_Pnt) -> None: ...
     @overload
@@ -3666,9 +3723,9 @@ class gp_Lin():
         Performs the symmetrical transformation of a line with respect to a plane. The axis placement <A2> locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirrored(self,A2 : gp_Ax2) -> gp_Lin: ...
-    @overload
     def Mirrored(self,A1 : gp_Ax1) -> gp_Lin: ...
+    @overload
+    def Mirrored(self,A2 : gp_Ax2) -> gp_Lin: ...
     def Normal(self,P : gp_Pnt) -> gp_Lin: 
         """
         Computes the line normal to the direction of <me>, passing through the point P. Raises ConstructionError if the distance between <me> and the point P is lower or equal to Resolution from gp because there is an infinity of solutions in 3D space.
@@ -3736,7 +3793,7 @@ class gp_Lin():
         Complete redefinition of the line. The "Location" point of <A1> is the origin of the line. The "Direction" of <A1> is the direction of the line.
         """
     @overload
-    def SquareDistance(self,Other : gp_Lin) -> float: 
+    def SquareDistance(self,P : gp_Pnt) -> float: 
         """
         Computes the square distance between <me> and the point P.
 
@@ -3747,7 +3804,7 @@ class gp_Lin():
         Computes the square distance between two lines.
         """
     @overload
-    def SquareDistance(self,P : gp_Pnt) -> float: ...
+    def SquareDistance(self,Other : gp_Lin) -> float: ...
     def Transform(self,T : gp_Trsf) -> None: 
         """
         None
@@ -3761,7 +3818,7 @@ class gp_Lin():
         Transforms a line with the transformation T from class Trsf.
         """
     @overload
-    def Translate(self,V : gp_Vec) -> None: 
+    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: 
         """
         None
 
@@ -3772,7 +3829,7 @@ class gp_Lin():
         None
         """
     @overload
-    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
+    def Translate(self,V : gp_Vec) -> None: ...
     @overload
     def Translated(self,V : gp_Vec) -> gp_Lin: 
         """
@@ -3950,7 +4007,7 @@ class gp_Lin2d():
         Transforms a line with the transformation T from class Trsf2d.
         """
     @overload
-    def Translate(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: 
+    def Translate(self,V : gp_Vec2d) -> None: 
         """
         None
 
@@ -3961,9 +4018,9 @@ class gp_Lin2d():
         None
         """
     @overload
-    def Translate(self,V : gp_Vec2d) -> None: ...
+    def Translate(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: ...
     @overload
-    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Lin2d: 
+    def Translated(self,V : gp_Vec2d) -> gp_Lin2d: 
         """
         Translates a line in the direction of the vector V. The magnitude of the translation is the vector's magnitude.
 
@@ -3974,15 +4031,15 @@ class gp_Lin2d():
         Translates a line from the point P1 to the point P2.
         """
     @overload
-    def Translated(self,V : gp_Vec2d) -> gp_Lin2d: ...
-    @overload
-    def __init__(self,P : gp_Pnt2d,V : gp_Dir2d) -> None: ...
+    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Lin2d: ...
     @overload
     def __init__(self,A : float,B : float,C : float) -> None: ...
     @overload
+    def __init__(self,A : gp_Ax2d) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,A : gp_Ax2d) -> None: ...
+    def __init__(self,P : gp_Pnt2d,V : gp_Dir2d) -> None: ...
     pass
 class gp_Mat():
     """
@@ -4032,7 +4089,7 @@ class gp_Mat():
 
         Divides all the coefficients of the matrix by Scalar
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -4187,20 +4244,20 @@ class gp_Mat():
         None
         """
     @overload
-    def __imul__(self,Other : gp_Mat) -> None: 
+    def __imul__(self,Scalar : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def __imul__(self,Scalar : float) -> None: ...
+    def __imul__(self,Other : gp_Mat) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,a11 : float,a12 : float,a13 : float,a21 : float,a22 : float,a23 : float,a31 : float,a32 : float,a33 : float) -> None: ...
     @overload
     def __init__(self,Col1 : gp_XYZ,Col2 : gp_XYZ,Col3 : gp_XYZ) -> None: ...
     @overload
-    def __init__(self,a11 : float,a12 : float,a13 : float,a21 : float,a22 : float,a23 : float,a31 : float,a32 : float,a33 : float) -> None: ...
+    def __init__(self) -> None: ...
     def __isub__(self,Other : gp_Mat) -> None: 
         """
         None
@@ -4210,23 +4267,23 @@ class gp_Mat():
         None
         """
     @overload
-    def __mul__(self,Scalar : float) -> gp_Mat: 
+    def __mul__(self,Other : gp_Mat) -> gp_Mat: 
         """
         None
 
         None
         """
     @overload
-    def __mul__(self,Other : gp_Mat) -> gp_Mat: ...
+    def __mul__(self,Scalar : float) -> gp_Mat: ...
     @overload
-    def __rmul__(self,Scalar : float) -> gp_Mat: 
+    def __rmul__(self,Other : gp_Mat) -> gp_Mat: 
         """
         None
 
         None
         """
     @overload
-    def __rmul__(self,Other : gp_Mat) -> gp_Mat: ...
+    def __rmul__(self,Scalar : float) -> gp_Mat: ...
     def __sub__(self,Other : gp_Mat) -> gp_Mat: 
         """
         None
@@ -4301,7 +4358,7 @@ class gp_Mat2d():
         Returns true if this matrix is singular (and therefore, cannot be inverted). The Gauss LU decomposition is used to invert the matrix so the matrix is considered as singular if the largest pivot found is lower or equal to Resolution from gp.
         """
     @overload
-    def Multiplied(self,Other : gp_Mat2d) -> gp_Mat2d: 
+    def Multiplied(self,Scalar : float) -> gp_Mat2d: 
         """
         None
 
@@ -4312,7 +4369,7 @@ class gp_Mat2d():
         None
         """
     @overload
-    def Multiplied(self,Scalar : float) -> gp_Mat2d: ...
+    def Multiplied(self,Other : gp_Mat2d) -> gp_Mat2d: ...
     @overload
     def Multiply(self,Scalar : float) -> None: 
         """
@@ -4435,9 +4492,9 @@ class gp_Mat2d():
         None
         """
     @overload
-    def __init__(self,Col1 : gp_XY,Col2 : gp_XY) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Col1 : gp_XY,Col2 : gp_XY) -> None: ...
     def __isub__(self,Other : gp_Mat2d) -> None: 
         """
         None
@@ -4508,7 +4565,7 @@ class gp_Parab():
         Returns the vertex of the parabola. It is the "Location" point of the coordinate system of the parabola.
         """
     @overload
-    def Mirror(self,A2 : gp_Ax2) -> None: 
+    def Mirror(self,A1 : gp_Ax1) -> None: 
         """
         None
 
@@ -4517,11 +4574,11 @@ class gp_Parab():
         None
         """
     @overload
-    def Mirror(self,A1 : gp_Ax1) -> None: ...
+    def Mirror(self,A2 : gp_Ax2) -> None: ...
     @overload
     def Mirror(self,P : gp_Pnt) -> None: ...
     @overload
-    def Mirrored(self,A1 : gp_Ax1) -> gp_Parab: 
+    def Mirrored(self,P : gp_Pnt) -> gp_Parab: 
         """
         Performs the symmetrical transformation of a parabola with respect to the point P which is the center of the symmetry.
 
@@ -4530,7 +4587,7 @@ class gp_Parab():
         Performs the symmetrical transformation of a parabola with respect to a plane. The axis placement A2 locates the plane of the symmetry (Location, XDirection, YDirection).
         """
     @overload
-    def Mirrored(self,P : gp_Pnt) -> gp_Parab: ...
+    def Mirrored(self,A1 : gp_Ax1) -> gp_Parab: ...
     @overload
     def Mirrored(self,A2 : gp_Ax2) -> gp_Parab: ...
     def Parameter(self) -> float: 
@@ -4606,7 +4663,7 @@ class gp_Parab():
         Transforms a parabola with the transformation T from class Trsf.
         """
     @overload
-    def Translate(self,V : gp_Vec) -> None: 
+    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: 
         """
         None
 
@@ -4617,9 +4674,9 @@ class gp_Parab():
         None
         """
     @overload
-    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
+    def Translate(self,V : gp_Vec) -> None: ...
     @overload
-    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Parab: 
+    def Translated(self,V : gp_Vec) -> gp_Parab: 
         """
         Translates a parabola in the direction of the vector V. The magnitude of the translation is the vector's magnitude.
 
@@ -4630,7 +4687,7 @@ class gp_Parab():
         Translates a parabola from the point P1 to the point P2.
         """
     @overload
-    def Translated(self,V : gp_Vec) -> gp_Parab: ...
+    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Parab: ...
     def XAxis(self) -> gp_Ax1: 
         """
         Returns the symmetry axis of the parabola. The location point of the axis is the vertex of the parabola.
@@ -4644,11 +4701,11 @@ class gp_Parab():
         It is an axis parallel to the directrix of the parabola. The location point of this axis is the vertex of the parabola.
         """
     @overload
+    def __init__(self,D : gp_Ax1,F : gp_Pnt) -> None: ...
+    @overload
     def __init__(self,A2 : gp_Ax2,Focal : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,D : gp_Ax1,F : gp_Pnt) -> None: ...
     pass
 class gp_Parab2d():
     """
@@ -4695,14 +4752,14 @@ class gp_Parab2d():
         Returns the vertex of the parabola.
         """
     @overload
-    def Mirror(self,A : gp_Ax2d) -> None: 
+    def Mirror(self,P : gp_Pnt2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Mirror(self,P : gp_Pnt2d) -> None: ...
+    def Mirror(self,A : gp_Ax2d) -> None: ...
     def MirrorAxis(self) -> gp_Ax2d: 
         """
         Returns the symmetry axis of the parabola. The "Location" point of this axis is the vertex of the parabola.
@@ -4710,14 +4767,14 @@ class gp_Parab2d():
         Returns the symmetry axis of the parabola. The "Location" point of this axis is the vertex of the parabola.
         """
     @overload
-    def Mirrored(self,A : gp_Ax2d) -> gp_Parab2d: 
+    def Mirrored(self,P : gp_Pnt2d) -> gp_Parab2d: 
         """
         Performs the symmetrical transformation of a parabola with respect to the point P which is the center of the symmetry
 
         Performs the symmetrical transformation of a parabola with respect to an axis placement which is the axis of the symmetry.
         """
     @overload
-    def Mirrored(self,P : gp_Pnt2d) -> gp_Parab2d: ...
+    def Mirrored(self,A : gp_Ax2d) -> gp_Parab2d: ...
     def Parameter(self) -> float: 
         """
         Returns the distance between the focus and the directrix of the parabola.
@@ -4797,7 +4854,7 @@ class gp_Parab2d():
         Transforms an parabola with the transformation T from class Trsf2d.
         """
     @overload
-    def Translate(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: 
+    def Translate(self,V : gp_Vec2d) -> None: 
         """
         None
 
@@ -4808,9 +4865,9 @@ class gp_Parab2d():
         None
         """
     @overload
-    def Translate(self,V : gp_Vec2d) -> None: ...
+    def Translate(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: ...
     @overload
-    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Parab2d: 
+    def Translated(self,V : gp_Vec2d) -> gp_Parab2d: 
         """
         Translates a parabola in the direction of the vector V. The magnitude of the translation is the vector's magnitude.
 
@@ -4821,15 +4878,15 @@ class gp_Parab2d():
         Translates a parabola from the point P1 to the point P2.
         """
     @overload
-    def Translated(self,V : gp_Vec2d) -> gp_Parab2d: ...
+    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Parab2d: ...
     @overload
     def __init__(self,theAxes : gp_Ax22d,theFocalLength : float) -> None: ...
-    @overload
-    def __init__(self,theDirectrix : gp_Ax2d,theFocus : gp_Pnt2d,theSense : bool=True) -> None: ...
     @overload
     def __init__(self,theMirrorAxis : gp_Ax2d,theFocalLength : float,theSense : bool=True) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theDirectrix : gp_Ax2d,theFocus : gp_Pnt2d,theSense : bool=True) -> None: ...
     pass
 class gp_Pln():
     """
@@ -4848,7 +4905,7 @@ class gp_Pln():
         Returns the coefficients of the plane's cartesian equation : A * X + B * Y + C * Z + D = 0.
         """
     @overload
-    def Contains(self,P : gp_Pnt,LinearTolerance : float) -> bool: 
+    def Contains(self,L : gp_Lin,LinearTolerance : float,AngularTolerance : float) -> bool: 
         """
         Returns true if this plane contains the point P. This means that - the distance between point P and this plane is less than or equal to LinearTolerance, or - line L is normal to the "main Axis" of the local coordinate system of this plane, within the tolerance AngularTolerance, and the distance between the origin of line L and this plane is less than or equal to LinearTolerance.
 
@@ -4859,7 +4916,7 @@ class gp_Pln():
         Returns true if this plane contains the line L. This means that - the distance between point P and this plane is less than or equal to LinearTolerance, or - line L is normal to the "main Axis" of the local coordinate system of this plane, within the tolerance AngularTolerance, and the distance between the origin of line L and this plane is less than or equal to LinearTolerance.
         """
     @overload
-    def Contains(self,L : gp_Lin,LinearTolerance : float,AngularTolerance : float) -> bool: ...
+    def Contains(self,P : gp_Pnt,LinearTolerance : float) -> bool: ...
     def Direct(self) -> bool: 
         """
         returns true if the Ax3 is right handed.
@@ -4867,7 +4924,7 @@ class gp_Pln():
         returns true if the Ax3 is right handed.
         """
     @overload
-    def Distance(self,L : gp_Lin) -> float: 
+    def Distance(self,P : gp_Pnt) -> float: 
         """
         Computes the distance between <me> and the point <P>.
 
@@ -4882,9 +4939,13 @@ class gp_Pln():
         Computes the distance between two planes.
         """
     @overload
-    def Distance(self,P : gp_Pnt) -> float: ...
+    def Distance(self,L : gp_Lin) -> float: ...
     @overload
     def Distance(self,Other : gp_Pln) -> float: ...
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def Location(self) -> gp_Pnt: 
         """
         Returns the plane's location (origin).
@@ -4905,7 +4966,7 @@ class gp_Pln():
     @overload
     def Mirror(self,P : gp_Pnt) -> None: ...
     @overload
-    def Mirrored(self,A1 : gp_Ax1) -> gp_Pln: 
+    def Mirrored(self,A2 : gp_Ax2) -> gp_Pln: 
         """
         Performs the symmetrical transformation of a plane with respect to the point <P> which is the center of the symmetry Warnings : The normal direction to the plane is not changed. The "XAxis" and the "YAxis" are reversed.
 
@@ -4914,7 +4975,7 @@ class gp_Pln():
         Performs the symmetrical transformation of a plane with respect to an axis placement. The axis placement <A2> locates the plane of the symmetry. The transformation is performed on the "Location" point, on the "XAxis" and the "YAxis". The resulting normal direction is the cross product between the "XDirection" and the "YDirection" after transformation if the initial plane was right handed, else it is the opposite.
         """
     @overload
-    def Mirrored(self,A2 : gp_Ax2) -> gp_Pln: ...
+    def Mirrored(self,A1 : gp_Ax1) -> gp_Pln: ...
     @overload
     def Mirrored(self,P : gp_Pnt) -> gp_Pln: ...
     def Position(self) -> gp_Ax3: 
@@ -4997,7 +5058,7 @@ class gp_Pln():
         Transforms a plane with the transformation T from class Trsf. The transformation is performed on the "Location" point, on the "XAxis" and the "YAxis". The resulting normal direction is the cross product between the "XDirection" and the "YDirection" after transformation.
         """
     @overload
-    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: 
+    def Translate(self,V : gp_Vec) -> None: 
         """
         None
 
@@ -5008,9 +5069,9 @@ class gp_Pln():
         None
         """
     @overload
-    def Translate(self,V : gp_Vec) -> None: ...
+    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
     @overload
-    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Pln: 
+    def Translated(self,V : gp_Vec) -> gp_Pln: 
         """
         Translates a plane in the direction of the vector V. The magnitude of the translation is the vector's magnitude.
 
@@ -5021,7 +5082,7 @@ class gp_Pln():
         Translates a plane from the point P1 to the point P2.
         """
     @overload
-    def Translated(self,V : gp_Vec) -> gp_Pln: ...
+    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Pln: ...
     def UReverse(self) -> None: 
         """
         Reverses the U parametrization of the plane reversing the XAxis.
@@ -5047,11 +5108,11 @@ class gp_Pln():
         Returns the Y axis of the plane.
         """
     @overload
-    def __init__(self,P : gp_Pnt,V : gp_Dir) -> None: ...
+    def __init__(self,A3 : gp_Ax3) -> None: ...
     @overload
     def __init__(self,A : float,B : float,C : float,D : float) -> None: ...
     @overload
-    def __init__(self,A3 : gp_Ax3) -> None: ...
+    def __init__(self,P : gp_Pnt,V : gp_Dir) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -5060,14 +5121,14 @@ class gp_Pnt():
     Defines a 3D cartesian point.
     """
     @overload
-    def BaryCenter(self,A : float,P : gp_Pnt,B : float) -> None: 
+    def BaryCenter(self,Alpha : float,P : gp_Pnt,Beta : float) -> None: 
         """
         Assigns the result of the following expression to this point (Alpha*this + Beta*P) / (Alpha + Beta)
 
         Assigns the result of the following expression to this point (Alpha*this + Beta*P) / (Alpha + Beta)
         """
     @overload
-    def BaryCenter(self,Alpha : float,P : gp_Pnt,Beta : float) -> None: ...
+    def BaryCenter(self,A : float,P : gp_Pnt,B : float) -> None: ...
     def ChangeCoord(self) -> gp_XYZ: 
         """
         Returns the coordinates of this point. Note: This syntax allows direct modification of the returned value.
@@ -5075,7 +5136,7 @@ class gp_Pnt():
         Returns the coordinates of this point. Note: This syntax allows direct modification of the returned value.
         """
     @overload
-    def Coord(self,Index : int) -> float: 
+    def Coord(self) -> gp_XYZ: 
         """
         Returns the coordinate of corresponding to the value of Index : Index = 1 => X is returned Index = 2 => Y is returned Index = 3 => Z is returned Raises OutOfRange if Index != {1, 2, 3}. Raised if Index != {1, 2, 3}.
 
@@ -5089,15 +5150,23 @@ class gp_Pnt():
 
         For this point, returns its three coordinates as a XYZ object.
         """
-    @overload
-    def Coord(self) -> gp_XYZ: ...
     @overload
     def Coord(self) -> Tuple[float, float, float]: ...
+    @overload
+    def Coord(self,Index : int) -> float: ...
     def Distance(self,Other : gp_Pnt) -> float: 
         """
         Computes the distance between two points.
 
         Computes the distance between two points.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def InitFromJson(self,theSStream : Any,theStreamPos : int) -> bool: 
+        """
+        Inits the content of me from the stream
         """
     def IsEqual(self,Other : gp_Pnt,LinearTolerance : float) -> bool: 
         """
@@ -5106,7 +5175,7 @@ class gp_Pnt():
         Comparison Returns True if the distance between the two points is lower or equal to LinearTolerance.
         """
     @overload
-    def Mirror(self,P : gp_Pnt) -> None: 
+    def Mirror(self,A1 : gp_Ax1) -> None: 
         """
         Performs the symmetrical transformation of a point with respect to the point P which is the center of the symmetry.
 
@@ -5115,11 +5184,11 @@ class gp_Pnt():
         None
         """
     @overload
-    def Mirror(self,A1 : gp_Ax1) -> None: ...
-    @overload
     def Mirror(self,A2 : gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : gp_Ax1) -> gp_Pnt: 
+    def Mirror(self,P : gp_Pnt) -> None: ...
+    @overload
+    def Mirrored(self,A2 : gp_Ax2) -> gp_Pnt: 
         """
         Performs the symmetrical transformation of a point with respect to an axis placement which is the axis of the symmetry.
 
@@ -5128,7 +5197,7 @@ class gp_Pnt():
         Rotates a point. A1 is the axis of the rotation. Ang is the angular value of the rotation in radians.
         """
     @overload
-    def Mirrored(self,A2 : gp_Ax2) -> gp_Pnt: ...
+    def Mirrored(self,A1 : gp_Ax1) -> gp_Pnt: ...
     @overload
     def Mirrored(self,P : gp_Pnt) -> gp_Pnt: ...
     def Rotate(self,A1 : gp_Ax1,Ang : float) -> None: 
@@ -5175,14 +5244,14 @@ class gp_Pnt():
         Assigns the given value to the X coordinate of this point.
         """
     @overload
-    def SetXYZ(self,Coord : gp_XYZ) -> None: 
+    def SetXYZ(self,Coordinates : gp_XYZ) -> None: 
         """
         Assigns the three coordinates of Coord to this point.
 
         Assigns the three coordinates of Coord to this point.
         """
     @overload
-    def SetXYZ(self,Coordinates : gp_XYZ) -> None: ...
+    def SetXYZ(self,Coord : gp_XYZ) -> None: ...
     def SetY(self,Y : float) -> None: 
         """
         Assigns the given value to the Y coordinate of this point.
@@ -5225,7 +5294,7 @@ class gp_Pnt():
     @overload
     def Translate(self,V : gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : gp_Vec) -> gp_Pnt: 
+    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Pnt: 
         """
         Translates a point from the point P1 to the point P2.
 
@@ -5236,7 +5305,7 @@ class gp_Pnt():
         None
         """
     @overload
-    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Pnt: ...
+    def Translated(self,V : gp_Vec) -> gp_Pnt: ...
     def X(self) -> float: 
         """
         For this point, returns its X coordinate.
@@ -5262,11 +5331,11 @@ class gp_Pnt():
         For this point, returns its Z coordinate.
         """
     @overload
-    def __init__(self,Coord : gp_XYZ) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Xp : float,Yp : float,Zp : float) -> None: ...
+    @overload
+    def __init__(self,Coord : gp_XYZ) -> None: ...
     pass
 class gp_Pnt2d():
     """
@@ -5279,7 +5348,7 @@ class gp_Pnt2d():
         Returns the coordinates of this point. Note: This syntax allows direct modification of the returned value.
         """
     @overload
-    def Coord(self,Index : int) -> float: 
+    def Coord(self) -> Tuple[float, float]: 
         """
         Returns the coordinate of range Index : Index = 1 => X is returned Index = 2 => Y is returned Raises OutOfRange if Index != {1, 2}.
 
@@ -5294,7 +5363,7 @@ class gp_Pnt2d():
         For this point, returns its two coordinates as a number pair.
         """
     @overload
-    def Coord(self) -> Tuple[float, float]: ...
+    def Coord(self,Index : int) -> float: ...
     @overload
     def Coord(self) -> gp_XY: ...
     def Distance(self,Other : gp_Pnt2d) -> float: 
@@ -5302,6 +5371,10 @@ class gp_Pnt2d():
         Computes the distance between two points.
 
         Computes the distance between two points.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def IsEqual(self,Other : gp_Pnt2d,LinearTolerance : float) -> bool: 
         """
@@ -5319,14 +5392,14 @@ class gp_Pnt2d():
     @overload
     def Mirror(self,A : gp_Ax2d) -> None: ...
     @overload
-    def Mirrored(self,A : gp_Ax2d) -> gp_Pnt2d: 
+    def Mirrored(self,P : gp_Pnt2d) -> gp_Pnt2d: 
         """
         Performs the symmetrical transformation of a point with respect to an axis placement which is the axis
 
         Rotates a point. A1 is the axis of the rotation. Ang is the angular value of the rotation in radians.
         """
     @overload
-    def Mirrored(self,P : gp_Pnt2d) -> gp_Pnt2d: ...
+    def Mirrored(self,A : gp_Ax2d) -> gp_Pnt2d: ...
     def Rotate(self,P : gp_Pnt2d,Ang : float) -> None: 
         """
         None
@@ -5402,7 +5475,7 @@ class gp_Pnt2d():
         Translates a point in the direction of the vector V. The magnitude of the translation is the vector's magnitude.
         """
     @overload
-    def Translate(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: 
+    def Translate(self,V : gp_Vec2d) -> None: 
         """
         None
 
@@ -5413,9 +5486,9 @@ class gp_Pnt2d():
         None
         """
     @overload
-    def Translate(self,V : gp_Vec2d) -> None: ...
+    def Translate(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: ...
     @overload
-    def Translated(self,V : gp_Vec2d) -> gp_Pnt2d: 
+    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Pnt2d: 
         """
         Translates a point from the point P1 to the point P2.
 
@@ -5426,7 +5499,7 @@ class gp_Pnt2d():
         None
         """
     @overload
-    def Translated(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> gp_Pnt2d: ...
+    def Translated(self,V : gp_Vec2d) -> gp_Pnt2d: ...
     def X(self) -> float: 
         """
         For this point, returns its X coordinate.
@@ -5448,23 +5521,23 @@ class gp_Pnt2d():
     @overload
     def __init__(self,Coord : gp_XY) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Xp : float,Yp : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class gp_Quaternion():
     """
     Represents operation of rotation in 3d space as queternion and implements operations with rotations basing on quaternion mathematics.
     """
     @overload
-    def Add(self,theQ : gp_Quaternion) -> None: 
+    def Add(self,theOther : gp_Quaternion) -> None: 
         """
         Adds componnets of other quaternion; result is "rotations mix"
 
         Adds componnets of other quaternion; result is "rotations mix"
         """
     @overload
-    def Add(self,theOther : gp_Quaternion) -> None: ...
+    def Add(self,theQ : gp_Quaternion) -> None: ...
     @overload
     def Added(self,theOther : gp_Quaternion) -> gp_Quaternion: 
         """
@@ -5516,14 +5589,14 @@ class gp_Quaternion():
         Simple equal test without precision
         """
     @overload
-    def Multiplied(self,theQ : gp_Quaternion) -> gp_Quaternion: 
+    def Multiplied(self,theOther : gp_Quaternion) -> gp_Quaternion: 
         """
         Multiply function - work the same as Matrices multiplying. qq' = (cross(v,v') + wv' + w'v, ww' - dot(v,v')) Result is rotation combination: q' than q (here q=this, q'=theQ). Notices than: qq' != q'q; qq^-1 = q;
 
         Multiply function - work the same as Matrices multiplying. qq' = (cross(v,v') + wv' + w'v, ww' - dot(v,v')) Result is rotation combination: q' than q (here q=this, q'=theQ). Notices than: qq' != q'q; qq^-1 = q;
         """
     @overload
-    def Multiplied(self,theOther : gp_Quaternion) -> gp_Quaternion: ...
+    def Multiplied(self,theQ : gp_Quaternion) -> gp_Quaternion: ...
     @overload
     def Multiply(self,theVec : gp_Vec) -> gp_Vec: 
         """
@@ -5595,9 +5668,9 @@ class gp_Quaternion():
         None
         """
     @overload
-    def Set(self,x : float,y : float,z : float,w : float) -> None: ...
-    @overload
     def Set(self,theX : float,theY : float,theZ : float,theW : float) -> None: ...
+    @overload
+    def Set(self,x : float,y : float,z : float,w : float) -> None: ...
     def SetEulerAngles(self,theOrder : gp_EulerSequence,theAlpha : float,theBeta : float,theGamma : float) -> None: 
         """
         Create a unit quaternion representing rotation defined by generalized Euler angles
@@ -5613,14 +5686,14 @@ class gp_Quaternion():
         Create a unit quaternion by rotation matrix matrix must contain only rotation (not scale or shear)
         """
     @overload
-    def SetRotation(self,theVecFrom : gp_Vec,theVecTo : gp_Vec,theHelpCrossVec : gp_Vec) -> None: 
+    def SetRotation(self,theVecFrom : gp_Vec,theVecTo : gp_Vec) -> None: 
         """
         Sets quaternion to shortest-arc rotation producing vector theVecTo from vector theVecFrom. If vectors theVecFrom and theVecTo are opposite then rotation axis is computed as theVecFrom ^ (1,0,0) or theVecFrom ^ (0,0,1).
 
         Sets quaternion to shortest-arc rotation producing vector theVecTo from vector theVecFrom. If vectors theVecFrom and theVecTo are opposite then rotation axis is computed as theVecFrom ^ theHelpCrossVec.
         """
     @overload
-    def SetRotation(self,theVecFrom : gp_Vec,theVecTo : gp_Vec) -> None: ...
+    def SetRotation(self,theVecFrom : gp_Vec,theVecTo : gp_Vec,theHelpCrossVec : gp_Vec) -> None: ...
     def SetVectorAndAngle(self,theAxis : gp_Vec,theAngle : float) -> None: 
         """
         Create a unit quaternion from Axis+Angle representation
@@ -5636,23 +5709,23 @@ class gp_Quaternion():
         Stabilize quaternion length within 1 - 1/4. This operation is a lot faster than normalization and preserve length goes to 0 or infinity
         """
     @overload
-    def Subtract(self,theQ : gp_Quaternion) -> None: 
+    def Subtract(self,theOther : gp_Quaternion) -> None: 
         """
         Subtracts componnets of other quaternion; result is "rotations mix"
 
         Subtracts componnets of other quaternion; result is "rotations mix"
         """
     @overload
-    def Subtract(self,theOther : gp_Quaternion) -> None: ...
+    def Subtract(self,theQ : gp_Quaternion) -> None: ...
     @overload
-    def Subtracted(self,theQ : gp_Quaternion) -> gp_Quaternion: 
+    def Subtracted(self,theOther : gp_Quaternion) -> gp_Quaternion: 
         """
         Makes difference of quaternion components; result is "rotations mix"
 
         Makes difference of quaternion components; result is "rotations mix"
         """
     @overload
-    def Subtracted(self,theOther : gp_Quaternion) -> gp_Quaternion: ...
+    def Subtracted(self,theQ : gp_Quaternion) -> gp_Quaternion: ...
     def W(self) -> float: 
         """
         None
@@ -5695,17 +5768,15 @@ class gp_Quaternion():
     @overload
     def __imul__(self,theScale : float) -> None: ...
     @overload
-    def __init__(self,theVecFrom : gp_Vec,theVecTo : gp_Vec,theHelpCrossVec : gp_Vec) -> None: ...
-    @overload
-    def __init__(self,theVecFrom : gp_Vec,theVecTo : gp_Vec) -> None: ...
-    @overload
-    def __init__(self,theAxis : gp_Vec,theAngle : float) -> None: ...
+    def __init__(self,theMat : gp_Mat) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theMat : gp_Mat) -> None: ...
+    def __init__(self,theVecFrom : gp_Vec,theVecTo : gp_Vec) -> None: ...
     @overload
-    def __init__(self,theToCopy : gp_Quaternion) -> None: ...
+    def __init__(self,theVecFrom : gp_Vec,theVecTo : gp_Vec,theHelpCrossVec : gp_Vec) -> None: ...
+    @overload
+    def __init__(self,theAxis : gp_Vec,theAngle : float) -> None: ...
     @overload
     def __init__(self,x : float,y : float,z : float,w : float) -> None: ...
     def __isub__(self,theOther : gp_Quaternion) -> None: 
@@ -5713,7 +5784,7 @@ class gp_Quaternion():
         None
         """
     @overload
-    def __mul__(self,theScale : float) -> gp_Quaternion: 
+    def __mul__(self,theOther : gp_Quaternion) -> gp_Quaternion: 
         """
         None
 
@@ -5722,11 +5793,11 @@ class gp_Quaternion():
         None
         """
     @overload
-    def __mul__(self,theOther : gp_Quaternion) -> gp_Quaternion: ...
+    def __mul__(self,theScale : float) -> gp_Quaternion: ...
     @overload
     def __mul__(self,theVec : gp_Vec) -> gp_Vec: ...
     @overload
-    def __rmul__(self,theVec : gp_Vec) -> gp_Vec: 
+    def __rmul__(self,theOther : gp_Quaternion) -> gp_Quaternion: 
         """
         None
 
@@ -5734,10 +5805,10 @@ class gp_Quaternion():
 
         None
         """
-    @overload
-    def __rmul__(self,theOther : gp_Quaternion) -> gp_Quaternion: ...
     @overload
     def __rmul__(self,theScale : float) -> gp_Quaternion: ...
+    @overload
+    def __rmul__(self,theVec : gp_Vec) -> gp_Vec: ...
     @overload
     def __sub__(self,theOther : gp_Quaternion) -> gp_Quaternion: 
         """
@@ -5796,9 +5867,9 @@ class gp_QuaternionSLerp():
         Compute interpolated quaternion between two quaternions.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theQStart : gp_Quaternion,theQEnd : gp_Quaternion) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class gp_Sphere():
     """
@@ -5827,7 +5898,7 @@ class gp_Sphere():
         --- Purpose ; Returns the center of the sphere.
         """
     @overload
-    def Mirror(self,A1 : gp_Ax1) -> None: 
+    def Mirror(self,A2 : gp_Ax2) -> None: 
         """
         None
 
@@ -5838,7 +5909,7 @@ class gp_Sphere():
     @overload
     def Mirror(self,P : gp_Pnt) -> None: ...
     @overload
-    def Mirror(self,A2 : gp_Ax2) -> None: ...
+    def Mirror(self,A1 : gp_Ax1) -> None: ...
     @overload
     def Mirrored(self,P : gp_Pnt) -> gp_Sphere: 
         """
@@ -6024,7 +6095,7 @@ class gp_Torus():
         returns the minor radius of the torus.
         """
     @overload
-    def Mirror(self,A1 : gp_Ax1) -> None: 
+    def Mirror(self,A2 : gp_Ax2) -> None: 
         """
         None
 
@@ -6032,12 +6103,12 @@ class gp_Torus():
 
         None
         """
+    @overload
+    def Mirror(self,A1 : gp_Ax1) -> None: ...
     @overload
     def Mirror(self,P : gp_Pnt) -> None: ...
     @overload
-    def Mirror(self,A2 : gp_Ax2) -> None: ...
-    @overload
-    def Mirrored(self,A1 : gp_Ax1) -> gp_Torus: 
+    def Mirrored(self,A2 : gp_Ax2) -> gp_Torus: 
         """
         Performs the symmetrical transformation of a torus with respect to the point P which is the center of the symmetry.
 
@@ -6046,9 +6117,9 @@ class gp_Torus():
         Performs the symmetrical transformation of a torus with respect to a plane. The axis placement A2 locates the plane of the of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirrored(self,P : gp_Pnt) -> gp_Torus: ...
+    def Mirrored(self,A1 : gp_Ax1) -> gp_Torus: ...
     @overload
-    def Mirrored(self,A2 : gp_Ax2) -> gp_Torus: ...
+    def Mirrored(self,P : gp_Pnt) -> gp_Torus: ...
     def Position(self) -> gp_Ax3: 
         """
         Returns the local coordinates system of the torus.
@@ -6122,7 +6193,7 @@ class gp_Torus():
         Transforms a torus with the transformation T from class Trsf.
         """
     @overload
-    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: 
+    def Translate(self,V : gp_Vec) -> None: 
         """
         None
 
@@ -6133,9 +6204,9 @@ class gp_Torus():
         None
         """
     @overload
-    def Translate(self,V : gp_Vec) -> None: ...
+    def Translate(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
     @overload
-    def Translated(self,V : gp_Vec) -> gp_Torus: 
+    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Torus: 
         """
         Translates a torus in the direction of the vector V. The magnitude of the translation is the vector's magnitude.
 
@@ -6146,7 +6217,7 @@ class gp_Torus():
         Translates a torus from the point P1 to the point P2.
         """
     @overload
-    def Translated(self,P1 : gp_Pnt,P2 : gp_Pnt) -> gp_Torus: ...
+    def Translated(self,V : gp_Vec) -> gp_Torus: ...
     def UReverse(self) -> None: 
         """
         Reverses the U parametrization of the torus reversing the YAxis.
@@ -6178,15 +6249,15 @@ class gp_Torus():
         returns the axis Y of the torus.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,A3 : gp_Ax3,MajorRadius : float,MinorRadius : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class gp_Trsf():
     """
     Defines a non-persistent transformation in 3D space. The following transformations are implemented : . Translation, Rotation, Scale . Symmetry with respect to a point, a line, a plane. Complex transformations can be obtained by combining the previous elementary transformations using the method Multiply. The transformations can be represented as follow :
     """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -6210,6 +6281,10 @@ class gp_Trsf():
         Computes the homogeneous vectorial part of the transformation. It is a 3*3 matrix which doesn't include the scale factor. In other words, the vectorial part of this transformation is equal to its homogeneous vectorial part, multiplied by the scale factor. The coefficients of this matrix must be multiplied by the scale factor to obtain the coefficients of the transformation.
 
         Computes the homogeneous vectorial part of the transformation. It is a 3*3 matrix which doesn't include the scale factor. In other words, the vectorial part of this transformation is equal to its homogeneous vectorial part, multiplied by the scale factor. The coefficients of this matrix must be multiplied by the scale factor to obtain the coefficients of the transformation.
+        """
+    def InitFromJson(self,theSStream : Any,theStreamPos : int) -> bool: 
+        """
+        Inits the content of me from the stream
         """
     def Invert(self) -> None: 
         """
@@ -6268,7 +6343,7 @@ class gp_Trsf():
         None
         """
     @overload
-    def SetMirror(self,A2 : gp_Ax2) -> None: 
+    def SetMirror(self,P : gp_Pnt) -> None: 
         """
         Makes the transformation into a symmetrical transformation. P is the center of the symmetry.
 
@@ -6279,9 +6354,9 @@ class gp_Trsf():
         Makes the transformation into a symmetrical transformation. P is the center of the symmetry.
         """
     @overload
-    def SetMirror(self,A1 : gp_Ax1) -> None: ...
+    def SetMirror(self,A2 : gp_Ax2) -> None: ...
     @overload
-    def SetMirror(self,P : gp_Pnt) -> None: ...
+    def SetMirror(self,A1 : gp_Ax1) -> None: ...
     @overload
     def SetRotation(self,A1 : gp_Ax1,Ang : float) -> None: 
         """
@@ -6291,6 +6366,10 @@ class gp_Trsf():
         """
     @overload
     def SetRotation(self,R : gp_Quaternion) -> None: ...
+    def SetRotationPart(self,R : gp_Quaternion) -> None: 
+        """
+        Replaces the rotation part with specified quaternion.
+        """
     def SetScale(self,P : gp_Pnt,S : float) -> None: 
         """
         Changes the transformation into a scale. P is the center of the scale and S is the scaling value. Raises ConstructionError If <S> is null.
@@ -6300,7 +6379,7 @@ class gp_Trsf():
         Modifies the scale factor. Raises ConstructionError If S is null.
         """
     @overload
-    def SetTransformation(self,FromSystem1 : gp_Ax3,ToSystem2 : gp_Ax3) -> None: 
+    def SetTransformation(self,ToSystem : gp_Ax3) -> None: 
         """
         Modifies this transformation so that it transforms the coordinates of any point, (x, y, z), relative to a source coordinate system into the coordinates (x', y', z') which are relative to a target coordinate system, but which represent the same point The transformation is from the coordinate system "FromSystem1" to the coordinate system "ToSystem2". Example : In a C++ implementation : Real x1, y1, z1; // are the coordinates of a point in the // local system FromSystem1 Real x2, y2, z2; // are the coordinates of a point in the // local system ToSystem2 gp_Pnt P1 (x1, y1, z1) Trsf T; T.SetTransformation (FromSystem1, ToSystem2); gp_Pnt P2 = P1.Transformed (T); P2.Coord (x2, y2, z2);
 
@@ -6309,11 +6388,11 @@ class gp_Trsf():
         Sets transformation by directly specified rotation and translation.
         """
     @overload
-    def SetTransformation(self,ToSystem : gp_Ax3) -> None: ...
-    @overload
     def SetTransformation(self,R : gp_Quaternion,T : gp_Vec) -> None: ...
     @overload
-    def SetTranslation(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: 
+    def SetTransformation(self,FromSystem1 : gp_Ax3,ToSystem2 : gp_Ax3) -> None: ...
+    @overload
+    def SetTranslation(self,V : gp_Vec) -> None: 
         """
         Changes the transformation into a translation. V is the vector of the translation.
 
@@ -6324,7 +6403,7 @@ class gp_Trsf():
         Makes the transformation into a translation where the translation vector is the vector (P1, P2) defined from point P1 to point P2.
         """
     @overload
-    def SetTranslation(self,V : gp_Vec) -> None: ...
+    def SetTranslation(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
     def SetTranslationPart(self,V : gp_Vec) -> None: 
         """
         Replaces the translation vector with the vector V.
@@ -6334,7 +6413,7 @@ class gp_Trsf():
         Sets the coefficients of the transformation. The transformation of the point x,y,z is the point x',y',z' with :
         """
     @overload
-    def Transforms(self,Coord : gp_XYZ) -> None: 
+    def Transforms(self) -> Tuple[float, float, float]: 
         """
         Transformation of a triplet XYZ with a Trsf
 
@@ -6345,7 +6424,7 @@ class gp_Trsf():
         None
         """
     @overload
-    def Transforms(self) -> Tuple[float, float, float]: ...
+    def Transforms(self,Coord : gp_XYZ) -> None: ...
     def TranslationPart(self) -> gp_XYZ: 
         """
         Returns the translation part of the transformation's matrix
@@ -6446,7 +6525,7 @@ class gp_Trsf2d():
         Returns the scale factor.
         """
     @overload
-    def SetMirror(self,A : gp_Ax2d) -> None: 
+    def SetMirror(self,P : gp_Pnt2d) -> None: 
         """
         Changes the transformation into a symmetrical transformation. P is the center of the symmetry.
 
@@ -6455,7 +6534,7 @@ class gp_Trsf2d():
         Changes the transformation into a symmetrical transformation. P is the center of the symmetry.
         """
     @overload
-    def SetMirror(self,P : gp_Pnt2d) -> None: ...
+    def SetMirror(self,A : gp_Ax2d) -> None: ...
     def SetRotation(self,P : gp_Pnt2d,Ang : float) -> None: 
         """
         Changes the transformation into a rotation. P is the rotation's center and Ang is the angular value of the rotation in radian.
@@ -6482,7 +6561,7 @@ class gp_Trsf2d():
     @overload
     def SetTransformation(self,ToSystem : gp_Ax2d) -> None: ...
     @overload
-    def SetTranslation(self,V : gp_Vec2d) -> None: 
+    def SetTranslation(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: 
         """
         Changes the transformation into a translation. V is the vector of the translation.
 
@@ -6493,7 +6572,7 @@ class gp_Trsf2d():
         Makes the transformation into a translation from the point P1 to the point P2.
         """
     @overload
-    def SetTranslation(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: ...
+    def SetTranslation(self,V : gp_Vec2d) -> None: ...
     def SetTranslationPart(self,V : gp_Vec2d) -> None: 
         """
         Replaces the translation vector with V.
@@ -6536,9 +6615,9 @@ class gp_Trsf2d():
         None
         """
     @overload
-    def __init__(self,T : gp_Trsf) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,T : gp_Trsf) -> None: ...
     def __mul__(self,T : gp_Trsf2d) -> gp_Trsf2d: 
         """
         None
@@ -6572,27 +6651,35 @@ class gp_TrsfForm():
 
       gp_Other
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    __entries: dict # value = {'gp_Identity': (gp_TrsfForm.gp_Identity, None), 'gp_Rotation': (gp_TrsfForm.gp_Rotation, None), 'gp_Translation': (gp_TrsfForm.gp_Translation, None), 'gp_PntMirror': (gp_TrsfForm.gp_PntMirror, None), 'gp_Ax1Mirror': (gp_TrsfForm.gp_Ax1Mirror, None), 'gp_Ax2Mirror': (gp_TrsfForm.gp_Ax2Mirror, None), 'gp_Scale': (gp_TrsfForm.gp_Scale, None), 'gp_CompoundTrsf': (gp_TrsfForm.gp_CompoundTrsf, None), 'gp_Other': (gp_TrsfForm.gp_Other, None)}
-    __members__: dict # value = {'gp_Identity': gp_TrsfForm.gp_Identity, 'gp_Rotation': gp_TrsfForm.gp_Rotation, 'gp_Translation': gp_TrsfForm.gp_Translation, 'gp_PntMirror': gp_TrsfForm.gp_PntMirror, 'gp_Ax1Mirror': gp_TrsfForm.gp_Ax1Mirror, 'gp_Ax2Mirror': gp_TrsfForm.gp_Ax2Mirror, 'gp_Scale': gp_TrsfForm.gp_Scale, 'gp_CompoundTrsf': gp_TrsfForm.gp_CompoundTrsf, 'gp_Other': gp_TrsfForm.gp_Other}
-    gp_Ax1Mirror: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Ax1Mirror
-    gp_Ax2Mirror: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Ax2Mirror
-    gp_CompoundTrsf: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_CompoundTrsf
-    gp_Identity: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Identity
-    gp_Other: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Other
-    gp_PntMirror: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_PntMirror
-    gp_Rotation: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Rotation
-    gp_Scale: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Scale
-    gp_Translation: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Translation
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    __entries: dict # value = {'gp_Identity': (<gp_TrsfForm.gp_Identity: 0>, None), 'gp_Rotation': (<gp_TrsfForm.gp_Rotation: 1>, None), 'gp_Translation': (<gp_TrsfForm.gp_Translation: 2>, None), 'gp_PntMirror': (<gp_TrsfForm.gp_PntMirror: 3>, None), 'gp_Ax1Mirror': (<gp_TrsfForm.gp_Ax1Mirror: 4>, None), 'gp_Ax2Mirror': (<gp_TrsfForm.gp_Ax2Mirror: 5>, None), 'gp_Scale': (<gp_TrsfForm.gp_Scale: 6>, None), 'gp_CompoundTrsf': (<gp_TrsfForm.gp_CompoundTrsf: 7>, None), 'gp_Other': (<gp_TrsfForm.gp_Other: 8>, None)}
+    __members__: dict # value = {'gp_Identity': <gp_TrsfForm.gp_Identity: 0>, 'gp_Rotation': <gp_TrsfForm.gp_Rotation: 1>, 'gp_Translation': <gp_TrsfForm.gp_Translation: 2>, 'gp_PntMirror': <gp_TrsfForm.gp_PntMirror: 3>, 'gp_Ax1Mirror': <gp_TrsfForm.gp_Ax1Mirror: 4>, 'gp_Ax2Mirror': <gp_TrsfForm.gp_Ax2Mirror: 5>, 'gp_Scale': <gp_TrsfForm.gp_Scale: 6>, 'gp_CompoundTrsf': <gp_TrsfForm.gp_CompoundTrsf: 7>, 'gp_Other': <gp_TrsfForm.gp_Other: 8>}
+    gp_Ax1Mirror: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Ax1Mirror: 4>
+    gp_Ax2Mirror: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Ax2Mirror: 5>
+    gp_CompoundTrsf: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_CompoundTrsf: 7>
+    gp_Identity: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Identity: 0>
+    gp_Other: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Other: 8>
+    gp_PntMirror: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_PntMirror: 3>
+    gp_Rotation: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Rotation: 1>
+    gp_Scale: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Scale: 6>
+    gp_Translation: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Translation: 2>
     pass
 class gp_Vec():
     """
@@ -6626,7 +6713,7 @@ class gp_Vec():
     @overload
     def AngleWithRef(self,Other : gp_Vec,Vref : gp_Vec) -> float: ...
     @overload
-    def Coord(self,Index : int) -> float: 
+    def Coord(self) -> Tuple[float, float, float]: 
         """
         Returns the coordinate of range Index : Index = 1 => X is returned Index = 2 => Y is returned Index = 3 => Z is returned Raised if Index != {1, 2, 3}.
 
@@ -6637,7 +6724,7 @@ class gp_Vec():
         For this vector returns its three coordinates Xv, Yv, and Zvinline
         """
     @overload
-    def Coord(self) -> Tuple[float, float, float]: ...
+    def Coord(self,Index : int) -> float: ...
     def Cross(self,Right : gp_Vec) -> None: 
         """
         computes the cross product between two vectors
@@ -6698,6 +6785,10 @@ class gp_Vec():
 
         Computes the triple scalar product <me> * (V1 ^ V2).
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def IsEqual(self,Other : gp_Vec,LinearTolerance : float,AngularTolerance : float) -> bool: 
         """
         Returns True if the two vectors have the same magnitude value and the same direction. The precision values are LinearTolerance for the magnitude and AngularTolerance for the direction.
@@ -6736,11 +6827,11 @@ class gp_Vec():
         None
         """
     @overload
-    def Mirror(self,A2 : gp_Ax2) -> None: ...
-    @overload
     def Mirror(self,A1 : gp_Ax1) -> None: ...
     @overload
-    def Mirrored(self,A1 : gp_Ax1) -> gp_Vec: 
+    def Mirror(self,A2 : gp_Ax2) -> None: ...
+    @overload
+    def Mirrored(self,V : gp_Vec) -> gp_Vec: 
         """
         Performs the symmetrical transformation of a vector with respect to the vector V which is the center of the symmetry.
 
@@ -6749,9 +6840,9 @@ class gp_Vec():
         Performs the symmetrical transformation of a vector with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirrored(self,A2 : gp_Ax2) -> gp_Vec: ...
+    def Mirrored(self,A1 : gp_Ax1) -> gp_Vec: ...
     @overload
-    def Mirrored(self,V : gp_Vec) -> gp_Vec: ...
+    def Mirrored(self,A2 : gp_Ax2) -> gp_Vec: ...
     def Multiplied(self,Scalar : float) -> gp_Vec: 
         """
         Multiplies a vector by a scalar
@@ -6813,7 +6904,7 @@ class gp_Vec():
         Scales a vector. S is the scaling value.
         """
     @overload
-    def SetCoord(self,Index : int,Xi : float) -> None: 
+    def SetCoord(self,Xv : float,Yv : float,Zv : float) -> None: 
         """
         Changes the coordinate of range Index Index = 1 => X is modified Index = 2 => Y is modified Index = 3 => Z is modified Raised if Index != {1, 2, 3}.
 
@@ -6824,9 +6915,9 @@ class gp_Vec():
         For this vector, assigns - the values Xv, Yv and Zv to its three coordinates.
         """
     @overload
-    def SetCoord(self,Xv : float,Yv : float,Zv : float) -> None: ...
+    def SetCoord(self,Index : int,Xi : float) -> None: ...
     @overload
-    def SetLinearForm(self,A1 : float,V1 : gp_Vec,A2 : float,V2 : gp_Vec) -> None: 
+    def SetLinearForm(self,V1 : gp_Vec,V2 : gp_Vec) -> None: 
         """
         <me> is set to the following linear form : A1 * V1 + A2 * V2 + A3 * V3 + V4
 
@@ -6852,22 +6943,22 @@ class gp_Vec():
 
         <me> is set to the following linear form : A1 * V1 + A2 * V2 + A3 * V3 + V4
         """
-    @overload
-    def SetLinearForm(self,A1 : float,V1 : gp_Vec,A2 : float,V2 : gp_Vec,A3 : float,V3 : gp_Vec,V4 : gp_Vec) -> None: ...
-    @overload
-    def SetLinearForm(self,V1 : gp_Vec,V2 : gp_Vec) -> None: ...
-    @overload
-    def SetLinearForm(self,A1 : float,V1 : gp_Vec,A2 : float,V2 : gp_Vec,A3 : float,V3 : gp_Vec) -> None: ...
     @overload
     def SetLinearForm(self,L : float,Left : gp_Vec,Right : gp_Vec) -> None: ...
     @overload
-    def SetLinearForm(self,Left : gp_Vec,Right : gp_Vec) -> None: ...
+    def SetLinearForm(self,A1 : float,V1 : gp_Vec,A2 : float,V2 : gp_Vec,A3 : float,V3 : gp_Vec,V4 : gp_Vec) -> None: ...
+    @overload
+    def SetLinearForm(self,A1 : float,V1 : gp_Vec,A2 : float,V2 : gp_Vec) -> None: ...
     @overload
     def SetLinearForm(self,A1 : float,V1 : gp_Vec,A2 : float,V2 : gp_Vec,V3 : gp_Vec) -> None: ...
     @overload
+    def SetLinearForm(self,L : float,Left : gp_Vec,R : float,Right : gp_Vec) -> None: ...
+    @overload
     def SetLinearForm(self,A1 : float,V1 : gp_Vec,V2 : gp_Vec) -> None: ...
     @overload
-    def SetLinearForm(self,L : float,Left : gp_Vec,R : float,Right : gp_Vec) -> None: ...
+    def SetLinearForm(self,A1 : float,V1 : gp_Vec,A2 : float,V2 : gp_Vec,A3 : float,V3 : gp_Vec) -> None: ...
+    @overload
+    def SetLinearForm(self,Left : gp_Vec,Right : gp_Vec) -> None: ...
     def SetX(self,X : float) -> None: 
         """
         Assigns the given value to the X coordinate of this vector.
@@ -6957,15 +7048,15 @@ class gp_Vec():
         None
         """
     @overload
+    def __init__(self,Xv : float,Yv : float,Zv : float) -> None: ...
+    @overload
     def __init__(self,P1 : gp_Pnt,P2 : gp_Pnt) -> None: ...
     @overload
     def __init__(self,V : gp_Dir) -> None: ...
     @overload
-    def __init__(self,Xv : float,Yv : float,Zv : float) -> None: ...
+    def __init__(self,Coord : gp_XYZ) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,Coord : gp_XYZ) -> None: ...
     def __ipow__(self,Right : gp_Vec) -> None: 
         """
         None
@@ -6992,23 +7083,23 @@ class gp_Vec():
         None
         """
     @overload
-    def __rmul__(self,Scalar : float) -> gp_Vec: 
+    def __rmul__(self,Other : gp_Vec) -> float: 
         """
         None
 
         None
         """
     @overload
-    def __rmul__(self,Other : gp_Vec) -> float: ...
+    def __rmul__(self,Scalar : float) -> gp_Vec: ...
     @overload
-    def __sub__(self,Right : gp_Vec) -> gp_Vec: 
+    def __sub__(self) -> gp_Vec: 
         """
         None
 
         None
         """
     @overload
-    def __sub__(self) -> gp_Vec: ...
+    def __sub__(self,Right : gp_Vec) -> gp_Vec: ...
     def __truediv__(self,Scalar : float) -> gp_Vec: 
         """
         None
@@ -7094,14 +7185,14 @@ class gp_Vec2d():
         Returns True if the two vectors have the same magnitude value and the same direction. The precision values are LinearTolerance for the magnitude and AngularTolerance for the direction.
         """
     @overload
-    def IsNormal(self,theOther : gp_Vec2d,theAngularTolerance : float) -> bool: 
+    def IsNormal(self,Other : gp_Vec2d,AngularTolerance : float) -> bool: 
         """
         Returns True if abs(Abs(<me>.Angle(Other)) - PI/2.) <= AngularTolerance Raises VectorWithNullMagnitude if <me>.Magnitude() <= Resolution or Other.Magnitude() <= Resolution from gp.
 
         Returns True if abs(Abs(<me>.Angle(Other)) - PI/2.) <= AngularTolerance Raises VectorWithNullMagnitude if <me>.Magnitude() <= Resolution or Other.Magnitude() <= Resolution from gp.
         """
     @overload
-    def IsNormal(self,Other : gp_Vec2d,AngularTolerance : float) -> bool: ...
+    def IsNormal(self,theOther : gp_Vec2d,theAngularTolerance : float) -> bool: ...
     def IsOpposite(self,Other : gp_Vec2d,AngularTolerance : float) -> bool: 
         """
         Returns True if PI - Abs(<me>.Angle(Other)) <= AngularTolerance Raises VectorWithNullMagnitude if <me>.Magnitude() <= Resolution or Other.Magnitude() <= Resolution from gp.
@@ -7121,23 +7212,23 @@ class gp_Vec2d():
         Computes the magnitude of this vector.
         """
     @overload
-    def Mirror(self,V : gp_Vec2d) -> None: 
+    def Mirror(self,A1 : gp_Ax2d) -> None: 
         """
         Performs the symmetrical transformation of a vector with respect to the vector V which is the center of the symmetry.
 
         Performs the symmetrical transformation of a vector with respect to an axis placement which is the axis of the symmetry.
         """
     @overload
-    def Mirror(self,A1 : gp_Ax2d) -> None: ...
+    def Mirror(self,V : gp_Vec2d) -> None: ...
     @overload
-    def Mirrored(self,V : gp_Vec2d) -> gp_Vec2d: 
+    def Mirrored(self,A1 : gp_Ax2d) -> gp_Vec2d: 
         """
         Performs the symmetrical transformation of a vector with respect to the vector V which is the center of the symmetry.
 
         Performs the symmetrical transformation of a vector with respect to an axis placement which is the axis of the symmetry.
         """
     @overload
-    def Mirrored(self,A1 : gp_Ax2d) -> gp_Vec2d: ...
+    def Mirrored(self,V : gp_Vec2d) -> gp_Vec2d: ...
     def Multiplied(self,Scalar : float) -> gp_Vec2d: 
         """
         Normalizes a vector Raises an exception if the magnitude of the vector is lower or equal to Resolution from package gp.
@@ -7199,7 +7290,7 @@ class gp_Vec2d():
         Scales a vector. S is the scaling value.
         """
     @overload
-    def SetCoord(self,Xv : float,Yv : float) -> None: 
+    def SetCoord(self,Index : int,Xi : float) -> None: 
         """
         Changes the coordinate of range Index Index = 1 => X is modified Index = 2 => Y is modified Raises OutOfRange if Index != {1, 2}.
 
@@ -7210,9 +7301,9 @@ class gp_Vec2d():
         For this vector, assigns the values Xv and Yv to its two coordinates
         """
     @overload
-    def SetCoord(self,Index : int,Xi : float) -> None: ...
+    def SetCoord(self,Xv : float,Yv : float) -> None: ...
     @overload
-    def SetLinearForm(self,Left : gp_Vec2d,Right : gp_Vec2d) -> None: 
+    def SetLinearForm(self,L : float,Left : gp_Vec2d,Right : gp_Vec2d) -> None: 
         """
         <me> is set to the following linear form : A1 * V1 + A2 * V2 + V3
 
@@ -7233,13 +7324,13 @@ class gp_Vec2d():
     @overload
     def SetLinearForm(self,A1 : float,V1 : gp_Vec2d,A2 : float,V2 : gp_Vec2d) -> None: ...
     @overload
+    def SetLinearForm(self,L : float,Left : gp_Vec2d,R : float,Right : gp_Vec2d) -> None: ...
+    @overload
+    def SetLinearForm(self,Left : gp_Vec2d,Right : gp_Vec2d) -> None: ...
+    @overload
     def SetLinearForm(self,A1 : float,V1 : gp_Vec2d,V2 : gp_Vec2d) -> None: ...
     @overload
     def SetLinearForm(self,A1 : float,V1 : gp_Vec2d,A2 : float,V2 : gp_Vec2d,V3 : gp_Vec2d) -> None: ...
-    @overload
-    def SetLinearForm(self,L : float,Left : gp_Vec2d,R : float,Right : gp_Vec2d) -> None: ...
-    @overload
-    def SetLinearForm(self,L : float,Left : gp_Vec2d,Right : gp_Vec2d) -> None: ...
     def SetX(self,X : float) -> None: 
         """
         Assigns the given value to the X coordinate of this vector.
@@ -7319,13 +7410,13 @@ class gp_Vec2d():
     @overload
     def __init__(self,Xv : float,Yv : float) -> None: ...
     @overload
-    def __init__(self,V : gp_Dir2d) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,Coord : gp_XY) -> None: ...
+    def __init__(self,V : gp_Dir2d) -> None: ...
     @overload
     def __init__(self,P1 : gp_Pnt2d,P2 : gp_Pnt2d) -> None: ...
+    @overload
+    def __init__(self,Coord : gp_XY) -> None: ...
     def __isub__(self,Right : gp_Vec2d) -> None: 
         """
         None
@@ -7404,7 +7495,7 @@ class gp_XY():
         None
         """
     @overload
-    def Coord(self,Index : int) -> float: 
+    def Coord(self,i : int) -> float: 
         """
         returns the coordinate of range Index : Index = 1 => X is returned Index = 2 => Y is returned Raises OutOfRange if Index != {1, 2}.
 
@@ -7417,7 +7508,7 @@ class gp_XY():
     @overload
     def Coord(self) -> Tuple[float, float]: ...
     @overload
-    def Coord(self,i : int) -> float: ...
+    def Coord(self,Index : int) -> float: ...
     def CrossMagnitude(self,Right : gp_XY) -> float: 
         """
         computes the magnitude of the cross product between <me> and Right. Returns || <me> ^ Right ||
@@ -7480,11 +7571,11 @@ class gp_XY():
         New = Matrix * <me>
         """
     @overload
-    def Multiplied(self,Other : gp_XY) -> gp_XY: ...
-    @overload
     def Multiplied(self,Scalar : float) -> gp_XY: ...
     @overload
-    def Multiply(self,Matrix : gp_Mat2d) -> None: 
+    def Multiplied(self,Other : gp_XY) -> gp_XY: ...
+    @overload
+    def Multiply(self,Other : gp_XY) -> None: 
         """
         <me>.X() = <me>.X() * Scalar; <me>.Y() = <me>.Y() * Scalar;
 
@@ -7499,7 +7590,7 @@ class gp_XY():
         <me> = Matrix * <me>
         """
     @overload
-    def Multiply(self,Other : gp_XY) -> None: ...
+    def Multiply(self,Matrix : gp_Mat2d) -> None: ...
     @overload
     def Multiply(self,Scalar : float) -> None: ...
     def Normalize(self) -> None: 
@@ -7527,7 +7618,7 @@ class gp_XY():
         New.X() = -<me>.X() New.Y() = -<me>.Y()
         """
     @overload
-    def SetCoord(self,X : float,Y : float) -> None: 
+    def SetCoord(self,i : int,X : float) -> None: 
         """
         modifies the coordinate of range Index Index = 1 => X is modified Index = 2 => Y is modified Raises OutOfRange if Index != {1, 2}.
 
@@ -7540,9 +7631,9 @@ class gp_XY():
     @overload
     def SetCoord(self,Index : int,Xi : float) -> None: ...
     @overload
-    def SetCoord(self,i : int,X : float) -> None: ...
+    def SetCoord(self,X : float,Y : float) -> None: ...
     @overload
-    def SetLinearForm(self,Left : gp_XY,Right : gp_XY) -> None: 
+    def SetLinearForm(self,L : float,Left : gp_XY,R : float,Right : gp_XY) -> None: 
         """
         Computes the following linear combination and assigns the result to this number pair: A1 * XY1 + A2 * XY2
 
@@ -7561,17 +7652,17 @@ class gp_XY():
         -- Computes the following linear combination and assigns the result to this number pair: A1 * XY1 + A2 * XY2 + XY3
         """
     @overload
-    def SetLinearForm(self,A1 : float,XY1 : gp_XY,A2 : float,XY2 : gp_XY) -> None: ...
-    @overload
-    def SetLinearForm(self,L : float,Left : gp_XY,R : float,Right : gp_XY) -> None: ...
+    def SetLinearForm(self,Left : gp_XY,Right : gp_XY) -> None: ...
     @overload
     def SetLinearForm(self,A1 : float,XY1 : gp_XY,A2 : float,XY2 : gp_XY,XY3 : gp_XY) -> None: ...
     @overload
+    def SetLinearForm(self,L : float,Left : gp_XY,Right : gp_XY) -> None: ...
+    @overload
     def SetLinearForm(self,XY1 : gp_XY,XY2 : gp_XY) -> None: ...
     @overload
-    def SetLinearForm(self,A1 : float,XY1 : gp_XY,XY2 : gp_XY) -> None: ...
+    def SetLinearForm(self,A1 : float,XY1 : gp_XY,A2 : float,XY2 : gp_XY) -> None: ...
     @overload
-    def SetLinearForm(self,L : float,Left : gp_XY,Right : gp_XY) -> None: ...
+    def SetLinearForm(self,A1 : float,XY1 : gp_XY,XY2 : gp_XY) -> None: ...
     def SetX(self,X : float) -> None: 
         """
         Assigns the given value to the X coordinate of this number pair.
@@ -7632,9 +7723,9 @@ class gp_XY():
         None
         """
     @overload
-    def __imul__(self,Scalar : float) -> None: ...
-    @overload
     def __imul__(self,Matrix : gp_Mat2d) -> None: ...
+    @overload
+    def __imul__(self,Scalar : float) -> None: ...
     @overload
     def __init__(self,X : float,Y : float) -> None: ...
     @overload
@@ -7648,7 +7739,7 @@ class gp_XY():
         None
         """
     @overload
-    def __mul__(self,Scalar : float) -> gp_XY: 
+    def __mul__(self,Matrix : gp_Mat2d) -> gp_XY: 
         """
         None
 
@@ -7657,7 +7748,7 @@ class gp_XY():
         None
         """
     @overload
-    def __mul__(self,Matrix : gp_Mat2d) -> gp_XY: ...
+    def __mul__(self,Scalar : float) -> gp_XY: ...
     @overload
     def __mul__(self,Other : gp_XY) -> float: ...
     def __pow__(self,Right : gp_XY) -> float: 
@@ -7718,7 +7809,7 @@ class gp_XYZ():
         Returns a ptr to coordinates location. Is useful for algorithms, but DOES NOT PERFORM ANY CHECKS!
         """
     @overload
-    def Coord(self,i : int) -> float: 
+    def Coord(self) -> Tuple[float, float, float]: 
         """
         returns the coordinate of range Index : Index = 1 => X is returned Index = 2 => Y is returned Index = 3 => Z is returned
 
@@ -7731,7 +7822,7 @@ class gp_XYZ():
     @overload
     def Coord(self,Index : int) -> float: ...
     @overload
-    def Coord(self) -> Tuple[float, float, float]: ...
+    def Coord(self,i : int) -> float: ...
     def Cross(self,Right : gp_XYZ) -> None: 
         """
         <me>.X() = <me>.Y() * Other.Z() - <me>.Z() * Other.Y() <me>.Y() = <me>.Z() * Other.X() - <me>.X() * Other.Z() <me>.Z() = <me>.X() * Other.Y() - <me>.Y() * Other.X()
@@ -7792,13 +7883,17 @@ class gp_XYZ():
 
         computes the triple scalar product
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
     def GetData(self) -> float: 
         """
         Returns a const ptr to coordinates location. Is useful for algorithms, but DOES NOT PERFORM ANY CHECKS!
+        """
+    def InitFromJson(self,theSStream : Any,theStreamPos : int) -> bool: 
+        """
+        Inits the content of me from the stream
         """
     def IsEqual(self,Other : gp_XYZ,Tolerance : float) -> bool: 
         """
@@ -7826,11 +7921,11 @@ class gp_XYZ():
         New = Matrix * <me>
         """
     @overload
-    def Multiplied(self,Matrix : gp_Mat) -> gp_XYZ: ...
-    @overload
     def Multiplied(self,Other : gp_XYZ) -> gp_XYZ: ...
     @overload
-    def Multiply(self,Scalar : float) -> None: 
+    def Multiplied(self,Matrix : gp_Mat) -> gp_XYZ: ...
+    @overload
+    def Multiply(self,Other : gp_XYZ) -> None: 
         """
         <me>.X() = <me>.X() * Scalar; <me>.Y() = <me>.Y() * Scalar; <me>.Z() = <me>.Z() * Scalar;
 
@@ -7847,7 +7942,7 @@ class gp_XYZ():
     @overload
     def Multiply(self,Matrix : gp_Mat) -> None: ...
     @overload
-    def Multiply(self,Other : gp_XYZ) -> None: ...
+    def Multiply(self,Scalar : float) -> None: ...
     def Normalize(self) -> None: 
         """
         <me>.X() = <me>.X()/ <me>.Modulus() <me>.Y() = <me>.Y()/ <me>.Modulus() <me>.Z() = <me>.Z()/ <me>.Modulus() Raised if <me>.Modulus() <= Resolution from gp
@@ -7873,7 +7968,7 @@ class gp_XYZ():
         New.X() = -<me>.X() New.Y() = -<me>.Y() New.Z() = -<me>.Z()
         """
     @overload
-    def SetCoord(self,i : int,X : float) -> None: 
+    def SetCoord(self,X : float,Y : float,Z : float) -> None: 
         """
         For this XYZ object, assigns the values X, Y and Z to its three coordinates
 
@@ -7886,9 +7981,9 @@ class gp_XYZ():
     @overload
     def SetCoord(self,Index : int,Xi : float) -> None: ...
     @overload
-    def SetCoord(self,X : float,Y : float,Z : float) -> None: ...
+    def SetCoord(self,i : int,X : float) -> None: ...
     @overload
-    def SetLinearForm(self,XYZ1 : gp_XYZ,XYZ2 : gp_XYZ) -> None: 
+    def SetLinearForm(self,A1 : float,XYZ1 : gp_XYZ,A2 : float,XYZ2 : gp_XYZ,A3 : float,XYZ3 : gp_XYZ) -> None: 
         """
         <me> is set to the following linear form : A1 * XYZ1 + A2 * XYZ2 + A3 * XYZ3 + XYZ4
 
@@ -7915,21 +8010,21 @@ class gp_XYZ():
         <me> is set to the following linear form : A1 * XYZ1 + A2 * XYZ2 + A3 * XYZ3 + XYZ4
         """
     @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : gp_XYZ,A2 : float,XYZ2 : gp_XYZ,A3 : float,XYZ3 : gp_XYZ,XYZ4 : gp_XYZ) -> None: ...
+    def SetLinearForm(self,Left : gp_XYZ,Right : gp_XYZ) -> None: ...
     @overload
     def SetLinearForm(self,L : float,Left : gp_XYZ,Right : gp_XYZ) -> None: ...
     @overload
     def SetLinearForm(self,L : float,Left : gp_XYZ,R : float,Right : gp_XYZ) -> None: ...
     @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : gp_XYZ,A2 : float,XYZ2 : gp_XYZ,XYZ3 : gp_XYZ) -> None: ...
-    @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : gp_XYZ,A2 : float,XYZ2 : gp_XYZ) -> None: ...
+    def SetLinearForm(self,XYZ1 : gp_XYZ,XYZ2 : gp_XYZ) -> None: ...
     @overload
     def SetLinearForm(self,A1 : float,XYZ1 : gp_XYZ,XYZ2 : gp_XYZ) -> None: ...
     @overload
-    def SetLinearForm(self,Left : gp_XYZ,Right : gp_XYZ) -> None: ...
+    def SetLinearForm(self,A1 : float,XYZ1 : gp_XYZ,A2 : float,XYZ2 : gp_XYZ) -> None: ...
     @overload
-    def SetLinearForm(self,A1 : float,XYZ1 : gp_XYZ,A2 : float,XYZ2 : gp_XYZ,A3 : float,XYZ3 : gp_XYZ) -> None: ...
+    def SetLinearForm(self,A1 : float,XYZ1 : gp_XYZ,A2 : float,XYZ2 : gp_XYZ,XYZ3 : gp_XYZ) -> None: ...
+    @overload
+    def SetLinearForm(self,A1 : float,XYZ1 : gp_XYZ,A2 : float,XYZ2 : gp_XYZ,A3 : float,XYZ3 : gp_XYZ,XYZ4 : gp_XYZ) -> None: ...
     def SetX(self,X : float) -> None: 
         """
         Assigns the given value to the X coordinate
@@ -7993,7 +8088,7 @@ class gp_XYZ():
         None
         """
     @overload
-    def __imul__(self,Other : gp_XYZ) -> None: 
+    def __imul__(self,Matrix : gp_Mat) -> None: 
         """
         None
 
@@ -8001,10 +8096,10 @@ class gp_XYZ():
 
         None
         """
-    @overload
-    def __imul__(self,Matrix : gp_Mat) -> None: ...
     @overload
     def __imul__(self,Scalar : float) -> None: ...
+    @overload
+    def __imul__(self,Other : gp_XYZ) -> None: ...
     @overload
     def __init__(self,X : float,Y : float,Z : float) -> None: ...
     @overload
@@ -8031,15 +8126,15 @@ class gp_XYZ():
         None
         """
     @overload
-    def __mul__(self,Other : gp_XYZ) -> float: ...
-    @overload
     def __mul__(self,Matrix : gp_Mat) -> gp_XYZ: ...
+    @overload
+    def __mul__(self,Other : gp_XYZ) -> float: ...
     def __pow__(self,Right : gp_XYZ) -> gp_XYZ: 
         """
         None
         """
     @overload
-    def __rmul__(self,Matrix : gp_Mat) -> gp_XYZ: 
+    def __rmul__(self,Scalar : float) -> gp_XYZ: 
         """
         None
 
@@ -8047,10 +8142,10 @@ class gp_XYZ():
 
         None
         """
+    @overload
+    def __rmul__(self,Matrix : gp_Mat) -> gp_XYZ: ...
     @overload
     def __rmul__(self,Other : gp_XYZ) -> float: ...
-    @overload
-    def __rmul__(self,Scalar : float) -> gp_XYZ: ...
     def __sub__(self,Right : gp_XYZ) -> gp_XYZ: 
         """
         None
@@ -8061,7 +8156,7 @@ class gp_XYZ():
         """
     pass
 @overload
-def __mul__(Scalar : float,Coord1 : gp_XY) -> gp_XY:
+def __mul__(Matrix : gp_Mat2d,Coord1 : gp_XY) -> gp_XY:
     """
     None
 
@@ -8080,10 +8175,7 @@ def __mul__(Scalar : float,Coord1 : gp_XY) -> gp_XY:
     None
     """
 @overload
-def __mul__(Scalar : float,Coord1 : gp_XYZ) -> gp_XYZ:
-    pass
-@overload
-def __mul__(Scalar : float,V : gp_Vec) -> gp_Vec:
+def __mul__(Scalar : float,V : gp_Vec2d) -> gp_Vec2d:
     pass
 @overload
 def __mul__(Scalar : float,Mat3D : gp_Mat) -> gp_Mat:
@@ -8092,16 +8184,19 @@ def __mul__(Scalar : float,Mat3D : gp_Mat) -> gp_Mat:
 def __mul__(Scalar : float,Mat2D : gp_Mat2d) -> gp_Mat2d:
     pass
 @overload
+def __mul__(Scalar : float,Coord1 : gp_XYZ) -> gp_XYZ:
+    pass
+@overload
+def __mul__(Scalar : float,V : gp_Vec) -> gp_Vec:
+    pass
+@overload
+def __mul__(Scalar : float,Coord1 : gp_XY) -> gp_XY:
+    pass
+@overload
 def __mul__(Matrix : gp_Mat,Coord1 : gp_XYZ) -> gp_XYZ:
     pass
 @overload
-def __mul__(Matrix : gp_Mat2d,Coord1 : gp_XY) -> gp_XY:
-    pass
-@overload
-def __mul__(Scalar : float,V : gp_Vec2d) -> gp_Vec2d:
-    pass
-@overload
-def __rmul__(Scalar : float,Mat3D : gp_Mat) -> gp_Mat:
+def __rmul__(Matrix : gp_Mat2d,Coord1 : gp_XY) -> gp_XY:
     """
     None
 
@@ -8119,59 +8214,59 @@ def __rmul__(Scalar : float,Mat3D : gp_Mat) -> gp_Mat:
 
     None
     """
-@overload
-def __rmul__(Matrix : gp_Mat,Coord1 : gp_XYZ) -> gp_XYZ:
-    pass
 @overload
 def __rmul__(Scalar : float,V : gp_Vec2d) -> gp_Vec2d:
     pass
 @overload
-def __rmul__(Scalar : float,Coord1 : gp_XYZ) -> gp_XYZ:
-    pass
-@overload
-def __rmul__(Scalar : float,Coord1 : gp_XY) -> gp_XY:
+def __rmul__(Scalar : float,Mat3D : gp_Mat) -> gp_Mat:
     pass
 @overload
 def __rmul__(Scalar : float,Mat2D : gp_Mat2d) -> gp_Mat2d:
     pass
 @overload
-def __rmul__(Matrix : gp_Mat2d,Coord1 : gp_XY) -> gp_XY:
+def __rmul__(Scalar : float,Coord1 : gp_XYZ) -> gp_XYZ:
     pass
 @overload
 def __rmul__(Scalar : float,V : gp_Vec) -> gp_Vec:
     pass
-gp_Ax1Mirror: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Ax1Mirror
-gp_Ax2Mirror: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Ax2Mirror
-gp_CompoundTrsf: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_CompoundTrsf
-gp_EulerAngles: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_EulerAngles
-gp_Extrinsic_XYX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_XYX
-gp_Extrinsic_XYZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_XYZ
-gp_Extrinsic_XZX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_XZX
-gp_Extrinsic_XZY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_XZY
-gp_Extrinsic_YXY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_YXY
-gp_Extrinsic_YXZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_YXZ
-gp_Extrinsic_YZX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_YZX
-gp_Extrinsic_YZY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_YZY
-gp_Extrinsic_ZXY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_ZXY
-gp_Extrinsic_ZXZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_ZXZ
-gp_Extrinsic_ZYX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_ZYX
-gp_Extrinsic_ZYZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Extrinsic_ZYZ
-gp_Identity: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Identity
-gp_Intrinsic_XYX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_XYX
-gp_Intrinsic_XYZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_XYZ
-gp_Intrinsic_XZX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_XZX
-gp_Intrinsic_XZY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_XZY
-gp_Intrinsic_YXY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_YXY
-gp_Intrinsic_YXZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_YXZ
-gp_Intrinsic_YZX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_YZX
-gp_Intrinsic_YZY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_YZY
-gp_Intrinsic_ZXY: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_ZXY
-gp_Intrinsic_ZXZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_ZXZ
-gp_Intrinsic_ZYX: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_ZYX
-gp_Intrinsic_ZYZ: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_Intrinsic_ZYZ
-gp_Other: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Other
-gp_PntMirror: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_PntMirror
-gp_Rotation: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Rotation
-gp_Scale: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Scale
-gp_Translation: OCP.gp.gp_TrsfForm # value = gp_TrsfForm.gp_Translation
-gp_YawPitchRoll: OCP.gp.gp_EulerSequence # value = gp_EulerSequence.gp_YawPitchRoll
+@overload
+def __rmul__(Scalar : float,Coord1 : gp_XY) -> gp_XY:
+    pass
+@overload
+def __rmul__(Matrix : gp_Mat,Coord1 : gp_XYZ) -> gp_XYZ:
+    pass
+gp_Ax1Mirror: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Ax1Mirror: 4>
+gp_Ax2Mirror: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Ax2Mirror: 5>
+gp_CompoundTrsf: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_CompoundTrsf: 7>
+gp_EulerAngles: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_EulerAngles: 0>
+gp_Extrinsic_XYX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_XYX: 14>
+gp_Extrinsic_XYZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_XYZ: 2>
+gp_Extrinsic_XZX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_XZX: 15>
+gp_Extrinsic_XZY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_XZY: 3>
+gp_Extrinsic_YXY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_YXY: 17>
+gp_Extrinsic_YXZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_YXZ: 5>
+gp_Extrinsic_YZX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_YZX: 4>
+gp_Extrinsic_YZY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_YZY: 16>
+gp_Extrinsic_ZXY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_ZXY: 6>
+gp_Extrinsic_ZXZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_ZXZ: 19>
+gp_Extrinsic_ZYX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_ZYX: 7>
+gp_Extrinsic_ZYZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Extrinsic_ZYZ: 18>
+gp_Identity: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Identity: 0>
+gp_Intrinsic_XYX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_XYX: 20>
+gp_Intrinsic_XYZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_XYZ: 8>
+gp_Intrinsic_XZX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_XZX: 21>
+gp_Intrinsic_XZY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_XZY: 9>
+gp_Intrinsic_YXY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_YXY: 23>
+gp_Intrinsic_YXZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_YXZ: 11>
+gp_Intrinsic_YZX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_YZX: 10>
+gp_Intrinsic_YZY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_YZY: 22>
+gp_Intrinsic_ZXY: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_ZXY: 12>
+gp_Intrinsic_ZXZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_ZXZ: 24>
+gp_Intrinsic_ZYX: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_ZYX: 13>
+gp_Intrinsic_ZYZ: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_Intrinsic_ZYZ: 25>
+gp_Other: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Other: 8>
+gp_PntMirror: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_PntMirror: 3>
+gp_Rotation: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Rotation: 1>
+gp_Scale: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Scale: 6>
+gp_Translation: OCP.gp.gp_TrsfForm # value = <gp_TrsfForm.gp_Translation: 2>
+gp_YawPitchRoll: OCP.gp.gp_EulerSequence # value = <gp_EulerSequence.gp_YawPitchRoll: 1>

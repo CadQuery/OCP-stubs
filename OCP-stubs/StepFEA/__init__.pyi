@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TColStd
-import OCP.StepData
-import OCP.StepRepr
-import OCP.StepBasic
-import OCP.StepGeom
-import OCP.Standard
-import OCP.StepElement
+import OCP.TCollection
 import OCP.NCollection
+import OCP.StepBasic
+import OCP.StepRepr
 import OCP.Interface
+import OCP.StepGeom
+import OCP.StepElement
+import OCP.Standard
+import OCP.StepData
 __all__  = [
 "StepFEA_FeaRepresentationItem",
 "StepFEA_AlignedSurface3dElementCoordinateSystem",
@@ -419,14 +419,14 @@ class StepFEA_Array1OfCurveElementEndOffset():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepFEA_CurveElementEndOffset,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepFEA_Array1OfCurveElementEndOffset) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : StepFEA_CurveElementEndOffset,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepFEA_Array1OfCurveElementEndRelease():
     """
@@ -505,14 +505,14 @@ class StepFEA_Array1OfCurveElementEndRelease():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepFEA_CurveElementEndRelease,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepFEA_Array1OfCurveElementEndRelease) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theBegin : StepFEA_CurveElementEndRelease,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepFEA_Array1OfCurveElementInterval():
     """
@@ -591,14 +591,14 @@ class StepFEA_Array1OfCurveElementInterval():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : StepFEA_Array1OfCurveElementInterval) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : StepFEA_CurveElementInterval,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepFEA_Array1OfCurveElementInterval) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepFEA_Array1OfDegreeOfFreedom():
     """
@@ -679,12 +679,12 @@ class StepFEA_Array1OfDegreeOfFreedom():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepFEA_Array1OfDegreeOfFreedom) -> None: ...
-    @overload
     def __init__(self,theBegin : StepFEA_DegreeOfFreedom,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepFEA_Array1OfDegreeOfFreedom) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepFEA_Array1OfElementRepresentation():
     """
@@ -763,14 +763,14 @@ class StepFEA_Array1OfElementRepresentation():
         Constant value access
         """
     @overload
+    def __init__(self,theOther : StepFEA_Array1OfElementRepresentation) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepFEA_ElementRepresentation,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : StepFEA_Array1OfElementRepresentation) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepFEA_Array1OfNodeRepresentation():
     """
@@ -851,12 +851,12 @@ class StepFEA_Array1OfNodeRepresentation():
     @overload
     def __init__(self,theBegin : StepFEA_NodeRepresentation,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepFEA_Array1OfNodeRepresentation) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : StepFEA_Array1OfNodeRepresentation) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepFEA_ConstantSurface3dElementCoordinateSystem(StepFEA_FeaRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     """
@@ -956,21 +956,29 @@ class StepFEA_CoordinateSystemType():
 
       StepFEA_Spherical
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepFEA_Cartesian: OCP.StepFEA.StepFEA_CoordinateSystemType # value = StepFEA_CoordinateSystemType.StepFEA_Cartesian
-    StepFEA_Cylindrical: OCP.StepFEA.StepFEA_CoordinateSystemType # value = StepFEA_CoordinateSystemType.StepFEA_Cylindrical
-    StepFEA_Spherical: OCP.StepFEA.StepFEA_CoordinateSystemType # value = StepFEA_CoordinateSystemType.StepFEA_Spherical
-    __entries: dict # value = {'StepFEA_Cartesian': (StepFEA_CoordinateSystemType.StepFEA_Cartesian, None), 'StepFEA_Cylindrical': (StepFEA_CoordinateSystemType.StepFEA_Cylindrical, None), 'StepFEA_Spherical': (StepFEA_CoordinateSystemType.StepFEA_Spherical, None)}
-    __members__: dict # value = {'StepFEA_Cartesian': StepFEA_CoordinateSystemType.StepFEA_Cartesian, 'StepFEA_Cylindrical': StepFEA_CoordinateSystemType.StepFEA_Cylindrical, 'StepFEA_Spherical': StepFEA_CoordinateSystemType.StepFEA_Spherical}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepFEA_Cartesian: OCP.StepFEA.StepFEA_CoordinateSystemType # value = <StepFEA_CoordinateSystemType.StepFEA_Cartesian: 0>
+    StepFEA_Cylindrical: OCP.StepFEA.StepFEA_CoordinateSystemType # value = <StepFEA_CoordinateSystemType.StepFEA_Cylindrical: 1>
+    StepFEA_Spherical: OCP.StepFEA.StepFEA_CoordinateSystemType # value = <StepFEA_CoordinateSystemType.StepFEA_Spherical: 2>
+    __entries: dict # value = {'StepFEA_Cartesian': (<StepFEA_CoordinateSystemType.StepFEA_Cartesian: 0>, None), 'StepFEA_Cylindrical': (<StepFEA_CoordinateSystemType.StepFEA_Cylindrical: 1>, None), 'StepFEA_Spherical': (<StepFEA_CoordinateSystemType.StepFEA_Spherical: 2>, None)}
+    __members__: dict # value = {'StepFEA_Cartesian': <StepFEA_CoordinateSystemType.StepFEA_Cartesian: 0>, 'StepFEA_Cylindrical': <StepFEA_CoordinateSystemType.StepFEA_Cylindrical: 1>, 'StepFEA_Spherical': <StepFEA_CoordinateSystemType.StepFEA_Spherical: 2>}
     pass
 class StepFEA_Curve3dElementProperty(OCP.Standard.Standard_Transient):
     """
@@ -1184,19 +1192,27 @@ class StepFEA_CurveEdge():
 
       StepFEA_ElementEdge
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepFEA_ElementEdge: OCP.StepFEA.StepFEA_CurveEdge # value = StepFEA_CurveEdge.StepFEA_ElementEdge
-    __entries: dict # value = {'StepFEA_ElementEdge': (StepFEA_CurveEdge.StepFEA_ElementEdge, None)}
-    __members__: dict # value = {'StepFEA_ElementEdge': StepFEA_CurveEdge.StepFEA_ElementEdge}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepFEA_ElementEdge: OCP.StepFEA.StepFEA_CurveEdge # value = <StepFEA_CurveEdge.StepFEA_ElementEdge: 0>
+    __entries: dict # value = {'StepFEA_ElementEdge': (<StepFEA_CurveEdge.StepFEA_ElementEdge: 0>, None)}
+    __members__: dict # value = {'StepFEA_ElementEdge': <StepFEA_CurveEdge.StepFEA_ElementEdge: 0>}
     pass
 class StepFEA_CurveElementEndCoordinateSystem(OCP.StepData.StepData_SelectType):
     """
@@ -2594,19 +2610,27 @@ class StepFEA_ElementVolume():
 
       StepFEA_Volume
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepFEA_Volume: OCP.StepFEA.StepFEA_ElementVolume # value = StepFEA_ElementVolume.StepFEA_Volume
-    __entries: dict # value = {'StepFEA_Volume': (StepFEA_ElementVolume.StepFEA_Volume, None)}
-    __members__: dict # value = {'StepFEA_Volume': StepFEA_ElementVolume.StepFEA_Volume}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepFEA_Volume: OCP.StepFEA.StepFEA_ElementVolume # value = <StepFEA_ElementVolume.StepFEA_Volume: 0>
+    __entries: dict # value = {'StepFEA_Volume': (<StepFEA_ElementVolume.StepFEA_Volume: 0>, None)}
+    __members__: dict # value = {'StepFEA_Volume': <StepFEA_ElementVolume.StepFEA_Volume: 0>}
     pass
 class StepFEA_EnumeratedDegreeOfFreedom():
     """
@@ -2628,25 +2652,33 @@ class StepFEA_EnumeratedDegreeOfFreedom():
 
       StepFEA_Warp
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepFEA_Warp: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_Warp
-    StepFEA_XRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XRotation
-    StepFEA_XTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XTranslation
-    StepFEA_YRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YRotation
-    StepFEA_YTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YTranslation
-    StepFEA_ZRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZRotation
-    StepFEA_ZTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZTranslation
-    __entries: dict # value = {'StepFEA_XTranslation': (StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XTranslation, None), 'StepFEA_YTranslation': (StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YTranslation, None), 'StepFEA_ZTranslation': (StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZTranslation, None), 'StepFEA_XRotation': (StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XRotation, None), 'StepFEA_YRotation': (StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YRotation, None), 'StepFEA_ZRotation': (StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZRotation, None), 'StepFEA_Warp': (StepFEA_EnumeratedDegreeOfFreedom.StepFEA_Warp, None)}
-    __members__: dict # value = {'StepFEA_XTranslation': StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XTranslation, 'StepFEA_YTranslation': StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YTranslation, 'StepFEA_ZTranslation': StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZTranslation, 'StepFEA_XRotation': StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XRotation, 'StepFEA_YRotation': StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YRotation, 'StepFEA_ZRotation': StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZRotation, 'StepFEA_Warp': StepFEA_EnumeratedDegreeOfFreedom.StepFEA_Warp}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepFEA_Warp: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_Warp: 6>
+    StepFEA_XRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XRotation: 3>
+    StepFEA_XTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XTranslation: 0>
+    StepFEA_YRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YRotation: 4>
+    StepFEA_YTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YTranslation: 1>
+    StepFEA_ZRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZRotation: 5>
+    StepFEA_ZTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZTranslation: 2>
+    __entries: dict # value = {'StepFEA_XTranslation': (<StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XTranslation: 0>, None), 'StepFEA_YTranslation': (<StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YTranslation: 1>, None), 'StepFEA_ZTranslation': (<StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZTranslation: 2>, None), 'StepFEA_XRotation': (<StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XRotation: 3>, None), 'StepFEA_YRotation': (<StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YRotation: 4>, None), 'StepFEA_ZRotation': (<StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZRotation: 5>, None), 'StepFEA_Warp': (<StepFEA_EnumeratedDegreeOfFreedom.StepFEA_Warp: 6>, None)}
+    __members__: dict # value = {'StepFEA_XTranslation': <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XTranslation: 0>, 'StepFEA_YTranslation': <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YTranslation: 1>, 'StepFEA_ZTranslation': <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZTranslation: 2>, 'StepFEA_XRotation': <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XRotation: 3>, 'StepFEA_YRotation': <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YRotation: 4>, 'StepFEA_ZRotation': <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZRotation: 5>, 'StepFEA_Warp': <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_Warp: 6>}
     pass
 class StepFEA_FeaMaterialPropertyRepresentationItem(OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     """
@@ -4850,12 +4882,12 @@ class StepFEA_HArray1OfCurveElementEndOffset(StepFEA_Array1OfCurveElementEndOffs
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theOther : StepFEA_Array1OfCurveElementEndOffset) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepFEA_CurveElementEndOffset) -> None: ...
-    @overload
-    def __init__(self,theOther : StepFEA_Array1OfCurveElementEndOffset) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4991,14 +5023,14 @@ class StepFEA_HArray1OfCurveElementEndRelease(StepFEA_Array1OfCurveElementEndRel
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepFEA_Array1OfCurveElementEndRelease) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepFEA_CurveElementEndRelease) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepFEA_CurveElementEndRelease) -> None: ...
+    def __init__(self,theOther : StepFEA_Array1OfCurveElementEndRelease) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5134,14 +5166,14 @@ class StepFEA_HArray1OfCurveElementInterval(StepFEA_Array1OfCurveElementInterval
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : StepFEA_Array1OfCurveElementInterval) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepFEA_CurveElementInterval) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepFEA_CurveElementInterval) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepFEA_Array1OfCurveElementInterval) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5277,14 +5309,14 @@ class StepFEA_HArray1OfDegreeOfFreedom(StepFEA_Array1OfDegreeOfFreedom, OCP.Stan
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepFEA_DegreeOfFreedom) -> None: ...
+    def __init__(self,theOther : StepFEA_Array1OfDegreeOfFreedom) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepFEA_DegreeOfFreedom) -> None: ...
     @overload
-    def __init__(self,theOther : StepFEA_Array1OfDegreeOfFreedom) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5420,14 +5452,14 @@ class StepFEA_HArray1OfElementRepresentation(StepFEA_Array1OfElementRepresentati
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepFEA_ElementRepresentation) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepFEA_Array1OfElementRepresentation) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepFEA_ElementRepresentation) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5563,14 +5595,14 @@ class StepFEA_HArray1OfNodeRepresentation(StepFEA_Array1OfNodeRepresentation, OC
         Constant value access
         """
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepFEA_NodeRepresentation) -> None: ...
+    @overload
     def __init__(self,theOther : StepFEA_Array1OfNodeRepresentation) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepFEA_NodeRepresentation) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5628,14 +5660,14 @@ class StepFEA_SequenceOfCurve3dElementProperty(OCP.NCollection.NCollection_BaseS
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepFEA_SequenceOfCurve3dElementProperty) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : StepFEA_Curve3dElementProperty) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepFEA_Curve3dElementProperty) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : StepFEA_SequenceOfCurve3dElementProperty) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : StepFEA_SequenceOfCurve3dElementProperty) -> None: 
         """
@@ -5662,23 +5694,23 @@ class StepFEA_SequenceOfCurve3dElementProperty(OCP.NCollection.NCollection_BaseS
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : StepFEA_SequenceOfCurve3dElementProperty) -> None: 
+    def Prepend(self,theItem : StepFEA_Curve3dElementProperty) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : StepFEA_Curve3dElementProperty) -> None: ...
+    def Prepend(self,theSeq : StepFEA_SequenceOfCurve3dElementProperty) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5704,12 +5736,12 @@ class StepFEA_SequenceOfCurve3dElementProperty(OCP.NCollection.NCollection_BaseS
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : StepFEA_SequenceOfCurve3dElementProperty) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : StepFEA_SequenceOfCurve3dElementProperty) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5805,14 +5837,14 @@ class StepFEA_SequenceOfElementGeometricRelationship(OCP.NCollection.NCollection
     @overload
     def Prepend(self,theSeq : StepFEA_SequenceOfElementGeometricRelationship) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5838,12 +5870,12 @@ class StepFEA_SequenceOfElementGeometricRelationship(OCP.NCollection.NCollection
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepFEA_SequenceOfElementGeometricRelationship) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5974,10 +6006,10 @@ class StepFEA_SequenceOfElementRepresentation(OCP.NCollection.NCollection_BaseSe
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : StepFEA_SequenceOfElementRepresentation) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepFEA_SequenceOfElementRepresentation) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6030,23 +6062,23 @@ class StepFEA_SequenceOfNodeRepresentation(OCP.NCollection.NCollection_BaseSeque
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepFEA_NodeRepresentation) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : StepFEA_SequenceOfNodeRepresentation) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepFEA_SequenceOfNodeRepresentation) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : StepFEA_NodeRepresentation) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepFEA_SequenceOfNodeRepresentation) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : StepFEA_NodeRepresentation) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepFEA_NodeRepresentation) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : StepFEA_SequenceOfNodeRepresentation) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -6073,14 +6105,14 @@ class StepFEA_SequenceOfNodeRepresentation(OCP.NCollection.NCollection_BaseSeque
     @overload
     def Prepend(self,theSeq : StepFEA_SequenceOfNodeRepresentation) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -6111,7 +6143,7 @@ class StepFEA_SequenceOfNodeRepresentation(OCP.NCollection.NCollection_BaseSeque
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7044,14 +7076,14 @@ class StepFEA_HSequenceOfCurve3dElementProperty(StepFEA_SequenceOfCurve3dElement
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : StepFEA_Curve3dElementProperty) -> None: 
+    def Append(self,theSequence : StepFEA_SequenceOfCurve3dElementProperty) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : StepFEA_SequenceOfCurve3dElementProperty) -> None: ...
+    def Append(self,theItem : StepFEA_Curve3dElementProperty) -> None: ...
     def Assign(self,theOther : StepFEA_SequenceOfCurve3dElementProperty) -> StepFEA_SequenceOfCurve3dElementProperty: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -7105,14 +7137,14 @@ class StepFEA_HSequenceOfCurve3dElementProperty(StepFEA_SequenceOfCurve3dElement
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepFEA_SequenceOfCurve3dElementProperty) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : StepFEA_Curve3dElementProperty) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepFEA_Curve3dElementProperty) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : StepFEA_SequenceOfCurve3dElementProperty) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : StepFEA_SequenceOfCurve3dElementProperty) -> None: 
         """
@@ -7157,23 +7189,23 @@ class StepFEA_HSequenceOfCurve3dElementProperty(StepFEA_SequenceOfCurve3dElement
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : StepFEA_SequenceOfCurve3dElementProperty) -> None: 
+    def Prepend(self,theItem : StepFEA_Curve3dElementProperty) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : StepFEA_Curve3dElementProperty) -> None: ...
+    def Prepend(self,theSeq : StepFEA_SequenceOfCurve3dElementProperty) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7207,10 +7239,10 @@ class StepFEA_HSequenceOfCurve3dElementProperty(StepFEA_SequenceOfCurve3dElement
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : StepFEA_SequenceOfCurve3dElementProperty) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepFEA_SequenceOfCurve3dElementProperty) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7355,14 +7387,14 @@ class StepFEA_HSequenceOfElementGeometricRelationship(StepFEA_SequenceOfElementG
     @overload
     def Prepend(self,theSeq : StepFEA_SequenceOfElementGeometricRelationship) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7396,10 +7428,10 @@ class StepFEA_HSequenceOfElementGeometricRelationship(StepFEA_SequenceOfElementG
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepFEA_SequenceOfElementGeometricRelationship) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7585,10 +7617,10 @@ class StepFEA_HSequenceOfElementRepresentation(StepFEA_SequenceOfElementRepresen
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : StepFEA_SequenceOfElementRepresentation) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepFEA_SequenceOfElementRepresentation) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7672,23 +7704,23 @@ class StepFEA_HSequenceOfNodeRepresentation(StepFEA_SequenceOfNodeRepresentation
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepFEA_NodeRepresentation) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : StepFEA_SequenceOfNodeRepresentation) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepFEA_SequenceOfNodeRepresentation) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : StepFEA_NodeRepresentation) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepFEA_SequenceOfNodeRepresentation) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : StepFEA_NodeRepresentation) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepFEA_NodeRepresentation) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : StepFEA_SequenceOfNodeRepresentation) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -7733,14 +7765,14 @@ class StepFEA_HSequenceOfNodeRepresentation(StepFEA_SequenceOfNodeRepresentation
     @overload
     def Prepend(self,theSeq : StepFEA_SequenceOfNodeRepresentation) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7774,10 +7806,10 @@ class StepFEA_HSequenceOfNodeRepresentation(StepFEA_SequenceOfNodeRepresentation
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepFEA_SequenceOfNodeRepresentation) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -8732,19 +8764,27 @@ class StepFEA_UnspecifiedValue():
 
       StepFEA_Unspecified
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepFEA_Unspecified: OCP.StepFEA.StepFEA_UnspecifiedValue # value = StepFEA_UnspecifiedValue.StepFEA_Unspecified
-    __entries: dict # value = {'StepFEA_Unspecified': (StepFEA_UnspecifiedValue.StepFEA_Unspecified, None)}
-    __members__: dict # value = {'StepFEA_Unspecified': StepFEA_UnspecifiedValue.StepFEA_Unspecified}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepFEA_Unspecified: OCP.StepFEA.StepFEA_UnspecifiedValue # value = <StepFEA_UnspecifiedValue.StepFEA_Unspecified: 0>
+    __entries: dict # value = {'StepFEA_Unspecified': (<StepFEA_UnspecifiedValue.StepFEA_Unspecified: 0>, None)}
+    __members__: dict # value = {'StepFEA_Unspecified': <StepFEA_UnspecifiedValue.StepFEA_Unspecified: 0>}
     pass
 class StepFEA_Volume3dElementRepresentation(StepFEA_ElementRepresentation, OCP.StepRepr.StepRepr_Representation, OCP.Standard.Standard_Transient):
     """
@@ -8872,16 +8912,16 @@ class StepFEA_Volume3dElementRepresentation(StepFEA_ElementRepresentation, OCP.S
         None
         """
     pass
-StepFEA_Cartesian: OCP.StepFEA.StepFEA_CoordinateSystemType # value = StepFEA_CoordinateSystemType.StepFEA_Cartesian
-StepFEA_Cylindrical: OCP.StepFEA.StepFEA_CoordinateSystemType # value = StepFEA_CoordinateSystemType.StepFEA_Cylindrical
-StepFEA_ElementEdge: OCP.StepFEA.StepFEA_CurveEdge # value = StepFEA_CurveEdge.StepFEA_ElementEdge
-StepFEA_Spherical: OCP.StepFEA.StepFEA_CoordinateSystemType # value = StepFEA_CoordinateSystemType.StepFEA_Spherical
-StepFEA_Unspecified: OCP.StepFEA.StepFEA_UnspecifiedValue # value = StepFEA_UnspecifiedValue.StepFEA_Unspecified
-StepFEA_Volume: OCP.StepFEA.StepFEA_ElementVolume # value = StepFEA_ElementVolume.StepFEA_Volume
-StepFEA_Warp: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_Warp
-StepFEA_XRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XRotation
-StepFEA_XTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XTranslation
-StepFEA_YRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YRotation
-StepFEA_YTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YTranslation
-StepFEA_ZRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZRotation
-StepFEA_ZTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZTranslation
+StepFEA_Cartesian: OCP.StepFEA.StepFEA_CoordinateSystemType # value = <StepFEA_CoordinateSystemType.StepFEA_Cartesian: 0>
+StepFEA_Cylindrical: OCP.StepFEA.StepFEA_CoordinateSystemType # value = <StepFEA_CoordinateSystemType.StepFEA_Cylindrical: 1>
+StepFEA_ElementEdge: OCP.StepFEA.StepFEA_CurveEdge # value = <StepFEA_CurveEdge.StepFEA_ElementEdge: 0>
+StepFEA_Spherical: OCP.StepFEA.StepFEA_CoordinateSystemType # value = <StepFEA_CoordinateSystemType.StepFEA_Spherical: 2>
+StepFEA_Unspecified: OCP.StepFEA.StepFEA_UnspecifiedValue # value = <StepFEA_UnspecifiedValue.StepFEA_Unspecified: 0>
+StepFEA_Volume: OCP.StepFEA.StepFEA_ElementVolume # value = <StepFEA_ElementVolume.StepFEA_Volume: 0>
+StepFEA_Warp: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_Warp: 6>
+StepFEA_XRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XRotation: 3>
+StepFEA_XTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_XTranslation: 0>
+StepFEA_YRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YRotation: 4>
+StepFEA_YTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_YTranslation: 1>
+StepFEA_ZRotation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZRotation: 5>
+StepFEA_ZTranslation: OCP.StepFEA.StepFEA_EnumeratedDegreeOfFreedom # value = <StepFEA_EnumeratedDegreeOfFreedom.StepFEA_ZTranslation: 2>

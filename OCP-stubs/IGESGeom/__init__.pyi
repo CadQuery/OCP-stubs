@@ -6,13 +6,13 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
 import OCP.TCollection
+import io
 import OCP.IGESData
-import OCP.IGESBasic
-import OCP.Message
-import OCP.TColgp
-import OCP.Standard
-import OCP.Interface
 import OCP.gp
+import OCP.TColgp
+import OCP.Interface
+import OCP.Standard
+import OCP.IGESBasic
 __all__  = [
 "IGESGeom",
 "IGESGeom_Array1OfBoundary",
@@ -165,14 +165,14 @@ class IGESGeom_Array1OfBoundary():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : IGESGeom_Boundary,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : IGESGeom_Array1OfBoundary) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : IGESGeom_Boundary,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : IGESGeom_Array1OfBoundary) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESGeom_Array1OfCurveOnSurface():
     """
@@ -251,14 +251,14 @@ class IGESGeom_Array1OfCurveOnSurface():
         Constant value access
         """
     @overload
+    def __init__(self,theBegin : IGESGeom_CurveOnSurface,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : IGESGeom_Array1OfCurveOnSurface) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBegin : IGESGeom_CurveOnSurface,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESGeom_Array1OfTransformationMatrix():
     """
@@ -337,14 +337,14 @@ class IGESGeom_Array1OfTransformationMatrix():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : IGESGeom_Array1OfTransformationMatrix) -> None: ...
     @overload
-    def __init__(self,theBegin : IGESGeom_TransformationMatrix,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : IGESGeom_TransformationMatrix,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESGeom_BSplineCurve(OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Standard_Transient):
     """
@@ -4599,14 +4599,14 @@ class IGESGeom_HArray1OfBoundary(IGESGeom_Array1OfBoundary, OCP.Standard.Standar
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : IGESGeom_Array1OfBoundary) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESGeom_Boundary) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESGeom_Boundary) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : IGESGeom_Array1OfBoundary) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4742,14 +4742,14 @@ class IGESGeom_HArray1OfCurveOnSurface(IGESGeom_Array1OfCurveOnSurface, OCP.Stan
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESGeom_CurveOnSurface) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESGeom_CurveOnSurface) -> None: ...
     @overload
     def __init__(self,theOther : IGESGeom_Array1OfCurveOnSurface) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4885,14 +4885,14 @@ class IGESGeom_HArray1OfTransformationMatrix(IGESGeom_Array1OfTransformationMatr
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESGeom_TransformationMatrix) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : IGESGeom_Array1OfTransformationMatrix) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESGeom_TransformationMatrix) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7259,7 +7259,7 @@ class IGESGeom_SpecificModule(OCP.IGESData.IGESData_SpecificModule, OCP.Standard
         """
         Performs non-ambiguous Correction on Entities which support them (Boundary,ConicArc,Flash,OffsetCurve,TransformationMatrix)
         """
-    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Specific Dump (own parameters) for IGESGeom
         """
@@ -8695,7 +8695,7 @@ class IGESGeom_ToolBSplineCurve():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_BSplineCurve,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_BSplineCurve,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8729,7 +8729,7 @@ class IGESGeom_ToolBSplineSurface():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_BSplineSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_BSplineSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8767,7 +8767,7 @@ class IGESGeom_ToolBoundary():
         """
         Sets automatic unambiguous Correction on a Boundary (if BoundaryType = 0, Nullify all ParameterCurves)
         """
-    def OwnDump(self,ent : IGESGeom_Boundary,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_Boundary,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8801,7 +8801,7 @@ class IGESGeom_ToolBoundedSurface():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_BoundedSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_BoundedSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8835,7 +8835,7 @@ class IGESGeom_ToolCircularArc():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_CircularArc,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_CircularArc,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8869,7 +8869,7 @@ class IGESGeom_ToolCompositeCurve():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_CompositeCurve,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_CompositeCurve,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8907,7 +8907,7 @@ class IGESGeom_ToolConicArc():
         """
         Sets automatic unambiguous Correction on a ConicArc (FormNumber recomputed according case Ellips-Parab-Hyperb)
         """
-    def OwnDump(self,ent : IGESGeom_ConicArc,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_ConicArc,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8941,7 +8941,7 @@ class IGESGeom_ToolCopiousData():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_CopiousData,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_CopiousData,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -8979,7 +8979,7 @@ class IGESGeom_ToolCurveOnSurface():
         """
         Sets automatic unambiguous Correction on a CurveOnSurface (its CurveUV must have UseFlag at 5)
         """
-    def OwnDump(self,ent : IGESGeom_CurveOnSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_CurveOnSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9013,7 +9013,7 @@ class IGESGeom_ToolDirection():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_Direction,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_Direction,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9051,7 +9051,7 @@ class IGESGeom_ToolFlash():
         """
         Sets automatic unambiguous Correction on a Flash (LineFont in Directory Entry forced to Rank = 1)
         """
-    def OwnDump(self,ent : IGESGeom_Flash,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_Flash,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9085,7 +9085,7 @@ class IGESGeom_ToolLine():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_Line,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_Line,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9123,7 +9123,7 @@ class IGESGeom_ToolOffsetCurve():
         """
         Sets automatic unambiguous Correction on a OffsetCurve (if OffsetType is not 3, OffsetFunction is cleared)
         """
-    def OwnDump(self,ent : IGESGeom_OffsetCurve,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_OffsetCurve,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9157,7 +9157,7 @@ class IGESGeom_ToolOffsetSurface():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_OffsetSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_OffsetSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9191,7 +9191,7 @@ class IGESGeom_ToolPlane():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_Plane,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_Plane,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9225,7 +9225,7 @@ class IGESGeom_ToolPoint():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_Point,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_Point,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9259,7 +9259,7 @@ class IGESGeom_ToolRuledSurface():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_RuledSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_RuledSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9293,7 +9293,7 @@ class IGESGeom_ToolSplineCurve():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_SplineCurve,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_SplineCurve,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9327,7 +9327,7 @@ class IGESGeom_ToolSplineSurface():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_SplineSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_SplineSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9361,7 +9361,7 @@ class IGESGeom_ToolSurfaceOfRevolution():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_SurfaceOfRevolution,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_SurfaceOfRevolution,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9395,7 +9395,7 @@ class IGESGeom_ToolTabulatedCylinder():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_TabulatedCylinder,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_TabulatedCylinder,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9433,7 +9433,7 @@ class IGESGeom_ToolTransformationMatrix():
         """
         Sets automatic unambiguous Correction on a TransformationMatrix (FormNumber if 0 or 1, recomputed according Positive/Negative)
         """
-    def OwnDump(self,ent : IGESGeom_TransformationMatrix,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_TransformationMatrix,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -9467,7 +9467,7 @@ class IGESGeom_ToolTrimmedSurface():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGeom_TrimmedSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGeom_TrimmedSurface,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """

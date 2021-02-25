@@ -284,14 +284,14 @@ class MAT_Bisector(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def EndPoint(self,apoint : int) -> None: 
+    def EndPoint(self) -> int: 
         """
         None
 
         None
         """
     @overload
-    def EndPoint(self) -> int: ...
+    def EndPoint(self,apoint : int) -> None: ...
     def FirstBisector(self) -> MAT_Bisector: 
         """
         None
@@ -376,14 +376,14 @@ class MAT_Bisector(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SecondEdge(self) -> MAT_Edge: 
+    def SecondEdge(self,anedge : MAT_Edge) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SecondEdge(self,anedge : MAT_Edge) -> None: ...
+    def SecondEdge(self) -> MAT_Edge: ...
     @overload
     def SecondParameter(self,aparameter : float) -> None: 
         """
@@ -394,23 +394,23 @@ class MAT_Bisector(OCP.Standard.Standard_Transient):
     @overload
     def SecondParameter(self) -> float: ...
     @overload
-    def SecondVector(self,avector : int) -> None: 
+    def SecondVector(self) -> int: 
         """
         None
 
         None
         """
     @overload
-    def SecondVector(self) -> int: ...
+    def SecondVector(self,avector : int) -> None: ...
     @overload
-    def Sense(self,asense : float) -> None: 
+    def Sense(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def Sense(self) -> float: ...
+    def Sense(self,asense : float) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -463,14 +463,14 @@ class MAT_Edge(OCP.Standard.Standard_Transient):
     @overload
     def EdgeNumber(self,anumber : int) -> None: ...
     @overload
-    def FirstBisector(self,abisector : MAT_Bisector) -> None: 
+    def FirstBisector(self) -> MAT_Bisector: 
         """
         None
 
         None
         """
     @overload
-    def FirstBisector(self) -> MAT_Bisector: ...
+    def FirstBisector(self,abisector : MAT_Bisector) -> None: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -803,14 +803,14 @@ class MAT_ListOfEdge(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Current(self,anitem : MAT_Edge) -> None: 
+    def Current(self) -> MAT_Edge: 
         """
         None
 
         None
         """
     @overload
-    def Current(self) -> MAT_Edge: ...
+    def Current(self,anitem : MAT_Edge) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1052,14 +1052,14 @@ class MAT_SequenceOfArc(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : MAT_Arc) -> None: 
+    def Append(self,theSeq : MAT_SequenceOfArc) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : MAT_SequenceOfArc) -> None: ...
+    def Append(self,theItem : MAT_Arc) -> None: ...
     def Assign(self,theOther : MAT_SequenceOfArc) -> MAT_SequenceOfArc: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1089,23 +1089,23 @@ class MAT_SequenceOfArc(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : MAT_Arc) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : MAT_SequenceOfArc) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : MAT_SequenceOfArc) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : MAT_Arc) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : MAT_SequenceOfArc) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : MAT_Arc) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : MAT_Arc) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : MAT_SequenceOfArc) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1123,23 +1123,23 @@ class MAT_SequenceOfArc(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : MAT_Arc) -> None: 
+    def Prepend(self,theSeq : MAT_SequenceOfArc) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : MAT_SequenceOfArc) -> None: ...
+    def Prepend(self,theItem : MAT_Arc) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1165,12 +1165,12 @@ class MAT_SequenceOfArc(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : MAT_SequenceOfArc) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1266,14 +1266,14 @@ class MAT_SequenceOfBasicElt(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : MAT_SequenceOfBasicElt) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1304,7 +1304,7 @@ class MAT_SequenceOfBasicElt(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : MAT_SequenceOfBasicElt) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1321,20 +1321,28 @@ class MAT_Side():
 
       MAT_Right
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    MAT_Left: OCP.MAT.MAT_Side # value = MAT_Side.MAT_Left
-    MAT_Right: OCP.MAT.MAT_Side # value = MAT_Side.MAT_Right
-    __entries: dict # value = {'MAT_Left': (MAT_Side.MAT_Left, None), 'MAT_Right': (MAT_Side.MAT_Right, None)}
-    __members__: dict # value = {'MAT_Left': MAT_Side.MAT_Left, 'MAT_Right': MAT_Side.MAT_Right}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    MAT_Left: OCP.MAT.MAT_Side # value = <MAT_Side.MAT_Left: 0>
+    MAT_Right: OCP.MAT.MAT_Side # value = <MAT_Side.MAT_Right: 1>
+    __entries: dict # value = {'MAT_Left': (<MAT_Side.MAT_Left: 0>, None), 'MAT_Right': (<MAT_Side.MAT_Right: 1>, None)}
+    __members__: dict # value = {'MAT_Left': <MAT_Side.MAT_Left: 0>, 'MAT_Right': <MAT_Side.MAT_Right: 1>}
     pass
 class MAT_TListNodeOfListOfBisector(OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -1384,23 +1392,23 @@ class MAT_TListNodeOfListOfBisector(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Next(self,atlistnode : MAT_TListNodeOfListOfBisector) -> None: 
+    def Next(self) -> MAT_TListNodeOfListOfBisector: 
         """
         None
 
         None
         """
     @overload
-    def Next(self) -> MAT_TListNodeOfListOfBisector: ...
+    def Next(self,atlistnode : MAT_TListNodeOfListOfBisector) -> None: ...
     @overload
-    def Previous(self,atlistnode : MAT_TListNodeOfListOfBisector) -> None: 
+    def Previous(self) -> MAT_TListNodeOfListOfBisector: 
         """
         None
 
         None
         """
     @overload
-    def Previous(self) -> MAT_TListNodeOfListOfBisector: ...
+    def Previous(self,atlistnode : MAT_TListNodeOfListOfBisector) -> None: ...
     def SetItem(self,anitem : MAT_Bisector) -> None: 
         """
         None
@@ -1410,9 +1418,9 @@ class MAT_TListNodeOfListOfBisector(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,anitem : MAT_Bisector) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1472,14 +1480,14 @@ class MAT_TListNodeOfListOfEdge(OCP.Standard.Standard_Transient):
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Next(self) -> MAT_TListNodeOfListOfEdge: 
+    def Next(self,atlistnode : MAT_TListNodeOfListOfEdge) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Next(self,atlistnode : MAT_TListNodeOfListOfEdge) -> None: ...
+    def Next(self) -> MAT_TListNodeOfListOfEdge: ...
     @overload
     def Previous(self) -> MAT_TListNodeOfListOfEdge: 
         """
@@ -1498,9 +1506,9 @@ class MAT_TListNodeOfListOfEdge(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,anitem : MAT_Edge) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1593,5 +1601,5 @@ class MAT_Zone(OCP.Standard.Standard_Transient):
         None
         """
     pass
-MAT_Left: OCP.MAT.MAT_Side # value = MAT_Side.MAT_Left
-MAT_Right: OCP.MAT.MAT_Side # value = MAT_Side.MAT_Right
+MAT_Left: OCP.MAT.MAT_Side # value = <MAT_Side.MAT_Left: 0>
+MAT_Right: OCP.MAT.MAT_Side # value = <MAT_Side.MAT_Right: 1>

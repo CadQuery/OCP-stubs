@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.ShapeFix
-import OCP.GeomAbs
-import OCP.ShapeExtend
 import OCP.TColGeom
-import OCP.Geom2d
-import OCP.ShapeAnalysis
-import OCP.Standard
-import OCP.TopoDS
 import OCP.TColGeom2d
+import OCP.GeomAbs
+import OCP.ShapeAnalysis
 import OCP.Geom
+import OCP.TopoDS
+import OCP.Geom2d
+import OCP.Standard
+import OCP.ShapeFix
+import OCP.ShapeExtend
 __all__  = [
 "ShapeAlgo",
 "ShapeAlgo_AlgoContainer",
@@ -42,23 +42,23 @@ class ShapeAlgo():
     pass
 class ShapeAlgo_AlgoContainer(OCP.Standard.Standard_Transient):
     @overload
-    def ApproxBSplineCurve(self,bspline : OCP.Geom2d.Geom2d_BSplineCurve,seq : OCP.TColGeom2d.TColGeom2d_SequenceOfCurve) -> None: 
+    def ApproxBSplineCurve(self,bspline : OCP.Geom.Geom_BSplineCurve,seq : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: 
         """
         None
 
         None
         """
     @overload
-    def ApproxBSplineCurve(self,bspline : OCP.Geom.Geom_BSplineCurve,seq : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: ...
+    def ApproxBSplineCurve(self,bspline : OCP.Geom2d.Geom2d_BSplineCurve,seq : OCP.TColGeom2d.TColGeom2d_SequenceOfCurve) -> None: ...
     @overload
-    def C0BSplineToSequenceOfC1BSplineCurve(self,BS : OCP.Geom2d.Geom2d_BSplineCurve,seqBS : OCP.TColGeom2d.TColGeom2d_HSequenceOfBoundedCurve) -> bool: 
+    def C0BSplineToSequenceOfC1BSplineCurve(self,BS : OCP.Geom.Geom_BSplineCurve,seqBS : OCP.TColGeom.TColGeom_HSequenceOfBoundedCurve) -> bool: 
         """
         None
 
         Converts C0 B-Spline curve into sequence of C1 B-Spline curves. Calls ShapeUpgrade::C0BSplineToSequenceOfC1BSplineCurve.
         """
     @overload
-    def C0BSplineToSequenceOfC1BSplineCurve(self,BS : OCP.Geom.Geom_BSplineCurve,seqBS : OCP.TColGeom.TColGeom_HSequenceOfBoundedCurve) -> bool: ...
+    def C0BSplineToSequenceOfC1BSplineCurve(self,BS : OCP.Geom2d.Geom2d_BSplineCurve,seqBS : OCP.TColGeom2d.TColGeom2d_HSequenceOfBoundedCurve) -> bool: ...
     def C0ShapeToC1Shape(self,shape : OCP.TopoDS.TopoDS_Shape,tol : float) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Converts a shape on C0 geometry into the shape on C1 geometry.

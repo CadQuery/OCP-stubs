@@ -4,20 +4,20 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Geom2d
+import OCP.Convert
+import OCP.Approx
+import OCP.TColGeom
+import OCP.math
+import OCP.NCollection
 import OCP.Law
 import OCP.TColgp
-import OCP.Adaptor3d
-import OCP.Convert
-import OCP.NCollection
-import OCP.gp
-import OCP.TColStd
-import OCP.GeomAbs
-import OCP.TColGeom
-import OCP.Approx
-import OCP.Standard
 import OCP.Geom
-import OCP.math
+import OCP.Standard
+import OCP.Adaptor3d
+import OCP.TColStd
+import OCP.gp
+import OCP.GeomAbs
+import OCP.Geom2d
 import OCP.AppBlend
 __all__  = [
 "GeomFill",
@@ -414,9 +414,9 @@ class GeomFill_AppSweep(OCP.AppBlend.AppBlend_Approx):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Degmin : int,Degmax : int,Tol3d : float,Tol2d : float,NbIt : int,KnownParameters : bool=False) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class GeomFill_ApproxStyle():
     """
@@ -428,20 +428,28 @@ class GeomFill_ApproxStyle():
 
       GeomFill_Location
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    GeomFill_Location: OCP.GeomFill.GeomFill_ApproxStyle # value = GeomFill_ApproxStyle.GeomFill_Location
-    GeomFill_Section: OCP.GeomFill.GeomFill_ApproxStyle # value = GeomFill_ApproxStyle.GeomFill_Section
-    __entries: dict # value = {'GeomFill_Section': (GeomFill_ApproxStyle.GeomFill_Section, None), 'GeomFill_Location': (GeomFill_ApproxStyle.GeomFill_Location, None)}
-    __members__: dict # value = {'GeomFill_Section': GeomFill_ApproxStyle.GeomFill_Section, 'GeomFill_Location': GeomFill_ApproxStyle.GeomFill_Location}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    GeomFill_Location: OCP.GeomFill.GeomFill_ApproxStyle # value = <GeomFill_ApproxStyle.GeomFill_Location: 1>
+    GeomFill_Section: OCP.GeomFill.GeomFill_ApproxStyle # value = <GeomFill_ApproxStyle.GeomFill_Section: 0>
+    __entries: dict # value = {'GeomFill_Section': (<GeomFill_ApproxStyle.GeomFill_Section: 0>, None), 'GeomFill_Location': (<GeomFill_ApproxStyle.GeomFill_Location: 1>, None)}
+    __members__: dict # value = {'GeomFill_Section': <GeomFill_ApproxStyle.GeomFill_Section: 0>, 'GeomFill_Location': <GeomFill_ApproxStyle.GeomFill_Location: 1>}
     pass
 class GeomFill_Array1OfLocationLaw():
     """
@@ -520,14 +528,14 @@ class GeomFill_Array1OfLocationLaw():
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : GeomFill_Array1OfLocationLaw) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : GeomFill_LocationLaw,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class GeomFill_Array1OfSectionLaw():
     """
@@ -606,21 +614,21 @@ class GeomFill_Array1OfSectionLaw():
         Constant value access
         """
     @overload
+    def __init__(self,theOther : GeomFill_Array1OfSectionLaw) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : GeomFill_Array1OfSectionLaw) -> None: ...
-    @overload
     def __init__(self,theBegin : GeomFill_SectionLaw,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class GeomFill_BSplineCurves():
     """
     An algorithm for constructing a BSpline surface filled from contiguous BSpline curves which form its boundaries. The algorithm accepts two, three or four BSpline curves as the boundaries of the target surface. A range of filling styles - more or less rounded, more or less flat - is available. A BSplineCurves object provides a framework for: - defining the boundaries, and the filling style of the surface - implementing the construction algorithm - consulting the result. Warning Some problems may show up with rational curves.
     """
     @overload
-    def Init(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,C4 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: 
+    def Init(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: 
         """
         if the curves cannot be joined
 
@@ -629,9 +637,9 @@ class GeomFill_BSplineCurves():
         Initializes or reinitializes this algorithm with two, three, or four curves - C1, C2, C3, and C4 - and Type, one of the following filling styles: - GeomFill_Stretch - the style with the flattest patch - GeomFill_Coons - a rounded style of patch with less depth than that of Curved - GeomFill_Curved - the style with the most rounded patch. Exceptions Standard_ConstructionError if the curves are not contiguous.
         """
     @overload
-    def Init(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
+    def Init(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,C4 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
     @overload
-    def Init(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
+    def Init(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
     def Surface(self) -> OCP.Geom.Geom_BSplineSurface: 
         """
         Returns the BSpline surface Surface resulting from the computation performed by this algorithm.
@@ -639,20 +647,20 @@ class GeomFill_BSplineCurves():
         Returns the BSpline surface Surface resulting from the computation performed by this algorithm.
         """
     @overload
-    def __init__(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
+    def __init__(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,C4 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,C4 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
+    def __init__(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
     pass
 class GeomFill_BezierCurves():
     """
     This class provides an algorithm for constructing a Bezier surface filled from contiguous Bezier curves which form its boundaries. The algorithm accepts two, three or four Bezier curves as the boundaries of the target surface. A range of filling styles - more or less rounded, more or less flat - is available. A BezierCurves object provides a framework for: - defining the boundaries, and the filling style of the surface - implementing the construction algorithm - consulting the result. Warning Some problems may show up with rational curves.
     """
     @overload
-    def Init(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,C4 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: 
+    def Init(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: 
         """
         if the curves cannot be joined
 
@@ -663,7 +671,7 @@ class GeomFill_BezierCurves():
     @overload
     def Init(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
     @overload
-    def Init(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
+    def Init(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,C4 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
     def Surface(self) -> OCP.Geom.Geom_BezierSurface: 
         """
         Returns the Bezier surface resulting from the computation performed by this algorithm.
@@ -671,13 +679,13 @@ class GeomFill_BezierCurves():
         Returns the Bezier surface resulting from the computation performed by this algorithm.
         """
     @overload
-    def __init__(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,C4 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
+    def __init__(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,C4 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
     pass
 class GeomFill_Boundary(OCP.Standard.Standard_Transient):
     """
@@ -1166,14 +1174,14 @@ class GeomFill_ConstrainedFilling():
         Internal use for Advmath approximation call.
         """
     @overload
-    def Init(self,B1 : GeomFill_Boundary,B2 : GeomFill_Boundary,B3 : GeomFill_Boundary,NoCheck : bool=False) -> None: 
+    def Init(self,B1 : GeomFill_Boundary,B2 : GeomFill_Boundary,B3 : GeomFill_Boundary,B4 : GeomFill_Boundary,NoCheck : bool=False) -> None: 
         """
         None
 
         Constructs a BSpline surface filled from the series of boundaries B1, B2, B3 and, if need be, B4, which serve: - as path constraints - and optionally, as tangency constraints if they are GeomFill_BoundWithSurf curves. The boundaries may be given in any order: they are classified and if necessary, reversed and reparameterized. The surface will also respect the following constraints: - its degree will not be greater than the maximum degree defined at the time of construction of this framework, and - the maximum number of segments MaxSeg which BSpline surfaces can have
         """
     @overload
-    def Init(self,B1 : GeomFill_Boundary,B2 : GeomFill_Boundary,B3 : GeomFill_Boundary,B4 : GeomFill_Boundary,NoCheck : bool=False) -> None: ...
+    def Init(self,B1 : GeomFill_Boundary,B2 : GeomFill_Boundary,B3 : GeomFill_Boundary,NoCheck : bool=False) -> None: ...
     def ReBuild(self) -> None: 
         """
         Computes the new poles of the surface using the new blending functions set by several calls to SetDomain.
@@ -1251,14 +1259,14 @@ class GeomFill_CoonsAlgPatch(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Func(self,I : int) -> OCP.Law.Law_Function: 
+    def Func(self,f1 : OCP.Law.Law_Function,f2 : OCP.Law.Law_Function) -> Any: 
         """
         None
 
         Give the blending functions.
         """
     @overload
-    def Func(self,f1 : OCP.Law.Law_Function,f2 : OCP.Law.Law_Function) -> Any: ...
+    def Func(self,I : int) -> OCP.Law.Law_Function: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -1484,14 +1492,14 @@ class GeomFill_LocationLaw(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: 
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: 
         """
         compute Location
 
         compute Location and 2d points
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: ...
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: ...
     def D1(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
         compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 aproximation
@@ -1638,7 +1646,7 @@ class GeomFill_Curved(GeomFill_Filling):
     None
     """
     @overload
-    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
+    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         None
 
@@ -1651,9 +1659,9 @@ class GeomFill_Curved(GeomFill_Filling):
     @overload
     def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
-    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
-    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     def NbUPoles(self) -> int: 
         """
         None
@@ -1671,15 +1679,15 @@ class GeomFill_Curved(GeomFill_Filling):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @overload
-    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
     def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    @overload
+    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def isRational(self) -> bool: 
         """
         None
@@ -2337,21 +2345,29 @@ class GeomFill_FillingStyle():
 
       GeomFill_CurvedStyle
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    GeomFill_CoonsStyle: OCP.GeomFill.GeomFill_FillingStyle # value = GeomFill_FillingStyle.GeomFill_CoonsStyle
-    GeomFill_CurvedStyle: OCP.GeomFill.GeomFill_FillingStyle # value = GeomFill_FillingStyle.GeomFill_CurvedStyle
-    GeomFill_StretchStyle: OCP.GeomFill.GeomFill_FillingStyle # value = GeomFill_FillingStyle.GeomFill_StretchStyle
-    __entries: dict # value = {'GeomFill_StretchStyle': (GeomFill_FillingStyle.GeomFill_StretchStyle, None), 'GeomFill_CoonsStyle': (GeomFill_FillingStyle.GeomFill_CoonsStyle, None), 'GeomFill_CurvedStyle': (GeomFill_FillingStyle.GeomFill_CurvedStyle, None)}
-    __members__: dict # value = {'GeomFill_StretchStyle': GeomFill_FillingStyle.GeomFill_StretchStyle, 'GeomFill_CoonsStyle': GeomFill_FillingStyle.GeomFill_CoonsStyle, 'GeomFill_CurvedStyle': GeomFill_FillingStyle.GeomFill_CurvedStyle}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    GeomFill_CoonsStyle: OCP.GeomFill.GeomFill_FillingStyle # value = <GeomFill_FillingStyle.GeomFill_CoonsStyle: 1>
+    GeomFill_CurvedStyle: OCP.GeomFill.GeomFill_FillingStyle # value = <GeomFill_FillingStyle.GeomFill_CurvedStyle: 2>
+    GeomFill_StretchStyle: OCP.GeomFill.GeomFill_FillingStyle # value = <GeomFill_FillingStyle.GeomFill_StretchStyle: 0>
+    __entries: dict # value = {'GeomFill_StretchStyle': (<GeomFill_FillingStyle.GeomFill_StretchStyle: 0>, None), 'GeomFill_CoonsStyle': (<GeomFill_FillingStyle.GeomFill_CoonsStyle: 1>, None), 'GeomFill_CurvedStyle': (<GeomFill_FillingStyle.GeomFill_CurvedStyle: 2>, None)}
+    __members__: dict # value = {'GeomFill_StretchStyle': <GeomFill_FillingStyle.GeomFill_StretchStyle: 0>, 'GeomFill_CoonsStyle': <GeomFill_FillingStyle.GeomFill_CoonsStyle: 1>, 'GeomFill_CurvedStyle': <GeomFill_FillingStyle.GeomFill_CurvedStyle: 2>}
     pass
 class GeomFill_Fixed(GeomFill_TrihedronLaw, OCP.Standard.Standard_Transient):
     """
@@ -3078,14 +3094,14 @@ class GeomFill_HArray1OfLocationLaw(GeomFill_Array1OfLocationLaw, OCP.Standard.S
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : GeomFill_LocationLaw) -> None: ...
-    @overload
     def __init__(self,theOther : GeomFill_Array1OfLocationLaw) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : GeomFill_LocationLaw) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3225,10 +3241,10 @@ class GeomFill_HArray1OfSectionLaw(GeomFill_Array1OfSectionLaw, OCP.Standard.Sta
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : GeomFill_Array1OfSectionLaw) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : GeomFill_Array1OfSectionLaw) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3286,23 +3302,23 @@ class GeomFill_SequenceOfAx2(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -3362,12 +3378,12 @@ class GeomFill_SequenceOfAx2(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : GeomFill_SequenceOfAx2) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -3475,14 +3491,14 @@ class GeomFill_LocationDraft(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         None
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: 
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: 
         """
         compute Location
 
         compute Location and 2d points
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: ...
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: ...
     def D1(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
         compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 aproximation
@@ -3651,14 +3667,14 @@ class GeomFill_LocationGuide(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         None
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: 
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: 
         """
         compute Location
 
         compute Location and 2d points
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: ...
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: ...
     def D1(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
         compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 aproximation
@@ -3830,14 +3846,14 @@ class GeomFill_CurveAndTrihedron(GeomFill_LocationLaw, OCP.Standard.Standard_Tra
         None
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: 
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: 
         """
         compute Location and 2d points
 
         compute Location and 2d points
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: ...
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: ...
     def D1(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
         compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 aproximation
@@ -4131,13 +4147,13 @@ class GeomFill_NSections(GeomFill_SectionLaw, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve,NP : OCP.TColStd.TColStd_SequenceOfReal,UF : float,UL : float,VF : float,VL : float) -> None: ...
-    @overload
-    def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve,Trsfs : GeomFill_SequenceOfTrsf,NP : OCP.TColStd.TColStd_SequenceOfReal,UF : float,UL : float,VF : float,VL : float,Surf : OCP.Geom.Geom_BSplineSurface) -> None: ...
+    def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: ...
     @overload
     def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve,NP : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
     @overload
-    def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: ...
+    def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve,NP : OCP.TColStd.TColStd_SequenceOfReal,UF : float,UL : float,VF : float,VL : float) -> None: ...
+    @overload
+    def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve,Trsfs : GeomFill_SequenceOfTrsf,NP : OCP.TColStd.TColStd_SequenceOfReal,UF : float,UL : float,VF : float,VL : float,Surf : OCP.Geom.Geom_BSplineSurface) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4166,7 +4182,7 @@ class GeomFill_Pipe():
         The u parametric direction of the surface constructed by this algorithm usually corresponds to the evolution along the path and the v parametric direction corresponds to the evolution along the section(s). However, this rule is not respected when constructing certain specific Geom surfaces (typically cylindrical surfaces, surfaces of revolution, etc.) for which the parameterization is inversed. The ExchangeUV function checks for this, and returns true in all these specific cases. Warning Do not use this function before the surface is built.
         """
     @overload
-    def GenerateParticularCase(self,B : bool) -> None: 
+    def GenerateParticularCase(self) -> bool: 
         """
         Sets a flag to try to create as many planes, cylinder,... as possible. Default value is <Standard_False>.
 
@@ -4177,7 +4193,7 @@ class GeomFill_Pipe():
         Returns the flag.
         """
     @overload
-    def GenerateParticularCase(self) -> bool: ...
+    def GenerateParticularCase(self,B : bool) -> None: ...
     @overload
     def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: 
         """
@@ -4198,19 +4214,19 @@ class GeomFill_Pipe():
         Initializes this pipe algorithm to build the following surface: - a pipe with a constant circular section of radius Radius along the path Path, or - a pipe with constant section FirstSect along the path Path, or - a pipe where the section evolves from FirstSect to LastSect along the path Path. Use the function Perform to build the surface. Note: a description of the resulting surface is given under Constructors.
         """
     @overload
-    def Init(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Curve1 : OCP.Adaptor3d.Adaptor3d_HCurve,Curve2 : OCP.Adaptor3d.Adaptor3d_HCurve,Radius : float) -> None: ...
-    @overload
-    def Init(self,Path : OCP.Geom2d.Geom2d_Curve,Support : OCP.Geom.Geom_Surface,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
-    @overload
-    def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Dir : OCP.gp.gp_Dir) -> None: ...
-    @overload
-    def Init(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
+    def Init(self,Path : OCP.Geom.Geom_Curve,Guide : OCP.Adaptor3d.Adaptor3d_HCurve,FirstSect : OCP.Geom.Geom_Curve,ByACR : bool,rotat : bool) -> None: ...
     @overload
     def Init(self,Path : OCP.Geom.Geom_Curve,NSections : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: ...
     @overload
-    def Init(self,Path : OCP.Geom.Geom_Curve,Guide : OCP.Adaptor3d.Adaptor3d_HCurve,FirstSect : OCP.Geom.Geom_Curve,ByACR : bool,rotat : bool) -> None: ...
-    @overload
     def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Option : GeomFill_Trihedron=GeomFill_Trihedron.GeomFill_IsCorrectedFrenet) -> None: ...
+    @overload
+    def Init(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
+    @overload
+    def Init(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Curve1 : OCP.Adaptor3d.Adaptor3d_HCurve,Curve2 : OCP.Adaptor3d.Adaptor3d_HCurve,Radius : float) -> None: ...
+    @overload
+    def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Dir : OCP.gp.gp_Dir) -> None: ...
+    @overload
+    def Init(self,Path : OCP.Geom2d.Geom2d_Curve,Support : OCP.Geom.Geom_Surface,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns whether approximation was done.
@@ -4233,15 +4249,7 @@ class GeomFill_Pipe():
         Returns the surface built by this algorithm. Warning Do not use this function before the surface is built (in this case the function will return a null handle).
         """
     @overload
-    def __init__(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Curve1 : OCP.Adaptor3d.Adaptor3d_HCurve,Curve2 : OCP.Adaptor3d.Adaptor3d_HCurve,Radius : float) -> None: ...
-    @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: ...
-    @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Dir : OCP.gp.gp_Dir) -> None: ...
-    @overload
-    def __init__(self,Path : OCP.Geom2d.Geom2d_Curve,Support : OCP.Geom.Geom_Surface,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
-    @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,NSections : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: ...
+    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Option : GeomFill_Trihedron=GeomFill_Trihedron.GeomFill_IsCorrectedFrenet) -> None: ...
     @overload
     def __init__(self,Path : OCP.Geom.Geom_Curve,Curve1 : OCP.Geom.Geom_Curve,Curve2 : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
     @overload
@@ -4249,9 +4257,17 @@ class GeomFill_Pipe():
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Curve1 : OCP.Adaptor3d.Adaptor3d_HCurve,Curve2 : OCP.Adaptor3d.Adaptor3d_HCurve,Radius : float) -> None: ...
+    @overload
+    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Dir : OCP.gp.gp_Dir) -> None: ...
+    @overload
     def __init__(self,Path : OCP.Geom.Geom_Curve,Guide : OCP.Adaptor3d.Adaptor3d_HCurve,FirstSect : OCP.Geom.Geom_Curve,ByACR : bool,rotat : bool) -> None: ...
     @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Option : GeomFill_Trihedron=GeomFill_Trihedron.GeomFill_IsCorrectedFrenet) -> None: ...
+    def __init__(self,Path : OCP.Geom2d.Geom2d_Curve,Support : OCP.Geom.Geom_Surface,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
+    @overload
+    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: ...
+    @overload
+    def __init__(self,Path : OCP.Geom.Geom_Curve,NSections : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: ...
     pass
 class GeomFill_PipeError():
     """
@@ -4267,22 +4283,30 @@ class GeomFill_PipeError():
 
       GeomFill_ImpossibleContact
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    GeomFill_ImpossibleContact: OCP.GeomFill.GeomFill_PipeError # value = GeomFill_PipeError.GeomFill_ImpossibleContact
-    GeomFill_PipeNotOk: OCP.GeomFill.GeomFill_PipeError # value = GeomFill_PipeError.GeomFill_PipeNotOk
-    GeomFill_PipeOk: OCP.GeomFill.GeomFill_PipeError # value = GeomFill_PipeError.GeomFill_PipeOk
-    GeomFill_PlaneNotIntersectGuide: OCP.GeomFill.GeomFill_PipeError # value = GeomFill_PipeError.GeomFill_PlaneNotIntersectGuide
-    __entries: dict # value = {'GeomFill_PipeOk': (GeomFill_PipeError.GeomFill_PipeOk, None), 'GeomFill_PipeNotOk': (GeomFill_PipeError.GeomFill_PipeNotOk, None), 'GeomFill_PlaneNotIntersectGuide': (GeomFill_PipeError.GeomFill_PlaneNotIntersectGuide, None), 'GeomFill_ImpossibleContact': (GeomFill_PipeError.GeomFill_ImpossibleContact, None)}
-    __members__: dict # value = {'GeomFill_PipeOk': GeomFill_PipeError.GeomFill_PipeOk, 'GeomFill_PipeNotOk': GeomFill_PipeError.GeomFill_PipeNotOk, 'GeomFill_PlaneNotIntersectGuide': GeomFill_PipeError.GeomFill_PlaneNotIntersectGuide, 'GeomFill_ImpossibleContact': GeomFill_PipeError.GeomFill_ImpossibleContact}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    GeomFill_ImpossibleContact: OCP.GeomFill.GeomFill_PipeError # value = <GeomFill_PipeError.GeomFill_ImpossibleContact: 3>
+    GeomFill_PipeNotOk: OCP.GeomFill.GeomFill_PipeError # value = <GeomFill_PipeError.GeomFill_PipeNotOk: 1>
+    GeomFill_PipeOk: OCP.GeomFill.GeomFill_PipeError # value = <GeomFill_PipeError.GeomFill_PipeOk: 0>
+    GeomFill_PlaneNotIntersectGuide: OCP.GeomFill.GeomFill_PipeError # value = <GeomFill_PipeError.GeomFill_PlaneNotIntersectGuide: 2>
+    __entries: dict # value = {'GeomFill_PipeOk': (<GeomFill_PipeError.GeomFill_PipeOk: 0>, None), 'GeomFill_PipeNotOk': (<GeomFill_PipeError.GeomFill_PipeNotOk: 1>, None), 'GeomFill_PlaneNotIntersectGuide': (<GeomFill_PipeError.GeomFill_PlaneNotIntersectGuide: 2>, None), 'GeomFill_ImpossibleContact': (<GeomFill_PipeError.GeomFill_ImpossibleContact: 3>, None)}
+    __members__: dict # value = {'GeomFill_PipeOk': <GeomFill_PipeError.GeomFill_PipeOk: 0>, 'GeomFill_PipeNotOk': <GeomFill_PipeError.GeomFill_PipeNotOk: 1>, 'GeomFill_PlaneNotIntersectGuide': <GeomFill_PipeError.GeomFill_PlaneNotIntersectGuide: 2>, 'GeomFill_ImpossibleContact': <GeomFill_PipeError.GeomFill_ImpossibleContact: 3>}
     pass
 class GeomFill_PlanFunc(OCP.math.math_FunctionWithDerivative, OCP.math.math_Function):
     """
@@ -4331,7 +4355,7 @@ class GeomFill_PolynomialConvertor():
         say if <me> is Initialized
         """
     @overload
-    def Section(self,FirstPnt : OCP.gp.gp_Pnt,Center : OCP.gp.gp_Pnt,Dir : OCP.gp.gp_Vec,Angle : float,Poles : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
+    def Section(self,FirstPnt : OCP.gp.gp_Pnt,DFirstPnt : OCP.gp.gp_Vec,D2FirstPnt : OCP.gp.gp_Vec,Center : OCP.gp.gp_Pnt,DCenter : OCP.gp.gp_Vec,D2Center : OCP.gp.gp_Vec,Dir : OCP.gp.gp_Vec,DDir : OCP.gp.gp_Vec,D2Dir : OCP.gp.gp_Vec,Angle : float,DAngle : float,D2Angle : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec) -> None: 
         """
         None
 
@@ -4342,7 +4366,7 @@ class GeomFill_PolynomialConvertor():
     @overload
     def Section(self,FirstPnt : OCP.gp.gp_Pnt,DFirstPnt : OCP.gp.gp_Vec,Center : OCP.gp.gp_Pnt,DCenter : OCP.gp.gp_Vec,Dir : OCP.gp.gp_Vec,DDir : OCP.gp.gp_Vec,Angle : float,DAngle : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec) -> None: ...
     @overload
-    def Section(self,FirstPnt : OCP.gp.gp_Pnt,DFirstPnt : OCP.gp.gp_Vec,D2FirstPnt : OCP.gp.gp_Vec,Center : OCP.gp.gp_Pnt,DCenter : OCP.gp.gp_Vec,D2Center : OCP.gp.gp_Vec,Dir : OCP.gp.gp_Vec,DDir : OCP.gp.gp_Vec,D2Dir : OCP.gp.gp_Vec,Angle : float,DAngle : float,D2Angle : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec) -> None: ...
+    def Section(self,FirstPnt : OCP.gp.gp_Pnt,Center : OCP.gp.gp_Pnt,Dir : OCP.gp.gp_Vec,Angle : float,Poles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     def __init__(self) -> None: ...
     pass
 class GeomFill_Generator(GeomFill_Profiler):
@@ -4414,7 +4438,7 @@ class GeomFill_QuasiAngularConvertor():
         say if <me> is Initialized
         """
     @overload
-    def Section(self,FirstPnt : OCP.gp.gp_Pnt,Center : OCP.gp.gp_Pnt,Dir : OCP.gp.gp_Vec,Angle : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Section(self,FirstPnt : OCP.gp.gp_Pnt,DFirstPnt : OCP.gp.gp_Vec,Center : OCP.gp.gp_Pnt,DCenter : OCP.gp.gp_Vec,Dir : OCP.gp.gp_Vec,DDir : OCP.gp.gp_Vec,Angle : float,DAngle : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Weights : OCP.TColStd.TColStd_Array1OfReal,DWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         None
 
@@ -4423,7 +4447,7 @@ class GeomFill_QuasiAngularConvertor():
         None
         """
     @overload
-    def Section(self,FirstPnt : OCP.gp.gp_Pnt,DFirstPnt : OCP.gp.gp_Vec,Center : OCP.gp.gp_Pnt,DCenter : OCP.gp.gp_Vec,Dir : OCP.gp.gp_Vec,DDir : OCP.gp.gp_Vec,Angle : float,DAngle : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Weights : OCP.TColStd.TColStd_Array1OfReal,DWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Section(self,FirstPnt : OCP.gp.gp_Pnt,Center : OCP.gp.gp_Pnt,Dir : OCP.gp.gp_Vec,Angle : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def Section(self,FirstPnt : OCP.gp.gp_Pnt,DFirstPnt : OCP.gp.gp_Vec,D2FirstPnt : OCP.gp.gp_Vec,Center : OCP.gp.gp_Pnt,DCenter : OCP.gp.gp_Vec,D2Center : OCP.gp.gp_Vec,Dir : OCP.gp.gp_Vec,DDir : OCP.gp.gp_Vec,D2Dir : OCP.gp.gp_Vec,Angle : float,DAngle : float,D2Angle : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Weights : OCP.TColStd.TColStd_Array1OfReal,DWeights : OCP.TColStd.TColStd_Array1OfReal,D2Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     def __init__(self) -> None: ...
@@ -4489,14 +4513,14 @@ class GeomFill_SectionGenerator(GeomFill_Profiler):
         returns in <Poles> the poles of the BSplineCurve from index <Index> adjusting to the current profile. Raises if not yet perform Raises if <Index> not in the range [1,NbCurves] if the length of <Poles> is not equal to NbPoles().
         """
     @overload
-    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
+    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Used for the first and last section The method returns Standard_True if the derivatives are computed, otherwise it returns Standard_False.
 
         None
         """
     @overload
-    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     def SetParam(self,Params : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
         None
@@ -4699,9 +4723,9 @@ class GeomFill_SectionPlacement():
         None
         """
     @overload
-    def Perform(self,Tol : float) -> None: ...
-    @overload
     def Perform(self,ParamOnPath : float,Tol : float) -> None: ...
+    @overload
+    def Perform(self,Tol : float) -> None: ...
     def Section(self,WithTranslation : bool) -> OCP.Geom.Geom_Curve: 
         """
         Compute the Section, in the coordinate syteme given by the Location Law. If <WithTranslation> contact beetween <Section> and <Path> is forced.
@@ -4722,14 +4746,14 @@ class GeomFill_HSequenceOfAx2(GeomFill_SequenceOfAx2, OCP.NCollection.NCollectio
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_Ax2) -> None: 
+    def Append(self,theSequence : GeomFill_SequenceOfAx2) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : GeomFill_SequenceOfAx2) -> None: ...
+    def Append(self,theItem : OCP.gp.gp_Ax2) -> None: ...
     def Assign(self,theOther : GeomFill_SequenceOfAx2) -> GeomFill_SequenceOfAx2: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4783,23 +4807,23 @@ class GeomFill_HSequenceOfAx2(GeomFill_SequenceOfAx2, OCP.NCollection.NCollectio
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4888,7 +4912,7 @@ class GeomFill_HSequenceOfAx2(GeomFill_SequenceOfAx2, OCP.NCollection.NCollectio
     def __init__(self,theOther : GeomFill_SequenceOfAx2) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4951,14 +4975,14 @@ class GeomFill_SequenceOfTrsf(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : GeomFill_SequenceOfTrsf) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Trsf) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Trsf) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : GeomFill_SequenceOfTrsf) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : GeomFill_SequenceOfTrsf) -> None: 
         """
@@ -5032,7 +5056,7 @@ class GeomFill_SequenceOfTrsf(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : GeomFill_SequenceOfTrsf) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5282,14 +5306,14 @@ class GeomFill_Stretch(GeomFill_Filling):
     None
     """
     @overload
-    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
+    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     def NbUPoles(self) -> int: 
         """
         None
@@ -5307,11 +5331,11 @@ class GeomFill_Stretch(GeomFill_Filling):
         None
         """
     @overload
-    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     def isRational(self) -> bool: 
         """
         None
@@ -5529,11 +5553,11 @@ class GeomFill_SweepSectionGenerator():
         None
         """
     @overload
-    def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
+    def Init(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
     @overload
     def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: ...
     @overload
-    def Init(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
+    def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
     def Knots(self,TKnots : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         None
@@ -5557,28 +5581,28 @@ class GeomFill_SweepSectionGenerator():
         None
         """
     @overload
-    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section The method returns Standard_True if the derivatives are computed, otherwise it returns Standard_False.
 
         None
         """
     @overload
-    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     def Transformation(self,Index : int) -> OCP.gp.gp_Trsf: 
         """
         raised if <Index> not in the range [1,NbSections()]
         """
     @overload
-    def __init__(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Curve1 : OCP.Adaptor3d.Adaptor3d_HCurve,Curve2 : OCP.Adaptor3d.Adaptor3d_HCurve,Radius : float) -> None: ...
+    def __init__(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
     @overload
     def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: ...
     @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
-    @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
+    def __init__(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Curve1 : OCP.Adaptor3d.Adaptor3d_HCurve,Curve2 : OCP.Adaptor3d.Adaptor3d_HCurve,Radius : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
     pass
 class GeomFill_Tensor():
     """
@@ -5601,14 +5625,14 @@ class GeomFill_TgtField(OCP.Standard.Standard_Transient):
     Root class defining the methods we need to make an algorithmic tangents field.Root class defining the methods we need to make an algorithmic tangents field.Root class defining the methods we need to make an algorithmic tangents field.
     """
     @overload
-    def D1(self,W : float,V : OCP.gp.gp_Vec,DV : OCP.gp.gp_Vec) -> None: 
+    def D1(self,W : float) -> OCP.gp.gp_Vec: 
         """
         Computes the derivative of the field of tangency at parameter W.
 
         Computes the value and the derivative of the field of tangency at parameter W.
         """
     @overload
-    def D1(self,W : float) -> OCP.gp.gp_Vec: ...
+    def D1(self,W : float,V : OCP.gp.gp_Vec,DV : OCP.gp.gp_Vec) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -5679,14 +5703,14 @@ class GeomFill_TgtOnCoons(GeomFill_TgtField, OCP.Standard.Standard_Transient):
     Defines an algorithmic tangents field on a boundary of a CoonsAlgPatch.Defines an algorithmic tangents field on a boundary of a CoonsAlgPatch.Defines an algorithmic tangents field on a boundary of a CoonsAlgPatch.
     """
     @overload
-    def D1(self,W : float,T : OCP.gp.gp_Vec,DT : OCP.gp.gp_Vec) -> None: 
+    def D1(self,W : float) -> OCP.gp.gp_Vec: 
         """
         Computes the derivative of the field of tangency at parameter W.
 
         Computes the value and the derivative of the field of tangency at parameter W.
         """
     @overload
-    def D1(self,W : float) -> OCP.gp.gp_Vec: ...
+    def D1(self,W : float,T : OCP.gp.gp_Vec,DT : OCP.gp.gp_Vec) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -5779,28 +5803,36 @@ class GeomFill_Trihedron():
 
       GeomFill_IsDiscreteTrihedron
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    GeomFill_IsConstantNormal: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsConstantNormal
-    GeomFill_IsCorrectedFrenet: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsCorrectedFrenet
-    GeomFill_IsDarboux: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsDarboux
-    GeomFill_IsDiscreteTrihedron: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsDiscreteTrihedron
-    GeomFill_IsFixed: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsFixed
-    GeomFill_IsFrenet: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsFrenet
-    GeomFill_IsGuideAC: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsGuideAC
-    GeomFill_IsGuideACWithContact: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsGuideACWithContact
-    GeomFill_IsGuidePlan: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsGuidePlan
-    GeomFill_IsGuidePlanWithContact: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsGuidePlanWithContact
-    __entries: dict # value = {'GeomFill_IsCorrectedFrenet': (GeomFill_Trihedron.GeomFill_IsCorrectedFrenet, None), 'GeomFill_IsFixed': (GeomFill_Trihedron.GeomFill_IsFixed, None), 'GeomFill_IsFrenet': (GeomFill_Trihedron.GeomFill_IsFrenet, None), 'GeomFill_IsConstantNormal': (GeomFill_Trihedron.GeomFill_IsConstantNormal, None), 'GeomFill_IsDarboux': (GeomFill_Trihedron.GeomFill_IsDarboux, None), 'GeomFill_IsGuideAC': (GeomFill_Trihedron.GeomFill_IsGuideAC, None), 'GeomFill_IsGuidePlan': (GeomFill_Trihedron.GeomFill_IsGuidePlan, None), 'GeomFill_IsGuideACWithContact': (GeomFill_Trihedron.GeomFill_IsGuideACWithContact, None), 'GeomFill_IsGuidePlanWithContact': (GeomFill_Trihedron.GeomFill_IsGuidePlanWithContact, None), 'GeomFill_IsDiscreteTrihedron': (GeomFill_Trihedron.GeomFill_IsDiscreteTrihedron, None)}
-    __members__: dict # value = {'GeomFill_IsCorrectedFrenet': GeomFill_Trihedron.GeomFill_IsCorrectedFrenet, 'GeomFill_IsFixed': GeomFill_Trihedron.GeomFill_IsFixed, 'GeomFill_IsFrenet': GeomFill_Trihedron.GeomFill_IsFrenet, 'GeomFill_IsConstantNormal': GeomFill_Trihedron.GeomFill_IsConstantNormal, 'GeomFill_IsDarboux': GeomFill_Trihedron.GeomFill_IsDarboux, 'GeomFill_IsGuideAC': GeomFill_Trihedron.GeomFill_IsGuideAC, 'GeomFill_IsGuidePlan': GeomFill_Trihedron.GeomFill_IsGuidePlan, 'GeomFill_IsGuideACWithContact': GeomFill_Trihedron.GeomFill_IsGuideACWithContact, 'GeomFill_IsGuidePlanWithContact': GeomFill_Trihedron.GeomFill_IsGuidePlanWithContact, 'GeomFill_IsDiscreteTrihedron': GeomFill_Trihedron.GeomFill_IsDiscreteTrihedron}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    GeomFill_IsConstantNormal: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsConstantNormal: 3>
+    GeomFill_IsCorrectedFrenet: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsCorrectedFrenet: 0>
+    GeomFill_IsDarboux: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsDarboux: 4>
+    GeomFill_IsDiscreteTrihedron: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsDiscreteTrihedron: 9>
+    GeomFill_IsFixed: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsFixed: 1>
+    GeomFill_IsFrenet: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsFrenet: 2>
+    GeomFill_IsGuideAC: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsGuideAC: 5>
+    GeomFill_IsGuideACWithContact: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsGuideACWithContact: 7>
+    GeomFill_IsGuidePlan: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsGuidePlan: 6>
+    GeomFill_IsGuidePlanWithContact: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsGuidePlanWithContact: 8>
+    __entries: dict # value = {'GeomFill_IsCorrectedFrenet': (<GeomFill_Trihedron.GeomFill_IsCorrectedFrenet: 0>, None), 'GeomFill_IsFixed': (<GeomFill_Trihedron.GeomFill_IsFixed: 1>, None), 'GeomFill_IsFrenet': (<GeomFill_Trihedron.GeomFill_IsFrenet: 2>, None), 'GeomFill_IsConstantNormal': (<GeomFill_Trihedron.GeomFill_IsConstantNormal: 3>, None), 'GeomFill_IsDarboux': (<GeomFill_Trihedron.GeomFill_IsDarboux: 4>, None), 'GeomFill_IsGuideAC': (<GeomFill_Trihedron.GeomFill_IsGuideAC: 5>, None), 'GeomFill_IsGuidePlan': (<GeomFill_Trihedron.GeomFill_IsGuidePlan: 6>, None), 'GeomFill_IsGuideACWithContact': (<GeomFill_Trihedron.GeomFill_IsGuideACWithContact: 7>, None), 'GeomFill_IsGuidePlanWithContact': (<GeomFill_Trihedron.GeomFill_IsGuidePlanWithContact: 8>, None), 'GeomFill_IsDiscreteTrihedron': (<GeomFill_Trihedron.GeomFill_IsDiscreteTrihedron: 9>, None)}
+    __members__: dict # value = {'GeomFill_IsCorrectedFrenet': <GeomFill_Trihedron.GeomFill_IsCorrectedFrenet: 0>, 'GeomFill_IsFixed': <GeomFill_Trihedron.GeomFill_IsFixed: 1>, 'GeomFill_IsFrenet': <GeomFill_Trihedron.GeomFill_IsFrenet: 2>, 'GeomFill_IsConstantNormal': <GeomFill_Trihedron.GeomFill_IsConstantNormal: 3>, 'GeomFill_IsDarboux': <GeomFill_Trihedron.GeomFill_IsDarboux: 4>, 'GeomFill_IsGuideAC': <GeomFill_Trihedron.GeomFill_IsGuideAC: 5>, 'GeomFill_IsGuidePlan': <GeomFill_Trihedron.GeomFill_IsGuidePlan: 6>, 'GeomFill_IsGuideACWithContact': <GeomFill_Trihedron.GeomFill_IsGuideACWithContact: 7>, 'GeomFill_IsGuidePlanWithContact': <GeomFill_Trihedron.GeomFill_IsGuidePlanWithContact: 8>, 'GeomFill_IsDiscreteTrihedron': <GeomFill_Trihedron.GeomFill_IsDiscreteTrihedron: 9>}
     pass
 class GeomFill_ConstantBiNormal(GeomFill_TrihedronLaw, OCP.Standard.Standard_Transient):
     """
@@ -6188,22 +6220,22 @@ class GeomFill_UniformSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         None
         """
     pass
-GeomFill_CoonsStyle: OCP.GeomFill.GeomFill_FillingStyle # value = GeomFill_FillingStyle.GeomFill_CoonsStyle
-GeomFill_CurvedStyle: OCP.GeomFill.GeomFill_FillingStyle # value = GeomFill_FillingStyle.GeomFill_CurvedStyle
-GeomFill_ImpossibleContact: OCP.GeomFill.GeomFill_PipeError # value = GeomFill_PipeError.GeomFill_ImpossibleContact
-GeomFill_IsConstantNormal: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsConstantNormal
-GeomFill_IsCorrectedFrenet: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsCorrectedFrenet
-GeomFill_IsDarboux: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsDarboux
-GeomFill_IsDiscreteTrihedron: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsDiscreteTrihedron
-GeomFill_IsFixed: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsFixed
-GeomFill_IsFrenet: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsFrenet
-GeomFill_IsGuideAC: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsGuideAC
-GeomFill_IsGuideACWithContact: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsGuideACWithContact
-GeomFill_IsGuidePlan: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsGuidePlan
-GeomFill_IsGuidePlanWithContact: OCP.GeomFill.GeomFill_Trihedron # value = GeomFill_Trihedron.GeomFill_IsGuidePlanWithContact
-GeomFill_Location: OCP.GeomFill.GeomFill_ApproxStyle # value = GeomFill_ApproxStyle.GeomFill_Location
-GeomFill_PipeNotOk: OCP.GeomFill.GeomFill_PipeError # value = GeomFill_PipeError.GeomFill_PipeNotOk
-GeomFill_PipeOk: OCP.GeomFill.GeomFill_PipeError # value = GeomFill_PipeError.GeomFill_PipeOk
-GeomFill_PlaneNotIntersectGuide: OCP.GeomFill.GeomFill_PipeError # value = GeomFill_PipeError.GeomFill_PlaneNotIntersectGuide
-GeomFill_Section: OCP.GeomFill.GeomFill_ApproxStyle # value = GeomFill_ApproxStyle.GeomFill_Section
-GeomFill_StretchStyle: OCP.GeomFill.GeomFill_FillingStyle # value = GeomFill_FillingStyle.GeomFill_StretchStyle
+GeomFill_CoonsStyle: OCP.GeomFill.GeomFill_FillingStyle # value = <GeomFill_FillingStyle.GeomFill_CoonsStyle: 1>
+GeomFill_CurvedStyle: OCP.GeomFill.GeomFill_FillingStyle # value = <GeomFill_FillingStyle.GeomFill_CurvedStyle: 2>
+GeomFill_ImpossibleContact: OCP.GeomFill.GeomFill_PipeError # value = <GeomFill_PipeError.GeomFill_ImpossibleContact: 3>
+GeomFill_IsConstantNormal: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsConstantNormal: 3>
+GeomFill_IsCorrectedFrenet: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsCorrectedFrenet: 0>
+GeomFill_IsDarboux: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsDarboux: 4>
+GeomFill_IsDiscreteTrihedron: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsDiscreteTrihedron: 9>
+GeomFill_IsFixed: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsFixed: 1>
+GeomFill_IsFrenet: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsFrenet: 2>
+GeomFill_IsGuideAC: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsGuideAC: 5>
+GeomFill_IsGuideACWithContact: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsGuideACWithContact: 7>
+GeomFill_IsGuidePlan: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsGuidePlan: 6>
+GeomFill_IsGuidePlanWithContact: OCP.GeomFill.GeomFill_Trihedron # value = <GeomFill_Trihedron.GeomFill_IsGuidePlanWithContact: 8>
+GeomFill_Location: OCP.GeomFill.GeomFill_ApproxStyle # value = <GeomFill_ApproxStyle.GeomFill_Location: 1>
+GeomFill_PipeNotOk: OCP.GeomFill.GeomFill_PipeError # value = <GeomFill_PipeError.GeomFill_PipeNotOk: 1>
+GeomFill_PipeOk: OCP.GeomFill.GeomFill_PipeError # value = <GeomFill_PipeError.GeomFill_PipeOk: 0>
+GeomFill_PlaneNotIntersectGuide: OCP.GeomFill.GeomFill_PipeError # value = <GeomFill_PipeError.GeomFill_PlaneNotIntersectGuide: 2>
+GeomFill_Section: OCP.GeomFill.GeomFill_ApproxStyle # value = <GeomFill_ApproxStyle.GeomFill_Section: 0>
+GeomFill_StretchStyle: OCP.GeomFill.GeomFill_FillingStyle # value = <GeomFill_FillingStyle.GeomFill_StretchStyle: 0>

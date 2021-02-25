@@ -4,28 +4,35 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
+import OCP.Prs3d
+import OCP.NCollection
+import OCP.Font
 import OCP.BRep
 import OCP.TColgp
-import OCP.HLRAlgo
-import OCP.Adaptor3d
+import OCP.Geom
 import OCP.TopoDS
+import OCP.Bnd
+import OCP.HLRAlgo
 import OCP.BRepAdaptor
+import OCP.Standard
+import OCP.TopAbs
+import OCP.Poly
+import OCP.Adaptor3d
+import OCP.TopTools
+import OCP.TCollection
+import OCP.TColStd
 import OCP.Adaptor2d
 import OCP.gp
-import OCP.TColStd
-import OCP.Poly
-import OCP.Bnd
 import OCP.Graphic3d
-import OCP.Prs3d
-import OCP.Geom
 import OCP.TopLoc
 __all__  = [
-"StdPrs_BndBox",
+"StdPrs_BRepFont",
+"StdPrs_BRepTextBuilder",
 "StdPrs_Curve",
 "StdPrs_DeflectionCurve",
-"StdPrs_HLRPolyShape",
+"StdPrs_HLRShapeI",
 "StdPrs_HLRShape",
+"StdPrs_HLRPolyShape",
 "StdPrs_HLRToolShape",
 "StdPrs_Isolines",
 "StdPrs_Plane",
@@ -33,6 +40,7 @@ __all__  = [
 "StdPrs_PoleCurve",
 "StdPrs_ShadedShape",
 "StdPrs_ShadedSurface",
+"StdPrs_ShapeTool",
 "StdPrs_ToolPoint",
 "StdPrs_ToolRFace",
 "StdPrs_ToolTriangulatedShape",
@@ -49,58 +57,158 @@ __all__  = [
 "StdPrs_Volume_Closed",
 "StdPrs_Volume_Opened"
 ]
-class StdPrs_BndBox(OCP.Prs3d.Prs3d_Root):
+class StdPrs_BRepFont(OCP.Standard.Standard_Transient):
     """
-    Tool for computing bounding box presentation.
+    This tool provides basic services for rendering of vectorized text glyphs as BRep shapes. Single instance initialize single font for sequential glyphs rendering with implicit caching of already rendered glyphs. Thus position of each glyph in the text is specified by shape location.This tool provides basic services for rendering of vectorized text glyphs as BRep shapes. Single instance initialize single font for sequential glyphs rendering with implicit caching of already rendered glyphs. Thus position of each glyph in the text is specified by shape location.
     """
-    @staticmethod
     @overload
-    def Add_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theBndBox : OCP.Bnd.Bnd_OBB,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
+    def AdvanceX(self,theUChar : str,theUCharNext : str) -> float: 
         """
-        Computes presentation of a bounding box.
+        Compute advance to the next character with kerning applied when applicable. Assuming text rendered horizontally.
 
-        Computes presentation of a bounding box.
+        Compute advance to the next character with kerning applied when applicable. Assuming text rendered horizontally.
         """
-    @staticmethod
     @overload
-    def Add_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theBndBox : OCP.Bnd.Bnd_Box,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: ...
-    @staticmethod
-    def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
-        """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
-        """
-    @staticmethod
+    def AdvanceX(self,theUCharNext : str) -> float: ...
     @overload
-    def FillSegments_s(theSegments : OCP.Graphic3d.Graphic3d_ArrayOfSegments,theBox : OCP.Bnd.Bnd_OBB) -> None: 
+    def AdvanceY(self,theUCharNext : str) -> float: 
         """
-        Create primitive array with line segments for displaying a box.
+        Compute advance to the next character with kerning applied when applicable. Assuming text rendered vertically.
 
-        Create primitive array with line segments for displaying a box.
+        Compute advance to the next character with kerning applied when applicable. Assuming text rendered vertically.
+        """
+    @overload
+    def AdvanceY(self,theUChar : str,theUCharNext : str) -> float: ...
+    def Ascender(self) -> float: 
+        """
+        Returns vertical distance from the horizontal baseline to the highest character coordinate.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def Descender(self) -> float: 
+        """
+        Returns vertical distance from the horizontal baseline to the lowest character coordinate.
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def FTFont(self) -> OCP.Font.Font_FTFont: 
+        """
+        Return wrapper over FreeType font.
+        """
+    @staticmethod
+    def FindAndCreate_s(theFontName : OCP.TCollection.TCollection_AsciiString,theFontAspect : OCP.Font.Font_FontAspect,theSize : float,theStrictLevel : OCP.Font.Font_StrictLevel=Font_StrictLevel.Font_StrictLevel_Any) -> StdPrs_BRepFont: 
+        """
+        Find the font Initialize the font.
+        """
+    def FindAndInit(self,theFontName : OCP.TCollection.TCollection_AsciiString,theFontAspect : OCP.Font.Font_FontAspect,theSize : float,theStrictLevel : OCP.Font.Font_StrictLevel=Font_StrictLevel.Font_StrictLevel_Any) -> bool: ...
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def Init(self,theFontPath : OCP.NCollection.NCollection_Utf8String,theSize : float,theFaceId : int) -> bool: 
+        """
+        Initialize the font.
+        """
+    @overload
+    def Init(self,theFontName : OCP.NCollection.NCollection_Utf8String,theFontAspect : OCP.Font.Font_FontAspect,theSize : float) -> bool: ...
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
 
-        Create primitive array with line segments for displaying a box.
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
-        Create primitive array with line segments for displaying a box.
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
-    @staticmethod
     @overload
-    def FillSegments_s(theSegments : OCP.Graphic3d.Graphic3d_ArrayOfSegments,theBox : OCP.Bnd.Bnd_Box) -> None: ...
-    @staticmethod
-    @overload
-    def FillSegments_s(theBox : OCP.Bnd.Bnd_OBB) -> OCP.Graphic3d.Graphic3d_ArrayOfSegments: ...
-    @staticmethod
-    @overload
-    def FillSegments_s(theBox : OCP.Bnd.Bnd_Box) -> OCP.Graphic3d.Graphic3d_ArrayOfSegments: ...
-    @staticmethod
-    def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def LineSpacing(self) -> float: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        Returns default line spacing (the baseline-to-baseline distance).
         """
+    def Mutex(self) -> OCP.Standard.Standard_Mutex: 
+        """
+        Returns mutex.
+        """
+    def PointSize(self) -> float: 
+        """
+        Configured point size
+        """
+    def Release(self) -> None: 
+        """
+        Release currently loaded font.
+        """
+    def RenderGlyph(self,theChar : str) -> OCP.TopoDS.TopoDS_Shape: 
+        """
+        Render single glyph as TopoDS_Shape.
+        """
+    def Scale(self) -> float: 
+        """
+        Returns scaling factor for current font size.
+        """
+    def SetCompositeCurveMode(self,theToConcatenate : bool) -> None: 
+        """
+        Setup glyph geometry construction mode. By default algorithm creates independent TopoDS_Edge for each original curve in the glyph (line segment or Bezie curve). Algorithm might optionally create composite BSpline curve for each contour which reduces memory footprint but limits curve class to C0. Notice that altering this flag clears currently accumulated cache!
+        """
+    def SetWidthScaling(self,theScaleFactor : float) -> None: 
+        """
+        Setup glyph scaling along X-axis. By default glyphs are not scaled (scaling factor = 1.0)
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    @overload
+    def __init__(self,theFontName : OCP.NCollection.NCollection_Utf8String,theFontAspect : OCP.Font.Font_FontAspect,theSize : float,theStrictLevel : OCP.Font.Font_StrictLevel=Font_StrictLevel.Font_StrictLevel_Any) -> None: ...
+    @overload
+    def __init__(self,theFontPath : OCP.NCollection.NCollection_Utf8String,theSize : float,theFaceId : int=0) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @staticmethod
-    def fillSegments_s(theSegments : OCP.Graphic3d.Graphic3d_ArrayOfSegments,theBox : OCP.gp.gp_Pnt) -> None: 
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
-        Create primitive array with line segments for displaying a box.
+        None
         """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StdPrs_BRepTextBuilder():
+    """
+    Represents class for applying text formatting.
+    """
+    @overload
+    def Perform(self,theFont : StdPrs_BRepFont,theString : OCP.NCollection.NCollection_Utf8String,thePenLoc : OCP.gp.gp_Ax3=OCP.gp.gp_Ax3,theHAlign : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment=Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT,theVAlign : OCP.Graphic3d.Graphic3d_VerticalTextAlignment=Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM) -> OCP.TopoDS.TopoDS_Shape: 
+        """
+        Render text as BRep shape.
+
+        Render text as BRep shape.
+        """
+    @overload
+    def Perform(self,theFont : StdPrs_BRepFont,theFormatter : OCP.Font.Font_TextFormatter,thePenLoc : OCP.gp.gp_Ax3=OCP.gp.gp_Ax3) -> OCP.TopoDS.TopoDS_Shape: ...
+    def __init__(self) -> None: ...
     pass
 class StdPrs_Curve(OCP.Prs3d.Prs3d_Root):
     """
@@ -108,7 +216,7 @@ class StdPrs_Curve(OCP.Prs3d.Prs3d_Root):
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,Points : OCP.TColgp.TColgp_SequenceOfPnt,aNbPoints : int=30,drawCurve : bool=True) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer,Points : OCP.TColgp.TColgp_SequenceOfPnt,drawCurve : bool=True) -> None: 
         """
         Adds to the presentation aPresentation the drawing of the curve aCurve. The aspect is defined by LineAspect in aDrawer. If drawCurve equals Standard_False the curve will not be displayed, it is used if the curve is a part of some shape and PrimitiveArray visualization approach is activated (it is activated by default).
 
@@ -120,21 +228,21 @@ class StdPrs_Curve(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer,drawCurve : bool=True) -> None: ...
-    @staticmethod
-    @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer,drawCurve : bool=True) -> None: ...
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer,Points : OCP.TColgp.TColgp_SequenceOfPnt,drawCurve : bool=True) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer,drawCurve : bool=True) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,Points : OCP.TColgp.TColgp_SequenceOfPnt,aNbPoints : int=30,drawCurve : bool=True) -> None: ...
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     @overload
-    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: 
+    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDeflection : float,aLimit : float,aNbPoints : int) -> bool: 
         """
         returns true if the distance between the point (X,Y,Z) and the drawing of the curve is less than aDistance.
 
@@ -144,19 +252,19 @@ class StdPrs_Curve(OCP.Prs3d.Prs3d_Root):
 
         returns true if the distance between the point (X,Y,Z) and the drawing of the curve aCurve is less than aDistance. The drawing is considered between the points of parameter U1 and U2;
         """
-    @staticmethod
-    @overload
-    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
     @staticmethod
     @overload
     def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDeflection : float,aNbPoints : int) -> bool: ...
     @staticmethod
     @overload
-    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDeflection : float,aLimit : float,aNbPoints : int) -> bool: ...
+    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
+    @staticmethod
+    @overload
+    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
     pass
@@ -166,7 +274,7 @@ class StdPrs_DeflectionCurve(OCP.Prs3d.Prs3d_Root):
     """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDeflection : float,aLimit : float,anAngle : float=0.2,drawCurve : bool=True) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer,drawCurve : bool=True) -> None: 
         """
         adds to the presentation aPresentation the drawing of the curve aCurve with respect to the maximal chordial deviation defined by the drawer aDrawer. The aspect is defined by LineAspect in aDrawer. If drawCurve equals Standard_False the curve will not be displayed, it is used if the curve is a part of some shape and PrimitiveArray visualization approach is activated (it is activated by default).
 
@@ -180,24 +288,24 @@ class StdPrs_DeflectionCurve(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDeflection : float,Points : OCP.TColgp.TColgp_SequenceOfPnt,anAngle : float=0.2,drawCurve : bool=True) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer,drawCurve : bool=True) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDeflection : float,aLimit : float,anAngle : float=0.2,drawCurve : bool=True) -> None: ...
     @staticmethod
     @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer,drawCurve : bool=True) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDeflection : float,Points : OCP.TColgp.TColgp_SequenceOfPnt,anAngle : float=0.2,drawCurve : bool=True) -> None: ...
     @staticmethod
     @overload
     def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDeflection : float,aDrawer : OCP.Prs3d.Prs3d_Drawer,Points : OCP.TColgp.TColgp_SequenceOfPnt,drawCurve : bool=True) -> None: ...
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     @overload
-    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: 
+    def Match_s(theX : float,theY : float,theZ : float,theDistance : float,theCurve : OCP.Adaptor3d.Adaptor3d_Curve,theDeflection : float,theLimit : float,theAngle : float) -> bool: 
         """
         returns true if the distance between the point (X,Y,Z) and the drawing of the curve aCurve with respect of the maximal chordial deviation defined by the drawer aDrawer is less then aDistance.
 
@@ -209,56 +317,204 @@ class StdPrs_DeflectionCurve(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Match_s(theX : float,theY : float,theZ : float,theDistance : float,theCurve : OCP.Adaptor3d.Adaptor3d_Curve,theDeflection : float,theLimit : float,theAngle : float) -> bool: ...
+    def Match_s(theX : float,theY : float,theZ : float,theDistance : float,theCurve : OCP.Adaptor3d.Adaptor3d_Curve,theU1 : float,theU2 : float,theDeflection : float,theAngle : float) -> bool: ...
     @staticmethod
     @overload
     def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
     @staticmethod
     @overload
-    def Match_s(theX : float,theY : float,theZ : float,theDistance : float,theCurve : OCP.Adaptor3d.Adaptor3d_Curve,theU1 : float,theU2 : float,theDeflection : float,theAngle : float) -> bool: ...
+    def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
     pass
-class StdPrs_HLRPolyShape(OCP.Prs3d.Prs3d_Root):
+class StdPrs_HLRShapeI(OCP.Standard.Standard_Transient):
+    """
+    Computes the presentation of objects with removal of their hidden lines for a specific projector.
+    """
+    def ComputeHLR(self,thePrs : OCP.Graphic3d.Graphic3d_Structure,theShape : OCP.TopoDS.TopoDS_Shape,theDrawer : OCP.Prs3d.Prs3d_Drawer,theProjector : OCP.Graphic3d.Graphic3d_Camera) -> None: 
+        """
+        Compute presentation for specified shape.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StdPrs_HLRShape(StdPrs_HLRShapeI, OCP.Standard.Standard_Transient):
+    """
+    Computes the presentation of objects with removal of their hidden lines for a specific projector. The exact algorithm is used.
+    """
+    def ComputeHLR(self,thePrs : OCP.Graphic3d.Graphic3d_Structure,theShape : OCP.TopoDS.TopoDS_Shape,theDrawer : OCP.Prs3d.Prs3d_Drawer,theProjector : OCP.Graphic3d.Graphic3d_Camera) -> None: 
+        """
+        Compute presentation for specified shape.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StdPrs_HLRPolyShape(StdPrs_HLRShapeI, OCP.Standard.Standard_Transient):
     """
     Instantiates Prs3d_PolyHLRShape to define a display of a shape where hidden and visible lines are identified with respect to a given projection. StdPrs_HLRPolyShape works with a polyhedral simplification of the shape whereas StdPrs_HLRShape takes the shape itself into account. When you use StdPrs_HLRShape, you obtain an exact result, whereas, when you use StdPrs_HLRPolyShape, you reduce computation time but obtain polygonal segments. The polygonal algorithm is used.
     """
-    @staticmethod
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aShape : OCP.TopoDS.TopoDS_Shape,aDrawer : OCP.Prs3d.Prs3d_Drawer,aProjector : OCP.Prs3d.Prs3d_Projector) -> None: 
+    def ComputeHLR(self,thePrs : OCP.Graphic3d.Graphic3d_Structure,theShape : OCP.TopoDS.TopoDS_Shape,theDrawer : OCP.Prs3d.Prs3d_Drawer,theProjector : OCP.Graphic3d.Graphic3d_Camera) -> None: 
         """
-        Defines the hidden line removal display of the topology aShape in the projection defined by aProjector. The shape and the projection are added to the display aPresentation, and the attributes of the elements present in the aPresentation are defined by the attribute manager aDrawer.
+        Compute presentation for specified shape.
         """
-    @staticmethod
-    def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
+    def DecrementRefCounter(self) -> int: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        Decrements the reference counter of this object; returns the decremented value
         """
-    @staticmethod
-    def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
+    def Delete(self) -> None: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     def __init__(self) -> None: ...
-    pass
-class StdPrs_HLRShape(OCP.Prs3d.Prs3d_Root):
-    """
-    None
-    """
     @staticmethod
-    def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
-    def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
+    def get_type_name_s() -> str: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
-    def __init__(self) -> None: ...
     pass
 class StdPrs_HLRToolShape():
     """
@@ -308,7 +564,7 @@ class StdPrs_Isolines(OCP.Prs3d.Prs3d_Root):
     """
     @staticmethod
     @overload
-    def AddOnSurface_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float,theUIsoParams : OCP.TColStd.TColStd_SequenceOfReal,theVIsoParams : OCP.TColStd.TColStd_SequenceOfReal) -> None: 
+    def AddOnSurface_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float) -> None: 
         """
         Computes isolines on surface and adds them to presentation.
 
@@ -316,15 +572,15 @@ class StdPrs_Isolines(OCP.Prs3d.Prs3d_Root):
 
         Computes isolines on surface and adds them to presentation.
         """
+    @staticmethod
+    @overload
+    def AddOnSurface_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float,theUIsoParams : OCP.TColStd.TColStd_SequenceOfReal,theVIsoParams : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
     @staticmethod
     @overload
     def AddOnSurface_s(theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float,theUPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt,theVPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: ...
     @staticmethod
     @overload
-    def AddOnSurface_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float) -> None: ...
-    @staticmethod
-    @overload
-    def AddOnTriangulation_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
+    def AddOnTriangulation_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theTriangulation : OCP.Poly.Poly_Triangulation,theSurface : OCP.Geom.Geom_Surface,theLocation : OCP.TopLoc.TopLoc_Location,theDrawer : OCP.Prs3d.Prs3d_Drawer,theUIsoParams : OCP.TColStd.TColStd_SequenceOfReal,theVIsoParams : OCP.TColStd.TColStd_SequenceOfReal) -> None: 
         """
         Computes isolines on triangulation and adds them to a presentation.
 
@@ -334,13 +590,13 @@ class StdPrs_Isolines(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
+    def AddOnTriangulation_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: ...
+    @staticmethod
+    @overload
     def AddOnTriangulation_s(theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theUPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt,theVPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: ...
     @staticmethod
     @overload
-    def AddOnTriangulation_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theTriangulation : OCP.Poly.Poly_Triangulation,theSurface : OCP.Geom.Geom_Surface,theLocation : OCP.TopLoc.TopLoc_Location,theDrawer : OCP.Prs3d.Prs3d_Drawer,theUIsoParams : OCP.TColStd.TColStd_SequenceOfReal,theVIsoParams : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float) -> None: 
+    def Add_s(theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float,theUPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt,theVPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: 
         """
         Computes isolines presentation for a TopoDS face. This method chooses proper version of isoline builder algorithm : on triangulation or surface depending on the flag passed from Prs3d_Drawer attributes. This method is a default way to display isolines for a given TopoDS face.
 
@@ -348,16 +604,16 @@ class StdPrs_Isolines(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Add_s(theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float,theUPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt,theVPolylines : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: ...
+    def Add_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,theFace : OCP.TopoDS.TopoDS_Face,theDrawer : OCP.Prs3d.Prs3d_Drawer,theDeflection : float) -> None: ...
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def UVIsoParameters_s(theFace : OCP.TopoDS.TopoDS_Face,theNbIsoU : int,theNbIsoV : int,theUVLimit : float,theUIsoParams : OCP.TColStd.TColStd_SequenceOfReal,theVIsoParams : OCP.TColStd.TColStd_SequenceOfReal) -> Tuple[float, float, float, float]: 
@@ -378,7 +634,7 @@ class StdPrs_Plane(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def Match_s(X : float,Y : float,Z : float,aDistance : float,aPlane : OCP.Adaptor3d.Adaptor3d_Surface,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: 
@@ -388,7 +644,7 @@ class StdPrs_Plane(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
     pass
@@ -397,7 +653,7 @@ class StdPrs_Point():
     None
     """
     @staticmethod
-    def Add_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,thePoint : OCP.Geom.Geom_Point,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
+    def Add_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,thePoint : OCP.Geom.Geom_Point,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
         None
         """
@@ -419,7 +675,7 @@ class StdPrs_PoleCurve(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def Match_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: 
@@ -429,7 +685,7 @@ class StdPrs_PoleCurve(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def Pick_s(X : float,Y : float,Z : float,aDistance : float,aCurve : OCP.Adaptor3d.Adaptor3d_Curve,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> int: 
@@ -466,7 +722,7 @@ class StdPrs_ShadedShape(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def ExploreSolids_s(theShape : OCP.TopoDS.TopoDS_Shape,theBuilder : OCP.BRep.BRep_Builder,theClosed : OCP.TopoDS.TopoDS_Compound,theOpened : OCP.TopoDS.TopoDS_Compound,theIgnore1DSubShape : bool) -> None: 
@@ -492,7 +748,7 @@ class StdPrs_ShadedShape(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
     pass
@@ -508,14 +764,113 @@ class StdPrs_ShadedSurface(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
+    pass
+class StdPrs_ShapeTool():
+    """
+    Describes the behaviour requested for a wireframe shape presentation.
+    """
+    def CurrentTriangulation(self,l : OCP.TopLoc.TopLoc_Location) -> OCP.Poly.Poly_Triangulation: 
+        """
+        None
+        """
+    def CurveBound(self) -> OCP.Bnd.Bnd_Box: 
+        """
+        None
+        """
+    def FaceBound(self) -> OCP.Bnd.Bnd_Box: 
+        """
+        None
+        """
+    def FacesOfEdge(self) -> OCP.TopTools.TopTools_HSequenceOfShape: 
+        """
+        None
+        """
+    def GetCurve(self) -> OCP.TopoDS.TopoDS_Edge: 
+        """
+        None
+        """
+    def GetFace(self) -> OCP.TopoDS.TopoDS_Face: 
+        """
+        None
+        """
+    def GetVertex(self) -> OCP.TopoDS.TopoDS_Vertex: 
+        """
+        None
+        """
+    def HasCurve(self) -> bool: 
+        """
+        None
+        """
+    def HasSurface(self) -> bool: 
+        """
+        None
+        """
+    def InitCurve(self) -> None: 
+        """
+        None
+        """
+    def InitFace(self) -> None: 
+        """
+        None
+        """
+    def InitVertex(self) -> None: 
+        """
+        None
+        """
+    def IsPlanarFace(self) -> bool: 
+        """
+        None
+        """
+    @staticmethod
+    def IsPlanarFace_s(theFace : OCP.TopoDS.TopoDS_Face) -> bool: 
+        """
+        None
+        """
+    def MoreCurve(self) -> bool: 
+        """
+        None
+        """
+    def MoreFace(self) -> bool: 
+        """
+        None
+        """
+    def MoreVertex(self) -> bool: 
+        """
+        None
+        """
+    def Neighbours(self) -> int: 
+        """
+        None
+        """
+    def NextCurve(self) -> None: 
+        """
+        None
+        """
+    def NextFace(self) -> None: 
+        """
+        None
+        """
+    def NextVertex(self) -> None: 
+        """
+        None
+        """
+    def Polygon3D(self,l : OCP.TopLoc.TopLoc_Location) -> OCP.Poly.Poly_Polygon3D: 
+        """
+        None
+        """
+    def PolygonOnTriangulation(self,Indices : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,l : OCP.TopLoc.TopLoc_Location) -> Any: 
+        """
+        None
+        """
+    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape,theAllVertices : bool=False) -> None: ...
     pass
 class StdPrs_ToolPoint():
     """
@@ -532,6 +887,10 @@ class StdPrs_ToolRFace():
     """
     Iterator over 2D curves restricting a face (skipping internal/external edges). In addition, the algorithm skips NULL curves - IsInvalidGeometry() can be checked if this should be handled within algorithm.
     """
+    def Edge(self) -> OCP.TopoDS.TopoDS_Edge: 
+        """
+        Return current edge.
+        """
     def Init(self) -> None: 
         """
         Move iterator to the first element.
@@ -586,6 +945,11 @@ class StdPrs_ToolTriangulatedShape():
     @overload
     def ComputeNormals_s(theFace : OCP.TopoDS.TopoDS_Face,theTris : OCP.Poly.Poly_Triangulation) -> None: ...
     @staticmethod
+    def GetDeflection_s(theShape : OCP.TopoDS.TopoDS_Shape,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> float: 
+        """
+        Computes the absolute deflection value depending on the type of deflection in theDrawer: Aspect_TOD_RELATIVE: the absolute deflection is computed using the relative deviation coefficient from theDrawer and the shape's bounding box; Aspect_TOD_ABSOLUTE: the maximal chordial deviation from theDrawer is returned. In case of the type of deflection in theDrawer computed relative deflection for shape is stored as absolute deflection. It is necessary to use it later on for sub-shapes. This function should always be used to compute the deflection value for building discrete representations of the shape (triangualtion, wireframe) to avoid incosistencies between different representations of the shape and undesirable visual artifacts.
+        """
+    @staticmethod
     def IsClosed_s(theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Checks back faces visibility for specified shape (to activate back-face culling).
@@ -628,7 +992,7 @@ class StdPrs_Vertex():
     None
     """
     @staticmethod
-    def Add_s(thePresentation : OCP.Graphic3d.Graphic3d_Structure,thePoint : OCP.TopoDS.TopoDS_Vertex,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
+    def Add_s(thePrs : OCP.Graphic3d.Graphic3d_Structure,thePoint : OCP.TopoDS.TopoDS_Vertex,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
         None
         """
@@ -650,21 +1014,29 @@ class StdPrs_Volume():
 
       StdPrs_Volume_Opened
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StdPrs_Volume_Autodetection: OCP.StdPrs.StdPrs_Volume # value = StdPrs_Volume.StdPrs_Volume_Autodetection
-    StdPrs_Volume_Closed: OCP.StdPrs.StdPrs_Volume # value = StdPrs_Volume.StdPrs_Volume_Closed
-    StdPrs_Volume_Opened: OCP.StdPrs.StdPrs_Volume # value = StdPrs_Volume.StdPrs_Volume_Opened
-    __entries: dict # value = {'StdPrs_Volume_Autodetection': (StdPrs_Volume.StdPrs_Volume_Autodetection, None), 'StdPrs_Volume_Closed': (StdPrs_Volume.StdPrs_Volume_Closed, None), 'StdPrs_Volume_Opened': (StdPrs_Volume.StdPrs_Volume_Opened, None)}
-    __members__: dict # value = {'StdPrs_Volume_Autodetection': StdPrs_Volume.StdPrs_Volume_Autodetection, 'StdPrs_Volume_Closed': StdPrs_Volume.StdPrs_Volume_Closed, 'StdPrs_Volume_Opened': StdPrs_Volume.StdPrs_Volume_Opened}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StdPrs_Volume_Autodetection: OCP.StdPrs.StdPrs_Volume # value = <StdPrs_Volume.StdPrs_Volume_Autodetection: 0>
+    StdPrs_Volume_Closed: OCP.StdPrs.StdPrs_Volume # value = <StdPrs_Volume.StdPrs_Volume_Closed: 1>
+    StdPrs_Volume_Opened: OCP.StdPrs.StdPrs_Volume # value = <StdPrs_Volume.StdPrs_Volume_Opened: 2>
+    __entries: dict # value = {'StdPrs_Volume_Autodetection': (<StdPrs_Volume.StdPrs_Volume_Autodetection: 0>, None), 'StdPrs_Volume_Closed': (<StdPrs_Volume.StdPrs_Volume_Closed: 1>, None), 'StdPrs_Volume_Opened': (<StdPrs_Volume.StdPrs_Volume_Opened: 2>, None)}
+    __members__: dict # value = {'StdPrs_Volume_Autodetection': <StdPrs_Volume.StdPrs_Volume_Autodetection: 0>, 'StdPrs_Volume_Closed': <StdPrs_Volume.StdPrs_Volume_Closed: 1>, 'StdPrs_Volume_Opened': <StdPrs_Volume.StdPrs_Volume_Opened: 2>}
     pass
 class StdPrs_WFDeflectionRestrictedFace(OCP.Prs3d.Prs3d_Root):
     """
@@ -682,7 +1054,7 @@ class StdPrs_WFDeflectionRestrictedFace(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aFace : OCP.BRepAdaptor.BRepAdaptor_HSurface,DrawUIso : bool,DrawVIso : bool,Deflection : float,NBUiso : int,NBViso : int,aDrawer : OCP.Prs3d.Prs3d_Drawer,Curves : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: 
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aFace : OCP.BRepAdaptor.BRepAdaptor_HSurface,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
         Defines a display featuring U and V isoparameters. Adds the surface aFace to the StdPrs_WFRestrictedFace algorithm. This face is found in a shape in the presentation object aPresentation, and its display attributes - in particular, the number of U and V isoparameters - are set in the attribute manager aDrawer. aFace is BRepAdaptor_HSurface surface created from a face in a topological shape. which is passed as an argument through the BRepAdaptor_HSurface surface created from it. This is what allows the topological face to be treated as a geometric surface.
 
@@ -690,11 +1062,11 @@ class StdPrs_WFDeflectionRestrictedFace(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aFace : OCP.BRepAdaptor.BRepAdaptor_HSurface,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: ...
+    def Add_s(aPresentation : OCP.Graphic3d.Graphic3d_Structure,aFace : OCP.BRepAdaptor.BRepAdaptor_HSurface,DrawUIso : bool,DrawVIso : bool,Deflection : float,NBUiso : int,NBViso : int,aDrawer : OCP.Prs3d.Prs3d_Drawer,Curves : OCP.Prs3d.Prs3d_NListOfSequenceOfPnt) -> None: ...
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def MatchUIso_s(X : float,Y : float,Z : float,aDistance : float,aFace : OCP.BRepAdaptor.BRepAdaptor_HSurface,aDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: 
@@ -720,7 +1092,7 @@ class StdPrs_WFDeflectionRestrictedFace(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
     pass
@@ -736,12 +1108,12 @@ class StdPrs_WFDeflectionSurface(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
     pass
@@ -757,12 +1129,12 @@ class StdPrs_WFPoleSurface(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
     pass
@@ -794,7 +1166,7 @@ class StdPrs_WFRestrictedFace(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def MatchUIso_s(theX : float,theY : float,theZ : float,theDistance : float,theFace : OCP.BRepAdaptor.BRepAdaptor_HSurface,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> bool: 
@@ -820,7 +1192,7 @@ class StdPrs_WFRestrictedFace(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
     pass
@@ -835,7 +1207,7 @@ class StdPrs_WFShape(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def AddEdgesOnTriangulation_s(theShape : OCP.TopoDS.TopoDS_Shape,theToExcludeGeometric : bool=True) -> OCP.Graphic3d.Graphic3d_ArrayOfPrimitives: 
+    def AddEdgesOnTriangulation_s(theSegments : OCP.TColgp.TColgp_SequenceOfPnt,theShape : OCP.TopoDS.TopoDS_Shape,theToExcludeGeometric : bool=True) -> None: 
         """
         Compute free and boundary edges on a triangulation of each face in the given shape.
 
@@ -843,7 +1215,7 @@ class StdPrs_WFShape(OCP.Prs3d.Prs3d_Root):
         """
     @staticmethod
     @overload
-    def AddEdgesOnTriangulation_s(theSegments : OCP.TColgp.TColgp_SequenceOfPnt,theShape : OCP.TopoDS.TopoDS_Shape,theToExcludeGeometric : bool=True) -> None: ...
+    def AddEdgesOnTriangulation_s(theShape : OCP.TopoDS.TopoDS_Shape,theToExcludeGeometric : bool=True) -> OCP.Graphic3d.Graphic3d_ArrayOfPrimitives: ...
     @staticmethod
     def AddVertexes_s(theShape : OCP.TopoDS.TopoDS_Shape,theVertexMode : OCP.Prs3d.Prs3d_VertexDrawMode) -> OCP.Graphic3d.Graphic3d_ArrayOfPoints: 
         """
@@ -857,12 +1229,12 @@ class StdPrs_WFShape(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
     pass
@@ -878,15 +1250,15 @@ class StdPrs_WFSurface(OCP.Prs3d.Prs3d_Root):
     @staticmethod
     def CurrentGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the current (last created) group of primititves inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     @staticmethod
     def NewGroup_s(thePrs3d : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Group: 
         """
-        Returns the new group of primitives inside graphic objects in the display. A group also contains the attributes whose ranges are limited to the primitives in it.
+        None
         """
     def __init__(self) -> None: ...
     pass
-StdPrs_Volume_Autodetection: OCP.StdPrs.StdPrs_Volume # value = StdPrs_Volume.StdPrs_Volume_Autodetection
-StdPrs_Volume_Closed: OCP.StdPrs.StdPrs_Volume # value = StdPrs_Volume.StdPrs_Volume_Closed
-StdPrs_Volume_Opened: OCP.StdPrs.StdPrs_Volume # value = StdPrs_Volume.StdPrs_Volume_Opened
+StdPrs_Volume_Autodetection: OCP.StdPrs.StdPrs_Volume # value = <StdPrs_Volume.StdPrs_Volume_Autodetection: 0>
+StdPrs_Volume_Closed: OCP.StdPrs.StdPrs_Volume # value = <StdPrs_Volume.StdPrs_Volume_Closed: 1>
+StdPrs_Volume_Opened: OCP.StdPrs.StdPrs_Volume # value = <StdPrs_Volume.StdPrs_Volume_Opened: 2>

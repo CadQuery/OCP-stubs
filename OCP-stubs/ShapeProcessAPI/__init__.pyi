@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.ShapeProcess
-import OCP.TopoDS
 import OCP.TopTools
+import OCP.TopoDS
+import OCP.ShapeProcess
 __all__  = [
 "ShapeProcessAPI_ApplySequence"
 ]
@@ -26,7 +26,7 @@ class ShapeProcessAPI_ApplySequence():
         """
         Returns myMap with accumulated history.
         """
-    def PrepareShape(self,shape : OCP.TopoDS.TopoDS_Shape,fillmap : bool=False,until : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE) -> OCP.TopoDS.TopoDS_Shape: 
+    def PrepareShape(self,shape : OCP.TopoDS.TopoDS_Shape,fillmap : bool=False,until : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Performs sequence of operators stored in myRsc. If <fillmap> is True adds history "shape-shape" into myMap for shape and its subshapes until level <until> (included). If <until> is TopAbs_SHAPE, all the subshapes are considered.
         """

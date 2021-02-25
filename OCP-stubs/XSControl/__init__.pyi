@@ -4,18 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.TCollection
-import OCP.TColStd
-import OCP.IFSelect
-import OCP.Message
 import OCP.TopTools
+import OCP.TColStd
+import OCP.TCollection
+import io
 import OCP.Transfer
-import OCP.Standard
-import OCP.TopoDS
 import OCP.OpenGl
-import OCP.Interface
+import OCP.IFSelect
 import OCP.gp
+import OCP.Interface
+import OCP.TopoDS
+import OCP.Standard
+import OCP.TopAbs
 __all__  = [
 "XSControl",
 "XSControl_ConnectedShapes",
@@ -301,11 +301,11 @@ class XSControl_Controller(OCP.Standard.Standard_Transient):
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def TransferWriteShape(self,shape : OCP.TopoDS.TopoDS_Shape,FP : OCP.Transfer.Transfer_FinderProcess,model : OCP.Interface.Interface_InterfaceModel,modetrans : int=0) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+    def TransferWriteShape(self,shape : OCP.TopoDS.TopoDS_Shape,FP : OCP.Transfer.Transfer_FinderProcess,model : OCP.Interface.Interface_InterfaceModel,modetrans : int=0,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Takes one Shape and transfers it to an InterfaceModel (already created, e.g. by NewModel) Default uses ActorWrite; can be redefined as necessary Returned value is a status, as follows : Done OK , Void : No Result , Fail : Fail (e.g. exception) Error : bad conditions , bad model or null model
         """
-    def TransferWriteTransient(self,obj : OCP.Standard.Standard_Transient,FP : OCP.Transfer.Transfer_FinderProcess,model : OCP.Interface.Interface_InterfaceModel,modetrans : int=0) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+    def TransferWriteTransient(self,obj : OCP.Standard.Standard_Transient,FP : OCP.Transfer.Transfer_FinderProcess,model : OCP.Interface.Interface_InterfaceModel,modetrans : int=0,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Takes one Transient Object and transfers it to an InterfaceModel (already created, e.g. by NewModel) (result is recorded in the model by AddWithRefs) FP records produced results and checks
         """
@@ -369,14 +369,14 @@ class XSControl_Reader():
         Gives statistics about Transfer
         """
     @overload
-    def GiveList(self,first : str='',second : str='') -> OCP.TColStd.TColStd_HSequenceOfTransient: 
+    def GiveList(self,first : str,ent : OCP.Standard.Standard_Transient) -> OCP.TColStd.TColStd_HSequenceOfTransient: 
         """
         Returns a list of entities from the IGES or STEP file according to the following rules: - if first and second are empty strings, the whole file is selected. - if first is an entity number or label, the entity referred to is selected. - if first is a list of entity numbers/labels separated by commas, the entities referred to are selected, - if first is the name of a selection in the worksession and second is not defined, the list contains the standard output for that selection. - if first is the name of a selection and second is defined, the criterion defined by second is applied to the result of the first selection. A selection is an operator which computes a list of entities from a list given in input according to its type. If no list is specified, the selection computes its list of entities from the whole model. A selection can be: - A predefined selection (xst-transferrable-mode) - A filter based on a signature A Signature is an operator which returns a string from an entity according to its type. For example: - "xst-type" (CDL) - "iges-level" - "step-type". For example, if you wanted to select only the advanced_faces in a STEP file you would use the following code: Example Reader.GiveList("xst-transferrable-roots","step-type(ADVANCED_FACE)"); Warning If the value given to second is incorrect, it will simply be ignored.
 
         Computes a List of entities from the model as follows <first> beeing a Selection, <ent> beeing an entity or a list of entities (as a HSequenceOfTransient) : the standard result of this selection applied to this list if <first> is erroneous, a null handle is returned
         """
     @overload
-    def GiveList(self,first : str,ent : OCP.Standard.Standard_Transient) -> OCP.TColStd.TColStd_HSequenceOfTransient: ...
+    def GiveList(self,first : str='',second : str='') -> OCP.TColStd.TColStd_HSequenceOfTransient: ...
     def Model(self) -> OCP.Interface.Interface_InterfaceModel: 
         """
         Returns the model. It can then be consulted (header, product)
@@ -393,21 +393,40 @@ class XSControl_Reader():
         """
         Returns all of the results in a single shape which is: - a null shape if there are no results, - a shape if there is one result, - a compound containing the resulting shapes if there are more than one.
         """
-    def PrintCheckLoad(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
+    @overload
+    def PrintCheckLoad(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
         """
         Prints the check list attached to loaded data, on the Standard Trace File (starts at std::cout) All messages or fails only, according to <failsonly> mode = 0 : per entity, prints messages mode = 1 : per message, just gives count of entities per check mode = 2 : also gives entity numbers
+
+        Prints the check list attached to loaded data.
         """
+    @overload
+    def PrintCheckLoad(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
+    @overload
     def PrintCheckTransfer(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
         """
         Displays check results for the last translation of IGES or STEP entities to Open CASCADE entities. Only fail messages are displayed if failsonly is true. All messages are displayed if failsonly is false. mode determines the contents and the order of the messages according to the terms of the IFSelect_PrintCount enumeration.
+
+        Displays check results for the last translation of IGES or STEP entities to Open CASCADE entities.
         """
+    @overload
+    def PrintCheckTransfer(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
+    @overload
     def PrintStatsTransfer(self,what : int,mode : int=0) -> None: 
         """
         Displays the statistics for the last translation. what defines the kind of statistics that are displayed as follows: - 0 gives general statistics (number of translated roots, number of warnings, number of fail messages), - 1 gives root results, - 2 gives statistics for all checked entities, - 3 gives the list of translated entities, - 4 gives warning and fail messages, - 5 gives fail messages only. The use of mode depends on the value of what. If what is 0, mode is ignored. If what is 1, 2 or 3, mode defines the following: - 0 lists the numbers of IGES or STEP entities in the respective model - 1 gives the number, identifier, type and result type for each IGES or STEP entity and/or its status (fail, warning, etc.) - 2 gives maximum information for each IGES or STEP entity (i.e. checks) - 3 gives the number of entities per type of IGES or STEP entity - 4 gives the number of IGES or STEP entities per result type and/or status - 5 gives the number of pairs (IGES or STEP or result type and status) - 6 gives the number of pairs (IGES or STEP or result type and status) AND the list of entity numbers in the IGES or STEP model. If what is 4 or 5, mode defines the warning and fail messages as follows: - if mode is 0 all warnings and checks per entity are returned - if mode is 2 the list of entities per warning is returned. If mode is not set, only the list of all entities per warning is given.
+
+        Displays the statistics for the last translation.
         """
+    @overload
+    def PrintStatsTransfer(self,theStream : io.BytesIO,what : int,mode : int=0) -> None: ...
     def ReadFile(self,filename : str) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Loads a file and returns the read status Zero for a Model which compies with the Controller
+        """
+    def ReadStream(self,theName : str,theIStream : io.BytesIO) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+        """
+        Loads a file from stream and returns the read status
         """
     def RootForTransfer(self,num : int=1) -> OCP.Standard.Standard_Transient: 
         """
@@ -425,23 +444,23 @@ class XSControl_Reader():
         """
         Returns the shape resulting from a translation and identified by the rank num. num equals 1 by default. In other words, the first shape resulting from the translation is returned.
         """
-    def TransferEntity(self,start : OCP.Standard.Standard_Transient) -> bool: 
+    def TransferEntity(self,start : OCP.Standard.Standard_Transient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Translates an IGES or STEP entity in the model. true is returned if a shape is produced; otherwise, false is returned.
         """
-    def TransferList(self,list : OCP.TColStd.TColStd_HSequenceOfTransient) -> int: 
+    def TransferList(self,list : OCP.TColStd.TColStd_HSequenceOfTransient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> int: 
         """
         Translates a list of entities. Returns the number of IGES or STEP entities that were successfully translated. The list can be produced with GiveList. Warning - This function does not clear the existing output shapes.
         """
-    def TransferOne(self,num : int) -> bool: 
+    def TransferOne(self,num : int,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Translates an IGES or STEP entity identified by the rank num in the model. false is returned if no shape is produced.
         """
-    def TransferOneRoot(self,num : int=1) -> bool: 
+    def TransferOneRoot(self,num : int=1,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Translates a root identified by the rank num in the model. false is returned if no shape is produced.
         """
-    def TransferRoots(self) -> int: 
+    def TransferRoots(self,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> int: 
         """
         Translates all translatable roots and returns the number of successful translations. Warning - This function clears existing output shapes first.
         """
@@ -450,9 +469,9 @@ class XSControl_Reader():
         Returns the session used in <me>
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,norm : str) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,WS : XSControl_WorkSession,scratch : bool=True) -> None: ...
     pass
@@ -583,9 +602,9 @@ class XSControl_SelectForTransfer(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSel
         Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,TR : XSControl_TransferReader) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -818,7 +837,7 @@ class XSControl_TransferReader(OCP.Standard.Standard_Transient):
         """
         Returns the currently set InterfaceModel
         """
-    def PrintStats(self,theWhat : int,theMode : int=0) -> None: 
+    def PrintStats(self,theStream : io.BytesIO,theWhat : int,theMode : int=0) -> None: 
         """
         Prints statistics on current Trace File, according <what> and <mode>. See PrintStatsProcess for details
         """
@@ -896,15 +915,15 @@ class XSControl_TransferReader(OCP.Standard.Standard_Transient):
         """
         Clears the results attached to an entity if <ents> equates the starting model, clears all results
         """
-    def TransferList(self,theList : OCP.TColStd.TColStd_HSequenceOfTransient,theRec : bool=True) -> int: 
+    def TransferList(self,theList : OCP.TColStd.TColStd_HSequenceOfTransient,theRec : bool=True,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> int: 
         """
         Commands the transfer on reading for a list of entities to data for Imagine, using the selected Actor for Read Returns count of transferred entities, ok or with fails (0/1) If <rec> is True (D), the results are recorded by RecordResult
         """
-    def TransferOne(self,theEnt : OCP.Standard.Standard_Transient,theRec : bool=True) -> int: 
+    def TransferOne(self,theEnt : OCP.Standard.Standard_Transient,theRec : bool=True,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> int: 
         """
         Commands the transfer on reading for an entity to data for Imagine, using the selected Actor for Read Returns count of transferred entities, ok or with fails (0/1) If <rec> is True (D), the result is recorded by RecordResult
         """
-    def TransferRoots(self,theGraph : OCP.Interface.Interface_Graph) -> int: 
+    def TransferRoots(self,theGraph : OCP.Interface.Interface_Graph,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> int: 
         """
         Transfers the content of the current Interface Model to data handled by Imagine, starting from its Roots (determined by the Graph <G>), using the selected Actor for Read Returns the count of performed root transfers (i.e. 0 if none) or -1 if no actor is defined
         """
@@ -1022,11 +1041,11 @@ class XSControl_TransferWriter(OCP.Standard.Standard_Transient):
         """
         Returns the current Transfer Mode (an Integer) It will be interpreted by the Controller to run Transfers This call form could be later replaced by more specific ones (parameters suited for each norm / transfer case)
         """
-    def TransferWriteShape(self,theModel : OCP.Interface.Interface_InterfaceModel,theShape : OCP.TopoDS.TopoDS_Shape) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+    def TransferWriteShape(self,theModel : OCP.Interface.Interface_InterfaceModel,theShape : OCP.TopoDS.TopoDS_Shape,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Transfers a Shape from CasCade to a model of current norm, according to the last call to SetTransferMode Works by calling the Controller Returns status : =0 if OK, >0 if error during transfer, <0 if transfer badly initialised
         """
-    def TransferWriteTransient(self,theModel : OCP.Interface.Interface_InterfaceModel,theObj : OCP.Standard.Standard_Transient) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+    def TransferWriteTransient(self,theModel : OCP.Interface.Interface_InterfaceModel,theObj : OCP.Standard.Standard_Transient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Transfers a Transient object (from an application) to a model of current norm, according to the last call to SetTransferMode Works by calling the Controller Returns status : =0 if OK, >0 if error during transfer, <0 if transfer badly initialised
         """
@@ -1155,23 +1174,23 @@ class XSControl_Utils():
         None
         """
     @overload
-    def ToCString(self,strval : OCP.TCollection.TCollection_AsciiString) -> str: 
+    def ToCString(self,strval : OCP.TCollection.TCollection_HAsciiString) -> str: 
         """
         None
 
         None
         """
     @overload
-    def ToCString(self,strval : OCP.TCollection.TCollection_HAsciiString) -> str: ...
+    def ToCString(self,strval : OCP.TCollection.TCollection_AsciiString) -> str: ...
     @overload
-    def ToEString(self,strval : OCP.TCollection.TCollection_ExtendedString) -> str: 
+    def ToEString(self,strval : OCP.TCollection.TCollection_HExtendedString) -> str: 
         """
         None
 
         None
         """
     @overload
-    def ToEString(self,strval : OCP.TCollection.TCollection_HExtendedString) -> str: ...
+    def ToEString(self,strval : OCP.TCollection.TCollection_ExtendedString) -> str: ...
     @overload
     def ToHString(self,strcon : str) -> OCP.TCollection.TCollection_HAsciiString: 
         """
@@ -1385,11 +1404,11 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
         Returns the rank of a Dispatch in the ShareOut, or 0 if <disp> is not in the ShareOut or not in the WorkSession
         """
-    def DumpEntity(self,ent : OCP.Standard.Standard_Transient,level : int,S : OCP.Message.Message_Messenger) -> None: 
+    def DumpEntity(self,ent : OCP.Standard.Standard_Transient,level : int,S : io.BytesIO) -> None: 
         """
         Dumps a starting entity according to the current norm. To do this, it calls DumpEntity from WorkLibrary. <level> is to be interpreted for each norm : see specific classes of WorkLibrary for it. Generally, 0 if for very basic (only type ...), greater values give more and more details.
         """
-    def DumpModel(self,level : int,S : OCP.Message.Message_Messenger) -> None: 
+    def DumpModel(self,level : int,S : io.BytesIO) -> None: 
         """
         Lists the content of the Input Model (if there is one) According level : 0 -> gives only count of Entities and Roots 1 -> Lists also Roots; 2 -> Lists all Entities (by TraceType) 3 -> Performs a call to CheckList (Fails) and lists the result 4 -> as 3 but all CheckList (Fails + Warnings) 5,6,7 : as 3 but resp. Count,List,Labels by Fail 8,9,10 : as 4 but resp. Count,List,Labels by message
         """
@@ -1486,14 +1505,14 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         Extracts File Root Name from a given complete file name (uses OSD_Path)
         """
     @overload
-    def GiveList(self,first : str,second : str='') -> OCP.TColStd.TColStd_HSequenceOfTransient: 
+    def GiveList(self,obj : OCP.Standard.Standard_Transient) -> OCP.TColStd.TColStd_HSequenceOfTransient: 
         """
         Determines a list of entities from an object : <obj> already HSequenceOfTransient : returned itself <obj> Selection : its Result of Evaluation is returned <obj> an entity of the Model : a HSequence which contains it else, an empty HSequence <obj> the Model it self : ALL its content (not only the roots)
 
         Computes a List of entities from two alphanums, first and second, as follows : if <first> is a Number or Label of an entity : this entity if <first> is a list of Numbers/Labels : the list of entities if <first> is the name of a Selection in <WS>, and <second> not defined, the standard result of this Selection else, let's consider "first second" : this whole phrase is splitted by blanks, as follows (RECURSIVE CALL) : - the leftest term is the final selection - the other terms define the result of the selection - and so on (the "leftest minus one" is a selection, of which the input is given by the remaining ...)
         """
     @overload
-    def GiveList(self,obj : OCP.Standard.Standard_Transient) -> OCP.TColStd.TColStd_HSequenceOfTransient: ...
+    def GiveList(self,first : str,second : str='') -> OCP.TColStd.TColStd_HSequenceOfTransient: ...
     def GiveListCombined(self,l1 : OCP.TColStd.TColStd_HSequenceOfTransient,l2 : OCP.TColStd.TColStd_HSequenceOfTransient,mode : int) -> OCP.TColStd.TColStd_HSequenceOfTransient: 
         """
         Combines two lists and returns the result, according to mode : <mode> < 0 : entities in <l1> AND NOT in <l2> <mode> = 0 : entities in <l1> AND in <l2> <mode> > 0 : entities in <l1> OR in <l2>
@@ -1596,7 +1615,7 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
         Returns the Check List produced by the last execution of either : EvaluateFile(for Split), SendSplit, SendAll, SendSelected, RunTransformer-RunModifier Cleared by SetModel or ClearData(1) The field is protected, hence a specialized WorkSession may fill it
         """
-    def ListEntities(self,iter : OCP.Interface.Interface_EntityIterator,mode : int) -> None: 
+    def ListEntities(self,iter : OCP.Interface.Interface_EntityIterator,mode : int,S : io.BytesIO) -> None: 
         """
         Internal method which displays an EntityIterator <mode> 0 gives short display (only entity numbers) 1 gives a more complete trace (1 line per Entity) (can be used each time a trace has to be output from a list) 2 gives a form suitable for givelist : (n1,n2,n3...)
         """
@@ -1653,14 +1672,14 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         Returns the Ident attached to a Name, 0 if name not recorded
         """
     @overload
-    def NamedItem(self,name : str) -> OCP.Standard.Standard_Transient: 
+    def NamedItem(self,name : OCP.TCollection.TCollection_HAsciiString) -> OCP.Standard.Standard_Transient: 
         """
         Returns the Item which corresponds to a Variable, given its Name (whatever the type of this Item). Returns a Null Handle if this Name is not recorded
 
         Same as above, but <name> is given through a Handle Especially Usefull with methods SelectionNames, etc...
         """
     @overload
-    def NamedItem(self,name : OCP.TCollection.TCollection_HAsciiString) -> OCP.Standard.Standard_Transient: ...
+    def NamedItem(self,name : str) -> OCP.Standard.Standard_Transient: ...
     def NbFiles(self) -> int: 
         """
         Returns the count of produced Models
@@ -1713,19 +1732,19 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
         From a given label in Model, returns the corresponding number Starts from first entity by Default, may start after a given number : this number may be given negative, its absolute value is then considered. Hence a loop on NumberFromLabel may be programmed (stop test is : returned value positive or null)
         """
-    def PrintCheckList(self,checklist : OCP.Interface.Interface_CheckIterator,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
+    def PrintCheckList(self,S : io.BytesIO,checklist : OCP.Interface.Interface_CheckIterator,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
         """
         Prints a CheckIterator to the current Trace File, controlled with the current Model complete or fails only, according to <failsonly> <mode> defines the mode of printing 0 : sequential, according entities; else with a CheckCounter 1 : according messages, count of entities 2 : id but with list of entities, designated by their numbers 3 : as 2 but with labels of entities
         """
-    def PrintEntityStatus(self,ent : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintEntityStatus(self,ent : OCP.Standard.Standard_Transient,S : io.BytesIO) -> None: 
         """
         Prints main informations about an entity : its number, type, validity (and checks if any), category, shareds and sharings.. mutable because it can recompute checks as necessary
         """
-    def PrintSignatureList(self,signlist : OCP.IFSelect.IFSelect_SignatureList,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
+    def PrintSignatureList(self,S : io.BytesIO,signlist : OCP.IFSelect.IFSelect_SignatureList,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
         """
         Prints a SignatureList to the current Trace File, controlled with the current Model <mode> defines the mode of printing (see SignatureList)
         """
-    def PrintTransferStatus(self,theNum : int,theWri : bool,theS : OCP.Message.Message_Messenger) -> bool: 
+    def PrintTransferStatus(self,theNum : int,theWri : bool,theS : io.BytesIO) -> bool: 
         """
         Prints the transfer status of a transferred item, as beeing the Mapped n0 <num>, from MapWriter if <wri> is True, or from MapReader if <wri> is False Returns True when done, False else (i.e. num out of range)
         """
@@ -1748,6 +1767,10 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
     def ReadFile(self,filename : str) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Reads a file with the WorkLibrary (sets Model and LoadedFile) Returns a integer status which can be : RetDone if OK, RetVoid if no Protocol not defined, RetError for file not found, RetFail if fail during read
+        """
+    def ReadStream(self,theName : str,theIStream : io.BytesIO) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+        """
+        Reads a file from stream with the WorkLibrary (sets Model and LoadedFile) Returns a integer status which can be : RetDone if OK, RetVoid if no Protocol not defined, RetError for file not found, RetFail if fail during read
         """
     def RemoveItem(self,item : OCP.Standard.Standard_Transient) -> bool: 
         """
@@ -2017,11 +2040,11 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
         Traces the Statics attached to a given use number If <use> is given positive (normal), the trace is embedded with a header and a trailer If <use> is negative, just values are printed (this allows to make compositions) Remark : use number 5 commands use -2 to be traced Remark : use numbers 4 and 6 command use -3 to be traced
         """
-    def TransferReadOne(self,theEnts : OCP.Standard.Standard_Transient) -> int: 
+    def TransferReadOne(self,theEnts : OCP.Standard.Standard_Transient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> int: 
         """
         Commands the transfer of, either one entity, or a list I.E. calls the TransferReader after having analysed <ents> It is cumulated from the last BeginTransfer <ents> is processed by GiveList, hence : - <ents> a Selection : its SelectionResult - <ents> a HSequenceOfTransient : this list - <ents> the Model : in this specific case, all the roots, with no cumulation of former transfers (TransferReadRoots)
         """
-    def TransferReadRoots(self) -> int: 
+    def TransferReadRoots(self,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> int: 
         """
         Commands the transfer of all the root entities of the model i.e. calls TransferRoot from the TransferReader with the Graph No cumulation with former calls to TransferReadOne
         """
@@ -2033,7 +2056,7 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
         Returns the check-list of last transfer (write) It is recorded in the FinderProcess, but it must be bound with resulting entities (in the resulting file model) rather than with original objects (in fact, their mappers)
         """
-    def TransferWriteShape(self,theShape : OCP.TopoDS.TopoDS_Shape,theCompGraph : bool=True) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+    def TransferWriteShape(self,theShape : OCP.TopoDS.TopoDS_Shape,theCompGraph : bool=True,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Transfers a Shape from CasCade to a model of current norm, according to the last call to SetModeWriteShape Returns status :Done if OK, Fail if error during transfer, Error if transfer badly initialised
         """
@@ -2102,7 +2125,7 @@ class XSControl_Writer():
         """
         Sets a specific session to <me>
         """
-    def TransferShape(self,sh : OCP.TopoDS.TopoDS_Shape,mode : int=0) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+    def TransferShape(self,sh : OCP.TopoDS.TopoDS_Shape,mode : int=0,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Transfers a Shape according to the mode
         """
@@ -2115,9 +2138,9 @@ class XSControl_Writer():
         Writes the produced model
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,norm : str) -> None: ...
     @overload
     def __init__(self,WS : XSControl_WorkSession,scratch : bool=True) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass

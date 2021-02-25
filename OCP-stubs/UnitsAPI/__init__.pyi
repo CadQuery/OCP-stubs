@@ -44,7 +44,7 @@ class UnitsAPI():
     def AnyToLS_s(aData : float,aUnit : str,aDim : OCP.Units.Units_Dimensions) -> float: ...
     @staticmethod
     @overload
-    def AnyToSI_s(aData : float,aUnit : str,aDim : OCP.Units.Units_Dimensions) -> float: 
+    def AnyToSI_s(aData : float,aUnit : str) -> float: 
         """
         Converts the local unit value to the SI system units value. Example: AnyToSI(1.,"in.") returns 0.0254
 
@@ -52,7 +52,7 @@ class UnitsAPI():
         """
     @staticmethod
     @overload
-    def AnyToSI_s(aData : float,aUnit : str) -> float: ...
+    def AnyToSI_s(aData : float,aUnit : str,aDim : OCP.Units.Units_Dimensions) -> float: ...
     @staticmethod
     def Check_s(aQuantity : str,aUnit : str) -> bool: 
         """
@@ -197,22 +197,30 @@ class UnitsAPI_SystemUnits():
 
       UnitsAPI_MDTV
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    UnitsAPI_DEFAULT: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = UnitsAPI_SystemUnits.UnitsAPI_DEFAULT
-    UnitsAPI_MDTV: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = UnitsAPI_SystemUnits.UnitsAPI_MDTV
-    UnitsAPI_SI: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = UnitsAPI_SystemUnits.UnitsAPI_SI
-    __entries: dict # value = {'UnitsAPI_DEFAULT': (UnitsAPI_SystemUnits.UnitsAPI_DEFAULT, None), 'UnitsAPI_SI': (UnitsAPI_SystemUnits.UnitsAPI_SI, None), 'UnitsAPI_MDTV': (UnitsAPI_SystemUnits.UnitsAPI_MDTV, None)}
-    __members__: dict # value = {'UnitsAPI_DEFAULT': UnitsAPI_SystemUnits.UnitsAPI_DEFAULT, 'UnitsAPI_SI': UnitsAPI_SystemUnits.UnitsAPI_SI, 'UnitsAPI_MDTV': UnitsAPI_SystemUnits.UnitsAPI_MDTV}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    UnitsAPI_DEFAULT: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = <UnitsAPI_SystemUnits.UnitsAPI_DEFAULT: 0>
+    UnitsAPI_MDTV: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = <UnitsAPI_SystemUnits.UnitsAPI_MDTV: 2>
+    UnitsAPI_SI: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = <UnitsAPI_SystemUnits.UnitsAPI_SI: 1>
+    __entries: dict # value = {'UnitsAPI_DEFAULT': (<UnitsAPI_SystemUnits.UnitsAPI_DEFAULT: 0>, None), 'UnitsAPI_SI': (<UnitsAPI_SystemUnits.UnitsAPI_SI: 1>, None), 'UnitsAPI_MDTV': (<UnitsAPI_SystemUnits.UnitsAPI_MDTV: 2>, None)}
+    __members__: dict # value = {'UnitsAPI_DEFAULT': <UnitsAPI_SystemUnits.UnitsAPI_DEFAULT: 0>, 'UnitsAPI_SI': <UnitsAPI_SystemUnits.UnitsAPI_SI: 1>, 'UnitsAPI_MDTV': <UnitsAPI_SystemUnits.UnitsAPI_MDTV: 2>}
     pass
-UnitsAPI_DEFAULT: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = UnitsAPI_SystemUnits.UnitsAPI_DEFAULT
-UnitsAPI_MDTV: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = UnitsAPI_SystemUnits.UnitsAPI_MDTV
-UnitsAPI_SI: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = UnitsAPI_SystemUnits.UnitsAPI_SI
+UnitsAPI_DEFAULT: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = <UnitsAPI_SystemUnits.UnitsAPI_DEFAULT: 0>
+UnitsAPI_MDTV: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = <UnitsAPI_SystemUnits.UnitsAPI_MDTV: 2>
+UnitsAPI_SI: OCP.UnitsAPI.UnitsAPI_SystemUnits # value = <UnitsAPI_SystemUnits.UnitsAPI_SI: 1>

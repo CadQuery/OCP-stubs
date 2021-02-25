@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TColStd
-import OCP.Storage
+import OCP.TCollection
 import OCP.StdObjMgt
-import OCP.Standard
 import OCP.NCollection
+import OCP.Storage
+import OCP.Standard
 __all__  = [
 "StdStorage",
 "StdStorage_BucketIterator",
@@ -27,7 +27,7 @@ class StdStorage():
     """
     @staticmethod
     @overload
-    def Read_s(theFileName : OCP.TCollection.TCollection_AsciiString,theData : StdStorage_Data) -> OCP.Storage.Storage_Error: 
+    def Read_s(theDriver : OCP.Storage.Storage_BaseDriver,theData : StdStorage_Data) -> OCP.Storage.Storage_Error: 
         """
         Returns the data read from a file located at theFileName. The storage format is compartible with legacy persistent one. These data are aggregated in a StdStorage_Data object which may be browsed in order to extract the root objects from the container. Note: - theData object will be created if it is null or cleared otherwise.
 
@@ -35,7 +35,7 @@ class StdStorage():
         """
     @staticmethod
     @overload
-    def Read_s(theDriver : OCP.Storage.Storage_BaseDriver,theData : StdStorage_Data) -> OCP.Storage.Storage_Error: ...
+    def Read_s(theFileName : OCP.TCollection.TCollection_AsciiString,theData : StdStorage_Data) -> OCP.Storage.Storage_Error: ...
     @staticmethod
     def Version_s() -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -154,14 +154,14 @@ class StdStorage_SequenceOfRoots(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : StdStorage_Root) -> None: 
+    def Append(self,theSeq : StdStorage_SequenceOfRoots) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : StdStorage_SequenceOfRoots) -> None: ...
+    def Append(self,theItem : StdStorage_Root) -> None: ...
     def Assign(self,theOther : StdStorage_SequenceOfRoots) -> StdStorage_SequenceOfRoots: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -225,14 +225,14 @@ class StdStorage_SequenceOfRoots(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : StdStorage_Root) -> None: 
+    def Prepend(self,theSeq : StdStorage_SequenceOfRoots) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : StdStorage_SequenceOfRoots) -> None: ...
+    def Prepend(self,theItem : StdStorage_Root) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -267,12 +267,12 @@ class StdStorage_SequenceOfRoots(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StdStorage_SequenceOfRoots) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -507,9 +507,9 @@ class StdStorage_Root(OCP.Standard.Standard_Transient):
         Returns a root's persistent type
         """
     @overload
-    def __init__(self,theName : OCP.TCollection.TCollection_AsciiString,theObject : OCP.StdObjMgt.StdObjMgt_Persistent) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theName : OCP.TCollection.TCollection_AsciiString,theObject : OCP.StdObjMgt.StdObjMgt_Persistent) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -632,14 +632,14 @@ class StdStorage_HSequenceOfRoots(StdStorage_SequenceOfRoots, OCP.NCollection.NC
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : StdStorage_Root) -> None: 
+    def Append(self,theSequence : StdStorage_SequenceOfRoots) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : StdStorage_SequenceOfRoots) -> None: ...
+    def Append(self,theItem : StdStorage_Root) -> None: ...
     def Assign(self,theOther : StdStorage_SequenceOfRoots) -> StdStorage_SequenceOfRoots: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -745,14 +745,14 @@ class StdStorage_HSequenceOfRoots(StdStorage_SequenceOfRoots, OCP.NCollection.NC
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : StdStorage_Root) -> None: 
+    def Prepend(self,theSeq : StdStorage_SequenceOfRoots) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : StdStorage_SequenceOfRoots) -> None: ...
+    def Prepend(self,theItem : StdStorage_Root) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -795,10 +795,10 @@ class StdStorage_HSequenceOfRoots(StdStorage_SequenceOfRoots, OCP.NCollection.NC
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StdStorage_SequenceOfRoots) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -820,14 +820,14 @@ class StdStorage_TypeData(OCP.Standard.Standard_Transient):
     Storage type data section keeps association between persistent textual types and their numbersStorage type data section keeps association between persistent textual types and their numbersStorage type data section keeps association between persistent textual types and their numbers
     """
     @overload
-    def AddType(self,aPObj : OCP.StdObjMgt.StdObjMgt_Persistent) -> int: 
+    def AddType(self,aTypeName : OCP.TCollection.TCollection_AsciiString,aTypeNum : int) -> None: 
         """
         Add a type to the list in case of reading data
 
         Add a type of the persistent object in case of writing data
         """
     @overload
-    def AddType(self,aTypeName : OCP.TCollection.TCollection_AsciiString,aTypeNum : int) -> None: ...
+    def AddType(self,aPObj : OCP.StdObjMgt.StdObjMgt_Persistent) -> int: ...
     def Clear(self) -> None: 
         """
         Unregisters all types

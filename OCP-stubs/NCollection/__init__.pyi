@@ -4,8 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Standard
 import OCP.gp
+import OCP.Standard
+import io
 __all__  = [
 "NCollection_BaseAllocator",
 "NCollection_AlignedAllocator",
@@ -315,7 +316,7 @@ class NCollection_BaseMap():
         """
         NbBuckets
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -381,6 +382,10 @@ class NCollection_Buffer(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -454,20 +459,28 @@ class NCollection_CellFilter_Action():
 
       CellFilter_Purge
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    CellFilter_Keep: OCP.NCollection.NCollection_CellFilter_Action # value = NCollection_CellFilter_Action.CellFilter_Keep
-    CellFilter_Purge: OCP.NCollection.NCollection_CellFilter_Action # value = NCollection_CellFilter_Action.CellFilter_Purge
-    __entries: dict # value = {'CellFilter_Keep': (NCollection_CellFilter_Action.CellFilter_Keep, None), 'CellFilter_Purge': (NCollection_CellFilter_Action.CellFilter_Purge, None)}
-    __members__: dict # value = {'CellFilter_Keep': NCollection_CellFilter_Action.CellFilter_Keep, 'CellFilter_Purge': NCollection_CellFilter_Action.CellFilter_Purge}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    CellFilter_Keep: OCP.NCollection.NCollection_CellFilter_Action # value = <NCollection_CellFilter_Action.CellFilter_Keep: 0>
+    CellFilter_Purge: OCP.NCollection.NCollection_CellFilter_Action # value = <NCollection_CellFilter_Action.CellFilter_Purge: 1>
+    __entries: dict # value = {'CellFilter_Keep': (<NCollection_CellFilter_Action.CellFilter_Keep: 0>, None), 'CellFilter_Purge': (<NCollection_CellFilter_Action.CellFilter_Purge: 1>, None)}
+    __members__: dict # value = {'CellFilter_Keep': <NCollection_CellFilter_Action.CellFilter_Keep: 0>, 'CellFilter_Purge': <NCollection_CellFilter_Action.CellFilter_Purge: 1>}
     pass
 class NCollection_CellFilter_InspectorXY():
     """
@@ -483,6 +496,7 @@ class NCollection_CellFilter_InspectorXY():
         Auxiliary method to shift point by each coordinate on given value; useful for preparing a points range for Inspect with tolerance
         """
     def __init__(self) -> None: ...
+    Dimension = 2
     pass
 class NCollection_CellFilter_InspectorXYZ():
     """
@@ -498,6 +512,7 @@ class NCollection_CellFilter_InspectorXYZ():
         Auxiliary method to shift point by each coordinate on given value; useful for preparing a points range for Inspect with tolerance
         """
     def __init__(self) -> None: ...
+    Dimension = 3
     pass
 class NCollection_HeapAllocator(NCollection_BaseAllocator, OCP.Standard.Standard_Transient):
     """
@@ -711,11 +726,11 @@ class NCollection_StdAllocator_void():
         Returns an underlying NCollection_BaseAllocator instance. Returns an object specified in the constructor.
         """
     @overload
-    def __init__(self,X : NCollection_StdAllocator_void) -> None: ...
-    @overload
     def __init__(self,theAlloc : NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,X : NCollection_StdAllocator_void) -> None: ...
     pass
 class NCollection_Utf16Iter():
     """
@@ -869,17 +884,17 @@ class NCollection_Utf16String():
         Join strings.
         """
     @overload
-    def __init__(self,theCopy : NCollection_Utf16String) -> None: ...
-    @overload
-    def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
-    @overload
-    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
-    @overload
-    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
+    def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
+    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self,theCopy : NCollection_Utf16String) -> None: ...
+    @overload
+    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
     pass
 class NCollection_Utf32Iter():
     """
@@ -922,14 +937,14 @@ class NCollection_Utf32Iter():
         Fill the UTF-32 buffer within current Unicode symbol. Use method AdvanceUtf32() to allocate buffer with enough size.
         """
     @overload
-    def GetUtf8(self,theBuffer : str) -> str: 
+    def GetUtf8(self,theBuffer : int) -> int: 
         """
         Fill the UTF-8 buffer within current Unicode symbol. Use method AdvanceUtf8() to allocate buffer with enough size.
 
         None
         """
     @overload
-    def GetUtf8(self,theBuffer : int) -> int: ...
+    def GetUtf8(self,theBuffer : str) -> str: ...
     def Index(self) -> int: 
         """
         Returns the index displacement from iterator intialization (first symbol has index 0)
@@ -1039,9 +1054,9 @@ class NCollection_Utf32String():
     @overload
     def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
     @overload
-    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
     pass
@@ -1199,15 +1214,15 @@ class NCollection_Utf8String():
     @overload
     def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
     @overload
-    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
+    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self,theCopy : NCollection_Utf8String) -> None: ...
     @overload
-    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class NCollection_UtfStringTool():
     """
@@ -1265,14 +1280,14 @@ class NCollection_UtfWideIter():
         Fill the UTF-32 buffer within current Unicode symbol. Use method AdvanceUtf32() to allocate buffer with enough size.
         """
     @overload
-    def GetUtf8(self,theBuffer : str) -> str: 
+    def GetUtf8(self,theBuffer : int) -> int: 
         """
         Fill the UTF-8 buffer within current Unicode symbol. Use method AdvanceUtf8() to allocate buffer with enough size.
 
         None
         """
     @overload
-    def GetUtf8(self,theBuffer : int) -> int: ...
+    def GetUtf8(self,theBuffer : str) -> str: ...
     def Index(self) -> int: 
         """
         Returns the index displacement from iterator intialization (first symbol has index 0)
@@ -1376,17 +1391,17 @@ class NCollection_UtfWideString():
         Join strings.
         """
     @overload
-    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
+    def __init__(self,theCopy : NCollection_UtfWideString) -> None: ...
     @overload
     def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theCopy : NCollection_UtfWideString) -> None: ...
-    @overload
     def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
     pass
 class NCollection_WinHeapAllocator(NCollection_BaseAllocator, OCP.Standard.Standard_Transient):
     """
@@ -1473,5 +1488,5 @@ def GetCapacity(theIncrement : int) -> int:
     """
     None
     """
-CellFilter_Keep: OCP.NCollection.NCollection_CellFilter_Action # value = NCollection_CellFilter_Action.CellFilter_Keep
-CellFilter_Purge: OCP.NCollection.NCollection_CellFilter_Action # value = NCollection_CellFilter_Action.CellFilter_Purge
+CellFilter_Keep: OCP.NCollection.NCollection_CellFilter_Action # value = <NCollection_CellFilter_Action.CellFilter_Keep: 0>
+CellFilter_Purge: OCP.NCollection.NCollection_CellFilter_Action # value = <NCollection_CellFilter_Action.CellFilter_Purge: 1>

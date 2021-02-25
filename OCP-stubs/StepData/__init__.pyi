@@ -4,11 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TColStd
+import OCP.TCollection
+import io
 import OCP.Message
-import OCP.Standard
 import OCP.Interface
+import OCP.Resource
+import OCP.Standard
 __all__  = [
 "StepData",
 "StepData_Array1OfField",
@@ -155,14 +157,14 @@ class StepData_Array1OfField():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepData_Field,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : StepData_Field,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepData_Array1OfField) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepData_GeneralModule(OCP.Interface.Interface_GeneralModule, OCP.Standard.Standard_Transient):
     """
@@ -732,14 +734,14 @@ class StepData_Field():
         Sets an undetermined value : can be String, SelectMember, HArray(1-2) ... else, an Entity In case of an HArray, determines and records its size(s)
         """
     @overload
-    def SetBoolean(self,val : bool=False) -> None: 
+    def SetBoolean(self,num : int,val : bool) -> None: 
         """
         Sets a Boolean value (or predeclares a list as boolean)
 
         None
         """
     @overload
-    def SetBoolean(self,num : int,val : bool) -> None: ...
+    def SetBoolean(self,val : bool=False) -> None: ...
     def SetDerived(self) -> None: 
         """
         Codes a Field as derived (no proper value)
@@ -754,9 +756,9 @@ class StepData_Field():
         None
         """
     @overload
-    def SetEntity(self) -> None: ...
-    @overload
     def SetEntity(self,val : OCP.Standard.Standard_Transient) -> None: ...
+    @overload
+    def SetEntity(self) -> None: ...
     @overload
     def SetEnum(self,val : int=-1,text : str='') -> None: 
         """
@@ -767,23 +769,23 @@ class StepData_Field():
     @overload
     def SetEnum(self,num : int,val : int,text : str='') -> None: ...
     @overload
-    def SetInt(self,num : int,val : int,kind : int) -> None: 
+    def SetInt(self,val : int) -> None: 
         """
         Directly sets the Integer value, if its Kind matches Integer, Boolean, Logical, or Enum (does not change Kind)
 
         Internal access to an Integer Value for a list, plus its kind
         """
     @overload
-    def SetInt(self,val : int) -> None: ...
+    def SetInt(self,num : int,val : int,kind : int) -> None: ...
     @overload
-    def SetInteger(self,val : int=0) -> None: 
+    def SetInteger(self,num : int,val : int) -> None: 
         """
         Sets an Integer value (before SetList* declares it as Integer)
 
         Sets an Integer Value for a list (rank num) (recognizes a SelectMember)
         """
     @overload
-    def SetInteger(self,num : int,val : int) -> None: ...
+    def SetInteger(self,val : int=0) -> None: ...
     def SetList(self,size : int,first : int=1) -> None: 
         """
         Declares a field as a list, with an initial size Initial lower is defaulted as 1, can be defined The list starts empty, typed by the last Set* If no Set* before, sets it as "any" (transient/select)
@@ -802,27 +804,27 @@ class StepData_Field():
     @overload
     def SetLogical(self,num : int,val : StepData_Logical) -> None: ...
     @overload
-    def SetReal(self,val : float=0.0) -> None: 
+    def SetReal(self,num : int,val : float) -> None: 
         """
         Sets a Real Value (or predeclares a list as Real);
 
         None
         """
     @overload
-    def SetReal(self,num : int,val : float) -> None: ...
+    def SetReal(self,val : float=0.0) -> None: ...
     def SetSelectMember(self,val : StepData_SelectMember) -> None: 
         """
         Sets a SelectMember (for Integer,Boolean,Enum,Real,Logical) Hence, the value of the field is accessed through this member
         """
     @overload
-    def SetString(self,num : int,val : str) -> None: 
+    def SetString(self,val : str='') -> None: 
         """
         Sets a String Value (or predeclares a list as String) Does not redefine the Kind if it is alread String or Enum
 
         None
         """
     @overload
-    def SetString(self,val : str='') -> None: ...
+    def SetString(self,num : int,val : str) -> None: ...
     def String(self,n1 : int=1,n2 : int=1) -> str: 
         """
         None
@@ -832,9 +834,9 @@ class StepData_Field():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,other : StepData_Field,copy : bool=False) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class StepData_FieldList():
     """
@@ -1583,14 +1585,14 @@ class StepData_HArray1OfField(StepData_Array1OfField, OCP.Standard.Standard_Tran
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepData_Field) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepData_Array1OfField) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepData_Field) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1614,21 +1616,29 @@ class StepData_Logical():
 
       StepData_LUnknown
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepData_LFalse: OCP.StepData.StepData_Logical # value = StepData_Logical.StepData_LFalse
-    StepData_LTrue: OCP.StepData.StepData_Logical # value = StepData_Logical.StepData_LTrue
-    StepData_LUnknown: OCP.StepData.StepData_Logical # value = StepData_Logical.StepData_LUnknown
-    __entries: dict # value = {'StepData_LFalse': (StepData_Logical.StepData_LFalse, None), 'StepData_LTrue': (StepData_Logical.StepData_LTrue, None), 'StepData_LUnknown': (StepData_Logical.StepData_LUnknown, None)}
-    __members__: dict # value = {'StepData_LFalse': StepData_Logical.StepData_LFalse, 'StepData_LTrue': StepData_Logical.StepData_LTrue, 'StepData_LUnknown': StepData_Logical.StepData_LUnknown}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepData_LFalse: OCP.StepData.StepData_Logical # value = <StepData_Logical.StepData_LFalse: 0>
+    StepData_LTrue: OCP.StepData.StepData_Logical # value = <StepData_Logical.StepData_LTrue: 1>
+    StepData_LUnknown: OCP.StepData.StepData_Logical # value = <StepData_Logical.StepData_LUnknown: 2>
+    __entries: dict # value = {'StepData_LFalse': (<StepData_Logical.StepData_LFalse: 0>, None), 'StepData_LTrue': (<StepData_Logical.StepData_LTrue: 1>, None), 'StepData_LUnknown': (<StepData_Logical.StepData_LUnknown: 2>, None)}
+    __members__: dict # value = {'StepData_LFalse': <StepData_Logical.StepData_LFalse: 0>, 'StepData_LTrue': <StepData_Logical.StepData_LTrue: 1>, 'StepData_LUnknown': <StepData_Logical.StepData_LUnknown: 2>}
     pass
 class StepData_NodeOfWriterLib(OCP.Standard.Standard_Transient):
     def AddNode(self,anode : StepData_GlobalNodeOfWriterLib) -> None: 
@@ -2232,14 +2242,14 @@ class StepData_ReadWriteModule(OCP.Interface.Interface_ReaderModule, OCP.Standar
         Translate the Type of record <num> in <data> to a positive Case Number, or 0 if failed. Works with a StepReaderData, in which the Type of an Entity is defined as a String : Reads the RecordType <num> then calls CaseNum (this type) Warning : The methods CaseStep, StepType and Recognize, must be in phase (triplets CaseNum-StepType-Type of Object)
         """
     @overload
-    def CaseStep(self,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> int: 
+    def CaseStep(self,atype : OCP.TCollection.TCollection_AsciiString) -> int: 
         """
         Defines Case Numbers corresponding to the recognized Types Called by CaseNum (data,num) above for a Simple Type Entity Warning : CaseStep must give the same Value as Protocol does for the Entity type which corresponds to this Type given as a String
 
         Same a above but for a Complex Type Entity ("Plex") The provided Default recognizes nothing
         """
     @overload
-    def CaseStep(self,atype : OCP.TCollection.TCollection_AsciiString) -> int: ...
+    def CaseStep(self,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> int: ...
     def ComplexType(self,CN : int,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> bool: 
         """
         Function specific to STEP, which delivers the list of types which corresponds to a complex type. If <CN> is not for a complex type, this method returns False. Else it returns True and fills the list in alphabetic order. The default returns False. To be redefined as required.
@@ -3324,14 +3334,14 @@ class StepData_StepDumper():
     Provides a way to dump entities processed through STEP, with these features : - same form as for writing a STEP File (because it is clear and compact enough, even if the names of the fields do not appear) : thus, no additionnal resource is required - possibility to look for an entity itself (only its Type or with its content), an entity and it shared items (one level) or all the entities its refers to, directly or recursively.
     """
     @overload
-    def Dump(self,S : OCP.Message.Message_Messenger,ent : OCP.Standard.Standard_Transient,level : int) -> bool: 
+    def Dump(self,S : io.BytesIO,ent : OCP.Standard.Standard_Transient,level : int) -> bool: 
         """
         Dumps a Entity on an Messenger. Returns True if sucess, False, if the entity to dump has not been recognized by the Protocol. <level> can have one of these values : - 0 : prints the TYPE only, as known in STEP Files (StepType) If <ent> has not been regognized by the Protocol, or if its type is Complex, the StepType is replaced by the display of the cdl type. Complex Type are well processed by level 1. - 1 : dumps the entity, completely (whatever it has simple or complex type) but alone. - 2 : dumps the entity completely, plus the item its refers to at first level (a header message designates the starting entity of the dump) <Lists Shared and Implied> - 3 : dumps the entity and its refered items at any levels
 
         Works as Dump with a Transient, but directly takes the entity designated by its number in the Model Returns False, also if <num> is out of range
         """
     @overload
-    def Dump(self,S : OCP.Message.Message_Messenger,num : int,level : int) -> bool: ...
+    def Dump(self,S : io.BytesIO,num : int,level : int) -> bool: ...
     def StepWriter(self) -> StepData_StepWriter: 
         """
         Gives an access to the tool which is used to work : this allow to acts on some parameters : Floating Format, Scopes ...
@@ -3420,7 +3430,7 @@ class StepData_StepModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         """
         Clears the list of entities (service WhenDelete)
         """
-    def DumpHeader(self,S : OCP.Message.Message_Messenger,level : int=0) -> None: 
+    def DumpHeader(self,S : io.BytesIO,level : int=0) -> None: 
         """
         Dumps the Header, with the Header Protocol of StepData. If the Header Protocol is not defined, for each Header Entity, prints its Type. Else sends the Header under the form of HEADER Section of an Ascii Step File <level> is not used because Header is not so big
         """
@@ -3556,15 +3566,15 @@ class StepData_StepModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         """
         Returns the Number of an Entity in the Model if it contains it. Else returns 0. For a ReportEntity, looks at Concerned Entity. Returns the Directory entry Number of an Entity in the Model if it contains it. Else returns 0. For a ReportEntity, looks at Concerned Entity.
         """
-    def Print(self,ent : OCP.Standard.Standard_Transient,s : OCP.Message.Message_Messenger,mode : int=0) -> None: 
+    def Print(self,ent : OCP.Standard.Standard_Transient,s : io.BytesIO,mode : int=0) -> None: 
         """
         Prints identification of a given entity in <me>, in order to be printed in a list or phrase <mode> < 0 : prints only its number <mode> = 1 : just calls PrintLabel <mode> = 0 (D) : prints its number plus '/' plus PrintLabel If <ent> == <me>, simply prints "Global" If <ent> is unknown, prints "??/its type"
         """
-    def PrintLabel(self,ent : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintLabel(self,ent : OCP.Standard.Standard_Transient,S : io.BytesIO) -> None: 
         """
         Prints label specific to STEP norm for a given entity, i.e. if a LabelIdent has been recorded, its value with '#', else the number in the model with '#' and between ()
         """
-    def PrintToLog(self,ent : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintToLog(self,ent : OCP.Standard.Standard_Transient,S : io.BytesIO) -> None: 
         """
         Prints label specific to each norm in log format, for a given entity. By default, just calls PrintLabel, can be redefined
         """
@@ -3620,10 +3630,18 @@ class StepData_StepModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         """
         Sets or Replaces a ReportEntity for the Entity <num>. Returns True if Report is replaced, False if it has been replaced Warning : the caller must assume that this setting is meaningfull
         """
+    def SetSourceCodePage(self,theCode : OCP.Resource.Resource_FormatType) -> None: 
+        """
+        Return the encoding of STEP file for converting names into UNICODE.
+        """
     @staticmethod
     def SetTemplate_s(name : str,model : OCP.Interface.Interface_InterfaceModel) -> bool: 
         """
         Records a new template model with a name. If the name was already recorded, the corresponding template is replaced by the new one. Then, WARNING : test HasTemplate to avoid surprises
+        """
+    def SourceCodePage(self) -> OCP.Resource.Resource_FormatType: 
+        """
+        Return the encoding of STEP file for converting names into UNICODE. Initialized from "read.step.codepage" variable by constructor, which is Resource_UTF8 by default.
         """
     def StringLabel(self,ent : OCP.Standard.Standard_Transient) -> OCP.TCollection.TCollection_HAsciiString: 
         """
@@ -3683,7 +3701,7 @@ class StepData_StepReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
     Specific FileReaderData for Step Contains litteral description of entities (for each one : type as a string, ident, parameter list) provides references evaluation, plus access to litteral data and specific access methods (Boolean, XY, XYZ)Specific FileReaderData for Step Contains litteral description of entities (for each one : type as a string, ident, parameter list) provides references evaluation, plus access to litteral data and specific access methods (Boolean, XY, XYZ)Specific FileReaderData for Step Contains litteral description of entities (for each one : type as a string, ident, parameter list) provides references evaluation, plus access to litteral data and specific access methods (Boolean, XY, XYZ)
     """
     @overload
-    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: 
+    def AddParam(self,num : int,FP : OCP.Interface.Interface_FileParameter) -> None: 
         """
         Adds a parameter to record no "num" and fills its fields (EntityNumber is optional) Warning : <aval> is assumed to be memory-managed elsewhere : it is NOT copied. This gives a best speed : strings remain stored in pages of characters
 
@@ -3692,9 +3710,9 @@ class StepData_StepReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
         Same as above, but gets a complete FileParameter Warning : Content of <FP> is NOT copied : its original address and space in memory are assumed to be managed elsewhere (see ParamSet)
         """
     @overload
-    def AddParam(self,num : int,aval : str,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
+    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
     @overload
-    def AddParam(self,num : int,FP : OCP.Interface.Interface_FileParameter) -> None: ...
+    def AddParam(self,num : int,aval : str,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
     def AddStepParam(self,num : int,aval : str,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: 
         """
         Fills the fields of a parameter of a record. This is a variant of AddParam, Adapted to STEP (optimized for specific values)
@@ -3965,7 +3983,7 @@ class StepData_StepReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def __init__(self,nbheader : int,nbtotal : int,nbpar : int) -> None: ...
+    def __init__(self,nbheader : int,nbtotal : int,nbpar : int,theSourceCodePage : OCP.Resource.Resource_FormatType=Resource_FormatType.Resource_FormatType_UTF8) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4026,14 +4044,14 @@ class StepData_StepReaderTool(OCP.Interface.Interface_FileReaderTool):
         Creates an empty Model of the norm. Uses Protocol to do it
         """
     @overload
-    def Prepare(self,optimize : bool=True) -> None: 
+    def Prepare(self,reco : StepData_FileRecognizer,optimize : bool=True) -> None: 
         """
         Bounds empty entities to records, uses default Recognition provided by ReaderLib and ReaderModule. Also calls computation of references (SetEntityNumbers from StepReaderData) Works only on data entities (skips header) <optimize> given False allows to test some internal algorithms which are normally avoided (see also StepReaderData)
 
         Bounds empty entities to records, works with a specific FileRecognizer, stored and later used in Recognize Works only on data entities (skips header) <optimize : same as above
         """
     @overload
-    def Prepare(self,reco : StepData_FileRecognizer,optimize : bool=True) -> None: ...
+    def Prepare(self,optimize : bool=True) -> None: ...
     def PrepareHeader(self,reco : StepData_FileRecognizer) -> None: 
         """
         bounds empty entities and sub-lists to header records works like Prepare + SetEntityNumbers, but for header (N.B.: in Header, no Ident and no reference) FileRecognizer is to specify Entities which are allowed to be defined in the Header (not every type can be)
@@ -4156,12 +4174,12 @@ class StepData_StepWriter():
         """
         open a sublist with its type then a '('
         """
-    def Print(self,S : Any) -> bool: 
+    def Print(self,S : io.BytesIO) -> bool: 
         """
         writes result on an output defined as an OStream then clears it
         """
     @overload
-    def Send(self,val : OCP.Standard.Standard_Transient) -> None: 
+    def Send(self,val : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         sends an integer parameter
 
@@ -4174,9 +4192,9 @@ class StepData_StepWriter():
     @overload
     def Send(self,val : int) -> None: ...
     @overload
-    def Send(self,val : float) -> None: ...
+    def Send(self,val : OCP.Standard.Standard_Transient) -> None: ...
     @overload
-    def Send(self,val : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def Send(self,val : float) -> None: ...
     def SendArrReal(self,anArr : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
         sends an array of real
@@ -4186,14 +4204,14 @@ class StepData_StepWriter():
         sends a Boolean as .T. for True or .F. for False (it is an useful case of Enum, which is built-in)
         """
     @overload
-    def SendComment(self,text : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def SendComment(self,text : str) -> None: 
         """
         sends a comment. Error if we are not inside a comment zone
 
         same as above but accepts a CString (ex.: "..." directly)
         """
     @overload
-    def SendComment(self,text : str) -> None: ...
+    def SendComment(self,text : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     def SendData(self) -> None: 
         """
         Begins data section; error if EndSec was not set
@@ -4211,14 +4229,14 @@ class StepData_StepWriter():
         Send an Entity of the Data Section. If it corresponds to a Scope, also Sends the Scope informations and contained Items
         """
     @overload
-    def SendEnum(self,val : str) -> None: 
+    def SendEnum(self,val : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         sends an enum given by String (litteral expression) adds '.' around it if not done Remark : val can be computed by class EnumTool from StepData: StepWriter.SendEnum (myenum.Text(enumval));
 
         sends an enum given by String (litteral expression) adds '.' around it if not done
         """
     @overload
-    def SendEnum(self,val : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def SendEnum(self,val : str) -> None: ...
     def SendField(self,fild : StepData_Field,descr : StepData_PDescr) -> None: 
         """
         Sends the content of a field, controlled by its descriptor If the descriptor is not defined, follows the description detained by the field itself
@@ -4385,9 +4403,9 @@ class StepData_UndefinedEntity(OCP.Standard.Standard_Transient):
         write data to StepWriter, taken from UndefinedContent
         """
     @overload
-    def __init__(self,issub : bool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,issub : bool) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4445,10 +4463,10 @@ class StepData_WriterLib():
         Starts Iteration on the Modules (sets it on the first one)
         """
     @overload
-    def __init__(self,aprotocol : StepData_Protocol) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aprotocol : StepData_Protocol) -> None: ...
     pass
-StepData_LFalse: OCP.StepData.StepData_Logical # value = StepData_Logical.StepData_LFalse
-StepData_LTrue: OCP.StepData.StepData_Logical # value = StepData_Logical.StepData_LTrue
-StepData_LUnknown: OCP.StepData.StepData_Logical # value = StepData_Logical.StepData_LUnknown
+StepData_LFalse: OCP.StepData.StepData_Logical # value = <StepData_Logical.StepData_LFalse: 0>
+StepData_LTrue: OCP.StepData.StepData_Logical # value = <StepData_Logical.StepData_LTrue: 1>
+StepData_LUnknown: OCP.StepData.StepData_Logical # value = <StepData_Logical.StepData_LUnknown: 2>

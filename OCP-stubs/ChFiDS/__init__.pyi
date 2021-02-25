@@ -4,19 +4,20 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.GeomAbs
-import OCP.TColStd
-import OCP.Geom2d
-import OCP.Law
-import OCP.TopTools
 import OCP.Adaptor3d
-import OCP.Standard
+import OCP.TopTools
+import OCP.TColStd
+import io
+import OCP.NCollection
+import OCP.Law
+import OCP.gp
+import OCP.GeomAbs
+import OCP.Geom
 import OCP.TopoDS
 import OCP.BRepAdaptor
-import OCP.Geom
-import OCP.NCollection
-import OCP.gp
+import OCP.Geom2d
+import OCP.Standard
+import OCP.TopAbs
 __all__  = [
 "ChFiDS_ChamfMethod",
 "ChFiDS_ChamfMode",
@@ -45,21 +46,27 @@ __all__  = [
 "ChFiDS_StripeArray1",
 "ChFiDS_StripeMap",
 "ChFiDS_SurfData",
+"ChFiDS_TypeOfConcavity",
 "ChFiDS_AllSame",
 "ChFiDS_BreakPoint",
 "ChFiDS_ClassicChamfer",
 "ChFiDS_Closed",
+"ChFiDS_Concave",
 "ChFiDS_ConstThroatChamfer",
 "ChFiDS_ConstThroatWithPenetrationChamfer",
+"ChFiDS_Convex",
 "ChFiDS_DistAngle",
 "ChFiDS_Error",
+"ChFiDS_FreeBound",
 "ChFiDS_FreeBoundary",
 "ChFiDS_Ok",
 "ChFiDS_OnDiff",
 "ChFiDS_OnSame",
+"ChFiDS_Other",
 "ChFiDS_StartsolFailure",
 "ChFiDS_Sym",
 "ChFiDS_Tangent",
+"ChFiDS_Tangential",
 "ChFiDS_TwistedSurface",
 "ChFiDS_TwoDist",
 "ChFiDS_WalkingFailure"
@@ -76,21 +83,29 @@ class ChFiDS_ChamfMethod():
 
       ChFiDS_DistAngle
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    ChFiDS_DistAngle: OCP.ChFiDS.ChFiDS_ChamfMethod # value = ChFiDS_ChamfMethod.ChFiDS_DistAngle
-    ChFiDS_Sym: OCP.ChFiDS.ChFiDS_ChamfMethod # value = ChFiDS_ChamfMethod.ChFiDS_Sym
-    ChFiDS_TwoDist: OCP.ChFiDS.ChFiDS_ChamfMethod # value = ChFiDS_ChamfMethod.ChFiDS_TwoDist
-    __entries: dict # value = {'ChFiDS_Sym': (ChFiDS_ChamfMethod.ChFiDS_Sym, None), 'ChFiDS_TwoDist': (ChFiDS_ChamfMethod.ChFiDS_TwoDist, None), 'ChFiDS_DistAngle': (ChFiDS_ChamfMethod.ChFiDS_DistAngle, None)}
-    __members__: dict # value = {'ChFiDS_Sym': ChFiDS_ChamfMethod.ChFiDS_Sym, 'ChFiDS_TwoDist': ChFiDS_ChamfMethod.ChFiDS_TwoDist, 'ChFiDS_DistAngle': ChFiDS_ChamfMethod.ChFiDS_DistAngle}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    ChFiDS_DistAngle: OCP.ChFiDS.ChFiDS_ChamfMethod # value = <ChFiDS_ChamfMethod.ChFiDS_DistAngle: 2>
+    ChFiDS_Sym: OCP.ChFiDS.ChFiDS_ChamfMethod # value = <ChFiDS_ChamfMethod.ChFiDS_Sym: 0>
+    ChFiDS_TwoDist: OCP.ChFiDS.ChFiDS_ChamfMethod # value = <ChFiDS_ChamfMethod.ChFiDS_TwoDist: 1>
+    __entries: dict # value = {'ChFiDS_Sym': (<ChFiDS_ChamfMethod.ChFiDS_Sym: 0>, None), 'ChFiDS_TwoDist': (<ChFiDS_ChamfMethod.ChFiDS_TwoDist: 1>, None), 'ChFiDS_DistAngle': (<ChFiDS_ChamfMethod.ChFiDS_DistAngle: 2>, None)}
+    __members__: dict # value = {'ChFiDS_Sym': <ChFiDS_ChamfMethod.ChFiDS_Sym: 0>, 'ChFiDS_TwoDist': <ChFiDS_ChamfMethod.ChFiDS_TwoDist: 1>, 'ChFiDS_DistAngle': <ChFiDS_ChamfMethod.ChFiDS_DistAngle: 2>}
     pass
 class ChFiDS_ChamfMode():
     """
@@ -104,28 +119,36 @@ class ChFiDS_ChamfMode():
 
       ChFiDS_ConstThroatWithPenetrationChamfer
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    ChFiDS_ClassicChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = ChFiDS_ChamfMode.ChFiDS_ClassicChamfer
-    ChFiDS_ConstThroatChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = ChFiDS_ChamfMode.ChFiDS_ConstThroatChamfer
-    ChFiDS_ConstThroatWithPenetrationChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = ChFiDS_ChamfMode.ChFiDS_ConstThroatWithPenetrationChamfer
-    __entries: dict # value = {'ChFiDS_ClassicChamfer': (ChFiDS_ChamfMode.ChFiDS_ClassicChamfer, None), 'ChFiDS_ConstThroatChamfer': (ChFiDS_ChamfMode.ChFiDS_ConstThroatChamfer, None), 'ChFiDS_ConstThroatWithPenetrationChamfer': (ChFiDS_ChamfMode.ChFiDS_ConstThroatWithPenetrationChamfer, None)}
-    __members__: dict # value = {'ChFiDS_ClassicChamfer': ChFiDS_ChamfMode.ChFiDS_ClassicChamfer, 'ChFiDS_ConstThroatChamfer': ChFiDS_ChamfMode.ChFiDS_ConstThroatChamfer, 'ChFiDS_ConstThroatWithPenetrationChamfer': ChFiDS_ChamfMode.ChFiDS_ConstThroatWithPenetrationChamfer}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    ChFiDS_ClassicChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = <ChFiDS_ChamfMode.ChFiDS_ClassicChamfer: 0>
+    ChFiDS_ConstThroatChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = <ChFiDS_ChamfMode.ChFiDS_ConstThroatChamfer: 1>
+    ChFiDS_ConstThroatWithPenetrationChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = <ChFiDS_ChamfMode.ChFiDS_ConstThroatWithPenetrationChamfer: 2>
+    __entries: dict # value = {'ChFiDS_ClassicChamfer': (<ChFiDS_ChamfMode.ChFiDS_ClassicChamfer: 0>, None), 'ChFiDS_ConstThroatChamfer': (<ChFiDS_ChamfMode.ChFiDS_ConstThroatChamfer: 1>, None), 'ChFiDS_ConstThroatWithPenetrationChamfer': (<ChFiDS_ChamfMode.ChFiDS_ConstThroatWithPenetrationChamfer: 2>, None)}
+    __members__: dict # value = {'ChFiDS_ClassicChamfer': <ChFiDS_ChamfMode.ChFiDS_ClassicChamfer: 0>, 'ChFiDS_ConstThroatChamfer': <ChFiDS_ChamfMode.ChFiDS_ConstThroatChamfer: 1>, 'ChFiDS_ConstThroatWithPenetrationChamfer': <ChFiDS_ChamfMode.ChFiDS_ConstThroatWithPenetrationChamfer: 2>}
     pass
 class ChFiDS_Spine(OCP.Standard.Standard_Transient):
     """
     Contains information necessary for construction of a 3D fillet or chamfer:Contains information necessary for construction of a 3D fillet or chamfer:Contains information necessary for construction of a 3D fillet or chamfer:
     """
     @overload
-    def Absc(self,V : OCP.TopoDS.TopoDS_Vertex) -> float: 
+    def Absc(self,U : float,I : int) -> float: 
         """
         None
 
@@ -133,10 +156,10 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Absc(self,U : float,I : int) -> float: ...
     @overload
     def Absc(self,U : float) -> float: ...
+    @overload
+    def Absc(self,V : OCP.TopoDS.TopoDS_Vertex) -> float: ...
     def AppendElSpine(self,Els : ChFiDS_HElSpine) -> None: 
         """
         None
@@ -198,7 +221,7 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,IE : int) -> ChFiDS_HElSpine: 
+    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_HElSpine: 
         """
         None
 
@@ -207,7 +230,7 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_HElSpine: ...
+    def ElSpine(self,IE : int) -> ChFiDS_HElSpine: ...
     @overload
     def ElSpine(self,W : float) -> ChFiDS_HElSpine: ...
     def ErrorStatus(self) -> ChFiDS_ErrorStatus: 
@@ -215,14 +238,14 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def FirstParameter(self,IndexSpine : int) -> float: 
+    def FirstParameter(self) -> float: 
         """
         None
 
         gives the total length of all arcs before the number IndexSp
         """
     @overload
-    def FirstParameter(self) -> float: ...
+    def FirstParameter(self,IndexSpine : int) -> float: ...
     def FirstStatus(self) -> ChFiDS_State: 
         """
         returns if the set of edges starts on a free boundary or if the first vertex is a breakpoint or if the set is closed
@@ -241,6 +264,12 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
         """
         None
         """
+    def GetTypeOfConcavity(self) -> ChFiDS_TypeOfConcavity: 
+        """
+        returns the type of concavity in the connection
+
+        returns the type of concavity in the connection
+        """
     def HasFirstTgt(self) -> bool: 
         """
         None
@@ -254,14 +283,14 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Index(self,W : float,Forward : bool=True) -> int: 
+    def Index(self,E : OCP.TopoDS.TopoDS_Edge) -> int: 
         """
         None
 
         None
         """
     @overload
-    def Index(self,E : OCP.TopoDS.TopoDS_Edge) -> int: ...
+    def Index(self,W : float,Forward : bool=True) -> int: ...
     def IsClosed(self) -> bool: 
         """
         None
@@ -445,15 +474,21 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
 
         None
         """
+    def SetTypeOfConcavity(self,theType : ChFiDS_TypeOfConcavity) -> None: 
+        """
+        sets the type of concavity in the connection
+
+        sets the type of concavity in the connection
+        """
     @overload
-    def SplitDone(self,B : bool) -> None: 
+    def SplitDone(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def SplitDone(self) -> bool: ...
+    def SplitDone(self,B : bool) -> None: ...
     def Status(self,IsFirst : bool) -> ChFiDS_State: 
         """
         None
@@ -473,9 +508,9 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Tol : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -650,14 +685,14 @@ class ChFiDS_ElSpine(OCP.Adaptor3d.Adaptor3d_Curve):
         None
         """
     @overload
-    def FirstParameter(self) -> float: 
+    def FirstParameter(self,P : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def FirstParameter(self,P : float) -> None: ...
+    def FirstParameter(self) -> float: ...
     def FirstPointAndTgt(self,P : OCP.gp.gp_Pnt,T : OCP.gp.gp_Vec) -> None: 
         """
         None
@@ -695,14 +730,14 @@ class ChFiDS_ElSpine(OCP.Adaptor3d.Adaptor3d_Curve):
         None
         """
     @overload
-    def LastParameter(self) -> float: 
+    def LastParameter(self,P : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def LastParameter(self,P : float) -> None: ...
+    def LastParameter(self) -> float: ...
     def LastPointAndTgt(self,P : OCP.gp.gp_Pnt,T : OCP.gp.gp_Vec) -> None: 
         """
         None
@@ -809,23 +844,31 @@ class ChFiDS_ErrorStatus():
 
       ChFiDS_TwistedSurface
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    ChFiDS_Error: OCP.ChFiDS.ChFiDS_ErrorStatus # value = ChFiDS_ErrorStatus.ChFiDS_Error
-    ChFiDS_Ok: OCP.ChFiDS.ChFiDS_ErrorStatus # value = ChFiDS_ErrorStatus.ChFiDS_Ok
-    ChFiDS_StartsolFailure: OCP.ChFiDS.ChFiDS_ErrorStatus # value = ChFiDS_ErrorStatus.ChFiDS_StartsolFailure
-    ChFiDS_TwistedSurface: OCP.ChFiDS.ChFiDS_ErrorStatus # value = ChFiDS_ErrorStatus.ChFiDS_TwistedSurface
-    ChFiDS_WalkingFailure: OCP.ChFiDS.ChFiDS_ErrorStatus # value = ChFiDS_ErrorStatus.ChFiDS_WalkingFailure
-    __entries: dict # value = {'ChFiDS_Ok': (ChFiDS_ErrorStatus.ChFiDS_Ok, None), 'ChFiDS_Error': (ChFiDS_ErrorStatus.ChFiDS_Error, None), 'ChFiDS_WalkingFailure': (ChFiDS_ErrorStatus.ChFiDS_WalkingFailure, None), 'ChFiDS_StartsolFailure': (ChFiDS_ErrorStatus.ChFiDS_StartsolFailure, None), 'ChFiDS_TwistedSurface': (ChFiDS_ErrorStatus.ChFiDS_TwistedSurface, None)}
-    __members__: dict # value = {'ChFiDS_Ok': ChFiDS_ErrorStatus.ChFiDS_Ok, 'ChFiDS_Error': ChFiDS_ErrorStatus.ChFiDS_Error, 'ChFiDS_WalkingFailure': ChFiDS_ErrorStatus.ChFiDS_WalkingFailure, 'ChFiDS_StartsolFailure': ChFiDS_ErrorStatus.ChFiDS_StartsolFailure, 'ChFiDS_TwistedSurface': ChFiDS_ErrorStatus.ChFiDS_TwistedSurface}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    ChFiDS_Error: OCP.ChFiDS.ChFiDS_ErrorStatus # value = <ChFiDS_ErrorStatus.ChFiDS_Error: 1>
+    ChFiDS_Ok: OCP.ChFiDS.ChFiDS_ErrorStatus # value = <ChFiDS_ErrorStatus.ChFiDS_Ok: 0>
+    ChFiDS_StartsolFailure: OCP.ChFiDS.ChFiDS_ErrorStatus # value = <ChFiDS_ErrorStatus.ChFiDS_StartsolFailure: 3>
+    ChFiDS_TwistedSurface: OCP.ChFiDS.ChFiDS_ErrorStatus # value = <ChFiDS_ErrorStatus.ChFiDS_TwistedSurface: 4>
+    ChFiDS_WalkingFailure: OCP.ChFiDS.ChFiDS_ErrorStatus # value = <ChFiDS_ErrorStatus.ChFiDS_WalkingFailure: 2>
+    __entries: dict # value = {'ChFiDS_Ok': (<ChFiDS_ErrorStatus.ChFiDS_Ok: 0>, None), 'ChFiDS_Error': (<ChFiDS_ErrorStatus.ChFiDS_Error: 1>, None), 'ChFiDS_WalkingFailure': (<ChFiDS_ErrorStatus.ChFiDS_WalkingFailure: 2>, None), 'ChFiDS_StartsolFailure': (<ChFiDS_ErrorStatus.ChFiDS_StartsolFailure: 3>, None), 'ChFiDS_TwistedSurface': (<ChFiDS_ErrorStatus.ChFiDS_TwistedSurface: 4>, None)}
+    __members__: dict # value = {'ChFiDS_Ok': <ChFiDS_ErrorStatus.ChFiDS_Ok: 0>, 'ChFiDS_Error': <ChFiDS_ErrorStatus.ChFiDS_Error: 1>, 'ChFiDS_WalkingFailure': <ChFiDS_ErrorStatus.ChFiDS_WalkingFailure: 2>, 'ChFiDS_StartsolFailure': <ChFiDS_ErrorStatus.ChFiDS_StartsolFailure: 3>, 'ChFiDS_TwistedSurface': <ChFiDS_ErrorStatus.ChFiDS_TwistedSurface: 4>}
     pass
 class ChFiDS_FaceInterference():
     """
@@ -922,7 +965,7 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
     Provides data specific to the fillets - vector or rule of evolution (C2).Provides data specific to the fillets - vector or rule of evolution (C2).Provides data specific to the fillets - vector or rule of evolution (C2).
     """
     @overload
-    def Absc(self,V : OCP.TopoDS.TopoDS_Vertex) -> float: 
+    def Absc(self,U : float,I : int) -> float: 
         """
         None
 
@@ -930,10 +973,10 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Absc(self,U : float,I : int) -> float: ...
     @overload
     def Absc(self,U : float) -> float: ...
+    @overload
+    def Absc(self,V : OCP.TopoDS.TopoDS_Vertex) -> float: ...
     def AppendElSpine(self,Els : ChFiDS_HElSpine) -> None: 
         """
         None
@@ -999,7 +1042,7 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,IE : int) -> ChFiDS_HElSpine: 
+    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_HElSpine: 
         """
         None
 
@@ -1008,7 +1051,7 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_HElSpine: ...
+    def ElSpine(self,IE : int) -> ChFiDS_HElSpine: ...
     @overload
     def ElSpine(self,W : float) -> ChFiDS_HElSpine: ...
     def ErrorStatus(self) -> ChFiDS_ErrorStatus: 
@@ -1016,14 +1059,14 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def FirstParameter(self,IndexSpine : int) -> float: 
+    def FirstParameter(self) -> float: 
         """
         None
 
         gives the total length of all arcs before the number IndexSp
         """
     @overload
-    def FirstParameter(self) -> float: ...
+    def FirstParameter(self,IndexSpine : int) -> float: ...
     def FirstStatus(self) -> ChFiDS_State: 
         """
         returns if the set of edges starts on a free boundary or if the first vertex is a breakpoint or if the set is closed
@@ -1042,6 +1085,12 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         """
         None
         """
+    def GetTypeOfConcavity(self) -> ChFiDS_TypeOfConcavity: 
+        """
+        returns the type of concavity in the connection
+
+        returns the type of concavity in the connection
+        """
     def HasFirstTgt(self) -> bool: 
         """
         None
@@ -1055,27 +1104,27 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Index(self,W : float,Forward : bool=True) -> int: 
+    def Index(self,E : OCP.TopoDS.TopoDS_Edge) -> int: 
         """
         None
 
         None
         """
     @overload
-    def Index(self,E : OCP.TopoDS.TopoDS_Edge) -> int: ...
+    def Index(self,W : float,Forward : bool=True) -> int: ...
     def IsClosed(self) -> bool: 
         """
         None
         """
     @overload
-    def IsConstant(self,IE : int) -> bool: 
+    def IsConstant(self) -> bool: 
         """
         returns true if the radius is constant all along the spine.
 
         returns true if the radius is constant all along the edge E.
         """
     @overload
-    def IsConstant(self) -> bool: ...
+    def IsConstant(self,IE : int) -> bool: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1196,9 +1245,9 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         returns the radius if the fillet is constant all along the edge E.
         """
     @overload
-    def Radius(self) -> float: ...
-    @overload
     def Radius(self,IE : int) -> float: ...
+    @overload
+    def Radius(self) -> float: ...
     def Reset(self,AllData : bool=False) -> None: 
         """
         None
@@ -1256,7 +1305,7 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         store offset edges composing the offset guideline
         """
     @overload
-    def SetRadius(self,Radius : float,E : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def SetRadius(self,Radius : float) -> None: 
         """
         initializes the constant vector on edge E.
 
@@ -1269,13 +1318,13 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         initializes the rule of evolution on all spine.
         """
     @overload
-    def SetRadius(self,UandR : OCP.gp.gp_XY,IinC : int) -> None: ...
+    def SetRadius(self,C : OCP.Law.Law_Function,IinC : int) -> None: ...
     @overload
     def SetRadius(self,Radius : float,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
-    def SetRadius(self,Radius : float) -> None: ...
+    def SetRadius(self,Radius : float,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
-    def SetRadius(self,C : OCP.Law.Law_Function,IinC : int) -> None: ...
+    def SetRadius(self,UandR : OCP.gp.gp_XY,IinC : int) -> None: ...
     @overload
     def SetReference(self,W : float) -> None: 
         """
@@ -1297,15 +1346,21 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
 
         None
         """
+    def SetTypeOfConcavity(self,theType : ChFiDS_TypeOfConcavity) -> None: 
+        """
+        sets the type of concavity in the connection
+
+        sets the type of concavity in the connection
+        """
     @overload
-    def SplitDone(self,B : bool) -> None: 
+    def SplitDone(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def SplitDone(self) -> bool: ...
+    def SplitDone(self,B : bool) -> None: ...
     def Status(self,IsFirst : bool) -> ChFiDS_State: 
         """
         None
@@ -1357,14 +1412,14 @@ class ChFiDS_SequenceOfSurfData(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : ChFiDS_SequenceOfSurfData) -> None: 
+    def Append(self,theItem : ChFiDS_SurfData) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : ChFiDS_SurfData) -> None: ...
+    def Append(self,theSeq : ChFiDS_SequenceOfSurfData) -> None: ...
     def Assign(self,theOther : ChFiDS_SequenceOfSurfData) -> ChFiDS_SequenceOfSurfData: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1403,14 +1458,14 @@ class ChFiDS_SequenceOfSurfData(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1437,14 +1492,14 @@ class ChFiDS_SequenceOfSurfData(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : ChFiDS_SurfData) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1470,12 +1525,12 @@ class ChFiDS_SequenceOfSurfData(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : ChFiDS_SequenceOfSurfData) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1759,14 +1814,14 @@ class ChFiDS_IndexedDataMapOfVertexListOfStripe(OCP.NCollection.NCollection_Base
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Vertex) -> bool: 
         """
         Contains
@@ -1832,7 +1887,7 @@ class ChFiDS_IndexedDataMapOfVertexListOfStripe(OCP.NCollection.NCollection_Base
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1847,10 +1902,10 @@ class ChFiDS_IndexedDataMapOfVertexListOfStripe(OCP.NCollection.NCollection_Base
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : ChFiDS_IndexedDataMapOfVertexListOfStripe) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : ChFiDS_IndexedDataMapOfVertexListOfStripe) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class ChFiDS_ListOfHElSpine(OCP.NCollection.NCollection_BaseList):
     """
@@ -1901,14 +1956,14 @@ class ChFiDS_ListOfHElSpine(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : ChFiDS_HElSpine,theIter : Any) -> ChFiDS_HElSpine: ...
     @overload
-    def InsertBefore(self,theItem : ChFiDS_HElSpine,theIter : Any) -> ChFiDS_HElSpine: 
+    def InsertBefore(self,theOther : ChFiDS_ListOfHElSpine,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : ChFiDS_ListOfHElSpine,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : ChFiDS_HElSpine,theIter : Any) -> ChFiDS_HElSpine: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1950,7 +2005,7 @@ class ChFiDS_ListOfHElSpine(OCP.NCollection.NCollection_BaseList):
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : ChFiDS_ListOfHElSpine) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class ChFiDS_ListOfStripe(OCP.NCollection.NCollection_BaseList):
     """
@@ -1970,9 +2025,9 @@ class ChFiDS_ListOfStripe(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : ChFiDS_ListOfStripe) -> None: ...
-    @overload
     def Append(self,theItem : ChFiDS_Stripe,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theOther : ChFiDS_ListOfStripe) -> None: ...
     def Assign(self,theOther : ChFiDS_ListOfStripe) -> ChFiDS_ListOfStripe: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1992,23 +2047,23 @@ class ChFiDS_ListOfStripe(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : ChFiDS_Stripe,theIter : Any) -> ChFiDS_Stripe: 
+    def InsertAfter(self,theOther : ChFiDS_ListOfStripe,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : ChFiDS_ListOfStripe,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : ChFiDS_Stripe,theIter : Any) -> ChFiDS_Stripe: ...
     @overload
-    def InsertBefore(self,theOther : ChFiDS_ListOfStripe,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : ChFiDS_Stripe,theIter : Any) -> ChFiDS_Stripe: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : ChFiDS_Stripe,theIter : Any) -> ChFiDS_Stripe: ...
+    def InsertBefore(self,theOther : ChFiDS_ListOfStripe,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -2020,14 +2075,14 @@ class ChFiDS_ListOfStripe(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : ChFiDS_Stripe) -> ChFiDS_Stripe: 
+    def Prepend(self,theOther : ChFiDS_ListOfStripe) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : ChFiDS_ListOfStripe) -> None: ...
+    def Prepend(self,theItem : ChFiDS_Stripe) -> ChFiDS_Stripe: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -2045,12 +2100,12 @@ class ChFiDS_ListOfStripe(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : ChFiDS_ListOfStripe) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : ChFiDS_ListOfStripe) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class ChFiDS_Map():
     """
@@ -2130,9 +2185,9 @@ class ChFiDS_Regularities(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : ChFiDS_Regul) -> ChFiDS_Regul: ...
-    @overload
     def Append(self,theItem : ChFiDS_Regul,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : ChFiDS_Regul) -> ChFiDS_Regul: ...
     def Assign(self,theOther : ChFiDS_Regularities) -> ChFiDS_Regularities: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -2152,14 +2207,14 @@ class ChFiDS_Regularities(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : ChFiDS_Regul,theIter : Any) -> ChFiDS_Regul: 
+    def InsertAfter(self,theOther : ChFiDS_Regularities,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : ChFiDS_Regularities,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : ChFiDS_Regul,theIter : Any) -> ChFiDS_Regul: ...
     @overload
     def InsertBefore(self,theItem : ChFiDS_Regul,theIter : Any) -> ChFiDS_Regul: 
         """
@@ -2207,10 +2262,10 @@ class ChFiDS_Regularities(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theOther : ChFiDS_Regularities) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class ChFiDS_SecArray1():
     """
@@ -2296,7 +2351,7 @@ class ChFiDS_SecArray1():
     def __init__(self,theBegin : ChFiDS_CircSection,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : ChFiDS_SecArray1) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class ChFiDS_SecHArray1(ChFiDS_SecArray1, OCP.Standard.Standard_Transient):
     def Array1(self) -> ChFiDS_SecArray1: 
@@ -2426,10 +2481,10 @@ class ChFiDS_SecHArray1(ChFiDS_SecArray1, OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : ChFiDS_SecArray1) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2496,14 +2551,14 @@ class ChFiDS_SequenceOfSpine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : ChFiDS_SequenceOfSpine) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : ChFiDS_Spine) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : ChFiDS_SequenceOfSpine) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : ChFiDS_SequenceOfSpine) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : ChFiDS_Spine) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2530,14 +2585,14 @@ class ChFiDS_SequenceOfSpine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : ChFiDS_Spine) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2565,10 +2620,10 @@ class ChFiDS_SequenceOfSpine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : ChFiDS_SequenceOfSpine) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2581,14 +2636,14 @@ class ChFiDS_HData(ChFiDS_SequenceOfSurfData, OCP.NCollection.NCollection_BaseSe
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : ChFiDS_SequenceOfSurfData) -> None: 
+    def Append(self,theItem : ChFiDS_SurfData) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : ChFiDS_SurfData) -> None: ...
+    def Append(self,theSequence : ChFiDS_SequenceOfSurfData) -> None: ...
     def Assign(self,theOther : ChFiDS_SequenceOfSurfData) -> ChFiDS_SequenceOfSurfData: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2651,14 +2706,14 @@ class ChFiDS_HData(ChFiDS_SequenceOfSurfData, OCP.NCollection.NCollection_BaseSe
     @overload
     def InsertAfter(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2703,14 +2758,14 @@ class ChFiDS_HData(ChFiDS_SequenceOfSurfData, OCP.NCollection.NCollection_BaseSe
     @overload
     def Prepend(self,theItem : ChFiDS_SurfData) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2747,7 +2802,7 @@ class ChFiDS_HData(ChFiDS_SequenceOfSurfData, OCP.NCollection.NCollection_BaseSe
     def __init__(self,theOther : ChFiDS_SequenceOfSurfData) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2769,7 +2824,7 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
     Provides data specific to chamfers distances on each of faces.Provides data specific to chamfers distances on each of faces.Provides data specific to chamfers distances on each of faces.
     """
     @overload
-    def Absc(self,V : OCP.TopoDS.TopoDS_Vertex) -> float: 
+    def Absc(self,U : float,I : int) -> float: 
         """
         None
 
@@ -2777,10 +2832,10 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Absc(self,U : float,I : int) -> float: ...
     @overload
     def Absc(self,U : float) -> float: ...
+    @overload
+    def Absc(self,V : OCP.TopoDS.TopoDS_Vertex) -> float: ...
     def AppendElSpine(self,Els : ChFiDS_HElSpine) -> None: 
         """
         None
@@ -2846,7 +2901,7 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,IE : int) -> ChFiDS_HElSpine: 
+    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_HElSpine: 
         """
         None
 
@@ -2855,7 +2910,7 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_HElSpine: ...
+    def ElSpine(self,IE : int) -> ChFiDS_HElSpine: ...
     @overload
     def ElSpine(self,W : float) -> ChFiDS_HElSpine: ...
     def ErrorStatus(self) -> ChFiDS_ErrorStatus: 
@@ -2863,14 +2918,14 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def FirstParameter(self,IndexSpine : int) -> float: 
+    def FirstParameter(self) -> float: 
         """
         None
 
         gives the total length of all arcs before the number IndexSp
         """
     @overload
-    def FirstParameter(self) -> float: ...
+    def FirstParameter(self,IndexSpine : int) -> float: ...
     def FirstStatus(self) -> ChFiDS_State: 
         """
         returns if the set of edges starts on a free boundary or if the first vertex is a breakpoint or if the set is closed
@@ -2897,6 +2952,12 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         """
         None
         """
+    def GetTypeOfConcavity(self) -> ChFiDS_TypeOfConcavity: 
+        """
+        returns the type of concavity in the connection
+
+        returns the type of concavity in the connection
+        """
     def HasFirstTgt(self) -> bool: 
         """
         None
@@ -2910,14 +2971,14 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Index(self,W : float,Forward : bool=True) -> int: 
+    def Index(self,E : OCP.TopoDS.TopoDS_Edge) -> int: 
         """
         None
 
         None
         """
     @overload
-    def Index(self,E : OCP.TopoDS.TopoDS_Edge) -> int: ...
+    def Index(self,W : float,Forward : bool=True) -> int: ...
     def IsChamfer(self) -> ChFiDS_ChamfMethod: 
         """
         Return the method of chamfers used
@@ -3121,15 +3182,21 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
 
         None
         """
+    def SetTypeOfConcavity(self,theType : ChFiDS_TypeOfConcavity) -> None: 
+        """
+        sets the type of concavity in the connection
+
+        sets the type of concavity in the connection
+        """
     @overload
-    def SplitDone(self,B : bool) -> None: 
+    def SplitDone(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def SplitDone(self) -> bool: ...
+    def SplitDone(self,B : bool) -> None: ...
     def Status(self,IsFirst : bool) -> ChFiDS_State: 
         """
         None
@@ -3183,25 +3250,33 @@ class ChFiDS_State():
 
       ChFiDS_Tangent
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    ChFiDS_AllSame: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_AllSame
-    ChFiDS_BreakPoint: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_BreakPoint
-    ChFiDS_Closed: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_Closed
-    ChFiDS_FreeBoundary: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_FreeBoundary
-    ChFiDS_OnDiff: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_OnDiff
-    ChFiDS_OnSame: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_OnSame
-    ChFiDS_Tangent: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_Tangent
-    __entries: dict # value = {'ChFiDS_OnSame': (ChFiDS_State.ChFiDS_OnSame, None), 'ChFiDS_OnDiff': (ChFiDS_State.ChFiDS_OnDiff, None), 'ChFiDS_AllSame': (ChFiDS_State.ChFiDS_AllSame, None), 'ChFiDS_BreakPoint': (ChFiDS_State.ChFiDS_BreakPoint, None), 'ChFiDS_FreeBoundary': (ChFiDS_State.ChFiDS_FreeBoundary, None), 'ChFiDS_Closed': (ChFiDS_State.ChFiDS_Closed, None), 'ChFiDS_Tangent': (ChFiDS_State.ChFiDS_Tangent, None)}
-    __members__: dict # value = {'ChFiDS_OnSame': ChFiDS_State.ChFiDS_OnSame, 'ChFiDS_OnDiff': ChFiDS_State.ChFiDS_OnDiff, 'ChFiDS_AllSame': ChFiDS_State.ChFiDS_AllSame, 'ChFiDS_BreakPoint': ChFiDS_State.ChFiDS_BreakPoint, 'ChFiDS_FreeBoundary': ChFiDS_State.ChFiDS_FreeBoundary, 'ChFiDS_Closed': ChFiDS_State.ChFiDS_Closed, 'ChFiDS_Tangent': ChFiDS_State.ChFiDS_Tangent}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    ChFiDS_AllSame: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_AllSame: 2>
+    ChFiDS_BreakPoint: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_BreakPoint: 3>
+    ChFiDS_Closed: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_Closed: 5>
+    ChFiDS_FreeBoundary: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_FreeBoundary: 4>
+    ChFiDS_OnDiff: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_OnDiff: 1>
+    ChFiDS_OnSame: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_OnSame: 0>
+    ChFiDS_Tangent: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_Tangent: 6>
+    __entries: dict # value = {'ChFiDS_OnSame': (<ChFiDS_State.ChFiDS_OnSame: 0>, None), 'ChFiDS_OnDiff': (<ChFiDS_State.ChFiDS_OnDiff: 1>, None), 'ChFiDS_AllSame': (<ChFiDS_State.ChFiDS_AllSame: 2>, None), 'ChFiDS_BreakPoint': (<ChFiDS_State.ChFiDS_BreakPoint: 3>, None), 'ChFiDS_FreeBoundary': (<ChFiDS_State.ChFiDS_FreeBoundary: 4>, None), 'ChFiDS_Closed': (<ChFiDS_State.ChFiDS_Closed: 5>, None), 'ChFiDS_Tangent': (<ChFiDS_State.ChFiDS_Tangent: 6>, None)}
+    __members__: dict # value = {'ChFiDS_OnSame': <ChFiDS_State.ChFiDS_OnSame: 0>, 'ChFiDS_OnDiff': <ChFiDS_State.ChFiDS_OnDiff: 1>, 'ChFiDS_AllSame': <ChFiDS_State.ChFiDS_AllSame: 2>, 'ChFiDS_BreakPoint': <ChFiDS_State.ChFiDS_BreakPoint: 3>, 'ChFiDS_FreeBoundary': <ChFiDS_State.ChFiDS_FreeBoundary: 4>, 'ChFiDS_Closed': <ChFiDS_State.ChFiDS_Closed: 5>, 'ChFiDS_Tangent': <ChFiDS_State.ChFiDS_Tangent: 6>}
     pass
 class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
     """
@@ -3325,7 +3400,7 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def FirstPCurveOrientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
+    def FirstPCurveOrientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: 
         """
         None
 
@@ -3336,7 +3411,7 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def FirstPCurveOrientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    def FirstPCurveOrientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
     def FirstParameters(self) -> Tuple[float, float]: 
         """
         None
@@ -3418,7 +3493,7 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def LastPCurveOrientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
+    def LastPCurveOrientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: 
         """
         None
 
@@ -3429,7 +3504,7 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def LastPCurveOrientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    def LastPCurveOrientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
     def LastParameters(self) -> Tuple[float, float]: 
         """
         None
@@ -3437,14 +3512,14 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Orientation(self,OnS : int) -> OCP.TopAbs.TopAbs_Orientation: 
+    def Orientation(self,First : bool) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         None
 
         None
         """
     @overload
-    def Orientation(self,First : bool) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,OnS : int) -> OCP.TopAbs.TopAbs_Orientation: ...
     @overload
     def OrientationOnFace1(self,Or1 : OCP.TopAbs.TopAbs_Orientation) -> None: 
         """
@@ -3498,14 +3573,14 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SetOrientation(self,Or : OCP.TopAbs.TopAbs_Orientation,OnS : int) -> None: 
+    def SetOrientation(self,Or : OCP.TopAbs.TopAbs_Orientation,First : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetOrientation(self,Or : OCP.TopAbs.TopAbs_Orientation,First : bool) -> None: ...
+    def SetOrientation(self,Or : OCP.TopAbs.TopAbs_Orientation,OnS : int) -> None: ...
     def SetParameters(self,First : bool,Pdeb : float,Pfin : float) -> None: 
         """
         None
@@ -3617,14 +3692,14 @@ class ChFiDS_StripeArray1():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : ChFiDS_StripeArray1) -> None: ...
-    @overload
     def __init__(self,theBegin : ChFiDS_Stripe,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : ChFiDS_StripeArray1) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class ChFiDS_StripeMap():
     """
@@ -3749,14 +3824,14 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def FirstExtensionValue(self,Extend : float) -> None: 
+    def FirstExtensionValue(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def FirstExtensionValue(self) -> float: ...
+    def FirstExtensionValue(self,Extend : float) -> None: ...
     @overload
     def FirstSpineParam(self,Par : float) -> None: 
         """
@@ -3870,23 +3945,23 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def LastExtensionValue(self,Extend : float) -> None: 
+    def LastExtensionValue(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def LastExtensionValue(self) -> float: ...
+    def LastExtensionValue(self,Extend : float) -> None: ...
     @overload
-    def LastSpineParam(self,Par : float) -> None: 
+    def LastSpineParam(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def LastSpineParam(self) -> float: ...
+    def LastSpineParam(self,Par : float) -> None: ...
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         None
@@ -3911,14 +3986,14 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
     @overload
     def SetIndexOfC1(self,theIndex : int) -> None: ...
     @overload
-    def SetIndexOfC2(self,theIndex : int) -> None: 
+    def SetIndexOfC2(self,Index : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetIndexOfC2(self,Index : int) -> None: ...
+    def SetIndexOfC2(self,theIndex : int) -> None: ...
     def SetSimul(self,S : OCP.Standard.Standard_Transient) -> None: 
         """
         None
@@ -3938,7 +4013,7 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def TwistOnS1(self) -> bool: 
+    def TwistOnS1(self,T : bool) -> None: 
         """
         None
 
@@ -3949,9 +4024,9 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def TwistOnS1(self,T : bool) -> None: ...
+    def TwistOnS1(self) -> bool: ...
     @overload
-    def TwistOnS2(self) -> bool: 
+    def TwistOnS2(self,T : bool) -> None: 
         """
         None
 
@@ -3962,7 +4037,7 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def TwistOnS2(self,T : bool) -> None: ...
+    def TwistOnS2(self) -> bool: ...
     def Vertex(self,First : bool,OnS : int) -> ChFiDS_CommonPoint: 
         """
         returns one of the four vertices wether First is true or wrong and OnS equals 1 or 2.
@@ -4003,21 +4078,68 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
         None
         """
     pass
-ChFiDS_AllSame: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_AllSame
-ChFiDS_BreakPoint: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_BreakPoint
-ChFiDS_ClassicChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = ChFiDS_ChamfMode.ChFiDS_ClassicChamfer
-ChFiDS_Closed: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_Closed
-ChFiDS_ConstThroatChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = ChFiDS_ChamfMode.ChFiDS_ConstThroatChamfer
-ChFiDS_ConstThroatWithPenetrationChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = ChFiDS_ChamfMode.ChFiDS_ConstThroatWithPenetrationChamfer
-ChFiDS_DistAngle: OCP.ChFiDS.ChFiDS_ChamfMethod # value = ChFiDS_ChamfMethod.ChFiDS_DistAngle
-ChFiDS_Error: OCP.ChFiDS.ChFiDS_ErrorStatus # value = ChFiDS_ErrorStatus.ChFiDS_Error
-ChFiDS_FreeBoundary: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_FreeBoundary
-ChFiDS_Ok: OCP.ChFiDS.ChFiDS_ErrorStatus # value = ChFiDS_ErrorStatus.ChFiDS_Ok
-ChFiDS_OnDiff: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_OnDiff
-ChFiDS_OnSame: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_OnSame
-ChFiDS_StartsolFailure: OCP.ChFiDS.ChFiDS_ErrorStatus # value = ChFiDS_ErrorStatus.ChFiDS_StartsolFailure
-ChFiDS_Sym: OCP.ChFiDS.ChFiDS_ChamfMethod # value = ChFiDS_ChamfMethod.ChFiDS_Sym
-ChFiDS_Tangent: OCP.ChFiDS.ChFiDS_State # value = ChFiDS_State.ChFiDS_Tangent
-ChFiDS_TwistedSurface: OCP.ChFiDS.ChFiDS_ErrorStatus # value = ChFiDS_ErrorStatus.ChFiDS_TwistedSurface
-ChFiDS_TwoDist: OCP.ChFiDS.ChFiDS_ChamfMethod # value = ChFiDS_ChamfMethod.ChFiDS_TwoDist
-ChFiDS_WalkingFailure: OCP.ChFiDS.ChFiDS_ErrorStatus # value = ChFiDS_ErrorStatus.ChFiDS_WalkingFailure
+class ChFiDS_TypeOfConcavity():
+    """
+    None
+
+    Members:
+
+      ChFiDS_Concave
+
+      ChFiDS_Convex
+
+      ChFiDS_Tangential
+
+      ChFiDS_FreeBound
+
+      ChFiDS_Other
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    ChFiDS_Concave: OCP.ChFiDS.ChFiDS_TypeOfConcavity # value = <ChFiDS_TypeOfConcavity.ChFiDS_Concave: 0>
+    ChFiDS_Convex: OCP.ChFiDS.ChFiDS_TypeOfConcavity # value = <ChFiDS_TypeOfConcavity.ChFiDS_Convex: 1>
+    ChFiDS_FreeBound: OCP.ChFiDS.ChFiDS_TypeOfConcavity # value = <ChFiDS_TypeOfConcavity.ChFiDS_FreeBound: 3>
+    ChFiDS_Other: OCP.ChFiDS.ChFiDS_TypeOfConcavity # value = <ChFiDS_TypeOfConcavity.ChFiDS_Other: 4>
+    ChFiDS_Tangential: OCP.ChFiDS.ChFiDS_TypeOfConcavity # value = <ChFiDS_TypeOfConcavity.ChFiDS_Tangential: 2>
+    __entries: dict # value = {'ChFiDS_Concave': (<ChFiDS_TypeOfConcavity.ChFiDS_Concave: 0>, None), 'ChFiDS_Convex': (<ChFiDS_TypeOfConcavity.ChFiDS_Convex: 1>, None), 'ChFiDS_Tangential': (<ChFiDS_TypeOfConcavity.ChFiDS_Tangential: 2>, None), 'ChFiDS_FreeBound': (<ChFiDS_TypeOfConcavity.ChFiDS_FreeBound: 3>, None), 'ChFiDS_Other': (<ChFiDS_TypeOfConcavity.ChFiDS_Other: 4>, None)}
+    __members__: dict # value = {'ChFiDS_Concave': <ChFiDS_TypeOfConcavity.ChFiDS_Concave: 0>, 'ChFiDS_Convex': <ChFiDS_TypeOfConcavity.ChFiDS_Convex: 1>, 'ChFiDS_Tangential': <ChFiDS_TypeOfConcavity.ChFiDS_Tangential: 2>, 'ChFiDS_FreeBound': <ChFiDS_TypeOfConcavity.ChFiDS_FreeBound: 3>, 'ChFiDS_Other': <ChFiDS_TypeOfConcavity.ChFiDS_Other: 4>}
+    pass
+ChFiDS_AllSame: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_AllSame: 2>
+ChFiDS_BreakPoint: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_BreakPoint: 3>
+ChFiDS_ClassicChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = <ChFiDS_ChamfMode.ChFiDS_ClassicChamfer: 0>
+ChFiDS_Closed: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_Closed: 5>
+ChFiDS_Concave: OCP.ChFiDS.ChFiDS_TypeOfConcavity # value = <ChFiDS_TypeOfConcavity.ChFiDS_Concave: 0>
+ChFiDS_ConstThroatChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = <ChFiDS_ChamfMode.ChFiDS_ConstThroatChamfer: 1>
+ChFiDS_ConstThroatWithPenetrationChamfer: OCP.ChFiDS.ChFiDS_ChamfMode # value = <ChFiDS_ChamfMode.ChFiDS_ConstThroatWithPenetrationChamfer: 2>
+ChFiDS_Convex: OCP.ChFiDS.ChFiDS_TypeOfConcavity # value = <ChFiDS_TypeOfConcavity.ChFiDS_Convex: 1>
+ChFiDS_DistAngle: OCP.ChFiDS.ChFiDS_ChamfMethod # value = <ChFiDS_ChamfMethod.ChFiDS_DistAngle: 2>
+ChFiDS_Error: OCP.ChFiDS.ChFiDS_ErrorStatus # value = <ChFiDS_ErrorStatus.ChFiDS_Error: 1>
+ChFiDS_FreeBound: OCP.ChFiDS.ChFiDS_TypeOfConcavity # value = <ChFiDS_TypeOfConcavity.ChFiDS_FreeBound: 3>
+ChFiDS_FreeBoundary: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_FreeBoundary: 4>
+ChFiDS_Ok: OCP.ChFiDS.ChFiDS_ErrorStatus # value = <ChFiDS_ErrorStatus.ChFiDS_Ok: 0>
+ChFiDS_OnDiff: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_OnDiff: 1>
+ChFiDS_OnSame: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_OnSame: 0>
+ChFiDS_Other: OCP.ChFiDS.ChFiDS_TypeOfConcavity # value = <ChFiDS_TypeOfConcavity.ChFiDS_Other: 4>
+ChFiDS_StartsolFailure: OCP.ChFiDS.ChFiDS_ErrorStatus # value = <ChFiDS_ErrorStatus.ChFiDS_StartsolFailure: 3>
+ChFiDS_Sym: OCP.ChFiDS.ChFiDS_ChamfMethod # value = <ChFiDS_ChamfMethod.ChFiDS_Sym: 0>
+ChFiDS_Tangent: OCP.ChFiDS.ChFiDS_State # value = <ChFiDS_State.ChFiDS_Tangent: 6>
+ChFiDS_Tangential: OCP.ChFiDS.ChFiDS_TypeOfConcavity # value = <ChFiDS_TypeOfConcavity.ChFiDS_Tangential: 2>
+ChFiDS_TwistedSurface: OCP.ChFiDS.ChFiDS_ErrorStatus # value = <ChFiDS_ErrorStatus.ChFiDS_TwistedSurface: 4>
+ChFiDS_TwoDist: OCP.ChFiDS.ChFiDS_ChamfMethod # value = <ChFiDS_ChamfMethod.ChFiDS_TwoDist: 1>
+ChFiDS_WalkingFailure: OCP.ChFiDS.ChFiDS_ErrorStatus # value = <ChFiDS_ErrorStatus.ChFiDS_WalkingFailure: 2>

@@ -6,9 +6,9 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
 import OCP.TColStd
+import OCP.Interface
 import OCP.Standard
 import OCP.StepData
-import OCP.Interface
 __all__  = [
 "StepBasic_Action",
 "StepBasic_ActionAssignment",
@@ -896,21 +896,29 @@ class StepBasic_AheadOrBehind():
 
       StepBasic_aobBehind
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepBasic_aobAhead: OCP.StepBasic.StepBasic_AheadOrBehind # value = StepBasic_AheadOrBehind.StepBasic_aobAhead
-    StepBasic_aobBehind: OCP.StepBasic.StepBasic_AheadOrBehind # value = StepBasic_AheadOrBehind.StepBasic_aobBehind
-    StepBasic_aobExact: OCP.StepBasic.StepBasic_AheadOrBehind # value = StepBasic_AheadOrBehind.StepBasic_aobExact
-    __entries: dict # value = {'StepBasic_aobAhead': (StepBasic_AheadOrBehind.StepBasic_aobAhead, None), 'StepBasic_aobExact': (StepBasic_AheadOrBehind.StepBasic_aobExact, None), 'StepBasic_aobBehind': (StepBasic_AheadOrBehind.StepBasic_aobBehind, None)}
-    __members__: dict # value = {'StepBasic_aobAhead': StepBasic_AheadOrBehind.StepBasic_aobAhead, 'StepBasic_aobExact': StepBasic_AheadOrBehind.StepBasic_aobExact, 'StepBasic_aobBehind': StepBasic_AheadOrBehind.StepBasic_aobBehind}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepBasic_aobAhead: OCP.StepBasic.StepBasic_AheadOrBehind # value = <StepBasic_AheadOrBehind.StepBasic_aobAhead: 0>
+    StepBasic_aobBehind: OCP.StepBasic.StepBasic_AheadOrBehind # value = <StepBasic_AheadOrBehind.StepBasic_aobBehind: 2>
+    StepBasic_aobExact: OCP.StepBasic.StepBasic_AheadOrBehind # value = <StepBasic_AheadOrBehind.StepBasic_aobExact: 1>
+    __entries: dict # value = {'StepBasic_aobAhead': (<StepBasic_AheadOrBehind.StepBasic_aobAhead: 0>, None), 'StepBasic_aobExact': (<StepBasic_AheadOrBehind.StepBasic_aobExact: 1>, None), 'StepBasic_aobBehind': (<StepBasic_AheadOrBehind.StepBasic_aobBehind: 2>, None)}
+    __members__: dict # value = {'StepBasic_aobAhead': <StepBasic_AheadOrBehind.StepBasic_aobAhead: 0>, 'StepBasic_aobExact': <StepBasic_AheadOrBehind.StepBasic_aobExact: 1>, 'StepBasic_aobBehind': <StepBasic_AheadOrBehind.StepBasic_aobBehind: 2>}
     pass
 class StepBasic_ApplicationContext(OCP.Standard.Standard_Transient):
     def Application(self) -> OCP.TCollection.TCollection_HAsciiString: 
@@ -1819,12 +1827,12 @@ class StepBasic_Array1OfApproval():
     @overload
     def __init__(self,theBegin : StepBasic_Approval,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepBasic_Array1OfApproval) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : StepBasic_Array1OfApproval) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepBasic_Array1OfDerivedUnitElement():
     """
@@ -1903,14 +1911,14 @@ class StepBasic_Array1OfDerivedUnitElement():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepBasic_DerivedUnitElement,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepBasic_Array1OfDerivedUnitElement) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : StepBasic_DerivedUnitElement,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepBasic_Array1OfDocument():
     """
@@ -1991,12 +1999,12 @@ class StepBasic_Array1OfDocument():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepBasic_Array1OfDocument) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : StepBasic_Array1OfDocument) -> None: ...
+    @overload
     def __init__(self,theBegin : StepBasic_Document,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepBasic_Array1OfNamedUnit():
     """
@@ -2075,14 +2083,14 @@ class StepBasic_Array1OfNamedUnit():
         Constant value access
         """
     @overload
+    def __init__(self,theBegin : StepBasic_NamedUnit,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepBasic_Array1OfNamedUnit) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepBasic_NamedUnit,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepBasic_Array1OfOrganization():
     """
@@ -2161,14 +2169,14 @@ class StepBasic_Array1OfOrganization():
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepBasic_Array1OfOrganization) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : StepBasic_Organization,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepBasic_Array1OfPerson():
     """
@@ -2247,14 +2255,14 @@ class StepBasic_Array1OfPerson():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepBasic_Person,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : StepBasic_Person,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepBasic_Array1OfPerson) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepBasic_Array1OfProduct():
     """
@@ -2335,12 +2343,12 @@ class StepBasic_Array1OfProduct():
     @overload
     def __init__(self,theBegin : StepBasic_Product,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepBasic_Array1OfProduct) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepBasic_Array1OfProductContext():
     """
@@ -2426,7 +2434,7 @@ class StepBasic_Array1OfProductContext():
     def __init__(self,theOther : StepBasic_Array1OfProductContext) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepBasic_Array1OfProductDefinition():
     """
@@ -2507,12 +2515,12 @@ class StepBasic_Array1OfProductDefinition():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepBasic_Array1OfProductDefinition) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : StepBasic_Array1OfProductDefinition) -> None: ...
+    @overload
     def __init__(self,theBegin : StepBasic_ProductDefinition,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepBasic_Array1OfUncertaintyMeasureWithUnit():
     """
@@ -2591,14 +2599,14 @@ class StepBasic_Array1OfUncertaintyMeasureWithUnit():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepBasic_Array1OfUncertaintyMeasureWithUnit) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepBasic_UncertaintyMeasureWithUnit,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepBasic_Date(OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -6799,14 +6807,14 @@ class StepBasic_HArray1OfApproval(StepBasic_Array1OfApproval, OCP.Standard.Stand
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_Approval) -> None: ...
     @overload
     def __init__(self,theOther : StepBasic_Array1OfApproval) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6942,14 +6950,14 @@ class StepBasic_HArray1OfDerivedUnitElement(StepBasic_Array1OfDerivedUnitElement
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_DerivedUnitElement) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepBasic_Array1OfDerivedUnitElement) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_DerivedUnitElement) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : StepBasic_Array1OfDerivedUnitElement) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7085,14 +7093,14 @@ class StepBasic_HArray1OfDocument(StepBasic_Array1OfDocument, OCP.Standard.Stand
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_Document) -> None: ...
-    @overload
     def __init__(self,theOther : StepBasic_Array1OfDocument) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_Document) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7228,14 +7236,14 @@ class StepBasic_HArray1OfNamedUnit(StepBasic_Array1OfNamedUnit, OCP.Standard.Sta
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepBasic_Array1OfNamedUnit) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_NamedUnit) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7371,14 +7379,14 @@ class StepBasic_HArray1OfOrganization(StepBasic_Array1OfOrganization, OCP.Standa
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_Organization) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepBasic_Array1OfOrganization) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_Organization) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7514,14 +7522,14 @@ class StepBasic_HArray1OfPerson(StepBasic_Array1OfPerson, OCP.Standard.Standard_
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepBasic_Array1OfPerson) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_Person) -> None: ...
     @overload
+    def __init__(self,theOther : StepBasic_Array1OfPerson) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7664,7 +7672,7 @@ class StepBasic_HArray1OfProduct(StepBasic_Array1OfProduct, OCP.Standard.Standar
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepBasic_Array1OfProduct) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7802,12 +7810,12 @@ class StepBasic_HArray1OfProductContext(StepBasic_Array1OfProductContext, OCP.St
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_ProductContext) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepBasic_Array1OfProductContext) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepBasic_Array1OfProductContext) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7945,12 +7953,12 @@ class StepBasic_HArray1OfProductDefinition(StepBasic_Array1OfProductDefinition, 
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_ProductDefinition) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepBasic_Array1OfProductDefinition) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -8088,12 +8096,12 @@ class StepBasic_HArray1OfUncertaintyMeasureWithUnit(StepBasic_Array1OfUncertaint
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepBasic_UncertaintyMeasureWithUnit) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepBasic_Array1OfUncertaintyMeasureWithUnit) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepBasic_Array1OfUncertaintyMeasureWithUnit) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -11943,14 +11951,14 @@ class StepBasic_ProductDefinitionReference(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theSource : StepBasic_ExternalSource,theProductId : OCP.TCollection.TCollection_HAsciiString,theProductDefinitionFormationId : OCP.TCollection.TCollection_HAsciiString,theProductDefinitionId : OCP.TCollection.TCollection_HAsciiString,theIdOwningOrganizationName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def Init(self,theSource : StepBasic_ExternalSource,theProductId : OCP.TCollection.TCollection_HAsciiString,theProductDefinitionFormationId : OCP.TCollection.TCollection_HAsciiString,theProductDefinitionId : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Initialize all fields (own and inherited)
 
         Initialize all fields (own and inherited)
         """
     @overload
-    def Init(self,theSource : StepBasic_ExternalSource,theProductId : OCP.TCollection.TCollection_HAsciiString,theProductDefinitionFormationId : OCP.TCollection.TCollection_HAsciiString,theProductDefinitionId : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    def Init(self,theSource : StepBasic_ExternalSource,theProductId : OCP.TCollection.TCollection_HAsciiString,theProductDefinitionFormationId : OCP.TCollection.TCollection_HAsciiString,theProductDefinitionId : OCP.TCollection.TCollection_HAsciiString,theIdOwningOrganizationName : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -13301,34 +13309,42 @@ class StepBasic_SiPrefix():
 
       StepBasic_spAtto
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepBasic_spAtto: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spAtto
-    StepBasic_spCenti: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spCenti
-    StepBasic_spDeca: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spDeca
-    StepBasic_spDeci: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spDeci
-    StepBasic_spExa: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spExa
-    StepBasic_spFemto: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spFemto
-    StepBasic_spGiga: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spGiga
-    StepBasic_spHecto: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spHecto
-    StepBasic_spKilo: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spKilo
-    StepBasic_spMega: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spMega
-    StepBasic_spMicro: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spMicro
-    StepBasic_spMilli: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spMilli
-    StepBasic_spNano: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spNano
-    StepBasic_spPeta: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spPeta
-    StepBasic_spPico: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spPico
-    StepBasic_spTera: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spTera
-    __entries: dict # value = {'StepBasic_spExa': (StepBasic_SiPrefix.StepBasic_spExa, None), 'StepBasic_spPeta': (StepBasic_SiPrefix.StepBasic_spPeta, None), 'StepBasic_spTera': (StepBasic_SiPrefix.StepBasic_spTera, None), 'StepBasic_spGiga': (StepBasic_SiPrefix.StepBasic_spGiga, None), 'StepBasic_spMega': (StepBasic_SiPrefix.StepBasic_spMega, None), 'StepBasic_spKilo': (StepBasic_SiPrefix.StepBasic_spKilo, None), 'StepBasic_spHecto': (StepBasic_SiPrefix.StepBasic_spHecto, None), 'StepBasic_spDeca': (StepBasic_SiPrefix.StepBasic_spDeca, None), 'StepBasic_spDeci': (StepBasic_SiPrefix.StepBasic_spDeci, None), 'StepBasic_spCenti': (StepBasic_SiPrefix.StepBasic_spCenti, None), 'StepBasic_spMilli': (StepBasic_SiPrefix.StepBasic_spMilli, None), 'StepBasic_spMicro': (StepBasic_SiPrefix.StepBasic_spMicro, None), 'StepBasic_spNano': (StepBasic_SiPrefix.StepBasic_spNano, None), 'StepBasic_spPico': (StepBasic_SiPrefix.StepBasic_spPico, None), 'StepBasic_spFemto': (StepBasic_SiPrefix.StepBasic_spFemto, None), 'StepBasic_spAtto': (StepBasic_SiPrefix.StepBasic_spAtto, None)}
-    __members__: dict # value = {'StepBasic_spExa': StepBasic_SiPrefix.StepBasic_spExa, 'StepBasic_spPeta': StepBasic_SiPrefix.StepBasic_spPeta, 'StepBasic_spTera': StepBasic_SiPrefix.StepBasic_spTera, 'StepBasic_spGiga': StepBasic_SiPrefix.StepBasic_spGiga, 'StepBasic_spMega': StepBasic_SiPrefix.StepBasic_spMega, 'StepBasic_spKilo': StepBasic_SiPrefix.StepBasic_spKilo, 'StepBasic_spHecto': StepBasic_SiPrefix.StepBasic_spHecto, 'StepBasic_spDeca': StepBasic_SiPrefix.StepBasic_spDeca, 'StepBasic_spDeci': StepBasic_SiPrefix.StepBasic_spDeci, 'StepBasic_spCenti': StepBasic_SiPrefix.StepBasic_spCenti, 'StepBasic_spMilli': StepBasic_SiPrefix.StepBasic_spMilli, 'StepBasic_spMicro': StepBasic_SiPrefix.StepBasic_spMicro, 'StepBasic_spNano': StepBasic_SiPrefix.StepBasic_spNano, 'StepBasic_spPico': StepBasic_SiPrefix.StepBasic_spPico, 'StepBasic_spFemto': StepBasic_SiPrefix.StepBasic_spFemto, 'StepBasic_spAtto': StepBasic_SiPrefix.StepBasic_spAtto}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepBasic_spAtto: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spAtto: 15>
+    StepBasic_spCenti: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spCenti: 9>
+    StepBasic_spDeca: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spDeca: 7>
+    StepBasic_spDeci: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spDeci: 8>
+    StepBasic_spExa: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spExa: 0>
+    StepBasic_spFemto: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spFemto: 14>
+    StepBasic_spGiga: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spGiga: 3>
+    StepBasic_spHecto: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spHecto: 6>
+    StepBasic_spKilo: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spKilo: 5>
+    StepBasic_spMega: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spMega: 4>
+    StepBasic_spMicro: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spMicro: 11>
+    StepBasic_spMilli: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spMilli: 10>
+    StepBasic_spNano: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spNano: 12>
+    StepBasic_spPeta: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spPeta: 1>
+    StepBasic_spPico: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spPico: 13>
+    StepBasic_spTera: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spTera: 2>
+    __entries: dict # value = {'StepBasic_spExa': (<StepBasic_SiPrefix.StepBasic_spExa: 0>, None), 'StepBasic_spPeta': (<StepBasic_SiPrefix.StepBasic_spPeta: 1>, None), 'StepBasic_spTera': (<StepBasic_SiPrefix.StepBasic_spTera: 2>, None), 'StepBasic_spGiga': (<StepBasic_SiPrefix.StepBasic_spGiga: 3>, None), 'StepBasic_spMega': (<StepBasic_SiPrefix.StepBasic_spMega: 4>, None), 'StepBasic_spKilo': (<StepBasic_SiPrefix.StepBasic_spKilo: 5>, None), 'StepBasic_spHecto': (<StepBasic_SiPrefix.StepBasic_spHecto: 6>, None), 'StepBasic_spDeca': (<StepBasic_SiPrefix.StepBasic_spDeca: 7>, None), 'StepBasic_spDeci': (<StepBasic_SiPrefix.StepBasic_spDeci: 8>, None), 'StepBasic_spCenti': (<StepBasic_SiPrefix.StepBasic_spCenti: 9>, None), 'StepBasic_spMilli': (<StepBasic_SiPrefix.StepBasic_spMilli: 10>, None), 'StepBasic_spMicro': (<StepBasic_SiPrefix.StepBasic_spMicro: 11>, None), 'StepBasic_spNano': (<StepBasic_SiPrefix.StepBasic_spNano: 12>, None), 'StepBasic_spPico': (<StepBasic_SiPrefix.StepBasic_spPico: 13>, None), 'StepBasic_spFemto': (<StepBasic_SiPrefix.StepBasic_spFemto: 14>, None), 'StepBasic_spAtto': (<StepBasic_SiPrefix.StepBasic_spAtto: 15>, None)}
+    __members__: dict # value = {'StepBasic_spExa': <StepBasic_SiPrefix.StepBasic_spExa: 0>, 'StepBasic_spPeta': <StepBasic_SiPrefix.StepBasic_spPeta: 1>, 'StepBasic_spTera': <StepBasic_SiPrefix.StepBasic_spTera: 2>, 'StepBasic_spGiga': <StepBasic_SiPrefix.StepBasic_spGiga: 3>, 'StepBasic_spMega': <StepBasic_SiPrefix.StepBasic_spMega: 4>, 'StepBasic_spKilo': <StepBasic_SiPrefix.StepBasic_spKilo: 5>, 'StepBasic_spHecto': <StepBasic_SiPrefix.StepBasic_spHecto: 6>, 'StepBasic_spDeca': <StepBasic_SiPrefix.StepBasic_spDeca: 7>, 'StepBasic_spDeci': <StepBasic_SiPrefix.StepBasic_spDeci: 8>, 'StepBasic_spCenti': <StepBasic_SiPrefix.StepBasic_spCenti: 9>, 'StepBasic_spMilli': <StepBasic_SiPrefix.StepBasic_spMilli: 10>, 'StepBasic_spMicro': <StepBasic_SiPrefix.StepBasic_spMicro: 11>, 'StepBasic_spNano': <StepBasic_SiPrefix.StepBasic_spNano: 12>, 'StepBasic_spPico': <StepBasic_SiPrefix.StepBasic_spPico: 13>, 'StepBasic_spFemto': <StepBasic_SiPrefix.StepBasic_spFemto: 14>, 'StepBasic_spAtto': <StepBasic_SiPrefix.StepBasic_spAtto: 15>}
     pass
 class StepBasic_SiUnit(StepBasic_NamedUnit, OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -14374,46 +14390,54 @@ class StepBasic_SiUnitName():
 
       StepBasic_sunSievert
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepBasic_sunAmpere: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunAmpere
-    StepBasic_sunBecquerel: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunBecquerel
-    StepBasic_sunCandela: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunCandela
-    StepBasic_sunCoulomb: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunCoulomb
-    StepBasic_sunDegreeCelsius: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunDegreeCelsius
-    StepBasic_sunFarad: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunFarad
-    StepBasic_sunGram: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunGram
-    StepBasic_sunGray: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunGray
-    StepBasic_sunHenry: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunHenry
-    StepBasic_sunHertz: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunHertz
-    StepBasic_sunJoule: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunJoule
-    StepBasic_sunKelvin: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunKelvin
-    StepBasic_sunLumen: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunLumen
-    StepBasic_sunLux: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunLux
-    StepBasic_sunMetre: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunMetre
-    StepBasic_sunMole: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunMole
-    StepBasic_sunNewton: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunNewton
-    StepBasic_sunOhm: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunOhm
-    StepBasic_sunPascal: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunPascal
-    StepBasic_sunRadian: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunRadian
-    StepBasic_sunSecond: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunSecond
-    StepBasic_sunSiemens: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunSiemens
-    StepBasic_sunSievert: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunSievert
-    StepBasic_sunSteradian: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunSteradian
-    StepBasic_sunTesla: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunTesla
-    StepBasic_sunVolt: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunVolt
-    StepBasic_sunWatt: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunWatt
-    StepBasic_sunWeber: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunWeber
-    __entries: dict # value = {'StepBasic_sunMetre': (StepBasic_SiUnitName.StepBasic_sunMetre, None), 'StepBasic_sunGram': (StepBasic_SiUnitName.StepBasic_sunGram, None), 'StepBasic_sunSecond': (StepBasic_SiUnitName.StepBasic_sunSecond, None), 'StepBasic_sunAmpere': (StepBasic_SiUnitName.StepBasic_sunAmpere, None), 'StepBasic_sunKelvin': (StepBasic_SiUnitName.StepBasic_sunKelvin, None), 'StepBasic_sunMole': (StepBasic_SiUnitName.StepBasic_sunMole, None), 'StepBasic_sunCandela': (StepBasic_SiUnitName.StepBasic_sunCandela, None), 'StepBasic_sunRadian': (StepBasic_SiUnitName.StepBasic_sunRadian, None), 'StepBasic_sunSteradian': (StepBasic_SiUnitName.StepBasic_sunSteradian, None), 'StepBasic_sunHertz': (StepBasic_SiUnitName.StepBasic_sunHertz, None), 'StepBasic_sunNewton': (StepBasic_SiUnitName.StepBasic_sunNewton, None), 'StepBasic_sunPascal': (StepBasic_SiUnitName.StepBasic_sunPascal, None), 'StepBasic_sunJoule': (StepBasic_SiUnitName.StepBasic_sunJoule, None), 'StepBasic_sunWatt': (StepBasic_SiUnitName.StepBasic_sunWatt, None), 'StepBasic_sunCoulomb': (StepBasic_SiUnitName.StepBasic_sunCoulomb, None), 'StepBasic_sunVolt': (StepBasic_SiUnitName.StepBasic_sunVolt, None), 'StepBasic_sunFarad': (StepBasic_SiUnitName.StepBasic_sunFarad, None), 'StepBasic_sunOhm': (StepBasic_SiUnitName.StepBasic_sunOhm, None), 'StepBasic_sunSiemens': (StepBasic_SiUnitName.StepBasic_sunSiemens, None), 'StepBasic_sunWeber': (StepBasic_SiUnitName.StepBasic_sunWeber, None), 'StepBasic_sunTesla': (StepBasic_SiUnitName.StepBasic_sunTesla, None), 'StepBasic_sunHenry': (StepBasic_SiUnitName.StepBasic_sunHenry, None), 'StepBasic_sunDegreeCelsius': (StepBasic_SiUnitName.StepBasic_sunDegreeCelsius, None), 'StepBasic_sunLumen': (StepBasic_SiUnitName.StepBasic_sunLumen, None), 'StepBasic_sunLux': (StepBasic_SiUnitName.StepBasic_sunLux, None), 'StepBasic_sunBecquerel': (StepBasic_SiUnitName.StepBasic_sunBecquerel, None), 'StepBasic_sunGray': (StepBasic_SiUnitName.StepBasic_sunGray, None), 'StepBasic_sunSievert': (StepBasic_SiUnitName.StepBasic_sunSievert, None)}
-    __members__: dict # value = {'StepBasic_sunMetre': StepBasic_SiUnitName.StepBasic_sunMetre, 'StepBasic_sunGram': StepBasic_SiUnitName.StepBasic_sunGram, 'StepBasic_sunSecond': StepBasic_SiUnitName.StepBasic_sunSecond, 'StepBasic_sunAmpere': StepBasic_SiUnitName.StepBasic_sunAmpere, 'StepBasic_sunKelvin': StepBasic_SiUnitName.StepBasic_sunKelvin, 'StepBasic_sunMole': StepBasic_SiUnitName.StepBasic_sunMole, 'StepBasic_sunCandela': StepBasic_SiUnitName.StepBasic_sunCandela, 'StepBasic_sunRadian': StepBasic_SiUnitName.StepBasic_sunRadian, 'StepBasic_sunSteradian': StepBasic_SiUnitName.StepBasic_sunSteradian, 'StepBasic_sunHertz': StepBasic_SiUnitName.StepBasic_sunHertz, 'StepBasic_sunNewton': StepBasic_SiUnitName.StepBasic_sunNewton, 'StepBasic_sunPascal': StepBasic_SiUnitName.StepBasic_sunPascal, 'StepBasic_sunJoule': StepBasic_SiUnitName.StepBasic_sunJoule, 'StepBasic_sunWatt': StepBasic_SiUnitName.StepBasic_sunWatt, 'StepBasic_sunCoulomb': StepBasic_SiUnitName.StepBasic_sunCoulomb, 'StepBasic_sunVolt': StepBasic_SiUnitName.StepBasic_sunVolt, 'StepBasic_sunFarad': StepBasic_SiUnitName.StepBasic_sunFarad, 'StepBasic_sunOhm': StepBasic_SiUnitName.StepBasic_sunOhm, 'StepBasic_sunSiemens': StepBasic_SiUnitName.StepBasic_sunSiemens, 'StepBasic_sunWeber': StepBasic_SiUnitName.StepBasic_sunWeber, 'StepBasic_sunTesla': StepBasic_SiUnitName.StepBasic_sunTesla, 'StepBasic_sunHenry': StepBasic_SiUnitName.StepBasic_sunHenry, 'StepBasic_sunDegreeCelsius': StepBasic_SiUnitName.StepBasic_sunDegreeCelsius, 'StepBasic_sunLumen': StepBasic_SiUnitName.StepBasic_sunLumen, 'StepBasic_sunLux': StepBasic_SiUnitName.StepBasic_sunLux, 'StepBasic_sunBecquerel': StepBasic_SiUnitName.StepBasic_sunBecquerel, 'StepBasic_sunGray': StepBasic_SiUnitName.StepBasic_sunGray, 'StepBasic_sunSievert': StepBasic_SiUnitName.StepBasic_sunSievert}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepBasic_sunAmpere: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunAmpere: 3>
+    StepBasic_sunBecquerel: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunBecquerel: 25>
+    StepBasic_sunCandela: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunCandela: 6>
+    StepBasic_sunCoulomb: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunCoulomb: 14>
+    StepBasic_sunDegreeCelsius: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunDegreeCelsius: 22>
+    StepBasic_sunFarad: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunFarad: 16>
+    StepBasic_sunGram: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunGram: 1>
+    StepBasic_sunGray: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunGray: 26>
+    StepBasic_sunHenry: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunHenry: 21>
+    StepBasic_sunHertz: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunHertz: 9>
+    StepBasic_sunJoule: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunJoule: 12>
+    StepBasic_sunKelvin: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunKelvin: 4>
+    StepBasic_sunLumen: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunLumen: 23>
+    StepBasic_sunLux: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunLux: 24>
+    StepBasic_sunMetre: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunMetre: 0>
+    StepBasic_sunMole: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunMole: 5>
+    StepBasic_sunNewton: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunNewton: 10>
+    StepBasic_sunOhm: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunOhm: 17>
+    StepBasic_sunPascal: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunPascal: 11>
+    StepBasic_sunRadian: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunRadian: 7>
+    StepBasic_sunSecond: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunSecond: 2>
+    StepBasic_sunSiemens: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunSiemens: 18>
+    StepBasic_sunSievert: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunSievert: 27>
+    StepBasic_sunSteradian: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunSteradian: 8>
+    StepBasic_sunTesla: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunTesla: 20>
+    StepBasic_sunVolt: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunVolt: 15>
+    StepBasic_sunWatt: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunWatt: 13>
+    StepBasic_sunWeber: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunWeber: 19>
+    __entries: dict # value = {'StepBasic_sunMetre': (<StepBasic_SiUnitName.StepBasic_sunMetre: 0>, None), 'StepBasic_sunGram': (<StepBasic_SiUnitName.StepBasic_sunGram: 1>, None), 'StepBasic_sunSecond': (<StepBasic_SiUnitName.StepBasic_sunSecond: 2>, None), 'StepBasic_sunAmpere': (<StepBasic_SiUnitName.StepBasic_sunAmpere: 3>, None), 'StepBasic_sunKelvin': (<StepBasic_SiUnitName.StepBasic_sunKelvin: 4>, None), 'StepBasic_sunMole': (<StepBasic_SiUnitName.StepBasic_sunMole: 5>, None), 'StepBasic_sunCandela': (<StepBasic_SiUnitName.StepBasic_sunCandela: 6>, None), 'StepBasic_sunRadian': (<StepBasic_SiUnitName.StepBasic_sunRadian: 7>, None), 'StepBasic_sunSteradian': (<StepBasic_SiUnitName.StepBasic_sunSteradian: 8>, None), 'StepBasic_sunHertz': (<StepBasic_SiUnitName.StepBasic_sunHertz: 9>, None), 'StepBasic_sunNewton': (<StepBasic_SiUnitName.StepBasic_sunNewton: 10>, None), 'StepBasic_sunPascal': (<StepBasic_SiUnitName.StepBasic_sunPascal: 11>, None), 'StepBasic_sunJoule': (<StepBasic_SiUnitName.StepBasic_sunJoule: 12>, None), 'StepBasic_sunWatt': (<StepBasic_SiUnitName.StepBasic_sunWatt: 13>, None), 'StepBasic_sunCoulomb': (<StepBasic_SiUnitName.StepBasic_sunCoulomb: 14>, None), 'StepBasic_sunVolt': (<StepBasic_SiUnitName.StepBasic_sunVolt: 15>, None), 'StepBasic_sunFarad': (<StepBasic_SiUnitName.StepBasic_sunFarad: 16>, None), 'StepBasic_sunOhm': (<StepBasic_SiUnitName.StepBasic_sunOhm: 17>, None), 'StepBasic_sunSiemens': (<StepBasic_SiUnitName.StepBasic_sunSiemens: 18>, None), 'StepBasic_sunWeber': (<StepBasic_SiUnitName.StepBasic_sunWeber: 19>, None), 'StepBasic_sunTesla': (<StepBasic_SiUnitName.StepBasic_sunTesla: 20>, None), 'StepBasic_sunHenry': (<StepBasic_SiUnitName.StepBasic_sunHenry: 21>, None), 'StepBasic_sunDegreeCelsius': (<StepBasic_SiUnitName.StepBasic_sunDegreeCelsius: 22>, None), 'StepBasic_sunLumen': (<StepBasic_SiUnitName.StepBasic_sunLumen: 23>, None), 'StepBasic_sunLux': (<StepBasic_SiUnitName.StepBasic_sunLux: 24>, None), 'StepBasic_sunBecquerel': (<StepBasic_SiUnitName.StepBasic_sunBecquerel: 25>, None), 'StepBasic_sunGray': (<StepBasic_SiUnitName.StepBasic_sunGray: 26>, None), 'StepBasic_sunSievert': (<StepBasic_SiUnitName.StepBasic_sunSievert: 27>, None)}
+    __members__: dict # value = {'StepBasic_sunMetre': <StepBasic_SiUnitName.StepBasic_sunMetre: 0>, 'StepBasic_sunGram': <StepBasic_SiUnitName.StepBasic_sunGram: 1>, 'StepBasic_sunSecond': <StepBasic_SiUnitName.StepBasic_sunSecond: 2>, 'StepBasic_sunAmpere': <StepBasic_SiUnitName.StepBasic_sunAmpere: 3>, 'StepBasic_sunKelvin': <StepBasic_SiUnitName.StepBasic_sunKelvin: 4>, 'StepBasic_sunMole': <StepBasic_SiUnitName.StepBasic_sunMole: 5>, 'StepBasic_sunCandela': <StepBasic_SiUnitName.StepBasic_sunCandela: 6>, 'StepBasic_sunRadian': <StepBasic_SiUnitName.StepBasic_sunRadian: 7>, 'StepBasic_sunSteradian': <StepBasic_SiUnitName.StepBasic_sunSteradian: 8>, 'StepBasic_sunHertz': <StepBasic_SiUnitName.StepBasic_sunHertz: 9>, 'StepBasic_sunNewton': <StepBasic_SiUnitName.StepBasic_sunNewton: 10>, 'StepBasic_sunPascal': <StepBasic_SiUnitName.StepBasic_sunPascal: 11>, 'StepBasic_sunJoule': <StepBasic_SiUnitName.StepBasic_sunJoule: 12>, 'StepBasic_sunWatt': <StepBasic_SiUnitName.StepBasic_sunWatt: 13>, 'StepBasic_sunCoulomb': <StepBasic_SiUnitName.StepBasic_sunCoulomb: 14>, 'StepBasic_sunVolt': <StepBasic_SiUnitName.StepBasic_sunVolt: 15>, 'StepBasic_sunFarad': <StepBasic_SiUnitName.StepBasic_sunFarad: 16>, 'StepBasic_sunOhm': <StepBasic_SiUnitName.StepBasic_sunOhm: 17>, 'StepBasic_sunSiemens': <StepBasic_SiUnitName.StepBasic_sunSiemens: 18>, 'StepBasic_sunWeber': <StepBasic_SiUnitName.StepBasic_sunWeber: 19>, 'StepBasic_sunTesla': <StepBasic_SiUnitName.StepBasic_sunTesla: 20>, 'StepBasic_sunHenry': <StepBasic_SiUnitName.StepBasic_sunHenry: 21>, 'StepBasic_sunDegreeCelsius': <StepBasic_SiUnitName.StepBasic_sunDegreeCelsius: 22>, 'StepBasic_sunLumen': <StepBasic_SiUnitName.StepBasic_sunLumen: 23>, 'StepBasic_sunLux': <StepBasic_SiUnitName.StepBasic_sunLux: 24>, 'StepBasic_sunBecquerel': <StepBasic_SiUnitName.StepBasic_sunBecquerel: 25>, 'StepBasic_sunGray': <StepBasic_SiUnitName.StepBasic_sunGray: 26>, 'StepBasic_sunSievert': <StepBasic_SiUnitName.StepBasic_sunSievert: 27>}
     pass
 class StepBasic_SizeMember(OCP.StepData.StepData_SelectReal, OCP.StepData.StepData_SelectMember, OCP.Standard.Standard_Transient):
     """
@@ -14837,21 +14861,29 @@ class StepBasic_Source():
 
       StepBasic_sNotKnown
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepBasic_sBought: OCP.StepBasic.StepBasic_Source # value = StepBasic_Source.StepBasic_sBought
-    StepBasic_sMade: OCP.StepBasic.StepBasic_Source # value = StepBasic_Source.StepBasic_sMade
-    StepBasic_sNotKnown: OCP.StepBasic.StepBasic_Source # value = StepBasic_Source.StepBasic_sNotKnown
-    __entries: dict # value = {'StepBasic_sMade': (StepBasic_Source.StepBasic_sMade, None), 'StepBasic_sBought': (StepBasic_Source.StepBasic_sBought, None), 'StepBasic_sNotKnown': (StepBasic_Source.StepBasic_sNotKnown, None)}
-    __members__: dict # value = {'StepBasic_sMade': StepBasic_Source.StepBasic_sMade, 'StepBasic_sBought': StepBasic_Source.StepBasic_sBought, 'StepBasic_sNotKnown': StepBasic_Source.StepBasic_sNotKnown}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepBasic_sBought: OCP.StepBasic.StepBasic_Source # value = <StepBasic_Source.StepBasic_sBought: 1>
+    StepBasic_sMade: OCP.StepBasic.StepBasic_Source # value = <StepBasic_Source.StepBasic_sMade: 0>
+    StepBasic_sNotKnown: OCP.StepBasic.StepBasic_Source # value = <StepBasic_Source.StepBasic_sNotKnown: 2>
+    __entries: dict # value = {'StepBasic_sMade': (<StepBasic_Source.StepBasic_sMade: 0>, None), 'StepBasic_sBought': (<StepBasic_Source.StepBasic_sBought: 1>, None), 'StepBasic_sNotKnown': (<StepBasic_Source.StepBasic_sNotKnown: 2>, None)}
+    __members__: dict # value = {'StepBasic_sMade': <StepBasic_Source.StepBasic_sMade: 0>, 'StepBasic_sBought': <StepBasic_Source.StepBasic_sBought: 1>, 'StepBasic_sNotKnown': <StepBasic_Source.StepBasic_sNotKnown: 2>}
     pass
 class StepBasic_SourceItem(OCP.StepData.StepData_SelectType):
     """
@@ -15644,53 +15676,53 @@ class StepBasic_WeekOfYearAndDayDate(StepBasic_Date, OCP.Standard.Standard_Trans
         None
         """
     pass
-StepBasic_aobAhead: OCP.StepBasic.StepBasic_AheadOrBehind # value = StepBasic_AheadOrBehind.StepBasic_aobAhead
-StepBasic_aobBehind: OCP.StepBasic.StepBasic_AheadOrBehind # value = StepBasic_AheadOrBehind.StepBasic_aobBehind
-StepBasic_aobExact: OCP.StepBasic.StepBasic_AheadOrBehind # value = StepBasic_AheadOrBehind.StepBasic_aobExact
-StepBasic_sBought: OCP.StepBasic.StepBasic_Source # value = StepBasic_Source.StepBasic_sBought
-StepBasic_sMade: OCP.StepBasic.StepBasic_Source # value = StepBasic_Source.StepBasic_sMade
-StepBasic_sNotKnown: OCP.StepBasic.StepBasic_Source # value = StepBasic_Source.StepBasic_sNotKnown
-StepBasic_spAtto: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spAtto
-StepBasic_spCenti: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spCenti
-StepBasic_spDeca: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spDeca
-StepBasic_spDeci: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spDeci
-StepBasic_spExa: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spExa
-StepBasic_spFemto: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spFemto
-StepBasic_spGiga: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spGiga
-StepBasic_spHecto: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spHecto
-StepBasic_spKilo: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spKilo
-StepBasic_spMega: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spMega
-StepBasic_spMicro: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spMicro
-StepBasic_spMilli: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spMilli
-StepBasic_spNano: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spNano
-StepBasic_spPeta: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spPeta
-StepBasic_spPico: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spPico
-StepBasic_spTera: OCP.StepBasic.StepBasic_SiPrefix # value = StepBasic_SiPrefix.StepBasic_spTera
-StepBasic_sunAmpere: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunAmpere
-StepBasic_sunBecquerel: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunBecquerel
-StepBasic_sunCandela: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunCandela
-StepBasic_sunCoulomb: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunCoulomb
-StepBasic_sunDegreeCelsius: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunDegreeCelsius
-StepBasic_sunFarad: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunFarad
-StepBasic_sunGram: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunGram
-StepBasic_sunGray: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunGray
-StepBasic_sunHenry: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunHenry
-StepBasic_sunHertz: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunHertz
-StepBasic_sunJoule: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunJoule
-StepBasic_sunKelvin: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunKelvin
-StepBasic_sunLumen: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunLumen
-StepBasic_sunLux: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunLux
-StepBasic_sunMetre: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunMetre
-StepBasic_sunMole: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunMole
-StepBasic_sunNewton: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunNewton
-StepBasic_sunOhm: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunOhm
-StepBasic_sunPascal: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunPascal
-StepBasic_sunRadian: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunRadian
-StepBasic_sunSecond: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunSecond
-StepBasic_sunSiemens: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunSiemens
-StepBasic_sunSievert: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunSievert
-StepBasic_sunSteradian: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunSteradian
-StepBasic_sunTesla: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunTesla
-StepBasic_sunVolt: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunVolt
-StepBasic_sunWatt: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunWatt
-StepBasic_sunWeber: OCP.StepBasic.StepBasic_SiUnitName # value = StepBasic_SiUnitName.StepBasic_sunWeber
+StepBasic_aobAhead: OCP.StepBasic.StepBasic_AheadOrBehind # value = <StepBasic_AheadOrBehind.StepBasic_aobAhead: 0>
+StepBasic_aobBehind: OCP.StepBasic.StepBasic_AheadOrBehind # value = <StepBasic_AheadOrBehind.StepBasic_aobBehind: 2>
+StepBasic_aobExact: OCP.StepBasic.StepBasic_AheadOrBehind # value = <StepBasic_AheadOrBehind.StepBasic_aobExact: 1>
+StepBasic_sBought: OCP.StepBasic.StepBasic_Source # value = <StepBasic_Source.StepBasic_sBought: 1>
+StepBasic_sMade: OCP.StepBasic.StepBasic_Source # value = <StepBasic_Source.StepBasic_sMade: 0>
+StepBasic_sNotKnown: OCP.StepBasic.StepBasic_Source # value = <StepBasic_Source.StepBasic_sNotKnown: 2>
+StepBasic_spAtto: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spAtto: 15>
+StepBasic_spCenti: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spCenti: 9>
+StepBasic_spDeca: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spDeca: 7>
+StepBasic_spDeci: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spDeci: 8>
+StepBasic_spExa: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spExa: 0>
+StepBasic_spFemto: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spFemto: 14>
+StepBasic_spGiga: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spGiga: 3>
+StepBasic_spHecto: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spHecto: 6>
+StepBasic_spKilo: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spKilo: 5>
+StepBasic_spMega: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spMega: 4>
+StepBasic_spMicro: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spMicro: 11>
+StepBasic_spMilli: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spMilli: 10>
+StepBasic_spNano: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spNano: 12>
+StepBasic_spPeta: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spPeta: 1>
+StepBasic_spPico: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spPico: 13>
+StepBasic_spTera: OCP.StepBasic.StepBasic_SiPrefix # value = <StepBasic_SiPrefix.StepBasic_spTera: 2>
+StepBasic_sunAmpere: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunAmpere: 3>
+StepBasic_sunBecquerel: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunBecquerel: 25>
+StepBasic_sunCandela: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunCandela: 6>
+StepBasic_sunCoulomb: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunCoulomb: 14>
+StepBasic_sunDegreeCelsius: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunDegreeCelsius: 22>
+StepBasic_sunFarad: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunFarad: 16>
+StepBasic_sunGram: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunGram: 1>
+StepBasic_sunGray: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunGray: 26>
+StepBasic_sunHenry: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunHenry: 21>
+StepBasic_sunHertz: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunHertz: 9>
+StepBasic_sunJoule: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunJoule: 12>
+StepBasic_sunKelvin: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunKelvin: 4>
+StepBasic_sunLumen: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunLumen: 23>
+StepBasic_sunLux: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunLux: 24>
+StepBasic_sunMetre: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunMetre: 0>
+StepBasic_sunMole: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunMole: 5>
+StepBasic_sunNewton: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunNewton: 10>
+StepBasic_sunOhm: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunOhm: 17>
+StepBasic_sunPascal: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunPascal: 11>
+StepBasic_sunRadian: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunRadian: 7>
+StepBasic_sunSecond: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunSecond: 2>
+StepBasic_sunSiemens: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunSiemens: 18>
+StepBasic_sunSievert: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunSievert: 27>
+StepBasic_sunSteradian: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunSteradian: 8>
+StepBasic_sunTesla: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunTesla: 20>
+StepBasic_sunVolt: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunVolt: 15>
+StepBasic_sunWatt: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunWatt: 13>
+StepBasic_sunWeber: OCP.StepBasic.StepBasic_SiUnitName # value = <StepBasic_SiUnitName.StepBasic_sunWeber: 19>

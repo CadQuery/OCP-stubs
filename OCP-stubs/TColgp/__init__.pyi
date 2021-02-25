@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.gp
 import OCP.NCollection
 import OCP.Standard
-import OCP.gp
 __all__  = [
 "TColgp_Array1OfCirc2d",
 "TColgp_Array1OfDir",
@@ -144,14 +144,14 @@ class TColgp_Array1OfCirc2d():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TColgp_Array1OfCirc2d) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.gp.gp_Circ2d,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TColgp_Array1OfCirc2d) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColgp_Array1OfDir():
     """
@@ -230,14 +230,14 @@ class TColgp_Array1OfDir():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_Dir,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColgp_Array1OfDir) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : OCP.gp.gp_Dir,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColgp_Array1OfDir2d():
     """
@@ -316,14 +316,14 @@ class TColgp_Array1OfDir2d():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_Dir2d,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : TColgp_Array1OfDir2d) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : OCP.gp.gp_Dir2d,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColgp_Array1OfLin2d():
     """
@@ -402,14 +402,14 @@ class TColgp_Array1OfLin2d():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_Lin2d,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : OCP.gp.gp_Lin2d,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_Array1OfLin2d) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColgp_Array1OfPnt():
     """
@@ -490,12 +490,12 @@ class TColgp_Array1OfPnt():
     @overload
     def __init__(self,theOther : TColgp_Array1OfPnt) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.gp.gp_Pnt,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColgp_Array1OfPnt2d():
     """
@@ -576,12 +576,12 @@ class TColgp_Array1OfPnt2d():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TColgp_Array1OfPnt2d) -> None: ...
-    @overload
     def __init__(self,theBegin : OCP.gp.gp_Pnt2d,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColgp_Array1OfPnt2d) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColgp_Array1OfVec():
     """
@@ -660,14 +660,14 @@ class TColgp_Array1OfVec():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColgp_Array1OfVec) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : TColgp_Array1OfVec) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.gp.gp_Vec,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColgp_Array1OfVec2d():
     """
@@ -746,14 +746,14 @@ class TColgp_Array1OfVec2d():
         Constant value access
         """
     @overload
+    def __init__(self,theOther : TColgp_Array1OfVec2d) -> None: ...
+    @overload
     def __init__(self,theBegin : OCP.gp.gp_Vec2d,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : TColgp_Array1OfVec2d) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColgp_Array1OfXY():
     """
@@ -832,14 +832,14 @@ class TColgp_Array1OfXY():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TColgp_Array1OfXY) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TColgp_Array1OfXY) -> None: ...
-    @overload
     def __init__(self,theBegin : OCP.gp.gp_XY,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColgp_Array1OfXYZ():
     """
@@ -918,14 +918,14 @@ class TColgp_Array1OfXYZ():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : OCP.gp.gp_XYZ,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_Array1OfXYZ) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_XYZ,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TColgp_Array2OfCirc2d():
     """
@@ -1002,9 +1002,9 @@ class TColgp_Array2OfCirc2d():
     @overload
     def __init__(self,theBegin : OCP.gp.gp_Circ2d,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : TColgp_Array2OfCirc2d) -> None: ...
+    @overload
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class TColgp_Array2OfDir():
     """
@@ -1077,13 +1077,13 @@ class TColgp_Array2OfDir():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColgp_Array2OfDir) -> None: ...
+    def __init__(self,theBegin : OCP.gp.gp_Dir,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_Dir,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self,theOther : TColgp_Array2OfDir) -> None: ...
     pass
 class TColgp_Array2OfDir2d():
     """
@@ -1156,13 +1156,13 @@ class TColgp_Array2OfDir2d():
         Constant value access
         """
     @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
-    def __init__(self,theBegin : OCP.gp.gp_Dir2d,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_Array2OfDir2d) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : OCP.gp.gp_Dir2d,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class TColgp_Array2OfLin2d():
     """
@@ -1235,13 +1235,13 @@ class TColgp_Array2OfLin2d():
         Constant value access
         """
     @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : TColgp_Array2OfLin2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.gp.gp_Lin2d,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class TColgp_Array2OfPnt():
     """
@@ -1316,11 +1316,11 @@ class TColgp_Array2OfPnt():
     @overload
     def __init__(self,theOther : TColgp_Array2OfPnt) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.gp.gp_Pnt,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class TColgp_Array2OfPnt2d():
     """
@@ -1393,13 +1393,13 @@ class TColgp_Array2OfPnt2d():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : OCP.gp.gp_Pnt2d,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_Array2OfPnt2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class TColgp_Array2OfVec():
     """
@@ -1472,13 +1472,13 @@ class TColgp_Array2OfVec():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_Vec,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self,theOther : TColgp_Array2OfVec) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TColgp_Array2OfVec) -> None: ...
-    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : OCP.gp.gp_Vec,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class TColgp_Array2OfVec2d():
     """
@@ -1551,13 +1551,13 @@ class TColgp_Array2OfVec2d():
         Constant value access
         """
     @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TColgp_Array2OfVec2d) -> None: ...
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.gp.gp_Vec2d,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TColgp_Array2OfVec2d) -> None: ...
     pass
 class TColgp_Array2OfXY():
     """
@@ -1630,13 +1630,13 @@ class TColgp_Array2OfXY():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColgp_Array2OfXY) -> None: ...
-    @overload
     def __init__(self,theBegin : OCP.gp.gp_XY,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TColgp_Array2OfXY) -> None: ...
     pass
 class TColgp_Array2OfXYZ():
     """
@@ -1713,9 +1713,9 @@ class TColgp_Array2OfXYZ():
     @overload
     def __init__(self,theBegin : OCP.gp.gp_XYZ,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TColgp_Array2OfXYZ) -> None: ...
-    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TColgp_Array2OfXYZ) -> None: ...
     pass
 class TColgp_HArray1OfCirc2d(TColgp_Array1OfCirc2d, OCP.Standard.Standard_Transient):
     def Array1(self) -> TColgp_Array1OfCirc2d: 
@@ -1841,14 +1841,14 @@ class TColgp_HArray1OfCirc2d(TColgp_Array1OfCirc2d, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColgp_Array1OfCirc2d) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Circ2d) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TColgp_Array1OfCirc2d) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1984,14 +1984,14 @@ class TColgp_HArray1OfDir(TColgp_Array1OfDir, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TColgp_Array1OfDir) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : TColgp_Array1OfDir) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2127,14 +2127,14 @@ class TColgp_HArray1OfDir2d(TColgp_Array1OfDir2d, OCP.Standard.Standard_Transien
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TColgp_Array1OfDir2d) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Dir2d) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColgp_Array1OfDir2d) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2270,14 +2270,14 @@ class TColgp_HArray1OfLin2d(TColgp_Array1OfLin2d, OCP.Standard.Standard_Transien
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Lin2d) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : TColgp_Array1OfLin2d) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Lin2d) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2413,14 +2413,14 @@ class TColgp_HArray1OfPnt(TColgp_Array1OfPnt, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Pnt) -> None: ...
+    def __init__(self,theOther : TColgp_Array1OfPnt) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TColgp_Array1OfPnt) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Pnt) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2556,14 +2556,14 @@ class TColgp_HArray1OfPnt2d(TColgp_Array1OfPnt2d, OCP.Standard.Standard_Transien
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : TColgp_Array1OfPnt2d) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def __init__(self,theOther : TColgp_Array1OfPnt2d) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2699,14 +2699,14 @@ class TColgp_HArray1OfVec(TColgp_Array1OfVec, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : TColgp_Array1OfVec) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Vec) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2844,12 +2844,12 @@ class TColgp_HArray1OfVec2d(TColgp_Array1OfVec2d, OCP.Standard.Standard_Transien
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Vec2d) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_Array1OfVec2d) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2985,14 +2985,14 @@ class TColgp_HArray1OfXY(TColgp_Array1OfXY, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_XY) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_Array1OfXY) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_XY) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3135,7 +3135,7 @@ class TColgp_HArray1OfXYZ(TColgp_Array1OfXYZ, OCP.Standard.Standard_Transient):
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3265,11 +3265,11 @@ class TColgp_HArray2OfCirc2d(TColgp_Array2OfCirc2d, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColgp_Array2OfCirc2d) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.gp.gp_Circ2d) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TColgp_Array2OfCirc2d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3533,11 +3533,11 @@ class TColgp_HArray2OfDir2d(TColgp_Array2OfDir2d, OCP.Standard.Standard_Transien
         Constant value access
         """
     @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.gp.gp_Dir2d) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_Array2OfDir2d) -> None: ...
-    @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3667,11 +3667,11 @@ class TColgp_HArray2OfLin2d(TColgp_Array2OfLin2d, OCP.Standard.Standard_Transien
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColgp_Array2OfLin2d) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.gp.gp_Lin2d) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TColgp_Array2OfLin2d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3801,11 +3801,11 @@ class TColgp_HArray2OfPnt(TColgp_Array2OfPnt, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
-    @overload
     def __init__(self,theOther : TColgp_Array2OfPnt) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4069,9 +4069,9 @@ class TColgp_HArray2OfVec(TColgp_Array2OfVec, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColgp_Array2OfVec) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.gp.gp_Vec) -> None: ...
+    @overload
+    def __init__(self,theOther : TColgp_Array2OfVec) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @staticmethod
@@ -4203,9 +4203,9 @@ class TColgp_HArray2OfVec2d(TColgp_Array2OfVec2d, OCP.Standard.Standard_Transien
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColgp_Array2OfVec2d) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TColgp_Array2OfVec2d) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.gp.gp_Vec2d) -> None: ...
     @staticmethod
@@ -4337,9 +4337,9 @@ class TColgp_HArray2OfXY(TColgp_Array2OfXY, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
-    @overload
     def __init__(self,theOther : TColgp_Array2OfXY) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.gp.gp_XY) -> None: ...
     @staticmethod
@@ -4471,11 +4471,11 @@ class TColgp_HArray2OfXYZ(TColgp_Array2OfXYZ, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColgp_Array2OfXYZ) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def __init__(self,theOther : TColgp_Array2OfXYZ) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4496,14 +4496,14 @@ class TColgp_SequenceOfDir(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : TColgp_SequenceOfDir) -> None: 
+    def Append(self,theItem : OCP.gp.gp_Dir) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_Dir) -> None: ...
+    def Append(self,theSeq : TColgp_SequenceOfDir) -> None: ...
     def Assign(self,theOther : TColgp_SequenceOfDir) -> TColgp_SequenceOfDir: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4542,14 +4542,14 @@ class TColgp_SequenceOfDir(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfDir) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfDir) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Dir) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Dir) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfDir) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4567,14 +4567,14 @@ class TColgp_SequenceOfDir(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.gp.gp_Dir) -> None: 
+    def Prepend(self,theSeq : TColgp_SequenceOfDir) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TColgp_SequenceOfDir) -> None: ...
+    def Prepend(self,theItem : OCP.gp.gp_Dir) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -4609,12 +4609,12 @@ class TColgp_SequenceOfDir(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TColgp_SequenceOfDir) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColgp_SequenceOfDir) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4630,14 +4630,14 @@ class TColgp_SequenceOfDir2d(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_Dir2d) -> None: 
+    def Append(self,theSeq : TColgp_SequenceOfDir2d) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : TColgp_SequenceOfDir2d) -> None: ...
+    def Append(self,theItem : OCP.gp.gp_Dir2d) -> None: ...
     def Assign(self,theOther : TColgp_SequenceOfDir2d) -> TColgp_SequenceOfDir2d: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4743,12 +4743,12 @@ class TColgp_SequenceOfDir2d(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TColgp_SequenceOfDir2d) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
+    def __init__(self,theOther : TColgp_SequenceOfDir2d) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4764,14 +4764,14 @@ class TColgp_SequenceOfPnt(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_Pnt) -> None: 
+    def Append(self,theSeq : TColgp_SequenceOfPnt) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : TColgp_SequenceOfPnt) -> None: ...
+    def Append(self,theItem : OCP.gp.gp_Pnt) -> None: ...
     def Assign(self,theOther : TColgp_SequenceOfPnt) -> TColgp_SequenceOfPnt: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4810,14 +4810,14 @@ class TColgp_SequenceOfPnt(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Pnt) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfPnt) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfPnt) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Pnt) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4877,12 +4877,12 @@ class TColgp_SequenceOfPnt(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_SequenceOfPnt) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4935,23 +4935,23 @@ class TColgp_SequenceOfPnt2d(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfPnt2d) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Pnt2d) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Pnt2d) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfPnt2d) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Pnt2d) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfPnt2d) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfPnt2d) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Pnt2d) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4978,14 +4978,14 @@ class TColgp_SequenceOfPnt2d(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : TColgp_SequenceOfPnt2d) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5011,12 +5011,12 @@ class TColgp_SequenceOfPnt2d(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TColgp_SequenceOfPnt2d) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColgp_SequenceOfPnt2d) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5069,14 +5069,14 @@ class TColgp_SequenceOfVec(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Vec) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfVec) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfVec) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Vec) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Vec) -> None: 
         """
@@ -5112,14 +5112,14 @@ class TColgp_SequenceOfVec(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : TColgp_SequenceOfVec) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5145,12 +5145,12 @@ class TColgp_SequenceOfVec(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : TColgp_SequenceOfVec) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5203,23 +5203,23 @@ class TColgp_SequenceOfVec2d(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Vec2d) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfVec2d) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfVec2d) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Vec2d) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfVec2d) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Vec2d) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Vec2d) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfVec2d) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5246,14 +5246,14 @@ class TColgp_SequenceOfVec2d(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : OCP.gp.gp_Vec2d) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5284,7 +5284,7 @@ class TColgp_SequenceOfVec2d(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self,theOther : TColgp_SequenceOfVec2d) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5300,14 +5300,14 @@ class TColgp_SequenceOfXY(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_XY) -> None: 
+    def Append(self,theSeq : TColgp_SequenceOfXY) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : TColgp_SequenceOfXY) -> None: ...
+    def Append(self,theItem : OCP.gp.gp_XY) -> None: ...
     def Assign(self,theOther : TColgp_SequenceOfXY) -> TColgp_SequenceOfXY: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5346,14 +5346,14 @@ class TColgp_SequenceOfXY(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfXY) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_XY) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfXY) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfXY) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_XY) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5371,23 +5371,23 @@ class TColgp_SequenceOfXY(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TColgp_SequenceOfXY) -> None: 
+    def Prepend(self,theItem : OCP.gp.gp_XY) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.gp.gp_XY) -> None: ...
+    def Prepend(self,theSeq : TColgp_SequenceOfXY) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5413,12 +5413,12 @@ class TColgp_SequenceOfXY(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_SequenceOfXY) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5434,14 +5434,14 @@ class TColgp_SequenceOfXYZ(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_XYZ) -> None: 
+    def Append(self,theSeq : TColgp_SequenceOfXYZ) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : TColgp_SequenceOfXYZ) -> None: ...
+    def Append(self,theItem : OCP.gp.gp_XYZ) -> None: ...
     def Assign(self,theOther : TColgp_SequenceOfXYZ) -> TColgp_SequenceOfXYZ: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5480,14 +5480,14 @@ class TColgp_SequenceOfXYZ(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_XYZ) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_XYZ) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfXYZ) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfXYZ) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_XYZ) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5505,23 +5505,23 @@ class TColgp_SequenceOfXYZ(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TColgp_SequenceOfXYZ) -> None: 
+    def Prepend(self,theItem : OCP.gp.gp_XYZ) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.gp.gp_XYZ) -> None: ...
+    def Prepend(self,theSeq : TColgp_SequenceOfXYZ) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5547,12 +5547,12 @@ class TColgp_SequenceOfXYZ(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColgp_SequenceOfXYZ) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5614,14 +5614,14 @@ class TColgp_SequenceOfArray1OfPnt2d(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfArray1OfPnt2d) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : TColgp_HArray1OfPnt2d) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfArray1OfPnt2d) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfArray1OfPnt2d) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : TColgp_HArray1OfPnt2d) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5639,14 +5639,14 @@ class TColgp_SequenceOfArray1OfPnt2d(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : TColgp_HArray1OfPnt2d) -> None: 
+    def Prepend(self,theSeq : TColgp_SequenceOfArray1OfPnt2d) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TColgp_SequenceOfArray1OfPnt2d) -> None: ...
+    def Prepend(self,theItem : TColgp_HArray1OfPnt2d) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -5681,12 +5681,12 @@ class TColgp_SequenceOfArray1OfPnt2d(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_SequenceOfArray1OfPnt2d) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5702,14 +5702,14 @@ class TColgp_SequenceOfAx1(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : TColgp_SequenceOfAx1) -> None: 
+    def Append(self,theItem : OCP.gp.gp_Ax1) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_Ax1) -> None: ...
+    def Append(self,theSeq : TColgp_SequenceOfAx1) -> None: ...
     def Assign(self,theOther : TColgp_SequenceOfAx1) -> TColgp_SequenceOfAx1: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5739,14 +5739,14 @@ class TColgp_SequenceOfAx1(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfAx1) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Ax1) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Ax1) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfAx1) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfAx1) -> None: 
         """
@@ -5815,12 +5815,12 @@ class TColgp_SequenceOfAx1(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_SequenceOfAx1) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5833,14 +5833,14 @@ class TColgp_HSequenceOfDir(TColgp_SequenceOfDir, OCP.NCollection.NCollection_Ba
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_Dir) -> None: 
+    def Append(self,theSequence : TColgp_SequenceOfDir) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : TColgp_SequenceOfDir) -> None: ...
+    def Append(self,theItem : OCP.gp.gp_Dir) -> None: ...
     def Assign(self,theOther : TColgp_SequenceOfDir) -> TColgp_SequenceOfDir: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5903,14 +5903,14 @@ class TColgp_HSequenceOfDir(TColgp_SequenceOfDir, OCP.NCollection.NCollection_Ba
     @overload
     def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfDir) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfDir) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Dir) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Dir) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfDir) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5946,14 +5946,14 @@ class TColgp_HSequenceOfDir(TColgp_SequenceOfDir, OCP.NCollection.NCollection_Ba
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.gp.gp_Dir) -> None: 
+    def Prepend(self,theSeq : TColgp_SequenceOfDir) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TColgp_SequenceOfDir) -> None: ...
+    def Prepend(self,theItem : OCP.gp.gp_Dir) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -5999,7 +5999,7 @@ class TColgp_HSequenceOfDir(TColgp_SequenceOfDir, OCP.NCollection.NCollection_Ba
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_SequenceOfDir) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6022,14 +6022,14 @@ class TColgp_HSequenceOfDir2d(TColgp_SequenceOfDir2d, OCP.NCollection.NCollectio
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_Dir2d) -> None: 
+    def Append(self,theSequence : TColgp_SequenceOfDir2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : TColgp_SequenceOfDir2d) -> None: ...
+    def Append(self,theItem : OCP.gp.gp_Dir2d) -> None: ...
     def Assign(self,theOther : TColgp_SequenceOfDir2d) -> TColgp_SequenceOfDir2d: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -6188,7 +6188,7 @@ class TColgp_HSequenceOfDir2d(TColgp_SequenceOfDir2d, OCP.NCollection.NCollectio
     def __init__(self,theOther : TColgp_SequenceOfDir2d) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6281,14 +6281,14 @@ class TColgp_HSequenceOfPnt(TColgp_SequenceOfPnt, OCP.NCollection.NCollection_Ba
     @overload
     def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Pnt) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfPnt) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfPnt) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Pnt) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -6377,7 +6377,7 @@ class TColgp_HSequenceOfPnt(TColgp_SequenceOfPnt, OCP.NCollection.NCollection_Ba
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColgp_SequenceOfPnt) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6400,14 +6400,14 @@ class TColgp_HSequenceOfPnt2d(TColgp_SequenceOfPnt2d, OCP.NCollection.NCollectio
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_Pnt2d) -> None: 
+    def Append(self,theSequence : TColgp_SequenceOfPnt2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : TColgp_SequenceOfPnt2d) -> None: ...
+    def Append(self,theItem : OCP.gp.gp_Pnt2d) -> None: ...
     def Assign(self,theOther : TColgp_SequenceOfPnt2d) -> TColgp_SequenceOfPnt2d: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -6461,23 +6461,23 @@ class TColgp_HSequenceOfPnt2d(TColgp_SequenceOfPnt2d, OCP.NCollection.NCollectio
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfPnt2d) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Pnt2d) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Pnt2d) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfPnt2d) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Pnt2d) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfPnt2d) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfPnt2d) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Pnt2d) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -6522,14 +6522,14 @@ class TColgp_HSequenceOfPnt2d(TColgp_SequenceOfPnt2d, OCP.NCollection.NCollectio
     @overload
     def Prepend(self,theSeq : TColgp_SequenceOfPnt2d) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -6566,7 +6566,7 @@ class TColgp_HSequenceOfPnt2d(TColgp_SequenceOfPnt2d, OCP.NCollection.NCollectio
     def __init__(self,theOther : TColgp_SequenceOfPnt2d) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6650,14 +6650,14 @@ class TColgp_HSequenceOfVec(TColgp_SequenceOfVec, OCP.NCollection.NCollection_Ba
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Vec) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfVec) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfVec) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Vec) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Vec) -> None: 
         """
@@ -6711,14 +6711,14 @@ class TColgp_HSequenceOfVec(TColgp_SequenceOfVec, OCP.NCollection.NCollection_Ba
     @overload
     def Prepend(self,theSeq : TColgp_SequenceOfVec) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -6752,10 +6752,10 @@ class TColgp_HSequenceOfVec(TColgp_SequenceOfVec, OCP.NCollection.NCollection_Ba
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TColgp_SequenceOfVec) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColgp_SequenceOfVec) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6839,23 +6839,23 @@ class TColgp_HSequenceOfVec2d(TColgp_SequenceOfVec2d, OCP.NCollection.NCollectio
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Vec2d) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfVec2d) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfVec2d) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Vec2d) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfVec2d) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Vec2d) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Vec2d) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfVec2d) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -6900,14 +6900,14 @@ class TColgp_HSequenceOfVec2d(TColgp_SequenceOfVec2d, OCP.NCollection.NCollectio
     @overload
     def Prepend(self,theItem : OCP.gp.gp_Vec2d) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -6941,10 +6941,10 @@ class TColgp_HSequenceOfVec2d(TColgp_SequenceOfVec2d, OCP.NCollection.NCollectio
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColgp_SequenceOfVec2d) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6967,14 +6967,14 @@ class TColgp_HSequenceOfXY(TColgp_SequenceOfXY, OCP.NCollection.NCollection_Base
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_XY) -> None: 
+    def Append(self,theSequence : TColgp_SequenceOfXY) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : TColgp_SequenceOfXY) -> None: ...
+    def Append(self,theItem : OCP.gp.gp_XY) -> None: ...
     def Assign(self,theOther : TColgp_SequenceOfXY) -> TColgp_SequenceOfXY: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -7037,14 +7037,14 @@ class TColgp_HSequenceOfXY(TColgp_SequenceOfXY, OCP.NCollection.NCollection_Base
     @overload
     def InsertAfter(self,theIndex : int,theSeq : TColgp_SequenceOfXY) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_XY) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfXY) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfXY) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_XY) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -7080,23 +7080,23 @@ class TColgp_HSequenceOfXY(TColgp_SequenceOfXY, OCP.NCollection.NCollection_Base
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TColgp_SequenceOfXY) -> None: 
+    def Prepend(self,theItem : OCP.gp.gp_XY) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.gp.gp_XY) -> None: ...
+    def Prepend(self,theSeq : TColgp_SequenceOfXY) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7133,7 +7133,7 @@ class TColgp_HSequenceOfXY(TColgp_SequenceOfXY, OCP.NCollection.NCollection_Base
     def __init__(self,theOther : TColgp_SequenceOfXY) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7156,14 +7156,14 @@ class TColgp_HSequenceOfXYZ(TColgp_SequenceOfXYZ, OCP.NCollection.NCollection_Ba
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : TColgp_SequenceOfXYZ) -> None: 
+    def Append(self,theItem : OCP.gp.gp_XYZ) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_XYZ) -> None: ...
+    def Append(self,theSequence : TColgp_SequenceOfXYZ) -> None: ...
     def Assign(self,theOther : TColgp_SequenceOfXYZ) -> TColgp_SequenceOfXYZ: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -7226,14 +7226,14 @@ class TColgp_HSequenceOfXYZ(TColgp_SequenceOfXYZ, OCP.NCollection.NCollection_Ba
     @overload
     def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_XYZ) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_XYZ) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfXYZ) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TColgp_SequenceOfXYZ) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_XYZ) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -7269,23 +7269,23 @@ class TColgp_HSequenceOfXYZ(TColgp_SequenceOfXYZ, OCP.NCollection.NCollection_Ba
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TColgp_SequenceOfXYZ) -> None: 
+    def Prepend(self,theItem : OCP.gp.gp_XYZ) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.gp.gp_XYZ) -> None: ...
+    def Prepend(self,theSeq : TColgp_SequenceOfXYZ) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7319,10 +7319,10 @@ class TColgp_HSequenceOfXYZ(TColgp_SequenceOfXYZ, OCP.NCollection.NCollection_Ba
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TColgp_SequenceOfXYZ) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : TColgp_SequenceOfXYZ) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """

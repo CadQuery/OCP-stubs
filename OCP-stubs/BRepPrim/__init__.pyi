@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.BRep
-import OCP.Geom2d
-import OCP.TopoDS
-import OCP.Geom
 import OCP.gp
+import OCP.BRep
+import OCP.Geom
+import OCP.TopoDS
+import OCP.Geom2d
 __all__  = [
 "BRepPrim_Builder",
 "BRepPrim_OneAxis",
@@ -33,14 +33,14 @@ class BRepPrim_Builder():
     implements the abstract Builder with the BRep Builder
     """
     @overload
-    def AddEdgeVertex(self,E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,P1 : float,P2 : float) -> None: 
+    def AddEdgeVertex(self,E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,P : float,direct : bool) -> None: 
         """
         Adds the Vertex <V> in the Edge <E>. <P> is the parameter of the vertex on the edge. If direct is False the Vertex is reversed.
 
         Adds the Vertex <V> in the Edge <E>. <P1,P2> are the parameters of the vertex on the closed edge.
         """
     @overload
-    def AddEdgeVertex(self,E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,P : float,direct : bool) -> None: ...
+    def AddEdgeVertex(self,E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,P1 : float,P2 : float) -> None: ...
     def AddFaceWire(self,F : OCP.TopoDS.TopoDS_Face,W : OCP.TopoDS.TopoDS_Wire) -> None: 
         """
         Adds the Wire <W> in the Face <F>.
@@ -126,23 +126,23 @@ class BRepPrim_Builder():
         <P1,P2> are the parameters of the vertex on the edge. The edge is a closed curve.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,B : OCP.BRep.BRep_Builder) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepPrim_OneAxis():
     """
     Algorithm to build primitives with one axis of revolution.
     """
     @overload
-    def Angle(self) -> float: 
+    def Angle(self,A : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Angle(self,A : float) -> None: ...
+    def Angle(self) -> float: ...
     @overload
     def Axes(self,A : OCP.gp.gp_Ax2) -> None: 
         """
@@ -313,14 +313,14 @@ class BRepPrim_OneAxis():
         Returns the wire in the top face.
         """
     @overload
-    def VMax(self,V : float) -> None: 
+    def VMax(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def VMax(self) -> float: ...
+    def VMax(self,V : float) -> None: ...
     def VMaxInfinite(self) -> bool: 
         """
         Returns True if VMax is infinite. Default Precision::IsPositiveInfinite(VMax);
@@ -344,14 +344,14 @@ class BRepPrim_Revolution(BRepPrim_OneAxis):
     Implement the OneAxis algoritm for a revolution surface.
     """
     @overload
-    def Angle(self) -> float: 
+    def Angle(self,A : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Angle(self,A : float) -> None: ...
+    def Angle(self) -> float: ...
     @overload
     def Axes(self,A : OCP.gp.gp_Ax2) -> None: 
         """
@@ -522,14 +522,14 @@ class BRepPrim_Revolution(BRepPrim_OneAxis):
         Returns the wire in the top face.
         """
     @overload
-    def VMax(self,V : float) -> None: 
+    def VMax(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def VMax(self) -> float: ...
+    def VMax(self,V : float) -> None: ...
     def VMaxInfinite(self) -> bool: 
         """
         Returns True if VMax is infinite. Default Precision::IsPositiveInfinite(VMax);
@@ -567,24 +567,32 @@ class BRepPrim_Direction():
 
       BRepPrim_ZMax
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepPrim_XMax: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_XMax
-    BRepPrim_XMin: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_XMin
-    BRepPrim_YMax: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_YMax
-    BRepPrim_YMin: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_YMin
-    BRepPrim_ZMax: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_ZMax
-    BRepPrim_ZMin: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_ZMin
-    __entries: dict # value = {'BRepPrim_XMin': (BRepPrim_Direction.BRepPrim_XMin, None), 'BRepPrim_XMax': (BRepPrim_Direction.BRepPrim_XMax, None), 'BRepPrim_YMin': (BRepPrim_Direction.BRepPrim_YMin, None), 'BRepPrim_YMax': (BRepPrim_Direction.BRepPrim_YMax, None), 'BRepPrim_ZMin': (BRepPrim_Direction.BRepPrim_ZMin, None), 'BRepPrim_ZMax': (BRepPrim_Direction.BRepPrim_ZMax, None)}
-    __members__: dict # value = {'BRepPrim_XMin': BRepPrim_Direction.BRepPrim_XMin, 'BRepPrim_XMax': BRepPrim_Direction.BRepPrim_XMax, 'BRepPrim_YMin': BRepPrim_Direction.BRepPrim_YMin, 'BRepPrim_YMax': BRepPrim_Direction.BRepPrim_YMax, 'BRepPrim_ZMin': BRepPrim_Direction.BRepPrim_ZMin, 'BRepPrim_ZMax': BRepPrim_Direction.BRepPrim_ZMax}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepPrim_XMax: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_XMax: 1>
+    BRepPrim_XMin: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_XMin: 0>
+    BRepPrim_YMax: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_YMax: 3>
+    BRepPrim_YMin: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_YMin: 2>
+    BRepPrim_ZMax: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_ZMax: 5>
+    BRepPrim_ZMin: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_ZMin: 4>
+    __entries: dict # value = {'BRepPrim_XMin': (<BRepPrim_Direction.BRepPrim_XMin: 0>, None), 'BRepPrim_XMax': (<BRepPrim_Direction.BRepPrim_XMax: 1>, None), 'BRepPrim_YMin': (<BRepPrim_Direction.BRepPrim_YMin: 2>, None), 'BRepPrim_YMax': (<BRepPrim_Direction.BRepPrim_YMax: 3>, None), 'BRepPrim_ZMin': (<BRepPrim_Direction.BRepPrim_ZMin: 4>, None), 'BRepPrim_ZMax': (<BRepPrim_Direction.BRepPrim_ZMax: 5>, None)}
+    __members__: dict # value = {'BRepPrim_XMin': <BRepPrim_Direction.BRepPrim_XMin: 0>, 'BRepPrim_XMax': <BRepPrim_Direction.BRepPrim_XMax: 1>, 'BRepPrim_YMin': <BRepPrim_Direction.BRepPrim_YMin: 2>, 'BRepPrim_YMax': <BRepPrim_Direction.BRepPrim_YMax: 3>, 'BRepPrim_ZMin': <BRepPrim_Direction.BRepPrim_ZMin: 4>, 'BRepPrim_ZMax': <BRepPrim_Direction.BRepPrim_ZMax: 5>}
     pass
 class BRepPrim_FaceBuilder():
     """
@@ -694,6 +702,10 @@ class BRepPrim_GWedge():
         """
         Returns True if <me> has a Wire in <d1> direction.
         """
+    def IsDegeneratedShape(self) -> bool: 
+        """
+        Checkes a shape on degeneracy
+        """
     def IsInfinite(self,d1 : BRepPrim_Direction) -> bool: 
         """
         Returns True if <me> is open in <d1> direction.
@@ -727,25 +739,27 @@ class BRepPrim_GWedge():
         Returns the Wire of <me> located in <d1> direction.
         """
     @overload
+    def __init__(self,B : BRepPrim_Builder,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float) -> None: ...
+    @overload
     def __init__(self,B : BRepPrim_Builder,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float,ltx : float) -> None: ...
     @overload
-    def __init__(self,B : BRepPrim_Builder,Axes : OCP.gp.gp_Ax2,xmin : float,ymin : float,zmin : float,z2min : float,x2min : float,xmax : float,ymax : float,zmax : float,z2max : float,x2max : float) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,B : BRepPrim_Builder,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float) -> None: ...
+    def __init__(self,B : BRepPrim_Builder,Axes : OCP.gp.gp_Ax2,xmin : float,ymin : float,zmin : float,z2min : float,x2min : float,xmax : float,ymax : float,zmax : float,z2max : float,x2max : float) -> None: ...
     pass
 class BRepPrim_Cone(BRepPrim_Revolution, BRepPrim_OneAxis):
     """
     Implement the cone primitive.
     """
     @overload
-    def Angle(self) -> float: 
+    def Angle(self,A : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Angle(self,A : float) -> None: ...
+    def Angle(self) -> float: ...
     @overload
     def Axes(self,A : OCP.gp.gp_Ax2) -> None: 
         """
@@ -916,14 +930,14 @@ class BRepPrim_Cone(BRepPrim_Revolution, BRepPrim_OneAxis):
         Returns the wire in the top face.
         """
     @overload
-    def VMax(self,V : float) -> None: 
+    def VMax(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def VMax(self) -> float: ...
+    def VMax(self,V : float) -> None: ...
     def VMaxInfinite(self) -> bool: 
         """
         Returns True if VMax is infinite. Default Precision::IsPositiveInfinite(VMax);
@@ -942,33 +956,33 @@ class BRepPrim_Cone(BRepPrim_Revolution, BRepPrim_OneAxis):
         Returns True if VMin is infinite. Default Precision::IsNegativeInfinite(VMax);
         """
     @overload
+    def __init__(self,R1 : float,R2 : float,H : float) -> None: ...
+    @overload
+    def __init__(self,Angle : float,Position : OCP.gp.gp_Ax2,Height : float,Radius : float=0.0) -> None: ...
+    @overload
+    def __init__(self,Center : OCP.gp.gp_Pnt,R1 : float,R2 : float,H : float) -> None: ...
+    @overload
     def __init__(self,Angle : float) -> None: ...
     @overload
     def __init__(self,Angle : float,Axes : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def __init__(self,R1 : float,R2 : float,H : float) -> None: ...
-    @overload
-    def __init__(self,Center : OCP.gp.gp_Pnt,R1 : float,R2 : float,H : float) -> None: ...
-    @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,H : float) -> None: ...
     @overload
     def __init__(self,Angle : float,Apex : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self,Angle : float,Position : OCP.gp.gp_Ax2,Height : float,Radius : float=0.0) -> None: ...
     pass
 class BRepPrim_Cylinder(BRepPrim_Revolution, BRepPrim_OneAxis):
     """
     Cylinder primitive.
     """
     @overload
-    def Angle(self) -> float: 
+    def Angle(self,A : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Angle(self,A : float) -> None: ...
+    def Angle(self) -> float: ...
     @overload
     def Axes(self,A : OCP.gp.gp_Ax2) -> None: 
         """
@@ -1139,14 +1153,14 @@ class BRepPrim_Cylinder(BRepPrim_Revolution, BRepPrim_OneAxis):
         Returns the wire in the top face.
         """
     @overload
-    def VMax(self,V : float) -> None: 
+    def VMax(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def VMax(self) -> float: ...
+    def VMax(self,V : float) -> None: ...
     def VMaxInfinite(self) -> bool: 
         """
         Returns True if VMax is infinite. Default Precision::IsPositiveInfinite(VMax);
@@ -1165,15 +1179,15 @@ class BRepPrim_Cylinder(BRepPrim_Revolution, BRepPrim_OneAxis):
         Returns True if VMin is infinite. Default Precision::IsNegativeInfinite(VMax);
         """
     @overload
-    def __init__(self,Position : OCP.gp.gp_Ax2,Radius : float,Height : float) -> None: ...
-    @overload
-    def __init__(self,Center : OCP.gp.gp_Pnt,Radius : float) -> None: ...
-    @overload
-    def __init__(self,Radius : float) -> None: ...
-    @overload
     def __init__(self,R : float,H : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,Radius : float) -> None: ...
+    @overload
+    def __init__(self,Position : OCP.gp.gp_Ax2,Radius : float,Height : float) -> None: ...
+    @overload
+    def __init__(self,Radius : float) -> None: ...
+    @overload
+    def __init__(self,Center : OCP.gp.gp_Pnt,Radius : float) -> None: ...
     @overload
     def __init__(self,Center : OCP.gp.gp_Pnt,R : float,H : float) -> None: ...
     pass
@@ -1182,14 +1196,14 @@ class BRepPrim_Sphere(BRepPrim_Revolution, BRepPrim_OneAxis):
     Implements the sphere primitive
     """
     @overload
-    def Angle(self) -> float: 
+    def Angle(self,A : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Angle(self,A : float) -> None: ...
+    def Angle(self) -> float: ...
     @overload
     def Axes(self,A : OCP.gp.gp_Ax2) -> None: 
         """
@@ -1360,14 +1374,14 @@ class BRepPrim_Sphere(BRepPrim_Revolution, BRepPrim_OneAxis):
         Returns the wire in the top face.
         """
     @overload
-    def VMax(self,V : float) -> None: 
+    def VMax(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def VMax(self) -> float: ...
+    def VMax(self,V : float) -> None: ...
     def VMaxInfinite(self) -> bool: 
         """
         Returns True if VMax is infinite. Default Precision::IsPositiveInfinite(VMax);
@@ -1386,25 +1400,25 @@ class BRepPrim_Sphere(BRepPrim_Revolution, BRepPrim_OneAxis):
         Returns True if VMin is infinite. Default Precision::IsNegativeInfinite(VMax);
         """
     @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,Radius : float) -> None: ...
+    @overload
     def __init__(self,Radius : float) -> None: ...
     @overload
     def __init__(self,Center : OCP.gp.gp_Pnt,Radius : float) -> None: ...
-    @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,Radius : float) -> None: ...
     pass
 class BRepPrim_Torus(BRepPrim_Revolution, BRepPrim_OneAxis):
     """
     Implements the torus primitive
     """
     @overload
-    def Angle(self) -> float: 
+    def Angle(self,A : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Angle(self,A : float) -> None: ...
+    def Angle(self) -> float: ...
     @overload
     def Axes(self,A : OCP.gp.gp_Ax2) -> None: 
         """
@@ -1575,14 +1589,14 @@ class BRepPrim_Torus(BRepPrim_Revolution, BRepPrim_OneAxis):
         Returns the wire in the top face.
         """
     @overload
-    def VMax(self,V : float) -> None: 
+    def VMax(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def VMax(self) -> float: ...
+    def VMax(self,V : float) -> None: ...
     def VMaxInfinite(self) -> bool: 
         """
         Returns True if VMax is infinite. Default Precision::IsPositiveInfinite(VMax);
@@ -1601,9 +1615,9 @@ class BRepPrim_Torus(BRepPrim_Revolution, BRepPrim_OneAxis):
         Returns True if VMin is infinite. Default Precision::IsNegativeInfinite(VMax);
         """
     @overload
-    def __init__(self,Center : OCP.gp.gp_Pnt,Major : float,Minor : float) -> None: ...
-    @overload
     def __init__(self,Position : OCP.gp.gp_Ax2,Major : float,Minor : float) -> None: ...
+    @overload
+    def __init__(self,Center : OCP.gp.gp_Pnt,Major : float,Minor : float) -> None: ...
     @overload
     def __init__(self,Major : float,Minor : float) -> None: ...
     pass
@@ -1683,6 +1697,10 @@ class BRepPrim_Wedge(BRepPrim_GWedge):
         """
         Returns True if <me> has a Wire in <d1> direction.
         """
+    def IsDegeneratedShape(self) -> bool: 
+        """
+        Checkes a shape on degeneracy
+        """
     def IsInfinite(self,d1 : BRepPrim_Direction) -> bool: 
         """
         Returns True if <me> is open in <d1> direction.
@@ -1716,15 +1734,17 @@ class BRepPrim_Wedge(BRepPrim_GWedge):
         Returns the Wire of <me> located in <d1> direction.
         """
     @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,xmin : float,ymin : float,zmin : float,z2min : float,x2min : float,xmax : float,ymax : float,zmax : float,z2max : float,x2max : float) -> None: ...
-    @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float,ltx : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float) -> None: ...
+    @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,xmin : float,ymin : float,zmin : float,z2min : float,x2min : float,xmax : float,ymax : float,zmax : float,z2max : float,x2max : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
-BRepPrim_XMax: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_XMax
-BRepPrim_XMin: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_XMin
-BRepPrim_YMax: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_YMax
-BRepPrim_YMin: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_YMin
-BRepPrim_ZMax: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_ZMax
-BRepPrim_ZMin: OCP.BRepPrim.BRepPrim_Direction # value = BRepPrim_Direction.BRepPrim_ZMin
+BRepPrim_XMax: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_XMax: 1>
+BRepPrim_XMin: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_XMin: 0>
+BRepPrim_YMax: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_YMax: 3>
+BRepPrim_YMin: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_YMin: 2>
+BRepPrim_ZMax: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_ZMax: 5>
+BRepPrim_ZMin: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_ZMin: 4>

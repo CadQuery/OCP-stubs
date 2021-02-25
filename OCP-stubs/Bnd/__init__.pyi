@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
-import OCP.Graphic3d
-import OCP.TColgp
-import OCP.Standard
+import io
 import OCP.NCollection
 import OCP.gp
+import OCP.TColgp
+import OCP.Standard
 __all__  = [
 "Bnd_Array1OfBox",
 "Bnd_Array1OfBox2d",
@@ -108,14 +108,14 @@ class Bnd_Array1OfBox():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : Bnd_Box,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : Bnd_Array1OfBox) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Bnd_Array1OfBox2d():
     """
@@ -194,14 +194,14 @@ class Bnd_Array1OfBox2d():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Bnd_Array1OfBox2d) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : Bnd_Box2d,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : Bnd_Array1OfBox2d) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Bnd_Array1OfSphere():
     """
@@ -280,14 +280,14 @@ class Bnd_Array1OfSphere():
         Constant value access
         """
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Bnd_Array1OfSphere) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : Bnd_Sphere,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Bnd_B2d():
     """
@@ -303,9 +303,9 @@ class Bnd_B2d():
         Update the box by another box.
         """
     @overload
-    def Add(self,thePnt : OCP.gp.gp_XY) -> None: ...
-    @overload
     def Add(self,theBox : Bnd_B2d) -> None: ...
+    @overload
+    def Add(self,thePnt : OCP.gp.gp_XY) -> None: ...
     def Clear(self) -> None: 
         """
         Reset the box data.
@@ -347,15 +347,15 @@ class Bnd_B2d():
         Check the Segment defined by the couple of input points for the intersection with the current box. Returns True if there is no intersection.
         """
     @overload
-    def IsOut(self,theOtherBox : Bnd_B2d) -> bool: ...
+    def IsOut(self,thePnt : OCP.gp.gp_XY) -> bool: ...
     @overload
-    def IsOut(self,theP0 : OCP.gp.gp_XY,theP1 : OCP.gp.gp_XY) -> bool: ...
+    def IsOut(self,theOtherBox : Bnd_B2d) -> bool: ...
     @overload
     def IsOut(self,theLine : OCP.gp.gp_Ax2d) -> bool: ...
     @overload
     def IsOut(self,theOtherBox : Bnd_B2d,theTrsf : OCP.gp.gp_Trsf2d) -> bool: ...
     @overload
-    def IsOut(self,thePnt : OCP.gp.gp_XY) -> bool: ...
+    def IsOut(self,theP0 : OCP.gp.gp_XY,theP1 : OCP.gp.gp_XY) -> bool: ...
     def IsVoid(self) -> bool: 
         """
         Returns True if the box is void (non-initialized).
@@ -381,16 +381,16 @@ class Bnd_B2d():
         Transform the bounding box with the given transformation. The resulting box will be larger if theTrsf contains rotation.
         """
     @overload
-    def __init__(self,theCenter : OCP.gp.gp_XY,theHSize : OCP.gp.gp_XY) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theCenter : OCP.gp.gp_XY,theHSize : OCP.gp.gp_XY) -> None: ...
     pass
 class Bnd_B2f():
     """
     None
     """
     @overload
-    def Add(self,theBox : Bnd_B2f) -> None: 
+    def Add(self,thePnt : OCP.gp.gp_Pnt2d) -> None: 
         """
         Update the box by a point.
 
@@ -399,7 +399,7 @@ class Bnd_B2f():
         Update the box by another box.
         """
     @overload
-    def Add(self,thePnt : OCP.gp.gp_Pnt2d) -> None: ...
+    def Add(self,theBox : Bnd_B2f) -> None: ...
     @overload
     def Add(self,thePnt : OCP.gp.gp_XY) -> None: ...
     def Clear(self) -> None: 
@@ -428,7 +428,7 @@ class Bnd_B2f():
     @overload
     def IsIn(self,theBox : Bnd_B2f) -> bool: ...
     @overload
-    def IsOut(self,thePnt : OCP.gp.gp_XY) -> bool: 
+    def IsOut(self,theLine : OCP.gp.gp_Ax2d) -> bool: 
         """
         Check the given point for the inclusion in the Box. Returns True if the point is outside.
 
@@ -443,15 +443,15 @@ class Bnd_B2f():
         Check the Segment defined by the couple of input points for the intersection with the current box. Returns True if there is no intersection.
         """
     @overload
-    def IsOut(self,theCenter : OCP.gp.gp_XY,theRadius : float,isCircleHollow : bool=False) -> bool: ...
+    def IsOut(self,thePnt : OCP.gp.gp_XY) -> bool: ...
     @overload
     def IsOut(self,theOtherBox : Bnd_B2f) -> bool: ...
+    @overload
+    def IsOut(self,theCenter : OCP.gp.gp_XY,theRadius : float,isCircleHollow : bool=False) -> bool: ...
     @overload
     def IsOut(self,theP0 : OCP.gp.gp_XY,theP1 : OCP.gp.gp_XY) -> bool: ...
     @overload
     def IsOut(self,theOtherBox : Bnd_B2f,theTrsf : OCP.gp.gp_Trsf2d) -> bool: ...
-    @overload
-    def IsOut(self,theLine : OCP.gp.gp_Ax2d) -> bool: ...
     def IsVoid(self) -> bool: 
         """
         Returns True if the box is void (non-initialized).
@@ -524,7 +524,7 @@ class Bnd_B3d():
     @overload
     def IsIn(self,theBox : Bnd_B3d,theTrsf : OCP.gp.gp_Trsf) -> bool: ...
     @overload
-    def IsOut(self,theOtherBox : Bnd_B3d) -> bool: 
+    def IsOut(self,theOtherBox : Bnd_B3d,theTrsf : OCP.gp.gp_Trsf) -> bool: 
         """
         Check the given point for the inclusion in the Box. Returns True if the point is outside.
 
@@ -539,15 +539,15 @@ class Bnd_B3d():
         Check the given Plane for the intersection with the current box. Returns True if there is no intersection.
         """
     @overload
-    def IsOut(self,theLine : OCP.gp.gp_Ax1,isRay : bool=False,theOverthickness : float=0.0) -> bool: ...
-    @overload
-    def IsOut(self,thePlane : OCP.gp.gp_Ax3) -> bool: ...
-    @overload
-    def IsOut(self,thePnt : OCP.gp.gp_XYZ) -> bool: ...
+    def IsOut(self,theOtherBox : Bnd_B3d) -> bool: ...
     @overload
     def IsOut(self,theCenter : OCP.gp.gp_XYZ,theRadius : float,isSphereHollow : bool=False) -> bool: ...
     @overload
-    def IsOut(self,theOtherBox : Bnd_B3d,theTrsf : OCP.gp.gp_Trsf) -> bool: ...
+    def IsOut(self,thePnt : OCP.gp.gp_XYZ) -> bool: ...
+    @overload
+    def IsOut(self,theLine : OCP.gp.gp_Ax1,isRay : bool=False,theOverthickness : float=0.0) -> bool: ...
+    @overload
+    def IsOut(self,thePlane : OCP.gp.gp_Ax3) -> bool: ...
     def IsVoid(self) -> bool: 
         """
         Returns True if the box is void (non-initialized).
@@ -573,16 +573,16 @@ class Bnd_B3d():
         Transform the bounding box with the given transformation. The resulting box will be larger if theTrsf contains rotation.
         """
     @overload
-    def __init__(self,theCenter : OCP.gp.gp_XYZ,theHSize : OCP.gp.gp_XYZ) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theCenter : OCP.gp.gp_XYZ,theHSize : OCP.gp.gp_XYZ) -> None: ...
     pass
 class Bnd_B3f():
     """
     None
     """
     @overload
-    def Add(self,thePnt : OCP.gp.gp_Pnt) -> None: 
+    def Add(self,thePnt : OCP.gp.gp_XYZ) -> None: 
         """
         Update the box by a point.
 
@@ -591,9 +591,9 @@ class Bnd_B3f():
         Update the box by another box.
         """
     @overload
-    def Add(self,thePnt : OCP.gp.gp_XYZ) -> None: ...
-    @overload
     def Add(self,theBox : Bnd_B3f) -> None: ...
+    @overload
+    def Add(self,thePnt : OCP.gp.gp_Pnt) -> None: ...
     def Clear(self) -> None: 
         """
         Reset the box data.
@@ -611,14 +611,14 @@ class Bnd_B3f():
         Extend the Box by the absolute value of theDiff.
         """
     @overload
-    def IsIn(self,theBox : Bnd_B3f,theTrsf : OCP.gp.gp_Trsf) -> bool: 
+    def IsIn(self,theBox : Bnd_B3f) -> bool: 
         """
         Check that the box 'this' is inside the given box 'theBox'. Returns True if 'this' box is fully inside 'theBox'.
 
         Check that the box 'this' is inside the given box 'theBox' transformed by 'theTrsf'. Returns True if 'this' box is fully inside the transformed 'theBox'.
         """
     @overload
-    def IsIn(self,theBox : Bnd_B3f) -> bool: ...
+    def IsIn(self,theBox : Bnd_B3f,theTrsf : OCP.gp.gp_Trsf) -> bool: ...
     @overload
     def IsOut(self,theOtherBox : Bnd_B3f) -> bool: 
         """
@@ -635,15 +635,15 @@ class Bnd_B3f():
         Check the given Plane for the intersection with the current box. Returns True if there is no intersection.
         """
     @overload
+    def IsOut(self,theCenter : OCP.gp.gp_XYZ,theRadius : float,isSphereHollow : bool=False) -> bool: ...
+    @overload
+    def IsOut(self,theOtherBox : Bnd_B3f,theTrsf : OCP.gp.gp_Trsf) -> bool: ...
+    @overload
     def IsOut(self,thePlane : OCP.gp.gp_Ax3) -> bool: ...
     @overload
     def IsOut(self,theLine : OCP.gp.gp_Ax1,isRay : bool=False,theOverthickness : float=0.0) -> bool: ...
     @overload
     def IsOut(self,thePnt : OCP.gp.gp_XYZ) -> bool: ...
-    @overload
-    def IsOut(self,theCenter : OCP.gp.gp_XYZ,theRadius : float,isSphereHollow : bool=False) -> bool: ...
-    @overload
-    def IsOut(self,theOtherBox : Bnd_B3f,theTrsf : OCP.gp.gp_Trsf) -> bool: ...
     def IsVoid(self) -> bool: 
         """
         Returns True if the box is void (non-initialized).
@@ -682,14 +682,14 @@ class Bnd_BoundSortBox():
         Adds the bounding box theBox at position boxIndex in the array of boxes to be sorted by this comparison algorithm. This function is used only in conjunction with the third syntax described in the synopsis of Initialize.
         """
     @overload
-    def Compare(self,P : OCP.gp.gp_Pln) -> OCP.TColStd.TColStd_ListOfInteger: 
+    def Compare(self,theBox : Bnd_Box) -> OCP.TColStd.TColStd_ListOfInteger: 
         """
         Compares the bounding box theBox, with the set of bounding boxes to be sorted by this comparison algorithm, and returns the list of intersecting bounding boxes as a list of indexes on the array of bounding boxes used by this algorithm.
 
         Compares the plane P with the set of bounding boxes to be sorted by this comparison algorithm, and returns the list of intersecting bounding boxes as a list of indexes on the array of bounding boxes used by this algorithm.
         """
     @overload
-    def Compare(self,theBox : Bnd_Box) -> OCP.TColStd.TColStd_ListOfInteger: ...
+    def Compare(self,P : OCP.gp.gp_Pln) -> OCP.TColStd.TColStd_ListOfInteger: ...
     def Destroy(self) -> None: 
         """
         None
@@ -730,7 +730,7 @@ class Bnd_BoundSortBox2d():
         None
         """
     @overload
-    def Initialize(self,CompleteBox : Bnd_Box2d,nbComponents : int) -> None: 
+    def Initialize(self,SetOfBox : Bnd_HArray1OfBox2d) -> None: 
         """
         Initializes this comparison algorithm with - the set of 2D bounding boxes SetOfBox
 
@@ -739,9 +739,9 @@ class Bnd_BoundSortBox2d():
         Initializes this comparison algorithm, giving it only - the maximum number nbComponents, and - the global bounding box CompleteBox, of the 2D bounding boxes to be managed. Use the Add function to define the array of bounding boxes to be sorted by this algorithm.
         """
     @overload
-    def Initialize(self,CompleteBox : Bnd_Box2d,SetOfBox : Bnd_HArray1OfBox2d) -> None: ...
+    def Initialize(self,CompleteBox : Bnd_Box2d,nbComponents : int) -> None: ...
     @overload
-    def Initialize(self,SetOfBox : Bnd_HArray1OfBox2d) -> None: ...
+    def Initialize(self,CompleteBox : Bnd_Box2d,SetOfBox : Bnd_HArray1OfBox2d) -> None: ...
     def __init__(self) -> None: ...
     pass
 class Bnd_Box():
@@ -762,9 +762,9 @@ class Bnd_Box():
     @overload
     def Add(self,Other : Bnd_Box) -> None: ...
     @overload
-    def Add(self,P : OCP.gp.gp_Pnt,D : OCP.gp.gp_Dir) -> None: ...
-    @overload
     def Add(self,D : OCP.gp.gp_Dir) -> None: ...
+    @overload
+    def Add(self,P : OCP.gp.gp_Pnt,D : OCP.gp.gp_Dir) -> None: ...
     def CornerMax(self) -> OCP.gp.gp_Pnt: 
         """
         Returns the upper corner of this bounding box. The gap is included. If this bounding box is infinite (i.e. "open"), returned values may be equal to +/- Precision::Infinite(). Standard_ConstructionError exception will be thrown if the box is void. if IsVoid()
@@ -781,7 +781,7 @@ class Bnd_Box():
         """
         None
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -804,6 +804,10 @@ class Bnd_Box():
     def HasFinitePart(self) -> bool: 
         """
         Returns TRUE if this box has finite part.
+        """
+    def InitFromJson(self,theSStream : Any,theStreamPos : int) -> bool: 
+        """
+        Inits the content of me from the stream
         """
     def IsOpen(self) -> bool: 
         """
@@ -834,7 +838,7 @@ class Bnd_Box():
         Returns true if this bounding box is open in the Zmin direction.
         """
     @overload
-    def IsOut(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,D : OCP.gp.gp_Dir) -> bool: 
+    def IsOut(self,P : OCP.gp.gp_Pnt) -> bool: 
         """
         Returns True if the Pnt is out the box.
 
@@ -851,17 +855,17 @@ class Bnd_Box():
         Returns False if the flat band lying between two parallel lines represented by their reference points <P1>, <P2> and direction <D> intersects the box.
         """
     @overload
+    def IsOut(self,L : OCP.gp.gp_Lin) -> bool: ...
+    @overload
     def IsOut(self,Other : Bnd_Box) -> bool: ...
-    @overload
-    def IsOut(self,T1 : OCP.gp.gp_Trsf,Other : Bnd_Box,T2 : OCP.gp.gp_Trsf) -> bool: ...
-    @overload
-    def IsOut(self,P : OCP.gp.gp_Pln) -> bool: ...
     @overload
     def IsOut(self,Other : Bnd_Box,T : OCP.gp.gp_Trsf) -> bool: ...
     @overload
-    def IsOut(self,P : OCP.gp.gp_Pnt) -> bool: ...
+    def IsOut(self,P : OCP.gp.gp_Pln) -> bool: ...
     @overload
-    def IsOut(self,L : OCP.gp.gp_Lin) -> bool: ...
+    def IsOut(self,T1 : OCP.gp.gp_Trsf,Other : Bnd_Box,T2 : OCP.gp.gp_Trsf) -> bool: ...
+    @overload
+    def IsOut(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,D : OCP.gp.gp_Dir) -> bool: ...
     def IsThin(self,tol : float) -> bool: 
         """
         Returns true if IsXThin, IsYThin and IsZThin are all true, i.e. if the box is thin in all three dimensions.
@@ -911,14 +915,14 @@ class Bnd_Box():
         The Box will be infinitely long in the Zmin direction.
         """
     @overload
-    def Set(self,P : OCP.gp.gp_Pnt,D : OCP.gp.gp_Dir) -> None: 
+    def Set(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Sets this bounding box so that it bounds - the point P. This involves first setting this bounding box to be void and then adding the point P.
 
         Sets this bounding box so that it bounds the half-line defined by point P and direction D, i.e. all points M defined by M=P+u*D, where u is greater than or equal to 0, are inside the bounding volume. This involves first setting this box to be void and then adding the half-line.
         """
     @overload
-    def Set(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Set(self,P : OCP.gp.gp_Pnt,D : OCP.gp.gp_Dir) -> None: ...
     def SetGap(self,Tol : float) -> None: 
         """
         Set the gap of this bounding box to abs(Tol).
@@ -949,16 +953,16 @@ class Bnd_Box():
     @overload
     def Update(self,X : float,Y : float,Z : float) -> None: ...
     @overload
-    def __init__(self,theMin : OCP.gp.gp_Pnt,theMax : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theMin : OCP.gp.gp_Pnt,theMax : OCP.gp.gp_Pnt) -> None: ...
     pass
 class Bnd_Box2d():
     """
     Describes a bounding box in 2D space. A bounding box is parallel to the axes of the coordinates system. If it is finite, it is defined by the two intervals: - [ Xmin,Xmax ], and - [ Ymin,Ymax ]. A bounding box may be infinite (i.e. open) in one or more directions. It is said to be: - OpenXmin if it is infinite on the negative side of the "X Direction"; - OpenXmax if it is infinite on the positive side of the "X Direction"; - OpenYmin if it is infinite on the negative side of the "Y Direction"; - OpenYmax if it is infinite on the positive side of the "Y Direction"; - WholeSpace if it is infinite in all four directions. In this case, any point of the space is inside the box; - Void if it is empty. In this case, there is no point included in the box. A bounding box is defined by four bounds (Xmin, Xmax, Ymin and Ymax) which limit the bounding box if it is finite, six flags (OpenXmin, OpenXmax, OpenYmin, OpenYmax, WholeSpace and Void) which describe the bounding box if it is infinite or empty, and - a gap, which is included on both sides in any direction when consulting the finite bounds of the box.
     """
     @overload
-    def Add(self,thePnt : OCP.gp.gp_Pnt2d) -> None: 
+    def Add(self,thePnt : OCP.gp.gp_Pnt2d,theDir : OCP.gp.gp_Dir2d) -> None: 
         """
         Adds the 2d box <Other> to <me>.
 
@@ -971,7 +975,7 @@ class Bnd_Box2d():
     @overload
     def Add(self,D : OCP.gp.gp_Dir2d) -> None: ...
     @overload
-    def Add(self,thePnt : OCP.gp.gp_Pnt2d,theDir : OCP.gp.gp_Dir2d) -> None: ...
+    def Add(self,thePnt : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
     def Add(self,Other : Bnd_Box2d) -> None: ...
     def Dump(self) -> None: 
@@ -1007,7 +1011,7 @@ class Bnd_Box2d():
         Returns true if this bounding box is open in the Ymin direction.
         """
     @overload
-    def IsOut(self,T1 : OCP.gp.gp_Trsf2d,Other : Bnd_Box2d,T2 : OCP.gp.gp_Trsf2d) -> bool: 
+    def IsOut(self,theOther : Bnd_Box2d,theTrsf : OCP.gp.gp_Trsf2d) -> bool: 
         """
         Returns True if the 2d pnt <P> is out <me>.
 
@@ -1018,11 +1022,11 @@ class Bnd_Box2d():
         Compares a transformed bounding with a transformed bounding. The default implementation is to make a copy of <me> and <Other>, to transform them and to test.
         """
     @overload
+    def IsOut(self,Other : Bnd_Box2d) -> bool: ...
+    @overload
     def IsOut(self,P : OCP.gp.gp_Pnt2d) -> bool: ...
     @overload
-    def IsOut(self,theOther : Bnd_Box2d,theTrsf : OCP.gp.gp_Trsf2d) -> bool: ...
-    @overload
-    def IsOut(self,Other : Bnd_Box2d) -> bool: ...
+    def IsOut(self,T1 : OCP.gp.gp_Trsf2d,Other : Bnd_Box2d,T2 : OCP.gp.gp_Trsf2d) -> bool: ...
     def IsVoid(self) -> bool: 
         """
         Returns true if this 2D bounding box is empty (Void flag).
@@ -1048,14 +1052,14 @@ class Bnd_Box2d():
         The Box will be infinitely long in the Ymin direction.
         """
     @overload
-    def Set(self,thePnt : OCP.gp.gp_Pnt2d) -> None: 
+    def Set(self,thePnt : OCP.gp.gp_Pnt2d,theDir : OCP.gp.gp_Dir2d) -> None: 
         """
         Sets this 2D bounding box so that it bounds the point P. This involves first setting this bounding box to be void and then adding the point PThe rectangle bounds the point <P>.
 
         Sets this 2D bounding box so that it bounds the half-line defined by point P and direction D, i.e. all points M defined by M=P+u*D, where u is greater than or equal to 0, are inside the bounding area. This involves first setting this 2D box to be void and then adding the half-line.
         """
     @overload
-    def Set(self,thePnt : OCP.gp.gp_Pnt2d,theDir : OCP.gp.gp_Dir2d) -> None: ...
+    def Set(self,thePnt : OCP.gp.gp_Pnt2d) -> None: ...
     def SetGap(self,Tol : float) -> None: 
         """
         Set the gap of this 2D bounding box to abs(Tol).
@@ -1077,14 +1081,14 @@ class Bnd_Box2d():
         Returns a bounding box which is the result of applying the transformation T to this bounding box. Warning Applying a geometric transformation (for example, a rotation) to a bounding box generally increases its dimensions. This is not optimal for algorithms which use it.
         """
     @overload
-    def Update(self,aXmin : float,aYmin : float,aXmax : float,aYmax : float) -> None: 
+    def Update(self,X : float,Y : float) -> None: 
         """
         Enlarges this 2D bounding box, if required, so that it contains at least: - interval [ aXmin,aXmax ] in the "X Direction", - interval [ aYmin,aYmax ] in the "Y Direction"
 
         Adds a point of coordinates (X,Y) to this bounding box.
         """
     @overload
-    def Update(self,X : float,Y : float) -> None: ...
+    def Update(self,aXmin : float,aYmin : float,aXmax : float,aYmax : float) -> None: ...
     def __init__(self) -> None: ...
     pass
 class Bnd_HArray1OfBox(Bnd_Array1OfBox, OCP.Standard.Standard_Transient):
@@ -1211,14 +1215,14 @@ class Bnd_HArray1OfBox(Bnd_Array1OfBox, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : Bnd_Box) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Bnd_Array1OfBox) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : Bnd_Box) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1356,12 +1360,12 @@ class Bnd_HArray1OfBox2d(Bnd_Array1OfBox2d, OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : Bnd_Box2d) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Bnd_Array1OfBox2d) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1499,12 +1503,12 @@ class Bnd_HArray1OfSphere(Bnd_Array1OfSphere, OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,theOther : Bnd_Array1OfSphere) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : Bnd_Sphere) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : Bnd_Sphere) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1521,19 +1525,19 @@ class Bnd_OBB():
     The class describes the Oriented Bounding Box (OBB), much tighter enclosing volume for the shape than the Axis Aligned Bounding Box (AABB). The OBB is defined by a center of the box, the axes and the halves of its three dimensions. The OBB can be used more effectively than AABB as a rejection mechanism for non-interfering objects.
     """
     @overload
-    def Add(self,theP : OCP.gp.gp_Pnt) -> None: 
+    def Add(self,theOther : Bnd_OBB) -> None: 
         """
         Rebuilds this in order to include all previous objects (which it was created from) and theOther.
 
         Rebuilds this in order to include all previous objects (which it was created from) and theP.
         """
     @overload
-    def Add(self,theOther : Bnd_OBB) -> None: ...
+    def Add(self,theP : OCP.gp.gp_Pnt) -> None: ...
     def Center(self) -> OCP.gp.gp_XYZ: 
         """
         Returns the center of OBB
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -1654,7 +1658,7 @@ class Bnd_Range():
         """
         Returns range value (MAX-MIN). Returns negative value for VOID range.
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -1783,14 +1787,14 @@ class Bnd_SeqOfBox(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Bnd_SeqOfBox) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Bnd_Box) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Bnd_SeqOfBox) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Bnd_SeqOfBox) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Bnd_Box) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1808,14 +1812,14 @@ class Bnd_SeqOfBox(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Bnd_SeqOfBox) -> None: 
+    def Prepend(self,theItem : Bnd_Box) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Bnd_Box) -> None: ...
+    def Prepend(self,theSeq : Bnd_SeqOfBox) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -1852,10 +1856,10 @@ class Bnd_SeqOfBox(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : Bnd_SeqOfBox) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : Bnd_SeqOfBox) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1885,14 +1889,14 @@ class Bnd_Sphere():
         Calculate and return minimal and maximal distance to sphere. NOTE: This function is tightly optimized; any modifications may affect performance!
         """
     @overload
-    def IsOut(self,thePnt : OCP.gp.gp_XYZ,theMaxDist : float) -> bool: 
+    def IsOut(self,theOther : Bnd_Sphere) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def IsOut(self,theOther : Bnd_Sphere) -> bool: ...
+    def IsOut(self,thePnt : OCP.gp.gp_XYZ,theMaxDist : float) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns validity status, indicating that this sphere corresponds to a real entity
@@ -1940,9 +1944,9 @@ class Bnd_Sphere():
         Returns the V parameter on shape
         """
     @overload
-    def __init__(self,theCntr : OCP.gp.gp_XYZ,theRad : float,theU : int,theV : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theCntr : OCP.gp.gp_XYZ,theRad : float,theU : int,theV : int) -> None: ...
     pass
 class Bnd_Tools():
     """
@@ -1958,6 +1962,6 @@ class Bnd_Tools():
         """
     @staticmethod
     @overload
-    def Bnd2BVH_s(theBox : Bnd_Box) -> OCP.Graphic3d.Graphic3d_BndBox3d: ...
+    def Bnd2BVH_s(theBox : Bnd_Box) -> Any: ...
     def __init__(self) -> None: ...
     pass

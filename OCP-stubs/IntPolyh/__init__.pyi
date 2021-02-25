@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.TColStd
-import OCP.Bnd
 import OCP.NCollection
+import OCP.Bnd
+import OCP.TColStd
 __all__  = [
 "IntPolyh_Couple",
 "IntPolyh_CoupleMapHasher",
@@ -68,9 +68,9 @@ class IntPolyh_Couple():
         Sets the triangles
         """
     @overload
-    def __init__(self,theTriangle1 : int,theTriangle2 : int,theAngle : float=-2.0) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theTriangle1 : int,theTriangle2 : int,theAngle : float=-2.0) -> None: ...
     pass
 class IntPolyh_CoupleMapHasher():
     """
@@ -166,9 +166,9 @@ class IntPolyh_Intersection():
         None
         """
     @overload
-    def __init__(self,theS1 : OCP.Adaptor3d.Adaptor3d_HSurface,theNbSU1 : int,theNbSV1 : int,theS2 : OCP.Adaptor3d.Adaptor3d_HSurface,theNbSU2 : int,theNbSV2 : int) -> None: ...
-    @overload
     def __init__(self,theS1 : OCP.Adaptor3d.Adaptor3d_HSurface,theS2 : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    @overload
+    def __init__(self,theS1 : OCP.Adaptor3d.Adaptor3d_HSurface,theNbSU1 : int,theNbSV1 : int,theS2 : OCP.Adaptor3d.Adaptor3d_HSurface,theNbSU2 : int,theNbSV2 : int) -> None: ...
     @overload
     def __init__(self,theS1 : OCP.Adaptor3d.Adaptor3d_HSurface,theUPars1 : OCP.TColStd.TColStd_Array1OfReal,theVPars1 : OCP.TColStd.TColStd_Array1OfReal,theS2 : OCP.Adaptor3d.Adaptor3d_HSurface,theUPars2 : OCP.TColStd.TColStd_Array1OfReal,theVPars2 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     pass
@@ -221,14 +221,14 @@ class IntPolyh_ListOfCouples(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theOther : IntPolyh_ListOfCouples,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theItem : IntPolyh_Couple,theIter : Any) -> IntPolyh_Couple: 
+    def InsertBefore(self,theOther : IntPolyh_ListOfCouples,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : IntPolyh_ListOfCouples,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : IntPolyh_Couple,theIter : Any) -> IntPolyh_Couple: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -265,26 +265,26 @@ class IntPolyh_ListOfCouples(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : IntPolyh_ListOfCouples) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IntPolyh_MaillageAffinage():
     """
     Low-level algorithm to compute intersection of the surfaces by computing the intersection of their triangulations.
     """
     @overload
-    def CommonBox(self) -> None: 
+    def CommonBox(self,B1 : OCP.Bnd.Bnd_Box,B2 : OCP.Bnd.Bnd_Box) -> Tuple[float, float, float, float, float, float]: 
         """
         Looks for the common box of the surfaces and marks the points of the surfaces inside that common box for possible intersection
 
         Compute the common box witch is the intersection of the two bounding boxes, and mark the points of the two surfaces that are inside.
         """
     @overload
-    def CommonBox(self,B1 : OCP.Bnd.Bnd_Box,B2 : OCP.Bnd.Bnd_Box) -> Tuple[float, float, float, float, float, float]: ...
+    def CommonBox(self) -> None: ...
     def CommonPartRefinement(self) -> None: 
         """
         Refine systematicaly all marked triangles of both surfaces
@@ -298,7 +298,7 @@ class IntPolyh_MaillageAffinage():
         Compute edges from the array of points
         """
     @overload
-    def FillArrayOfPnt(self,SurfID : int,Upars : OCP.TColStd.TColStd_Array1OfReal,Vpars : OCP.TColStd.TColStd_Array1OfReal,theDeflTol : float=None) -> None: 
+    def FillArrayOfPnt(self,SurfID : int,isShiftFwd : bool) -> None: 
         """
         Computes points on one surface and fills an array of points; standard (default) method
 
@@ -311,11 +311,11 @@ class IntPolyh_MaillageAffinage():
         Fills the array of points for the surface taking into account the shift
         """
     @overload
-    def FillArrayOfPnt(self,SurfID : int,isShiftFwd : bool) -> None: ...
-    @overload
-    def FillArrayOfPnt(self,SurfID : int,isShiftFwd : bool,thePoints : Any,theUPars : OCP.TColStd.TColStd_Array1OfReal,theVPars : OCP.TColStd.TColStd_Array1OfReal,theDeflTol : float) -> None: ...
+    def FillArrayOfPnt(self,SurfID : int,Upars : OCP.TColStd.TColStd_Array1OfReal,Vpars : OCP.TColStd.TColStd_Array1OfReal,theDeflTol : float=None) -> None: ...
     @overload
     def FillArrayOfPnt(self,SurfID : int,isShiftFwd : bool,Upars : OCP.TColStd.TColStd_Array1OfReal,Vpars : OCP.TColStd.TColStd_Array1OfReal,theDeflTol : float=None) -> None: ...
+    @overload
+    def FillArrayOfPnt(self,SurfID : int,isShiftFwd : bool,thePoints : Any,theUPars : OCP.TColStd.TColStd_Array1OfReal,theVPars : OCP.TColStd.TColStd_Array1OfReal,theDeflTol : float) -> None: ...
     @overload
     def FillArrayOfPnt(self,SurfID : int) -> None: ...
     def FillArrayOfTriangles(self,SurfID : int) -> None: 
@@ -399,9 +399,9 @@ class IntPolyh_MaillageAffinage():
         Refine both surfaces using BoundSortBox as -- rejection. The criterions used to refine a -- triangle are: The deflection The size of the -- bounding boxes (one surface may be very small compared to the other)
         """
     @overload
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,NbSU1 : int,NbSV1 : int,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,NbSU2 : int,NbSV2 : int,PRINT : int) -> None: ...
-    @overload
     def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,PRINT : int) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,NbSU1 : int,NbSV1 : int,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,NbSU2 : int,NbSV2 : int,PRINT : int) -> None: ...
     pass
 class IntPolyh_Point():
     """
@@ -428,18 +428,14 @@ class IntPolyh_Point():
         Dot
         """
     @overload
-    def Dump(self,i : int) -> None: 
+    def Dump(self) -> None: 
         """
         Dump
 
         Dump
         """
     @overload
-    def Dump(self) -> None: ...
-    def Equal(self,Pt : IntPolyh_Point) -> None: 
-        """
-        Assignment operator
-        """
+    def Dump(self,i : int) -> None: ...
     def Middle(self,MySurface : OCP.Adaptor3d.Adaptor3d_HSurface,P1 : IntPolyh_Point,P2 : IntPolyh_Point) -> None: 
         """
         Creates middle point from P1 and P2 and stores it to this
@@ -521,9 +517,9 @@ class IntPolyh_Point():
         None
         """
     @overload
-    def __init__(self,x : float,y : float,z : float,u : float,v : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,x : float,y : float,z : float,u : float,v : float) -> None: ...
     def __mul__(self,rr : float) -> IntPolyh_Point: 
         """
         None
@@ -621,14 +617,14 @@ class IntPolyh_SeqOfStartPoints(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : IntPolyh_StartPoint) -> None: 
+    def Append(self,theSeq : IntPolyh_SeqOfStartPoints) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : IntPolyh_SeqOfStartPoints) -> None: ...
+    def Append(self,theItem : IntPolyh_StartPoint) -> None: ...
     def Assign(self,theOther : IntPolyh_SeqOfStartPoints) -> IntPolyh_SeqOfStartPoints: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -658,23 +654,23 @@ class IntPolyh_SeqOfStartPoints(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntPolyh_SeqOfStartPoints) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : IntPolyh_StartPoint) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntPolyh_StartPoint) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : IntPolyh_SeqOfStartPoints) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntPolyh_StartPoint) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IntPolyh_SeqOfStartPoints) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntPolyh_SeqOfStartPoints) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IntPolyh_StartPoint) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -692,23 +688,23 @@ class IntPolyh_SeqOfStartPoints(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : IntPolyh_SeqOfStartPoints) -> None: 
+    def Prepend(self,theItem : IntPolyh_StartPoint) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : IntPolyh_StartPoint) -> None: ...
+    def Prepend(self,theSeq : IntPolyh_SeqOfStartPoints) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -736,10 +732,10 @@ class IntPolyh_SeqOfStartPoints(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : IntPolyh_SeqOfStartPoints) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : IntPolyh_SeqOfStartPoints) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -868,9 +864,9 @@ class IntPolyh_StartPoint():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,xx : float,yy : float,zz : float,uu1 : float,vv1 : float,uu2 : float,vv2 : float,T1 : int,E1 : int,LAM1 : float,T2 : int,E2 : int,LAM2 : float,List : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntPolyh_Tools():
     """

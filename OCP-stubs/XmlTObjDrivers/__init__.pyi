@@ -4,17 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.TDocStd
 import OCP.TDF
 import OCP.TCollection
-import OCP.PCDM
-import OCP.XmlMDF
-import OCP.Message
 import OCP.XmlObjMgt
-import OCP.Storage
+import OCP.XmlMDF
+import io
+import OCP.Message
 import OCP.XmlLDrivers
-import OCP.Standard
-import OCP.TDocStd
 import OCP.CDM
+import OCP.PCDM
+import OCP.Storage
+import OCP.Standard
 __all__  = [
 "XmlTObjDrivers",
 "XmlTObjDrivers_DocumentRetrievalDriver",
@@ -109,14 +110,14 @@ class XmlTObjDrivers_DocumentRetrievalDriver(OCP.XmlLDrivers.XmlLDrivers_Documen
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: 
+    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: ...
+    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @staticmethod
     def ReferenceCounter_s(theFileName : OCP.TCollection.TCollection_ExtendedString,theMsgDriver : OCP.Message.Message_Messenger) -> int: 
         """
@@ -198,14 +199,14 @@ class XmlTObjDrivers_DocumentStorageDriver(OCP.XmlLDrivers.XmlLDrivers_DocumentS
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -223,14 +224,14 @@ class XmlTObjDrivers_DocumentStorageDriver(OCP.XmlLDrivers.XmlLDrivers_DocumentS
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : Any) -> None: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString) -> None: ...
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     def __init__(self,theCopyright : OCP.TCollection.TCollection_ExtendedString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -282,6 +283,14 @@ class XmlTObjDrivers_IntSparseArrayDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standar
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
+    def Namespace(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the namespace string
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -362,6 +371,14 @@ class XmlTObjDrivers_ModelDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standar
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
+    def Namespace(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the namespace string
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -442,6 +459,14 @@ class XmlTObjDrivers_ObjectDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
+    def Namespace(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the namespace string
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -522,6 +547,14 @@ class XmlTObjDrivers_ReferenceDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Sta
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
+    def Namespace(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the namespace string
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -602,6 +635,14 @@ class XmlTObjDrivers_XYZDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standard_
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
+    def Namespace(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the namespace string
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None

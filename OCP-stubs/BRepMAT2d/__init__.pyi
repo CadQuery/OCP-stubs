@@ -4,14 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.Geom2d
-import OCP.MAT
-import OCP.TopoDS
-import OCP.TColGeom2d
 import OCP.Bisector
+import OCP.TColStd
+import io
+import OCP.MAT
 import OCP.NCollection
+import OCP.TColGeom2d
 import OCP.gp
+import OCP.TopoDS
+import OCP.Geom2d
 __all__  = [
 "BRepMAT2d_BisectingLocus",
 "BRepMAT2d_DataMapOfBasicEltShape",
@@ -36,14 +37,14 @@ class BRepMAT2d_BisectingLocus():
         Returns the geometry of type <Bissec> linked to the arc <ARC>. <Reverse> is False when the FirstNode of <anArc> correspond to the first point of geometry.
         """
     @overload
-    def GeomElt(self,aNode : OCP.MAT.MAT_Node) -> OCP.gp.gp_Pnt2d: 
+    def GeomElt(self,aBasicElt : OCP.MAT.MAT_BasicElt) -> OCP.Geom2d.Geom2d_Geometry: 
         """
         Returns the geometry linked to the <BasicElt>.
 
         Returns the geometry of type <gp> linked to the <Node>.
         """
     @overload
-    def GeomElt(self,aBasicElt : OCP.MAT.MAT_BasicElt) -> OCP.Geom2d.Geom2d_Geometry: ...
+    def GeomElt(self,aNode : OCP.MAT.MAT_Node) -> OCP.gp.gp_Pnt2d: ...
     def Graph(self) -> OCP.MAT.MAT_Graph: 
         """
         Returns <theGraph> of <me>.
@@ -112,14 +113,14 @@ class BRepMAT2d_DataMapOfBasicEltShape(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.MAT.MAT_BasicElt,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: 
+    def Find(self,theKey : OCP.MAT.MAT_BasicElt) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.MAT.MAT_BasicElt) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Find(self,theKey : OCP.MAT.MAT_BasicElt,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     def IsBound(self,theKey : OCP.MAT.MAT_BasicElt) -> bool: 
         """
         IsBound
@@ -144,7 +145,7 @@ class BRepMAT2d_DataMapOfBasicEltShape(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -153,12 +154,12 @@ class BRepMAT2d_DataMapOfBasicEltShape(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theOther : BRepMAT2d_DataMapOfBasicEltShape) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : BRepMAT2d_DataMapOfBasicEltShape) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepMAT2d_DataMapOfShapeSequenceOfBasicElt(OCP.NCollection.NCollection_BaseMap):
     """
@@ -238,7 +239,7 @@ class BRepMAT2d_DataMapOfShapeSequenceOfBasicElt(OCP.NCollection.NCollection_Bas
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -252,7 +253,7 @@ class BRepMAT2d_DataMapOfShapeSequenceOfBasicElt(OCP.NCollection.NCollection_Bas
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepMAT2d_Explorer():
     """
@@ -311,9 +312,9 @@ class BRepMAT2d_Explorer():
         Returns the current curve on the current Contour.
         """
     @overload
-    def __init__(self,aFace : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aFace : OCP.TopoDS.TopoDS_Face) -> None: ...
     pass
 class BRepMAT2d_LinkTopoBilo():
     """

@@ -6,12 +6,12 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
 import OCP.TCollection
-import OCP.IFGraph
-import OCP.Message
-import OCP.Standard
-import OCP.OpenGl
+import io
 import OCP.NCollection
+import OCP.OpenGl
 import OCP.Interface
+import OCP.Standard
+import OCP.IFGraph
 __all__  = [
 "IFSelect",
 "IFSelect_Activator",
@@ -629,15 +629,15 @@ class IFSelect_SignatureList(OCP.Standard.Standard_Transient):
         """
         Returns the number of times a signature was counted, 0 if it has not been recorded at all
         """
-    def PrintCount(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintCount(self,S : io.BytesIO) -> None: 
         """
         Prints the counts of items (not the list)
         """
-    def PrintList(self,S : OCP.Message.Message_Messenger,model : OCP.Interface.Interface_InterfaceModel,mod : IFSelect_PrintCount=IFSelect_PrintCount.IFSelect_ListByItem) -> None: 
+    def PrintList(self,S : io.BytesIO,model : OCP.Interface.Interface_InterfaceModel,mod : IFSelect_PrintCount=IFSelect_PrintCount.IFSelect_ListByItem) -> None: 
         """
         Prints the lists of items, if they are present (else, prints a message "no list available") Uses <model> to determine for each entity to be listed, its number, and its specific identifier (by PrintLabel) <mod> gives a mode for printing : - CountByItem : just count (as PrintCount) - ShortByItem : minimum i.e. count plus 5 first entity numbers - ShortByItem(D) complete list of entity numbers (0: "Global") - EntitiesByItem : list of (entity number/PrintLabel from the model) other modes are ignored
         """
-    def PrintSum(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintSum(self,S : io.BytesIO) -> None: 
         """
         Prints a summary Item which has the greatest count of entities For items which are numeric values : their count, maximum, minimum values, cumul, average
         """
@@ -694,14 +694,14 @@ class IFSelect_ContextModif():
         Adds a Warning Message for an Entity from the original Model If <start> is not an Entity from the original model (e.g. the model itself) this message is added to Global Check.
         """
     @overload
-    def CCheck(self,start : OCP.Standard.Standard_Transient) -> OCP.Interface.Interface_Check: 
+    def CCheck(self,num : int=0) -> OCP.Interface.Interface_Check: 
         """
         Returns a Check given an Entity number (in the original Model) by default a Global Check. Creates it the first time. It can then be acknowledged on the spot, in condition that the caller works by reference ("Interface_Check& check = ...")
 
         Returns a Check attached to an Entity from the original Model It can then be acknowledged on the spot, in condition that the caller works by reference ("Interface_Check& check = ...")
         """
     @overload
-    def CCheck(self,num : int=0) -> OCP.Interface.Interface_Check: ...
+    def CCheck(self,start : OCP.Standard.Standard_Transient) -> OCP.Interface.Interface_Check: ...
     def CheckList(self) -> OCP.Interface.Interface_CheckIterator: 
         """
         Returns the complete CheckList
@@ -795,9 +795,9 @@ class IFSelect_ContextModif():
         Returns the result counterpart of current selected item (in the target model)
         """
     @overload
-    def __init__(self,graph : OCP.Interface.Interface_Graph,TC : OCP.Interface.Interface_CopyTool,filename : str='') -> None: ...
-    @overload
     def __init__(self,graph : OCP.Interface.Interface_Graph,filename : str='') -> None: ...
+    @overload
+    def __init__(self,graph : OCP.Interface.Interface_Graph,TC : OCP.Interface.Interface_CopyTool,filename : str='') -> None: ...
     pass
 class IFSelect_ContextWrite():
     """
@@ -1669,14 +1669,14 @@ class IFSelect_EditForm(OCP.Standard.Standard_Transient):
         Returns a ListEditor to edit the parameter <num> of the EditForm, if it is a List The Editor created it (by ListEditor) then loads it (by ListValue) For a single parameter, returns a Null Handle ...
         """
     @overload
-    def LoadData(self,ent : OCP.Standard.Standard_Transient,model : OCP.Interface.Interface_InterfaceModel) -> bool: 
+    def LoadData(self) -> bool: 
         """
         Loads modifications to data Default uses Editor. Can be redefined Remark that <ent> and/or <model> may be null, according to the kind of Editor. Shortcuts are available for these cases, but they finally call LoadData (hence, just ignore non-used args)
 
         Shortcut when both <ent> and <model> are not used (when the Editor works on fully static or global data)
         """
     @overload
-    def LoadData(self) -> bool: ...
+    def LoadData(self,ent : OCP.Standard.Standard_Transient,model : OCP.Interface.Interface_InterfaceModel) -> bool: ...
     def LoadDefault(self) -> None: 
         """
         For a read-write undoable EditForm, loads original values from defaults stored in the Editor
@@ -1737,11 +1737,11 @@ class IFSelect_EditForm(OCP.Standard.Standard_Transient):
         """
         From an edited value, returns its ... value (original one) Null means that this value is not defined <num> is for the EditForm, not the Editor It is for a single parameter. For a list, gives a Null Handle
         """
-    def PrintDefs(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintDefs(self,S : io.BytesIO) -> None: 
         """
         Prints Definitions, relative to the Editor
         """
-    def PrintValues(self,S : OCP.Message.Message_Messenger,what : int,names : bool,alsolist : bool=False) -> None: 
+    def PrintValues(self,S : io.BytesIO,what : int,names : bool,alsolist : bool=False) -> None: 
         """
         Prints Values, according to what and alsolist <names> True : prints Long Names; False : prints Short Names <what> < 0 : prints Original Values (+ flag Modified) <what> > 0 : prints Final Values (+flag Modified) <what> = 0 : prints Modified Values (Original + Edited) <alsolist> False (D) : lists are printed only as their count <alsolist> True : lists are printed for all their items
         """
@@ -1826,24 +1826,32 @@ class IFSelect_EditValue():
 
       IFSelect_EditDynamic
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IFSelect_EditComputed: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_EditComputed
-    IFSelect_EditDynamic: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_EditDynamic
-    IFSelect_EditProtected: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_EditProtected
-    IFSelect_EditRead: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_EditRead
-    IFSelect_Editable: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_Editable
-    IFSelect_Optional: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_Optional
-    __entries: dict # value = {'IFSelect_Optional': (IFSelect_EditValue.IFSelect_Optional, None), 'IFSelect_Editable': (IFSelect_EditValue.IFSelect_Editable, None), 'IFSelect_EditProtected': (IFSelect_EditValue.IFSelect_EditProtected, None), 'IFSelect_EditComputed': (IFSelect_EditValue.IFSelect_EditComputed, None), 'IFSelect_EditRead': (IFSelect_EditValue.IFSelect_EditRead, None), 'IFSelect_EditDynamic': (IFSelect_EditValue.IFSelect_EditDynamic, None)}
-    __members__: dict # value = {'IFSelect_Optional': IFSelect_EditValue.IFSelect_Optional, 'IFSelect_Editable': IFSelect_EditValue.IFSelect_Editable, 'IFSelect_EditProtected': IFSelect_EditValue.IFSelect_EditProtected, 'IFSelect_EditComputed': IFSelect_EditValue.IFSelect_EditComputed, 'IFSelect_EditRead': IFSelect_EditValue.IFSelect_EditRead, 'IFSelect_EditDynamic': IFSelect_EditValue.IFSelect_EditDynamic}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IFSelect_EditComputed: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_EditComputed: 3>
+    IFSelect_EditDynamic: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_EditDynamic: 5>
+    IFSelect_EditProtected: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_EditProtected: 2>
+    IFSelect_EditRead: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_EditRead: 4>
+    IFSelect_Editable: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_Editable: 1>
+    IFSelect_Optional: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_Optional: 0>
+    __entries: dict # value = {'IFSelect_Optional': (<IFSelect_EditValue.IFSelect_Optional: 0>, None), 'IFSelect_Editable': (<IFSelect_EditValue.IFSelect_Editable: 1>, None), 'IFSelect_EditProtected': (<IFSelect_EditValue.IFSelect_EditProtected: 2>, None), 'IFSelect_EditComputed': (<IFSelect_EditValue.IFSelect_EditComputed: 3>, None), 'IFSelect_EditRead': (<IFSelect_EditValue.IFSelect_EditRead: 4>, None), 'IFSelect_EditDynamic': (<IFSelect_EditValue.IFSelect_EditDynamic: 5>, None)}
+    __members__: dict # value = {'IFSelect_Optional': <IFSelect_EditValue.IFSelect_Optional: 0>, 'IFSelect_Editable': <IFSelect_EditValue.IFSelect_Editable: 1>, 'IFSelect_EditProtected': <IFSelect_EditValue.IFSelect_EditProtected: 2>, 'IFSelect_EditComputed': <IFSelect_EditValue.IFSelect_EditComputed: 3>, 'IFSelect_EditRead': <IFSelect_EditValue.IFSelect_EditRead: 4>, 'IFSelect_EditDynamic': <IFSelect_EditValue.IFSelect_EditDynamic: 5>}
     pass
 class IFSelect_Editor(OCP.Standard.Standard_Transient):
     """
@@ -1939,11 +1947,11 @@ class IFSelect_Editor(OCP.Standard.Standard_Transient):
         """
         Returns the count of Typed Values
         """
-    def PrintDefs(self,S : OCP.Message.Message_Messenger,labels : bool=False) -> None: 
+    def PrintDefs(self,S : io.BytesIO,labels : bool=False) -> None: 
         """
         None
         """
-    def PrintNames(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintNames(self,S : io.BytesIO) -> None: 
         """
         None
         """
@@ -2228,15 +2236,15 @@ class IFSelect_SignCounter(IFSelect_SignatureList, OCP.Standard.Standard_Transie
         """
         Returns the number of times a signature was counted, 0 if it has not been recorded at all
         """
-    def PrintCount(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintCount(self,S : io.BytesIO) -> None: 
         """
         Prints the counts of items (not the list)
         """
-    def PrintList(self,S : OCP.Message.Message_Messenger,model : OCP.Interface.Interface_InterfaceModel,mod : IFSelect_PrintCount=IFSelect_PrintCount.IFSelect_ListByItem) -> None: 
+    def PrintList(self,S : io.BytesIO,model : OCP.Interface.Interface_InterfaceModel,mod : IFSelect_PrintCount=IFSelect_PrintCount.IFSelect_ListByItem) -> None: 
         """
         Prints the lists of items, if they are present (else, prints a message "no list available") Uses <model> to determine for each entity to be listed, its number, and its specific identifier (by PrintLabel) <mod> gives a mode for printing : - CountByItem : just count (as PrintCount) - ShortByItem : minimum i.e. count plus 5 first entity numbers - ShortByItem(D) complete list of entity numbers (0: "Global") - EntitiesByItem : list of (entity number/PrintLabel from the model) other modes are ignored
         """
-    def PrintSum(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintSum(self,S : io.BytesIO) -> None: 
         """
         Prints a summary Item which has the greatest count of entities For items which are numeric values : their count, maximum, minimum values, cumul, average
         """
@@ -2281,9 +2289,9 @@ class IFSelect_SignCounter(IFSelect_SignatureList, OCP.Standard.Standard_Transie
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,matcher : IFSelect_Signature,withmap : bool=True,withlist : bool=False) -> None: ...
-    @overload
     def __init__(self,withmap : bool=True,withlist : bool=False) -> None: ...
+    @overload
+    def __init__(self,matcher : IFSelect_Signature,withmap : bool=True,withlist : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2362,14 +2370,14 @@ class IFSelect_TSeqOfSelection(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : IFSelect_Selection) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfSelection) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : IFSelect_Selection) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IFSelect_Selection) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfSelection) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2396,14 +2404,14 @@ class IFSelect_TSeqOfSelection(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : IFSelect_Selection) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2434,7 +2442,7 @@ class IFSelect_TSeqOfSelection(OCP.NCollection.NCollection_BaseSequence):
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2622,9 +2630,9 @@ class IFSelect_ListEditor(OCP.Standard.Standard_Transient):
         Returns a value given its rank. Edited (D) or Original A Null String means the value is cleared but not removed
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,def_ : OCP.Interface.Interface_TypedValue,max : int=0) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3283,11 +3291,11 @@ class IFSelect_ParamEditor(IFSelect_Editor, OCP.Standard.Standard_Transient):
         """
         Returns the count of Typed Values
         """
-    def PrintDefs(self,S : OCP.Message.Message_Messenger,labels : bool=False) -> None: 
+    def PrintDefs(self,S : io.BytesIO,labels : bool=False) -> None: 
         """
         None
         """
-    def PrintNames(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintNames(self,S : io.BytesIO) -> None: 
         """
         None
         """
@@ -3364,27 +3372,35 @@ class IFSelect_PrintCount():
 
       IFSelect_ResultCount
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IFSelect_CountByItem: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_CountByItem
-    IFSelect_CountSummary: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_CountSummary
-    IFSelect_EntitiesByItem: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_EntitiesByItem
-    IFSelect_GeneralInfo: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_GeneralInfo
-    IFSelect_ItemsByEntity: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_ItemsByEntity
-    IFSelect_ListByItem: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_ListByItem
-    IFSelect_Mapping: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_Mapping
-    IFSelect_ResultCount: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_ResultCount
-    IFSelect_ShortByItem: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_ShortByItem
-    __entries: dict # value = {'IFSelect_ItemsByEntity': (IFSelect_PrintCount.IFSelect_ItemsByEntity, None), 'IFSelect_CountByItem': (IFSelect_PrintCount.IFSelect_CountByItem, None), 'IFSelect_ShortByItem': (IFSelect_PrintCount.IFSelect_ShortByItem, None), 'IFSelect_ListByItem': (IFSelect_PrintCount.IFSelect_ListByItem, None), 'IFSelect_EntitiesByItem': (IFSelect_PrintCount.IFSelect_EntitiesByItem, None), 'IFSelect_CountSummary': (IFSelect_PrintCount.IFSelect_CountSummary, None), 'IFSelect_GeneralInfo': (IFSelect_PrintCount.IFSelect_GeneralInfo, None), 'IFSelect_Mapping': (IFSelect_PrintCount.IFSelect_Mapping, None), 'IFSelect_ResultCount': (IFSelect_PrintCount.IFSelect_ResultCount, None)}
-    __members__: dict # value = {'IFSelect_ItemsByEntity': IFSelect_PrintCount.IFSelect_ItemsByEntity, 'IFSelect_CountByItem': IFSelect_PrintCount.IFSelect_CountByItem, 'IFSelect_ShortByItem': IFSelect_PrintCount.IFSelect_ShortByItem, 'IFSelect_ListByItem': IFSelect_PrintCount.IFSelect_ListByItem, 'IFSelect_EntitiesByItem': IFSelect_PrintCount.IFSelect_EntitiesByItem, 'IFSelect_CountSummary': IFSelect_PrintCount.IFSelect_CountSummary, 'IFSelect_GeneralInfo': IFSelect_PrintCount.IFSelect_GeneralInfo, 'IFSelect_Mapping': IFSelect_PrintCount.IFSelect_Mapping, 'IFSelect_ResultCount': IFSelect_PrintCount.IFSelect_ResultCount}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IFSelect_CountByItem: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_CountByItem: 1>
+    IFSelect_CountSummary: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_CountSummary: 5>
+    IFSelect_EntitiesByItem: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_EntitiesByItem: 4>
+    IFSelect_GeneralInfo: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_GeneralInfo: 6>
+    IFSelect_ItemsByEntity: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_ItemsByEntity: 0>
+    IFSelect_ListByItem: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_ListByItem: 3>
+    IFSelect_Mapping: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_Mapping: 7>
+    IFSelect_ResultCount: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_ResultCount: 8>
+    IFSelect_ShortByItem: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_ShortByItem: 2>
+    __entries: dict # value = {'IFSelect_ItemsByEntity': (<IFSelect_PrintCount.IFSelect_ItemsByEntity: 0>, None), 'IFSelect_CountByItem': (<IFSelect_PrintCount.IFSelect_CountByItem: 1>, None), 'IFSelect_ShortByItem': (<IFSelect_PrintCount.IFSelect_ShortByItem: 2>, None), 'IFSelect_ListByItem': (<IFSelect_PrintCount.IFSelect_ListByItem: 3>, None), 'IFSelect_EntitiesByItem': (<IFSelect_PrintCount.IFSelect_EntitiesByItem: 4>, None), 'IFSelect_CountSummary': (<IFSelect_PrintCount.IFSelect_CountSummary: 5>, None), 'IFSelect_GeneralInfo': (<IFSelect_PrintCount.IFSelect_GeneralInfo: 6>, None), 'IFSelect_Mapping': (<IFSelect_PrintCount.IFSelect_Mapping: 7>, None), 'IFSelect_ResultCount': (<IFSelect_PrintCount.IFSelect_ResultCount: 8>, None)}
+    __members__: dict # value = {'IFSelect_ItemsByEntity': <IFSelect_PrintCount.IFSelect_ItemsByEntity: 0>, 'IFSelect_CountByItem': <IFSelect_PrintCount.IFSelect_CountByItem: 1>, 'IFSelect_ShortByItem': <IFSelect_PrintCount.IFSelect_ShortByItem: 2>, 'IFSelect_ListByItem': <IFSelect_PrintCount.IFSelect_ListByItem: 3>, 'IFSelect_EntitiesByItem': <IFSelect_PrintCount.IFSelect_EntitiesByItem: 4>, 'IFSelect_CountSummary': <IFSelect_PrintCount.IFSelect_CountSummary: 5>, 'IFSelect_GeneralInfo': <IFSelect_PrintCount.IFSelect_GeneralInfo: 6>, 'IFSelect_Mapping': <IFSelect_PrintCount.IFSelect_Mapping: 7>, 'IFSelect_ResultCount': <IFSelect_PrintCount.IFSelect_ResultCount: 8>}
     pass
 class IFSelect_PrintFail():
     """
@@ -3396,20 +3412,28 @@ class IFSelect_PrintFail():
 
       IFSelect_FailAndWarn
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IFSelect_FailAndWarn: OCP.IFSelect.IFSelect_PrintFail # value = IFSelect_PrintFail.IFSelect_FailAndWarn
-    IFSelect_FailOnly: OCP.IFSelect.IFSelect_PrintFail # value = IFSelect_PrintFail.IFSelect_FailOnly
-    __entries: dict # value = {'IFSelect_FailOnly': (IFSelect_PrintFail.IFSelect_FailOnly, None), 'IFSelect_FailAndWarn': (IFSelect_PrintFail.IFSelect_FailAndWarn, None)}
-    __members__: dict # value = {'IFSelect_FailOnly': IFSelect_PrintFail.IFSelect_FailOnly, 'IFSelect_FailAndWarn': IFSelect_PrintFail.IFSelect_FailAndWarn}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IFSelect_FailAndWarn: OCP.IFSelect.IFSelect_PrintFail # value = <IFSelect_PrintFail.IFSelect_FailAndWarn: 1>
+    IFSelect_FailOnly: OCP.IFSelect.IFSelect_PrintFail # value = <IFSelect_PrintFail.IFSelect_FailOnly: 0>
+    __entries: dict # value = {'IFSelect_FailOnly': (<IFSelect_PrintFail.IFSelect_FailOnly: 0>, None), 'IFSelect_FailAndWarn': (<IFSelect_PrintFail.IFSelect_FailAndWarn: 1>, None)}
+    __members__: dict # value = {'IFSelect_FailOnly': <IFSelect_PrintFail.IFSelect_FailOnly: 0>, 'IFSelect_FailAndWarn': <IFSelect_PrintFail.IFSelect_FailAndWarn: 1>}
     pass
 class IFSelect_RemainMode():
     """
@@ -3425,22 +3449,30 @@ class IFSelect_RemainMode():
 
       IFSelect_RemainUndo
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IFSelect_RemainCompute: OCP.IFSelect.IFSelect_RemainMode # value = IFSelect_RemainMode.IFSelect_RemainCompute
-    IFSelect_RemainDisplay: OCP.IFSelect.IFSelect_RemainMode # value = IFSelect_RemainMode.IFSelect_RemainDisplay
-    IFSelect_RemainForget: OCP.IFSelect.IFSelect_RemainMode # value = IFSelect_RemainMode.IFSelect_RemainForget
-    IFSelect_RemainUndo: OCP.IFSelect.IFSelect_RemainMode # value = IFSelect_RemainMode.IFSelect_RemainUndo
-    __entries: dict # value = {'IFSelect_RemainForget': (IFSelect_RemainMode.IFSelect_RemainForget, None), 'IFSelect_RemainCompute': (IFSelect_RemainMode.IFSelect_RemainCompute, None), 'IFSelect_RemainDisplay': (IFSelect_RemainMode.IFSelect_RemainDisplay, None), 'IFSelect_RemainUndo': (IFSelect_RemainMode.IFSelect_RemainUndo, None)}
-    __members__: dict # value = {'IFSelect_RemainForget': IFSelect_RemainMode.IFSelect_RemainForget, 'IFSelect_RemainCompute': IFSelect_RemainMode.IFSelect_RemainCompute, 'IFSelect_RemainDisplay': IFSelect_RemainMode.IFSelect_RemainDisplay, 'IFSelect_RemainUndo': IFSelect_RemainMode.IFSelect_RemainUndo}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IFSelect_RemainCompute: OCP.IFSelect.IFSelect_RemainMode # value = <IFSelect_RemainMode.IFSelect_RemainCompute: 1>
+    IFSelect_RemainDisplay: OCP.IFSelect.IFSelect_RemainMode # value = <IFSelect_RemainMode.IFSelect_RemainDisplay: 2>
+    IFSelect_RemainForget: OCP.IFSelect.IFSelect_RemainMode # value = <IFSelect_RemainMode.IFSelect_RemainForget: 0>
+    IFSelect_RemainUndo: OCP.IFSelect.IFSelect_RemainMode # value = <IFSelect_RemainMode.IFSelect_RemainUndo: 3>
+    __entries: dict # value = {'IFSelect_RemainForget': (<IFSelect_RemainMode.IFSelect_RemainForget: 0>, None), 'IFSelect_RemainCompute': (<IFSelect_RemainMode.IFSelect_RemainCompute: 1>, None), 'IFSelect_RemainDisplay': (<IFSelect_RemainMode.IFSelect_RemainDisplay: 2>, None), 'IFSelect_RemainUndo': (<IFSelect_RemainMode.IFSelect_RemainUndo: 3>, None)}
+    __members__: dict # value = {'IFSelect_RemainForget': <IFSelect_RemainMode.IFSelect_RemainForget: 0>, 'IFSelect_RemainCompute': <IFSelect_RemainMode.IFSelect_RemainCompute: 1>, 'IFSelect_RemainDisplay': <IFSelect_RemainMode.IFSelect_RemainDisplay: 2>, 'IFSelect_RemainUndo': <IFSelect_RemainMode.IFSelect_RemainUndo: 3>}
     pass
 class IFSelect_ReturnStatus():
     """
@@ -3458,23 +3490,31 @@ class IFSelect_ReturnStatus():
 
       IFSelect_RetStop
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    IFSelect_RetDone: OCP.IFSelect.IFSelect_ReturnStatus # value = IFSelect_ReturnStatus.IFSelect_RetDone
-    IFSelect_RetError: OCP.IFSelect.IFSelect_ReturnStatus # value = IFSelect_ReturnStatus.IFSelect_RetError
-    IFSelect_RetFail: OCP.IFSelect.IFSelect_ReturnStatus # value = IFSelect_ReturnStatus.IFSelect_RetFail
-    IFSelect_RetStop: OCP.IFSelect.IFSelect_ReturnStatus # value = IFSelect_ReturnStatus.IFSelect_RetStop
-    IFSelect_RetVoid: OCP.IFSelect.IFSelect_ReturnStatus # value = IFSelect_ReturnStatus.IFSelect_RetVoid
-    __entries: dict # value = {'IFSelect_RetVoid': (IFSelect_ReturnStatus.IFSelect_RetVoid, None), 'IFSelect_RetDone': (IFSelect_ReturnStatus.IFSelect_RetDone, None), 'IFSelect_RetError': (IFSelect_ReturnStatus.IFSelect_RetError, None), 'IFSelect_RetFail': (IFSelect_ReturnStatus.IFSelect_RetFail, None), 'IFSelect_RetStop': (IFSelect_ReturnStatus.IFSelect_RetStop, None)}
-    __members__: dict # value = {'IFSelect_RetVoid': IFSelect_ReturnStatus.IFSelect_RetVoid, 'IFSelect_RetDone': IFSelect_ReturnStatus.IFSelect_RetDone, 'IFSelect_RetError': IFSelect_ReturnStatus.IFSelect_RetError, 'IFSelect_RetFail': IFSelect_ReturnStatus.IFSelect_RetFail, 'IFSelect_RetStop': IFSelect_ReturnStatus.IFSelect_RetStop}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    IFSelect_RetDone: OCP.IFSelect.IFSelect_ReturnStatus # value = <IFSelect_ReturnStatus.IFSelect_RetDone: 1>
+    IFSelect_RetError: OCP.IFSelect.IFSelect_ReturnStatus # value = <IFSelect_ReturnStatus.IFSelect_RetError: 2>
+    IFSelect_RetFail: OCP.IFSelect.IFSelect_ReturnStatus # value = <IFSelect_ReturnStatus.IFSelect_RetFail: 3>
+    IFSelect_RetStop: OCP.IFSelect.IFSelect_ReturnStatus # value = <IFSelect_ReturnStatus.IFSelect_RetStop: 4>
+    IFSelect_RetVoid: OCP.IFSelect.IFSelect_ReturnStatus # value = <IFSelect_ReturnStatus.IFSelect_RetVoid: 0>
+    __entries: dict # value = {'IFSelect_RetVoid': (<IFSelect_ReturnStatus.IFSelect_RetVoid: 0>, None), 'IFSelect_RetDone': (<IFSelect_ReturnStatus.IFSelect_RetDone: 1>, None), 'IFSelect_RetError': (<IFSelect_ReturnStatus.IFSelect_RetError: 2>, None), 'IFSelect_RetFail': (<IFSelect_ReturnStatus.IFSelect_RetFail: 3>, None), 'IFSelect_RetStop': (<IFSelect_ReturnStatus.IFSelect_RetStop: 4>, None)}
+    __members__: dict # value = {'IFSelect_RetVoid': <IFSelect_ReturnStatus.IFSelect_RetVoid: 0>, 'IFSelect_RetDone': <IFSelect_ReturnStatus.IFSelect_RetDone: 1>, 'IFSelect_RetError': <IFSelect_ReturnStatus.IFSelect_RetError: 2>, 'IFSelect_RetFail': <IFSelect_ReturnStatus.IFSelect_RetFail: 3>, 'IFSelect_RetStop': <IFSelect_ReturnStatus.IFSelect_RetStop: 4>}
     pass
 class IFSelect_Selection(OCP.Standard.Standard_Transient):
     """
@@ -5421,14 +5461,14 @@ class IFSelect_SelectPointed(IFSelect_SelectBase, IFSelect_Selection, OCP.Standa
         Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     @overload
-    def Update(self,control : OCP.Interface.Interface_CopyControl) -> None: 
+    def Update(self,trf : IFSelect_Transformer) -> None: 
         """
         Rebuilds the selected list. Any selected entity which has a bound result is replaced by this result, else it is removed.
 
         Rebuilds the selected list, by querying a Transformer (same principle as from a CopyControl)
         """
     @overload
-    def Update(self,trf : IFSelect_Transformer) -> None: ...
+    def Update(self,control : OCP.Interface.Interface_CopyControl) -> None: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -6308,11 +6348,11 @@ class IFSelect_SelectSignature(IFSelect_SelectExtract, IFSelect_SelectDeduct, IF
         Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     @overload
-    def __init__(self,matcher : IFSelect_SignCounter,signtext : str,exact : bool=True) -> None: ...
-    @overload
     def __init__(self,matcher : IFSelect_Signature,signtext : OCP.TCollection.TCollection_AsciiString,exact : bool=True) -> None: ...
     @overload
     def __init__(self,matcher : IFSelect_Signature,signtext : str,exact : bool=True) -> None: ...
+    @overload
+    def __init__(self,matcher : IFSelect_SignCounter,signtext : str,exact : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6821,9 +6861,9 @@ class IFSelect_SelectType(IFSelect_SelectAnyType, IFSelect_SelectExtract, IFSele
         Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     @overload
-    def __init__(self,atype : OCP.Standard.Standard_Type) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,atype : OCP.Standard.Standard_Type) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7224,14 +7264,14 @@ class IFSelect_SequenceOfAppliedModifiers(OCP.NCollection.NCollection_BaseSequen
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IFSelect_SequenceOfAppliedModifiers) -> None: 
+    def Append(self,theItem : IFSelect_AppliedModifiers) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IFSelect_AppliedModifiers) -> None: ...
+    def Append(self,theSeq : IFSelect_SequenceOfAppliedModifiers) -> None: ...
     def Assign(self,theOther : IFSelect_SequenceOfAppliedModifiers) -> IFSelect_SequenceOfAppliedModifiers: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -7270,14 +7310,14 @@ class IFSelect_SequenceOfAppliedModifiers(OCP.NCollection.NCollection_BaseSequen
     @overload
     def InsertAfter(self,theIndex : int,theSeq : IFSelect_SequenceOfAppliedModifiers) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IFSelect_AppliedModifiers) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IFSelect_SequenceOfAppliedModifiers) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IFSelect_SequenceOfAppliedModifiers) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IFSelect_AppliedModifiers) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -7295,14 +7335,14 @@ class IFSelect_SequenceOfAppliedModifiers(OCP.NCollection.NCollection_BaseSequen
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : IFSelect_SequenceOfAppliedModifiers) -> None: 
+    def Prepend(self,theItem : IFSelect_AppliedModifiers) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : IFSelect_AppliedModifiers) -> None: ...
+    def Prepend(self,theSeq : IFSelect_SequenceOfAppliedModifiers) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -7342,7 +7382,7 @@ class IFSelect_SequenceOfAppliedModifiers(OCP.NCollection.NCollection_BaseSequen
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7395,23 +7435,23 @@ class IFSelect_SequenceOfGeneralModifier(OCP.NCollection.NCollection_BaseSequenc
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IFSelect_GeneralModifier) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : IFSelect_GeneralModifier) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IFSelect_GeneralModifier) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IFSelect_GeneralModifier) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -7429,14 +7469,14 @@ class IFSelect_SequenceOfGeneralModifier(OCP.NCollection.NCollection_BaseSequenc
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: 
+    def Prepend(self,theItem : IFSelect_GeneralModifier) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : IFSelect_GeneralModifier) -> None: ...
+    def Prepend(self,theSeq : IFSelect_SequenceOfGeneralModifier) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -7473,10 +7513,10 @@ class IFSelect_SequenceOfGeneralModifier(OCP.NCollection.NCollection_BaseSequenc
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : IFSelect_SequenceOfGeneralModifier) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : IFSelect_SequenceOfGeneralModifier) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7492,14 +7532,14 @@ class IFSelect_SequenceOfInterfaceModel(OCP.NCollection.NCollection_BaseSequence
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.Interface.Interface_InterfaceModel) -> None: 
+    def Append(self,theSeq : IFSelect_SequenceOfInterfaceModel) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : IFSelect_SequenceOfInterfaceModel) -> None: ...
+    def Append(self,theItem : OCP.Interface.Interface_InterfaceModel) -> None: ...
     def Assign(self,theOther : IFSelect_SequenceOfInterfaceModel) -> IFSelect_SequenceOfInterfaceModel: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -7538,14 +7578,14 @@ class IFSelect_SequenceOfInterfaceModel(OCP.NCollection.NCollection_BaseSequence
     @overload
     def InsertAfter(self,theIndex : int,theItem : OCP.Interface.Interface_InterfaceModel) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IFSelect_SequenceOfInterfaceModel) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.Interface.Interface_InterfaceModel) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.Interface.Interface_InterfaceModel) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IFSelect_SequenceOfInterfaceModel) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -7572,14 +7612,14 @@ class IFSelect_SequenceOfInterfaceModel(OCP.NCollection.NCollection_BaseSequence
     @overload
     def Prepend(self,theSeq : IFSelect_SequenceOfInterfaceModel) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7607,10 +7647,10 @@ class IFSelect_SequenceOfInterfaceModel(OCP.NCollection.NCollection_BaseSequence
     @overload
     def __init__(self,theOther : IFSelect_SequenceOfInterfaceModel) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -7837,9 +7877,9 @@ class IFSelect_SessionFile():
         Prepares the Write operation from a WorkSession (IFSelect) to a File, i.e. fills the list of lines (the file itself remains to be written; or NbLines/Line may be called) Important Remark : this excludes the reading of the last line, which is performed by WriteEnd Returns 0 if OK, status > 0 in case of error
         """
     @overload
-    def __init__(self,WS : IFSelect_WorkSession) -> None: ...
-    @overload
     def __init__(self,WS : IFSelect_WorkSession,filename : str) -> None: ...
+    @overload
+    def __init__(self,WS : IFSelect_WorkSession) -> None: ...
     pass
 class IFSelect_SessionPilot(IFSelect_Activator, OCP.Standard.Standard_Transient):
     """
@@ -8061,14 +8101,14 @@ class IFSelect_ShareOut(OCP.Standard.Standard_Transient):
         Adds a Modifier to the list of Modifiers : Model Modifiers if <formodel> is True, File Modifiers else (internal).
         """
     @overload
-    def AddModifier(self,modifier : IFSelect_GeneralModifier,atnum : int) -> None: 
+    def AddModifier(self,modifier : IFSelect_GeneralModifier,dispnum : int,atnum : int) -> None: 
         """
         Sets a Modifier to be applied on all Dispatches to be run If <modifier> is a ModelModifier, adds it to the list of Model Modifiers; else to the list of File Modifiers By default (atnum = 0) at the end of the list, else at <atnum> Each Modifier is used, after each copy of a packet of Entities into a Model : its criteria are checked and if they are OK, the method Perform of this Modifier is run.
 
         Sets a Modifier to be applied on the Dispatch <dispnum> If <modifier> is a ModelModifier, adds it to the list of Model Modifiers; else to the list of File Modifiers This is the same list as for all Dispatches, but the Modifier is qualified to be applied to one Dispatch only Then, <atnum> refers to the entire list By default (atnum = 0) at the end of the list, else at <atnum> Remark : if the Modifier was already in the list and if <atnum> = 0, the Modifier is not moved, but only qualified for a Dispatch
         """
     @overload
-    def AddModifier(self,modifier : IFSelect_GeneralModifier,dispnum : int,atnum : int) -> None: ...
+    def AddModifier(self,modifier : IFSelect_GeneralModifier,atnum : int) -> None: ...
     def ChangeModifierRank(self,formodel : bool,befor : int,after : int) -> bool: 
         """
         Changes the rank of a modifier in the list : Model Modifiers if <formodel> is True, File Modifiers else from <before> to <after> Returns True if done, False else (before or after out of range)
@@ -8296,13 +8336,13 @@ class IFSelect_ShareOutResult():
         Returns the ShareOut used to create the ShareOutResult if creation from a Dispatch, returns a Null Handle
         """
     @overload
-    def __init__(self,disp : IFSelect_Dispatch,mod : OCP.Interface.Interface_InterfaceModel) -> None: ...
+    def __init__(self,sho : IFSelect_ShareOut,mod : OCP.Interface.Interface_InterfaceModel) -> None: ...
     @overload
     def __init__(self,disp : IFSelect_Dispatch,G : OCP.Interface.Interface_Graph) -> None: ...
     @overload
-    def __init__(self,sho : IFSelect_ShareOut,G : OCP.Interface.Interface_Graph) -> None: ...
+    def __init__(self,disp : IFSelect_Dispatch,mod : OCP.Interface.Interface_InterfaceModel) -> None: ...
     @overload
-    def __init__(self,sho : IFSelect_ShareOut,mod : OCP.Interface.Interface_InterfaceModel) -> None: ...
+    def __init__(self,sho : IFSelect_ShareOut,G : OCP.Interface.Interface_Graph) -> None: ...
     pass
 class IFSelect_Signature(OCP.Interface.Interface_SignType):
     """
@@ -8563,15 +8603,15 @@ class IFSelect_GraphCounter(IFSelect_SignCounter, IFSelect_SignatureList, OCP.St
         """
         Returns the number of times a signature was counted, 0 if it has not been recorded at all
         """
-    def PrintCount(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintCount(self,S : io.BytesIO) -> None: 
         """
         Prints the counts of items (not the list)
         """
-    def PrintList(self,S : OCP.Message.Message_Messenger,model : OCP.Interface.Interface_InterfaceModel,mod : IFSelect_PrintCount=IFSelect_PrintCount.IFSelect_ListByItem) -> None: 
+    def PrintList(self,S : io.BytesIO,model : OCP.Interface.Interface_InterfaceModel,mod : IFSelect_PrintCount=IFSelect_PrintCount.IFSelect_ListByItem) -> None: 
         """
         Prints the lists of items, if they are present (else, prints a message "no list available") Uses <model> to determine for each entity to be listed, its number, and its specific identifier (by PrintLabel) <mod> gives a mode for printing : - CountByItem : just count (as PrintCount) - ShortByItem : minimum i.e. count plus 5 first entity numbers - ShortByItem(D) complete list of entity numbers (0: "Global") - EntitiesByItem : list of (entity number/PrintLabel from the model) other modes are ignored
         """
-    def PrintSum(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintSum(self,S : io.BytesIO) -> None: 
         """
         Prints a summary Item which has the greatest count of entities For items which are numeric values : their count, maximum, minimum values, cumul, average
         """
@@ -9019,15 +9059,15 @@ class IFSelect_CheckCounter(IFSelect_SignatureList, OCP.Standard.Standard_Transi
         """
         Returns the number of times a signature was counted, 0 if it has not been recorded at all
         """
-    def PrintCount(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintCount(self,S : io.BytesIO) -> None: 
         """
         Prints the counts of items (not the list)
         """
-    def PrintList(self,S : OCP.Message.Message_Messenger,model : OCP.Interface.Interface_InterfaceModel,mod : IFSelect_PrintCount=IFSelect_PrintCount.IFSelect_ListByItem) -> None: 
+    def PrintList(self,S : io.BytesIO,model : OCP.Interface.Interface_InterfaceModel,mod : IFSelect_PrintCount=IFSelect_PrintCount.IFSelect_ListByItem) -> None: 
         """
         Prints the lists of items, if they are present (else, prints a message "no list available") Uses <model> to determine for each entity to be listed, its number, and its specific identifier (by PrintLabel) <mod> gives a mode for printing : - CountByItem : just count (as PrintCount) - ShortByItem : minimum i.e. count plus 5 first entity numbers - ShortByItem(D) complete list of entity numbers (0: "Global") - EntitiesByItem : list of (entity number/PrintLabel from the model) other modes are ignored
         """
-    def PrintSum(self,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintSum(self,S : io.BytesIO) -> None: 
         """
         Prints a summary Item which has the greatest count of entities For items which are numeric values : their count, maximum, minimum values, cumul, average
         """
@@ -9121,23 +9161,23 @@ class IFSelect_TSeqOfDispatch(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IFSelect_Dispatch) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : IFSelect_TSeqOfDispatch) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IFSelect_TSeqOfDispatch) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : IFSelect_Dispatch) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfDispatch) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : IFSelect_Dispatch) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IFSelect_Dispatch) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfDispatch) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -9155,23 +9195,23 @@ class IFSelect_TSeqOfDispatch(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : IFSelect_Dispatch) -> None: 
+    def Prepend(self,theSeq : IFSelect_TSeqOfDispatch) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : IFSelect_TSeqOfDispatch) -> None: ...
+    def Prepend(self,theItem : IFSelect_Dispatch) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -9197,12 +9237,12 @@ class IFSelect_TSeqOfDispatch(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IFSelect_TSeqOfDispatch) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -9215,14 +9255,14 @@ class IFSelect_HSeqOfSelection(IFSelect_TSeqOfSelection, OCP.NCollection.NCollec
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : IFSelect_TSeqOfSelection) -> None: 
+    def Append(self,theItem : IFSelect_Selection) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : IFSelect_Selection) -> None: ...
+    def Append(self,theSequence : IFSelect_TSeqOfSelection) -> None: ...
     def Assign(self,theOther : IFSelect_TSeqOfSelection) -> IFSelect_TSeqOfSelection: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -9285,14 +9325,14 @@ class IFSelect_HSeqOfSelection(IFSelect_TSeqOfSelection, OCP.NCollection.NCollec
     @overload
     def InsertAfter(self,theIndex : int,theItem : IFSelect_Selection) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfSelection) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : IFSelect_Selection) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IFSelect_Selection) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IFSelect_TSeqOfSelection) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -9337,14 +9377,14 @@ class IFSelect_HSeqOfSelection(IFSelect_TSeqOfSelection, OCP.NCollection.NCollec
     @overload
     def Prepend(self,theItem : IFSelect_Selection) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -9378,10 +9418,10 @@ class IFSelect_HSeqOfSelection(IFSelect_TSeqOfSelection, OCP.NCollection.NCollec
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : IFSelect_TSeqOfSelection) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -9619,14 +9659,14 @@ class IFSelect_WorkLibrary(OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def DumpEntity(self,model : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol,entity : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger) -> None: 
+    def DumpEntity(self,model : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol,entity : OCP.Standard.Standard_Transient,S : io.BytesIO,level : int) -> None: 
         """
         Gives the way of dumping an entity under a form comprehensive for each norm. <model> helps to identify, number ... entities. <level> is to be interpreted for each norm (because of the formats which can be very different)
 
         Calls deferred DumpEntity with the recorded default level
         """
     @overload
-    def DumpEntity(self,model : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol,entity : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger,level : int) -> None: ...
+    def DumpEntity(self,model : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol,entity : OCP.Standard.Standard_Transient,S : io.BytesIO) -> None: ...
     def DumpHelp(self,level : int) -> str: 
         """
         Returns the help line recorded for <level>, or an empty string
@@ -9668,6 +9708,10 @@ class IFSelect_WorkLibrary(OCP.Standard.Standard_Transient):
     def ReadFile(self,name : str,model : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol) -> int: 
         """
         Gives the way to Read a File and transfer it to a Model <mod> is the resulting Model, which has to be created by this method. In case of error, <mod> must be returned Null Return value is a status with free values. Simply, 0 is for "Execution OK" The Protocol can be used to work (e.g. create the Model, read and recognize the Entities)
+        """
+    def ReadStream(self,theName : str,theIStream : io.BytesIO,model : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol) -> int: 
+        """
+        Interface to read a data from the specified stream.
         """
     def SetDumpHelp(self,level : int,help : str) -> None: 
         """
@@ -9796,11 +9840,11 @@ class IFSelect_WorkSession(OCP.Standard.Standard_Transient):
         """
         Returns the rank of a Dispatch in the ShareOut, or 0 if <disp> is not in the ShareOut or not in the WorkSession
         """
-    def DumpEntity(self,ent : OCP.Standard.Standard_Transient,level : int,S : OCP.Message.Message_Messenger) -> None: 
+    def DumpEntity(self,ent : OCP.Standard.Standard_Transient,level : int,S : io.BytesIO) -> None: 
         """
         Dumps a starting entity according to the current norm. To do this, it calls DumpEntity from WorkLibrary. <level> is to be interpreted for each norm : see specific classes of WorkLibrary for it. Generally, 0 if for very basic (only type ...), greater values give more and more details.
         """
-    def DumpModel(self,level : int,S : OCP.Message.Message_Messenger) -> None: 
+    def DumpModel(self,level : int,S : io.BytesIO) -> None: 
         """
         Lists the content of the Input Model (if there is one) According level : 0 -> gives only count of Entities and Roots 1 -> Lists also Roots; 2 -> Lists all Entities (by TraceType) 3 -> Performs a call to CheckList (Fails) and lists the result 4 -> as 3 but all CheckList (Fails + Warnings) 5,6,7 : as 3 but resp. Count,List,Labels by Fail 8,9,10 : as 4 but resp. Count,List,Labels by message
         """
@@ -10003,7 +10047,7 @@ class IFSelect_WorkSession(OCP.Standard.Standard_Transient):
         """
         Returns the Check List produced by the last execution of either : EvaluateFile(for Split), SendSplit, SendAll, SendSelected, RunTransformer-RunModifier Cleared by SetModel or ClearData(1) The field is protected, hence a specialized WorkSession may fill it
         """
-    def ListEntities(self,iter : OCP.Interface.Interface_EntityIterator,mode : int) -> None: 
+    def ListEntities(self,iter : OCP.Interface.Interface_EntityIterator,mode : int,S : io.BytesIO) -> None: 
         """
         Internal method which displays an EntityIterator <mode> 0 gives short display (only entity numbers) 1 gives a more complete trace (1 line per Entity) (can be used each time a trace has to be output from a list) 2 gives a form suitable for givelist : (n1,n2,n3...)
         """
@@ -10108,15 +10152,15 @@ class IFSelect_WorkSession(OCP.Standard.Standard_Transient):
         """
         From a given label in Model, returns the corresponding number Starts from first entity by Default, may start after a given number : this number may be given negative, its absolute value is then considered. Hence a loop on NumberFromLabel may be programmed (stop test is : returned value positive or null)
         """
-    def PrintCheckList(self,checklist : OCP.Interface.Interface_CheckIterator,failsonly : bool,mode : IFSelect_PrintCount) -> None: 
+    def PrintCheckList(self,S : io.BytesIO,checklist : OCP.Interface.Interface_CheckIterator,failsonly : bool,mode : IFSelect_PrintCount) -> None: 
         """
         Prints a CheckIterator to the current Trace File, controlled with the current Model complete or fails only, according to <failsonly> <mode> defines the mode of printing 0 : sequential, according entities; else with a CheckCounter 1 : according messages, count of entities 2 : id but with list of entities, designated by their numbers 3 : as 2 but with labels of entities
         """
-    def PrintEntityStatus(self,ent : OCP.Standard.Standard_Transient,S : OCP.Message.Message_Messenger) -> None: 
+    def PrintEntityStatus(self,ent : OCP.Standard.Standard_Transient,S : io.BytesIO) -> None: 
         """
         Prints main informations about an entity : its number, type, validity (and checks if any), category, shareds and sharings.. mutable because it can recompute checks as necessary
         """
-    def PrintSignatureList(self,signlist : IFSelect_SignatureList,mode : IFSelect_PrintCount) -> None: 
+    def PrintSignatureList(self,S : io.BytesIO,signlist : IFSelect_SignatureList,mode : IFSelect_PrintCount) -> None: 
         """
         Prints a SignatureList to the current Trace File, controlled with the current Model <mode> defines the mode of printing (see SignatureList)
         """
@@ -10139,6 +10183,10 @@ class IFSelect_WorkSession(OCP.Standard.Standard_Transient):
     def ReadFile(self,filename : str) -> IFSelect_ReturnStatus: 
         """
         Reads a file with the WorkLibrary (sets Model and LoadedFile) Returns a integer status which can be : RetDone if OK, RetVoid if no Protocol not defined, RetError for file not found, RetFail if fail during read
+        """
+    def ReadStream(self,theName : str,theIStream : io.BytesIO) -> IFSelect_ReturnStatus: 
+        """
+        Reads a file from stream with the WorkLibrary (sets Model and LoadedFile) Returns a integer status which can be : RetDone if OK, RetVoid if no Protocol not defined, RetError for file not found, RetFail if fail during read
         """
     def RemoveItem(self,item : OCP.Standard.Standard_Transient) -> bool: 
         """
@@ -10409,29 +10457,29 @@ class IFSelect_WorkSession(OCP.Standard.Standard_Transient):
         None
         """
     pass
-IFSelect_CountByItem: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_CountByItem
-IFSelect_CountSummary: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_CountSummary
-IFSelect_EditComputed: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_EditComputed
-IFSelect_EditDynamic: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_EditDynamic
-IFSelect_EditProtected: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_EditProtected
-IFSelect_EditRead: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_EditRead
-IFSelect_Editable: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_Editable
-IFSelect_EntitiesByItem: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_EntitiesByItem
-IFSelect_FailAndWarn: OCP.IFSelect.IFSelect_PrintFail # value = IFSelect_PrintFail.IFSelect_FailAndWarn
-IFSelect_FailOnly: OCP.IFSelect.IFSelect_PrintFail # value = IFSelect_PrintFail.IFSelect_FailOnly
-IFSelect_GeneralInfo: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_GeneralInfo
-IFSelect_ItemsByEntity: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_ItemsByEntity
-IFSelect_ListByItem: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_ListByItem
-IFSelect_Mapping: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_Mapping
-IFSelect_Optional: OCP.IFSelect.IFSelect_EditValue # value = IFSelect_EditValue.IFSelect_Optional
-IFSelect_RemainCompute: OCP.IFSelect.IFSelect_RemainMode # value = IFSelect_RemainMode.IFSelect_RemainCompute
-IFSelect_RemainDisplay: OCP.IFSelect.IFSelect_RemainMode # value = IFSelect_RemainMode.IFSelect_RemainDisplay
-IFSelect_RemainForget: OCP.IFSelect.IFSelect_RemainMode # value = IFSelect_RemainMode.IFSelect_RemainForget
-IFSelect_RemainUndo: OCP.IFSelect.IFSelect_RemainMode # value = IFSelect_RemainMode.IFSelect_RemainUndo
-IFSelect_ResultCount: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_ResultCount
-IFSelect_RetDone: OCP.IFSelect.IFSelect_ReturnStatus # value = IFSelect_ReturnStatus.IFSelect_RetDone
-IFSelect_RetError: OCP.IFSelect.IFSelect_ReturnStatus # value = IFSelect_ReturnStatus.IFSelect_RetError
-IFSelect_RetFail: OCP.IFSelect.IFSelect_ReturnStatus # value = IFSelect_ReturnStatus.IFSelect_RetFail
-IFSelect_RetStop: OCP.IFSelect.IFSelect_ReturnStatus # value = IFSelect_ReturnStatus.IFSelect_RetStop
-IFSelect_RetVoid: OCP.IFSelect.IFSelect_ReturnStatus # value = IFSelect_ReturnStatus.IFSelect_RetVoid
-IFSelect_ShortByItem: OCP.IFSelect.IFSelect_PrintCount # value = IFSelect_PrintCount.IFSelect_ShortByItem
+IFSelect_CountByItem: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_CountByItem: 1>
+IFSelect_CountSummary: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_CountSummary: 5>
+IFSelect_EditComputed: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_EditComputed: 3>
+IFSelect_EditDynamic: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_EditDynamic: 5>
+IFSelect_EditProtected: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_EditProtected: 2>
+IFSelect_EditRead: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_EditRead: 4>
+IFSelect_Editable: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_Editable: 1>
+IFSelect_EntitiesByItem: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_EntitiesByItem: 4>
+IFSelect_FailAndWarn: OCP.IFSelect.IFSelect_PrintFail # value = <IFSelect_PrintFail.IFSelect_FailAndWarn: 1>
+IFSelect_FailOnly: OCP.IFSelect.IFSelect_PrintFail # value = <IFSelect_PrintFail.IFSelect_FailOnly: 0>
+IFSelect_GeneralInfo: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_GeneralInfo: 6>
+IFSelect_ItemsByEntity: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_ItemsByEntity: 0>
+IFSelect_ListByItem: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_ListByItem: 3>
+IFSelect_Mapping: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_Mapping: 7>
+IFSelect_Optional: OCP.IFSelect.IFSelect_EditValue # value = <IFSelect_EditValue.IFSelect_Optional: 0>
+IFSelect_RemainCompute: OCP.IFSelect.IFSelect_RemainMode # value = <IFSelect_RemainMode.IFSelect_RemainCompute: 1>
+IFSelect_RemainDisplay: OCP.IFSelect.IFSelect_RemainMode # value = <IFSelect_RemainMode.IFSelect_RemainDisplay: 2>
+IFSelect_RemainForget: OCP.IFSelect.IFSelect_RemainMode # value = <IFSelect_RemainMode.IFSelect_RemainForget: 0>
+IFSelect_RemainUndo: OCP.IFSelect.IFSelect_RemainMode # value = <IFSelect_RemainMode.IFSelect_RemainUndo: 3>
+IFSelect_ResultCount: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_ResultCount: 8>
+IFSelect_RetDone: OCP.IFSelect.IFSelect_ReturnStatus # value = <IFSelect_ReturnStatus.IFSelect_RetDone: 1>
+IFSelect_RetError: OCP.IFSelect.IFSelect_ReturnStatus # value = <IFSelect_ReturnStatus.IFSelect_RetError: 2>
+IFSelect_RetFail: OCP.IFSelect.IFSelect_ReturnStatus # value = <IFSelect_ReturnStatus.IFSelect_RetFail: 3>
+IFSelect_RetStop: OCP.IFSelect.IFSelect_ReturnStatus # value = <IFSelect_ReturnStatus.IFSelect_RetStop: 4>
+IFSelect_RetVoid: OCP.IFSelect.IFSelect_ReturnStatus # value = <IFSelect_ReturnStatus.IFSelect_RetVoid: 0>
+IFSelect_ShortByItem: OCP.IFSelect.IFSelect_PrintCount # value = <IFSelect_PrintCount.IFSelect_ShortByItem: 2>

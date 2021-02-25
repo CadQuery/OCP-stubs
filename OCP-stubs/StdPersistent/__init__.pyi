@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StdObject
 import OCP.TDataXtd
 import OCP.StdObjMgt
+import OCP.StdObject
 import OCP.Standard
 import OCP.TopLoc
 __all__  = [
@@ -184,7 +184,7 @@ class StdPersistent_TopLoc():
     """
     @staticmethod
     @overload
-    def Translate_s(theDatum : OCP.TopLoc.TopLoc_Datum3D,theMap : Any) -> Any: 
+    def Translate_s(theLoc : OCP.TopLoc.TopLoc_Location,theMap : Any) -> Any: 
         """
         None
 
@@ -192,7 +192,7 @@ class StdPersistent_TopLoc():
         """
     @staticmethod
     @overload
-    def Translate_s(theLoc : OCP.TopLoc.TopLoc_Location,theMap : Any) -> Any: ...
+    def Translate_s(theDatum : OCP.TopLoc.TopLoc_Datum3D,theMap : Any) -> Any: ...
     def __init__(self) -> None: ...
     pass
 class StdPersistent_TopoDS():

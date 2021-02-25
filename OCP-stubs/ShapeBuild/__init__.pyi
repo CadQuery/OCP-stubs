@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.ShapeExtend
-import OCP.Geom2d
-import OCP.TopLoc
-import OCP.Standard
-import OCP.TopoDS
-import OCP.Geom
-import OCP.BRepTools
 import OCP.gp
+import OCP.BRepTools
+import OCP.Geom
+import OCP.TopoDS
+import OCP.TopLoc
+import OCP.Geom2d
+import OCP.ShapeExtend
+import OCP.Standard
+import OCP.TopAbs
 __all__  = [
 "ShapeBuild",
 "ShapeBuild_Edge",
@@ -55,7 +55,7 @@ class ShapeBuild_Edge():
         Copy edge and replace one or both its vertices to a given one(s). Vertex V1 replaces FORWARD vertex, and V2 - REVERSED, as they are found by TopoDS_Iterator. If V1 or V2 is NULL, the original vertex is taken
         """
     @overload
-    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: 
+    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,curve : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Makes edge with curve and location
 
@@ -70,15 +70,15 @@ class ShapeBuild_Edge():
         Makes edge with pcurve, surface, location and range [p1, p2]
         """
     @overload
-    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,face : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
-    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,curve : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,p1 : float,p2 : float) -> None: ...
-    @overload
-    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,curve : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> None: ...
+    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,p1 : float,p2 : float) -> None: ...
     @overload
     def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,face : OCP.TopoDS.TopoDS_Face,p1 : float,p2 : float) -> None: ...
     @overload
-    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,p1 : float,p2 : float) -> None: ...
+    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,curve : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,p1 : float,p2 : float) -> None: ...
+    @overload
+    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: ...
+    @overload
+    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,face : OCP.TopoDS.TopoDS_Face) -> None: ...
     def ReassignPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,old : OCP.TopoDS.TopoDS_Face,sub : OCP.TopoDS.TopoDS_Face) -> bool: 
         """
         Reassign edge pcurve lying on face <old> to another face . If edge has two pcurves on <old> face, only one of them will be reassigned, and other will left alone. Similarly, if edge already had a pcurve on face , it will have two pcurves on it. Returns True if succeeded, False if no pcurve lying on <old> found.
@@ -88,7 +88,7 @@ class ShapeBuild_Edge():
         Removes the Curve3D recorded in an Edge
         """
     @overload
-    def RemovePCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face) -> None: 
+    def RemovePCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surf : OCP.Geom.Geom_Surface) -> None: 
         """
         Removes the PCurve(s) which could be recorded in an Edge for the given Face
 
@@ -97,9 +97,9 @@ class ShapeBuild_Edge():
         Removes the PCurve(s) which could be recorded in an Edge for the given Surface, with given Location
         """
     @overload
-    def RemovePCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surf : OCP.Geom.Geom_Surface,loc : OCP.TopLoc.TopLoc_Location) -> None: ...
+    def RemovePCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
-    def RemovePCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surf : OCP.Geom.Geom_Surface) -> None: ...
+    def RemovePCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surf : OCP.Geom.Geom_Surface,loc : OCP.TopLoc.TopLoc_Location) -> None: ...
     def ReplacePCurve(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,face : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         Replace the PCurve in an Edge for the given Face In case if edge is seam, i.e. has 2 pcurves on that face, only pcurve corresponding to the orientation of the edge is replaced

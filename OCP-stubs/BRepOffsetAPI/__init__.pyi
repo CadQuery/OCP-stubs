@@ -4,21 +4,21 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Draft
+import OCP.Approx
+import OCP.NCollection
+import OCP.BRepBuilderAPI
 import OCP.Law
+import OCP.Geom
+import OCP.TopoDS
+import OCP.GeomFill
+import OCP.Draft
+import OCP.TopTools
+import OCP.TColStd
 import OCP.BRepFill
 import OCP.BRepPrimAPI
-import OCP.TopoDS
-import OCP.BRepOffset
-import OCP.NCollection
-import OCP.GeomFill
 import OCP.gp
 import OCP.GeomAbs
-import OCP.TColStd
-import OCP.BRepBuilderAPI
-import OCP.Approx
-import OCP.TopTools
-import OCP.Geom
+import OCP.BRepOffset
 __all__  = [
 "BRepOffsetAPI_DraftAngle",
 "BRepOffsetAPI_FindContigousEdges",
@@ -113,9 +113,9 @@ class BRepOffsetAPI_DraftAngle(OCP.BRepBuilderAPI.BRepBuilderAPI_ModifyShape, OC
         Returns an error status when an error has occured (Face, Edge or Vertex recomputaion problem). Otherwise returns Draft_NoError. The method may be called if AddDone returns Standard_False, or when IsDone returns Standard_False.
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     pass
 class BRepOffsetAPI_FindContigousEdges():
     """
@@ -204,7 +204,7 @@ class BRepOffsetAPI_MakeDraft(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.B
         Returns the list of shapes modified from the shape <S>.
         """
     @overload
-    def Perform(self,LengthMax : float) -> None: 
+    def Perform(self,Surface : OCP.Geom.Geom_Surface,KeepInsideSurface : bool=True) -> None: 
         """
         Performs the draft using the length LengthMax as the maximum length for the corner edge between two draft faces.
 
@@ -213,9 +213,9 @@ class BRepOffsetAPI_MakeDraft(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.B
         Performs the draft up to the shape StopShape. If KeepOutSide is true, the part of StopShape which is outside the Draft is kept in the result.
         """
     @overload
-    def Perform(self,Surface : OCP.Geom.Geom_Surface,KeepInsideSurface : bool=True) -> None: ...
-    @overload
     def Perform(self,StopShape : OCP.TopoDS.TopoDS_Shape,KeepOutSide : bool=True) -> None: ...
+    @overload
+    def Perform(self,LengthMax : float) -> None: ...
     def SetDraft(self,IsInternal : bool=False) -> None: 
         """
         Sets the direction of the draft for this object. If IsInternal is true, the draft is internal to the argument Shape used in the constructor.
@@ -283,16 +283,16 @@ class BRepOffsetAPI_MakeEvolved(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP
         Return the face Top if <Solid> is True in the constructor.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theSpine : OCP.TopoDS.TopoDS_Shape,theProfile : OCP.TopoDS.TopoDS_Wire,theJoinType : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,theIsAxeProf : bool=True,theIsSolid : bool=False,theIsProfOnSpine : bool=False,theTol : float=1e-07,theIsVolume : bool=False,theRunInParallel : bool=False) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepOffsetAPI_MakeFilling(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
     N-Side Filling This algorithm avoids to build a face from: * a set of edges defining the bounds of the face and some constraints the surface of the face has to satisfy * a set of edges and points defining some constraints the support surface has to satisfy * an initial surface to deform for satisfying the constraints * a set of parameters to control the constraints.
     """
     @overload
-    def Add(self,Constr : OCP.TopoDS.TopoDS_Edge,Order : OCP.GeomAbs.GeomAbs_Shape,IsBound : bool=True) -> int: 
+    def Add(self,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Adds a new constraint which also defines an edge of the wire of the face Order: Order of the constraint: GeomAbs_C0 : the surface has to pass by 3D representation of the edge GeomAbs_G1 : the surface has to pass by 3D representation of the edge and to respect tangency with the first face of the edge GeomAbs_G2 : the surface has to pass by 3D representation of the edge and to respect tangency and curvature with the first face of the edge. Raises ConstructionError if the edge has no representation on a face and Order is GeomAbs_G1 or GeomAbs_G2.
 
@@ -305,11 +305,11 @@ class BRepOffsetAPI_MakeFilling(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP
         Adds a punctual constraint.
         """
     @overload
-    def Add(self,Point : OCP.gp.gp_Pnt) -> int: ...
-    @overload
-    def Add(self,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape) -> int: ...
+    def Add(self,Constr : OCP.TopoDS.TopoDS_Edge,Order : OCP.GeomAbs.GeomAbs_Shape,IsBound : bool=True) -> int: ...
     @overload
     def Add(self,Constr : OCP.TopoDS.TopoDS_Edge,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape,IsBound : bool=True) -> int: ...
+    @overload
+    def Add(self,Point : OCP.gp.gp_Pnt) -> int: ...
     @overload
     def Add(self,U : float,V : float,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape) -> int: ...
     def Build(self) -> None: 
@@ -330,23 +330,23 @@ class BRepOffsetAPI_MakeFilling(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP
     @overload
     def G0Error(self) -> float: ...
     @overload
-    def G1Error(self,Index : int) -> float: 
+    def G1Error(self) -> float: 
         """
         Returns the maximum angle between the result and the constraints. This is set at construction time.
 
         Returns the maximum angle between the result and the constraints. This is set at construction time.
         """
     @overload
-    def G1Error(self) -> float: ...
+    def G1Error(self,Index : int) -> float: ...
     @overload
-    def G2Error(self,Index : int) -> float: 
+    def G2Error(self) -> float: 
         """
         Returns the maximum angle between the result and the constraints. This is set at construction time.
 
         Returns the greatest difference in curvature found between the result and the constraint Index.
         """
     @overload
-    def G2Error(self) -> float: ...
+    def G2Error(self,Index : int) -> float: ...
     def Generated(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
         Returns the list of shapes generated from the shape <S>.
@@ -406,14 +406,14 @@ class BRepOffsetAPI_MakeOffset(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.
         returns a list of the created shapes from the shape <S>.
         """
     @overload
-    def Init(self,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,IsOpenResult : bool=False) -> None: 
+    def Init(self,Spine : OCP.TopoDS.TopoDS_Face,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,IsOpenResult : bool=False) -> None: 
         """
         Initializes the algorithm to construct parallels to the spine Spine. Join defines the type of parallel generated by the salient vertices of the spine. The default type is GeomAbs_Arc where the vertices generate sections of a circle. If join type is GeomAbs_Intersection, the edges that intersect in a salient vertex generate the edges prolonged until intersection.
 
         Initialize the evaluation of Offseting.
         """
     @overload
-    def Init(self,Spine : OCP.TopoDS.TopoDS_Face,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,IsOpenResult : bool=False) -> None: ...
+    def Init(self,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,IsOpenResult : bool=False) -> None: ...
     def IsDeleted(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Returns true if the shape S has been deleted.
@@ -435,11 +435,11 @@ class BRepOffsetAPI_MakeOffset(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.
         Returns a shape built by the shape construction algorithm. Raises exception StdFail_NotDone if the shape was not built.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,Spine : OCP.TopoDS.TopoDS_Face,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,IsOpenResult : bool=False) -> None: ...
     @overload
     def __init__(self,Spine : OCP.TopoDS.TopoDS_Wire,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,IsOpenResult : bool=False) -> None: ...
     @overload
-    def __init__(self,Spine : OCP.TopoDS.TopoDS_Face,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,IsOpenResult : bool=False) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class BRepOffsetAPI_MakeOffsetShape(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -457,17 +457,13 @@ class BRepOffsetAPI_MakeOffsetShape(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape,
         """
         Returns the list of shapes generated from the shape <S>.
         """
-    def GeneratedEdge(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
-        """
-        Returns the list of edges generated from the shape <S>.
-        """
     def GetJoinType(self) -> OCP.GeomAbs.GeomAbs_JoinType: 
         """
         Returns offset join type.
         """
     def IsDeleted(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
-        Returns true if the shape S has been deleted.
+        Returns true if the shape has been removed from the result.
         """
     def IsDone(self) -> bool: 
         """
@@ -479,7 +475,7 @@ class BRepOffsetAPI_MakeOffsetShape(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape,
         """
     def Modified(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
-        Returns the list of shapes modified from the shape <S>.
+        Returns the list of shapes Modified from the shape <S>.
         """
     def PerformByJoin(self,S : OCP.TopoDS.TopoDS_Shape,Offset : float,Tol : float,Mode : OCP.BRepOffset.BRepOffset_Mode=BRepOffset_Mode.BRepOffset_Skin,Intersection : bool=False,SelfInter : bool=False,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,RemoveIntEdges : bool=False) -> None: 
         """
@@ -561,14 +557,14 @@ class BRepOffsetAPI_MakePipeShell(OCP.BRepPrimAPI.BRepPrimAPI_MakeSweep, OCP.BRe
     This class provides for a framework to construct a shell or a solid along a spine consisting in a wire. To produce a solid, the initial wire must be closed. Two approaches are used: - definition by section - by a section and a scaling law - by addition of successive intermediary sections - definition by sweep mode. - pseudo-Frenet - constant - binormal constant - normal defined by a surface support - normal defined by a guiding contour. The two global approaches can also be combined. You can also close the surface later in order to form a solid. Warning: some limitations exist -- Mode with auxilary spine is incompatible with hometetic laws -- Mode with auxilary spine and keep contact produce only CO surface.
     """
     @overload
-    def Add(self,Profile : OCP.TopoDS.TopoDS_Shape,Location : OCP.TopoDS.TopoDS_Vertex,WithContact : bool=False,WithCorrection : bool=False) -> None: 
+    def Add(self,Profile : OCP.TopoDS.TopoDS_Shape,WithContact : bool=False,WithCorrection : bool=False) -> None: 
         """
         Adds the section Profile to this framework. First and last sections may be punctual, so the shape Profile may be both wire and vertex. Correspondent point on spine is computed automatically. If WithContact is true, the section is translated to be in contact with the spine. If WithCorrection is true, the section is rotated to be orthogonal to the spine?s tangent in the correspondent point. This option has no sense if the section is punctual (Profile is of type TopoDS_Vertex).
 
         Adds the section Profile to this framework. Correspondent point on the spine is given by Location. Warning: To be effective, it is not recommended to combine methods Add and SetLaw.
         """
     @overload
-    def Add(self,Profile : OCP.TopoDS.TopoDS_Shape,WithContact : bool=False,WithCorrection : bool=False) -> None: ...
+    def Add(self,Profile : OCP.TopoDS.TopoDS_Shape,Location : OCP.TopoDS.TopoDS_Vertex,WithContact : bool=False,WithCorrection : bool=False) -> None: ...
     def Build(self) -> None: 
         """
         Builds the resulting shape (redefined from MakeShape).
@@ -651,7 +647,7 @@ class BRepOffsetAPI_MakePipeShell(OCP.BRepPrimAPI.BRepPrimAPI_MakeSweep, OCP.BRe
         Define the maximum number of spans in V-direction on resulting surface
         """
     @overload
-    def SetMode(self,BiNormal : OCP.gp.gp_Dir) -> None: 
+    def SetMode(self,AuxiliarySpine : OCP.TopoDS.TopoDS_Wire,CurvilinearEquivalence : bool,KeepContact : OCP.BRepFill.BRepFill_TypeOfContact=BRepFill_TypeOfContact.BRepFill_NoContact) -> None: 
         """
         Sets a Frenet or a CorrectedFrenet trihedron to perform the sweeping If IsFrenet is false, a corrected Frenet trihedron is used.
 
@@ -664,13 +660,13 @@ class BRepOffsetAPI_MakePipeShell(OCP.BRepPrimAPI.BRepPrimAPI_MakeSweep, OCP.BRe
         Sets an auxiliary spine to define the Normal For each Point of the Spine P, an Point Q is evalued on <AuxiliarySpine> If <CurvilinearEquivalence> Q split <AuxiliarySpine> with the same length ratio than P split <Spline>. Else the plan define by P and the tangent to the <Spine> intersect <AuxiliarySpine> in Q. If <KeepContact> equals BRepFill_NoContact: The Normal is defined by the vector PQ. If <KeepContact> equals BRepFill_Contact: The Normal is defined to achieve that the sweeped section is in contact to the auxiliarySpine. The width of section is constant all along the path. In other words, the auxiliary spine lies on the swept surface, but not necessarily is a boundary of this surface. However, the auxiliary spine has to be close enough to the main spine to provide intersection with any section all along the path. If <KeepContact> equals BRepFill_ContactOnBorder: The auxiliary spine becomes a boundary of the swept surface and the width of section varies along the path. Give section to sweep. Possibilities are : - Give one or sevral section - Give one profile and an homotetic law. - Automatic compute of correspondance beetween spine, and section on the sweeped shape - correspondance beetween spine, and section on the sweeped shape defined by a vertex of the spine
         """
     @overload
+    def SetMode(self,BiNormal : OCP.gp.gp_Dir) -> None: ...
+    @overload
     def SetMode(self,Axe : OCP.gp.gp_Ax2) -> None: ...
     @overload
     def SetMode(self,IsFrenet : bool=False) -> None: ...
     @overload
     def SetMode(self,SpineSupport : OCP.TopoDS.TopoDS_Shape) -> bool: ...
-    @overload
-    def SetMode(self,AuxiliarySpine : OCP.TopoDS.TopoDS_Wire,CurvilinearEquivalence : bool,KeepContact : OCP.BRepFill.BRepFill_TypeOfContact=BRepFill_TypeOfContact.BRepFill_NoContact) -> None: ...
     def SetTolerance(self,Tol3d : float=0.0001,BoundTol : float=0.0001,TolAngular : float=0.01) -> None: 
         """
         Sets the following tolerance values - 3D tolerance Tol3d - boundary tolerance BoundTol - angular tolerance TolAngular.
@@ -709,17 +705,13 @@ class BRepOffsetAPI_MakeThickSolid(BRepOffsetAPI_MakeOffsetShape, OCP.BRepBuilde
         """
         Returns the list of shapes generated from the shape <S>.
         """
-    def GeneratedEdge(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
-        """
-        Returns the list of edges generated from the shape <S>.
-        """
     def GetJoinType(self) -> OCP.GeomAbs.GeomAbs_JoinType: 
         """
         Returns offset join type.
         """
     def IsDeleted(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
-        Returns true if the shape S has been deleted.
+        Returns true if the shape has been removed from the result.
         """
     def IsDone(self) -> bool: 
         """
@@ -754,9 +746,9 @@ class BRepOffsetAPI_MakeThickSolid(BRepOffsetAPI_MakeOffsetShape, OCP.BRepBuilde
         Returns a shape built by the shape construction algorithm. Raises exception StdFail_NotDone if the shape was not built.
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,ClosingFaces : OCP.TopTools.TopTools_ListOfShape,Offset : float,Tol : float,Mode : OCP.BRepOffset.BRepOffset_Mode=BRepOffset_Mode.BRepOffset_Skin,Intersection : bool=False,SelfInter : bool=False,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,RemoveIntEdges : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,ClosingFaces : OCP.TopTools.TopTools_ListOfShape,Offset : float,Tol : float,Mode : OCP.BRepOffset.BRepOffset_Mode=BRepOffset_Mode.BRepOffset_Skin,Intersection : bool=False,SelfInter : bool=False,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,RemoveIntEdges : bool=False) -> None: ...
     pass
 class BRepOffsetAPI_MiddlePath(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -878,14 +870,14 @@ class BRepOffsetAPI_SequenceOfSequenceOfReal(OCP.NCollection.NCollection_BaseSeq
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TColStd.TColStd_SequenceOfReal) -> None: 
+    def Append(self,theSeq : BRepOffsetAPI_SequenceOfSequenceOfReal) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : BRepOffsetAPI_SequenceOfSequenceOfReal) -> None: ...
+    def Append(self,theItem : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
     def Assign(self,theOther : BRepOffsetAPI_SequenceOfSequenceOfReal) -> BRepOffsetAPI_SequenceOfSequenceOfReal: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -915,23 +907,23 @@ class BRepOffsetAPI_SequenceOfSequenceOfReal(OCP.NCollection.NCollection_BaseSeq
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : BRepOffsetAPI_SequenceOfSequenceOfReal) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OCP.TColStd.TColStd_SequenceOfReal) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : BRepOffsetAPI_SequenceOfSequenceOfReal) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.TColStd.TColStd_SequenceOfReal) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : BRepOffsetAPI_SequenceOfSequenceOfReal) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : BRepOffsetAPI_SequenceOfSequenceOfReal) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -958,14 +950,14 @@ class BRepOffsetAPI_SequenceOfSequenceOfReal(OCP.NCollection.NCollection_BaseSeq
     @overload
     def Prepend(self,theSeq : BRepOffsetAPI_SequenceOfSequenceOfReal) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -991,12 +983,12 @@ class BRepOffsetAPI_SequenceOfSequenceOfReal(OCP.NCollection.NCollection_BaseSeq
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : BRepOffsetAPI_SequenceOfSequenceOfReal) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : BRepOffsetAPI_SequenceOfSequenceOfReal) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1012,14 +1004,14 @@ class BRepOffsetAPI_SequenceOfSequenceOfShape(OCP.NCollection.NCollection_BaseSe
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TopTools.TopTools_SequenceOfShape) -> None: 
+    def Append(self,theSeq : BRepOffsetAPI_SequenceOfSequenceOfShape) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : BRepOffsetAPI_SequenceOfSequenceOfShape) -> None: ...
+    def Append(self,theItem : OCP.TopTools.TopTools_SequenceOfShape) -> None: ...
     def Assign(self,theOther : BRepOffsetAPI_SequenceOfSequenceOfShape) -> BRepOffsetAPI_SequenceOfSequenceOfShape: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1058,14 +1050,14 @@ class BRepOffsetAPI_SequenceOfSequenceOfShape(OCP.NCollection.NCollection_BaseSe
     @overload
     def InsertAfter(self,theIndex : int,theSeq : BRepOffsetAPI_SequenceOfSequenceOfShape) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.TopTools.TopTools_SequenceOfShape) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : BRepOffsetAPI_SequenceOfSequenceOfShape) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : BRepOffsetAPI_SequenceOfSequenceOfShape) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.TopTools.TopTools_SequenceOfShape) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1083,23 +1075,23 @@ class BRepOffsetAPI_SequenceOfSequenceOfShape(OCP.NCollection.NCollection_BaseSe
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : BRepOffsetAPI_SequenceOfSequenceOfShape) -> None: 
+    def Prepend(self,theItem : OCP.TopTools.TopTools_SequenceOfShape) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.TopTools.TopTools_SequenceOfShape) -> None: ...
+    def Prepend(self,theSeq : BRepOffsetAPI_SequenceOfSequenceOfShape) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1127,10 +1119,10 @@ class BRepOffsetAPI_SequenceOfSequenceOfShape(OCP.NCollection.NCollection_BaseSe
     @overload
     def __init__(self,theOther : BRepOffsetAPI_SequenceOfSequenceOfShape) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """

@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.gp
+import OCP.TColgp
 import OCP.TColStd
 import OCP.math
-import OCP.TColgp
-import OCP.gp
 __all__  = [
 "CSLib",
 "CSLib_Class2d",
@@ -37,7 +37,7 @@ class CSLib():
     """
     @staticmethod
     @overload
-    def DNNUV_s(Nu : int,Nv : int,DerSurf1 : OCP.TColgp.TColgp_Array2OfVec,DerSurf2 : OCP.TColgp.TColgp_Array2OfVec) -> OCP.gp.gp_Vec: 
+    def DNNUV_s(Nu : int,Nv : int,DerSurf : OCP.TColgp.TColgp_Array2OfVec) -> OCP.gp.gp_Vec: 
         """
         -- Computes the derivative of order Nu in the -- direction U and Nv in the direction V of the not -- normalized normal vector at the point P(U,V) The array DerSurf contain the derivative (i,j) of the surface for i=0,Nu+1 ; j=0,Nv+1
 
@@ -45,7 +45,7 @@ class CSLib():
         """
     @staticmethod
     @overload
-    def DNNUV_s(Nu : int,Nv : int,DerSurf : OCP.TColgp.TColgp_Array2OfVec) -> OCP.gp.gp_Vec: ...
+    def DNNUV_s(Nu : int,Nv : int,DerSurf1 : OCP.TColgp.TColgp_Array2OfVec,DerSurf2 : OCP.TColgp.TColgp_Array2OfVec) -> OCP.gp.gp_Vec: ...
     @staticmethod
     def DNNormal_s(Nu : int,Nv : int,DerNUV : OCP.TColgp.TColgp_Array2OfVec,Iduref : int=0,Idvref : int=0) -> OCP.gp.gp_Vec: 
         """
@@ -53,7 +53,7 @@ class CSLib():
         """
     @staticmethod
     @overload
-    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,SinTol : float,theStatus : CSLib_DerivativeStatus,Normal : OCP.gp.gp_Dir) -> None: 
+    def Normal_s(MaxOrder : int,DerNUV : OCP.TColgp.TColgp_Array2OfVec,MagTol : float,U : float,V : float,Umin : float,Umax : float,Vmin : float,Vmax : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> Tuple[int, int]: 
         """
         The following functions computes the normal to a surface inherits FunctionWithDerivative from math
 
@@ -68,10 +68,10 @@ class CSLib():
     def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,MagTol : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> None: ...
     @staticmethod
     @overload
-    def Normal_s(MaxOrder : int,DerNUV : OCP.TColgp.TColgp_Array2OfVec,MagTol : float,U : float,V : float,Umin : float,Umax : float,Vmin : float,Vmax : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> Tuple[int, int]: ...
+    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,D2U : OCP.gp.gp_Vec,D2V : OCP.gp.gp_Vec,D2UV : OCP.gp.gp_Vec,SinTol : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> Tuple[bool]: ...
     @staticmethod
     @overload
-    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,D2U : OCP.gp.gp_Vec,D2V : OCP.gp.gp_Vec,D2UV : OCP.gp.gp_Vec,SinTol : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> Tuple[bool]: ...
+    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,SinTol : float,theStatus : CSLib_DerivativeStatus,Normal : OCP.gp.gp_Dir) -> None: ...
     def __init__(self) -> None: ...
     pass
 class CSLib_Class2d():
@@ -95,9 +95,9 @@ class CSLib_Class2d():
         None
         """
     @overload
-    def __init__(self,thePnts2d : OCP.TColgp.TColgp_SequenceOfPnt2d,theTolU : float,theTolV : float,theUMin : float,theVMin : float,theUMax : float,theVMax : float) -> None: ...
-    @overload
     def __init__(self,thePnts2d : OCP.TColgp.TColgp_Array1OfPnt2d,theTolU : float,theTolV : float,theUMin : float,theVMin : float,theUMax : float,theVMax : float) -> None: ...
+    @overload
+    def __init__(self,thePnts2d : OCP.TColgp.TColgp_SequenceOfPnt2d,theTolU : float,theTolV : float,theUMin : float,theVMin : float,theUMax : float,theVMax : float) -> None: ...
     pass
 class CSLib_DerivativeStatus():
     """
@@ -119,25 +119,33 @@ class CSLib_DerivativeStatus():
 
       CSLib_D1uIsParallelD1v
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    CSLib_D1IsNull: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1IsNull
-    CSLib_D1uD1vRatioIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1uD1vRatioIsNull
-    CSLib_D1uIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1uIsNull
-    CSLib_D1uIsParallelD1v: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1uIsParallelD1v
-    CSLib_D1vD1uRatioIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1vD1uRatioIsNull
-    CSLib_D1vIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1vIsNull
-    CSLib_Done: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_Done
-    __entries: dict # value = {'CSLib_Done': (CSLib_DerivativeStatus.CSLib_Done, None), 'CSLib_D1uIsNull': (CSLib_DerivativeStatus.CSLib_D1uIsNull, None), 'CSLib_D1vIsNull': (CSLib_DerivativeStatus.CSLib_D1vIsNull, None), 'CSLib_D1IsNull': (CSLib_DerivativeStatus.CSLib_D1IsNull, None), 'CSLib_D1uD1vRatioIsNull': (CSLib_DerivativeStatus.CSLib_D1uD1vRatioIsNull, None), 'CSLib_D1vD1uRatioIsNull': (CSLib_DerivativeStatus.CSLib_D1vD1uRatioIsNull, None), 'CSLib_D1uIsParallelD1v': (CSLib_DerivativeStatus.CSLib_D1uIsParallelD1v, None)}
-    __members__: dict # value = {'CSLib_Done': CSLib_DerivativeStatus.CSLib_Done, 'CSLib_D1uIsNull': CSLib_DerivativeStatus.CSLib_D1uIsNull, 'CSLib_D1vIsNull': CSLib_DerivativeStatus.CSLib_D1vIsNull, 'CSLib_D1IsNull': CSLib_DerivativeStatus.CSLib_D1IsNull, 'CSLib_D1uD1vRatioIsNull': CSLib_DerivativeStatus.CSLib_D1uD1vRatioIsNull, 'CSLib_D1vD1uRatioIsNull': CSLib_DerivativeStatus.CSLib_D1vD1uRatioIsNull, 'CSLib_D1uIsParallelD1v': CSLib_DerivativeStatus.CSLib_D1uIsParallelD1v}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    CSLib_D1IsNull: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1IsNull: 3>
+    CSLib_D1uD1vRatioIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1uD1vRatioIsNull: 4>
+    CSLib_D1uIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1uIsNull: 1>
+    CSLib_D1uIsParallelD1v: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1uIsParallelD1v: 6>
+    CSLib_D1vD1uRatioIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1vD1uRatioIsNull: 5>
+    CSLib_D1vIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1vIsNull: 2>
+    CSLib_Done: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_Done: 0>
+    __entries: dict # value = {'CSLib_Done': (<CSLib_DerivativeStatus.CSLib_Done: 0>, None), 'CSLib_D1uIsNull': (<CSLib_DerivativeStatus.CSLib_D1uIsNull: 1>, None), 'CSLib_D1vIsNull': (<CSLib_DerivativeStatus.CSLib_D1vIsNull: 2>, None), 'CSLib_D1IsNull': (<CSLib_DerivativeStatus.CSLib_D1IsNull: 3>, None), 'CSLib_D1uD1vRatioIsNull': (<CSLib_DerivativeStatus.CSLib_D1uD1vRatioIsNull: 4>, None), 'CSLib_D1vD1uRatioIsNull': (<CSLib_DerivativeStatus.CSLib_D1vD1uRatioIsNull: 5>, None), 'CSLib_D1uIsParallelD1v': (<CSLib_DerivativeStatus.CSLib_D1uIsParallelD1v: 6>, None)}
+    __members__: dict # value = {'CSLib_Done': <CSLib_DerivativeStatus.CSLib_Done: 0>, 'CSLib_D1uIsNull': <CSLib_DerivativeStatus.CSLib_D1uIsNull: 1>, 'CSLib_D1vIsNull': <CSLib_DerivativeStatus.CSLib_D1vIsNull: 2>, 'CSLib_D1IsNull': <CSLib_DerivativeStatus.CSLib_D1IsNull: 3>, 'CSLib_D1uD1vRatioIsNull': <CSLib_DerivativeStatus.CSLib_D1uD1vRatioIsNull: 4>, 'CSLib_D1vD1uRatioIsNull': <CSLib_DerivativeStatus.CSLib_D1vD1uRatioIsNull: 5>, 'CSLib_D1uIsParallelD1v': <CSLib_DerivativeStatus.CSLib_D1uIsParallelD1v: 6>}
     pass
 class CSLib_NormalPolyDef(OCP.math.math_FunctionWithDerivative, OCP.math.math_Function):
     """
@@ -185,41 +193,49 @@ class CSLib_NormalStatus():
 
       CSLib_D1NuIsParallelD1Nv
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    CSLib_D1NIsNull: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NIsNull
-    CSLib_D1NuIsNull: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NuIsNull
-    CSLib_D1NuIsParallelD1Nv: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NuIsParallelD1Nv
-    CSLib_D1NuNvRatioIsNull: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NuNvRatioIsNull
-    CSLib_D1NvIsNull: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NvIsNull
-    CSLib_D1NvNuRatioIsNull: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NvNuRatioIsNull
-    CSLib_Defined: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_Defined
-    CSLib_InfinityOfSolutions: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_InfinityOfSolutions
-    CSLib_Singular: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_Singular
-    __entries: dict # value = {'CSLib_Singular': (CSLib_NormalStatus.CSLib_Singular, None), 'CSLib_Defined': (CSLib_NormalStatus.CSLib_Defined, None), 'CSLib_InfinityOfSolutions': (CSLib_NormalStatus.CSLib_InfinityOfSolutions, None), 'CSLib_D1NuIsNull': (CSLib_NormalStatus.CSLib_D1NuIsNull, None), 'CSLib_D1NvIsNull': (CSLib_NormalStatus.CSLib_D1NvIsNull, None), 'CSLib_D1NIsNull': (CSLib_NormalStatus.CSLib_D1NIsNull, None), 'CSLib_D1NuNvRatioIsNull': (CSLib_NormalStatus.CSLib_D1NuNvRatioIsNull, None), 'CSLib_D1NvNuRatioIsNull': (CSLib_NormalStatus.CSLib_D1NvNuRatioIsNull, None), 'CSLib_D1NuIsParallelD1Nv': (CSLib_NormalStatus.CSLib_D1NuIsParallelD1Nv, None)}
-    __members__: dict # value = {'CSLib_Singular': CSLib_NormalStatus.CSLib_Singular, 'CSLib_Defined': CSLib_NormalStatus.CSLib_Defined, 'CSLib_InfinityOfSolutions': CSLib_NormalStatus.CSLib_InfinityOfSolutions, 'CSLib_D1NuIsNull': CSLib_NormalStatus.CSLib_D1NuIsNull, 'CSLib_D1NvIsNull': CSLib_NormalStatus.CSLib_D1NvIsNull, 'CSLib_D1NIsNull': CSLib_NormalStatus.CSLib_D1NIsNull, 'CSLib_D1NuNvRatioIsNull': CSLib_NormalStatus.CSLib_D1NuNvRatioIsNull, 'CSLib_D1NvNuRatioIsNull': CSLib_NormalStatus.CSLib_D1NvNuRatioIsNull, 'CSLib_D1NuIsParallelD1Nv': CSLib_NormalStatus.CSLib_D1NuIsParallelD1Nv}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    CSLib_D1NIsNull: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NIsNull: 5>
+    CSLib_D1NuIsNull: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NuIsNull: 3>
+    CSLib_D1NuIsParallelD1Nv: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NuIsParallelD1Nv: 8>
+    CSLib_D1NuNvRatioIsNull: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NuNvRatioIsNull: 6>
+    CSLib_D1NvIsNull: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NvIsNull: 4>
+    CSLib_D1NvNuRatioIsNull: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NvNuRatioIsNull: 7>
+    CSLib_Defined: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_Defined: 1>
+    CSLib_InfinityOfSolutions: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_InfinityOfSolutions: 2>
+    CSLib_Singular: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_Singular: 0>
+    __entries: dict # value = {'CSLib_Singular': (<CSLib_NormalStatus.CSLib_Singular: 0>, None), 'CSLib_Defined': (<CSLib_NormalStatus.CSLib_Defined: 1>, None), 'CSLib_InfinityOfSolutions': (<CSLib_NormalStatus.CSLib_InfinityOfSolutions: 2>, None), 'CSLib_D1NuIsNull': (<CSLib_NormalStatus.CSLib_D1NuIsNull: 3>, None), 'CSLib_D1NvIsNull': (<CSLib_NormalStatus.CSLib_D1NvIsNull: 4>, None), 'CSLib_D1NIsNull': (<CSLib_NormalStatus.CSLib_D1NIsNull: 5>, None), 'CSLib_D1NuNvRatioIsNull': (<CSLib_NormalStatus.CSLib_D1NuNvRatioIsNull: 6>, None), 'CSLib_D1NvNuRatioIsNull': (<CSLib_NormalStatus.CSLib_D1NvNuRatioIsNull: 7>, None), 'CSLib_D1NuIsParallelD1Nv': (<CSLib_NormalStatus.CSLib_D1NuIsParallelD1Nv: 8>, None)}
+    __members__: dict # value = {'CSLib_Singular': <CSLib_NormalStatus.CSLib_Singular: 0>, 'CSLib_Defined': <CSLib_NormalStatus.CSLib_Defined: 1>, 'CSLib_InfinityOfSolutions': <CSLib_NormalStatus.CSLib_InfinityOfSolutions: 2>, 'CSLib_D1NuIsNull': <CSLib_NormalStatus.CSLib_D1NuIsNull: 3>, 'CSLib_D1NvIsNull': <CSLib_NormalStatus.CSLib_D1NvIsNull: 4>, 'CSLib_D1NIsNull': <CSLib_NormalStatus.CSLib_D1NIsNull: 5>, 'CSLib_D1NuNvRatioIsNull': <CSLib_NormalStatus.CSLib_D1NuNvRatioIsNull: 6>, 'CSLib_D1NvNuRatioIsNull': <CSLib_NormalStatus.CSLib_D1NvNuRatioIsNull: 7>, 'CSLib_D1NuIsParallelD1Nv': <CSLib_NormalStatus.CSLib_D1NuIsParallelD1Nv: 8>}
     pass
-CSLib_D1IsNull: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1IsNull
-CSLib_D1NIsNull: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NIsNull
-CSLib_D1NuIsNull: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NuIsNull
-CSLib_D1NuIsParallelD1Nv: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NuIsParallelD1Nv
-CSLib_D1NuNvRatioIsNull: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NuNvRatioIsNull
-CSLib_D1NvIsNull: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NvIsNull
-CSLib_D1NvNuRatioIsNull: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_D1NvNuRatioIsNull
-CSLib_D1uD1vRatioIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1uD1vRatioIsNull
-CSLib_D1uIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1uIsNull
-CSLib_D1uIsParallelD1v: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1uIsParallelD1v
-CSLib_D1vD1uRatioIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1vD1uRatioIsNull
-CSLib_D1vIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_D1vIsNull
-CSLib_Defined: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_Defined
-CSLib_Done: OCP.CSLib.CSLib_DerivativeStatus # value = CSLib_DerivativeStatus.CSLib_Done
-CSLib_InfinityOfSolutions: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_InfinityOfSolutions
-CSLib_Singular: OCP.CSLib.CSLib_NormalStatus # value = CSLib_NormalStatus.CSLib_Singular
+CSLib_D1IsNull: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1IsNull: 3>
+CSLib_D1NIsNull: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NIsNull: 5>
+CSLib_D1NuIsNull: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NuIsNull: 3>
+CSLib_D1NuIsParallelD1Nv: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NuIsParallelD1Nv: 8>
+CSLib_D1NuNvRatioIsNull: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NuNvRatioIsNull: 6>
+CSLib_D1NvIsNull: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NvIsNull: 4>
+CSLib_D1NvNuRatioIsNull: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_D1NvNuRatioIsNull: 7>
+CSLib_D1uD1vRatioIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1uD1vRatioIsNull: 4>
+CSLib_D1uIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1uIsNull: 1>
+CSLib_D1uIsParallelD1v: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1uIsParallelD1v: 6>
+CSLib_D1vD1uRatioIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1vD1uRatioIsNull: 5>
+CSLib_D1vIsNull: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_D1vIsNull: 2>
+CSLib_Defined: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_Defined: 1>
+CSLib_Done: OCP.CSLib.CSLib_DerivativeStatus # value = <CSLib_DerivativeStatus.CSLib_Done: 0>
+CSLib_InfinityOfSolutions: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_InfinityOfSolutions: 2>
+CSLib_Singular: OCP.CSLib.CSLib_NormalStatus # value = <CSLib_NormalStatus.CSLib_Singular: 0>

@@ -5,10 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TColStd
-import OCP.Geom2d
-import OCP.TColgp
+import io
 import OCP.math
 import OCP.gp
+import OCP.TColgp
+import OCP.Geom2d
 __all__  = [
 "FairCurve_AnalysisCode",
 "FairCurve_Batten",
@@ -41,22 +42,30 @@ class FairCurve_AnalysisCode():
 
       FairCurve_NullHeight
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    FairCurve_InfiniteSliding: OCP.FairCurve.FairCurve_AnalysisCode # value = FairCurve_AnalysisCode.FairCurve_InfiniteSliding
-    FairCurve_NotConverged: OCP.FairCurve.FairCurve_AnalysisCode # value = FairCurve_AnalysisCode.FairCurve_NotConverged
-    FairCurve_NullHeight: OCP.FairCurve.FairCurve_AnalysisCode # value = FairCurve_AnalysisCode.FairCurve_NullHeight
-    FairCurve_OK: OCP.FairCurve.FairCurve_AnalysisCode # value = FairCurve_AnalysisCode.FairCurve_OK
-    __entries: dict # value = {'FairCurve_OK': (FairCurve_AnalysisCode.FairCurve_OK, None), 'FairCurve_NotConverged': (FairCurve_AnalysisCode.FairCurve_NotConverged, None), 'FairCurve_InfiniteSliding': (FairCurve_AnalysisCode.FairCurve_InfiniteSliding, None), 'FairCurve_NullHeight': (FairCurve_AnalysisCode.FairCurve_NullHeight, None)}
-    __members__: dict # value = {'FairCurve_OK': FairCurve_AnalysisCode.FairCurve_OK, 'FairCurve_NotConverged': FairCurve_AnalysisCode.FairCurve_NotConverged, 'FairCurve_InfiniteSliding': FairCurve_AnalysisCode.FairCurve_InfiniteSliding, 'FairCurve_NullHeight': FairCurve_AnalysisCode.FairCurve_NullHeight}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    FairCurve_InfiniteSliding: OCP.FairCurve.FairCurve_AnalysisCode # value = <FairCurve_AnalysisCode.FairCurve_InfiniteSliding: 2>
+    FairCurve_NotConverged: OCP.FairCurve.FairCurve_AnalysisCode # value = <FairCurve_AnalysisCode.FairCurve_NotConverged: 1>
+    FairCurve_NullHeight: OCP.FairCurve.FairCurve_AnalysisCode # value = <FairCurve_AnalysisCode.FairCurve_NullHeight: 3>
+    FairCurve_OK: OCP.FairCurve.FairCurve_AnalysisCode # value = <FairCurve_AnalysisCode.FairCurve_OK: 0>
+    __entries: dict # value = {'FairCurve_OK': (<FairCurve_AnalysisCode.FairCurve_OK: 0>, None), 'FairCurve_NotConverged': (<FairCurve_AnalysisCode.FairCurve_NotConverged: 1>, None), 'FairCurve_InfiniteSliding': (<FairCurve_AnalysisCode.FairCurve_InfiniteSliding: 2>, None), 'FairCurve_NullHeight': (<FairCurve_AnalysisCode.FairCurve_NullHeight: 3>, None)}
+    __members__: dict # value = {'FairCurve_OK': <FairCurve_AnalysisCode.FairCurve_OK: 0>, 'FairCurve_NotConverged': <FairCurve_AnalysisCode.FairCurve_NotConverged: 1>, 'FairCurve_InfiniteSliding': <FairCurve_AnalysisCode.FairCurve_InfiniteSliding: 2>, 'FairCurve_NullHeight': <FairCurve_AnalysisCode.FairCurve_NullHeight: 3>}
     pass
 class FairCurve_Batten():
     """
@@ -70,7 +79,7 @@ class FairCurve_Batten():
         """
         Returns the computed curve a 2d BSpline.
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints on the stream o information on the current state of the object.
         """
@@ -368,14 +377,14 @@ class FairCurve_Energy(OCP.math.math_MultipleVarFunctionWithHessian, OCP.math.ma
         computes the values of the Energys E for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: 
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: 
         """
         computes the Energy <E> and the gradient <G> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
 
         computes the Energy <E>, the gradient <G> and the Hessian <H> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: ...
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: ...
     def Variable(self,X : OCP.math.math_Vector) -> bool: 
         """
         compute the variables <X> wich correspond with the field <MyPoles>
@@ -422,14 +431,14 @@ class FairCurve_EnergyOfBatten(FairCurve_Energy, OCP.math.math_MultipleVarFuncti
         computes the values of the Energys E for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: 
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: 
         """
         computes the Energy <E> and the gradient <G> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
 
         computes the Energy <E>, the gradient <G> and the Hessian <H> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: ...
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: ...
     def Variable(self,X : OCP.math.math_Vector) -> bool: 
         """
         compute the variables <X> wich correspond with the field <MyPoles>
@@ -477,14 +486,14 @@ class FairCurve_EnergyOfMVC(FairCurve_Energy, OCP.math.math_MultipleVarFunctionW
         computes the values of the Energys E for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: 
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: 
         """
         computes the Energy <E> and the gradient <G> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
 
         computes the Energy <E>, the gradient <G> and the Hessian <H> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: ...
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: ...
     def Variable(self,X : OCP.math.math_Vector) -> bool: 
         """
         compute the variables <X> wich correspond with the field <MyPoles>
@@ -503,7 +512,7 @@ class FairCurve_MinimalVariation(FairCurve_Batten):
         """
         Returns the computed curve a 2d BSpline.
         """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints on the stream o information on the current state of the object. Is used to redefine the operator <<.
         """
@@ -669,7 +678,7 @@ class FairCurve_Newton(OCP.math.math_NewtonMinimum):
     """
     Algorithme of Optimization used to make "FairCurve"
     """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints on the stream o information on the current state of the object. Is used to redefine the operator <<.
         """
@@ -737,7 +746,7 @@ class FairCurve_Newton(OCP.math.math_NewtonMinimum):
         """
     def __init__(self,theFunction : OCP.math.math_MultipleVarFunctionWithHessian,theSpatialTolerance : float=1e-07,theCriteriumTolerance : float=1e-07,theNbIterations : int=40,theConvexity : float=1e-06,theWithSingularity : bool=True) -> None: ...
     pass
-FairCurve_InfiniteSliding: OCP.FairCurve.FairCurve_AnalysisCode # value = FairCurve_AnalysisCode.FairCurve_InfiniteSliding
-FairCurve_NotConverged: OCP.FairCurve.FairCurve_AnalysisCode # value = FairCurve_AnalysisCode.FairCurve_NotConverged
-FairCurve_NullHeight: OCP.FairCurve.FairCurve_AnalysisCode # value = FairCurve_AnalysisCode.FairCurve_NullHeight
-FairCurve_OK: OCP.FairCurve.FairCurve_AnalysisCode # value = FairCurve_AnalysisCode.FairCurve_OK
+FairCurve_InfiniteSliding: OCP.FairCurve.FairCurve_AnalysisCode # value = <FairCurve_AnalysisCode.FairCurve_InfiniteSliding: 2>
+FairCurve_NotConverged: OCP.FairCurve.FairCurve_AnalysisCode # value = <FairCurve_AnalysisCode.FairCurve_NotConverged: 1>
+FairCurve_NullHeight: OCP.FairCurve.FairCurve_AnalysisCode # value = <FairCurve_AnalysisCode.FairCurve_NullHeight: 3>
+FairCurve_OK: OCP.FairCurve.FairCurve_AnalysisCode # value = <FairCurve_AnalysisCode.FairCurve_OK: 0>

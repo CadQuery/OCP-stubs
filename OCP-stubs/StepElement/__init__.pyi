@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TColStd
+import OCP.TCollection
+import OCP.NCollection
 import OCP.StepRepr
+import OCP.Interface
 import OCP.Standard
 import OCP.StepData
-import OCP.NCollection
-import OCP.Interface
 __all__  = [
 "StepElement_AnalysisItemWithinRepresentation",
 "StepElement_Array1OfCurveElementEndReleasePacket",
@@ -284,14 +284,14 @@ class StepElement_Array1OfCurveElementEndReleasePacket():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : StepElement_CurveElementEndReleasePacket,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfCurveElementEndReleasePacket) -> None: ...
     @overload
-    def __init__(self,theBegin : StepElement_CurveElementEndReleasePacket,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepElement_Array1OfCurveElementSectionDefinition():
     """
@@ -372,12 +372,12 @@ class StepElement_Array1OfCurveElementSectionDefinition():
     @overload
     def __init__(self,theOther : StepElement_Array1OfCurveElementSectionDefinition) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : StepElement_CurveElementSectionDefinition,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepElement_Array1OfHSequenceOfCurveElementPurposeMember():
     """
@@ -463,7 +463,7 @@ class StepElement_Array1OfHSequenceOfCurveElementPurposeMember():
     def __init__(self,theOther : StepElement_Array1OfHSequenceOfCurveElementPurposeMember) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember():
     """
@@ -544,12 +544,12 @@ class StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember():
     @overload
     def __init__(self,theBegin : StepElement_HSequenceOfSurfaceElementPurposeMember,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepElement_Array1OfMeasureOrUnspecifiedValue():
     """
@@ -628,14 +628,14 @@ class StepElement_Array1OfMeasureOrUnspecifiedValue():
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : StepElement_MeasureOrUnspecifiedValue,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepElement_Array1OfMeasureOrUnspecifiedValue) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepElement_Array1OfSurfaceSection():
     """
@@ -714,14 +714,14 @@ class StepElement_Array1OfSurfaceSection():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepElement_Array1OfSurfaceSection) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepElement_SurfaceSection,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepElement_Array1OfVolumeElementPurpose():
     """
@@ -802,12 +802,12 @@ class StepElement_Array1OfVolumeElementPurpose():
     @overload
     def __init__(self,theOther : StepElement_Array1OfVolumeElementPurpose) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : StepElement_VolumeElementPurpose,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepElement_Array1OfVolumeElementPurposeMember():
     """
@@ -886,14 +886,14 @@ class StepElement_Array1OfVolumeElementPurposeMember():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfVolumeElementPurposeMember) -> None: ...
     @overload
     def __init__(self,theBegin : StepElement_VolumeElementPurposeMember,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepElement_Array2OfCurveElementPurposeMember():
     """
@@ -966,13 +966,13 @@ class StepElement_Array2OfCurveElementPurposeMember():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : StepElement_CurveElementPurposeMember,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array2OfCurveElementPurposeMember) -> None: ...
     @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class StepElement_Array2OfSurfaceElementPurpose():
     """
@@ -1045,11 +1045,11 @@ class StepElement_Array2OfSurfaceElementPurpose():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepElement_SurfaceElementPurpose,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array2OfSurfaceElementPurpose) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : StepElement_SurfaceElementPurpose,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
@@ -1126,9 +1126,9 @@ class StepElement_Array2OfSurfaceElementPurposeMember():
     @overload
     def __init__(self,theBegin : StepElement_SurfaceElementPurposeMember,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array2OfSurfaceElementPurposeMember) -> None: ...
     pass
@@ -1218,19 +1218,27 @@ class StepElement_CurveEdge():
 
       StepElement_ElementEdge
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepElement_ElementEdge: OCP.StepElement.StepElement_CurveEdge # value = StepElement_CurveEdge.StepElement_ElementEdge
-    __entries: dict # value = {'StepElement_ElementEdge': (StepElement_CurveEdge.StepElement_ElementEdge, None)}
-    __members__: dict # value = {'StepElement_ElementEdge': StepElement_CurveEdge.StepElement_ElementEdge}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepElement_ElementEdge: OCP.StepElement.StepElement_CurveEdge # value = <StepElement_CurveEdge.StepElement_ElementEdge: 0>
+    __entries: dict # value = {'StepElement_ElementEdge': (<StepElement_CurveEdge.StepElement_ElementEdge: 0>, None)}
+    __members__: dict # value = {'StepElement_ElementEdge': <StepElement_CurveEdge.StepElement_ElementEdge: 0>}
     pass
 class StepElement_CurveElementEndReleasePacket(OCP.Standard.Standard_Transient):
     """
@@ -2108,20 +2116,28 @@ class StepElement_Element2dShape():
 
       StepElement_Triangle
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepElement_Quadrilateral: OCP.StepElement.StepElement_Element2dShape # value = StepElement_Element2dShape.StepElement_Quadrilateral
-    StepElement_Triangle: OCP.StepElement.StepElement_Element2dShape # value = StepElement_Element2dShape.StepElement_Triangle
-    __entries: dict # value = {'StepElement_Quadrilateral': (StepElement_Element2dShape.StepElement_Quadrilateral, None), 'StepElement_Triangle': (StepElement_Element2dShape.StepElement_Triangle, None)}
-    __members__: dict # value = {'StepElement_Quadrilateral': StepElement_Element2dShape.StepElement_Quadrilateral, 'StepElement_Triangle': StepElement_Element2dShape.StepElement_Triangle}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepElement_Quadrilateral: OCP.StepElement.StepElement_Element2dShape # value = <StepElement_Element2dShape.StepElement_Quadrilateral: 0>
+    StepElement_Triangle: OCP.StepElement.StepElement_Element2dShape # value = <StepElement_Element2dShape.StepElement_Triangle: 1>
+    __entries: dict # value = {'StepElement_Quadrilateral': (<StepElement_Element2dShape.StepElement_Quadrilateral: 0>, None), 'StepElement_Triangle': (<StepElement_Element2dShape.StepElement_Triangle: 1>, None)}
+    __members__: dict # value = {'StepElement_Quadrilateral': <StepElement_Element2dShape.StepElement_Quadrilateral: 0>, 'StepElement_Triangle': <StepElement_Element2dShape.StepElement_Triangle: 1>}
     pass
 class StepElement_ElementAspect(OCP.StepData.StepData_SelectType):
     """
@@ -2647,21 +2663,29 @@ class StepElement_ElementOrder():
 
       StepElement_Cubic
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepElement_Cubic: OCP.StepElement.StepElement_ElementOrder # value = StepElement_ElementOrder.StepElement_Cubic
-    StepElement_Linear: OCP.StepElement.StepElement_ElementOrder # value = StepElement_ElementOrder.StepElement_Linear
-    StepElement_Quadratic: OCP.StepElement.StepElement_ElementOrder # value = StepElement_ElementOrder.StepElement_Quadratic
-    __entries: dict # value = {'StepElement_Linear': (StepElement_ElementOrder.StepElement_Linear, None), 'StepElement_Quadratic': (StepElement_ElementOrder.StepElement_Quadratic, None), 'StepElement_Cubic': (StepElement_ElementOrder.StepElement_Cubic, None)}
-    __members__: dict # value = {'StepElement_Linear': StepElement_ElementOrder.StepElement_Linear, 'StepElement_Quadratic': StepElement_ElementOrder.StepElement_Quadratic, 'StepElement_Cubic': StepElement_ElementOrder.StepElement_Cubic}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepElement_Cubic: OCP.StepElement.StepElement_ElementOrder # value = <StepElement_ElementOrder.StepElement_Cubic: 2>
+    StepElement_Linear: OCP.StepElement.StepElement_ElementOrder # value = <StepElement_ElementOrder.StepElement_Linear: 0>
+    StepElement_Quadratic: OCP.StepElement.StepElement_ElementOrder # value = <StepElement_ElementOrder.StepElement_Quadratic: 1>
+    __entries: dict # value = {'StepElement_Linear': (<StepElement_ElementOrder.StepElement_Linear: 0>, None), 'StepElement_Quadratic': (<StepElement_ElementOrder.StepElement_Quadratic: 1>, None), 'StepElement_Cubic': (<StepElement_ElementOrder.StepElement_Cubic: 2>, None)}
+    __members__: dict # value = {'StepElement_Linear': <StepElement_ElementOrder.StepElement_Linear: 0>, 'StepElement_Quadratic': <StepElement_ElementOrder.StepElement_Quadratic: 1>, 'StepElement_Cubic': <StepElement_ElementOrder.StepElement_Cubic: 2>}
     pass
 class StepElement_ElementVolume():
     """
@@ -2671,19 +2695,27 @@ class StepElement_ElementVolume():
 
       StepElement_Volume
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepElement_Volume: OCP.StepElement.StepElement_ElementVolume # value = StepElement_ElementVolume.StepElement_Volume
-    __entries: dict # value = {'StepElement_Volume': (StepElement_ElementVolume.StepElement_Volume, None)}
-    __members__: dict # value = {'StepElement_Volume': StepElement_ElementVolume.StepElement_Volume}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepElement_Volume: OCP.StepElement.StepElement_ElementVolume # value = <StepElement_ElementVolume.StepElement_Volume: 0>
+    __entries: dict # value = {'StepElement_Volume': (<StepElement_ElementVolume.StepElement_Volume: 0>, None)}
+    __members__: dict # value = {'StepElement_Volume': <StepElement_ElementVolume.StepElement_Volume: 0>}
     pass
 class StepElement_EnumeratedCurveElementFreedom():
     """
@@ -2707,26 +2739,34 @@ class StepElement_EnumeratedCurveElementFreedom():
 
       StepElement_None
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepElement_None: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_None
-    StepElement_Warp: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_Warp
-    StepElement_XRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_XRotation
-    StepElement_XTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_XTranslation
-    StepElement_YRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_YRotation
-    StepElement_YTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_YTranslation
-    StepElement_ZRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_ZRotation
-    StepElement_ZTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_ZTranslation
-    __entries: dict # value = {'StepElement_XTranslation': (StepElement_EnumeratedCurveElementFreedom.StepElement_XTranslation, None), 'StepElement_YTranslation': (StepElement_EnumeratedCurveElementFreedom.StepElement_YTranslation, None), 'StepElement_ZTranslation': (StepElement_EnumeratedCurveElementFreedom.StepElement_ZTranslation, None), 'StepElement_XRotation': (StepElement_EnumeratedCurveElementFreedom.StepElement_XRotation, None), 'StepElement_YRotation': (StepElement_EnumeratedCurveElementFreedom.StepElement_YRotation, None), 'StepElement_ZRotation': (StepElement_EnumeratedCurveElementFreedom.StepElement_ZRotation, None), 'StepElement_Warp': (StepElement_EnumeratedCurveElementFreedom.StepElement_Warp, None), 'StepElement_None': (StepElement_EnumeratedCurveElementFreedom.StepElement_None, None)}
-    __members__: dict # value = {'StepElement_XTranslation': StepElement_EnumeratedCurveElementFreedom.StepElement_XTranslation, 'StepElement_YTranslation': StepElement_EnumeratedCurveElementFreedom.StepElement_YTranslation, 'StepElement_ZTranslation': StepElement_EnumeratedCurveElementFreedom.StepElement_ZTranslation, 'StepElement_XRotation': StepElement_EnumeratedCurveElementFreedom.StepElement_XRotation, 'StepElement_YRotation': StepElement_EnumeratedCurveElementFreedom.StepElement_YRotation, 'StepElement_ZRotation': StepElement_EnumeratedCurveElementFreedom.StepElement_ZRotation, 'StepElement_Warp': StepElement_EnumeratedCurveElementFreedom.StepElement_Warp, 'StepElement_None': StepElement_EnumeratedCurveElementFreedom.StepElement_None}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepElement_None: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_None: 7>
+    StepElement_Warp: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_Warp: 6>
+    StepElement_XRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_XRotation: 3>
+    StepElement_XTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_XTranslation: 0>
+    StepElement_YRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_YRotation: 4>
+    StepElement_YTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_YTranslation: 1>
+    StepElement_ZRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_ZRotation: 5>
+    StepElement_ZTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_ZTranslation: 2>
+    __entries: dict # value = {'StepElement_XTranslation': (<StepElement_EnumeratedCurveElementFreedom.StepElement_XTranslation: 0>, None), 'StepElement_YTranslation': (<StepElement_EnumeratedCurveElementFreedom.StepElement_YTranslation: 1>, None), 'StepElement_ZTranslation': (<StepElement_EnumeratedCurveElementFreedom.StepElement_ZTranslation: 2>, None), 'StepElement_XRotation': (<StepElement_EnumeratedCurveElementFreedom.StepElement_XRotation: 3>, None), 'StepElement_YRotation': (<StepElement_EnumeratedCurveElementFreedom.StepElement_YRotation: 4>, None), 'StepElement_ZRotation': (<StepElement_EnumeratedCurveElementFreedom.StepElement_ZRotation: 5>, None), 'StepElement_Warp': (<StepElement_EnumeratedCurveElementFreedom.StepElement_Warp: 6>, None), 'StepElement_None': (<StepElement_EnumeratedCurveElementFreedom.StepElement_None: 7>, None)}
+    __members__: dict # value = {'StepElement_XTranslation': <StepElement_EnumeratedCurveElementFreedom.StepElement_XTranslation: 0>, 'StepElement_YTranslation': <StepElement_EnumeratedCurveElementFreedom.StepElement_YTranslation: 1>, 'StepElement_ZTranslation': <StepElement_EnumeratedCurveElementFreedom.StepElement_ZTranslation: 2>, 'StepElement_XRotation': <StepElement_EnumeratedCurveElementFreedom.StepElement_XRotation: 3>, 'StepElement_YRotation': <StepElement_EnumeratedCurveElementFreedom.StepElement_YRotation: 4>, 'StepElement_ZRotation': <StepElement_EnumeratedCurveElementFreedom.StepElement_ZRotation: 5>, 'StepElement_Warp': <StepElement_EnumeratedCurveElementFreedom.StepElement_Warp: 6>, 'StepElement_None': <StepElement_EnumeratedCurveElementFreedom.StepElement_None: 7>}
     pass
 class StepElement_EnumeratedCurveElementPurpose():
     """
@@ -2748,25 +2788,33 @@ class StepElement_EnumeratedCurveElementPurpose():
 
       StepElement_Warping
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepElement_Axial: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_Axial
-    StepElement_Torsion: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_Torsion
-    StepElement_Warping: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_Warping
-    StepElement_XYShear: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_XYShear
-    StepElement_XZShear: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_XZShear
-    StepElement_YYBending: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_YYBending
-    StepElement_ZZBending: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_ZZBending
-    __entries: dict # value = {'StepElement_Axial': (StepElement_EnumeratedCurveElementPurpose.StepElement_Axial, None), 'StepElement_YYBending': (StepElement_EnumeratedCurveElementPurpose.StepElement_YYBending, None), 'StepElement_ZZBending': (StepElement_EnumeratedCurveElementPurpose.StepElement_ZZBending, None), 'StepElement_Torsion': (StepElement_EnumeratedCurveElementPurpose.StepElement_Torsion, None), 'StepElement_XYShear': (StepElement_EnumeratedCurveElementPurpose.StepElement_XYShear, None), 'StepElement_XZShear': (StepElement_EnumeratedCurveElementPurpose.StepElement_XZShear, None), 'StepElement_Warping': (StepElement_EnumeratedCurveElementPurpose.StepElement_Warping, None)}
-    __members__: dict # value = {'StepElement_Axial': StepElement_EnumeratedCurveElementPurpose.StepElement_Axial, 'StepElement_YYBending': StepElement_EnumeratedCurveElementPurpose.StepElement_YYBending, 'StepElement_ZZBending': StepElement_EnumeratedCurveElementPurpose.StepElement_ZZBending, 'StepElement_Torsion': StepElement_EnumeratedCurveElementPurpose.StepElement_Torsion, 'StepElement_XYShear': StepElement_EnumeratedCurveElementPurpose.StepElement_XYShear, 'StepElement_XZShear': StepElement_EnumeratedCurveElementPurpose.StepElement_XZShear, 'StepElement_Warping': StepElement_EnumeratedCurveElementPurpose.StepElement_Warping}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepElement_Axial: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_Axial: 0>
+    StepElement_Torsion: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_Torsion: 3>
+    StepElement_Warping: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_Warping: 6>
+    StepElement_XYShear: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_XYShear: 4>
+    StepElement_XZShear: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_XZShear: 5>
+    StepElement_YYBending: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_YYBending: 1>
+    StepElement_ZZBending: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_ZZBending: 2>
+    __entries: dict # value = {'StepElement_Axial': (<StepElement_EnumeratedCurveElementPurpose.StepElement_Axial: 0>, None), 'StepElement_YYBending': (<StepElement_EnumeratedCurveElementPurpose.StepElement_YYBending: 1>, None), 'StepElement_ZZBending': (<StepElement_EnumeratedCurveElementPurpose.StepElement_ZZBending: 2>, None), 'StepElement_Torsion': (<StepElement_EnumeratedCurveElementPurpose.StepElement_Torsion: 3>, None), 'StepElement_XYShear': (<StepElement_EnumeratedCurveElementPurpose.StepElement_XYShear: 4>, None), 'StepElement_XZShear': (<StepElement_EnumeratedCurveElementPurpose.StepElement_XZShear: 5>, None), 'StepElement_Warping': (<StepElement_EnumeratedCurveElementPurpose.StepElement_Warping: 6>, None)}
+    __members__: dict # value = {'StepElement_Axial': <StepElement_EnumeratedCurveElementPurpose.StepElement_Axial: 0>, 'StepElement_YYBending': <StepElement_EnumeratedCurveElementPurpose.StepElement_YYBending: 1>, 'StepElement_ZZBending': <StepElement_EnumeratedCurveElementPurpose.StepElement_ZZBending: 2>, 'StepElement_Torsion': <StepElement_EnumeratedCurveElementPurpose.StepElement_Torsion: 3>, 'StepElement_XYShear': <StepElement_EnumeratedCurveElementPurpose.StepElement_XYShear: 4>, 'StepElement_XZShear': <StepElement_EnumeratedCurveElementPurpose.StepElement_XZShear: 5>, 'StepElement_Warping': <StepElement_EnumeratedCurveElementPurpose.StepElement_Warping: 6>}
     pass
 class StepElement_EnumeratedSurfaceElementPurpose():
     """
@@ -2784,23 +2832,31 @@ class StepElement_EnumeratedSurfaceElementPurpose():
 
       StepElement_NormalToPlaneShear
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepElement_BendingDirect: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingDirect
-    StepElement_BendingTorsion: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingTorsion
-    StepElement_MembraneDirect: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneDirect
-    StepElement_MembraneShear: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneShear
-    StepElement_NormalToPlaneShear: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = StepElement_EnumeratedSurfaceElementPurpose.StepElement_NormalToPlaneShear
-    __entries: dict # value = {'StepElement_MembraneDirect': (StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneDirect, None), 'StepElement_MembraneShear': (StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneShear, None), 'StepElement_BendingDirect': (StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingDirect, None), 'StepElement_BendingTorsion': (StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingTorsion, None), 'StepElement_NormalToPlaneShear': (StepElement_EnumeratedSurfaceElementPurpose.StepElement_NormalToPlaneShear, None)}
-    __members__: dict # value = {'StepElement_MembraneDirect': StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneDirect, 'StepElement_MembraneShear': StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneShear, 'StepElement_BendingDirect': StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingDirect, 'StepElement_BendingTorsion': StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingTorsion, 'StepElement_NormalToPlaneShear': StepElement_EnumeratedSurfaceElementPurpose.StepElement_NormalToPlaneShear}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepElement_BendingDirect: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = <StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingDirect: 2>
+    StepElement_BendingTorsion: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = <StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingTorsion: 3>
+    StepElement_MembraneDirect: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = <StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneDirect: 0>
+    StepElement_MembraneShear: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = <StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneShear: 1>
+    StepElement_NormalToPlaneShear: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = <StepElement_EnumeratedSurfaceElementPurpose.StepElement_NormalToPlaneShear: 4>
+    __entries: dict # value = {'StepElement_MembraneDirect': (<StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneDirect: 0>, None), 'StepElement_MembraneShear': (<StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneShear: 1>, None), 'StepElement_BendingDirect': (<StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingDirect: 2>, None), 'StepElement_BendingTorsion': (<StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingTorsion: 3>, None), 'StepElement_NormalToPlaneShear': (<StepElement_EnumeratedSurfaceElementPurpose.StepElement_NormalToPlaneShear: 4>, None)}
+    __members__: dict # value = {'StepElement_MembraneDirect': <StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneDirect: 0>, 'StepElement_MembraneShear': <StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneShear: 1>, 'StepElement_BendingDirect': <StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingDirect: 2>, 'StepElement_BendingTorsion': <StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingTorsion: 3>, 'StepElement_NormalToPlaneShear': <StepElement_EnumeratedSurfaceElementPurpose.StepElement_NormalToPlaneShear: 4>}
     pass
 class StepElement_EnumeratedVolumeElementPurpose():
     """
@@ -2810,19 +2866,27 @@ class StepElement_EnumeratedVolumeElementPurpose():
 
       StepElement_StressDisplacement
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepElement_StressDisplacement: OCP.StepElement.StepElement_EnumeratedVolumeElementPurpose # value = StepElement_EnumeratedVolumeElementPurpose.StepElement_StressDisplacement
-    __entries: dict # value = {'StepElement_StressDisplacement': (StepElement_EnumeratedVolumeElementPurpose.StepElement_StressDisplacement, None)}
-    __members__: dict # value = {'StepElement_StressDisplacement': StepElement_EnumeratedVolumeElementPurpose.StepElement_StressDisplacement}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepElement_StressDisplacement: OCP.StepElement.StepElement_EnumeratedVolumeElementPurpose # value = <StepElement_EnumeratedVolumeElementPurpose.StepElement_StressDisplacement: 0>
+    __entries: dict # value = {'StepElement_StressDisplacement': (<StepElement_EnumeratedVolumeElementPurpose.StepElement_StressDisplacement: 0>, None)}
+    __members__: dict # value = {'StepElement_StressDisplacement': <StepElement_EnumeratedVolumeElementPurpose.StepElement_StressDisplacement: 0>}
     pass
 class StepElement_HArray1OfCurveElementEndReleasePacket(StepElement_Array1OfCurveElementEndReleasePacket, OCP.Standard.Standard_Transient):
     def Array1(self) -> StepElement_Array1OfCurveElementEndReleasePacket: 
@@ -2950,12 +3014,12 @@ class StepElement_HArray1OfCurveElementEndReleasePacket(StepElement_Array1OfCurv
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepElement_CurveElementEndReleasePacket) -> None: ...
     @overload
-    def __init__(self,theOther : StepElement_Array1OfCurveElementEndReleasePacket) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : StepElement_Array1OfCurveElementEndReleasePacket) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3091,14 +3155,14 @@ class StepElement_HArray1OfCurveElementSectionDefinition(StepElement_Array1OfCur
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_CurveElementSectionDefinition) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfCurveElementSectionDefinition) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_CurveElementSectionDefinition) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3236,12 +3300,12 @@ class StepElement_HArray1OfHSequenceOfCurveElementPurposeMember(StepElement_Arra
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_HSequenceOfCurveElementPurposeMember) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfHSequenceOfCurveElementPurposeMember) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_HSequenceOfCurveElementPurposeMember) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3377,14 +3441,14 @@ class StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember(StepElement_Ar
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepElement_HSequenceOfSurfaceElementPurposeMember) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3527,7 +3591,7 @@ class StepElement_HArray1OfMeasureOrUnspecifiedValue(StepElement_Array1OfMeasure
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3665,12 +3729,12 @@ class StepElement_HArray1OfSurfaceSection(StepElement_Array1OfSurfaceSection, OC
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepElement_SurfaceSection) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfSurfaceSection) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3806,14 +3870,14 @@ class StepElement_HArray1OfVolumeElementPurpose(StepElement_Array1OfVolumeElemen
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_VolumeElementPurpose) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array1OfVolumeElementPurpose) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_VolumeElementPurpose) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3949,14 +4013,14 @@ class StepElement_HArray1OfVolumeElementPurposeMember(StepElement_Array1OfVolume
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_VolumeElementPurposeMember) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepElement_VolumeElementPurposeMember) -> None: ...
+    @overload
     def __init__(self,theOther : StepElement_Array1OfVolumeElementPurposeMember) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4086,11 +4150,11 @@ class StepElement_HArray2OfCurveElementPurposeMember(StepElement_Array2OfCurveEl
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepElement_CurveElementPurposeMember) -> None: ...
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_Array2OfCurveElementPurposeMember) -> None: ...
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepElement_CurveElementPurposeMember) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4220,9 +4284,9 @@ class StepElement_HArray2OfSurfaceElementPurpose(StepElement_Array2OfSurfaceElem
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepElement_Array2OfSurfaceElementPurpose) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepElement_SurfaceElementPurpose) -> None: ...
+    @overload
+    def __init__(self,theOther : StepElement_Array2OfSurfaceElementPurpose) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @staticmethod
@@ -4356,9 +4420,9 @@ class StepElement_HArray2OfSurfaceElementPurposeMember(StepElement_Array2OfSurfa
     @overload
     def __init__(self,theOther : StepElement_Array2OfSurfaceElementPurposeMember) -> None: ...
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepElement_SurfaceElementPurposeMember) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4379,14 +4443,14 @@ class StepElement_SequenceOfCurveElementPurposeMember(OCP.NCollection.NCollectio
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : StepElement_CurveElementPurposeMember) -> None: 
+    def Append(self,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
+    def Append(self,theItem : StepElement_CurveElementPurposeMember) -> None: ...
     def Assign(self,theOther : StepElement_SequenceOfCurveElementPurposeMember) -> StepElement_SequenceOfCurveElementPurposeMember: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4416,23 +4480,23 @@ class StepElement_SequenceOfCurveElementPurposeMember(OCP.NCollection.NCollectio
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepElement_CurveElementPurposeMember) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : StepElement_CurveElementPurposeMember) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : StepElement_CurveElementPurposeMember) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepElement_CurveElementPurposeMember) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4459,14 +4523,14 @@ class StepElement_SequenceOfCurveElementPurposeMember(OCP.NCollection.NCollectio
     @overload
     def Prepend(self,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4492,12 +4556,12 @@ class StepElement_SequenceOfCurveElementPurposeMember(OCP.NCollection.NCollectio
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self,theOther : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4550,14 +4614,14 @@ class StepElement_SequenceOfCurveElementSectionDefinition(OCP.NCollection.NColle
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepElement_CurveElementSectionDefinition) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementSectionDefinition) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : StepElement_CurveElementSectionDefinition) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementSectionDefinition) -> None: 
         """
@@ -4593,14 +4657,14 @@ class StepElement_SequenceOfCurveElementSectionDefinition(OCP.NCollection.NColle
     @overload
     def Prepend(self,theSeq : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4626,12 +4690,12 @@ class StepElement_SequenceOfCurveElementSectionDefinition(OCP.NCollection.NColle
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4693,14 +4757,14 @@ class StepElement_SequenceOfElementMaterial(OCP.NCollection.NCollection_BaseSequ
     @overload
     def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfElementMaterial) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepElement_ElementMaterial) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfElementMaterial) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfElementMaterial) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : StepElement_ElementMaterial) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4760,12 +4824,12 @@ class StepElement_SequenceOfElementMaterial(OCP.NCollection.NCollection_BaseSequ
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : StepElement_SequenceOfElementMaterial) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -4781,14 +4845,14 @@ class StepElement_SequenceOfSurfaceElementPurposeMember(OCP.NCollection.NCollect
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: 
+    def Append(self,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
+    def Append(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: ...
     def Assign(self,theOther : StepElement_SequenceOfSurfaceElementPurposeMember) -> StepElement_SequenceOfSurfaceElementPurposeMember: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4818,23 +4882,23 @@ class StepElement_SequenceOfSurfaceElementPurposeMember(OCP.NCollection.NCollect
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : StepElement_SurfaceElementPurposeMember) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepElement_SurfaceElementPurposeMember) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : StepElement_SurfaceElementPurposeMember) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepElement_SurfaceElementPurposeMember) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4852,14 +4916,14 @@ class StepElement_SequenceOfSurfaceElementPurposeMember(OCP.NCollection.NCollect
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: 
+    def Prepend(self,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
+    def Prepend(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -4894,12 +4958,12 @@ class StepElement_SequenceOfSurfaceElementPurposeMember(OCP.NCollection.NCollect
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5188,14 +5252,14 @@ class StepElement_HSequenceOfCurveElementPurposeMember(StepElement_SequenceOfCur
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : StepElement_SequenceOfCurveElementPurposeMember) -> None: 
+    def Append(self,theItem : StepElement_CurveElementPurposeMember) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : StepElement_CurveElementPurposeMember) -> None: ...
+    def Append(self,theSequence : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
     def Assign(self,theOther : StepElement_SequenceOfCurveElementPurposeMember) -> StepElement_SequenceOfCurveElementPurposeMember: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5249,23 +5313,23 @@ class StepElement_HSequenceOfCurveElementPurposeMember(StepElement_SequenceOfCur
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepElement_CurveElementPurposeMember) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : StepElement_CurveElementPurposeMember) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : StepElement_CurveElementPurposeMember) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepElement_CurveElementPurposeMember) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5310,14 +5374,14 @@ class StepElement_HSequenceOfCurveElementPurposeMember(StepElement_SequenceOfCur
     @overload
     def Prepend(self,theSeq : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5351,10 +5415,10 @@ class StepElement_HSequenceOfCurveElementPurposeMember(StepElement_SequenceOfCur
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepElement_SequenceOfCurveElementPurposeMember) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5438,14 +5502,14 @@ class StepElement_HSequenceOfCurveElementSectionDefinition(StepElement_SequenceO
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepElement_CurveElementSectionDefinition) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementSectionDefinition) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : StepElement_CurveElementSectionDefinition) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfCurveElementSectionDefinition) -> None: 
         """
@@ -5499,14 +5563,14 @@ class StepElement_HSequenceOfCurveElementSectionDefinition(StepElement_SequenceO
     @overload
     def Prepend(self,theSeq : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5543,7 +5607,7 @@ class StepElement_HSequenceOfCurveElementSectionDefinition(StepElement_SequenceO
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepElement_SequenceOfCurveElementSectionDefinition) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5636,14 +5700,14 @@ class StepElement_HSequenceOfElementMaterial(StepElement_SequenceOfElementMateri
     @overload
     def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfElementMaterial) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepElement_ElementMaterial) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfElementMaterial) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfElementMaterial) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : StepElement_ElementMaterial) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5732,7 +5796,7 @@ class StepElement_HSequenceOfElementMaterial(StepElement_SequenceOfElementMateri
     def __init__(self,theOther : StepElement_SequenceOfElementMaterial) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5755,14 +5819,14 @@ class StepElement_HSequenceOfSurfaceElementPurposeMember(StepElement_SequenceOfS
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: 
+    def Append(self,theSequence : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
+    def Append(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: ...
     def Assign(self,theOther : StepElement_SequenceOfSurfaceElementPurposeMember) -> StepElement_SequenceOfSurfaceElementPurposeMember: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5816,23 +5880,23 @@ class StepElement_HSequenceOfSurfaceElementPurposeMember(StepElement_SequenceOfS
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : StepElement_SurfaceElementPurposeMember) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : StepElement_SurfaceElementPurposeMember) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : StepElement_SurfaceElementPurposeMember) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : StepElement_SurfaceElementPurposeMember) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5868,14 +5932,14 @@ class StepElement_HSequenceOfSurfaceElementPurposeMember(StepElement_SequenceOfS
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: 
+    def Prepend(self,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
+    def Prepend(self,theItem : StepElement_SurfaceElementPurposeMember) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -5918,10 +5982,10 @@ class StepElement_HSequenceOfSurfaceElementPurposeMember(StepElement_SequenceOfS
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepElement_SequenceOfSurfaceElementPurposeMember) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6804,19 +6868,27 @@ class StepElement_UnspecifiedValue():
 
       StepElement_Unspecified
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepElement_Unspecified: OCP.StepElement.StepElement_UnspecifiedValue # value = StepElement_UnspecifiedValue.StepElement_Unspecified
-    __entries: dict # value = {'StepElement_Unspecified': (StepElement_UnspecifiedValue.StepElement_Unspecified, None)}
-    __members__: dict # value = {'StepElement_Unspecified': StepElement_UnspecifiedValue.StepElement_Unspecified}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepElement_Unspecified: OCP.StepElement.StepElement_UnspecifiedValue # value = <StepElement_UnspecifiedValue.StepElement_Unspecified: 0>
+    __entries: dict # value = {'StepElement_Unspecified': (<StepElement_UnspecifiedValue.StepElement_Unspecified: 0>, None)}
+    __members__: dict # value = {'StepElement_Unspecified': <StepElement_UnspecifiedValue.StepElement_Unspecified: 0>}
     pass
 class StepElement_Volume3dElementDescriptor(StepElement_ElementDescriptor, OCP.Standard.Standard_Transient):
     """
@@ -6926,22 +6998,30 @@ class StepElement_Volume3dElementShape():
 
       StepElement_Pyramid
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepElement_Hexahedron: OCP.StepElement.StepElement_Volume3dElementShape # value = StepElement_Volume3dElementShape.StepElement_Hexahedron
-    StepElement_Pyramid: OCP.StepElement.StepElement_Volume3dElementShape # value = StepElement_Volume3dElementShape.StepElement_Pyramid
-    StepElement_Tetrahedron: OCP.StepElement.StepElement_Volume3dElementShape # value = StepElement_Volume3dElementShape.StepElement_Tetrahedron
-    StepElement_Wedge: OCP.StepElement.StepElement_Volume3dElementShape # value = StepElement_Volume3dElementShape.StepElement_Wedge
-    __entries: dict # value = {'StepElement_Hexahedron': (StepElement_Volume3dElementShape.StepElement_Hexahedron, None), 'StepElement_Wedge': (StepElement_Volume3dElementShape.StepElement_Wedge, None), 'StepElement_Tetrahedron': (StepElement_Volume3dElementShape.StepElement_Tetrahedron, None), 'StepElement_Pyramid': (StepElement_Volume3dElementShape.StepElement_Pyramid, None)}
-    __members__: dict # value = {'StepElement_Hexahedron': StepElement_Volume3dElementShape.StepElement_Hexahedron, 'StepElement_Wedge': StepElement_Volume3dElementShape.StepElement_Wedge, 'StepElement_Tetrahedron': StepElement_Volume3dElementShape.StepElement_Tetrahedron, 'StepElement_Pyramid': StepElement_Volume3dElementShape.StepElement_Pyramid}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepElement_Hexahedron: OCP.StepElement.StepElement_Volume3dElementShape # value = <StepElement_Volume3dElementShape.StepElement_Hexahedron: 0>
+    StepElement_Pyramid: OCP.StepElement.StepElement_Volume3dElementShape # value = <StepElement_Volume3dElementShape.StepElement_Pyramid: 3>
+    StepElement_Tetrahedron: OCP.StepElement.StepElement_Volume3dElementShape # value = <StepElement_Volume3dElementShape.StepElement_Tetrahedron: 2>
+    StepElement_Wedge: OCP.StepElement.StepElement_Volume3dElementShape # value = <StepElement_Volume3dElementShape.StepElement_Wedge: 1>
+    __entries: dict # value = {'StepElement_Hexahedron': (<StepElement_Volume3dElementShape.StepElement_Hexahedron: 0>, None), 'StepElement_Wedge': (<StepElement_Volume3dElementShape.StepElement_Wedge: 1>, None), 'StepElement_Tetrahedron': (<StepElement_Volume3dElementShape.StepElement_Tetrahedron: 2>, None), 'StepElement_Pyramid': (<StepElement_Volume3dElementShape.StepElement_Pyramid: 3>, None)}
+    __members__: dict # value = {'StepElement_Hexahedron': <StepElement_Volume3dElementShape.StepElement_Hexahedron: 0>, 'StepElement_Wedge': <StepElement_Volume3dElementShape.StepElement_Wedge: 1>, 'StepElement_Tetrahedron': <StepElement_Volume3dElementShape.StepElement_Tetrahedron: 2>, 'StepElement_Pyramid': <StepElement_Volume3dElementShape.StepElement_Pyramid: 3>}
     pass
 class StepElement_VolumeElementPurpose(OCP.StepData.StepData_SelectType):
     """
@@ -7219,36 +7299,36 @@ class StepElement_VolumeElementPurposeMember(OCP.StepData.StepData_SelectNamed, 
         None
         """
     pass
-StepElement_Axial: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_Axial
-StepElement_BendingDirect: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingDirect
-StepElement_BendingTorsion: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingTorsion
-StepElement_Cubic: OCP.StepElement.StepElement_ElementOrder # value = StepElement_ElementOrder.StepElement_Cubic
-StepElement_ElementEdge: OCP.StepElement.StepElement_CurveEdge # value = StepElement_CurveEdge.StepElement_ElementEdge
-StepElement_Hexahedron: OCP.StepElement.StepElement_Volume3dElementShape # value = StepElement_Volume3dElementShape.StepElement_Hexahedron
-StepElement_Linear: OCP.StepElement.StepElement_ElementOrder # value = StepElement_ElementOrder.StepElement_Linear
-StepElement_MembraneDirect: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneDirect
-StepElement_MembraneShear: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneShear
-StepElement_None: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_None
-StepElement_NormalToPlaneShear: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = StepElement_EnumeratedSurfaceElementPurpose.StepElement_NormalToPlaneShear
-StepElement_Pyramid: OCP.StepElement.StepElement_Volume3dElementShape # value = StepElement_Volume3dElementShape.StepElement_Pyramid
-StepElement_Quadratic: OCP.StepElement.StepElement_ElementOrder # value = StepElement_ElementOrder.StepElement_Quadratic
-StepElement_Quadrilateral: OCP.StepElement.StepElement_Element2dShape # value = StepElement_Element2dShape.StepElement_Quadrilateral
-StepElement_StressDisplacement: OCP.StepElement.StepElement_EnumeratedVolumeElementPurpose # value = StepElement_EnumeratedVolumeElementPurpose.StepElement_StressDisplacement
-StepElement_Tetrahedron: OCP.StepElement.StepElement_Volume3dElementShape # value = StepElement_Volume3dElementShape.StepElement_Tetrahedron
-StepElement_Torsion: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_Torsion
-StepElement_Triangle: OCP.StepElement.StepElement_Element2dShape # value = StepElement_Element2dShape.StepElement_Triangle
-StepElement_Unspecified: OCP.StepElement.StepElement_UnspecifiedValue # value = StepElement_UnspecifiedValue.StepElement_Unspecified
-StepElement_Volume: OCP.StepElement.StepElement_ElementVolume # value = StepElement_ElementVolume.StepElement_Volume
-StepElement_Warp: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_Warp
-StepElement_Warping: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_Warping
-StepElement_Wedge: OCP.StepElement.StepElement_Volume3dElementShape # value = StepElement_Volume3dElementShape.StepElement_Wedge
-StepElement_XRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_XRotation
-StepElement_XTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_XTranslation
-StepElement_XYShear: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_XYShear
-StepElement_XZShear: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_XZShear
-StepElement_YRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_YRotation
-StepElement_YTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_YTranslation
-StepElement_YYBending: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_YYBending
-StepElement_ZRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_ZRotation
-StepElement_ZTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = StepElement_EnumeratedCurveElementFreedom.StepElement_ZTranslation
-StepElement_ZZBending: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = StepElement_EnumeratedCurveElementPurpose.StepElement_ZZBending
+StepElement_Axial: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_Axial: 0>
+StepElement_BendingDirect: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = <StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingDirect: 2>
+StepElement_BendingTorsion: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = <StepElement_EnumeratedSurfaceElementPurpose.StepElement_BendingTorsion: 3>
+StepElement_Cubic: OCP.StepElement.StepElement_ElementOrder # value = <StepElement_ElementOrder.StepElement_Cubic: 2>
+StepElement_ElementEdge: OCP.StepElement.StepElement_CurveEdge # value = <StepElement_CurveEdge.StepElement_ElementEdge: 0>
+StepElement_Hexahedron: OCP.StepElement.StepElement_Volume3dElementShape # value = <StepElement_Volume3dElementShape.StepElement_Hexahedron: 0>
+StepElement_Linear: OCP.StepElement.StepElement_ElementOrder # value = <StepElement_ElementOrder.StepElement_Linear: 0>
+StepElement_MembraneDirect: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = <StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneDirect: 0>
+StepElement_MembraneShear: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = <StepElement_EnumeratedSurfaceElementPurpose.StepElement_MembraneShear: 1>
+StepElement_None: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_None: 7>
+StepElement_NormalToPlaneShear: OCP.StepElement.StepElement_EnumeratedSurfaceElementPurpose # value = <StepElement_EnumeratedSurfaceElementPurpose.StepElement_NormalToPlaneShear: 4>
+StepElement_Pyramid: OCP.StepElement.StepElement_Volume3dElementShape # value = <StepElement_Volume3dElementShape.StepElement_Pyramid: 3>
+StepElement_Quadratic: OCP.StepElement.StepElement_ElementOrder # value = <StepElement_ElementOrder.StepElement_Quadratic: 1>
+StepElement_Quadrilateral: OCP.StepElement.StepElement_Element2dShape # value = <StepElement_Element2dShape.StepElement_Quadrilateral: 0>
+StepElement_StressDisplacement: OCP.StepElement.StepElement_EnumeratedVolumeElementPurpose # value = <StepElement_EnumeratedVolumeElementPurpose.StepElement_StressDisplacement: 0>
+StepElement_Tetrahedron: OCP.StepElement.StepElement_Volume3dElementShape # value = <StepElement_Volume3dElementShape.StepElement_Tetrahedron: 2>
+StepElement_Torsion: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_Torsion: 3>
+StepElement_Triangle: OCP.StepElement.StepElement_Element2dShape # value = <StepElement_Element2dShape.StepElement_Triangle: 1>
+StepElement_Unspecified: OCP.StepElement.StepElement_UnspecifiedValue # value = <StepElement_UnspecifiedValue.StepElement_Unspecified: 0>
+StepElement_Volume: OCP.StepElement.StepElement_ElementVolume # value = <StepElement_ElementVolume.StepElement_Volume: 0>
+StepElement_Warp: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_Warp: 6>
+StepElement_Warping: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_Warping: 6>
+StepElement_Wedge: OCP.StepElement.StepElement_Volume3dElementShape # value = <StepElement_Volume3dElementShape.StepElement_Wedge: 1>
+StepElement_XRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_XRotation: 3>
+StepElement_XTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_XTranslation: 0>
+StepElement_XYShear: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_XYShear: 4>
+StepElement_XZShear: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_XZShear: 5>
+StepElement_YRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_YRotation: 4>
+StepElement_YTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_YTranslation: 1>
+StepElement_YYBending: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_YYBending: 1>
+StepElement_ZRotation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_ZRotation: 5>
+StepElement_ZTranslation: OCP.StepElement.StepElement_EnumeratedCurveElementFreedom # value = <StepElement_EnumeratedCurveElementFreedom.StepElement_ZTranslation: 2>
+StepElement_ZZBending: OCP.StepElement.StepElement_EnumeratedCurveElementPurpose # value = <StepElement_EnumeratedCurveElementPurpose.StepElement_ZZBending: 2>

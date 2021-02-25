@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.TDocStd
 import OCP.TCollection
-import OCP.PCDM
+import io
+import OCP.NCollection
 import OCP.Message
+import OCP.BinMDF
+import OCP.CDM
+import OCP.PCDM
 import OCP.Storage
 import OCP.Standard
-import OCP.TDocStd
-import OCP.CDM
-import OCP.NCollection
-import OCP.BinMDF
 __all__  = [
 "BinLDrivers",
 "BinLDrivers_DocumentRetrievalDriver",
@@ -112,14 +113,14 @@ class BinLDrivers_DocumentRetrievalDriver(OCP.PCDM.PCDM_RetrievalDriver, OCP.PCD
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: 
+    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         retrieves the content of the file into a new Document.
 
         None
         """
     @overload
-    def Read(self,theIStream : Any,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application) -> None: ...
+    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @staticmethod
     def ReferenceCounter_s(theFileName : OCP.TCollection.TCollection_ExtendedString,theMsgDriver : OCP.Message.Message_Messenger) -> int: 
         """
@@ -166,7 +167,7 @@ class BinLDrivers_DocumentSection():
         Query the offset of the section in the persistent file
         """
     @staticmethod
-    def ReadTOC_s(theSection : BinLDrivers_DocumentSection,theIS : Any,theDocFormatVersion : int) -> None: 
+    def ReadTOC_s(theSection : BinLDrivers_DocumentSection,theIS : io.BytesIO,theDocFormatVersion : int) -> None: 
         """
         Fill a DocumentSection instance from the data that are read from TOC.
         """
@@ -178,18 +179,18 @@ class BinLDrivers_DocumentSection():
         """
         Set the offset of the section in the persistent file
         """
-    def Write(self,theOS : Any,theOffset : int) -> None: 
+    def Write(self,theOS : io.BytesIO,theOffset : int) -> None: 
         """
         Save Offset and Length data into the Section entry in the Document TOC (list of sections)
         """
-    def WriteTOC(self,theOS : Any) -> None: 
+    def WriteTOC(self,theOS : io.BytesIO) -> None: 
         """
         Create a Section entry in the Document TOC (list of sections)
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theName : OCP.TCollection.TCollection_AsciiString,isPostRead : bool) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BinLDrivers_DocumentStorageDriver(OCP.PCDM.PCDM_StorageDriver, OCP.PCDM.PCDM_Writer, OCP.Standard.Standard_Transient):
     """
@@ -254,14 +255,14 @@ class BinLDrivers_DocumentStorageDriver(OCP.PCDM.PCDM_StorageDriver, OCP.PCDM.PC
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -279,14 +280,14 @@ class BinLDrivers_DocumentStorageDriver(OCP.PCDM.PCDM_StorageDriver, OCP.PCDM.PC
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString) -> None: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Write <theDocument> to the binary file <theFileName>
 
         Write <theDocument> to theOStream
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : Any) -> None: ...
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -309,20 +310,28 @@ class BinLDrivers_Marker():
 
       BinLDrivers_ENDLABEL
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BinLDrivers_ENDATTRLIST: OCP.BinLDrivers.BinLDrivers_Marker # value = BinLDrivers_Marker.BinLDrivers_ENDATTRLIST
-    BinLDrivers_ENDLABEL: OCP.BinLDrivers.BinLDrivers_Marker # value = BinLDrivers_Marker.BinLDrivers_ENDLABEL
-    __entries: dict # value = {'BinLDrivers_ENDATTRLIST': (BinLDrivers_Marker.BinLDrivers_ENDATTRLIST, None), 'BinLDrivers_ENDLABEL': (BinLDrivers_Marker.BinLDrivers_ENDLABEL, None)}
-    __members__: dict # value = {'BinLDrivers_ENDATTRLIST': BinLDrivers_Marker.BinLDrivers_ENDATTRLIST, 'BinLDrivers_ENDLABEL': BinLDrivers_Marker.BinLDrivers_ENDLABEL}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BinLDrivers_ENDATTRLIST: OCP.BinLDrivers.BinLDrivers_Marker # value = <BinLDrivers_Marker.BinLDrivers_ENDATTRLIST: -1>
+    BinLDrivers_ENDLABEL: OCP.BinLDrivers.BinLDrivers_Marker # value = <BinLDrivers_Marker.BinLDrivers_ENDLABEL: -2>
+    __entries: dict # value = {'BinLDrivers_ENDATTRLIST': (<BinLDrivers_Marker.BinLDrivers_ENDATTRLIST: -1>, None), 'BinLDrivers_ENDLABEL': (<BinLDrivers_Marker.BinLDrivers_ENDLABEL: -2>, None)}
+    __members__: dict # value = {'BinLDrivers_ENDATTRLIST': <BinLDrivers_Marker.BinLDrivers_ENDATTRLIST: -1>, 'BinLDrivers_ENDLABEL': <BinLDrivers_Marker.BinLDrivers_ENDLABEL: -2>}
     pass
 class BinLDrivers_VectorOfDocumentSection(OCP.NCollection.NCollection_BaseVector):
     """
@@ -398,10 +407,10 @@ class BinLDrivers_VectorOfDocumentSection(OCP.NCollection.NCollection_BaseVector
         None
         """
     @overload
-    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BinLDrivers_VectorOfDocumentSection) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
-BinLDrivers_ENDATTRLIST: OCP.BinLDrivers.BinLDrivers_Marker # value = BinLDrivers_Marker.BinLDrivers_ENDATTRLIST
-BinLDrivers_ENDLABEL: OCP.BinLDrivers.BinLDrivers_Marker # value = BinLDrivers_Marker.BinLDrivers_ENDLABEL
+BinLDrivers_ENDATTRLIST: OCP.BinLDrivers.BinLDrivers_Marker # value = <BinLDrivers_Marker.BinLDrivers_ENDATTRLIST: -1>
+BinLDrivers_ENDLABEL: OCP.BinLDrivers.BinLDrivers_Marker # value = <BinLDrivers_Marker.BinLDrivers_ENDLABEL: -2>

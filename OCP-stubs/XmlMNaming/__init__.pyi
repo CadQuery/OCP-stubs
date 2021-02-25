@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.TopTools
 import OCP.TDF
+import OCP.LDOM
+import OCP.XmlObjMgt
 import OCP.TCollection
-import OCP.TopAbs
 import OCP.XmlMDF
 import OCP.Message
-import OCP.XmlObjMgt
-import OCP.TopTools
-import OCP.Standard
 import OCP.TopoDS
-import OCP.LDOM
+import OCP.Standard
+import OCP.TopAbs
 __all__  = [
 "XmlMNaming",
 "XmlMNaming_NamedShapeDriver",
@@ -80,6 +80,14 @@ class XmlMNaming_NamedShapeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
+    def Namespace(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the namespace string
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
@@ -93,7 +101,7 @@ class XmlMNaming_NamedShapeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         """
     @overload
     def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.XmlObjMgt.XmlObjMgt_Persistent,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
-    def ReadShapeSection(self,anElement : OCP.LDOM.LDOM_Element) -> None: 
+    def ReadShapeSection(self,anElement : OCP.LDOM.LDOM_Element,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Input the shapes from DOM element
         """
@@ -113,7 +121,7 @@ class XmlMNaming_NamedShapeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         """
         Returns the version number from which the driver is available.
         """
-    def WriteShapeSection(self,anElement : OCP.LDOM.LDOM_Element) -> None: 
+    def WriteShapeSection(self,anElement : OCP.LDOM.LDOM_Element,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Output the shapes into DOM element
         """
@@ -168,19 +176,27 @@ class XmlMNaming_NamingDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standard_T
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
+    def MessageDriver(self) -> OCP.Message.Message_Messenger: 
+        """
+        Returns the current message driver of this driver
+        """
+    def Namespace(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the namespace string
+        """
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
         """
         None
         """
     @overload
-    def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.XmlObjMgt.XmlObjMgt_Persistent,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
+    def Paste(self,theSource : OCP.XmlObjMgt.XmlObjMgt_Persistent,theTarget : OCP.TDF.TDF_Attribute,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,theSource : OCP.XmlObjMgt.XmlObjMgt_Persistent,theTarget : OCP.TDF.TDF_Attribute,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.XmlObjMgt.XmlObjMgt_Persistent,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -240,7 +256,7 @@ class XmlMNaming_Shape1():
         None
         """
     @overload
-    def __init__(self,Doc : OCP.LDOM.LDOM_Document) -> None: ...
-    @overload
     def __init__(self,E : OCP.LDOM.LDOM_Element) -> None: ...
+    @overload
+    def __init__(self,Doc : OCP.LDOM.LDOM_Document) -> None: ...
     pass

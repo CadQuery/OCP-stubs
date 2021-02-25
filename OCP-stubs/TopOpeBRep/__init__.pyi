@@ -4,23 +4,24 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.TopAbs
-import OCP.Geom2d
-import OCP.TopoDS
-import OCP.BRepAdaptor
 import OCP.NCollection
-import OCP.gp
-import OCP.Geom2dAdaptor
-import OCP.IntRes2d
-import OCP.Bnd
-import OCP.TopTools
+import OCP.Geom
 import OCP.IntSurf
-import OCP.IntPatch
+import OCP.TopoDS
+import OCP.Bnd
+import OCP.BRepAdaptor
 import OCP.Standard
+import OCP.IntPatch
+import OCP.TopAbs
+import OCP.TopTools
+import OCP.TCollection
+import io
+import OCP.gp
 import OCP.TopOpeBRepDS
 import OCP.TopOpeBRepTool
-import OCP.Geom
+import OCP.Geom2dAdaptor
+import OCP.Geom2d
+import OCP.IntRes2d
 __all__  = [
 "TopOpeBRep",
 "TopOpeBRep_Array1OfLineInter",
@@ -76,7 +77,7 @@ class TopOpeBRep():
     This package provides the topological operations on the BRep data structure.
     """
     @staticmethod
-    def Print_s(TLC : TopOpeBRep_TypeLineCurve,OS : Any) -> Any: 
+    def Print_s(TLC : TopOpeBRep_TypeLineCurve,OS : io.BytesIO) -> io.BytesIO: 
         """
         Prints the name of <TLC> as a String on the Stream <S> and returns <S>.
         """
@@ -166,7 +167,7 @@ class TopOpeBRep_Array1OfLineInter():
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRep_Array1OfVPointInter():
     """
@@ -245,14 +246,14 @@ class TopOpeBRep_Array1OfVPointInter():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : TopOpeBRep_VPointInter,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TopOpeBRep_Array1OfVPointInter) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TopOpeBRep_Array1OfVPointInter) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theBegin : TopOpeBRep_VPointInter,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRep_Bipoint():
     """
@@ -267,9 +268,9 @@ class TopOpeBRep_Bipoint():
         None
         """
     @overload
-    def __init__(self,I1 : int,I2 : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,I1 : int,I2 : int) -> None: ...
     pass
 class TopOpeBRep_DSFiller():
     """
@@ -385,14 +386,14 @@ class TopOpeBRep_EdgesIntersector():
         None
         """
     @overload
-    def Dimension(self) -> int: 
+    def Dimension(self,D : int) -> None: 
         """
         None
 
         set working space dimension D = 1 for E &|| W, 2 for E in F
         """
     @overload
-    def Dimension(self,D : int) -> None: ...
+    def Dimension(self) -> int: ...
     def Dump(self,str : OCP.TCollection.TCollection_AsciiString,ie1 : int=0,ie2 : int=0) -> None: 
         """
         None
@@ -446,14 +447,14 @@ class TopOpeBRep_EdgesIntersector():
         None
         """
     @overload
-    def Point(self) -> TopOpeBRep_Point2d: 
+    def Point(self,I : int) -> TopOpeBRep_Point2d: 
         """
         None
 
         None
         """
     @overload
-    def Point(self,I : int) -> TopOpeBRep_Point2d: ...
+    def Point(self) -> TopOpeBRep_Point2d: ...
     def Points(self) -> TopOpeBRep_SequenceOfPoint2d: 
         """
         None
@@ -602,7 +603,7 @@ class TopOpeBRep_FFTransitionTool():
         """
     @staticmethod
     @overload
-    def ProcessLineTransition_s(P : TopOpeBRep_VPointInter,Index : int,EdgeOrientation : OCP.TopAbs.TopAbs_Orientation) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Transition: 
+    def ProcessLineTransition_s(P : TopOpeBRep_VPointInter,L : TopOpeBRep_LineInter) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Transition: 
         """
         None
 
@@ -610,7 +611,7 @@ class TopOpeBRep_FFTransitionTool():
         """
     @staticmethod
     @overload
-    def ProcessLineTransition_s(P : TopOpeBRep_VPointInter,L : TopOpeBRep_LineInter) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Transition: ...
+    def ProcessLineTransition_s(P : TopOpeBRep_VPointInter,Index : int,EdgeOrientation : OCP.TopAbs.TopAbs_Orientation) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Transition: ...
     def __init__(self) -> None: ...
     pass
 class TopOpeBRep_FaceEdgeFiller():
@@ -732,14 +733,14 @@ class TopOpeBRep_FacesFiller():
         None
         """
     @overload
-    def FaceFaceTransition(self,I : int) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Transition: 
+    def FaceFaceTransition(self,L : TopOpeBRep_LineInter,I : int) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Transition: 
         """
         None
 
         None
         """
     @overload
-    def FaceFaceTransition(self,L : TopOpeBRep_LineInter,I : int) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Transition: ...
+    def FaceFaceTransition(self,I : int) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Transition: ...
     def FillLine(self) -> None: 
         """
         None
@@ -884,9 +885,9 @@ class TopOpeBRep_FacesFiller():
         compute position of VP with current faces, according to VP.ShapeIndex() .
         """
     @overload
-    def VP_Position(self,VP : TopOpeBRep_VPointInter,VPC : TopOpeBRep_VPointInterClassifier) -> None: ...
-    @overload
     def VP_Position(self,FACINT : TopOpeBRep_FacesIntersector) -> None: ...
+    @overload
+    def VP_Position(self,VP : TopOpeBRep_VPointInter,VPC : TopOpeBRep_VPointInterClassifier) -> None: ...
     def VP_PositionOnL(self,L : TopOpeBRep_LineInter) -> None: 
         """
         compute position of VPoints of non-restriction line L.
@@ -958,14 +959,14 @@ class TopOpeBRep_FacesIntersector():
         None
         """
     @overload
-    def Perform(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,B1 : OCP.Bnd.Bnd_Box,B2 : OCP.Bnd.Bnd_Box) -> None: 
+    def Perform(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Computes the intersection of faces S1 and S2.
 
         Computes the intersection of faces S1 and S2.
         """
     @overload
-    def Perform(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Perform(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,B1 : OCP.Bnd.Bnd_Box,B2 : OCP.Bnd.Bnd_Box) -> None: ...
     def PrepareLines(self) -> None: 
         """
         None
@@ -1134,14 +1135,14 @@ class TopOpeBRep_HArray1OfLineInter(TopOpeBRep_Array1OfLineInter, OCP.Standard.S
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : TopOpeBRep_LineInter) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TopOpeBRep_Array1OfLineInter) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TopOpeBRep_Array1OfLineInter) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : TopOpeBRep_LineInter) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1279,12 +1280,12 @@ class TopOpeBRep_HArray1OfVPointInter(TopOpeBRep_Array1OfVPointInter, OCP.Standa
     @overload
     def __init__(self,theOther : TopOpeBRep_Array1OfVPointInter) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : TopOpeBRep_VPointInter) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : TopOpeBRep_VPointInter) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1487,19 +1488,19 @@ class TopOpeBRep_LineInter():
         None
         """
     @overload
-    def Curve(self,parmin : float,parmax : float) -> OCP.Geom.Geom_Curve: 
+    def Curve(self) -> OCP.Geom.Geom_Curve: 
         """
         None
 
         None
         """
     @overload
-    def Curve(self) -> OCP.Geom.Geom_Curve: ...
+    def Curve(self,parmin : float,parmax : float) -> OCP.Geom.Geom_Curve: ...
     def DumpBipoint(self,B : TopOpeBRep_Bipoint,s1 : OCP.TCollection.TCollection_AsciiString,s2 : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         None
         """
-    def DumpLineTransitions(self,OS : Any) -> Any: 
+    def DumpLineTransitions(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -1544,7 +1545,7 @@ class TopOpeBRep_LineInter():
         None
         """
     @overload
-    def Index(self,I : int) -> None: 
+    def Index(self) -> int: 
         """
         None
 
@@ -1555,7 +1556,7 @@ class TopOpeBRep_LineInter():
         None
         """
     @overload
-    def Index(self) -> int: ...
+    def Index(self,I : int) -> None: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -1722,23 +1723,23 @@ class TopOpeBRep_ListOfBipoint(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : TopOpeBRep_Bipoint,theIter : Any) -> TopOpeBRep_Bipoint: 
+    def InsertAfter(self,theOther : TopOpeBRep_ListOfBipoint,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : TopOpeBRep_ListOfBipoint,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : TopOpeBRep_Bipoint,theIter : Any) -> TopOpeBRep_Bipoint: ...
     @overload
-    def InsertBefore(self,theOther : TopOpeBRep_ListOfBipoint,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : TopOpeBRep_Bipoint,theIter : Any) -> TopOpeBRep_Bipoint: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : TopOpeBRep_Bipoint,theIter : Any) -> TopOpeBRep_Bipoint: ...
+    def InsertBefore(self,theOther : TopOpeBRep_ListOfBipoint,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1750,14 +1751,14 @@ class TopOpeBRep_ListOfBipoint(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : TopOpeBRep_ListOfBipoint) -> None: 
+    def Prepend(self,theItem : TopOpeBRep_Bipoint) -> TopOpeBRep_Bipoint: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : TopOpeBRep_Bipoint) -> TopOpeBRep_Bipoint: ...
+    def Prepend(self,theOther : TopOpeBRep_ListOfBipoint) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1775,12 +1776,12 @@ class TopOpeBRep_ListOfBipoint(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : TopOpeBRep_ListOfBipoint) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRep_P2Dstatus():
     """
@@ -1798,23 +1799,31 @@ class TopOpeBRep_P2Dstatus():
 
       TopOpeBRep_P2DNEW
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TopOpeBRep_P2DINT: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = TopOpeBRep_P2Dstatus.TopOpeBRep_P2DINT
-    TopOpeBRep_P2DNEW: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = TopOpeBRep_P2Dstatus.TopOpeBRep_P2DNEW
-    TopOpeBRep_P2DSGF: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGF
-    TopOpeBRep_P2DSGL: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGL
-    TopOpeBRep_P2DUNK: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = TopOpeBRep_P2Dstatus.TopOpeBRep_P2DUNK
-    __entries: dict # value = {'TopOpeBRep_P2DUNK': (TopOpeBRep_P2Dstatus.TopOpeBRep_P2DUNK, None), 'TopOpeBRep_P2DINT': (TopOpeBRep_P2Dstatus.TopOpeBRep_P2DINT, None), 'TopOpeBRep_P2DSGF': (TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGF, None), 'TopOpeBRep_P2DSGL': (TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGL, None), 'TopOpeBRep_P2DNEW': (TopOpeBRep_P2Dstatus.TopOpeBRep_P2DNEW, None)}
-    __members__: dict # value = {'TopOpeBRep_P2DUNK': TopOpeBRep_P2Dstatus.TopOpeBRep_P2DUNK, 'TopOpeBRep_P2DINT': TopOpeBRep_P2Dstatus.TopOpeBRep_P2DINT, 'TopOpeBRep_P2DSGF': TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGF, 'TopOpeBRep_P2DSGL': TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGL, 'TopOpeBRep_P2DNEW': TopOpeBRep_P2Dstatus.TopOpeBRep_P2DNEW}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TopOpeBRep_P2DINT: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DINT: 1>
+    TopOpeBRep_P2DNEW: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DNEW: 4>
+    TopOpeBRep_P2DSGF: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGF: 2>
+    TopOpeBRep_P2DSGL: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGL: 3>
+    TopOpeBRep_P2DUNK: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DUNK: 0>
+    __entries: dict # value = {'TopOpeBRep_P2DUNK': (<TopOpeBRep_P2Dstatus.TopOpeBRep_P2DUNK: 0>, None), 'TopOpeBRep_P2DINT': (<TopOpeBRep_P2Dstatus.TopOpeBRep_P2DINT: 1>, None), 'TopOpeBRep_P2DSGF': (<TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGF: 2>, None), 'TopOpeBRep_P2DSGL': (<TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGL: 3>, None), 'TopOpeBRep_P2DNEW': (<TopOpeBRep_P2Dstatus.TopOpeBRep_P2DNEW: 4>, None)}
+    __members__: dict # value = {'TopOpeBRep_P2DUNK': <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DUNK: 0>, 'TopOpeBRep_P2DINT': <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DINT: 1>, 'TopOpeBRep_P2DSGF': <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGF: 2>, 'TopOpeBRep_P2DSGL': <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGL: 3>, 'TopOpeBRep_P2DNEW': <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DNEW: 4>}
     pass
 class TopOpeBRep_Point2d():
     """
@@ -1865,14 +1874,14 @@ class TopOpeBRep_Point2d():
         None
         """
     @overload
-    def IsVertex(self,Index : int) -> bool: 
+    def IsVertex(self,I : int) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def IsVertex(self,I : int) -> bool: ...
+    def IsVertex(self,Index : int) -> bool: ...
     def Keep(self) -> bool: 
         """
         None
@@ -1880,14 +1889,14 @@ class TopOpeBRep_Point2d():
         None
         """
     @overload
-    def Parameter(self,Index : int) -> float: 
+    def Parameter(self,I : int) -> float: 
         """
         None
 
         None
         """
     @overload
-    def Parameter(self,I : int) -> float: ...
+    def Parameter(self,Index : int) -> float: ...
     def Pint(self) -> OCP.IntRes2d.IntRes2d_IntersectionPoint: 
         """
         None
@@ -1901,14 +1910,14 @@ class TopOpeBRep_Point2d():
         None
         """
     @overload
-    def SetEdgesConfig(self,B : OCP.TopOpeBRepDS.TopOpeBRepDS_Config) -> None: 
+    def SetEdgesConfig(self,C : OCP.TopOpeBRepDS.TopOpeBRepDS_Config) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetEdgesConfig(self,C : OCP.TopOpeBRepDS.TopOpeBRepDS_Config) -> None: ...
+    def SetEdgesConfig(self,B : OCP.TopOpeBRepDS.TopOpeBRepDS_Config) -> None: ...
     @overload
     def SetHctxee2d(self,ee2d : TopOpeBRep_Hctxee2d) -> None: 
         """
@@ -1919,23 +1928,23 @@ class TopOpeBRep_Point2d():
     @overload
     def SetHctxee2d(self,h : TopOpeBRep_Hctxee2d) -> None: ...
     @overload
-    def SetHctxff2d(self,h : TopOpeBRep_Hctxff2d) -> None: 
+    def SetHctxff2d(self,ff2d : TopOpeBRep_Hctxff2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetHctxff2d(self,ff2d : TopOpeBRep_Hctxff2d) -> None: ...
+    def SetHctxff2d(self,h : TopOpeBRep_Hctxff2d) -> None: ...
     @overload
-    def SetIndex(self,X : int) -> None: 
+    def SetIndex(self,I : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetIndex(self,I : int) -> None: ...
+    def SetIndex(self,X : int) -> None: ...
     def SetIsPointOfSegment(self,B : bool) -> None: 
         """
         None
@@ -1958,14 +1967,14 @@ class TopOpeBRep_Point2d():
         None
         """
     @overload
-    def SetParameter(self,I : int,P : float) -> None: 
+    def SetParameter(self,Index : int,P : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetParameter(self,Index : int,P : float) -> None: ...
+    def SetParameter(self,I : int,P : float) -> None: ...
     def SetPint(self,P : OCP.IntRes2d.IntRes2d_IntersectionPoint) -> None: 
         """
         None
@@ -2018,14 +2027,14 @@ class TopOpeBRep_Point2d():
         None
         """
     @overload
-    def SetVertex(self,Index : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: 
+    def SetVertex(self,I : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetVertex(self,I : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def SetVertex(self,Index : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     def Status(self) -> TopOpeBRep_P2Dstatus: 
         """
         None
@@ -2093,7 +2102,7 @@ class TopOpeBRep_PointGeomTool():
         """
     @staticmethod
     @overload
-    def MakePoint_s(FEI : TopOpeBRep_FaceEdgeIntersector) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: 
+    def MakePoint_s(S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: 
         """
         None
 
@@ -2103,15 +2112,15 @@ class TopOpeBRep_PointGeomTool():
 
         None
         """
+    @staticmethod
+    @overload
+    def MakePoint_s(IP : TopOpeBRep_VPointInter) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: ...
     @staticmethod
     @overload
     def MakePoint_s(P2D : TopOpeBRep_Point2d) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: ...
     @staticmethod
     @overload
-    def MakePoint_s(S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: ...
-    @staticmethod
-    @overload
-    def MakePoint_s(IP : TopOpeBRep_VPointInter) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: ...
+    def MakePoint_s(FEI : TopOpeBRep_FaceEdgeIntersector) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: ...
     def __init__(self) -> None: ...
     pass
 class TopOpeBRep_SequenceOfPoint2d(OCP.NCollection.NCollection_BaseSequence):
@@ -2123,14 +2132,14 @@ class TopOpeBRep_SequenceOfPoint2d(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : TopOpeBRep_SequenceOfPoint2d) -> None: 
+    def Append(self,theItem : TopOpeBRep_Point2d) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : TopOpeBRep_Point2d) -> None: ...
+    def Append(self,theSeq : TopOpeBRep_SequenceOfPoint2d) -> None: ...
     def Assign(self,theOther : TopOpeBRep_SequenceOfPoint2d) -> TopOpeBRep_SequenceOfPoint2d: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2160,14 +2169,14 @@ class TopOpeBRep_SequenceOfPoint2d(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : TopOpeBRep_Point2d) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TopOpeBRep_SequenceOfPoint2d) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TopOpeBRep_SequenceOfPoint2d) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : TopOpeBRep_Point2d) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : TopOpeBRep_Point2d) -> None: 
         """
@@ -2203,14 +2212,14 @@ class TopOpeBRep_SequenceOfPoint2d(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : TopOpeBRep_Point2d) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2236,12 +2245,12 @@ class TopOpeBRep_SequenceOfPoint2d(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TopOpeBRep_SequenceOfPoint2d) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
+    def __init__(self,theOther : TopOpeBRep_SequenceOfPoint2d) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2369,7 +2378,7 @@ class TopOpeBRep_ShapeScanner():
         """
         None
         """
-    def DumpCurrent(self,OS : Any) -> Any: 
+    def DumpCurrent(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         None
         """
@@ -2378,14 +2387,14 @@ class TopOpeBRep_ShapeScanner():
         None
         """
     @overload
-    def Init(self,E : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Init(self,X : OCP.TopOpeBRepTool.TopOpeBRepTool_ShapeExplorer) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,X : OCP.TopOpeBRepTool.TopOpeBRepTool_ShapeExplorer) -> None: ...
+    def Init(self,E : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def More(self) -> bool: 
         """
         None
@@ -2420,27 +2429,35 @@ class TopOpeBRep_TypeLineCurve():
 
       TopOpeBRep_OTHERTYPE
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TopOpeBRep_ANALYTIC: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_ANALYTIC
-    TopOpeBRep_CIRCLE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_CIRCLE
-    TopOpeBRep_ELLIPSE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_ELLIPSE
-    TopOpeBRep_HYPERBOLA: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_HYPERBOLA
-    TopOpeBRep_LINE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_LINE
-    TopOpeBRep_OTHERTYPE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_OTHERTYPE
-    TopOpeBRep_PARABOLA: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_PARABOLA
-    TopOpeBRep_RESTRICTION: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_RESTRICTION
-    TopOpeBRep_WALKING: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_WALKING
-    __entries: dict # value = {'TopOpeBRep_ANALYTIC': (TopOpeBRep_TypeLineCurve.TopOpeBRep_ANALYTIC, None), 'TopOpeBRep_RESTRICTION': (TopOpeBRep_TypeLineCurve.TopOpeBRep_RESTRICTION, None), 'TopOpeBRep_WALKING': (TopOpeBRep_TypeLineCurve.TopOpeBRep_WALKING, None), 'TopOpeBRep_LINE': (TopOpeBRep_TypeLineCurve.TopOpeBRep_LINE, None), 'TopOpeBRep_CIRCLE': (TopOpeBRep_TypeLineCurve.TopOpeBRep_CIRCLE, None), 'TopOpeBRep_ELLIPSE': (TopOpeBRep_TypeLineCurve.TopOpeBRep_ELLIPSE, None), 'TopOpeBRep_PARABOLA': (TopOpeBRep_TypeLineCurve.TopOpeBRep_PARABOLA, None), 'TopOpeBRep_HYPERBOLA': (TopOpeBRep_TypeLineCurve.TopOpeBRep_HYPERBOLA, None), 'TopOpeBRep_OTHERTYPE': (TopOpeBRep_TypeLineCurve.TopOpeBRep_OTHERTYPE, None)}
-    __members__: dict # value = {'TopOpeBRep_ANALYTIC': TopOpeBRep_TypeLineCurve.TopOpeBRep_ANALYTIC, 'TopOpeBRep_RESTRICTION': TopOpeBRep_TypeLineCurve.TopOpeBRep_RESTRICTION, 'TopOpeBRep_WALKING': TopOpeBRep_TypeLineCurve.TopOpeBRep_WALKING, 'TopOpeBRep_LINE': TopOpeBRep_TypeLineCurve.TopOpeBRep_LINE, 'TopOpeBRep_CIRCLE': TopOpeBRep_TypeLineCurve.TopOpeBRep_CIRCLE, 'TopOpeBRep_ELLIPSE': TopOpeBRep_TypeLineCurve.TopOpeBRep_ELLIPSE, 'TopOpeBRep_PARABOLA': TopOpeBRep_TypeLineCurve.TopOpeBRep_PARABOLA, 'TopOpeBRep_HYPERBOLA': TopOpeBRep_TypeLineCurve.TopOpeBRep_HYPERBOLA, 'TopOpeBRep_OTHERTYPE': TopOpeBRep_TypeLineCurve.TopOpeBRep_OTHERTYPE}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TopOpeBRep_ANALYTIC: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_ANALYTIC: 0>
+    TopOpeBRep_CIRCLE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_CIRCLE: 4>
+    TopOpeBRep_ELLIPSE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_ELLIPSE: 5>
+    TopOpeBRep_HYPERBOLA: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_HYPERBOLA: 7>
+    TopOpeBRep_LINE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_LINE: 3>
+    TopOpeBRep_OTHERTYPE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_OTHERTYPE: 8>
+    TopOpeBRep_PARABOLA: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_PARABOLA: 6>
+    TopOpeBRep_RESTRICTION: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_RESTRICTION: 1>
+    TopOpeBRep_WALKING: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_WALKING: 2>
+    __entries: dict # value = {'TopOpeBRep_ANALYTIC': (<TopOpeBRep_TypeLineCurve.TopOpeBRep_ANALYTIC: 0>, None), 'TopOpeBRep_RESTRICTION': (<TopOpeBRep_TypeLineCurve.TopOpeBRep_RESTRICTION: 1>, None), 'TopOpeBRep_WALKING': (<TopOpeBRep_TypeLineCurve.TopOpeBRep_WALKING: 2>, None), 'TopOpeBRep_LINE': (<TopOpeBRep_TypeLineCurve.TopOpeBRep_LINE: 3>, None), 'TopOpeBRep_CIRCLE': (<TopOpeBRep_TypeLineCurve.TopOpeBRep_CIRCLE: 4>, None), 'TopOpeBRep_ELLIPSE': (<TopOpeBRep_TypeLineCurve.TopOpeBRep_ELLIPSE: 5>, None), 'TopOpeBRep_PARABOLA': (<TopOpeBRep_TypeLineCurve.TopOpeBRep_PARABOLA: 6>, None), 'TopOpeBRep_HYPERBOLA': (<TopOpeBRep_TypeLineCurve.TopOpeBRep_HYPERBOLA: 7>, None), 'TopOpeBRep_OTHERTYPE': (<TopOpeBRep_TypeLineCurve.TopOpeBRep_OTHERTYPE: 8>, None)}
+    __members__: dict # value = {'TopOpeBRep_ANALYTIC': <TopOpeBRep_TypeLineCurve.TopOpeBRep_ANALYTIC: 0>, 'TopOpeBRep_RESTRICTION': <TopOpeBRep_TypeLineCurve.TopOpeBRep_RESTRICTION: 1>, 'TopOpeBRep_WALKING': <TopOpeBRep_TypeLineCurve.TopOpeBRep_WALKING: 2>, 'TopOpeBRep_LINE': <TopOpeBRep_TypeLineCurve.TopOpeBRep_LINE: 3>, 'TopOpeBRep_CIRCLE': <TopOpeBRep_TypeLineCurve.TopOpeBRep_CIRCLE: 4>, 'TopOpeBRep_ELLIPSE': <TopOpeBRep_TypeLineCurve.TopOpeBRep_ELLIPSE: 5>, 'TopOpeBRep_PARABOLA': <TopOpeBRep_TypeLineCurve.TopOpeBRep_PARABOLA: 6>, 'TopOpeBRep_HYPERBOLA': <TopOpeBRep_TypeLineCurve.TopOpeBRep_HYPERBOLA: 7>, 'TopOpeBRep_OTHERTYPE': <TopOpeBRep_TypeLineCurve.TopOpeBRep_OTHERTYPE: 8>}
     pass
 class TopOpeBRep_VPointInter():
     """
@@ -2461,14 +2478,14 @@ class TopOpeBRep_VPointInter():
         updates VPointInter flag "keep" with <keep>.
         """
     @overload
-    def Dump(self,I : int,F : OCP.TopoDS.TopoDS_Face,OS : Any) -> Any: 
+    def Dump(self,I : int,F : OCP.TopoDS.TopoDS_Face,OS : io.BytesIO) -> io.BytesIO: 
         """
         None
 
         None
         """
     @overload
-    def Dump(self,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face,OS : Any) -> Any: ...
+    def Dump(self,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face,OS : io.BytesIO) -> io.BytesIO: ...
     def Edge(self,I : int) -> OCP.TopoDS.TopoDS_Shape: 
         """
         get the edge of shape I (1,2) containing the point. Returned shape is null if the VPoint is not on an edge of shape I (1,2).
@@ -2608,7 +2625,7 @@ class TopOpeBRep_VPointInter():
         None
         """
     @overload
-    def ShapeIndex(self,I : int) -> None: 
+    def ShapeIndex(self) -> int: 
         """
         returns value of filed myShapeIndex = 0,1,2,3 0 means the VPoint is on no restriction 1 means the VPoint is on the restriction 1 2 means the VPoint is on the restriction 2 3 means the VPoint is on the restrictions 1 and 2
 
@@ -2619,16 +2636,16 @@ class TopOpeBRep_VPointInter():
         set value of shape supporting me (0,1,2,3).
         """
     @overload
-    def ShapeIndex(self) -> int: ...
+    def ShapeIndex(self,I : int) -> None: ...
     @overload
-    def State(self,S : OCP.TopAbs.TopAbs_State,I : int) -> None: 
+    def State(self,I : int) -> OCP.TopAbs.TopAbs_State: 
         """
         get state of VPoint within the domain of geometric shape domain <I> (= 1 or 2).
 
         Set the state of VPoint within the domain of the geometric shape <I> (= 1 or 2).
         """
     @overload
-    def State(self,I : int) -> OCP.TopAbs.TopAbs_State: ...
+    def State(self,S : OCP.TopAbs.TopAbs_State,I : int) -> None: ...
     def SurfaceParameters(self,I : int) -> OCP.gp.gp_Pnt2d: 
         """
         get the parameter on surface of shape I (1,2) containing the point
@@ -2722,14 +2739,14 @@ class TopOpeBRep_VPointInterIterator():
         None
         """
     @overload
-    def Init(self) -> None: 
+    def Init(self,LI : TopOpeBRep_LineInter,checkkeep : bool=False) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,LI : TopOpeBRep_LineInter,checkkeep : bool=False) -> None: ...
+    def Init(self) -> None: ...
     def More(self) -> bool: 
         """
         None
@@ -2815,21 +2832,21 @@ class TopOpeBRep_WPointInterIterator():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,LI : TopOpeBRep_LineInter) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
-TopOpeBRep_ANALYTIC: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_ANALYTIC
-TopOpeBRep_CIRCLE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_CIRCLE
-TopOpeBRep_ELLIPSE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_ELLIPSE
-TopOpeBRep_HYPERBOLA: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_HYPERBOLA
-TopOpeBRep_LINE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_LINE
-TopOpeBRep_OTHERTYPE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_OTHERTYPE
-TopOpeBRep_P2DINT: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = TopOpeBRep_P2Dstatus.TopOpeBRep_P2DINT
-TopOpeBRep_P2DNEW: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = TopOpeBRep_P2Dstatus.TopOpeBRep_P2DNEW
-TopOpeBRep_P2DSGF: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGF
-TopOpeBRep_P2DSGL: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGL
-TopOpeBRep_P2DUNK: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = TopOpeBRep_P2Dstatus.TopOpeBRep_P2DUNK
-TopOpeBRep_PARABOLA: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_PARABOLA
-TopOpeBRep_RESTRICTION: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_RESTRICTION
-TopOpeBRep_WALKING: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = TopOpeBRep_TypeLineCurve.TopOpeBRep_WALKING
+TopOpeBRep_ANALYTIC: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_ANALYTIC: 0>
+TopOpeBRep_CIRCLE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_CIRCLE: 4>
+TopOpeBRep_ELLIPSE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_ELLIPSE: 5>
+TopOpeBRep_HYPERBOLA: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_HYPERBOLA: 7>
+TopOpeBRep_LINE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_LINE: 3>
+TopOpeBRep_OTHERTYPE: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_OTHERTYPE: 8>
+TopOpeBRep_P2DINT: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DINT: 1>
+TopOpeBRep_P2DNEW: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DNEW: 4>
+TopOpeBRep_P2DSGF: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGF: 2>
+TopOpeBRep_P2DSGL: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DSGL: 3>
+TopOpeBRep_P2DUNK: OCP.TopOpeBRep.TopOpeBRep_P2Dstatus # value = <TopOpeBRep_P2Dstatus.TopOpeBRep_P2DUNK: 0>
+TopOpeBRep_PARABOLA: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_PARABOLA: 6>
+TopOpeBRep_RESTRICTION: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_RESTRICTION: 1>
+TopOpeBRep_WALKING: OCP.TopOpeBRep.TopOpeBRep_TypeLineCurve # value = <TopOpeBRep_TypeLineCurve.TopOpeBRep_WALKING: 2>

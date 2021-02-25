@@ -4,9 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.TCollection
 import OCP.TColStd
+import OCP.TCollection
+import io
+import OCP.NCollection
 import OCP.Standard
 __all__  = [
 "Storage",
@@ -148,14 +149,14 @@ class Storage_ArrayOfCallBack():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : Storage_CallBack,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Storage_ArrayOfCallBack) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : Storage_CallBack,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Storage_ArrayOfSchema():
     """
@@ -234,18 +235,18 @@ class Storage_ArrayOfSchema():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : Storage_Schema,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : Storage_ArrayOfSchema) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : Storage_Schema,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : Storage_ArrayOfSchema) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
-class Storage_BaseDriver():
+class Storage_BaseDriver(OCP.Standard.Standard_Transient):
     """
-    Root class for drivers. A driver assigns a physical container to data to be stored or retrieved, for instance a file. The FSD package provides two derived concrete classes : - FSD_File is a general driver which defines a file as the container of data.
+    Root class for drivers. A driver assigns a physical container to data to be stored or retrieved, for instance a file. The FSD package provides two derived concrete classes : - FSD_File is a general driver which defines a file as the container of data.Root class for drivers. A driver assigns a physical container to data to be stored or retrieved, for instance a file. The FSD package provides two derived concrete classes : - FSD_File is a general driver which defines a file as the container of data.
     """
     def BeginReadCommentSection(self) -> Storage_Error: 
         """
@@ -312,6 +313,18 @@ class Storage_BaseDriver():
         None
         """
     def Close(self) -> Storage_Error: 
+        """
+        None
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
@@ -399,32 +412,48 @@ class Storage_BaseDriver():
         """
         None
         """
-    def GetReference(self,aValue : int) -> Storage_BaseDriver: 
+    def GetRefCount(self) -> int: 
         """
-        None
+        Get the reference counter of this object
         """
+    def GetReference(self,aValue : int) -> Storage_BaseDriver: ...
     def GetShortReal(self,aValue : float) -> Storage_BaseDriver: 
         """
         None
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
         """
     def IsEnd(self) -> bool: 
         """
         returns True if we are at end of the stream
         """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
-
-        None
         """
-    def Open(self,aName : OCP.TCollection.TCollection_AsciiString,aMode : Storage_OpenMode) -> Storage_Error: 
-        """
-        None
-        """
+    def Open(self,aName : OCP.TCollection.TCollection_AsciiString,aMode : Storage_OpenMode) -> Storage_Error: ...
     def OpenMode(self) -> Storage_OpenMode: 
         """
-        None
-
         None
         """
     def PutBoolean(self,aValue : bool) -> Storage_BaseDriver: 
@@ -447,10 +476,7 @@ class Storage_BaseDriver():
         """
         None
         """
-    def PutReference(self,aValue : int) -> Storage_BaseDriver: 
-        """
-        None
-        """
+    def PutReference(self,aValue : int) -> Storage_BaseDriver: ...
     def PutShortReal(self,aValue : float) -> Storage_BaseDriver: 
         """
         None
@@ -459,7 +485,7 @@ class Storage_BaseDriver():
         """
         None
         """
-    def ReadCompleteInfo(self,theIStream : Any,theData : Storage_Data) -> Any: 
+    def ReadCompleteInfo(self,theIStream : io.BytesIO,theData : Storage_Data) -> Any: 
         """
         None
         """
@@ -468,7 +494,7 @@ class Storage_BaseDriver():
         None
         """
     @staticmethod
-    def ReadMagicNumber_s(theIStream : Any) -> OCP.TCollection.TCollection_AsciiString: 
+    def ReadMagicNumber_s(theIStream : io.BytesIO) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
         """
@@ -516,6 +542,10 @@ class Storage_BaseDriver():
         """
         return position in the file. Return -1 upon error.
         """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
     def TypeSectionSize(self) -> int: 
         """
         None
@@ -541,6 +571,16 @@ class Storage_BaseDriver():
         None
         """
     def WriteTypeInformations(self,typeNum : int,typeName : OCP.TCollection.TCollection_AsciiString) -> None: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
         """
         None
         """
@@ -643,14 +683,14 @@ class Storage_Data(OCP.Standard.Standard_Transient):
     A picture memorizing the data stored in a container (for example, in a file). A Storage_Data object represents either: - persistent data to be written into a container, or - persistent data which are read from a container. A Storage_Data object is used in both the storage and retrieval operations: - Storage mechanism: create an empty Storage_Data object, then add successively persistent objects (roots) to be stored using the function AddRoot. When the set of data is complete, write it to a container using the function Write in your Storage_Schema storage/retrieval algorithm. - Retrieval mechanism: a Storage_Data object is returned by the Read function from your Storage_Schema storage/retrieval algorithm. Use the functions NumberOfRoots and Roots to find the roots which were stored in the read container. The roots of a Storage_Data object may share references on objects. The shared internal references of a Storage_Data object are maintained by the storage/retrieval mechanism. Note: References shared by objects which are contained in two distinct Storage_Data objects are not maintained by the storage/retrieval mechanism: external references are not supported by Storage_Schema algorithmA picture memorizing the data stored in a container (for example, in a file). A Storage_Data object represents either: - persistent data to be written into a container, or - persistent data which are read from a container. A Storage_Data object is used in both the storage and retrieval operations: - Storage mechanism: create an empty Storage_Data object, then add successively persistent objects (roots) to be stored using the function AddRoot. When the set of data is complete, write it to a container using the function Write in your Storage_Schema storage/retrieval algorithm. - Retrieval mechanism: a Storage_Data object is returned by the Read function from your Storage_Schema storage/retrieval algorithm. Use the functions NumberOfRoots and Roots to find the roots which were stored in the read container. The roots of a Storage_Data object may share references on objects. The shared internal references of a Storage_Data object are maintained by the storage/retrieval mechanism. Note: References shared by objects which are contained in two distinct Storage_Data objects are not maintained by the storage/retrieval mechanism: external references are not supported by Storage_Schema algorithmA picture memorizing the data stored in a container (for example, in a file). A Storage_Data object represents either: - persistent data to be written into a container, or - persistent data which are read from a container. A Storage_Data object is used in both the storage and retrieval operations: - Storage mechanism: create an empty Storage_Data object, then add successively persistent objects (roots) to be stored using the function AddRoot. When the set of data is complete, write it to a container using the function Write in your Storage_Schema storage/retrieval algorithm. - Retrieval mechanism: a Storage_Data object is returned by the Read function from your Storage_Schema storage/retrieval algorithm. Use the functions NumberOfRoots and Roots to find the roots which were stored in the read container. The roots of a Storage_Data object may share references on objects. The shared internal references of a Storage_Data object are maintained by the storage/retrieval mechanism. Note: References shared by objects which are contained in two distinct Storage_Data objects are not maintained by the storage/retrieval mechanism: external references are not supported by Storage_Schema algorithm
     """
     @overload
-    def AddRoot(self,aName : OCP.TCollection.TCollection_AsciiString,anObject : OCP.Standard.Standard_Persistent) -> None: 
+    def AddRoot(self,anObject : OCP.Standard.Standard_Persistent) -> None: 
         """
         add a persistent root to write. the name of the root is a driver reference number.
 
         Adds the root anObject to this set of data. The name of the root is aName if given; if not, it will be a reference number assigned by the driver when writing the set of data into the container. When naming the roots, it is easier to retrieve objects by significant references rather than by references without any semantic values.
         """
     @overload
-    def AddRoot(self,anObject : OCP.Standard.Standard_Persistent) -> None: ...
+    def AddRoot(self,aName : OCP.TCollection.TCollection_AsciiString,anObject : OCP.Standard.Standard_Persistent) -> None: ...
     def AddToComments(self,aComment : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         add <theUserInfo> to the user informations
@@ -830,7 +870,7 @@ class Storage_Data(OCP.Standard.Standard_Transient):
         """
     pass
 class Storage_DefaultCallBack(Storage_CallBack, OCP.Standard.Standard_Transient):
-    def Add(self,aPers : OCP.Standard.Standard_Persistent,aSchema : Storage_Schema) -> None: 
+    def Add(self,thePers : OCP.Standard.Standard_Persistent,theSchema : Storage_Schema) -> None: 
         """
         None
         """
@@ -876,7 +916,7 @@ class Storage_DefaultCallBack(Storage_CallBack, OCP.Standard.Standard_Transient)
         """
         None
         """
-    def Read(self,aPers : OCP.Standard.Standard_Persistent,aDriver : Storage_BaseDriver,aSchema : Storage_Schema) -> None: 
+    def Read(self,thePers : OCP.Standard.Standard_Persistent,theDriver : Storage_BaseDriver,theSchema : Storage_Schema) -> None: 
         """
         None
         """
@@ -884,7 +924,7 @@ class Storage_DefaultCallBack(Storage_CallBack, OCP.Standard.Standard_Transient)
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Write(self,aPers : OCP.Standard.Standard_Persistent,aDriver : Storage_BaseDriver,aSchema : Storage_Schema) -> None: 
+    def Write(self,thePers : OCP.Standard.Standard_Persistent,theDriver : Storage_BaseDriver,theSchema : Storage_Schema) -> None: 
         """
         None
         """
@@ -934,32 +974,40 @@ class Storage_Error():
 
       Storage_VSWrongFileDriver
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Storage_VSAlreadyOpen: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSAlreadyOpen
-    Storage_VSCloseError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSCloseError
-    Storage_VSExtCharParityError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSExtCharParityError
-    Storage_VSFormatError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSFormatError
-    Storage_VSInternalError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSInternalError
-    Storage_VSModeError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSModeError
-    Storage_VSNotOpen: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSNotOpen
-    Storage_VSOk: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSOk
-    Storage_VSOpenError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSOpenError
-    Storage_VSSectionNotFound: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSSectionNotFound
-    Storage_VSTypeMismatch: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSTypeMismatch
-    Storage_VSUnknownType: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSUnknownType
-    Storage_VSWriteError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSWriteError
-    Storage_VSWrongFileDriver: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSWrongFileDriver
-    __entries: dict # value = {'Storage_VSOk': (Storage_Error.Storage_VSOk, None), 'Storage_VSOpenError': (Storage_Error.Storage_VSOpenError, None), 'Storage_VSModeError': (Storage_Error.Storage_VSModeError, None), 'Storage_VSCloseError': (Storage_Error.Storage_VSCloseError, None), 'Storage_VSAlreadyOpen': (Storage_Error.Storage_VSAlreadyOpen, None), 'Storage_VSNotOpen': (Storage_Error.Storage_VSNotOpen, None), 'Storage_VSSectionNotFound': (Storage_Error.Storage_VSSectionNotFound, None), 'Storage_VSWriteError': (Storage_Error.Storage_VSWriteError, None), 'Storage_VSFormatError': (Storage_Error.Storage_VSFormatError, None), 'Storage_VSUnknownType': (Storage_Error.Storage_VSUnknownType, None), 'Storage_VSTypeMismatch': (Storage_Error.Storage_VSTypeMismatch, None), 'Storage_VSInternalError': (Storage_Error.Storage_VSInternalError, None), 'Storage_VSExtCharParityError': (Storage_Error.Storage_VSExtCharParityError, None), 'Storage_VSWrongFileDriver': (Storage_Error.Storage_VSWrongFileDriver, None)}
-    __members__: dict # value = {'Storage_VSOk': Storage_Error.Storage_VSOk, 'Storage_VSOpenError': Storage_Error.Storage_VSOpenError, 'Storage_VSModeError': Storage_Error.Storage_VSModeError, 'Storage_VSCloseError': Storage_Error.Storage_VSCloseError, 'Storage_VSAlreadyOpen': Storage_Error.Storage_VSAlreadyOpen, 'Storage_VSNotOpen': Storage_Error.Storage_VSNotOpen, 'Storage_VSSectionNotFound': Storage_Error.Storage_VSSectionNotFound, 'Storage_VSWriteError': Storage_Error.Storage_VSWriteError, 'Storage_VSFormatError': Storage_Error.Storage_VSFormatError, 'Storage_VSUnknownType': Storage_Error.Storage_VSUnknownType, 'Storage_VSTypeMismatch': Storage_Error.Storage_VSTypeMismatch, 'Storage_VSInternalError': Storage_Error.Storage_VSInternalError, 'Storage_VSExtCharParityError': Storage_Error.Storage_VSExtCharParityError, 'Storage_VSWrongFileDriver': Storage_Error.Storage_VSWrongFileDriver}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Storage_VSAlreadyOpen: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSAlreadyOpen: 4>
+    Storage_VSCloseError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSCloseError: 3>
+    Storage_VSExtCharParityError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSExtCharParityError: 12>
+    Storage_VSFormatError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSFormatError: 8>
+    Storage_VSInternalError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSInternalError: 11>
+    Storage_VSModeError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSModeError: 2>
+    Storage_VSNotOpen: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSNotOpen: 5>
+    Storage_VSOk: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSOk: 0>
+    Storage_VSOpenError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSOpenError: 1>
+    Storage_VSSectionNotFound: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSSectionNotFound: 6>
+    Storage_VSTypeMismatch: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSTypeMismatch: 10>
+    Storage_VSUnknownType: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSUnknownType: 9>
+    Storage_VSWriteError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSWriteError: 7>
+    Storage_VSWrongFileDriver: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSWrongFileDriver: 13>
+    __entries: dict # value = {'Storage_VSOk': (<Storage_Error.Storage_VSOk: 0>, None), 'Storage_VSOpenError': (<Storage_Error.Storage_VSOpenError: 1>, None), 'Storage_VSModeError': (<Storage_Error.Storage_VSModeError: 2>, None), 'Storage_VSCloseError': (<Storage_Error.Storage_VSCloseError: 3>, None), 'Storage_VSAlreadyOpen': (<Storage_Error.Storage_VSAlreadyOpen: 4>, None), 'Storage_VSNotOpen': (<Storage_Error.Storage_VSNotOpen: 5>, None), 'Storage_VSSectionNotFound': (<Storage_Error.Storage_VSSectionNotFound: 6>, None), 'Storage_VSWriteError': (<Storage_Error.Storage_VSWriteError: 7>, None), 'Storage_VSFormatError': (<Storage_Error.Storage_VSFormatError: 8>, None), 'Storage_VSUnknownType': (<Storage_Error.Storage_VSUnknownType: 9>, None), 'Storage_VSTypeMismatch': (<Storage_Error.Storage_VSTypeMismatch: 10>, None), 'Storage_VSInternalError': (<Storage_Error.Storage_VSInternalError: 11>, None), 'Storage_VSExtCharParityError': (<Storage_Error.Storage_VSExtCharParityError: 12>, None), 'Storage_VSWrongFileDriver': (<Storage_Error.Storage_VSWrongFileDriver: 13>, None)}
+    __members__: dict # value = {'Storage_VSOk': <Storage_Error.Storage_VSOk: 0>, 'Storage_VSOpenError': <Storage_Error.Storage_VSOpenError: 1>, 'Storage_VSModeError': <Storage_Error.Storage_VSModeError: 2>, 'Storage_VSCloseError': <Storage_Error.Storage_VSCloseError: 3>, 'Storage_VSAlreadyOpen': <Storage_Error.Storage_VSAlreadyOpen: 4>, 'Storage_VSNotOpen': <Storage_Error.Storage_VSNotOpen: 5>, 'Storage_VSSectionNotFound': <Storage_Error.Storage_VSSectionNotFound: 6>, 'Storage_VSWriteError': <Storage_Error.Storage_VSWriteError: 7>, 'Storage_VSFormatError': <Storage_Error.Storage_VSFormatError: 8>, 'Storage_VSUnknownType': <Storage_Error.Storage_VSUnknownType: 9>, 'Storage_VSTypeMismatch': <Storage_Error.Storage_VSTypeMismatch: 10>, 'Storage_VSInternalError': <Storage_Error.Storage_VSInternalError: 11>, 'Storage_VSExtCharParityError': <Storage_Error.Storage_VSExtCharParityError: 12>, 'Storage_VSWrongFileDriver': <Storage_Error.Storage_VSWrongFileDriver: 13>}
     pass
 class Storage_HArrayOfCallBack(Storage_ArrayOfCallBack, OCP.Standard.Standard_Transient):
     def Array1(self) -> Storage_ArrayOfCallBack: 
@@ -1085,14 +1133,14 @@ class Storage_HArrayOfCallBack(Storage_ArrayOfCallBack, OCP.Standard.Standard_Tr
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : Storage_CallBack) -> None: ...
-    @overload
     def __init__(self,theOther : Storage_ArrayOfCallBack) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : Storage_CallBack) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1228,14 +1276,14 @@ class Storage_HArrayOfSchema(Storage_ArrayOfSchema, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : Storage_ArrayOfSchema) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : Storage_Schema) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : Storage_ArrayOfSchema) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1324,14 +1372,14 @@ class Storage_PArray():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.Standard.Standard_Persistent,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : Storage_PArray) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : OCP.Standard.Standard_Persistent,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -1342,14 +1390,14 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Storage_Root) -> None: 
+    def Append(self,theSeq : Storage_SeqOfRoot) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Storage_SeqOfRoot) -> None: ...
+    def Append(self,theItem : Storage_Root) -> None: ...
     def Assign(self,theOther : Storage_SeqOfRoot) -> Storage_SeqOfRoot: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1388,14 +1436,14 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : Storage_Root) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Storage_Root) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Storage_Root) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1413,14 +1461,14 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Storage_Root) -> None: 
+    def Prepend(self,theSeq : Storage_SeqOfRoot) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Storage_SeqOfRoot) -> None: ...
+    def Prepend(self,theItem : Storage_Root) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -1455,12 +1503,12 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Storage_SeqOfRoot) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : Storage_SeqOfRoot) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1695,22 +1743,30 @@ class Storage_OpenMode():
 
       Storage_VSReadWrite
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Storage_VSNone: OCP.Storage.Storage_OpenMode # value = Storage_OpenMode.Storage_VSNone
-    Storage_VSRead: OCP.Storage.Storage_OpenMode # value = Storage_OpenMode.Storage_VSRead
-    Storage_VSReadWrite: OCP.Storage.Storage_OpenMode # value = Storage_OpenMode.Storage_VSReadWrite
-    Storage_VSWrite: OCP.Storage.Storage_OpenMode # value = Storage_OpenMode.Storage_VSWrite
-    __entries: dict # value = {'Storage_VSNone': (Storage_OpenMode.Storage_VSNone, None), 'Storage_VSRead': (Storage_OpenMode.Storage_VSRead, None), 'Storage_VSWrite': (Storage_OpenMode.Storage_VSWrite, None), 'Storage_VSReadWrite': (Storage_OpenMode.Storage_VSReadWrite, None)}
-    __members__: dict # value = {'Storage_VSNone': Storage_OpenMode.Storage_VSNone, 'Storage_VSRead': Storage_OpenMode.Storage_VSRead, 'Storage_VSWrite': Storage_OpenMode.Storage_VSWrite, 'Storage_VSReadWrite': Storage_OpenMode.Storage_VSReadWrite}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Storage_VSNone: OCP.Storage.Storage_OpenMode # value = <Storage_OpenMode.Storage_VSNone: 0>
+    Storage_VSRead: OCP.Storage.Storage_OpenMode # value = <Storage_OpenMode.Storage_VSRead: 1>
+    Storage_VSReadWrite: OCP.Storage.Storage_OpenMode # value = <Storage_OpenMode.Storage_VSReadWrite: 3>
+    Storage_VSWrite: OCP.Storage.Storage_OpenMode # value = <Storage_OpenMode.Storage_VSWrite: 2>
+    __entries: dict # value = {'Storage_VSNone': (<Storage_OpenMode.Storage_VSNone: 0>, None), 'Storage_VSRead': (<Storage_OpenMode.Storage_VSRead: 1>, None), 'Storage_VSWrite': (<Storage_OpenMode.Storage_VSWrite: 2>, None), 'Storage_VSReadWrite': (<Storage_OpenMode.Storage_VSReadWrite: 3>, None)}
+    __members__: dict # value = {'Storage_VSNone': <Storage_OpenMode.Storage_VSNone: 0>, 'Storage_VSRead': <Storage_OpenMode.Storage_VSRead: 1>, 'Storage_VSWrite': <Storage_OpenMode.Storage_VSWrite: 2>, 'Storage_VSReadWrite': <Storage_OpenMode.Storage_VSReadWrite: 3>}
     pass
 class Storage_HPArray(Storage_PArray, OCP.Standard.Standard_Transient):
     def Array1(self) -> Storage_PArray: 
@@ -1836,14 +1892,14 @@ class Storage_HPArray(Storage_PArray, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self,theOther : Storage_PArray) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.Standard.Standard_Persistent) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.Standard.Standard_Persistent) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Storage_PArray) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1909,14 +1965,14 @@ class Storage_PType(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString) -> int: 
+    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString,theValue : int) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString,theValue : int) -> bool: ...
+    def FindFromKey(self,theKey1 : OCP.TCollection.TCollection_AsciiString) -> int: ...
     def FindIndex(self,theKey1 : OCP.TCollection.TCollection_AsciiString) -> int: 
         """
         FindIndex
@@ -1957,7 +2013,7 @@ class Storage_PType(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1970,12 +2026,12 @@ class Storage_PType(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theOther : Storage_PType) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : Storage_PType) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Storage_Root(OCP.Standard.Standard_Transient):
     """
@@ -2295,24 +2351,14 @@ class Storage_Schema(OCP.Standard.Standard_Transient):
         """
         Writes the data aggregated in aData into the container defined by the driver s. The storage operation is performed according to the data schema with which this algorithm is working. Note: aData may aggregate several root objects to be stored together.
         """
-    @overload
-    def WritePersistentObjectHeader(self,sp : OCP.Standard.Standard_Persistent,f : Storage_BaseDriver) -> None: 
+    def WritePersistentObjectHeader(self,sp : OCP.Standard.Standard_Persistent,theDriver : Storage_BaseDriver) -> None: 
         """
         None
-
-        None
         """
-    @overload
-    def WritePersistentObjectHeader(self,sp : OCP.Standard.Standard_Persistent,s : Storage_BaseDriver) -> None: ...
-    @overload
-    def WritePersistentReference(self,sp : OCP.Standard.Standard_Persistent,s : Storage_BaseDriver) -> None: 
+    def WritePersistentReference(self,sp : OCP.Standard.Standard_Persistent,theDriver : Storage_BaseDriver) -> None: 
         """
         None
-
-        None
         """
-    @overload
-    def WritePersistentReference(self,sp : OCP.Standard.Standard_Persistent,f : Storage_BaseDriver) -> None: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2401,14 +2447,14 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
     @overload
     def InsertAfter(self,theIndex : int,theItem : Storage_Root) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Storage_Root) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Storage_Root) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2444,14 +2490,14 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Storage_Root) -> None: 
+    def Prepend(self,theSeq : Storage_SeqOfRoot) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Storage_SeqOfRoot) -> None: ...
+    def Prepend(self,theItem : Storage_Root) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -2494,10 +2540,10 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Storage_SeqOfRoot) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : Storage_SeqOfRoot) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -2526,21 +2572,29 @@ class Storage_SolveMode():
 
       Storage_ReadSolve
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    Storage_AddSolve: OCP.Storage.Storage_SolveMode # value = Storage_SolveMode.Storage_AddSolve
-    Storage_ReadSolve: OCP.Storage.Storage_SolveMode # value = Storage_SolveMode.Storage_ReadSolve
-    Storage_WriteSolve: OCP.Storage.Storage_SolveMode # value = Storage_SolveMode.Storage_WriteSolve
-    __entries: dict # value = {'Storage_AddSolve': (Storage_SolveMode.Storage_AddSolve, None), 'Storage_WriteSolve': (Storage_SolveMode.Storage_WriteSolve, None), 'Storage_ReadSolve': (Storage_SolveMode.Storage_ReadSolve, None)}
-    __members__: dict # value = {'Storage_AddSolve': Storage_SolveMode.Storage_AddSolve, 'Storage_WriteSolve': Storage_SolveMode.Storage_WriteSolve, 'Storage_ReadSolve': Storage_SolveMode.Storage_ReadSolve}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Storage_AddSolve: OCP.Storage.Storage_SolveMode # value = <Storage_SolveMode.Storage_AddSolve: 0>
+    Storage_ReadSolve: OCP.Storage.Storage_SolveMode # value = <Storage_SolveMode.Storage_ReadSolve: 2>
+    Storage_WriteSolve: OCP.Storage.Storage_SolveMode # value = <Storage_SolveMode.Storage_WriteSolve: 1>
+    __entries: dict # value = {'Storage_AddSolve': (<Storage_SolveMode.Storage_AddSolve: 0>, None), 'Storage_WriteSolve': (<Storage_SolveMode.Storage_WriteSolve: 1>, None), 'Storage_ReadSolve': (<Storage_SolveMode.Storage_ReadSolve: 2>, None)}
+    __members__: dict # value = {'Storage_AddSolve': <Storage_SolveMode.Storage_AddSolve: 0>, 'Storage_WriteSolve': <Storage_SolveMode.Storage_WriteSolve: 1>, 'Storage_ReadSolve': <Storage_SolveMode.Storage_ReadSolve: 2>}
     pass
 class Storage_StreamFormatError(Exception, BaseException):
     class type():
@@ -2662,14 +2716,14 @@ class Storage_TypeData(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Type(self,aTypeNum : int) -> OCP.TCollection.TCollection_AsciiString: 
+    def Type(self,aTypeName : OCP.TCollection.TCollection_AsciiString) -> int: 
         """
         returns the name of the type with number <aTypeNum>
 
         returns the name of the type with number <aTypeNum>
         """
     @overload
-    def Type(self,aTypeName : OCP.TCollection.TCollection_AsciiString) -> int: ...
+    def Type(self,aTypeNum : int) -> OCP.TCollection.TCollection_AsciiString: ...
     def Types(self) -> OCP.TColStd.TColStd_HSequenceOfAsciiString: 
         """
         None
@@ -2768,24 +2822,24 @@ class Storage_TypedCallBack(OCP.Standard.Standard_Transient):
         None
         """
     pass
-Storage_AddSolve: OCP.Storage.Storage_SolveMode # value = Storage_SolveMode.Storage_AddSolve
-Storage_ReadSolve: OCP.Storage.Storage_SolveMode # value = Storage_SolveMode.Storage_ReadSolve
-Storage_VSAlreadyOpen: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSAlreadyOpen
-Storage_VSCloseError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSCloseError
-Storage_VSExtCharParityError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSExtCharParityError
-Storage_VSFormatError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSFormatError
-Storage_VSInternalError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSInternalError
-Storage_VSModeError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSModeError
-Storage_VSNone: OCP.Storage.Storage_OpenMode # value = Storage_OpenMode.Storage_VSNone
-Storage_VSNotOpen: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSNotOpen
-Storage_VSOk: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSOk
-Storage_VSOpenError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSOpenError
-Storage_VSRead: OCP.Storage.Storage_OpenMode # value = Storage_OpenMode.Storage_VSRead
-Storage_VSReadWrite: OCP.Storage.Storage_OpenMode # value = Storage_OpenMode.Storage_VSReadWrite
-Storage_VSSectionNotFound: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSSectionNotFound
-Storage_VSTypeMismatch: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSTypeMismatch
-Storage_VSUnknownType: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSUnknownType
-Storage_VSWrite: OCP.Storage.Storage_OpenMode # value = Storage_OpenMode.Storage_VSWrite
-Storage_VSWriteError: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSWriteError
-Storage_VSWrongFileDriver: OCP.Storage.Storage_Error # value = Storage_Error.Storage_VSWrongFileDriver
-Storage_WriteSolve: OCP.Storage.Storage_SolveMode # value = Storage_SolveMode.Storage_WriteSolve
+Storage_AddSolve: OCP.Storage.Storage_SolveMode # value = <Storage_SolveMode.Storage_AddSolve: 0>
+Storage_ReadSolve: OCP.Storage.Storage_SolveMode # value = <Storage_SolveMode.Storage_ReadSolve: 2>
+Storage_VSAlreadyOpen: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSAlreadyOpen: 4>
+Storage_VSCloseError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSCloseError: 3>
+Storage_VSExtCharParityError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSExtCharParityError: 12>
+Storage_VSFormatError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSFormatError: 8>
+Storage_VSInternalError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSInternalError: 11>
+Storage_VSModeError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSModeError: 2>
+Storage_VSNone: OCP.Storage.Storage_OpenMode # value = <Storage_OpenMode.Storage_VSNone: 0>
+Storage_VSNotOpen: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSNotOpen: 5>
+Storage_VSOk: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSOk: 0>
+Storage_VSOpenError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSOpenError: 1>
+Storage_VSRead: OCP.Storage.Storage_OpenMode # value = <Storage_OpenMode.Storage_VSRead: 1>
+Storage_VSReadWrite: OCP.Storage.Storage_OpenMode # value = <Storage_OpenMode.Storage_VSReadWrite: 3>
+Storage_VSSectionNotFound: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSSectionNotFound: 6>
+Storage_VSTypeMismatch: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSTypeMismatch: 10>
+Storage_VSUnknownType: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSUnknownType: 9>
+Storage_VSWrite: OCP.Storage.Storage_OpenMode # value = <Storage_OpenMode.Storage_VSWrite: 2>
+Storage_VSWriteError: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSWriteError: 7>
+Storage_VSWrongFileDriver: OCP.Storage.Storage_Error # value = <Storage_Error.Storage_VSWrongFileDriver: 13>
+Storage_WriteSolve: OCP.Storage.Storage_SolveMode # value = <Storage_SolveMode.Storage_WriteSolve: 1>

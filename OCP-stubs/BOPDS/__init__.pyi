@@ -4,20 +4,23 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.TopAbs
-import OCP.Bnd
 import OCP.TopTools
-import OCP.Standard
-import OCP.TopoDS
-import OCP.IntTools
+import OCP.TColStd
+import io
 import OCP.NCollection
+import OCP.IntTools
 import OCP.gp
+import OCP.Bnd
+import OCP.TopoDS
+import OCP.Standard
+import OCP.TopAbs
 __all__  = [
 "BOPDS_CommonBlock",
 "BOPDS_CoupleOfPaveBlocks",
 "BOPDS_Curve",
 "BOPDS_DS",
+"BOPDS_DataMapOfIntegerListOfPaveBlock",
+"BOPDS_DataMapOfPaveBlockListOfInteger",
 "BOPDS_DataMapOfPaveBlockListOfPaveBlock",
 "BOPDS_DataMapOfShapeCoupleOfPaveBlocks",
 "BOPDS_FaceInfo",
@@ -332,14 +335,14 @@ class BOPDS_Curve():
         Modifier Sets the bounding box <theBox> of the curve
         """
     @overload
-    def SetCurve(self,theC : OCP.IntTools.IntTools_Curve) -> None: 
+    def SetCurve(self,theCurve : OCP.IntTools.IntTools_Curve) -> None: 
         """
         Modifier Sets the curve <theC>
 
         Modifier Sets the curve <theC>
         """
     @overload
-    def SetCurve(self,theCurve : OCP.IntTools.IntTools_Curve) -> None: ...
+    def SetCurve(self,theC : OCP.IntTools.IntTools_Curve) -> None: ...
     def SetPaveBlocks(self,theLPB : BOPDS_ListOfPaveBlock) -> None: 
         """
         None
@@ -392,14 +395,14 @@ class BOPDS_DS():
         Selector Returns the indices of alone vertices for the face with index theIndex
         """
     @overload
-    def Append(self,theSI : BOPDS_ShapeInfo) -> int: 
+    def Append(self,theS : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         Modifier Appends the information about the shape [theSI] to the data structure Returns the index of theSI in the data structure
 
         Modifier Appends the default information about the shape [theS] to the data structure Returns the index of theS in the data structure
         """
     @overload
-    def Append(self,theS : OCP.TopoDS.TopoDS_Shape) -> int: ...
+    def Append(self,theSI : BOPDS_ShapeInfo) -> int: ...
     def Arguments(self) -> OCP.TopTools.TopTools_ListOfShape: 
         """
         Selector Returns the arguments of an operation
@@ -673,23 +676,23 @@ class BOPDS_DS():
         Update the pave block of the common block for all shapes in data structure
         """
     @overload
-    def UpdateFaceInfoIn(self,theIndex : int) -> None: 
+    def UpdateFaceInfoIn(self,theFaces : OCP.TColStd.TColStd_MapOfInteger) -> None: 
         """
         Update the state In of face with index theIndex
 
         Update the state IN for all faces in the given map
         """
     @overload
-    def UpdateFaceInfoIn(self,theFaces : OCP.TColStd.TColStd_MapOfInteger) -> None: ...
+    def UpdateFaceInfoIn(self,theIndex : int) -> None: ...
     @overload
-    def UpdateFaceInfoOn(self,theIndex : int) -> None: 
+    def UpdateFaceInfoOn(self,theFaces : OCP.TColStd.TColStd_MapOfInteger) -> None: 
         """
         Update the state On of face with index theIndex
 
         Update the state ON for all faces in the given map
         """
     @overload
-    def UpdateFaceInfoOn(self,theFaces : OCP.TColStd.TColStd_MapOfInteger) -> None: ...
+    def UpdateFaceInfoOn(self,theIndex : int) -> None: ...
     def UpdatePaveBlock(self,thePB : BOPDS_PaveBlock) -> None: 
         """
         Update the pave block thePB
@@ -707,9 +710,197 @@ class BOPDS_DS():
         Update the pave blocks for all shapes in data structure
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    pass
+class BOPDS_DataMapOfIntegerListOfPaveBlock(OCP.NCollection.NCollection_BaseMap):
+    """
+    Purpose: The DataMap is a Map to store keys with associated Items. See Map from NCollection for a discussion about the number of buckets.
+    """
+    def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
+        """
+        Returns attached allocator
+        """
+    def Assign(self,theOther : BOPDS_DataMapOfIntegerListOfPaveBlock) -> BOPDS_DataMapOfIntegerListOfPaveBlock: 
+        """
+        Assignment. This method does not change the internal allocator.
+        """
+    def Bind(self,theKey : int,theItem : BOPDS_ListOfPaveBlock) -> bool: 
+        """
+        Bind binds Item to Key in map.
+        """
+    def Bound(self,theKey : int,theItem : BOPDS_ListOfPaveBlock) -> BOPDS_ListOfPaveBlock: 
+        """
+        Bound binds Item to Key in map. Returns modifiable Item
+        """
+    def ChangeFind(self,theKey : int) -> BOPDS_ListOfPaveBlock: 
+        """
+        ChangeFind returns mofifiable Item by Key. Raises if Key was not bound
+        """
+    def ChangeSeek(self,theKey : int) -> BOPDS_ListOfPaveBlock: 
+        """
+        ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
+        """
+    @overload
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
+        """
+        Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
+
+        Clear data and reset allocator
+        """
+    @overload
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Exchange(self,theOther : BOPDS_DataMapOfIntegerListOfPaveBlock) -> None: 
+        """
+        Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
+        """
+    def Extent(self) -> int: 
+        """
+        Extent
+        """
+    @overload
+    def Find(self,theKey : int,theValue : BOPDS_ListOfPaveBlock) -> bool: 
+        """
+        Find returns the Item for Key. Raises if Key was not bound
+
+        Find Item for key with copying.
+        """
+    @overload
+    def Find(self,theKey : int) -> BOPDS_ListOfPaveBlock: ...
+    def IsBound(self,theKey : int) -> bool: 
+        """
+        IsBound
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        IsEmpty
+        """
+    def NbBuckets(self) -> int: 
+        """
+        NbBuckets
+        """
+    def ReSize(self,N : int) -> None: 
+        """
+        ReSize
+        """
+    def Seek(self,theKey : int) -> BOPDS_ListOfPaveBlock: 
+        """
+        Seek returns pointer to Item by Key. Returns NULL is Key was not bound.
+        """
+    def Size(self) -> int: 
+        """
+        Size
+        """
+    def Statistics(self,S : io.BytesIO) -> None: 
+        """
+        Statistics
+        """
+    def UnBind(self,theKey : int) -> bool: 
+        """
+        UnBind removes Item Key pair from map
+        """
+    @overload
+    def __init__(self,theOther : BOPDS_DataMapOfIntegerListOfPaveBlock) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
+    pass
+class BOPDS_DataMapOfPaveBlockListOfInteger(OCP.NCollection.NCollection_BaseMap):
+    """
+    Purpose: The DataMap is a Map to store keys with associated Items. See Map from NCollection for a discussion about the number of buckets.
+    """
+    def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
+        """
+        Returns attached allocator
+        """
+    def Assign(self,theOther : BOPDS_DataMapOfPaveBlockListOfInteger) -> BOPDS_DataMapOfPaveBlockListOfInteger: 
+        """
+        Assignment. This method does not change the internal allocator.
+        """
+    def Bind(self,theKey : BOPDS_PaveBlock,theItem : OCP.TColStd.TColStd_ListOfInteger) -> bool: 
+        """
+        Bind binds Item to Key in map.
+        """
+    def Bound(self,theKey : BOPDS_PaveBlock,theItem : OCP.TColStd.TColStd_ListOfInteger) -> OCP.TColStd.TColStd_ListOfInteger: 
+        """
+        Bound binds Item to Key in map. Returns modifiable Item
+        """
+    def ChangeFind(self,theKey : BOPDS_PaveBlock) -> OCP.TColStd.TColStd_ListOfInteger: 
+        """
+        ChangeFind returns mofifiable Item by Key. Raises if Key was not bound
+        """
+    def ChangeSeek(self,theKey : BOPDS_PaveBlock) -> OCP.TColStd.TColStd_ListOfInteger: 
+        """
+        ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
+        """
+    @overload
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
+        """
+        Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
+
+        Clear data and reset allocator
+        """
+    @overload
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Exchange(self,theOther : BOPDS_DataMapOfPaveBlockListOfInteger) -> None: 
+        """
+        Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
+        """
+    def Extent(self) -> int: 
+        """
+        Extent
+        """
+    @overload
+    def Find(self,theKey : BOPDS_PaveBlock) -> OCP.TColStd.TColStd_ListOfInteger: 
+        """
+        Find returns the Item for Key. Raises if Key was not bound
+
+        Find Item for key with copying.
+        """
+    @overload
+    def Find(self,theKey : BOPDS_PaveBlock,theValue : OCP.TColStd.TColStd_ListOfInteger) -> bool: ...
+    def IsBound(self,theKey : BOPDS_PaveBlock) -> bool: 
+        """
+        IsBound
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        IsEmpty
+        """
+    def NbBuckets(self) -> int: 
+        """
+        NbBuckets
+        """
+    def ReSize(self,N : int) -> None: 
+        """
+        ReSize
+        """
+    def Seek(self,theKey : BOPDS_PaveBlock) -> OCP.TColStd.TColStd_ListOfInteger: 
+        """
+        Seek returns pointer to Item by Key. Returns NULL is Key was not bound.
+        """
+    def Size(self) -> int: 
+        """
+        Size
+        """
+    def Statistics(self,S : io.BytesIO) -> None: 
+        """
+        Statistics
+        """
+    def UnBind(self,theKey : BOPDS_PaveBlock) -> bool: 
+        """
+        UnBind removes Item Key pair from map
+        """
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : BOPDS_DataMapOfPaveBlockListOfInteger) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_DataMapOfPaveBlockListOfPaveBlock(OCP.NCollection.NCollection_BaseMap):
     """
@@ -757,14 +948,14 @@ class BOPDS_DataMapOfPaveBlockListOfPaveBlock(OCP.NCollection.NCollection_BaseMa
         Extent
         """
     @overload
-    def Find(self,theKey : BOPDS_PaveBlock) -> BOPDS_ListOfPaveBlock: 
+    def Find(self,theKey : BOPDS_PaveBlock,theValue : BOPDS_ListOfPaveBlock) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : BOPDS_PaveBlock,theValue : BOPDS_ListOfPaveBlock) -> bool: ...
+    def Find(self,theKey : BOPDS_PaveBlock) -> BOPDS_ListOfPaveBlock: ...
     def IsBound(self,theKey : BOPDS_PaveBlock) -> bool: 
         """
         IsBound
@@ -789,7 +980,7 @@ class BOPDS_DataMapOfPaveBlockListOfPaveBlock(OCP.NCollection.NCollection_BaseMa
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -800,10 +991,10 @@ class BOPDS_DataMapOfPaveBlockListOfPaveBlock(OCP.NCollection.NCollection_BaseMa
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BOPDS_DataMapOfPaveBlockListOfPaveBlock) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_DataMapOfShapeCoupleOfPaveBlocks(OCP.NCollection.NCollection_BaseMap):
     """
@@ -883,7 +1074,7 @@ class BOPDS_DataMapOfShapeCoupleOfPaveBlocks(OCP.NCollection.NCollection_BaseMap
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -892,12 +1083,12 @@ class BOPDS_DataMapOfShapeCoupleOfPaveBlocks(OCP.NCollection.NCollection_BaseMap
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BOPDS_DataMapOfShapeCoupleOfPaveBlocks) -> None: ...
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_FaceInfo():
     """
@@ -1003,14 +1194,14 @@ class BOPDS_IndexRange():
     The class BOPDS_IndexRange is to store the information about range of two indices
     """
     @overload
-    def Contains(self,aIndex : int) -> bool: 
+    def Contains(self,theIndex : int) -> bool: 
         """
         Query Returns true if the range contains <theIndex>
 
         Query Returns true if the range contains <theIndex>
         """
     @overload
-    def Contains(self,theIndex : int) -> bool: ...
+    def Contains(self,aIndex : int) -> bool: ...
     def Dump(self) -> None: 
         """
         None
@@ -1034,14 +1225,14 @@ class BOPDS_IndexRange():
         Selector Returns the second index of the range
         """
     @overload
-    def SetFirst(self,aFirst : int) -> None: 
+    def SetFirst(self,theI1 : int) -> None: 
         """
         Modifier Sets the first index <theI1> of the range
 
         Modifier Sets the first index <theI1> of the range
         """
     @overload
-    def SetFirst(self,theI1 : int) -> None: ...
+    def SetFirst(self,aFirst : int) -> None: ...
     def SetIndices(self,theI1 : int,theI2 : int) -> None: 
         """
         Modifier Sets the first index of the range <theI1> Sets the second index of the range <theI2>
@@ -1088,14 +1279,14 @@ class BOPDS_IndexedDataMapOfPaveBlockListOfInteger(OCP.NCollection.NCollection_B
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : BOPDS_PaveBlock) -> bool: 
         """
         Contains
@@ -1161,7 +1352,7 @@ class BOPDS_IndexedDataMapOfPaveBlockListOfInteger(OCP.NCollection.NCollection_B
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1174,12 +1365,12 @@ class BOPDS_IndexedDataMapOfPaveBlockListOfInteger(OCP.NCollection.NCollection_B
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : BOPDS_IndexedDataMapOfPaveBlockListOfInteger) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : BOPDS_IndexedDataMapOfPaveBlockListOfInteger) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_IndexedDataMapOfPaveBlockListOfPaveBlock(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1235,14 +1426,14 @@ class BOPDS_IndexedDataMapOfPaveBlockListOfPaveBlock(OCP.NCollection.NCollection
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : BOPDS_PaveBlock) -> BOPDS_ListOfPaveBlock: 
+    def FindFromKey(self,theKey1 : BOPDS_PaveBlock,theValue : BOPDS_ListOfPaveBlock) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : BOPDS_PaveBlock,theValue : BOPDS_ListOfPaveBlock) -> bool: ...
+    def FindFromKey(self,theKey1 : BOPDS_PaveBlock) -> BOPDS_ListOfPaveBlock: ...
     def FindIndex(self,theKey1 : BOPDS_PaveBlock) -> int: 
         """
         FindIndex
@@ -1283,7 +1474,7 @@ class BOPDS_IndexedDataMapOfPaveBlockListOfPaveBlock(OCP.NCollection.NCollection
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1296,12 +1487,12 @@ class BOPDS_IndexedDataMapOfPaveBlockListOfPaveBlock(OCP.NCollection.NCollection
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self,theOther : BOPDS_IndexedDataMapOfPaveBlockListOfPaveBlock) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self,theOther : BOPDS_IndexedDataMapOfPaveBlockListOfPaveBlock) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_IndexedDataMapOfShapeCoupleOfPaveBlocks(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1405,7 +1596,7 @@ class BOPDS_IndexedDataMapOfShapeCoupleOfPaveBlocks(OCP.NCollection.NCollection_
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1418,12 +1609,12 @@ class BOPDS_IndexedDataMapOfShapeCoupleOfPaveBlocks(OCP.NCollection.NCollection_
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self,theOther : BOPDS_IndexedDataMapOfShapeCoupleOfPaveBlocks) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : BOPDS_IndexedDataMapOfShapeCoupleOfPaveBlocks) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_IndexedMapOfPaveBlock(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1442,14 +1633,14 @@ class BOPDS_IndexedMapOfPaveBlock(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Contains(self,theKey1 : BOPDS_PaveBlock) -> bool: 
         """
         Contains
@@ -1498,7 +1689,7 @@ class BOPDS_IndexedMapOfPaveBlock(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1511,9 +1702,9 @@ class BOPDS_IndexedMapOfPaveBlock(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : BOPDS_IndexedMapOfPaveBlock) -> None: ...
     pass
@@ -1699,9 +1890,9 @@ class BOPDS_InterfEF(BOPDS_Interf):
         Sets the indices of interferred shapes
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPDS_InterfEZ(BOPDS_Interf):
     """
@@ -1898,9 +2089,9 @@ class BOPDS_InterfFZ(BOPDS_Interf):
         Sets the indices of interferred shapes
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
 class BOPDS_InterfVE(BOPDS_Interf):
     """
@@ -2030,9 +2221,9 @@ class BOPDS_InterfVF(BOPDS_Interf):
         Selector Returns the value of parameters of the point of the vertex on the surface of of the face
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
 class BOPDS_InterfVV(BOPDS_Interf):
     """
@@ -2088,9 +2279,9 @@ class BOPDS_InterfVV(BOPDS_Interf):
         Sets the indices of interferred shapes
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPDS_InterfVZ(BOPDS_Interf):
     """
@@ -2146,9 +2337,9 @@ class BOPDS_InterfVZ(BOPDS_Interf):
         Sets the indices of interferred shapes
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPDS_InterfZZ(BOPDS_Interf):
     """
@@ -2204,9 +2395,9 @@ class BOPDS_InterfZZ(BOPDS_Interf):
         Sets the indices of interferred shapes
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPDS_ListOfPave(OCP.NCollection.NCollection_BaseList):
     """
@@ -2257,14 +2448,14 @@ class BOPDS_ListOfPave(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : BOPDS_Pave,theIter : Any) -> BOPDS_Pave: ...
     @overload
-    def InsertBefore(self,theOther : BOPDS_ListOfPave,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : BOPDS_Pave,theIter : Any) -> BOPDS_Pave: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : BOPDS_Pave,theIter : Any) -> BOPDS_Pave: ...
+    def InsertBefore(self,theOther : BOPDS_ListOfPave,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -2301,12 +2492,12 @@ class BOPDS_ListOfPave(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : BOPDS_ListOfPave) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_ListOfPaveBlock(OCP.NCollection.NCollection_BaseList):
     """
@@ -2317,7 +2508,7 @@ class BOPDS_ListOfPaveBlock(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : BOPDS_ListOfPaveBlock) -> None: 
+    def Append(self,theItem : BOPDS_PaveBlock) -> BOPDS_PaveBlock: 
         """
         Append one item at the end
 
@@ -2326,9 +2517,9 @@ class BOPDS_ListOfPaveBlock(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : BOPDS_PaveBlock,theIter : Any) -> None: ...
+    def Append(self,theOther : BOPDS_ListOfPaveBlock) -> None: ...
     @overload
-    def Append(self,theItem : BOPDS_PaveBlock) -> BOPDS_PaveBlock: ...
+    def Append(self,theItem : BOPDS_PaveBlock,theIter : Any) -> None: ...
     def Assign(self,theOther : BOPDS_ListOfPaveBlock) -> BOPDS_ListOfPaveBlock: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -2348,23 +2539,23 @@ class BOPDS_ListOfPaveBlock(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : BOPDS_PaveBlock,theIter : Any) -> BOPDS_PaveBlock: 
+    def InsertAfter(self,theOther : BOPDS_ListOfPaveBlock,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : BOPDS_ListOfPaveBlock,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : BOPDS_PaveBlock,theIter : Any) -> BOPDS_PaveBlock: ...
     @overload
-    def InsertBefore(self,theOther : BOPDS_ListOfPaveBlock,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : BOPDS_PaveBlock,theIter : Any) -> BOPDS_PaveBlock: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : BOPDS_PaveBlock,theIter : Any) -> BOPDS_PaveBlock: ...
+    def InsertBefore(self,theOther : BOPDS_ListOfPaveBlock,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -2401,12 +2592,12 @@ class BOPDS_ListOfPaveBlock(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : BOPDS_ListOfPaveBlock) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_MapOfCommonBlock(OCP.NCollection.NCollection_BaseMap):
     """
@@ -2498,7 +2689,7 @@ class BOPDS_MapOfCommonBlock(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -2519,11 +2710,11 @@ class BOPDS_MapOfCommonBlock(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theOther : BOPDS_MapOfCommonBlock) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : BOPDS_MapOfCommonBlock) -> None: ...
     pass
 class BOPDS_MapOfPair(OCP.NCollection.NCollection_BaseMap):
     """
@@ -2615,7 +2806,7 @@ class BOPDS_MapOfPair(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -2636,11 +2827,11 @@ class BOPDS_MapOfPair(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theOther : BOPDS_MapOfPair) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self,theOther : BOPDS_MapOfPair) -> None: ...
     pass
 class BOPDS_MapOfPave(OCP.NCollection.NCollection_BaseMap):
     """
@@ -2672,14 +2863,14 @@ class BOPDS_MapOfPave(OCP.NCollection.NCollection_BaseMap):
     @overload
     def Clear(self,doReleaseMemory : bool=True) -> None: ...
     @overload
-    def Contains(self,K : BOPDS_Pave) -> bool: 
+    def Contains(self,theOther : BOPDS_MapOfPave) -> bool: 
         """
         Contains
 
         Returns true if this map contains ALL keys of another map.
         """
     @overload
-    def Contains(self,theOther : BOPDS_MapOfPave) -> bool: ...
+    def Contains(self,K : BOPDS_Pave) -> bool: ...
     def Differ(self,theOther : BOPDS_MapOfPave) -> bool: 
         """
         Apply to this Map the symmetric difference (aka exclusive disjunction, boolean XOR) operation with another (given) Map. The result contains the values that are contained only in this or the operand map, but not in both. This algorithm is similar to method Difference(). Returns True if contents of this map is changed.
@@ -2732,7 +2923,7 @@ class BOPDS_MapOfPave(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -2753,11 +2944,11 @@ class BOPDS_MapOfPave(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self,theOther : BOPDS_MapOfPave) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : BOPDS_MapOfPave) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class BOPDS_MapOfPaveBlock(OCP.NCollection.NCollection_BaseMap):
     """
@@ -2780,14 +2971,14 @@ class BOPDS_MapOfPaveBlock(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def Contains(self,K : BOPDS_PaveBlock) -> bool: 
         """
@@ -2849,7 +3040,7 @@ class BOPDS_MapOfPaveBlock(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -2870,11 +3061,11 @@ class BOPDS_MapOfPaveBlock(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BOPDS_MapOfPaveBlock) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class BOPDS_Pair():
     """
@@ -3018,14 +3209,14 @@ class BOPDS_PaveBlock(OCP.Standard.Standard_Transient):
         Get the reference counter of this object
         """
     @overload
-    def HasEdge(self) -> bool: 
+    def HasEdge(self,theEdge : int) -> bool: 
         """
         Query Returns true if the pave block has edge
 
         Query Returns true if the pave block has edge Returns the index of edge <theEdge>
         """
     @overload
-    def HasEdge(self,theEdge : int) -> bool: ...
+    def HasEdge(self) -> bool: ...
     def HasSameBounds(self,theOther : BOPDS_PaveBlock) -> bool: 
         """
         Query Returns true if the pave block has pave indices that equal to the pave indices of the pave block <theOther>
@@ -3291,14 +3482,14 @@ class BOPDS_ShapeInfo():
         Modifier Sets the boundung box of the shape theBox
         """
     @overload
-    def SetFlag(self,theI : int) -> None: 
+    def SetFlag(self,theFlag : int) -> None: 
         """
         Modifier Sets the flag
 
         Modifier Sets the flag
         """
     @overload
-    def SetFlag(self,theFlag : int) -> None: ...
+    def SetFlag(self,theI : int) -> None: ...
     def SetReference(self,theI : int) -> None: 
         """
         Modifier Sets the index of a reference information
@@ -3336,9 +3527,9 @@ class BOPDS_ShapeInfo():
         Selector Returns the list of indices of sub-shapes
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPDS_SubIterator():
     """
@@ -3389,9 +3580,9 @@ class BOPDS_SubIterator():
         Returns indices (DS) of intersected shapes theIndex1 - the index of the first shape theIndex2 - the index of the second shape
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
 class BOPDS_Tools():
     """
@@ -3494,10 +3685,10 @@ class BOPDS_VectorOfCurve(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BOPDS_VectorOfCurve) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfFaceInfo(OCP.NCollection.NCollection_BaseVector):
     """
@@ -3573,10 +3764,10 @@ class BOPDS_VectorOfFaceInfo(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theOther : BOPDS_VectorOfFaceInfo) -> None: ...
-    @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : BOPDS_VectorOfFaceInfo) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfIndexRange(OCP.NCollection.NCollection_BaseVector):
     """
@@ -3655,7 +3846,7 @@ class BOPDS_VectorOfIndexRange(OCP.NCollection.NCollection_BaseVector):
     def __init__(self,theOther : BOPDS_VectorOfIndexRange) -> None: ...
     @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfInterfEE(OCP.NCollection.NCollection_BaseVector):
     """
@@ -3731,10 +3922,10 @@ class BOPDS_VectorOfInterfEE(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BOPDS_VectorOfInterfEE) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfInterfEF(OCP.NCollection.NCollection_BaseVector):
     """
@@ -3810,10 +4001,10 @@ class BOPDS_VectorOfInterfEF(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theOther : BOPDS_VectorOfInterfEF) -> None: ...
-    @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : BOPDS_VectorOfInterfEF) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfInterfEZ(OCP.NCollection.NCollection_BaseVector):
     """
@@ -3889,10 +4080,10 @@ class BOPDS_VectorOfInterfEZ(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BOPDS_VectorOfInterfEZ) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfInterfFF(OCP.NCollection.NCollection_BaseVector):
     """
@@ -3971,7 +4162,7 @@ class BOPDS_VectorOfInterfFF(OCP.NCollection.NCollection_BaseVector):
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : BOPDS_VectorOfInterfFF) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfInterfFZ(OCP.NCollection.NCollection_BaseVector):
     """
@@ -4050,7 +4241,7 @@ class BOPDS_VectorOfInterfFZ(OCP.NCollection.NCollection_BaseVector):
     def __init__(self,theOther : BOPDS_VectorOfInterfFZ) -> None: ...
     @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfInterfVE(OCP.NCollection.NCollection_BaseVector):
     """
@@ -4129,7 +4320,7 @@ class BOPDS_VectorOfInterfVE(OCP.NCollection.NCollection_BaseVector):
     def __init__(self,theOther : BOPDS_VectorOfInterfVE) -> None: ...
     @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfInterfVF(OCP.NCollection.NCollection_BaseVector):
     """
@@ -4205,10 +4396,10 @@ class BOPDS_VectorOfInterfVF(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BOPDS_VectorOfInterfVF) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfInterfVV(OCP.NCollection.NCollection_BaseVector):
     """
@@ -4284,10 +4475,10 @@ class BOPDS_VectorOfInterfVV(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theOther : BOPDS_VectorOfInterfVV) -> None: ...
-    @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : BOPDS_VectorOfInterfVV) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfInterfVZ(OCP.NCollection.NCollection_BaseVector):
     """
@@ -4363,10 +4554,10 @@ class BOPDS_VectorOfInterfVZ(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theOther : BOPDS_VectorOfInterfVZ) -> None: ...
-    @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : BOPDS_VectorOfInterfVZ) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfInterfZZ(OCP.NCollection.NCollection_BaseVector):
     """
@@ -4442,10 +4633,10 @@ class BOPDS_VectorOfInterfZZ(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BOPDS_VectorOfInterfZZ) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfListOfPaveBlock(OCP.NCollection.NCollection_BaseVector):
     """
@@ -4524,7 +4715,7 @@ class BOPDS_VectorOfListOfPaveBlock(OCP.NCollection.NCollection_BaseVector):
     def __init__(self,theOther : BOPDS_VectorOfListOfPaveBlock) -> None: ...
     @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfPair(OCP.NCollection.NCollection_BaseVector):
     """
@@ -4603,7 +4794,7 @@ class BOPDS_VectorOfPair(OCP.NCollection.NCollection_BaseVector):
     def __init__(self,theOther : BOPDS_VectorOfPair) -> None: ...
     @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfPave():
     """
@@ -4682,14 +4873,14 @@ class BOPDS_VectorOfPave():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : BOPDS_Pave,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : BOPDS_VectorOfPave) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : BOPDS_Pave,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfPoint(OCP.NCollection.NCollection_BaseVector):
     """
@@ -4768,7 +4959,7 @@ class BOPDS_VectorOfPoint(OCP.NCollection.NCollection_BaseVector):
     def __init__(self,theOther : BOPDS_VectorOfPoint) -> None: ...
     @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfShapeInfo(OCP.NCollection.NCollection_BaseVector):
     """
@@ -4844,10 +5035,10 @@ class BOPDS_VectorOfShapeInfo(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BOPDS_VectorOfShapeInfo) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BOPDS_VectorOfVectorOfPair(OCP.NCollection.NCollection_BaseVector):
     """
@@ -4923,8 +5114,8 @@ class BOPDS_VectorOfVectorOfPair(OCP.NCollection.NCollection_BaseVector):
         None
         """
     @overload
-    def __init__(self,theOther : BOPDS_VectorOfVectorOfPair) -> None: ...
-    @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : BOPDS_VectorOfVectorOfPair) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass

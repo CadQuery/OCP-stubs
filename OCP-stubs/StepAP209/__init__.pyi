@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.XSControl
-import OCP.StepRepr
-import OCP.STEPConstruct
-import OCP.StepBasic
 import OCP.Transfer
+import OCP.StepBasic
+import OCP.STEPConstruct
+import OCP.StepRepr
+import OCP.Interface
+import OCP.StepFEA
 import OCP.StepShape
 import OCP.StepElement
+import OCP.XSControl
 import OCP.StepData
-import OCP.StepFEA
-import OCP.Interface
 __all__  = [
 "StepAP209_Construct"
 ]
@@ -42,7 +42,7 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
         Create fea structure
         """
     @overload
-    def FeaModel(self,PDS : OCP.StepRepr.StepRepr_ProductDefinitionShape) -> OCP.StepFEA.StepFEA_FeaModel: 
+    def FeaModel(self,PDF : OCP.StepBasic.StepBasic_ProductDefinitionFormation) -> OCP.StepFEA.StepFEA_FeaModel: 
         """
         None
 
@@ -52,12 +52,12 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
 
         None
         """
+    @overload
+    def FeaModel(self,PD : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.StepFEA.StepFEA_FeaModel: ...
     @overload
     def FeaModel(self,Prod : OCP.StepBasic.StepBasic_Product) -> OCP.StepFEA.StepFEA_FeaModel: ...
     @overload
-    def FeaModel(self,PDF : OCP.StepBasic.StepBasic_ProductDefinitionFormation) -> OCP.StepFEA.StepFEA_FeaModel: ...
-    @overload
-    def FeaModel(self,PD : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.StepFEA.StepFEA_FeaModel: ...
+    def FeaModel(self,PDS : OCP.StepRepr.StepRepr_ProductDefinitionShape) -> OCP.StepFEA.StepFEA_FeaModel: ...
     def FinderProcess(self) -> OCP.Transfer.Transfer_FinderProcess: 
         """
         Returns FinderProcess (writing; Null if not loaded)
@@ -97,16 +97,16 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
         None
         """
     @overload
-    def Graph(self,recompute : bool) -> OCP.Interface.Interface_Graph: 
+    def Graph(self,recompute : bool=False) -> OCP.Interface.Interface_Graph: 
         """
         Returns current graph (recomputing if necessary)
 
         Returns current graph (recomputing if necessary)
         """
     @overload
-    def Graph(self,recompute : bool=False) -> OCP.Interface.Interface_Graph: ...
+    def Graph(self,recompute : bool) -> OCP.Interface.Interface_Graph: ...
     @overload
-    def IdealShape(self,PDS : OCP.StepRepr.StepRepr_ProductDefinitionShape) -> OCP.StepShape.StepShape_ShapeRepresentation: 
+    def IdealShape(self,Prod : OCP.StepBasic.StepBasic_Product) -> OCP.StepShape.StepShape_ShapeRepresentation: 
         """
         None
 
@@ -116,12 +116,12 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
 
         None
         """
-    @overload
-    def IdealShape(self,Prod : OCP.StepBasic.StepBasic_Product) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
     @overload
     def IdealShape(self,PDF : OCP.StepBasic.StepBasic_ProductDefinitionFormation) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
     @overload
     def IdealShape(self,PD : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
+    @overload
+    def IdealShape(self,PDS : OCP.StepRepr.StepRepr_ProductDefinitionShape) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
     def Init(self,WS : OCP.XSControl.XSControl_WorkSession) -> bool: 
         """
         Initializes tool; returns True if succeeded
@@ -166,7 +166,7 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
         Returns currently loaded WorkSession
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,WS : OCP.XSControl.XSControl_WorkSession) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass

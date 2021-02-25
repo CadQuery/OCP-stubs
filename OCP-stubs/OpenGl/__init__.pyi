@@ -4,19 +4,21 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.TColStd
-import OCP.Message
+import OCP.NCollection
 import OCP.Font
 import OCP.Bnd
-import OCP.Aspect
-import OCP.Graphic3d
-import OCP.Quantity
-import OCP.Image
 import OCP.Standard
-import OCP.Geom
-import OCP.NCollection
+import OCP.Quantity
+import OCP.TColStd
+import OCP.TCollection
+import io
+import OCP.Message
+import OCP.Image
 import OCP.gp
+import OCP.Graphic3d.Graphic3d_Camera
+import OCP.Graphic3d
+import OCP.Aspect
+import OCP.TopLoc
 __all__  = [
 "NSOpenGLContext",
 "OpenGl_ArbDbg",
@@ -93,12 +95,15 @@ __all__  = [
 "OpenGl_LineAttributes",
 "OpenGl_ListOfStructure",
 "OpenGl_Material",
+"OpenGl_MaterialCommon",
 "OpenGl_MaterialFlag",
+"OpenGl_MaterialPBR",
 "OpenGl_MaterialState",
 "OpenGl_Matrix",
 "OpenGl_ModelWorldState",
 "OpenGl_NamedResource",
 "OpenGl_OitState",
+"OpenGl_PBREnvironment",
 "OpenGl_Texture",
 "OpenGl_BackgroundArray",
 "OpenGl_ProgramOptions",
@@ -137,6 +142,7 @@ __all__  = [
 "OpenGl_TextureFormatSelector_GLuint",
 "OpenGl_TextureFormatSelector_GLushort",
 "OpenGl_TextureSet",
+"OpenGl_TextureSetPairIterator",
 "OpenGl_TileSampler",
 "OpenGl_TriangleSet",
 "OpenGl_UniformStateType",
@@ -161,18 +167,21 @@ __all__  = [
 "OpenGl_MaterialFlag_Back",
 "OpenGl_MaterialFlag_Front",
 "OpenGl_OCCT_ALPHA_CUTOFF",
-"OpenGl_OCCT_BACK_MATERIAL",
 "OpenGl_OCCT_COLOR",
+"OpenGl_OCCT_COMMON_BACK_MATERIAL",
+"OpenGl_OCCT_COMMON_FRONT_MATERIAL",
 "OpenGl_OCCT_DISTINGUISH_MODE",
-"OpenGl_OCCT_FRONT_MATERIAL",
 "OpenGl_OCCT_LINE_FEATHER",
 "OpenGl_OCCT_LINE_STIPPLE_FACTOR",
 "OpenGl_OCCT_LINE_STIPPLE_PATTERN",
 "OpenGl_OCCT_LINE_WIDTH",
+"OpenGl_OCCT_NB_SPEC_IBL_LEVELS",
 "OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES",
 "OpenGl_OCCT_OIT_DEPTH_FACTOR",
 "OpenGl_OCCT_OIT_OUTPUT",
 "OpenGl_OCCT_ORTHO_SCALE",
+"OpenGl_OCCT_PBR_BACK_MATERIAL",
+"OpenGl_OCCT_PBR_FRONT_MATERIAL",
 "OpenGl_OCCT_POINT_SIZE",
 "OpenGl_OCCT_QUAD_MODE_STATE",
 "OpenGl_OCCT_SILHOUETTE_THICKNESS",
@@ -214,6 +223,7 @@ __all__  = [
 "OpenGl_PO_PointSpriteA",
 "OpenGl_PO_StippleLine",
 "OpenGl_PO_TextureEnv",
+"OpenGl_PO_TextureNormal",
 "OpenGl_PO_TextureRGB",
 "OpenGl_PO_VertColor",
 "OpenGl_PO_WriteOit",
@@ -252,7 +262,7 @@ class OpenGl_ArbFBOBlit():
     pass
 class OpenGl_ArbIns():
     """
-    Instancing is available on OpenGL 3.0+ hardware
+    Instancing is available on OpenGL 3.0+ hardware (in core since OpenGL 3.1 or GL_ARB_draw_instanced extension).
     """
     def __init__(self) -> None: ...
     pass
@@ -278,6 +288,14 @@ class OpenGl_Element():
     """
     Base interface for drawable elements.
     """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
     def IsFillDrawMode(self) -> bool: 
         """
         Return TRUE if primitive type generates shaded triangulation (to be used in filters).
@@ -293,6 +311,14 @@ class OpenGl_Element():
     def SynchronizeAspects(self) -> None: 
         """
         Update parameters of the drawable elements.
+        """
+    def UpdateDrawStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp,theIsDetailed : bool) -> None: 
+        """
+        Increment draw calls statistics.
+        """
+    def UpdateMemStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp) -> None: 
+        """
+        Increment memory usage statistics. Default implementation puts EstimatedDataSize() into Graphic3d_FrameStatsCounter_EstimatedBytesGeom.
         """
     def __init__(self) -> None: ...
     pass
@@ -399,9 +425,9 @@ class OpenGl_BVHTriangulation3f():
         Performs transposing the two given triangles in the set.
         """
     @overload
-    def __init__(self,theBuilder : Any) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBuilder : Any) -> None: ...
     pass
 class OpenGl_PrimitiveArray(OpenGl_Element):
     """
@@ -422,6 +448,14 @@ class OpenGl_PrimitiveArray(OpenGl_Element):
     def DrawMode(self) -> int: 
         """
         Returns primitive type (GL_LINES, GL_TRIANGLES and others)
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
         """
     def GetUID(self) -> int: 
         """
@@ -463,10 +497,19 @@ class OpenGl_PrimitiveArray(OpenGl_Element):
         """
         Update parameters of the drawable elements.
         """
+    def UpdateDrawStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp,theIsDetailed : bool) -> None: 
+        """
+        Increment draw calls statistics.
+        """
+    def UpdateMemStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp) -> None: 
+        """
+        Increment memory usage statistics. Default implementation puts EstimatedDataSize() into Graphic3d_FrameStatsCounter_EstimatedBytesGeom.
+        """
     @overload
     def __init__(self,theDriver : OpenGl_GraphicDriver,theType : OCP.Graphic3d.Graphic3d_TypeOfPrimitiveArray,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theAttribs : OCP.Graphic3d.Graphic3d_Buffer,theBounds : OCP.Graphic3d.Graphic3d_BoundBuffer) -> None: ...
     @overload
     def __init__(self,theDriver : OpenGl_GraphicDriver) -> None: ...
+    DRAW_MODE_NONE = -1
     pass
 class OpenGl_CappingAlgo():
     """
@@ -490,6 +533,10 @@ class OpenGl_Resource(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -611,6 +658,14 @@ class OpenGl_Caps(OCP.Standard.Standard_Transient):
     def buffersNoSwap(self, arg0: bool) -> None:
         pass
     @property
+    def compressedTexturesDisable(self) -> bool:
+        """
+        :type: bool
+        """
+    @compressedTexturesDisable.setter
+    def compressedTexturesDisable(self, arg0: bool) -> None:
+        pass
+    @property
     def contextCompatible(self) -> bool:
         """
         :type: bool
@@ -699,6 +754,14 @@ class OpenGl_Caps(OCP.Standard.Standard_Transient):
     def glslWarnings(self, arg0: bool) -> None:
         pass
     @property
+    def isTopDownTextureUV(self) -> bool:
+        """
+        :type: bool
+        """
+    @isTopDownTextureUV.setter
+    def isTopDownTextureUV(self, arg0: bool) -> None:
+        pass
+    @property
     def keepArrayData(self) -> bool:
         """
         :type: bool
@@ -713,6 +776,14 @@ class OpenGl_Caps(OCP.Standard.Standard_Transient):
         """
     @pntSpritesDisable.setter
     def pntSpritesDisable(self, arg0: bool) -> None:
+        pass
+    @property
+    def sRGBDisable(self) -> bool:
+        """
+        :type: bool
+        """
+    @sRGBDisable.setter
+    def sRGBDisable(self, arg0: bool) -> None:
         pass
     @property
     def suppressExtraMsg(self) -> bool:
@@ -962,7 +1033,7 @@ class OpenGl_ColorFormats(OCP.NCollection.NCollection_BaseVector):
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : OpenGl_ColorFormats) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class OpenGl_Context(OCP.Standard.Standard_Transient):
     """
@@ -982,19 +1053,19 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
     def ApplyModelViewMatrix(self) -> None: 
         """
-        Applies combination of matrices stored in ModelWorldState and WorldViewState to OpenGl.
+        Applies combination of matrices stored in ModelWorldState and WorldViewState to OpenGl. In "model -> world -> view -> projection" it performs: model -> world -> view
         """
     def ApplyModelWorldMatrix(self) -> None: 
         """
-        Applies matrix stored in ModelWorldState to OpenGl.
+        Applies matrix into shader manager stored in ModelWorldState to OpenGl. In "model -> world -> view -> projection" it performs: model -> world
         """
     def ApplyProjectionMatrix(self) -> None: 
         """
-        Applies matrix stored in ProjectionState to OpenGl.
+        Applies matrix stored in ProjectionState to OpenGl. In "model -> world -> view -> projection" it performs: view -> projection
         """
     def ApplyWorldViewMatrix(self) -> None: 
         """
-        Applies matrix stored in WorldViewState to OpenGl.
+        Applies matrix stored in WorldViewState to OpenGl. In "model -> world -> view -> projection" it performs: model -> world -> view, where model -> world is identical matrix
         """
     def AvailableMemory(self) -> int: 
         """
@@ -1008,9 +1079,18 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Bind specified program to current context, or unbind previous one when NULL specified.
         """
-    def BindTextures(self,theTextures : OpenGl_TextureSet) -> OpenGl_TextureSet: 
+    @overload
+    def BindTextures(self,theTextures : OpenGl_TextureSet,theProgram : OpenGl_ShaderProgram) -> OpenGl_TextureSet: 
         """
+        Bind specified texture set to current context taking into account active GLSL program.
+
         Bind specified texture set to current context, or unbind previous one when NULL specified.
+        """
+    @overload
+    def BindTextures(self,theTextures : OpenGl_TextureSet) -> OpenGl_TextureSet: ...
+    def Camera(self) -> OCP.Graphic3d.Graphic3d_Camera: 
+        """
+        Returns camera object.
         """
     def ChangeClipping(self) -> OpenGl_Clipping: 
         """
@@ -1068,6 +1148,15 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Return active draw buffer attached to a render target referred by index (layout location).
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    @staticmethod
+    def DumpJsonOpenGlState_s(theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of openGL state into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1092,6 +1181,10 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Access entire map of loaded OpenGL functions.
         """
+    def GetBufferSubData(self,theTarget : int,theOffset : int,theSize : int,theData : capsule) -> bool: 
+        """
+        Wrapper over glGetBufferSubData(), implemented as: - OpenGL 1.5+ (desktop) via glGetBufferSubData(); - OpenGL ES 3.0+ via glMapBufferRange(); - WebGL 2.0+ via gl.getBufferSubData().
+        """
     @staticmethod
     def GetPowerOfTwo_s(theNumber : int,theThreshold : int) -> int: 
         """
@@ -1104,6 +1197,10 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
     def GetResource(self,theKey : OCP.TCollection.TCollection_AsciiString) -> OpenGl_Resource: 
         """
         Access shared resource by its name.
+        """
+    def HasPBR(self) -> bool: 
+        """
+        Returns TRUE if PBR shading model is supported. Basically, feature requires OpenGL 3.0+ / OpenGL ES 3.0+ hardware; more precisely: - Graphics hardware with moderate capabilities for compiling long enough GLSL program. - FBO (e.g. for baking environment). - Multi-texturing with >= 4 units (LUT and IBL textures). - GL_RG32F texture format (arbTexRG + arbTexFloat) - Cubemap texture lookup textureCubeLod()/textureLod() with LOD index within Fragment Shader, which requires GLSL OpenGL 3.0+ / OpenGL ES 3.0+ or OpenGL 2.1 + GL_EXT_gpu_shader4 extension.
         """
     def HasRayTracing(self) -> bool: 
         """
@@ -1125,9 +1222,17 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Return TRUE if rendering scale factor is not 1.
         """
+    def HasSRGB(self) -> bool: 
+        """
+        Returns TRUE if sRGB rendering is supported.
+        """
     def HasStereoBuffers(self) -> bool: 
         """
         Returns true if OpenGl context supports left and right rendering buffers.
+        """
+    def HasTextureBaseLevel(self) -> bool: 
+        """
+        Returns true if texture parameters GL_TEXTURE_BASE_LEVEL/GL_TEXTURE_MAX_LEVEL are supported.
         """
     def IncludeMessage(self,theSource : int,theId : int) -> bool: 
         """
@@ -1138,14 +1243,14 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theWindow : int,theDisplay : capsule,theGContext : capsule,theIsCoreProfile : bool=False) -> bool: 
+    def Init(self,theIsCoreProfile : bool=False) -> bool: 
         """
         Initialize class from currently bound OpenGL context. Method should be called only once.
 
         Initialize class from specified window and rendering context. Method should be called only once.
         """
     @overload
-    def Init(self,theIsCoreProfile : bool=False) -> bool: ...
+    def Init(self,theWindow : int,theDisplay : capsule,theGContext : capsule,theIsCoreProfile : bool=False) -> bool: ...
     def IsCurrent(self) -> bool: 
         """
         This method uses system-dependent API to retrieve information about GL context bound to the current thread.
@@ -1157,6 +1262,10 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
     def IsFeedback(self) -> bool: 
         """
         Return true if active mode is GL_FEEDBACK (cached state)
+        """
+    def IsFrameBufferSRGB(self) -> bool: 
+        """
+        Returns cached GL_FRAMEBUFFER_SRGB state. If TRUE, GLSL program is expected to write linear RGB color. Otherwise, GLSL program might need manually converting result color into sRGB color space.
         """
     def IsGlGreaterEqual(self,theVerMajor : int,theVerMinor : int) -> bool: 
         """
@@ -1195,6 +1304,10 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
     def IsValid(self) -> bool: 
         """
         Returns true if this context is valid (has been initialized)
+        """
+    def IsWindowSRGB(self) -> bool: 
+        """
+        Returns TRUE if window/surface buffer is sRGB-ready.
         """
     def LineFeather(self) -> float: 
         """
@@ -1249,17 +1362,29 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         This method returns the multi-texture limit for obsolete fixed-function pipeline. Use MaxCombinedTextureUnits() instead for limits for using programmable pipeline.
         """
     @overload
-    def MemoryInfo(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def MemoryInfo(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString) -> None: 
         """
         This function retrieves information from GL about GPU memory and contains more vendor-specific values than AvailableMemory().
 
         This function retrieves information from GL about GPU memory.
         """
     @overload
-    def MemoryInfo(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString) -> None: ...
+    def MemoryInfo(self) -> OCP.TCollection.TCollection_AsciiString: ...
     def Messenger(self) -> OCP.Message.Message_Messenger: 
         """
         Returns messenger instance
+        """
+    def PBRDiffIBLMapSHTexUnit(self) -> OCP.Graphic3d.Graphic3d_TextureUnit: 
+        """
+        Returns texture unit where Diffuse (irradiance) IBL map's spherical harmonics coefficients is expected to be bound, or 0 if PBR is unavailable.
+        """
+    def PBREnvLUTTexUnit(self) -> OCP.Graphic3d.Graphic3d_TextureUnit: 
+        """
+        Returns texture unit where Environment Lookup Table is expected to be bound, or 0 if PBR is unavailable.
+        """
+    def PBRSpecIBLMapTexUnit(self) -> OCP.Graphic3d.Graphic3d_TextureUnit: 
+        """
+        Returns texture unit where Specular IBL map is expected to be bound, or 0 if PBR is unavailable.
         """
     def PolygonHatchStyle(self) -> int: 
         """
@@ -1326,6 +1451,10 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Allow GL_SAMPLE_ALPHA_TO_COVERAGE usage.
         """
+    def SetCamera(self,theCamera : OCP.Graphic3d.Graphic3d_Camera) -> None: 
+        """
+        Sets camera object to the context and update matrices.
+        """
     def SetColor4fv(self,theColor : OCP.Graphic3d.Graphic3d_Vec4) -> None: 
         """
         Setup current color.
@@ -1350,6 +1479,10 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Switch draw buffer, wrapper for ::glDrawBuffers (GLsizei, const GLenum*).
         """
+    def SetFrameBufferSRGB(self,theIsFbo : bool,theIsFboSRgb : bool=True) -> None: 
+        """
+        Enables/disables GL_FRAMEBUFFER_SRGB flag. This flag can be set to: - TRUE when writing into offscreen FBO (always expected to be in sRGB or RGBF formats). - TRUE when writing into sRGB-ready window buffer (might require choosing proper pixel format on window creation). - FALSE if sRGB rendering is not supported or sRGB-not-ready window buffer is used for drawing.
+        """
     def SetFrameStats(self,theStats : OpenGl_FrameStats) -> None: 
         """
         Set structure holding frame statistics. This call makes sense only if application defines OpenGl_FrameStats sub-class.
@@ -1362,6 +1495,15 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Set line feater width.
         """
+    @overload
+    def SetLineStipple(self,theFactor : float,thePattern : int) -> None: 
+        """
+        Setup stipple line pattern with 1.0f factor; wrapper for glLineStipple().
+
+        Setup type of line; wrapper for glLineStipple().
+        """
+    @overload
+    def SetLineStipple(self,thePattern : int) -> None: ...
     def SetLineWidth(self,theWidth : float) -> None: 
         """
         Setup width of line.
@@ -1410,6 +1552,10 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Enable/disable GL_SAMPLE_ALPHA_TO_COVERAGE.
         """
+    def SetShadeModel(self,theModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel) -> None: 
+        """
+        Set GL_SHADE_MODEL value.
+        """
     def SetShadingMaterial(self,theAspect : OpenGl_Aspects,theHighlight : OCP.Graphic3d.Graphic3d_PresentationAttributes) -> None: 
         """
         Setup current shading material.
@@ -1418,13 +1564,17 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Setup swap interval (VSync).
         """
-    def SetTextureMatrix(self,theParams : OCP.Graphic3d.Graphic3d_TextureParams) -> None: 
+    def SetTextureMatrix(self,theParams : OCP.Graphic3d.Graphic3d_TextureParams,theIsTopDown : bool) -> None: 
         """
         Setup texture matrix to active GLSL program or to FFP global state using glMatrixMode (GL_TEXTURE).
         """
     def SetTypeOfLine(self,theType : OCP.Aspect.Aspect_TypeOfLine,theFactor : float=1.0) -> None: 
         """
         Setup type of line.
+        """
+    def SetWindowSRGB(self,theIsSRgb : bool) -> None: 
+        """
+        Overrides if window/surface buffer is sRGB-ready or not (initialized with the context).
         """
     def ShaderManager(self) -> OpenGl_ShaderManager: 
         """
@@ -1444,7 +1594,11 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
     def SpriteTextureUnit(self) -> OCP.Graphic3d.Graphic3d_TextureUnit: 
         """
-        Returns texture unit to be used for sprites
+        Return texture unit to be used for sprites (Graphic3d_TextureUnit_PointSprite by default).
+        """
+    def SupportedTextureFormats(self) -> OCP.Image.Image_SupportedFormats: 
+        """
+        Return map of supported texture formats.
         """
     def SwapBuffers(self) -> None: 
         """
@@ -1462,9 +1616,25 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Return back face culling state.
         """
+    def ToRenderSRGB(self) -> bool: 
+        """
+        Returns TRUE if sRGB rendering is supported and permitted.
+        """
     def ToUseVbo(self) -> bool: 
         """
         Returns true if VBO is supported and permitted.
+        """
+    def Vec4FromQuantityColor(self,theColor : OCP.Graphic3d.Graphic3d_Vec4) -> OCP.Graphic3d.Graphic3d_Vec4: 
+        """
+        Convert Quantity_ColorRGBA into vec4 with conversion or no conversion into non-linear sRGB basing on ToRenderSRGB() flag.
+        """
+    def Vec4LinearFromQuantityColor(self,theColor : OCP.Graphic3d.Graphic3d_Vec4) -> OCP.Graphic3d.Graphic3d_Vec4: 
+        """
+        Convert Quantity_ColorRGBA into vec4. Quantity_Color is expected to be linear RGB, hence conversion is NOT required
+        """
+    def Vec4sRGBFromQuantityColor(self,theColor : OCP.Graphic3d.Graphic3d_Vec4) -> OCP.Graphic3d.Graphic3d_Vec4: 
+        """
+        Convert Quantity_ColorRGBA (linear RGB) into non-linear sRGB vec4.
         """
     def Vendor(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -1505,6 +1675,246 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         None
         """
+    @property
+    def arbDrawBuffers(self) -> bool:
+        """
+        :type: bool
+        """
+    @arbDrawBuffers.setter
+    def arbDrawBuffers(self, arg0: bool) -> None:
+        pass
+    @property
+    def arbNPTW(self) -> bool:
+        """
+        :type: bool
+        """
+    @arbNPTW.setter
+    def arbNPTW(self, arg0: bool) -> None:
+        pass
+    @property
+    def arbSampleShading(self) -> bool:
+        """
+        :type: bool
+        """
+    @arbSampleShading.setter
+    def arbSampleShading(self, arg0: bool) -> None:
+        pass
+    @property
+    def arbTboRGB32(self) -> bool:
+        """
+        :type: bool
+        """
+    @arbTboRGB32.setter
+    def arbTboRGB32(self, arg0: bool) -> None:
+        pass
+    @property
+    def arbTexFloat(self) -> bool:
+        """
+        :type: bool
+        """
+    @arbTexFloat.setter
+    def arbTexFloat(self, arg0: bool) -> None:
+        pass
+    @property
+    def arbTexRG(self) -> bool:
+        """
+        :type: bool
+        """
+    @arbTexRG.setter
+    def arbTexRG(self, arg0: bool) -> None:
+        pass
+    @property
+    def atiMem(self) -> bool:
+        """
+        :type: bool
+        """
+    @atiMem.setter
+    def atiMem(self, arg0: bool) -> None:
+        pass
+    @property
+    def extAnis(self) -> bool:
+        """
+        :type: bool
+        """
+    @extAnis.setter
+    def extAnis(self, arg0: bool) -> None:
+        pass
+    @property
+    def extBgra(self) -> bool:
+        """
+        :type: bool
+        """
+    @extBgra.setter
+    def extBgra(self, arg0: bool) -> None:
+        pass
+    @property
+    def extDrawBuffers(self) -> bool:
+        """
+        :type: bool
+        """
+    @extDrawBuffers.setter
+    def extDrawBuffers(self, arg0: bool) -> None:
+        pass
+    @property
+    def extFragDepth(self) -> bool:
+        """
+        :type: bool
+        """
+    @extFragDepth.setter
+    def extFragDepth(self, arg0: bool) -> None:
+        pass
+    @property
+    def extPDS(self) -> bool:
+        """
+        :type: bool
+        """
+    @extPDS.setter
+    def extPDS(self, arg0: bool) -> None:
+        pass
+    @property
+    def hasDrawBuffers(self) -> OpenGl_FeatureFlag:
+        """
+        :type: OpenGl_FeatureFlag
+        """
+    @hasDrawBuffers.setter
+    def hasDrawBuffers(self, arg0: OpenGl_FeatureFlag) -> None:
+        pass
+    @property
+    def hasFboSRGB(self) -> bool:
+        """
+        :type: bool
+        """
+    @hasFboSRGB.setter
+    def hasFboSRGB(self, arg0: bool) -> None:
+        pass
+    @property
+    def hasFlatShading(self) -> OpenGl_FeatureFlag:
+        """
+        :type: OpenGl_FeatureFlag
+        """
+    @hasFlatShading.setter
+    def hasFlatShading(self, arg0: OpenGl_FeatureFlag) -> None:
+        pass
+    @property
+    def hasFloatBuffer(self) -> OpenGl_FeatureFlag:
+        """
+        :type: OpenGl_FeatureFlag
+        """
+    @hasFloatBuffer.setter
+    def hasFloatBuffer(self, arg0: OpenGl_FeatureFlag) -> None:
+        pass
+    @property
+    def hasGeometryStage(self) -> OpenGl_FeatureFlag:
+        """
+        :type: OpenGl_FeatureFlag
+        """
+    @hasGeometryStage.setter
+    def hasGeometryStage(self, arg0: OpenGl_FeatureFlag) -> None:
+        pass
+    @property
+    def hasGetBufferData(self) -> bool:
+        """
+        :type: bool
+        """
+    @hasGetBufferData.setter
+    def hasGetBufferData(self, arg0: bool) -> None:
+        pass
+    @property
+    def hasGlslBitwiseOps(self) -> OpenGl_FeatureFlag:
+        """
+        :type: OpenGl_FeatureFlag
+        """
+    @hasGlslBitwiseOps.setter
+    def hasGlslBitwiseOps(self, arg0: OpenGl_FeatureFlag) -> None:
+        pass
+    @property
+    def hasHalfFloatBuffer(self) -> OpenGl_FeatureFlag:
+        """
+        :type: OpenGl_FeatureFlag
+        """
+    @hasHalfFloatBuffer.setter
+    def hasHalfFloatBuffer(self, arg0: OpenGl_FeatureFlag) -> None:
+        pass
+    @property
+    def hasHighp(self) -> bool:
+        """
+        :type: bool
+        """
+    @hasHighp.setter
+    def hasHighp(self, arg0: bool) -> None:
+        pass
+    @property
+    def hasSRGBControl(self) -> bool:
+        """
+        :type: bool
+        """
+    @hasSRGBControl.setter
+    def hasSRGBControl(self, arg0: bool) -> None:
+        pass
+    @property
+    def hasSampleVariables(self) -> OpenGl_FeatureFlag:
+        """
+        :type: OpenGl_FeatureFlag
+        """
+    @hasSampleVariables.setter
+    def hasSampleVariables(self, arg0: OpenGl_FeatureFlag) -> None:
+        pass
+    @property
+    def hasTexFloatLinear(self) -> bool:
+        """
+        :type: bool
+        """
+    @hasTexFloatLinear.setter
+    def hasTexFloatLinear(self, arg0: bool) -> None:
+        pass
+    @property
+    def hasTexRGBA8(self) -> bool:
+        """
+        :type: bool
+        """
+    @hasTexRGBA8.setter
+    def hasTexRGBA8(self, arg0: bool) -> None:
+        pass
+    @property
+    def hasTexSRGB(self) -> bool:
+        """
+        :type: bool
+        """
+    @hasTexSRGB.setter
+    def hasTexSRGB(self, arg0: bool) -> None:
+        pass
+    @property
+    def hasUintIndex(self) -> bool:
+        """
+        :type: bool
+        """
+    @hasUintIndex.setter
+    def hasUintIndex(self, arg0: bool) -> None:
+        pass
+    @property
+    def nvxMem(self) -> bool:
+        """
+        :type: bool
+        """
+    @nvxMem.setter
+    def nvxMem(self, arg0: bool) -> None:
+        pass
+    @property
+    def oesSampleVariables(self) -> bool:
+        """
+        :type: bool
+        """
+    @oesSampleVariables.setter
+    def oesSampleVariables(self, arg0: bool) -> None:
+        pass
+    @property
+    def oesStdDerivatives(self) -> bool:
+        """
+        :type: bool
+        """
+    @oesStdDerivatives.setter
+    def oesStdDerivatives(self, arg0: bool) -> None:
+        pass
     pass
 class OpenGl_Aspects(OpenGl_Element):
     """
@@ -1514,9 +1924,13 @@ class OpenGl_Aspects(OpenGl_Element):
         """
         Return aspect.
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
         """
     def HasPointSprite(self,theCtx : OpenGl_Context) -> bool: 
         """
@@ -1570,6 +1984,14 @@ class OpenGl_Aspects(OpenGl_Element):
         """
         Returns textures map.
         """
+    def UpdateDrawStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp,theIsDetailed : bool) -> None: 
+        """
+        Increment draw calls statistics.
+        """
+    def UpdateMemStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp) -> None: 
+        """
+        Increment memory usage statistics. Default implementation puts EstimatedDataSize() into Graphic3d_FrameStatsCounter_EstimatedBytesGeom.
+        """
     @overload
     def __init__(self) -> None: ...
     @overload
@@ -1599,26 +2021,42 @@ class OpenGl_FeatureFlag():
 
       OpenGl_FeatureInCore
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OpenGl_FeatureInCore: OCP.OpenGl.OpenGl_FeatureFlag # value = OpenGl_FeatureFlag.OpenGl_FeatureInCore
-    OpenGl_FeatureInExtensions: OCP.OpenGl.OpenGl_FeatureFlag # value = OpenGl_FeatureFlag.OpenGl_FeatureInExtensions
-    OpenGl_FeatureNotAvailable: OCP.OpenGl.OpenGl_FeatureFlag # value = OpenGl_FeatureFlag.OpenGl_FeatureNotAvailable
-    __entries: dict # value = {'OpenGl_FeatureNotAvailable': (OpenGl_FeatureFlag.OpenGl_FeatureNotAvailable, None), 'OpenGl_FeatureInExtensions': (OpenGl_FeatureFlag.OpenGl_FeatureInExtensions, None), 'OpenGl_FeatureInCore': (OpenGl_FeatureFlag.OpenGl_FeatureInCore, None)}
-    __members__: dict # value = {'OpenGl_FeatureNotAvailable': OpenGl_FeatureFlag.OpenGl_FeatureNotAvailable, 'OpenGl_FeatureInExtensions': OpenGl_FeatureFlag.OpenGl_FeatureInExtensions, 'OpenGl_FeatureInCore': OpenGl_FeatureFlag.OpenGl_FeatureInCore}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OpenGl_FeatureInCore: OCP.OpenGl.OpenGl_FeatureFlag # value = <OpenGl_FeatureFlag.OpenGl_FeatureInCore: 2>
+    OpenGl_FeatureInExtensions: OCP.OpenGl.OpenGl_FeatureFlag # value = <OpenGl_FeatureFlag.OpenGl_FeatureInExtensions: 1>
+    OpenGl_FeatureNotAvailable: OCP.OpenGl.OpenGl_FeatureFlag # value = <OpenGl_FeatureFlag.OpenGl_FeatureNotAvailable: 0>
+    __entries: dict # value = {'OpenGl_FeatureNotAvailable': (<OpenGl_FeatureFlag.OpenGl_FeatureNotAvailable: 0>, None), 'OpenGl_FeatureInExtensions': (<OpenGl_FeatureFlag.OpenGl_FeatureInExtensions: 1>, None), 'OpenGl_FeatureInCore': (<OpenGl_FeatureFlag.OpenGl_FeatureInCore: 2>, None)}
+    __members__: dict # value = {'OpenGl_FeatureNotAvailable': <OpenGl_FeatureFlag.OpenGl_FeatureNotAvailable: 0>, 'OpenGl_FeatureInExtensions': <OpenGl_FeatureFlag.OpenGl_FeatureInExtensions: 1>, 'OpenGl_FeatureInCore': <OpenGl_FeatureFlag.OpenGl_FeatureInCore: 2>}
     pass
 class OpenGl_Flipper(OpenGl_Element):
     """
     Being rendered, the elements modifies current model-view matrix such that the axes of the specified reference system (in model space) become oriented in the following way: - X - heads to the right side of view. - Y - heads to the up side of view. - N(Z) - heads towards the screen. Originally, this element serves for need of flipping the 3D text of dimension presentations.
     """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
     def IsFillDrawMode(self) -> bool: 
         """
         Return TRUE if primitive type generates shaded triangulation (to be used in filters).
@@ -1638,6 +2076,14 @@ class OpenGl_Flipper(OpenGl_Element):
     def SynchronizeAspects(self) -> None: 
         """
         Update parameters of the drawable elements.
+        """
+    def UpdateDrawStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp,theIsDetailed : bool) -> None: 
+        """
+        Increment draw calls statistics.
+        """
+    def UpdateMemStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp) -> None: 
+        """
+        Increment memory usage statistics. Default implementation puts EstimatedDataSize() into Graphic3d_FrameStatsCounter_EstimatedBytesGeom.
         """
     def __init__(self,theReferenceSystem : OCP.gp.gp_Ax2) -> None: ...
     pass
@@ -1660,6 +2106,10 @@ class OpenGl_Font(OpenGl_Resource, OCP.Standard.Standard_Transient):
     def Descender(self) -> float: 
         """
         Returns vertical distance from the horizontal baseline to the lowest character coordinate
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1788,6 +2238,10 @@ class OpenGl_FrameBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Returns the depth-stencil texture.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1837,7 +2291,7 @@ class OpenGl_FrameBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormat : int,theDepthFormat : int,theNbSamples : int=0) -> bool: 
+    def Init(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormats : OpenGl_ColorFormats,theDepthFormat : int,theNbSamples : int=0) -> bool: 
         """
         Initialize FBO for rendering into single/multiple color buffer and depth textures.
 
@@ -1848,9 +2302,9 @@ class OpenGl_FrameBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
     @overload
     def Init(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormats : OpenGl_ColorFormats,theDepthStencilTexture : OpenGl_Texture,theNbSamples : int=0) -> bool: ...
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormats : OpenGl_ColorFormats,theDepthFormat : int,theNbSamples : int=0) -> bool: ...
+    def Init(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormat : int,theDepthFormat : int,theNbSamples : int=0) -> bool: ...
     @overload
-    def InitLazy(self,theGlCtx : OpenGl_Context,theFbo : OpenGl_FrameBuffer) -> bool: 
+    def InitLazy(self,theGlCtx : OpenGl_Context,theViewportSizeX : int,theViewportSizeY : int,theColorFormat : int,theDepthFormat : int,theNbSamples : int=0) -> bool: 
         """
         (Re-)initialize FBO with specified dimensions.
 
@@ -1861,7 +2315,7 @@ class OpenGl_FrameBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
     @overload
     def InitLazy(self,theGlCtx : OpenGl_Context,theViewportSizeX : int,theViewportSizeY : int,theColorFormats : OpenGl_ColorFormats,theDepthFormat : int,theNbSamples : int=0) -> bool: ...
     @overload
-    def InitLazy(self,theGlCtx : OpenGl_Context,theViewportSizeX : int,theViewportSizeY : int,theColorFormat : int,theDepthFormat : int,theNbSamples : int=0) -> bool: ...
+    def InitLazy(self,theGlCtx : OpenGl_Context,theFbo : OpenGl_FrameBuffer) -> bool: ...
     def InitWithRB(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormat : int,theDepthFormat : int,theColorRBufferFromWindow : int=0) -> bool: 
         """
         (Re-)initialize FBO with specified dimensions. The Render Buffer Objects will be used for Color, Depth and Stencil attachments (as opposite to textures).
@@ -2083,6 +2537,14 @@ class OpenGl_FrameStatsPrs(OpenGl_Element):
     """
     Element rendering frame statistics.
     """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
     def IsFillDrawMode(self) -> bool: 
         """
         Return TRUE if primitive type generates shaded triangulation (to be used in filters).
@@ -2106,6 +2568,14 @@ class OpenGl_FrameStatsPrs(OpenGl_Element):
     def Update(self,theWorkspace : OpenGl_Workspace) -> None: 
         """
         Update text.
+        """
+    def UpdateDrawStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp,theIsDetailed : bool) -> None: 
+        """
+        Increment draw calls statistics.
+        """
+    def UpdateMemStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp) -> None: 
+        """
+        Increment memory usage statistics. Default implementation puts EstimatedDataSize() into Graphic3d_FrameStatsCounter_EstimatedBytesGeom.
         """
     def __init__(self) -> None: ...
     pass
@@ -3487,6 +3957,10 @@ class OpenGl_GraphicDriver(OCP.Graphic3d.Graphic3d_GraphicDriver, OCP.Standard.S
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -3661,11 +4135,11 @@ class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transien
         """
         Return line aspect.
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox4f: 
+    def BoundingBox(self) -> Any: 
         """
         Returns boundary box of the group <me> without transformation applied,
         """
-    def ChangeBoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox4f: 
+    def ChangeBoundingBox(self) -> Any: 
         """
         Returns non-const boundary box of the group <me> without transformation applied,
         """
@@ -3685,7 +4159,7 @@ class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transien
         """
         Memory deallocator for transient classes
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -3804,7 +4278,7 @@ class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transien
         Update presentation aspects after their modification.
         """
     @overload
-    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: 
+    def Text(self,theTextUtf : str,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : OCP.Graphic3d.Graphic3d_TextPath,theHTA : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,theVTA : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: 
         """
         Creates the string <AText> at position <APoint>. The 3D point of attachment is projected. The text is written in the plane of projection. The attributes are given with respect to the plane of projection. AHeight : Height of text. (Relative to the Normalized Projection Coordinates (NPC) Space). AAngle : Orientation of the text (with respect to the horizontal).
 
@@ -3818,16 +4292,16 @@ class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transien
 
         Creates the string <theText> at orientation <theOrientation> in 3D space.
         """
-    @overload
-    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : OCP.Graphic3d.Graphic3d_TextPath,AHta : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,AVta : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: ...
     @overload
     def Text(self,AText : str,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: ...
-    @overload
-    def Text(self,theTextUtf : str,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : OCP.Graphic3d.Graphic3d_TextPath,theHTA : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,theVTA : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: ...
     @overload
     def Text(self,theText : OCP.TCollection.TCollection_ExtendedString,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : OCP.Graphic3d.Graphic3d_TextPath,theHTA : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,theVTA : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: ...
     @overload
     def Text(self,AText : str,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : OCP.Graphic3d.Graphic3d_TextPath,AHta : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,AVta : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: ...
+    @overload
+    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : OCP.Graphic3d.Graphic3d_TextPath,AHta : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,AVta : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: ...
+    @overload
+    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3846,7 +4320,7 @@ class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transien
     pass
 class OpenGl_HaltonSampler():
     """
-    Compute points of the Halton sequence with with digit-permutations for different bases.
+    Compute points of the Halton sequence with digit-permutations for different bases.
     """
     def __init__(self) -> None: ...
     @staticmethod
@@ -3854,15 +4328,9 @@ class OpenGl_HaltonSampler():
         """
         Return the number of supported dimensions.
         """
-    def initFaure(self) -> None: 
-        """
-        Init the permutation arrays using Faure-permutations. Alternatively, initRandom() can be called before the sampling functionality can be used.
-
-        Init the permutation arrays using Faure-permutations. Alternatively, initRandom() can be called before the sampling functionality can be used.
-        """
     def sample(self,theDimension : int,theIndex : int) -> float: 
         """
-        Return the Halton sample for the given dimension (component) and index. The client must have called initRandom or initFaure() at least once before. dimension must be smaller than the value returned by get_num_dimensions().
+        Return the Halton sample for the given dimension (component) and index. The client must have called initFaure() at least once before. dimension must be smaller than the value returned by get_num_dimensions().
         """
     pass
 class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
@@ -3901,6 +4369,10 @@ class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -3929,6 +4401,19 @@ class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Get the reference counter of this object
         """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
+        """
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
     def GetTarget(self) -> int: 
         """
         None
@@ -3946,7 +4431,7 @@ class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: 
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: 
         """
         Notice that VBO will be unbound after this call.
 
@@ -3957,7 +4442,7 @@ class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Notice that VBO will be unbound after this call.
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: ...
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4031,6 +4516,10 @@ class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Setup array pointer - either for active GLSL program OpenGl_Context::ActiveProgram() or for FFP using bindFixed() when no program bound.
         """
+    def getSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+        """
+        Read back buffer sub-range.
+        """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4042,14 +4531,14 @@ class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: 
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
         """
         Initialize buffer with new data.
 
         Initialize buffer with new data.
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: ...
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: ...
     @staticmethod
     def sizeOfGlType_s(theType : int) -> int: 
         """
@@ -4079,22 +4568,30 @@ class OpenGl_LayerFilter():
 
       OpenGl_LF_RayTracable
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OpenGl_LF_All: OCP.OpenGl.OpenGl_LayerFilter # value = OpenGl_LayerFilter.OpenGl_LF_All
-    OpenGl_LF_Bottom: OCP.OpenGl.OpenGl_LayerFilter # value = OpenGl_LayerFilter.OpenGl_LF_Bottom
-    OpenGl_LF_RayTracable: OCP.OpenGl.OpenGl_LayerFilter # value = OpenGl_LayerFilter.OpenGl_LF_RayTracable
-    OpenGl_LF_Upper: OCP.OpenGl.OpenGl_LayerFilter # value = OpenGl_LayerFilter.OpenGl_LF_Upper
-    __entries: dict # value = {'OpenGl_LF_All': (OpenGl_LayerFilter.OpenGl_LF_All, None), 'OpenGl_LF_Upper': (OpenGl_LayerFilter.OpenGl_LF_Upper, None), 'OpenGl_LF_Bottom': (OpenGl_LayerFilter.OpenGl_LF_Bottom, None), 'OpenGl_LF_RayTracable': (OpenGl_LayerFilter.OpenGl_LF_RayTracable, None)}
-    __members__: dict # value = {'OpenGl_LF_All': OpenGl_LayerFilter.OpenGl_LF_All, 'OpenGl_LF_Upper': OpenGl_LayerFilter.OpenGl_LF_Upper, 'OpenGl_LF_Bottom': OpenGl_LayerFilter.OpenGl_LF_Bottom, 'OpenGl_LF_RayTracable': OpenGl_LayerFilter.OpenGl_LF_RayTracable}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OpenGl_LF_All: OCP.OpenGl.OpenGl_LayerFilter # value = <OpenGl_LayerFilter.OpenGl_LF_All: 0>
+    OpenGl_LF_Bottom: OCP.OpenGl.OpenGl_LayerFilter # value = <OpenGl_LayerFilter.OpenGl_LF_Bottom: 2>
+    OpenGl_LF_RayTracable: OCP.OpenGl.OpenGl_LayerFilter # value = <OpenGl_LayerFilter.OpenGl_LF_RayTracable: 3>
+    OpenGl_LF_Upper: OCP.OpenGl.OpenGl_LayerFilter # value = <OpenGl_LayerFilter.OpenGl_LF_Upper: 1>
+    __entries: dict # value = {'OpenGl_LF_All': (<OpenGl_LayerFilter.OpenGl_LF_All: 0>, None), 'OpenGl_LF_Upper': (<OpenGl_LayerFilter.OpenGl_LF_Upper: 1>, None), 'OpenGl_LF_Bottom': (<OpenGl_LayerFilter.OpenGl_LF_Bottom: 2>, None), 'OpenGl_LF_RayTracable': (<OpenGl_LayerFilter.OpenGl_LF_RayTracable: 3>, None)}
+    __members__: dict # value = {'OpenGl_LF_All': <OpenGl_LayerFilter.OpenGl_LF_All: 0>, 'OpenGl_LF_Upper': <OpenGl_LayerFilter.OpenGl_LF_Upper: 1>, 'OpenGl_LF_Bottom': <OpenGl_LayerFilter.OpenGl_LF_Bottom: 2>, 'OpenGl_LF_RayTracable': <OpenGl_LayerFilter.OpenGl_LF_RayTracable: 3>}
     pass
 class OpenGl_StateInterface():
     """
@@ -4112,7 +4609,7 @@ class OpenGl_StateInterface():
     pass
 class OpenGl_LineAttributes(OpenGl_Resource, OCP.Standard.Standard_Transient):
     """
-    Utility class to manage OpenGL state of polygon hatching rasterization and keeping its cached state. The hatching rasterization is implemented using glPolygonStipple function of OpenGL. State of hatching is controlled by two parameters - type of hatching and IsEnabled parameter. The hatching rasterization is enabled only if non-zero index pattern type is selected (zero by default is reserved for solid filling) and if IsEnabled flag is set to true. The IsEnabled parameter is useful for temporarily turning on/off the hatching rasterization without making any costly GL calls for changing the hatch pattern. This is a sharable resource class - it creates OpenGL context objects for each hatch pattern to achieve quicker switching between them, thesse GL objects are freed when the resource is released by owner context.Utility class to manage OpenGL state of polygon hatching rasterization and keeping its cached state. The hatching rasterization is implemented using glPolygonStipple function of OpenGL. State of hatching is controlled by two parameters - type of hatching and IsEnabled parameter. The hatching rasterization is enabled only if non-zero index pattern type is selected (zero by default is reserved for solid filling) and if IsEnabled flag is set to true. The IsEnabled parameter is useful for temporarily turning on/off the hatching rasterization without making any costly GL calls for changing the hatch pattern. This is a sharable resource class - it creates OpenGL context objects for each hatch pattern to achieve quicker switching between them, thesse GL objects are freed when the resource is released by owner context.
+    Utility class to manage OpenGL resources of polygon hatching styles.Utility class to manage OpenGL resources of polygon hatching styles.
     """
     def DecrementRefCounter(self) -> int: 
         """
@@ -4121,6 +4618,10 @@ class OpenGl_LineAttributes(OpenGl_Resource, OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -4137,10 +4638,6 @@ class OpenGl_LineAttributes(OpenGl_Resource, OCP.Standard.Standard_Transient):
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
-        """
-    def IsEnabled(self) -> bool: 
-        """
-        Current enabled state of the hatching rasterization.
         """
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
@@ -4164,21 +4661,13 @@ class OpenGl_LineAttributes(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Release GL resources.
         """
-    def SetEnabled(self,theGlCtx : OpenGl_Context,theToEnable : bool) -> bool: 
-        """
-        Turns on/off the hatching rasterization rasterization.
-        """
-    def SetTypeOfHatch(self,theGlCtx : OpenGl_Context,theStyle : OCP.Graphic3d.Graphic3d_HatchStyle) -> int: 
+    def SetTypeOfHatch(self,theGlCtx : OpenGl_Context,theStyle : OCP.Graphic3d.Graphic3d_HatchStyle) -> bool: 
         """
         Sets type of the hatch.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def TypeOfHatch(self) -> int: 
-        """
-        Index of currently selected type of hatch.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -4210,9 +4699,9 @@ class OpenGl_ListOfStructure(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OpenGl_Structure) -> OpenGl_Structure: ...
-    @overload
     def Append(self,theItem : OpenGl_Structure,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : OpenGl_Structure) -> OpenGl_Structure: ...
     def Assign(self,theOther : OpenGl_ListOfStructure) -> OpenGl_ListOfStructure: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -4232,14 +4721,14 @@ class OpenGl_ListOfStructure(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : OpenGl_Structure,theIter : Any) -> OpenGl_Structure: 
+    def InsertAfter(self,theOther : OpenGl_ListOfStructure,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : OpenGl_ListOfStructure,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : OpenGl_Structure,theIter : Any) -> OpenGl_Structure: ...
     @overload
     def InsertBefore(self,theOther : OpenGl_ListOfStructure,theIter : Any) -> None: 
         """
@@ -4285,14 +4774,48 @@ class OpenGl_ListOfStructure(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : OpenGl_ListOfStructure) -> None: ...
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class OpenGl_Material():
+    """
+    OpenGL material definition
+    """
+    def Init(self,theCtx : OpenGl_Context,theProp : OCP.Graphic3d.Graphic3d_MaterialAspect,theInteriorColor : OCP.Quantity.Quantity_Color) -> None: 
+        """
+        Initialize material
+        """
+    def IsEqual(self,theOther : OpenGl_Material) -> bool: 
+        """
+        Check this material for equality with another material (without tolerance!).
+        """
+    def SetColor(self,theColor : OCP.Graphic3d.Graphic3d_Vec4) -> None: 
+        """
+        Set material color.
+        """
+    def __init__(self) -> None: ...
+    @property
+    def Common(self) -> OpenGl_MaterialCommon:
+        """
+        :type: OpenGl_MaterialCommon
+        """
+    @Common.setter
+    def Common(self, arg0: OpenGl_MaterialCommon) -> None:
+        pass
+    @property
+    def Pbr(self) -> OpenGl_MaterialPBR:
+        """
+        :type: OpenGl_MaterialPBR
+        """
+    @Pbr.setter
+    def Pbr(self, arg0: OpenGl_MaterialPBR) -> None:
+        pass
+    pass
+class OpenGl_MaterialCommon():
     """
     OpenGL material definition
     """
@@ -4304,14 +4827,6 @@ class OpenGl_Material():
         """
         None
         """
-    def Init(self,theProp : OCP.Graphic3d.Graphic3d_MaterialAspect,theInteriorColor : OCP.Quantity.Quantity_Color) -> None: 
-        """
-        Initialize material
-        """
-    def IsEqual(self,theOther : OpenGl_Material) -> bool: 
-        """
-        Check this material for equality with another material (without tolerance!).
-        """
     @staticmethod
     def NbOfVec4_s() -> int: 
         """
@@ -4320,10 +4835,6 @@ class OpenGl_Material():
     def Packed(self) -> OCP.Graphic3d.Graphic3d_Vec4: 
         """
         Returns packed (serialized) representation of material properties
-        """
-    def SetColor(self,theColor : OCP.Graphic3d.Graphic3d_Vec4) -> None: 
-        """
-        Set material color.
         """
     def Shine(self) -> float: 
         """
@@ -4385,20 +4896,83 @@ class OpenGl_MaterialFlag():
 
       OpenGl_MaterialFlag_Back
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OpenGl_MaterialFlag_Back: OCP.OpenGl.OpenGl_MaterialFlag # value = OpenGl_MaterialFlag.OpenGl_MaterialFlag_Back
-    OpenGl_MaterialFlag_Front: OCP.OpenGl.OpenGl_MaterialFlag # value = OpenGl_MaterialFlag.OpenGl_MaterialFlag_Front
-    __entries: dict # value = {'OpenGl_MaterialFlag_Front': (OpenGl_MaterialFlag.OpenGl_MaterialFlag_Front, None), 'OpenGl_MaterialFlag_Back': (OpenGl_MaterialFlag.OpenGl_MaterialFlag_Back, None)}
-    __members__: dict # value = {'OpenGl_MaterialFlag_Front': OpenGl_MaterialFlag.OpenGl_MaterialFlag_Front, 'OpenGl_MaterialFlag_Back': OpenGl_MaterialFlag.OpenGl_MaterialFlag_Back}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OpenGl_MaterialFlag_Back: OCP.OpenGl.OpenGl_MaterialFlag # value = <OpenGl_MaterialFlag.OpenGl_MaterialFlag_Back: 1>
+    OpenGl_MaterialFlag_Front: OCP.OpenGl.OpenGl_MaterialFlag # value = <OpenGl_MaterialFlag.OpenGl_MaterialFlag_Front: 0>
+    __entries: dict # value = {'OpenGl_MaterialFlag_Front': (<OpenGl_MaterialFlag.OpenGl_MaterialFlag_Front: 0>, None), 'OpenGl_MaterialFlag_Back': (<OpenGl_MaterialFlag.OpenGl_MaterialFlag_Back: 1>, None)}
+    __members__: dict # value = {'OpenGl_MaterialFlag_Front': <OpenGl_MaterialFlag.OpenGl_MaterialFlag_Front: 0>, 'OpenGl_MaterialFlag_Back': <OpenGl_MaterialFlag.OpenGl_MaterialFlag_Back: 1>}
+    pass
+class OpenGl_MaterialPBR():
+    """
+    OpenGL material definition
+    """
+    def ChangeMetallic(self) -> float: 
+        """
+        None
+        """
+    def ChangeRoughness(self) -> float: 
+        """
+        None
+        """
+    def Metallic(self) -> float: 
+        """
+        None
+        """
+    @staticmethod
+    def NbOfVec4_s() -> int: 
+        """
+        None
+        """
+    def Packed(self) -> OCP.Graphic3d.Graphic3d_Vec4: 
+        """
+        Returns packed (serialized) representation of material properties
+        """
+    def Roughness(self) -> float: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    @property
+    def BaseColor(self) -> OCP.Graphic3d.Graphic3d_Vec4:
+        """
+        :type: OCP.Graphic3d.Graphic3d_Vec4
+        """
+    @BaseColor.setter
+    def BaseColor(self, arg0: OCP.Graphic3d.Graphic3d_Vec4) -> None:
+        pass
+    @property
+    def EmissionIOR(self) -> OCP.Graphic3d.Graphic3d_Vec4:
+        """
+        :type: OCP.Graphic3d.Graphic3d_Vec4
+        """
+    @EmissionIOR.setter
+    def EmissionIOR(self, arg0: OCP.Graphic3d.Graphic3d_Vec4) -> None:
+        pass
+    @property
+    def Params(self) -> OCP.Graphic3d.Graphic3d_Vec4:
+        """
+        :type: OCP.Graphic3d.Graphic3d_Vec4
+        """
+    @Params.setter
+    def Params(self, arg0: OCP.Graphic3d.Graphic3d_Vec4) -> None:
+        pass
     pass
 class OpenGl_MaterialState(OpenGl_StateInterface):
     """
@@ -4486,6 +5060,10 @@ class OpenGl_NamedResource(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -4570,6 +5148,120 @@ class OpenGl_OitState(OpenGl_StateInterface):
         """
     def __init__(self) -> None: ...
     pass
+class OpenGl_PBREnvironment(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standard_Transient):
+    """
+    This class contains specular and diffuse maps required for Image Base Lighting (IBL) in PBR shading model with it's generation methods.
+    """
+    def Bake(self,theCtx : OpenGl_Context,theEnvMap : OpenGl_Texture,theZIsInverted : bool=False,theIsTopDown : bool=True,theDiffMapNbSamples : int=1024,theSpecMapNbSamples : int=256,theProbability : float=0.9900000095367432) -> None: 
+        """
+        Generates specular and diffuse (irradiance) IBL maps.
+        """
+    def Bind(self,theCtx : OpenGl_Context) -> None: 
+        """
+        Binds diffuse and specular IBL maps to the corresponding texture units.
+        """
+    def Clear(self,theCtx : OpenGl_Context,theColor : OCP.Graphic3d.Graphic3d_Vec3=OCP.Graphic3d.Graphic3d_Vec3) -> None: 
+        """
+        Fills all mipmaps of specular IBL map and diffuse IBL map with one color. So that environment illumination will be constant.
+        """
+    @staticmethod
+    def Create_s(theCtx : OpenGl_Context,thePow2Size : int=9,theSpecMapLevelsNum : int=6,theId : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OpenGl_PBREnvironment: 
+        """
+        Creates and initializes new PBR environment. It is the only way to create OpenGl_PBREnvironment.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def IsComplete(self) -> bool: 
+        """
+        Checks completeness of PBR environment. Creation method returns only completed objects or null handles otherwise.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsNeededToBeBound(self) -> bool: 
+        """
+        Indicates whether IBL map's textures have to be bound or it is not obligate.
+        """
+    def Pow2Size(self) -> int: 
+        """
+        Returns size of IBL maps sides as power of 2. So that the real size can be calculated as 2^Pow2Size()
+        """
+    def Release(self,theCtx : OpenGl_Context) -> None: 
+        """
+        Releases all OpenGL resources. It must be called before destruction.
+        """
+    def ResourceId(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Return resource name.
+        """
+    def SizesAreDifferent(self,thePow2Size : int,theSpecMapLevelsNumber : int) -> bool: 
+        """
+        Checks whether the given sizes affects to the current ones. It can be imagined as creation of new PBR environment. If creation method with this values returns the PBR environment having real sizes which are equals to current ones then this method will return false. It is handful when sizes are required to be changed. If this method returns false there is no reason to recreate PBR environment in order to change sizes.
+        """
+    def SpecMapLevelsNumber(self) -> int: 
+        """
+        Returns number of mipmap levels used in specular IBL map. It can be different from value passed to creation method.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Unbind(self,theCtx : OpenGl_Context) -> None: 
+        """
+        Unbinds diffuse and specular IBL maps.
+        """
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
 class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standard_Transient):
     """
     Texture resource.Texture resource.
@@ -4595,6 +5287,10 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -4605,11 +5301,11 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
         """
     @staticmethod
     @overload
-    def GetDataFormat_s(theCtx : OpenGl_Context,theFromat : OCP.Image.Image_Format,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: 
+    def GetDataFormat_s(theCtx : OpenGl_Context,theFormat : OCP.Image.Image_Format,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: 
         """
-        Return texture type and format by Image_Format.
+        None
 
-        Return texture type and format by Image_PixMap data format.
+        None
         """
     @staticmethod
     @overload
@@ -4641,29 +5337,41 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
 
         Initialize the texture with specified format, size and texture type. If theImage is empty the texture data will contain trash. Notice that texture will be unbound after this call.
 
-        Initialize the texture with Graphic3d_TextureMap. It is an universal way to initialize. Sitable initialization method will be chosen.
+        Initialize the texture with Graphic3d_TextureMap. It is an universal way to initialize. Suitable initialization method will be chosen.
+
+        None
+
+        None
         """
     @overload
     def Init(self,theCtx : OpenGl_Context,theTextureMap : OCP.Graphic3d.Graphic3d_TextureMap) -> bool: ...
     @overload
     def Init(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_PixMap,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture) -> bool: ...
+    @overload
+    def Init(self,theCtx : OpenGl_Context,theFormat : OpenGl_TextureFormat,theSizeXY : OCP.Graphic3d.Graphic3d_Vec2i,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theImage : OCP.Image.Image_PixMap=None) -> bool: ...
+    @overload
+    def Init(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_PixMap,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theIsColorMap : bool) -> bool: ...
     def Init2DMultisample(self,theCtx : OpenGl_Context,theNbSamples : int,theTextFormat : int,theSizeX : int,theSizeY : int) -> bool: 
         """
         Initialize the 2D multisampling texture using glTexImage2DMultisample().
         """
-    def Init3D(self,theCtx : OpenGl_Context,theTextFormat : int,thePixelFormat : int,theDataType : int,theSizeX : int,theSizeY : int,theSizeZ : int,thePixels : capsule) -> bool: 
+    @overload
+    def Init3D(self,theCtx : OpenGl_Context,theFormat : OpenGl_TextureFormat,theSizeXYZ : OCP.Graphic3d.Graphic3d_Vec3i,thePixels : capsule) -> bool: 
         """
         Initializes 3D texture rectangle with specified format and size.
-        """
-    @overload
-    def InitCubeMap(self,theCtx : OpenGl_Context,theCubeMap : OCP.Graphic3d.Graphic3d_CubeMap,theSize : int=0,theFormat : OCP.Image.Image_Format=Image_Format.Image_Format_RGB,theToGenMipmap : bool=False) -> bool: 
-        """
-        Initializes 6 sides of cubemap. If theCubeMap is not NULL then size and format will be taken from it and corresponding arguments will be ignored. Otherwise this parametres will be taken from arguments. theToGenMipmap allows to generate mipmaped cubemap.
 
-        The same InitCubeMap but there is another order of arguments.
+        None
         """
     @overload
-    def InitCubeMap(self,theCtx : OpenGl_Context,theCubeMap : OCP.Graphic3d.Graphic3d_CubeMap,theToGenMipmap : bool,theSize : int=0,theFormat : OCP.Image.Image_Format=Image_Format.Image_Format_RGB) -> bool: ...
+    def Init3D(self,theCtx : OpenGl_Context,theTextFormat : int,thePixelFormat : int,theDataType : int,theSizeX : int,theSizeY : int,theSizeZ : int,thePixels : capsule) -> bool: ...
+    def InitCompressed(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_CompressedPixMap,theIsColorMap : bool) -> bool: 
+        """
+        Initialize the texture with Image_CompressedPixMap.
+        """
+    def InitCubeMap(self,theCtx : OpenGl_Context,theCubeMap : OCP.Graphic3d.Graphic3d_CubeMap,theSize : int,theFormat : OCP.Image.Image_Format,theToGenMipmap : bool,theIsColorMap : bool) -> bool: 
+        """
+        Initializes 6 sides of cubemap. If theCubeMap is not NULL then size and format will be taken from it and corresponding arguments will be ignored. Otherwise this parametres will be taken from arguments.
+        """
     def InitRectangle(self,theCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theFormat : OpenGl_TextureFormat) -> bool: 
         """
         Allocates texture rectangle with specified format and size.
@@ -4698,9 +5406,17 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
         """
         Returns TRUE for point sprite texture.
         """
+    def IsTopDown(self) -> bool: 
+        """
+        Return if 2D surface is defined top-down (TRUE) or bottom-up (FALSE). Normally set from Image_PixMap::IsTopDown() within texture initialization.
+        """
     def IsValid(self) -> bool: 
         """
         Returns true if current object was initialized
+        """
+    def MaxMipmapLevel(self) -> int: 
+        """
+        Return upper mipmap level index (0 means no mipmaps).
         """
     @staticmethod
     def PixelSizeOfPixelFormat_s(theInternalFormat : int) -> int: 
@@ -4725,7 +5441,7 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
         """
     def SetAlpha(self,theValue : bool) -> None: 
         """
-        Setup to interprete the format as Alpha by Shader Manager (should be GL_ALPHA within compatible context or GL_RED otherwise).
+        Setup to interpret the format as Alpha by Shader Manager (should be GL_ALPHA within compatible context or GL_RED otherwise).
         """
     def SetRevision(self,theRevision : int) -> None: 
         """
@@ -4734,6 +5450,10 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
     def SetSampler(self,theSampler : OpenGl_Sampler) -> None: 
         """
         Set texture sampler.
+        """
+    def SetTopDown(self,theIsTopDown : bool) -> None: 
+        """
+        Set if 2D surface is defined top-down (TRUE) or bottom-up (FALSE).
         """
     def SizeX(self) -> int: 
         """
@@ -4796,6 +5516,14 @@ class OpenGl_BackgroundArray(OpenGl_PrimitiveArray, OpenGl_Element):
         """
         Returns primitive type (GL_LINES, GL_TRIANGLES and others)
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
     def GetUID(self) -> int: 
         """
         Returns unique ID of primitive array.
@@ -4840,7 +5568,7 @@ class OpenGl_BackgroundArray(OpenGl_PrimitiveArray, OpenGl_Element):
         """
         Release OpenGL resources (VBOs)
         """
-    def Render(self,theWorkspace : OpenGl_Workspace) -> None: 
+    def Render(self,theWorkspace : OpenGl_Workspace,theProjection : OCP.Graphic3d.Graphic3d_Camera.Projection_e) -> None: 
         """
         Render primitives to the window
         """
@@ -4868,7 +5596,16 @@ class OpenGl_BackgroundArray(OpenGl_PrimitiveArray, OpenGl_Element):
         """
         Gets background texture fill method
         """
+    def UpdateDrawStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp,theIsDetailed : bool) -> None: 
+        """
+        Increment draw calls statistics.
+        """
+    def UpdateMemStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp) -> None: 
+        """
+        Increment memory usage statistics. Default implementation puts EstimatedDataSize() into Graphic3d_FrameStatsCounter_EstimatedBytesGeom.
+        """
     def __init__(self,theType : OCP.Graphic3d.Graphic3d_TypeOfBackground) -> None: ...
+    DRAW_MODE_NONE = -1
     pass
 class OpenGl_ProgramOptions():
     """
@@ -4880,13 +5617,15 @@ class OpenGl_ProgramOptions():
 
       OpenGl_PO_TextureRGB
 
+      OpenGl_PO_TextureEnv
+
+      OpenGl_PO_TextureNormal
+
       OpenGl_PO_PointSimple
 
       OpenGl_PO_PointSprite
 
       OpenGl_PO_PointSpriteA
-
-      OpenGl_PO_TextureEnv
 
       OpenGl_PO_StippleLine
 
@@ -4912,36 +5651,45 @@ class OpenGl_ProgramOptions():
 
       OpenGl_PO_NeedsGeomShader
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OpenGl_PO_AlphaTest: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_AlphaTest
-    OpenGl_PO_ClipChains: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_ClipChains
-    OpenGl_PO_ClipPlanes1: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1
-    OpenGl_PO_ClipPlanes2: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2
-    OpenGl_PO_ClipPlanesN: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN
-    OpenGl_PO_HasTextures: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_TextureRGB
-    OpenGl_PO_IsPoint: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA
-    OpenGl_PO_MeshEdges: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_MeshEdges
-    OpenGl_PO_NB: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_NB
-    OpenGl_PO_NeedsGeomShader: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_MeshEdges
-    OpenGl_PO_PointSimple: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_PointSimple
-    OpenGl_PO_PointSprite: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_PointSprite
-    OpenGl_PO_PointSpriteA: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA
-    OpenGl_PO_StippleLine: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_StippleLine
-    OpenGl_PO_TextureEnv: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_TextureEnv
-    OpenGl_PO_TextureRGB: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_TextureRGB
-    OpenGl_PO_VertColor: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_VertColor
-    OpenGl_PO_WriteOit: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_WriteOit
-    __entries: dict # value = {'OpenGl_PO_VertColor': (OpenGl_ProgramOptions.OpenGl_PO_VertColor, None), 'OpenGl_PO_TextureRGB': (OpenGl_ProgramOptions.OpenGl_PO_TextureRGB, None), 'OpenGl_PO_PointSimple': (OpenGl_ProgramOptions.OpenGl_PO_PointSimple, None), 'OpenGl_PO_PointSprite': (OpenGl_ProgramOptions.OpenGl_PO_PointSprite, None), 'OpenGl_PO_PointSpriteA': (OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA, None), 'OpenGl_PO_TextureEnv': (OpenGl_ProgramOptions.OpenGl_PO_TextureEnv, None), 'OpenGl_PO_StippleLine': (OpenGl_ProgramOptions.OpenGl_PO_StippleLine, None), 'OpenGl_PO_ClipPlanes1': (OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1, None), 'OpenGl_PO_ClipPlanes2': (OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2, None), 'OpenGl_PO_ClipPlanesN': (OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN, None), 'OpenGl_PO_ClipChains': (OpenGl_ProgramOptions.OpenGl_PO_ClipChains, None), 'OpenGl_PO_MeshEdges': (OpenGl_ProgramOptions.OpenGl_PO_MeshEdges, None), 'OpenGl_PO_AlphaTest': (OpenGl_ProgramOptions.OpenGl_PO_AlphaTest, None), 'OpenGl_PO_WriteOit': (OpenGl_ProgramOptions.OpenGl_PO_WriteOit, None), 'OpenGl_PO_NB': (OpenGl_ProgramOptions.OpenGl_PO_NB, None), 'OpenGl_PO_IsPoint': (OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA, None), 'OpenGl_PO_HasTextures': (OpenGl_ProgramOptions.OpenGl_PO_TextureRGB, None), 'OpenGl_PO_NeedsGeomShader': (OpenGl_ProgramOptions.OpenGl_PO_MeshEdges, None)}
-    __members__: dict # value = {'OpenGl_PO_VertColor': OpenGl_ProgramOptions.OpenGl_PO_VertColor, 'OpenGl_PO_TextureRGB': OpenGl_ProgramOptions.OpenGl_PO_TextureRGB, 'OpenGl_PO_PointSimple': OpenGl_ProgramOptions.OpenGl_PO_PointSimple, 'OpenGl_PO_PointSprite': OpenGl_ProgramOptions.OpenGl_PO_PointSprite, 'OpenGl_PO_PointSpriteA': OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA, 'OpenGl_PO_TextureEnv': OpenGl_ProgramOptions.OpenGl_PO_TextureEnv, 'OpenGl_PO_StippleLine': OpenGl_ProgramOptions.OpenGl_PO_StippleLine, 'OpenGl_PO_ClipPlanes1': OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1, 'OpenGl_PO_ClipPlanes2': OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2, 'OpenGl_PO_ClipPlanesN': OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN, 'OpenGl_PO_ClipChains': OpenGl_ProgramOptions.OpenGl_PO_ClipChains, 'OpenGl_PO_MeshEdges': OpenGl_ProgramOptions.OpenGl_PO_MeshEdges, 'OpenGl_PO_AlphaTest': OpenGl_ProgramOptions.OpenGl_PO_AlphaTest, 'OpenGl_PO_WriteOit': OpenGl_ProgramOptions.OpenGl_PO_WriteOit, 'OpenGl_PO_NB': OpenGl_ProgramOptions.OpenGl_PO_NB, 'OpenGl_PO_IsPoint': OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA, 'OpenGl_PO_HasTextures': OpenGl_ProgramOptions.OpenGl_PO_TextureRGB, 'OpenGl_PO_NeedsGeomShader': OpenGl_ProgramOptions.OpenGl_PO_MeshEdges}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OpenGl_PO_AlphaTest: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_AlphaTest: 1024>
+    OpenGl_PO_ClipChains: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipChains: 256>
+    OpenGl_PO_ClipPlanes1: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1: 64>
+    OpenGl_PO_ClipPlanes2: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2: 128>
+    OpenGl_PO_ClipPlanesN: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN: 192>
+    OpenGl_PO_HasTextures: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>
+    OpenGl_PO_IsPoint: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>
+    OpenGl_PO_MeshEdges: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>
+    OpenGl_PO_NB: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_NB: 4096>
+    OpenGl_PO_NeedsGeomShader: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>
+    OpenGl_PO_PointSimple: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSimple: 8>
+    OpenGl_PO_PointSprite: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSprite: 16>
+    OpenGl_PO_PointSpriteA: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>
+    OpenGl_PO_StippleLine: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_StippleLine: 32>
+    OpenGl_PO_TextureEnv: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureEnv: 4>
+    OpenGl_PO_TextureNormal: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>
+    OpenGl_PO_TextureRGB: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureRGB: 2>
+    OpenGl_PO_VertColor: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_VertColor: 1>
+    OpenGl_PO_WriteOit: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_WriteOit: 2048>
+    __entries: dict # value = {'OpenGl_PO_VertColor': (<OpenGl_ProgramOptions.OpenGl_PO_VertColor: 1>, None), 'OpenGl_PO_TextureRGB': (<OpenGl_ProgramOptions.OpenGl_PO_TextureRGB: 2>, None), 'OpenGl_PO_TextureEnv': (<OpenGl_ProgramOptions.OpenGl_PO_TextureEnv: 4>, None), 'OpenGl_PO_TextureNormal': (<OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>, None), 'OpenGl_PO_PointSimple': (<OpenGl_ProgramOptions.OpenGl_PO_PointSimple: 8>, None), 'OpenGl_PO_PointSprite': (<OpenGl_ProgramOptions.OpenGl_PO_PointSprite: 16>, None), 'OpenGl_PO_PointSpriteA': (<OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>, None), 'OpenGl_PO_StippleLine': (<OpenGl_ProgramOptions.OpenGl_PO_StippleLine: 32>, None), 'OpenGl_PO_ClipPlanes1': (<OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1: 64>, None), 'OpenGl_PO_ClipPlanes2': (<OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2: 128>, None), 'OpenGl_PO_ClipPlanesN': (<OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN: 192>, None), 'OpenGl_PO_ClipChains': (<OpenGl_ProgramOptions.OpenGl_PO_ClipChains: 256>, None), 'OpenGl_PO_MeshEdges': (<OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>, None), 'OpenGl_PO_AlphaTest': (<OpenGl_ProgramOptions.OpenGl_PO_AlphaTest: 1024>, None), 'OpenGl_PO_WriteOit': (<OpenGl_ProgramOptions.OpenGl_PO_WriteOit: 2048>, None), 'OpenGl_PO_NB': (<OpenGl_ProgramOptions.OpenGl_PO_NB: 4096>, None), 'OpenGl_PO_IsPoint': (<OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>, None), 'OpenGl_PO_HasTextures': (<OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>, None), 'OpenGl_PO_NeedsGeomShader': (<OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>, None)}
+    __members__: dict # value = {'OpenGl_PO_VertColor': <OpenGl_ProgramOptions.OpenGl_PO_VertColor: 1>, 'OpenGl_PO_TextureRGB': <OpenGl_ProgramOptions.OpenGl_PO_TextureRGB: 2>, 'OpenGl_PO_TextureEnv': <OpenGl_ProgramOptions.OpenGl_PO_TextureEnv: 4>, 'OpenGl_PO_TextureNormal': <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>, 'OpenGl_PO_PointSimple': <OpenGl_ProgramOptions.OpenGl_PO_PointSimple: 8>, 'OpenGl_PO_PointSprite': <OpenGl_ProgramOptions.OpenGl_PO_PointSprite: 16>, 'OpenGl_PO_PointSpriteA': <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>, 'OpenGl_PO_StippleLine': <OpenGl_ProgramOptions.OpenGl_PO_StippleLine: 32>, 'OpenGl_PO_ClipPlanes1': <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1: 64>, 'OpenGl_PO_ClipPlanes2': <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2: 128>, 'OpenGl_PO_ClipPlanesN': <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN: 192>, 'OpenGl_PO_ClipChains': <OpenGl_ProgramOptions.OpenGl_PO_ClipChains: 256>, 'OpenGl_PO_MeshEdges': <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>, 'OpenGl_PO_AlphaTest': <OpenGl_ProgramOptions.OpenGl_PO_AlphaTest: 1024>, 'OpenGl_PO_WriteOit': <OpenGl_ProgramOptions.OpenGl_PO_WriteOit: 2048>, 'OpenGl_PO_NB': <OpenGl_ProgramOptions.OpenGl_PO_NB: 4096>, 'OpenGl_PO_IsPoint': <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>, 'OpenGl_PO_HasTextures': <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>, 'OpenGl_PO_NeedsGeomShader': <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>}
     pass
 class OpenGl_ProjectionState(OpenGl_StateInterface):
     """
@@ -4978,9 +5726,9 @@ class OpenGl_RaytraceLight():
         Returns packed (serialized) representation of light source.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theEmission : OCP.Graphic3d.Graphic3d_Vec4,thePosition : OCP.Graphic3d.Graphic3d_Vec4) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class OpenGl_RaytraceMaterial():
     """
@@ -5008,23 +5756,31 @@ class OpenGl_RenderFilter():
 
       OpenGl_RenderFilter_FillModeOnly
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OpenGl_RenderFilter_Empty: OCP.OpenGl.OpenGl_RenderFilter # value = OpenGl_RenderFilter.OpenGl_RenderFilter_Empty
-    OpenGl_RenderFilter_FillModeOnly: OCP.OpenGl.OpenGl_RenderFilter # value = OpenGl_RenderFilter.OpenGl_RenderFilter_FillModeOnly
-    OpenGl_RenderFilter_NonRaytraceableOnly: OCP.OpenGl.OpenGl_RenderFilter # value = OpenGl_RenderFilter.OpenGl_RenderFilter_NonRaytraceableOnly
-    OpenGl_RenderFilter_OpaqueOnly: OCP.OpenGl.OpenGl_RenderFilter # value = OpenGl_RenderFilter.OpenGl_RenderFilter_OpaqueOnly
-    OpenGl_RenderFilter_TransparentOnly: OCP.OpenGl.OpenGl_RenderFilter # value = OpenGl_RenderFilter.OpenGl_RenderFilter_TransparentOnly
-    __entries: dict # value = {'OpenGl_RenderFilter_Empty': (OpenGl_RenderFilter.OpenGl_RenderFilter_Empty, None), 'OpenGl_RenderFilter_OpaqueOnly': (OpenGl_RenderFilter.OpenGl_RenderFilter_OpaqueOnly, None), 'OpenGl_RenderFilter_TransparentOnly': (OpenGl_RenderFilter.OpenGl_RenderFilter_TransparentOnly, None), 'OpenGl_RenderFilter_NonRaytraceableOnly': (OpenGl_RenderFilter.OpenGl_RenderFilter_NonRaytraceableOnly, None), 'OpenGl_RenderFilter_FillModeOnly': (OpenGl_RenderFilter.OpenGl_RenderFilter_FillModeOnly, None)}
-    __members__: dict # value = {'OpenGl_RenderFilter_Empty': OpenGl_RenderFilter.OpenGl_RenderFilter_Empty, 'OpenGl_RenderFilter_OpaqueOnly': OpenGl_RenderFilter.OpenGl_RenderFilter_OpaqueOnly, 'OpenGl_RenderFilter_TransparentOnly': OpenGl_RenderFilter.OpenGl_RenderFilter_TransparentOnly, 'OpenGl_RenderFilter_NonRaytraceableOnly': OpenGl_RenderFilter.OpenGl_RenderFilter_NonRaytraceableOnly, 'OpenGl_RenderFilter_FillModeOnly': OpenGl_RenderFilter.OpenGl_RenderFilter_FillModeOnly}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OpenGl_RenderFilter_Empty: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_Empty: 0>
+    OpenGl_RenderFilter_FillModeOnly: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_FillModeOnly: 8>
+    OpenGl_RenderFilter_NonRaytraceableOnly: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_NonRaytraceableOnly: 4>
+    OpenGl_RenderFilter_OpaqueOnly: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_OpaqueOnly: 1>
+    OpenGl_RenderFilter_TransparentOnly: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_TransparentOnly: 2>
+    __entries: dict # value = {'OpenGl_RenderFilter_Empty': (<OpenGl_RenderFilter.OpenGl_RenderFilter_Empty: 0>, None), 'OpenGl_RenderFilter_OpaqueOnly': (<OpenGl_RenderFilter.OpenGl_RenderFilter_OpaqueOnly: 1>, None), 'OpenGl_RenderFilter_TransparentOnly': (<OpenGl_RenderFilter.OpenGl_RenderFilter_TransparentOnly: 2>, None), 'OpenGl_RenderFilter_NonRaytraceableOnly': (<OpenGl_RenderFilter.OpenGl_RenderFilter_NonRaytraceableOnly: 4>, None), 'OpenGl_RenderFilter_FillModeOnly': (<OpenGl_RenderFilter.OpenGl_RenderFilter_FillModeOnly: 8>, None)}
+    __members__: dict # value = {'OpenGl_RenderFilter_Empty': <OpenGl_RenderFilter.OpenGl_RenderFilter_Empty: 0>, 'OpenGl_RenderFilter_OpaqueOnly': <OpenGl_RenderFilter.OpenGl_RenderFilter_OpaqueOnly: 1>, 'OpenGl_RenderFilter_TransparentOnly': <OpenGl_RenderFilter.OpenGl_RenderFilter_TransparentOnly: 2>, 'OpenGl_RenderFilter_NonRaytraceableOnly': <OpenGl_RenderFilter.OpenGl_RenderFilter_NonRaytraceableOnly: 4>, 'OpenGl_RenderFilter_FillModeOnly': <OpenGl_RenderFilter.OpenGl_RenderFilter_FillModeOnly: 8>}
     pass
 class OpenGl_CappingPlaneResource(OpenGl_Resource, OCP.Standard.Standard_Transient):
     """
@@ -5041,6 +5797,10 @@ class OpenGl_CappingPlaneResource(OpenGl_Resource, OCP.Standard.Standard_Transie
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -5117,14 +5877,14 @@ class OpenGl_Sampler(OpenGl_Resource, OCP.Standard.Standard_Transient):
     Class implements OpenGL sampler object resource that stores the sampling parameters for a texture access.Class implements OpenGL sampler object resource that stores the sampling parameters for a texture access.
     """
     @overload
-    def Bind(self,theCtx : OpenGl_Context,theUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: 
+    def Bind(self,theCtx : OpenGl_Context) -> None: 
         """
         Binds sampler object to texture unit specified in parameters.
 
         Binds sampler object to the given texture unit.
         """
     @overload
-    def Bind(self,theCtx : OpenGl_Context) -> None: ...
+    def Bind(self,theCtx : OpenGl_Context,theUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: ...
     def Create(self,theContext : OpenGl_Context) -> bool: 
         """
         Creates an uninitialized sampler object.
@@ -5136,6 +5896,10 @@ class OpenGl_Sampler(OpenGl_Resource, OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -5381,14 +6145,14 @@ class OpenGl_ShaderList(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OpenGl_ShaderObject) -> None: 
+    def Append(self,theSeq : OpenGl_ShaderList) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : OpenGl_ShaderList) -> None: ...
+    def Append(self,theItem : OpenGl_ShaderObject) -> None: ...
     def Assign(self,theOther : OpenGl_ShaderList) -> OpenGl_ShaderList: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5418,14 +6182,14 @@ class OpenGl_ShaderList(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : OpenGl_ShaderList) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OpenGl_ShaderObject) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OpenGl_ShaderObject) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : OpenGl_ShaderList) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : OpenGl_ShaderList) -> None: 
         """
@@ -5452,14 +6216,14 @@ class OpenGl_ShaderList(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OpenGl_ShaderObject) -> None: 
+    def Prepend(self,theSeq : OpenGl_ShaderList) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : OpenGl_ShaderList) -> None: ...
+    def Prepend(self,theItem : OpenGl_ShaderObject) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -5494,12 +6258,12 @@ class OpenGl_ShaderList(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : OpenGl_ShaderList) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -5523,7 +6287,7 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
     @overload
     def BindFaceProgram(self,theTextures : OpenGl_TextureSet,theShadingModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel,theAlphaMode : OCP.Graphic3d.Graphic3d_AlphaMode,theHasVertColor : bool,theEnableEnvMap : bool,theCustomProgram : OpenGl_ShaderProgram) -> bool: ...
-    def BindFboBlitProgram(self) -> bool: 
+    def BindFboBlitProgram(self,theNbSamples : int,theIsFallback_sRGB : bool) -> bool: 
         """
         Bind program for FBO blit operation.
         """
@@ -5547,6 +6311,10 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Bind program for outline rendering
         """
+    def BindPBREnvBakingProgram(self) -> bool: 
+        """
+        Bind program for IBL maps generation in PBR pipeline.
+        """
     def BindStereoProgram(self,theStereoMode : OCP.Graphic3d.Graphic3d_StereoMode) -> bool: 
         """
         Bind program for rendering stereoscopic image.
@@ -5557,11 +6325,11 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
     def ChooseFaceShadingModel(self,theCustomModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel,theHasNodalNormals : bool) -> OCP.Graphic3d.Graphic3d_TypeOfShadingModel: 
         """
-        Choose Shading Model for filled primitives. Fallbacks to FACET model if there are no normal attributes.
+        Choose Shading Model for filled primitives. Fallbacks to FACET model if there are no normal attributes. Fallbacks to corresponding non-PBR models if PBR is unavailable.
         """
     def ChooseLineShadingModel(self,theCustomModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel,theHasNodalNormals : bool) -> OCP.Graphic3d.Graphic3d_TypeOfShadingModel: 
         """
-        Choose Shading Model for line primitives. Fallbacks to UNLIT model if there are no normal attributes.
+        Choose Shading Model for line primitives. Fallbacks to UNLIT model if there are no normal attributes. Fallbacks to corresponding non-PBR models if PBR is unavailable.
         """
     def ChooseMarkerShadingModel(self,theCustomModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel,theHasNodalNormals : bool) -> OCP.Graphic3d.Graphic3d_TypeOfShadingModel: 
         """
@@ -5649,6 +6417,11 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Returns state of OIT uniforms.
         """
+    @staticmethod
+    def PBRShadingModelFallback_s(theShadingModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel,theIsPbrAllowed : bool=False) -> OCP.Graphic3d.Graphic3d_TypeOfShadingModel: 
+        """
+        Resets PBR shading models to corresponding non-PBR ones if PBR is not allowed.
+        """
     def ProjectionState(self) -> OpenGl_ProjectionState: 
         """
         Returns current state of OCCT projection transform.
@@ -5681,7 +6454,7 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Pushes current state of OCCT projection transform to specified program (only on state change).
         """
-    def PushState(self,theProgram : OpenGl_ShaderProgram) -> None: 
+    def PushState(self,theProgram : OpenGl_ShaderProgram,theShadingModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel=Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT) -> None: 
         """
         Pushes current state of OCCT graphics parameters to specified program.
         """
@@ -5737,7 +6510,7 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Invalidate state of OCCT light sources.
         """
-    def UpdateLightSourceStateTo(self,theLights : OCP.Graphic3d.Graphic3d_LightSet) -> None: 
+    def UpdateLightSourceStateTo(self,theLights : OCP.Graphic3d.Graphic3d_LightSet,theSpecIBLMapLevels : int=0) -> None: 
         """
         Updates state of OCCT light sources.
         """
@@ -5756,6 +6529,10 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
     def UpdateProjectionStateTo(self,theProjectionMatrix : OCP.Graphic3d.Graphic3d_Mat4) -> None: 
         """
         Updates state of OCCT projection transform.
+        """
+    def UpdateSRgbState(self) -> None: 
+        """
+        Fetch sRGB state from caps and invalidates programs, if necessary.
         """
     def UpdateWorldViewStateTo(self,theWorldViewMatrix : OCP.Graphic3d.Graphic3d_Mat4) -> None: 
         """
@@ -5821,6 +6598,11 @@ class OpenGl_ShaderObject(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Creates new empty shader object of specified type.
         """
+    @staticmethod
+    def CreateFromSource_s(theSource : OCP.TCollection.TCollection_AsciiString,theType : OCP.Graphic3d.Graphic3d_TypeOfShaderObject,theUniforms : Any,theStageInOuts : Any,theInName : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,theOutName : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,theNbGeomInputVerts : int=0) -> OCP.Graphic3d.Graphic3d_ShaderObject: 
+        """
+        This is a preprocessor for Graphic3d_ShaderObject::CreateFromSource() function. Creates a new shader object from specified source according to list of uniforms and in/out variables.
+        """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -5828,6 +6610,10 @@ class OpenGl_ShaderObject(OpenGl_Resource, OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DumpSourceCode(self,theCtx : OpenGl_Context,theId : OCP.TCollection.TCollection_AsciiString,theSource : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
@@ -5935,6 +6721,10 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
         """
         Detaches shader object to the program object.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -5948,7 +6738,7 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
         Fetches information log of the last link operation.
         """
     @overload
-    def GetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: 
+    def GetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: 
         """
         Returns the integer vertex attribute.
 
@@ -5958,12 +6748,12 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
 
         Returns the float vertex attribute.
         """
-    @overload
-    def GetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
-    @overload
-    def GetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
     @overload
     def GetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
+    @overload
+    def GetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
+    @overload
+    def GetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
     def GetAttributeLocation(self,theCtx : OpenGl_Context,theName : str) -> int: 
         """
         Returns index of the generic vertex attribute by variable name.
@@ -5977,7 +6767,7 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
         Returns location of the OCCT state uniform variable.
         """
     @overload
-    def GetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: 
+    def GetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: 
         """
         Returns the value of the integer uniform variable.
 
@@ -5988,7 +6778,7 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
         Returns the value of the float uniform variable.
         """
     @overload
-    def GetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
+    def GetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
     @overload
     def GetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
     @overload
@@ -6059,6 +6849,10 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
         """
         Returns program ID
         """
+    def Proxy(self) -> OCP.Graphic3d.Graphic3d_ShaderProgram: 
+        """
+        Returns proxy shader program.
+        """
     def Release(self,theCtx : OpenGl_Context) -> None: 
         """
         Destroys shader program.
@@ -6068,7 +6862,7 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
         Return resource name.
         """
     @overload
-    def SetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec3) -> bool: 
+    def SetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: 
         """
         Wrapper for glVertexAttrib1f()
 
@@ -6086,35 +6880,35 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
 
         Wrapper for glVertexAttrib4fv()
         """
-    @overload
-    def SetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
     @overload
     def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
     @overload
-    def SetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : float) -> bool: ...
-    @overload
-    def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec3) -> bool: ...
-    @overload
-    def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
+    def SetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec3) -> bool: ...
     @overload
     def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : float) -> bool: ...
     @overload
+    def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec3) -> bool: ...
+    @overload
+    def SetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : float) -> bool: ...
+    @overload
     def SetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
+    @overload
+    def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
     def SetAttributeName(self,theCtx : OpenGl_Context,theIndex : int,theName : str) -> bool: 
         """
         Wrapper for glBindAttribLocation()
         """
     @overload
-    def SetSampler(self,theCtx : OpenGl_Context,theLocation : int,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> bool: 
+    def SetSampler(self,theCtx : OpenGl_Context,theName : str,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> bool: 
         """
         Specifies the value of the sampler uniform variable.
 
         Specifies the value of the sampler uniform variable.
         """
     @overload
-    def SetSampler(self,theCtx : OpenGl_Context,theName : str,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> bool: ...
+    def SetSampler(self,theCtx : OpenGl_Context,theLocation : int,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> bool: ...
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : float) -> bool: 
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec3) -> bool: 
         """
         Specifies the value of the integer uniform variable.
 
@@ -6181,67 +6975,71 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
         Specifies the value of the int4 uniform array
         """
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec3) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Mat4,theTranspose : int=0) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : int) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec3i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec2i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OpenGl_Matrix,theTranspose : int=0) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec3i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec2i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
-    @overload
     def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : float) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : int) -> bool: ...
     @overload
     def SetUniform(self,theCtx : OpenGl_Context,theName : str,theCount : int,theValue : Any) -> bool: ...
     @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : float) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : int) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Mat4,theTranspose : int=0) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec3i) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OpenGl_Matrix,theTranspose : int=0) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Mat4,theTranspose : int=0) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec2i) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
+    @overload
     def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : Any) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec3i) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec2i) -> bool: ...
     @overload
     def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec3) -> bool: ...
     @overload
     def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OpenGl_Matrix,theTranspose : int=0) -> bool: ...
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : int) -> bool: ...
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : float) -> bool: ...
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec3i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec3) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theValue : Any) -> bool: ...
+    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec3i) -> bool: ...
     @overload
     def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : int) -> bool: ...
     @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec3) -> bool: ...
+    @overload
     def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : Any) -> bool: ...
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : float) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theValue : Any) -> bool: ...
     @overload
     def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec2i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Mat4,theTranspose : int=0) -> bool: ...
+    def TextureSetBits(self) -> int: 
+        """
+        Return texture units declared within the program,
+        """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6274,21 +7072,29 @@ class OpenGl_ShaderProgramDumpLevel():
 
       OpenGl_ShaderProgramDumpLevel_Full
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OpenGl_ShaderProgramDumpLevel_Full: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Full
-    OpenGl_ShaderProgramDumpLevel_Off: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Off
-    OpenGl_ShaderProgramDumpLevel_Short: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Short
-    __entries: dict # value = {'OpenGl_ShaderProgramDumpLevel_Off': (OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Off, None), 'OpenGl_ShaderProgramDumpLevel_Short': (OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Short, None), 'OpenGl_ShaderProgramDumpLevel_Full': (OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Full, None)}
-    __members__: dict # value = {'OpenGl_ShaderProgramDumpLevel_Off': OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Off, 'OpenGl_ShaderProgramDumpLevel_Short': OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Short, 'OpenGl_ShaderProgramDumpLevel_Full': OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Full}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OpenGl_ShaderProgramDumpLevel_Full: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = <OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Full: 2>
+    OpenGl_ShaderProgramDumpLevel_Off: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = <OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Off: 0>
+    OpenGl_ShaderProgramDumpLevel_Short: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = <OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Short: 1>
+    __entries: dict # value = {'OpenGl_ShaderProgramDumpLevel_Off': (<OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Off: 0>, None), 'OpenGl_ShaderProgramDumpLevel_Short': (<OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Short: 1>, None), 'OpenGl_ShaderProgramDumpLevel_Full': (<OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Full: 2>, None)}
+    __members__: dict # value = {'OpenGl_ShaderProgramDumpLevel_Off': <OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Off: 0>, 'OpenGl_ShaderProgramDumpLevel_Short': <OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Short: 1>, 'OpenGl_ShaderProgramDumpLevel_Full': <OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Full: 2>}
     pass
 class OpenGl_ShaderProgramList(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -6345,14 +7151,14 @@ class OpenGl_ShaderProgramList(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : OpenGl_ShaderProgramList) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OpenGl_ShaderProgram) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : OpenGl_ShaderProgramList) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : OpenGl_ShaderProgramList) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OpenGl_ShaderProgram) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -6412,12 +7218,12 @@ class OpenGl_ShaderProgramList(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : OpenGl_ShaderProgramList) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -6462,6 +7268,14 @@ class OpenGl_LightSourceState(OpenGl_StateInterface):
     def Set(self,theLightSources : OCP.Graphic3d.Graphic3d_LightSet) -> None: 
         """
         Sets new light sources.
+        """
+    def SetSpecIBLMapLevels(self,theSpecIBLMapLevels : int) -> None: 
+        """
+        Sets number of mipmap levels used in specular IBL map.
+        """
+    def SpecIBLMapLevels(self) -> int: 
+        """
+        Returns number of mipmap levels used in specular IBL map. 0 by default or in case of using non-PBR shading model.
         """
     def Update(self) -> None: 
         """
@@ -6517,9 +7331,13 @@ class OpenGl_StateVariable():
 
       OpenGl_OCCT_DISTINGUISH_MODE
 
-      OpenGl_OCCT_FRONT_MATERIAL
+      OpenGl_OCCT_PBR_FRONT_MATERIAL
 
-      OpenGl_OCCT_BACK_MATERIAL
+      OpenGl_OCCT_PBR_BACK_MATERIAL
+
+      OpenGl_OCCT_COMMON_FRONT_MATERIAL
+
+      OpenGl_OCCT_COMMON_BACK_MATERIAL
 
       OpenGl_OCCT_ALPHA_CUTOFF
 
@@ -6551,64 +7369,85 @@ class OpenGl_StateVariable():
 
       OpenGl_OCCT_SILHOUETTE_THICKNESS
 
+      OpenGl_OCCT_NB_SPEC_IBL_LEVELS
+
       OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OpenGl_OCCT_ALPHA_CUTOFF: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF
-    OpenGl_OCCT_BACK_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_BACK_MATERIAL
-    OpenGl_OCCT_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_COLOR
-    OpenGl_OCCT_DISTINGUISH_MODE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE
-    OpenGl_OCCT_FRONT_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_FRONT_MATERIAL
-    OpenGl_OCCT_LINE_FEATHER: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER
-    OpenGl_OCCT_LINE_STIPPLE_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR
-    OpenGl_OCCT_LINE_STIPPLE_PATTERN: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN
-    OpenGl_OCCT_LINE_WIDTH: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH
-    OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES
-    OpenGl_OCCT_OIT_DEPTH_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR
-    OpenGl_OCCT_OIT_OUTPUT: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT
-    OpenGl_OCCT_ORTHO_SCALE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE
-    OpenGl_OCCT_POINT_SIZE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE
-    OpenGl_OCCT_QUAD_MODE_STATE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE
-    OpenGl_OCCT_SILHOUETTE_THICKNESS: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS
-    OpenGl_OCCT_TEXTURE_ENABLE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE
-    OpenGl_OCCT_TEXTURE_TRSF2D: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D
-    OpenGl_OCCT_VIEWPORT: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT
-    OpenGl_OCCT_WIREFRAME_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR
-    OpenGl_OCC_CLIP_PLANE_CHAINS: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS
-    OpenGl_OCC_CLIP_PLANE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT
-    OpenGl_OCC_CLIP_PLANE_EQUATIONS: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS
-    OpenGl_OCC_LIGHT_AMBIENT: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT
-    OpenGl_OCC_LIGHT_SOURCE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT
-    OpenGl_OCC_LIGHT_SOURCE_PARAMS: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS
-    OpenGl_OCC_LIGHT_SOURCE_TYPES: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES
-    OpenGl_OCC_MODEL_WORLD_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX
-    OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE
-    OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE
-    OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE
-    OpenGl_OCC_PROJECTION_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX
-    OpenGl_OCC_PROJECTION_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE
-    OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE
-    OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE
-    OpenGl_OCC_WORLD_VIEW_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX
-    OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE
-    OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE
-    OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE
-    __entries: dict # value = {'OpenGl_OCC_MODEL_WORLD_MATRIX': (OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX': (OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX, None), 'OpenGl_OCC_PROJECTION_MATRIX': (OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE': (OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE': (OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE, None), 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE': (OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE': (OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE': (OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE, None), 'OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE': (OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE': (OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE': (OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE, None), 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE': (OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE, None), 'OpenGl_OCC_CLIP_PLANE_EQUATIONS': (OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS, None), 'OpenGl_OCC_CLIP_PLANE_CHAINS': (OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS, None), 'OpenGl_OCC_CLIP_PLANE_COUNT': (OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT, None), 'OpenGl_OCC_LIGHT_SOURCE_COUNT': (OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT, None), 'OpenGl_OCC_LIGHT_SOURCE_TYPES': (OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES, None), 'OpenGl_OCC_LIGHT_SOURCE_PARAMS': (OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS, None), 'OpenGl_OCC_LIGHT_AMBIENT': (OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT, None), 'OpenGl_OCCT_TEXTURE_ENABLE': (OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE, None), 'OpenGl_OCCT_DISTINGUISH_MODE': (OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE, None), 'OpenGl_OCCT_FRONT_MATERIAL': (OpenGl_StateVariable.OpenGl_OCCT_FRONT_MATERIAL, None), 'OpenGl_OCCT_BACK_MATERIAL': (OpenGl_StateVariable.OpenGl_OCCT_BACK_MATERIAL, None), 'OpenGl_OCCT_ALPHA_CUTOFF': (OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF, None), 'OpenGl_OCCT_COLOR': (OpenGl_StateVariable.OpenGl_OCCT_COLOR, None), 'OpenGl_OCCT_OIT_OUTPUT': (OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT, None), 'OpenGl_OCCT_OIT_DEPTH_FACTOR': (OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR, None), 'OpenGl_OCCT_TEXTURE_TRSF2D': (OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D, None), 'OpenGl_OCCT_POINT_SIZE': (OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE, None), 'OpenGl_OCCT_VIEWPORT': (OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT, None), 'OpenGl_OCCT_LINE_WIDTH': (OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH, None), 'OpenGl_OCCT_LINE_FEATHER': (OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER, None), 'OpenGl_OCCT_LINE_STIPPLE_PATTERN': (OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN, None), 'OpenGl_OCCT_LINE_STIPPLE_FACTOR': (OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR, None), 'OpenGl_OCCT_WIREFRAME_COLOR': (OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR, None), 'OpenGl_OCCT_QUAD_MODE_STATE': (OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE, None), 'OpenGl_OCCT_ORTHO_SCALE': (OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE, None), 'OpenGl_OCCT_SILHOUETTE_THICKNESS': (OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS, None), 'OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES': (OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES, None)}
-    __members__: dict # value = {'OpenGl_OCC_MODEL_WORLD_MATRIX': OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX, 'OpenGl_OCC_WORLD_VIEW_MATRIX': OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX, 'OpenGl_OCC_PROJECTION_MATRIX': OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX, 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE': OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE, 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE': OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE, 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE': OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE, 'OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE': OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE, 'OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE': OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE, 'OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE': OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE, 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE': OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE, 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE': OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE, 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE': OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE, 'OpenGl_OCC_CLIP_PLANE_EQUATIONS': OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS, 'OpenGl_OCC_CLIP_PLANE_CHAINS': OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS, 'OpenGl_OCC_CLIP_PLANE_COUNT': OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT, 'OpenGl_OCC_LIGHT_SOURCE_COUNT': OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT, 'OpenGl_OCC_LIGHT_SOURCE_TYPES': OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES, 'OpenGl_OCC_LIGHT_SOURCE_PARAMS': OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS, 'OpenGl_OCC_LIGHT_AMBIENT': OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT, 'OpenGl_OCCT_TEXTURE_ENABLE': OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE, 'OpenGl_OCCT_DISTINGUISH_MODE': OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE, 'OpenGl_OCCT_FRONT_MATERIAL': OpenGl_StateVariable.OpenGl_OCCT_FRONT_MATERIAL, 'OpenGl_OCCT_BACK_MATERIAL': OpenGl_StateVariable.OpenGl_OCCT_BACK_MATERIAL, 'OpenGl_OCCT_ALPHA_CUTOFF': OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF, 'OpenGl_OCCT_COLOR': OpenGl_StateVariable.OpenGl_OCCT_COLOR, 'OpenGl_OCCT_OIT_OUTPUT': OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT, 'OpenGl_OCCT_OIT_DEPTH_FACTOR': OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR, 'OpenGl_OCCT_TEXTURE_TRSF2D': OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D, 'OpenGl_OCCT_POINT_SIZE': OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE, 'OpenGl_OCCT_VIEWPORT': OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT, 'OpenGl_OCCT_LINE_WIDTH': OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH, 'OpenGl_OCCT_LINE_FEATHER': OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER, 'OpenGl_OCCT_LINE_STIPPLE_PATTERN': OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN, 'OpenGl_OCCT_LINE_STIPPLE_FACTOR': OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR, 'OpenGl_OCCT_WIREFRAME_COLOR': OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR, 'OpenGl_OCCT_QUAD_MODE_STATE': OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE, 'OpenGl_OCCT_ORTHO_SCALE': OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE, 'OpenGl_OCCT_SILHOUETTE_THICKNESS': OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS, 'OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES': OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OpenGl_OCCT_ALPHA_CUTOFF: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 25>
+    OpenGl_OCCT_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COLOR: 26>
+    OpenGl_OCCT_COMMON_BACK_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COMMON_BACK_MATERIAL: 24>
+    OpenGl_OCCT_COMMON_FRONT_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COMMON_FRONT_MATERIAL: 23>
+    OpenGl_OCCT_DISTINGUISH_MODE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 20>
+    OpenGl_OCCT_LINE_FEATHER: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 33>
+    OpenGl_OCCT_LINE_STIPPLE_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 35>
+    OpenGl_OCCT_LINE_STIPPLE_PATTERN: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 34>
+    OpenGl_OCCT_LINE_WIDTH: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 32>
+    OpenGl_OCCT_NB_SPEC_IBL_LEVELS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 40>
+    OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 41>
+    OpenGl_OCCT_OIT_DEPTH_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 28>
+    OpenGl_OCCT_OIT_OUTPUT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 27>
+    OpenGl_OCCT_ORTHO_SCALE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 38>
+    OpenGl_OCCT_PBR_BACK_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_PBR_BACK_MATERIAL: 22>
+    OpenGl_OCCT_PBR_FRONT_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_PBR_FRONT_MATERIAL: 21>
+    OpenGl_OCCT_POINT_SIZE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 30>
+    OpenGl_OCCT_QUAD_MODE_STATE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 37>
+    OpenGl_OCCT_SILHOUETTE_THICKNESS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 39>
+    OpenGl_OCCT_TEXTURE_ENABLE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 19>
+    OpenGl_OCCT_TEXTURE_TRSF2D: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 29>
+    OpenGl_OCCT_VIEWPORT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 31>
+    OpenGl_OCCT_WIREFRAME_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 36>
+    OpenGl_OCC_CLIP_PLANE_CHAINS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS: 13>
+    OpenGl_OCC_CLIP_PLANE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT: 14>
+    OpenGl_OCC_CLIP_PLANE_EQUATIONS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS: 12>
+    OpenGl_OCC_LIGHT_AMBIENT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT: 18>
+    OpenGl_OCC_LIGHT_SOURCE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT: 15>
+    OpenGl_OCC_LIGHT_SOURCE_PARAMS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS: 17>
+    OpenGl_OCC_LIGHT_SOURCE_TYPES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES: 16>
+    OpenGl_OCC_MODEL_WORLD_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX: 0>
+    OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: 3>
+    OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: 9>
+    OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: 6>
+    OpenGl_OCC_PROJECTION_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX: 2>
+    OpenGl_OCC_PROJECTION_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE: 5>
+    OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: 11>
+    OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: 8>
+    OpenGl_OCC_WORLD_VIEW_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX: 1>
+    OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: 4>
+    OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: 10>
+    OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: 7>
+    __entries: dict # value = {'OpenGl_OCC_MODEL_WORLD_MATRIX': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX: 0>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX: 1>, None), 'OpenGl_OCC_PROJECTION_MATRIX': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX: 2>, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: 3>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: 4>, None), 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE: 5>, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: 6>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: 7>, None), 'OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: 8>, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: 9>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: 10>, None), 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: 11>, None), 'OpenGl_OCC_CLIP_PLANE_EQUATIONS': (<OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS: 12>, None), 'OpenGl_OCC_CLIP_PLANE_CHAINS': (<OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS: 13>, None), 'OpenGl_OCC_CLIP_PLANE_COUNT': (<OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT: 14>, None), 'OpenGl_OCC_LIGHT_SOURCE_COUNT': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT: 15>, None), 'OpenGl_OCC_LIGHT_SOURCE_TYPES': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES: 16>, None), 'OpenGl_OCC_LIGHT_SOURCE_PARAMS': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS: 17>, None), 'OpenGl_OCC_LIGHT_AMBIENT': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT: 18>, None), 'OpenGl_OCCT_TEXTURE_ENABLE': (<OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 19>, None), 'OpenGl_OCCT_DISTINGUISH_MODE': (<OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 20>, None), 'OpenGl_OCCT_PBR_FRONT_MATERIAL': (<OpenGl_StateVariable.OpenGl_OCCT_PBR_FRONT_MATERIAL: 21>, None), 'OpenGl_OCCT_PBR_BACK_MATERIAL': (<OpenGl_StateVariable.OpenGl_OCCT_PBR_BACK_MATERIAL: 22>, None), 'OpenGl_OCCT_COMMON_FRONT_MATERIAL': (<OpenGl_StateVariable.OpenGl_OCCT_COMMON_FRONT_MATERIAL: 23>, None), 'OpenGl_OCCT_COMMON_BACK_MATERIAL': (<OpenGl_StateVariable.OpenGl_OCCT_COMMON_BACK_MATERIAL: 24>, None), 'OpenGl_OCCT_ALPHA_CUTOFF': (<OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 25>, None), 'OpenGl_OCCT_COLOR': (<OpenGl_StateVariable.OpenGl_OCCT_COLOR: 26>, None), 'OpenGl_OCCT_OIT_OUTPUT': (<OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 27>, None), 'OpenGl_OCCT_OIT_DEPTH_FACTOR': (<OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 28>, None), 'OpenGl_OCCT_TEXTURE_TRSF2D': (<OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 29>, None), 'OpenGl_OCCT_POINT_SIZE': (<OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 30>, None), 'OpenGl_OCCT_VIEWPORT': (<OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 31>, None), 'OpenGl_OCCT_LINE_WIDTH': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 32>, None), 'OpenGl_OCCT_LINE_FEATHER': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 33>, None), 'OpenGl_OCCT_LINE_STIPPLE_PATTERN': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 34>, None), 'OpenGl_OCCT_LINE_STIPPLE_FACTOR': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 35>, None), 'OpenGl_OCCT_WIREFRAME_COLOR': (<OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 36>, None), 'OpenGl_OCCT_QUAD_MODE_STATE': (<OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 37>, None), 'OpenGl_OCCT_ORTHO_SCALE': (<OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 38>, None), 'OpenGl_OCCT_SILHOUETTE_THICKNESS': (<OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 39>, None), 'OpenGl_OCCT_NB_SPEC_IBL_LEVELS': (<OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 40>, None), 'OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES': (<OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 41>, None)}
+    __members__: dict # value = {'OpenGl_OCC_MODEL_WORLD_MATRIX': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX: 0>, 'OpenGl_OCC_WORLD_VIEW_MATRIX': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX: 1>, 'OpenGl_OCC_PROJECTION_MATRIX': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX: 2>, 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: 3>, 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: 4>, 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE: 5>, 'OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: 6>, 'OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: 7>, 'OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: 8>, 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: 9>, 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: 10>, 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: 11>, 'OpenGl_OCC_CLIP_PLANE_EQUATIONS': <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS: 12>, 'OpenGl_OCC_CLIP_PLANE_CHAINS': <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS: 13>, 'OpenGl_OCC_CLIP_PLANE_COUNT': <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT: 14>, 'OpenGl_OCC_LIGHT_SOURCE_COUNT': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT: 15>, 'OpenGl_OCC_LIGHT_SOURCE_TYPES': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES: 16>, 'OpenGl_OCC_LIGHT_SOURCE_PARAMS': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS: 17>, 'OpenGl_OCC_LIGHT_AMBIENT': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT: 18>, 'OpenGl_OCCT_TEXTURE_ENABLE': <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 19>, 'OpenGl_OCCT_DISTINGUISH_MODE': <OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 20>, 'OpenGl_OCCT_PBR_FRONT_MATERIAL': <OpenGl_StateVariable.OpenGl_OCCT_PBR_FRONT_MATERIAL: 21>, 'OpenGl_OCCT_PBR_BACK_MATERIAL': <OpenGl_StateVariable.OpenGl_OCCT_PBR_BACK_MATERIAL: 22>, 'OpenGl_OCCT_COMMON_FRONT_MATERIAL': <OpenGl_StateVariable.OpenGl_OCCT_COMMON_FRONT_MATERIAL: 23>, 'OpenGl_OCCT_COMMON_BACK_MATERIAL': <OpenGl_StateVariable.OpenGl_OCCT_COMMON_BACK_MATERIAL: 24>, 'OpenGl_OCCT_ALPHA_CUTOFF': <OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 25>, 'OpenGl_OCCT_COLOR': <OpenGl_StateVariable.OpenGl_OCCT_COLOR: 26>, 'OpenGl_OCCT_OIT_OUTPUT': <OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 27>, 'OpenGl_OCCT_OIT_DEPTH_FACTOR': <OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 28>, 'OpenGl_OCCT_TEXTURE_TRSF2D': <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 29>, 'OpenGl_OCCT_POINT_SIZE': <OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 30>, 'OpenGl_OCCT_VIEWPORT': <OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 31>, 'OpenGl_OCCT_LINE_WIDTH': <OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 32>, 'OpenGl_OCCT_LINE_FEATHER': <OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 33>, 'OpenGl_OCCT_LINE_STIPPLE_PATTERN': <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 34>, 'OpenGl_OCCT_LINE_STIPPLE_FACTOR': <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 35>, 'OpenGl_OCCT_WIREFRAME_COLOR': <OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 36>, 'OpenGl_OCCT_QUAD_MODE_STATE': <OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 37>, 'OpenGl_OCCT_ORTHO_SCALE': <OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 38>, 'OpenGl_OCCT_SILHOUETTE_THICKNESS': <OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 39>, 'OpenGl_OCCT_NB_SPEC_IBL_LEVELS': <OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 40>, 'OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES': <OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 41>}
     pass
 class OpenGl_StencilTest(OpenGl_Element):
     """
     None
     """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
     def IsFillDrawMode(self) -> bool: 
         """
         Return TRUE if primitive type generates shaded triangulation (to be used in filters).
@@ -6629,6 +7468,14 @@ class OpenGl_StencilTest(OpenGl_Element):
         """
         Update parameters of the drawable elements.
         """
+    def UpdateDrawStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp,theIsDetailed : bool) -> None: 
+        """
+        Increment draw calls statistics.
+        """
+    def UpdateMemStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp) -> None: 
+        """
+        Increment memory usage statistics. Default implementation puts EstimatedDataSize() into Graphic3d_FrameStatsCounter_EstimatedBytesGeom.
+        """
     def __init__(self) -> None: ...
     pass
 class OpenGl_Structure(OCP.Graphic3d.Graphic3d_CStructure, OCP.Standard.Standard_Transient):
@@ -6639,23 +7486,23 @@ class OpenGl_Structure(OCP.Graphic3d.Graphic3d_CStructure, OCP.Standard.Standard
         """
         Returns whether check of object's bounding box clipping is enabled before drawing of object; TRUE by default.
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of this presentation
         """
-    def ChangeBoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def ChangeBoundingBox(self) -> Any: 
         """
         Returns bounding box of this presentation without transformation matrix applied
         """
     @overload
-    def Clear(self,theGlCtx : OpenGl_Context) -> None: 
+    def Clear(self) -> None: 
         """
         Clear graphic data
 
         None
         """
     @overload
-    def Clear(self) -> None: ...
+    def Clear(self,theGlCtx : OpenGl_Context) -> None: ...
     def ClipPlanes(self) -> OCP.Graphic3d.Graphic3d_SequenceOfHClipPlane: 
         """
         Returns associated clip planes
@@ -6675,6 +7522,10 @@ class OpenGl_Structure(OCP.Graphic3d.Graphic3d_CStructure, OCP.Standard.Standard
     def Disconnect(self,theStructure : OCP.Graphic3d.Graphic3d_CStructure) -> None: 
         """
         Disconnect other structure to this one
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -6807,7 +7658,7 @@ class OpenGl_Structure(OCP.Graphic3d.Graphic3d_CStructure, OCP.Standard.Standard
         """
         Set transformation persistence.
         """
-    def SetTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Synchronize structure transformation
         """
@@ -6827,7 +7678,7 @@ class OpenGl_Structure(OCP.Graphic3d.Graphic3d_CStructure, OCP.Standard.Standard
         """
         Return transformation persistence.
         """
-    def Transformation(self) -> OCP.Geom.Geom_Transformation: 
+    def Transformation(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return transformation.
         """
@@ -6867,23 +7718,23 @@ class OpenGl_StructureShadow(OpenGl_Structure, OCP.Graphic3d.Graphic3d_CStructur
         """
         Returns whether check of object's bounding box clipping is enabled before drawing of object; TRUE by default.
         """
-    def BoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def BoundingBox(self) -> Any: 
         """
         Returns bounding box of this presentation
         """
-    def ChangeBoundingBox(self) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def ChangeBoundingBox(self) -> Any: 
         """
         Returns bounding box of this presentation without transformation matrix applied
         """
     @overload
-    def Clear(self,theGlCtx : OpenGl_Context) -> None: 
+    def Clear(self) -> None: 
         """
         Clear graphic data
 
         None
         """
     @overload
-    def Clear(self) -> None: ...
+    def Clear(self,theGlCtx : OpenGl_Context) -> None: ...
     def ClipPlanes(self) -> OCP.Graphic3d.Graphic3d_SequenceOfHClipPlane: 
         """
         Returns associated clip planes
@@ -6903,6 +7754,10 @@ class OpenGl_StructureShadow(OpenGl_Structure, OCP.Graphic3d.Graphic3d_CStructur
     def Disconnect(self,arg1 : OCP.Graphic3d.Graphic3d_CStructure) -> None: 
         """
         Raise exception on API misuse.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -7035,7 +7890,7 @@ class OpenGl_StructureShadow(OpenGl_Structure, OCP.Graphic3d.Graphic3d_CStructur
         """
         Set transformation persistence.
         """
-    def SetTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: 
+    def SetTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Synchronize structure transformation
         """
@@ -7055,7 +7910,7 @@ class OpenGl_StructureShadow(OpenGl_Structure, OCP.Graphic3d.Graphic3d_CStructur
         """
         Return transformation persistence.
         """
-    def Transformation(self) -> OCP.Geom.Geom_Transformation: 
+    def Transformation(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return transformation.
         """
@@ -7091,6 +7946,14 @@ class OpenGl_Text(OpenGl_Element):
     """
     Text rendering
     """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
     @staticmethod
     def FindFont_s(theCtx : OpenGl_Context,theAspect : OpenGl_Aspects,theHeight : int,theResolution : int,theKey : OCP.TCollection.TCollection_AsciiString) -> OpenGl_Font: 
         """
@@ -7159,6 +8022,14 @@ class OpenGl_Text(OpenGl_Element):
         """
         Returns text parameters
         """
+    def UpdateDrawStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp,theIsDetailed : bool) -> None: 
+        """
+        Increment draw calls statistics.
+        """
+    def UpdateMemStats(self,theStats : OCP.Graphic3d.Graphic3d_FrameStatsDataTmp) -> None: 
+        """
+        Increment memory usage statistics. Default implementation puts EstimatedDataSize() into Graphic3d_FrameStatsCounter_EstimatedBytesGeom.
+        """
     @overload
     def __init__(self,theTextParams : OCP.Graphic3d.Graphic3d_Text) -> None: ...
     @overload
@@ -7203,6 +8074,10 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         """
         Draw sprite using glBitmap. Please call glRasterPos3fv() before to setup sprite position.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -7213,11 +8088,11 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         """
     @staticmethod
     @overload
-    def GetDataFormat_s(theCtx : OpenGl_Context,theFromat : OCP.Image.Image_Format,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: 
+    def GetDataFormat_s(theCtx : OpenGl_Context,theFormat : OCP.Image.Image_Format,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: 
         """
-        Return texture type and format by Image_Format.
+        None
 
-        Return texture type and format by Image_PixMap data format.
+        None
         """
     @staticmethod
     @overload
@@ -7249,29 +8124,41 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
 
         Initialize the texture with specified format, size and texture type. If theImage is empty the texture data will contain trash. Notice that texture will be unbound after this call.
 
-        Initialize the texture with Graphic3d_TextureMap. It is an universal way to initialize. Sitable initialization method will be chosen.
+        Initialize the texture with Graphic3d_TextureMap. It is an universal way to initialize. Suitable initialization method will be chosen.
+
+        None
+
+        None
         """
     @overload
     def Init(self,theCtx : OpenGl_Context,theTextureMap : OCP.Graphic3d.Graphic3d_TextureMap) -> bool: ...
     @overload
     def Init(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_PixMap,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture) -> bool: ...
+    @overload
+    def Init(self,theCtx : OpenGl_Context,theFormat : OpenGl_TextureFormat,theSizeXY : OCP.Graphic3d.Graphic3d_Vec2i,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theImage : OCP.Image.Image_PixMap=None) -> bool: ...
+    @overload
+    def Init(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_PixMap,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theIsColorMap : bool) -> bool: ...
     def Init2DMultisample(self,theCtx : OpenGl_Context,theNbSamples : int,theTextFormat : int,theSizeX : int,theSizeY : int) -> bool: 
         """
         Initialize the 2D multisampling texture using glTexImage2DMultisample().
         """
-    def Init3D(self,theCtx : OpenGl_Context,theTextFormat : int,thePixelFormat : int,theDataType : int,theSizeX : int,theSizeY : int,theSizeZ : int,thePixels : capsule) -> bool: 
+    @overload
+    def Init3D(self,theCtx : OpenGl_Context,theFormat : OpenGl_TextureFormat,theSizeXYZ : OCP.Graphic3d.Graphic3d_Vec3i,thePixels : capsule) -> bool: 
         """
         Initializes 3D texture rectangle with specified format and size.
-        """
-    @overload
-    def InitCubeMap(self,theCtx : OpenGl_Context,theCubeMap : OCP.Graphic3d.Graphic3d_CubeMap,theSize : int=0,theFormat : OCP.Image.Image_Format=Image_Format.Image_Format_RGB,theToGenMipmap : bool=False) -> bool: 
-        """
-        Initializes 6 sides of cubemap. If theCubeMap is not NULL then size and format will be taken from it and corresponding arguments will be ignored. Otherwise this parametres will be taken from arguments. theToGenMipmap allows to generate mipmaped cubemap.
 
-        The same InitCubeMap but there is another order of arguments.
+        None
         """
     @overload
-    def InitCubeMap(self,theCtx : OpenGl_Context,theCubeMap : OCP.Graphic3d.Graphic3d_CubeMap,theToGenMipmap : bool,theSize : int=0,theFormat : OCP.Image.Image_Format=Image_Format.Image_Format_RGB) -> bool: ...
+    def Init3D(self,theCtx : OpenGl_Context,theTextFormat : int,thePixelFormat : int,theDataType : int,theSizeX : int,theSizeY : int,theSizeZ : int,thePixels : capsule) -> bool: ...
+    def InitCompressed(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_CompressedPixMap,theIsColorMap : bool) -> bool: 
+        """
+        Initialize the texture with Image_CompressedPixMap.
+        """
+    def InitCubeMap(self,theCtx : OpenGl_Context,theCubeMap : OCP.Graphic3d.Graphic3d_CubeMap,theSize : int,theFormat : OCP.Image.Image_Format,theToGenMipmap : bool,theIsColorMap : bool) -> bool: 
+        """
+        Initializes 6 sides of cubemap. If theCubeMap is not NULL then size and format will be taken from it and corresponding arguments will be ignored. Otherwise this parametres will be taken from arguments.
+        """
     def InitRectangle(self,theCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theFormat : OpenGl_TextureFormat) -> bool: 
         """
         Allocates texture rectangle with specified format and size.
@@ -7310,9 +8197,17 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         """
         Returns TRUE for point sprite texture.
         """
+    def IsTopDown(self) -> bool: 
+        """
+        Return if 2D surface is defined top-down (TRUE) or bottom-up (FALSE). Normally set from Image_PixMap::IsTopDown() within texture initialization.
+        """
     def IsValid(self) -> bool: 
         """
         Returns true if current object was initialized
+        """
+    def MaxMipmapLevel(self) -> int: 
+        """
+        Return upper mipmap level index (0 means no mipmaps).
         """
     @staticmethod
     def PixelSizeOfPixelFormat_s(theInternalFormat : int) -> int: 
@@ -7337,7 +8232,7 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         """
     def SetAlpha(self,theValue : bool) -> None: 
         """
-        Setup to interprete the format as Alpha by Shader Manager (should be GL_ALPHA within compatible context or GL_RED otherwise).
+        Setup to interpret the format as Alpha by Shader Manager (should be GL_ALPHA within compatible context or GL_RED otherwise).
         """
     def SetDisplayList(self,theCtx : OpenGl_Context,theBitmapList : int) -> None: 
         """
@@ -7350,6 +8245,10 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
     def SetSampler(self,theSampler : OpenGl_Sampler) -> None: 
         """
         Set texture sampler.
+        """
+    def SetTopDown(self,theIsTopDown : bool) -> None: 
+        """
+        Set if 2D surface is defined top-down (TRUE) or bottom-up (FALSE).
         """
     def SizeX(self) -> int: 
         """
@@ -7432,6 +8331,10 @@ class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -7460,6 +8363,19 @@ class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard
         """
         Get the reference counter of this object
         """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
+        """
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
     def GetTarget(self) -> int: 
         """
         Override VBO target
@@ -7574,6 +8490,10 @@ class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard
         """
         Setup array pointer - either for active GLSL program OpenGl_Context::ActiveProgram() or for FFP using bindFixed() when no program bound.
         """
+    def getSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+        """
+        Read back buffer sub-range.
+        """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7585,14 +8505,14 @@ class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard
         None
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: 
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
         """
         Initialize buffer with new data.
 
         Initialize buffer with new data.
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: ...
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: ...
     @staticmethod
     def sizeOfGlType_s(theType : int) -> int: 
         """
@@ -7614,20 +8534,72 @@ class OpenGl_TextureFormat():
     """
     def DataType(self) -> int: 
         """
-        Returns OpenGL data type of the pixel data.
+        Returns OpenGL data type of the pixel data (example: GL_FLOAT).
+        """
+    @staticmethod
+    def FindCompressedFormat_s(theCtx : OpenGl_Context,theFormat : OCP.Image.Image_CompressedFormat,theIsColorMap : bool) -> OpenGl_TextureFormat: 
+        """
+        Find texture format suitable to specified compressed texture format.
+        """
+    @staticmethod
+    def FindFormat_s(theCtx : OpenGl_Context,theFormat : OCP.Image.Image_Format,theIsColorMap : bool) -> OpenGl_TextureFormat: 
+        """
+        Find texture format suitable to specified image format.
+        """
+    @staticmethod
+    def FindSizedFormat_s(theCtx : OpenGl_Context,theSizedFormat : int) -> OpenGl_TextureFormat: 
+        """
+        Find texture format suitable to specified internal (sized) texture format.
         """
     def Format(self) -> int: 
         """
-        Returns OpenGL format of the pixel data.
+        Returns OpenGL format of the pixel data (example: GL_RED).
         """
     def Internal(self) -> int: 
         """
-        Returns OpenGL internal format of the pixel data.
+        Returns OpenGL internal format of the pixel data (example: GL_R32F).
         """
+    def InternalFormat(self) -> int: 
+        """
+        Returns OpenGL internal format of the pixel data (example: GL_R32F).
+        """
+    def IsSRGB(self) -> bool: 
+        """
+        Return TRUE if internal texture format is sRGB(A).
+        """
+    def IsValid(self) -> bool: 
+        """
+        Return TRUE if format is defined.
+        """
+    def NbComponents(self) -> int: 
+        """
+        Returns number of components (channels). Here for debugging purposes.
+        """
+    def PixelFormat(self) -> int: 
+        """
+        Returns OpenGL format of the pixel data (example: GL_RED).
+        """
+    def SetDataType(self,theType : int) -> None: 
+        """
+        Sets OpenGL data type of the pixel data.
+        """
+    def SetInternalFormat(self,theInternal : int) -> None: 
+        """
+        Sets texture internal format.
+        """
+    def SetNbComponents(self,theNbComponents : int) -> None: 
+        """
+        Sets number of components (channels).
+        """
+    def SetPixelFormat(self,theFormat : int) -> None: 
+        """
+        Sets OpenGL format of the pixel data.
+        """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_TextureFormatSelector_GLbyte():
     """
-    None
+    Specialization for signed byte.
     """
     @staticmethod
     def DataType_s() -> int: 
@@ -7643,7 +8615,7 @@ class OpenGl_TextureFormatSelector_GLbyte():
     pass
 class OpenGl_TextureFormatSelector_GLfloat():
     """
-    None
+    Specialization for float.
     """
     @staticmethod
     def DataType_s() -> int: 
@@ -7659,7 +8631,7 @@ class OpenGl_TextureFormatSelector_GLfloat():
     pass
 class OpenGl_TextureFormatSelector_GLint():
     """
-    None
+    Specialization for signed int.
     """
     @staticmethod
     def DataType_s() -> int: 
@@ -7675,7 +8647,7 @@ class OpenGl_TextureFormatSelector_GLint():
     pass
 class OpenGl_TextureFormatSelector_GLshort():
     """
-    None
+    Specialization for signed short.
     """
     @staticmethod
     def DataType_s() -> int: 
@@ -7691,7 +8663,7 @@ class OpenGl_TextureFormatSelector_GLshort():
     pass
 class OpenGl_TextureFormatSelector_GLubyte():
     """
-    None
+    Specialization for unsigned byte.
     """
     @staticmethod
     def DataType_s() -> int: 
@@ -7707,7 +8679,7 @@ class OpenGl_TextureFormatSelector_GLubyte():
     pass
 class OpenGl_TextureFormatSelector_GLuint():
     """
-    None
+    Specialization for unsigned int.
     """
     @staticmethod
     def DataType_s() -> int: 
@@ -7723,7 +8695,7 @@ class OpenGl_TextureFormatSelector_GLuint():
     pass
 class OpenGl_TextureFormatSelector_GLushort():
     """
-    None
+    Specialization for unsigned short.
     """
     @staticmethod
     def DataType_s() -> int: 
@@ -7739,7 +8711,7 @@ class OpenGl_TextureFormatSelector_GLushort():
     pass
 class OpenGl_TextureSet(OCP.Standard.Standard_Transient):
     """
-    Class holding array of textures to be mapped as a set.
+    Class holding array of textures to be mapped as a set. Textures should be defined in ascending order of texture units within the set.
     """
     def ChangeFirst(self) -> OpenGl_Texture: 
         """
@@ -7748,6 +8720,10 @@ class OpenGl_TextureSet(OCP.Standard.Standard_Transient):
     def ChangeLast(self) -> OpenGl_Texture: 
         """
         Return the last texture.
+        """
+    def ChangeLastUnit(self) -> OCP.Graphic3d.Graphic3d_TextureUnit: 
+        """
+        Return the last texture unit.
         """
     def ChangeValue(self,theIndex : int) -> OpenGl_Texture: 
         """
@@ -7768,6 +8744,10 @@ class OpenGl_TextureSet(OCP.Standard.Standard_Transient):
     def First(self) -> OpenGl_Texture: 
         """
         Return the first texture.
+        """
+    def FirstUnit(self) -> OCP.Graphic3d.Graphic3d_TextureUnit: 
+        """
+        Return the first texture unit.
         """
     def GetRefCount(self) -> int: 
         """
@@ -7819,6 +8799,10 @@ class OpenGl_TextureSet(OCP.Standard.Standard_Transient):
         """
         Return the last texture.
         """
+    def LastUnit(self) -> OCP.Graphic3d.Graphic3d_TextureUnit: 
+        """
+        Return the last texture unit.
+        """
     def Lower(self) -> int: 
         """
         Return the lower index in texture set.
@@ -7826,6 +8810,10 @@ class OpenGl_TextureSet(OCP.Standard.Standard_Transient):
     def Size(self) -> int: 
         """
         Return number of textures.
+        """
+    def TextureSetBits(self) -> int: 
+        """
+        Return texture units declared within the program,
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -7840,11 +8828,11 @@ class OpenGl_TextureSet(OCP.Standard.Standard_Transient):
         Return the texture at specified position within [0, Size()) range.
         """
     @overload
-    def __init__(self,theTexture : OpenGl_Texture) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbTextures : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theTexture : OpenGl_Texture) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7855,6 +8843,44 @@ class OpenGl_TextureSet(OCP.Standard.Standard_Transient):
         """
         None
         """
+    @property
+    def ChangeTextureSetBits(self) -> int:
+        """
+        Return texture units declared within the program,
+
+        :type: int
+        """
+    @ChangeTextureSetBits.setter
+    def ChangeTextureSetBits(self, arg1: int) -> None:
+        """
+        Return texture units declared within the program,
+        """
+    pass
+class OpenGl_TextureSetPairIterator():
+    """
+    Class for iterating pair of texture sets through each defined texture slot. Note that iterator considers texture slots being in ascending order within OpenGl_TextureSet.
+    """
+    def More(self) -> bool: 
+        """
+        Return TRUE if there are more texture units to pass through.
+        """
+    def Next(self) -> None: 
+        """
+        Move iterator position to the next pair.
+        """
+    def Texture1(self) -> OpenGl_Texture: 
+        """
+        Access texture from first texture set.
+        """
+    def Texture2(self) -> OpenGl_Texture: 
+        """
+        Access texture from second texture set.
+        """
+    def Unit(self) -> OCP.Graphic3d.Graphic3d_TextureUnit: 
+        """
+        Return current texture unit.
+        """
+    def __init__(self,theSet1 : OpenGl_TextureSet,theSet2 : OpenGl_TextureSet) -> None: ...
     pass
 class OpenGl_TileSampler():
     """
@@ -7999,27 +9025,35 @@ class OpenGl_UniformStateType():
 
       OpenGl_UniformStateType_NB
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    OpenGL_OIT_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGL_OIT_STATE
-    OpenGl_CLIP_PLANES_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_CLIP_PLANES_STATE
-    OpenGl_LIGHT_SOURCES_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_LIGHT_SOURCES_STATE
-    OpenGl_MATERIAL_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_MATERIAL_STATE
-    OpenGl_MODEL_WORLD_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_MODEL_WORLD_STATE
-    OpenGl_PROJECTION_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_PROJECTION_STATE
-    OpenGl_SURF_DETAIL_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_SURF_DETAIL_STATE
-    OpenGl_UniformStateType_NB: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_UniformStateType_NB
-    OpenGl_WORLD_VIEW_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_WORLD_VIEW_STATE
-    __entries: dict # value = {'OpenGl_LIGHT_SOURCES_STATE': (OpenGl_UniformStateType.OpenGl_LIGHT_SOURCES_STATE, None), 'OpenGl_CLIP_PLANES_STATE': (OpenGl_UniformStateType.OpenGl_CLIP_PLANES_STATE, None), 'OpenGl_MODEL_WORLD_STATE': (OpenGl_UniformStateType.OpenGl_MODEL_WORLD_STATE, None), 'OpenGl_WORLD_VIEW_STATE': (OpenGl_UniformStateType.OpenGl_WORLD_VIEW_STATE, None), 'OpenGl_PROJECTION_STATE': (OpenGl_UniformStateType.OpenGl_PROJECTION_STATE, None), 'OpenGl_MATERIAL_STATE': (OpenGl_UniformStateType.OpenGl_MATERIAL_STATE, None), 'OpenGl_SURF_DETAIL_STATE': (OpenGl_UniformStateType.OpenGl_SURF_DETAIL_STATE, None), 'OpenGL_OIT_STATE': (OpenGl_UniformStateType.OpenGL_OIT_STATE, None), 'OpenGl_UniformStateType_NB': (OpenGl_UniformStateType.OpenGl_UniformStateType_NB, None)}
-    __members__: dict # value = {'OpenGl_LIGHT_SOURCES_STATE': OpenGl_UniformStateType.OpenGl_LIGHT_SOURCES_STATE, 'OpenGl_CLIP_PLANES_STATE': OpenGl_UniformStateType.OpenGl_CLIP_PLANES_STATE, 'OpenGl_MODEL_WORLD_STATE': OpenGl_UniformStateType.OpenGl_MODEL_WORLD_STATE, 'OpenGl_WORLD_VIEW_STATE': OpenGl_UniformStateType.OpenGl_WORLD_VIEW_STATE, 'OpenGl_PROJECTION_STATE': OpenGl_UniformStateType.OpenGl_PROJECTION_STATE, 'OpenGl_MATERIAL_STATE': OpenGl_UniformStateType.OpenGl_MATERIAL_STATE, 'OpenGl_SURF_DETAIL_STATE': OpenGl_UniformStateType.OpenGl_SURF_DETAIL_STATE, 'OpenGL_OIT_STATE': OpenGl_UniformStateType.OpenGL_OIT_STATE, 'OpenGl_UniformStateType_NB': OpenGl_UniformStateType.OpenGl_UniformStateType_NB}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    OpenGL_OIT_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGL_OIT_STATE: 7>
+    OpenGl_CLIP_PLANES_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_CLIP_PLANES_STATE: 1>
+    OpenGl_LIGHT_SOURCES_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_LIGHT_SOURCES_STATE: 0>
+    OpenGl_MATERIAL_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_MATERIAL_STATE: 5>
+    OpenGl_MODEL_WORLD_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_MODEL_WORLD_STATE: 2>
+    OpenGl_PROJECTION_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_PROJECTION_STATE: 4>
+    OpenGl_SURF_DETAIL_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_SURF_DETAIL_STATE: 6>
+    OpenGl_UniformStateType_NB: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_UniformStateType_NB: 8>
+    OpenGl_WORLD_VIEW_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_WORLD_VIEW_STATE: 3>
+    __entries: dict # value = {'OpenGl_LIGHT_SOURCES_STATE': (<OpenGl_UniformStateType.OpenGl_LIGHT_SOURCES_STATE: 0>, None), 'OpenGl_CLIP_PLANES_STATE': (<OpenGl_UniformStateType.OpenGl_CLIP_PLANES_STATE: 1>, None), 'OpenGl_MODEL_WORLD_STATE': (<OpenGl_UniformStateType.OpenGl_MODEL_WORLD_STATE: 2>, None), 'OpenGl_WORLD_VIEW_STATE': (<OpenGl_UniformStateType.OpenGl_WORLD_VIEW_STATE: 3>, None), 'OpenGl_PROJECTION_STATE': (<OpenGl_UniformStateType.OpenGl_PROJECTION_STATE: 4>, None), 'OpenGl_MATERIAL_STATE': (<OpenGl_UniformStateType.OpenGl_MATERIAL_STATE: 5>, None), 'OpenGl_SURF_DETAIL_STATE': (<OpenGl_UniformStateType.OpenGl_SURF_DETAIL_STATE: 6>, None), 'OpenGL_OIT_STATE': (<OpenGl_UniformStateType.OpenGL_OIT_STATE: 7>, None), 'OpenGl_UniformStateType_NB': (<OpenGl_UniformStateType.OpenGl_UniformStateType_NB: 8>, None)}
+    __members__: dict # value = {'OpenGl_LIGHT_SOURCES_STATE': <OpenGl_UniformStateType.OpenGl_LIGHT_SOURCES_STATE: 0>, 'OpenGl_CLIP_PLANES_STATE': <OpenGl_UniformStateType.OpenGl_CLIP_PLANES_STATE: 1>, 'OpenGl_MODEL_WORLD_STATE': <OpenGl_UniformStateType.OpenGl_MODEL_WORLD_STATE: 2>, 'OpenGl_WORLD_VIEW_STATE': <OpenGl_UniformStateType.OpenGl_WORLD_VIEW_STATE: 3>, 'OpenGl_PROJECTION_STATE': <OpenGl_UniformStateType.OpenGl_PROJECTION_STATE: 4>, 'OpenGl_MATERIAL_STATE': <OpenGl_UniformStateType.OpenGl_MATERIAL_STATE: 5>, 'OpenGl_SURF_DETAIL_STATE': <OpenGl_UniformStateType.OpenGl_SURF_DETAIL_STATE: 6>, 'OpenGL_OIT_STATE': <OpenGl_UniformStateType.OpenGL_OIT_STATE: 7>, 'OpenGl_UniformStateType_NB': <OpenGl_UniformStateType.OpenGl_UniformStateType_NB: 8>}
     pass
 class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Standard_Transient):
     """
@@ -8057,6 +9091,10 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -8085,6 +9123,19 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         """
         Get the reference counter of this object
         """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
+        """
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
     def GetTarget(self) -> int: 
         """
         None
@@ -8102,7 +9153,7 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: 
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: 
         """
         Notice that VBO will be unbound after this call.
 
@@ -8113,7 +9164,7 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         Notice that VBO will be unbound after this call.
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: ...
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8187,6 +9238,10 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         """
         Setup array pointer - either for active GLSL program OpenGl_Context::ActiveProgram() or for FFP using bindFixed() when no program bound.
         """
+    def getSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+        """
+        Read back buffer sub-range.
+        """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -8198,14 +9253,14 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         None
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: 
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
         """
         Initialize buffer with new data.
 
         Initialize buffer with new data.
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: ...
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: ...
     @staticmethod
     def sizeOfGlType_s(theType : int) -> int: 
         """
@@ -8257,6 +9312,10 @@ class OpenGl_VertexBufferCompat(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standa
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -8285,6 +9344,19 @@ class OpenGl_VertexBufferCompat(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standa
         """
         Get the reference counter of this object
         """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
+        """
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
     def GetTarget(self) -> int: 
         """
         None
@@ -8302,7 +9374,7 @@ class OpenGl_VertexBufferCompat(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: 
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: 
         """
         Notice that VBO will be unbound after this call.
 
@@ -8313,7 +9385,7 @@ class OpenGl_VertexBufferCompat(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standa
         Notice that VBO will be unbound after this call.
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: ...
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -8387,6 +9459,10 @@ class OpenGl_VertexBufferCompat(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standa
         """
         Setup array pointer - either for active GLSL program OpenGl_Context::ActiveProgram() or for FFP using bindFixed() when no program bound.
         """
+    def getSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+        """
+        Read back buffer sub-range.
+        """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -8448,13 +9524,17 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Returns cubemap being set last time on background.
         """
-    def BackgroundImage(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def BackgroundImage(self) -> OCP.Graphic3d.Graphic3d_TextureMap: 
         """
-        Returns background image texture file path.
+        Returns background image texture map.
         """
     def BackgroundImageStyle(self) -> OCP.Aspect.Aspect_FillMethod: 
         """
         Returns background image fill style.
+        """
+    def BaseXRCamera(self) -> OCP.Graphic3d.Graphic3d_Camera: 
+        """
+        Returns anchor camera definition (without tracked head orientation).
         """
     def BufferDump(self,theImage : OCP.Image.Image_PixMap,theBufferType : OCP.Graphic3d.Graphic3d_BufferType) -> bool: 
         """
@@ -8472,6 +9552,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Returns reference to current rendering parameters and effect settings.
         """
+    def ClearPBREnvironment(self) -> None: 
+        """
+        Fills PBR specular probe and irradiance map with white color. So that environment indirect illumination will be constant and will be fully controlled by ambient light sources. If PBR is unavailable it does nothing.
+        """
     def ClipPlanes(self) -> OCP.Graphic3d.Graphic3d_SequenceOfHClipPlane: 
         """
         Returns list of clip planes set for the view.
@@ -8479,6 +9563,14 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
     def Compute(self) -> None: 
         """
         Computes the new presentation of the structures displayed in this view with the type Graphic3d_TOS_COMPUTED.
+        """
+    def ComputeXRBaseCameraFromPosed(self,theCamPosed : OCP.Graphic3d.Graphic3d_Camera,thePoseTrsf : OCP.gp.gp_Trsf) -> None: 
+        """
+        Update based camera from posed camera by applying reversed transformation.
+        """
+    def ComputeXRPosedCameraFromBase(self,theCam : OCP.Graphic3d.Graphic3d_Camera,theXRTrsf : OCP.gp.gp_Trsf) -> None: 
+        """
+        Compute camera position based on XR pose.
         """
     def ComputedMode(self) -> bool: 
         """
@@ -8521,6 +9613,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Returns the set of structures displayed in this view.
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -8544,6 +9640,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
     def FBORelease(self,theFbo : OCP.Standard.Standard_Transient) -> Any: 
         """
         Remove offscreen FBO from the graphic library
+        """
+    def GeneratePBREnvironment(self) -> None: 
+        """
+        Generates PBR specular probe and irradiance map in order to provide environment indirect illumination in PBR shading model (Image Based Lighting). The source of environment data is background cubemap. If PBR is unavailable it does nothing. If PBR is available but there is no cubemap being set to background it clears all IBL maps (see 'ClearPBREnvironment').
         """
     def GetGraduatedTrihedron(self) -> OCP.Graphic3d.Graphic3d_GraduatedTrihedron: 
         """
@@ -8593,6 +9693,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Increments the reference counter of this object
         """
+    def InitXR(self) -> bool: 
+        """
+        Initialize XR session.
+        """
     def InsertLayerAfter(self,theNewLayerId : int,theSettings : OCP.Graphic3d.Graphic3d_ZLayerSettings,theLayerBefore : int) -> None: 
         """
         Add a layer to the view.
@@ -8616,6 +9720,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
     def IsActive(self) -> bool: 
         """
         Returns the activity flag of the view.
+        """
+    def IsActiveXR(self) -> bool: 
+        """
+        Return TRUE if there is active XR session.
         """
     def IsComputed(self,theStructId : int,theComputedStruct : OCP.Graphic3d.Graphic3d_Structure) -> bool: 
         """
@@ -8675,6 +9783,18 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Returns number of displayed structures in the view.
         """
+    def PoseXRToWorld(self,thePoseXR : OCP.gp.gp_Trsf) -> OCP.gp.gp_Trsf: 
+        """
+        Convert XR pose to world space.
+        """
+    def PosedXRCamera(self) -> OCP.Graphic3d.Graphic3d_Camera: 
+        """
+        Returns transient XR camera position with tracked head orientation applied.
+        """
+    def ProcessXRInput(self) -> None: 
+        """
+        Process input.
+        """
     def ReCompute(self,theStructure : OCP.Graphic3d.Graphic3d_Structure) -> None: 
         """
         Computes the new presentation of the structure displayed in this view with the type Graphic3d_TOS_COMPUTED.
@@ -8689,7 +9809,11 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
     def ReleaseGlResources(self,theCtx : OpenGl_Context) -> None: 
         """
-        None
+        Release OpenGL resources.
+        """
+    def ReleaseXR(self) -> None: 
+        """
+        Release XR session.
         """
     def Remove(self) -> None: 
         """
@@ -8715,17 +9839,17 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Sets background fill color.
         """
-    def SetBackgroundCubeMap(self,theCubeMap : OCP.Graphic3d.Graphic3d_CubeMap) -> None: 
+    def SetBackgroundImage(self,theTextureMap : OCP.Graphic3d.Graphic3d_TextureMap,theToUpdatePBREnv : bool=True) -> None: 
         """
-        Sets environment cubemap as background.
-        """
-    def SetBackgroundImage(self,theFilePath : OCP.TCollection.TCollection_AsciiString) -> None: 
-        """
-        Sets background image texture file path.
+        Sets image texture or environment cubemap as backround.
         """
     def SetBackgroundImageStyle(self,theFillStyle : OCP.Aspect.Aspect_FillMethod) -> None: 
         """
         Sets background image fill style.
+        """
+    def SetBaseXRCamera(self,theCamera : OCP.Graphic3d.Graphic3d_Camera) -> None: 
+        """
+        Sets anchor camera definition.
         """
     def SetCamera(self,theCamera : OCP.Graphic3d.Graphic3d_Camera) -> None: 
         """
@@ -8759,6 +9883,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Setup local camera origin currently set for rendering.
         """
+    def SetPosedXRCamera(self,theCamera : OCP.Graphic3d.Graphic3d_Camera) -> None: 
+        """
+        Sets transient XR camera position with tracked head orientation applied.
+        """
     def SetShadingModel(self,theModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel) -> None: 
         """
         Sets default Shading Model of the view. Will throw an exception on attempt to set Graphic3d_TOSM_DEFAULT.
@@ -8766,6 +9894,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
     def SetTextureEnv(self,theTextureEnv : OCP.Graphic3d.Graphic3d_TextureEnv) -> None: 
         """
         Sets environment texture for the view.
+        """
+    def SetUnitFactor(self,theFactor : float) -> None: 
+        """
+        Set unit scale factor.
         """
     def SetVisualizationType(self,theType : OCP.Graphic3d.Graphic3d_TypeOfVisualization) -> None: 
         """
@@ -8775,26 +9907,46 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Creates and maps rendering window to the view.
         """
+    def SetXRSession(self,theSession : OCP.Aspect.Aspect_XRSession) -> None: 
+        """
+        Set XR session.
+        """
     def SetZLayerSettings(self,theLayerId : int,theSettings : OCP.Graphic3d.Graphic3d_ZLayerSettings) -> None: 
         """
         Sets the settings for a single Z layer of specified view.
+        """
+    def SetupXRPosedCamera(self) -> None: 
+        """
+        Compute PosedXRCamera() based on current XR head pose and make it active.
         """
     def ShadingModel(self) -> OCP.Graphic3d.Graphic3d_TypeOfShadingModel: 
         """
         Returns default Shading Model of the view; Graphic3d_TOSM_FRAGMENT by default.
         """
+    def SpecIBLMapLevels(self) -> int: 
+        """
+        Returns number of mipmap levels used in specular IBL map. 0 if PBR environment is not created.
+        """
     @overload
-    def StatisticInformation(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString) -> None: 
+    def StatisticInformation(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns string with statistic performance info.
 
         Fills in the dictionary with statistic performance info.
         """
     @overload
-    def StatisticInformation(self) -> OCP.TCollection.TCollection_AsciiString: ...
+    def StatisticInformation(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString) -> None: ...
     def StructureManager(self) -> OCP.Graphic3d.Graphic3d_StructureManager: 
         """
         Returns the structure manager handle which manage structures associated with this view.
+        """
+    def SynchronizeXRBaseToPosedCamera(self) -> None: 
+        """
+        Recomputes PosedXRCamera() based on BaseXRCamera() and head orientation.
+        """
+    def SynchronizeXRPosedToBaseCamera(self) -> None: 
+        """
+        Checks if PosedXRCamera() has been modified since SetupXRPosedCamera() and copies these modifications to BaseXRCamera().
         """
     def TextureEnv(self) -> OCP.Graphic3d.Graphic3d_TextureEnv: 
         """
@@ -8803,6 +9955,18 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TurnViewXRCamera(self,theTrsfTurn : OCP.gp.gp_Trsf) -> None: 
+        """
+        Turn XR camera direction using current (head) eye position as anchor.
+        """
+    def UnitFactor(self) -> float: 
+        """
+        Return unit scale factor defined as scale factor for m (meters); 1.0 by default. Normally, view definition is unitless, however some operations like VR input requires proper units mapping.
+        """
+    def UnsetXRPosedCamera(self) -> None: 
+        """
+        Set current camera back to BaseXRCamera() and copy temporary modifications of PosedXRCamera(). Calls SynchronizeXRPosedToBaseCamera() beforehand.
         """
     def Update(self,theLayerId : int=-1) -> None: 
         """
@@ -8815,6 +9979,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
     def Window(self) -> OCP.Aspect.Aspect_Window: 
         """
         Returns window associated with the view.
+        """
+    def XRSession(self) -> OCP.Aspect.Aspect_XRSession: 
+        """
+        Return XR session.
         """
     def ZLayerMax(self) -> int: 
         """
@@ -8898,7 +10066,7 @@ class OpenGl_Window(OCP.Standard.Standard_Transient):
         """
         Resizes the window.
         """
-    def SetSwapInterval(self) -> None: 
+    def SetSwapInterval(self,theToForceNoSync : bool) -> None: 
         """
         Sets swap interval for this window according to the context's settings.
         """
@@ -8930,7 +10098,7 @@ class OpenGl_Workspace(OCP.Standard.Standard_Transient):
         """
         Activate rendering context.
         """
-    def ApplyAspects(self) -> OpenGl_Aspects: 
+    def ApplyAspects(self,theToBindTextures : bool=True) -> OpenGl_Aspects: 
         """
         Apply aspects.
         """
@@ -8949,6 +10117,10 @@ class OpenGl_Workspace(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -9080,6 +10252,10 @@ class OpenGl_Workspace(OCP.Standard.Standard_Transient):
         """
         Return text Subtitle color taking into account highlight flag.
         """
+    def TextureSet(self) -> OpenGl_TextureSet: 
+        """
+        Return TextureSet from set Aspects or Environment texture.
+        """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -9166,86 +10342,90 @@ class OpenGl_WorldViewState(OpenGl_StateInterface):
         """
     def __init__(self) -> None: ...
     pass
-OpenGL_OIT_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGL_OIT_STATE
-OpenGl_CLIP_PLANES_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_CLIP_PLANES_STATE
-OpenGl_FeatureInCore: OCP.OpenGl.OpenGl_FeatureFlag # value = OpenGl_FeatureFlag.OpenGl_FeatureInCore
-OpenGl_FeatureInExtensions: OCP.OpenGl.OpenGl_FeatureFlag # value = OpenGl_FeatureFlag.OpenGl_FeatureInExtensions
-OpenGl_FeatureNotAvailable: OCP.OpenGl.OpenGl_FeatureFlag # value = OpenGl_FeatureFlag.OpenGl_FeatureNotAvailable
-OpenGl_LF_All: OCP.OpenGl.OpenGl_LayerFilter # value = OpenGl_LayerFilter.OpenGl_LF_All
-OpenGl_LF_Bottom: OCP.OpenGl.OpenGl_LayerFilter # value = OpenGl_LayerFilter.OpenGl_LF_Bottom
-OpenGl_LF_RayTracable: OCP.OpenGl.OpenGl_LayerFilter # value = OpenGl_LayerFilter.OpenGl_LF_RayTracable
-OpenGl_LF_Upper: OCP.OpenGl.OpenGl_LayerFilter # value = OpenGl_LayerFilter.OpenGl_LF_Upper
-OpenGl_LIGHT_SOURCES_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_LIGHT_SOURCES_STATE
-OpenGl_MATERIAL_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_MATERIAL_STATE
-OpenGl_MODEL_WORLD_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_MODEL_WORLD_STATE
-OpenGl_MaterialFlag_Back: OCP.OpenGl.OpenGl_MaterialFlag # value = OpenGl_MaterialFlag.OpenGl_MaterialFlag_Back
-OpenGl_MaterialFlag_Front: OCP.OpenGl.OpenGl_MaterialFlag # value = OpenGl_MaterialFlag.OpenGl_MaterialFlag_Front
-OpenGl_OCCT_ALPHA_CUTOFF: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF
-OpenGl_OCCT_BACK_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_BACK_MATERIAL
-OpenGl_OCCT_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_COLOR
-OpenGl_OCCT_DISTINGUISH_MODE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE
-OpenGl_OCCT_FRONT_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_FRONT_MATERIAL
-OpenGl_OCCT_LINE_FEATHER: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER
-OpenGl_OCCT_LINE_STIPPLE_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR
-OpenGl_OCCT_LINE_STIPPLE_PATTERN: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN
-OpenGl_OCCT_LINE_WIDTH: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH
-OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES
-OpenGl_OCCT_OIT_DEPTH_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR
-OpenGl_OCCT_OIT_OUTPUT: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT
-OpenGl_OCCT_ORTHO_SCALE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE
-OpenGl_OCCT_POINT_SIZE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE
-OpenGl_OCCT_QUAD_MODE_STATE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE
-OpenGl_OCCT_SILHOUETTE_THICKNESS: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS
-OpenGl_OCCT_TEXTURE_ENABLE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE
-OpenGl_OCCT_TEXTURE_TRSF2D: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D
-OpenGl_OCCT_VIEWPORT: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT
-OpenGl_OCCT_WIREFRAME_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR
-OpenGl_OCC_CLIP_PLANE_CHAINS: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS
-OpenGl_OCC_CLIP_PLANE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT
-OpenGl_OCC_CLIP_PLANE_EQUATIONS: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS
-OpenGl_OCC_LIGHT_AMBIENT: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT
-OpenGl_OCC_LIGHT_SOURCE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT
-OpenGl_OCC_LIGHT_SOURCE_PARAMS: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS
-OpenGl_OCC_LIGHT_SOURCE_TYPES: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES
-OpenGl_OCC_MODEL_WORLD_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX
-OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE
-OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE
-OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE
-OpenGl_OCC_PROJECTION_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX
-OpenGl_OCC_PROJECTION_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE
-OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE
-OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE
-OpenGl_OCC_WORLD_VIEW_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX
-OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE
-OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE
-OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE
-OpenGl_PO_AlphaTest: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_AlphaTest
-OpenGl_PO_ClipChains: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_ClipChains
-OpenGl_PO_ClipPlanes1: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1
-OpenGl_PO_ClipPlanes2: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2
-OpenGl_PO_ClipPlanesN: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN
-OpenGl_PO_HasTextures: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_TextureRGB
-OpenGl_PO_IsPoint: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA
-OpenGl_PO_MeshEdges: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_MeshEdges
-OpenGl_PO_NB: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_NB
-OpenGl_PO_NeedsGeomShader: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_MeshEdges
-OpenGl_PO_PointSimple: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_PointSimple
-OpenGl_PO_PointSprite: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_PointSprite
-OpenGl_PO_PointSpriteA: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA
-OpenGl_PO_StippleLine: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_StippleLine
-OpenGl_PO_TextureEnv: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_TextureEnv
-OpenGl_PO_TextureRGB: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_TextureRGB
-OpenGl_PO_VertColor: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_VertColor
-OpenGl_PO_WriteOit: OCP.OpenGl.OpenGl_ProgramOptions # value = OpenGl_ProgramOptions.OpenGl_PO_WriteOit
-OpenGl_PROJECTION_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_PROJECTION_STATE
-OpenGl_RenderFilter_Empty: OCP.OpenGl.OpenGl_RenderFilter # value = OpenGl_RenderFilter.OpenGl_RenderFilter_Empty
-OpenGl_RenderFilter_FillModeOnly: OCP.OpenGl.OpenGl_RenderFilter # value = OpenGl_RenderFilter.OpenGl_RenderFilter_FillModeOnly
-OpenGl_RenderFilter_NonRaytraceableOnly: OCP.OpenGl.OpenGl_RenderFilter # value = OpenGl_RenderFilter.OpenGl_RenderFilter_NonRaytraceableOnly
-OpenGl_RenderFilter_OpaqueOnly: OCP.OpenGl.OpenGl_RenderFilter # value = OpenGl_RenderFilter.OpenGl_RenderFilter_OpaqueOnly
-OpenGl_RenderFilter_TransparentOnly: OCP.OpenGl.OpenGl_RenderFilter # value = OpenGl_RenderFilter.OpenGl_RenderFilter_TransparentOnly
-OpenGl_SURF_DETAIL_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_SURF_DETAIL_STATE
-OpenGl_ShaderProgramDumpLevel_Full: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Full
-OpenGl_ShaderProgramDumpLevel_Off: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Off
-OpenGl_ShaderProgramDumpLevel_Short: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Short
-OpenGl_UniformStateType_NB: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_UniformStateType_NB
-OpenGl_WORLD_VIEW_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = OpenGl_UniformStateType.OpenGl_WORLD_VIEW_STATE
+OpenGL_OIT_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGL_OIT_STATE: 7>
+OpenGl_CLIP_PLANES_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_CLIP_PLANES_STATE: 1>
+OpenGl_FeatureInCore: OCP.OpenGl.OpenGl_FeatureFlag # value = <OpenGl_FeatureFlag.OpenGl_FeatureInCore: 2>
+OpenGl_FeatureInExtensions: OCP.OpenGl.OpenGl_FeatureFlag # value = <OpenGl_FeatureFlag.OpenGl_FeatureInExtensions: 1>
+OpenGl_FeatureNotAvailable: OCP.OpenGl.OpenGl_FeatureFlag # value = <OpenGl_FeatureFlag.OpenGl_FeatureNotAvailable: 0>
+OpenGl_LF_All: OCP.OpenGl.OpenGl_LayerFilter # value = <OpenGl_LayerFilter.OpenGl_LF_All: 0>
+OpenGl_LF_Bottom: OCP.OpenGl.OpenGl_LayerFilter # value = <OpenGl_LayerFilter.OpenGl_LF_Bottom: 2>
+OpenGl_LF_RayTracable: OCP.OpenGl.OpenGl_LayerFilter # value = <OpenGl_LayerFilter.OpenGl_LF_RayTracable: 3>
+OpenGl_LF_Upper: OCP.OpenGl.OpenGl_LayerFilter # value = <OpenGl_LayerFilter.OpenGl_LF_Upper: 1>
+OpenGl_LIGHT_SOURCES_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_LIGHT_SOURCES_STATE: 0>
+OpenGl_MATERIAL_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_MATERIAL_STATE: 5>
+OpenGl_MODEL_WORLD_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_MODEL_WORLD_STATE: 2>
+OpenGl_MaterialFlag_Back: OCP.OpenGl.OpenGl_MaterialFlag # value = <OpenGl_MaterialFlag.OpenGl_MaterialFlag_Back: 1>
+OpenGl_MaterialFlag_Front: OCP.OpenGl.OpenGl_MaterialFlag # value = <OpenGl_MaterialFlag.OpenGl_MaterialFlag_Front: 0>
+OpenGl_OCCT_ALPHA_CUTOFF: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 25>
+OpenGl_OCCT_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COLOR: 26>
+OpenGl_OCCT_COMMON_BACK_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COMMON_BACK_MATERIAL: 24>
+OpenGl_OCCT_COMMON_FRONT_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COMMON_FRONT_MATERIAL: 23>
+OpenGl_OCCT_DISTINGUISH_MODE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 20>
+OpenGl_OCCT_LINE_FEATHER: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 33>
+OpenGl_OCCT_LINE_STIPPLE_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 35>
+OpenGl_OCCT_LINE_STIPPLE_PATTERN: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 34>
+OpenGl_OCCT_LINE_WIDTH: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 32>
+OpenGl_OCCT_NB_SPEC_IBL_LEVELS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 40>
+OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 41>
+OpenGl_OCCT_OIT_DEPTH_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 28>
+OpenGl_OCCT_OIT_OUTPUT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 27>
+OpenGl_OCCT_ORTHO_SCALE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 38>
+OpenGl_OCCT_PBR_BACK_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_PBR_BACK_MATERIAL: 22>
+OpenGl_OCCT_PBR_FRONT_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_PBR_FRONT_MATERIAL: 21>
+OpenGl_OCCT_POINT_SIZE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 30>
+OpenGl_OCCT_QUAD_MODE_STATE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 37>
+OpenGl_OCCT_SILHOUETTE_THICKNESS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 39>
+OpenGl_OCCT_TEXTURE_ENABLE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 19>
+OpenGl_OCCT_TEXTURE_TRSF2D: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 29>
+OpenGl_OCCT_VIEWPORT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 31>
+OpenGl_OCCT_WIREFRAME_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 36>
+OpenGl_OCC_CLIP_PLANE_CHAINS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS: 13>
+OpenGl_OCC_CLIP_PLANE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT: 14>
+OpenGl_OCC_CLIP_PLANE_EQUATIONS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS: 12>
+OpenGl_OCC_LIGHT_AMBIENT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT: 18>
+OpenGl_OCC_LIGHT_SOURCE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT: 15>
+OpenGl_OCC_LIGHT_SOURCE_PARAMS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS: 17>
+OpenGl_OCC_LIGHT_SOURCE_TYPES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES: 16>
+OpenGl_OCC_MODEL_WORLD_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX: 0>
+OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: 3>
+OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: 9>
+OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: 6>
+OpenGl_OCC_PROJECTION_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX: 2>
+OpenGl_OCC_PROJECTION_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE: 5>
+OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: 11>
+OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: 8>
+OpenGl_OCC_WORLD_VIEW_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX: 1>
+OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: 4>
+OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: 10>
+OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: 7>
+OpenGl_PO_AlphaTest: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_AlphaTest: 1024>
+OpenGl_PO_ClipChains: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipChains: 256>
+OpenGl_PO_ClipPlanes1: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1: 64>
+OpenGl_PO_ClipPlanes2: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2: 128>
+OpenGl_PO_ClipPlanesN: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN: 192>
+OpenGl_PO_HasTextures: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>
+OpenGl_PO_IsPoint: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>
+OpenGl_PO_MeshEdges: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>
+OpenGl_PO_NB: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_NB: 4096>
+OpenGl_PO_NeedsGeomShader: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>
+OpenGl_PO_PointSimple: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSimple: 8>
+OpenGl_PO_PointSprite: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSprite: 16>
+OpenGl_PO_PointSpriteA: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>
+OpenGl_PO_StippleLine: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_StippleLine: 32>
+OpenGl_PO_TextureEnv: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureEnv: 4>
+OpenGl_PO_TextureNormal: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>
+OpenGl_PO_TextureRGB: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureRGB: 2>
+OpenGl_PO_VertColor: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_VertColor: 1>
+OpenGl_PO_WriteOit: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_WriteOit: 2048>
+OpenGl_PROJECTION_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_PROJECTION_STATE: 4>
+OpenGl_RenderFilter_Empty: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_Empty: 0>
+OpenGl_RenderFilter_FillModeOnly: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_FillModeOnly: 8>
+OpenGl_RenderFilter_NonRaytraceableOnly: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_NonRaytraceableOnly: 4>
+OpenGl_RenderFilter_OpaqueOnly: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_OpaqueOnly: 1>
+OpenGl_RenderFilter_TransparentOnly: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_TransparentOnly: 2>
+OpenGl_SURF_DETAIL_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_SURF_DETAIL_STATE: 6>
+OpenGl_ShaderProgramDumpLevel_Full: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = <OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Full: 2>
+OpenGl_ShaderProgramDumpLevel_Off: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = <OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Off: 0>
+OpenGl_ShaderProgramDumpLevel_Short: OCP.OpenGl.OpenGl_ShaderProgramDumpLevel # value = <OpenGl_ShaderProgramDumpLevel.OpenGl_ShaderProgramDumpLevel_Short: 1>
+OpenGl_UniformStateType_NB: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_UniformStateType_NB: 8>
+OpenGl_WORLD_VIEW_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_WORLD_VIEW_STATE: 3>

@@ -4,18 +4,20 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDF
-import OCP.TopAbs
 import OCP.TopTools
-import OCP.Standard
-import OCP.TopoDS
+import OCP.TDF
+import io
 import OCP.NCollection
-import OCP.TopLoc
 import OCP.gp
+import OCP.TopoDS
+import OCP.TopLoc
+import OCP.Standard
+import OCP.TopAbs
 __all__  = [
 "TNaming",
 "TNaming_Builder",
 "TNaming_CopyShape",
+"TNaming_DataMapOfShapeMapOfShape",
 "TNaming_DataMapOfShapeShapesSet",
 "TNaming_DeltaOnModification",
 "TNaming_DeltaOnRemoval",
@@ -28,6 +30,7 @@ __all__  = [
 "TNaming_ListOfNamedShape",
 "TNaming_Localizer",
 "TNaming_MapOfNamedShape",
+"TNaming_MapOfShape",
 "TNaming_Name",
 "TNaming_NameType",
 "TNaming_NamedShape",
@@ -110,7 +113,7 @@ class TNaming():
         """
     @staticmethod
     @overload
-    def Print_s(NAME : TNaming_NameType,S : Any) -> Any: 
+    def Print_s(ACCESS : OCP.TDF.TDF_Label,S : io.BytesIO) -> io.BytesIO: 
         """
         Prints the evolution <EVOL> as a String on the Stream <S> and returns <S>.
 
@@ -120,13 +123,13 @@ class TNaming():
         """
     @staticmethod
     @overload
-    def Print_s(EVOL : TNaming_Evolution,S : Any) -> Any: ...
+    def Print_s(EVOL : TNaming_Evolution,S : io.BytesIO) -> io.BytesIO: ...
     @staticmethod
     @overload
-    def Print_s(ACCESS : OCP.TDF.TDF_Label,S : Any) -> Any: ...
+    def Print_s(NAME : TNaming_NameType,S : io.BytesIO) -> io.BytesIO: ...
     @staticmethod
     @overload
-    def Replicate_s(NS : TNaming_NamedShape,T : OCP.gp.gp_Trsf,L : OCP.TDF.TDF_Label) -> None: 
+    def Replicate_s(SH : OCP.TopoDS.TopoDS_Shape,T : OCP.gp.gp_Trsf,L : OCP.TDF.TDF_Label) -> None: 
         """
         Replicates the named shape with the transformation <T> on the label <L> (and sub-labels if necessary) (TNaming_GENERATED is set)
 
@@ -134,7 +137,7 @@ class TNaming():
         """
     @staticmethod
     @overload
-    def Replicate_s(SH : OCP.TopoDS.TopoDS_Shape,T : OCP.gp.gp_Trsf,L : OCP.TDF.TDF_Label) -> None: ...
+    def Replicate_s(NS : TNaming_NamedShape,T : OCP.gp.gp_Trsf,L : OCP.TDF.TDF_Label) -> None: ...
     @staticmethod
     def SubstituteSShape_s(accesslabel : OCP.TDF.TDF_Label,From : OCP.TopoDS.TopoDS_Shape,To : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
@@ -199,7 +202,7 @@ class TNaming_CopyShape():
         """
     @staticmethod
     @overload
-    def Translate_s(aShape : OCP.TopoDS.TopoDS_Shape,aMap : Any,aResult : OCP.TopoDS.TopoDS_Shape,TrTool : TNaming_TranslateTool) -> None: 
+    def Translate_s(L : OCP.TopLoc.TopLoc_Location,aMap : Any) -> OCP.TopLoc.TopLoc_Location: 
         """
         Translates a Transient shape(s) to Transient
 
@@ -207,8 +210,102 @@ class TNaming_CopyShape():
         """
     @staticmethod
     @overload
-    def Translate_s(L : OCP.TopLoc.TopLoc_Location,aMap : Any) -> OCP.TopLoc.TopLoc_Location: ...
+    def Translate_s(aShape : OCP.TopoDS.TopoDS_Shape,aMap : Any,aResult : OCP.TopoDS.TopoDS_Shape,TrTool : TNaming_TranslateTool) -> None: ...
     def __init__(self) -> None: ...
+    pass
+class TNaming_DataMapOfShapeMapOfShape(OCP.NCollection.NCollection_BaseMap):
+    """
+    Purpose: The DataMap is a Map to store keys with associated Items. See Map from NCollection for a discussion about the number of buckets.
+    """
+    def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
+        """
+        Returns attached allocator
+        """
+    def Assign(self,theOther : TNaming_DataMapOfShapeMapOfShape) -> TNaming_DataMapOfShapeMapOfShape: 
+        """
+        Assignment. This method does not change the internal allocator.
+        """
+    def Bind(self,theKey : OCP.TopoDS.TopoDS_Shape,theItem : TNaming_MapOfShape) -> bool: 
+        """
+        Bind binds Item to Key in map.
+        """
+    def Bound(self,theKey : OCP.TopoDS.TopoDS_Shape,theItem : TNaming_MapOfShape) -> TNaming_MapOfShape: 
+        """
+        Bound binds Item to Key in map. Returns modifiable Item
+        """
+    def ChangeFind(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TNaming_MapOfShape: 
+        """
+        ChangeFind returns mofifiable Item by Key. Raises if Key was not bound
+        """
+    def ChangeSeek(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TNaming_MapOfShape: 
+        """
+        ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
+        """
+    @overload
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
+        """
+        Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
+
+        Clear data and reset allocator
+        """
+    @overload
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Exchange(self,theOther : TNaming_DataMapOfShapeMapOfShape) -> None: 
+        """
+        Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
+        """
+    def Extent(self) -> int: 
+        """
+        Extent
+        """
+    @overload
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TNaming_MapOfShape) -> bool: 
+        """
+        Find returns the Item for Key. Raises if Key was not bound
+
+        Find Item for key with copying.
+        """
+    @overload
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TNaming_MapOfShape: ...
+    def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
+        IsBound
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        IsEmpty
+        """
+    def NbBuckets(self) -> int: 
+        """
+        NbBuckets
+        """
+    def ReSize(self,N : int) -> None: 
+        """
+        ReSize
+        """
+    def Seek(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TNaming_MapOfShape: 
+        """
+        Seek returns pointer to Item by Key. Returns NULL is Key was not bound.
+        """
+    def Size(self) -> int: 
+        """
+        Size
+        """
+    def Statistics(self,S : io.BytesIO) -> None: 
+        """
+        Statistics
+        """
+    def UnBind(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
+        UnBind removes Item Key pair from map
+        """
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TNaming_DataMapOfShapeMapOfShape) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TNaming_DataMapOfShapeShapesSet(OCP.NCollection.NCollection_BaseMap):
     """
@@ -239,14 +336,14 @@ class TNaming_DataMapOfShapeShapesSet(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TNaming_DataMapOfShapeShapesSet) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -288,7 +385,7 @@ class TNaming_DataMapOfShapeShapesSet(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -297,12 +394,12 @@ class TNaming_DataMapOfShapeShapesSet(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self,theOther : TNaming_DataMapOfShapeShapesSet) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TNaming_DeltaOnModification(OCP.TDF.TDF_DeltaOnModification, OCP.TDF.TDF_AttributeDelta, OCP.Standard.Standard_Transient):
     """
@@ -324,9 +421,13 @@ class TNaming_DeltaOnModification(OCP.TDF.TDF_DeltaOnModification, OCP.TDF.TDF_A
         """
         Memory deallocator for transient classes
         """
-    def Dump(self,OS : Any) -> Any: 
+    def Dump(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the contents.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -399,9 +500,13 @@ class TNaming_DeltaOnRemoval(OCP.TDF.TDF_DeltaOnRemoval, OCP.TDF.TDF_AttributeDe
         """
         Memory deallocator for transient classes
         """
-    def Dump(self,OS : Any) -> Any: 
+    def Dump(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the contents.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -475,24 +580,32 @@ class TNaming_Evolution():
 
       TNaming_SELECTED
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TNaming_DELETE: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_DELETE
-    TNaming_GENERATED: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_GENERATED
-    TNaming_MODIFY: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_MODIFY
-    TNaming_PRIMITIVE: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_PRIMITIVE
-    TNaming_REPLACE: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_REPLACE
-    TNaming_SELECTED: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_SELECTED
-    __entries: dict # value = {'TNaming_PRIMITIVE': (TNaming_Evolution.TNaming_PRIMITIVE, None), 'TNaming_GENERATED': (TNaming_Evolution.TNaming_GENERATED, None), 'TNaming_MODIFY': (TNaming_Evolution.TNaming_MODIFY, None), 'TNaming_DELETE': (TNaming_Evolution.TNaming_DELETE, None), 'TNaming_REPLACE': (TNaming_Evolution.TNaming_REPLACE, None), 'TNaming_SELECTED': (TNaming_Evolution.TNaming_SELECTED, None)}
-    __members__: dict # value = {'TNaming_PRIMITIVE': TNaming_Evolution.TNaming_PRIMITIVE, 'TNaming_GENERATED': TNaming_Evolution.TNaming_GENERATED, 'TNaming_MODIFY': TNaming_Evolution.TNaming_MODIFY, 'TNaming_DELETE': TNaming_Evolution.TNaming_DELETE, 'TNaming_REPLACE': TNaming_Evolution.TNaming_REPLACE, 'TNaming_SELECTED': TNaming_Evolution.TNaming_SELECTED}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TNaming_DELETE: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_DELETE: 3>
+    TNaming_GENERATED: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_GENERATED: 1>
+    TNaming_MODIFY: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_MODIFY: 2>
+    TNaming_PRIMITIVE: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_PRIMITIVE: 0>
+    TNaming_REPLACE: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_REPLACE: 4>
+    TNaming_SELECTED: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_SELECTED: 5>
+    __entries: dict # value = {'TNaming_PRIMITIVE': (<TNaming_Evolution.TNaming_PRIMITIVE: 0>, None), 'TNaming_GENERATED': (<TNaming_Evolution.TNaming_GENERATED: 1>, None), 'TNaming_MODIFY': (<TNaming_Evolution.TNaming_MODIFY: 2>, None), 'TNaming_DELETE': (<TNaming_Evolution.TNaming_DELETE: 3>, None), 'TNaming_REPLACE': (<TNaming_Evolution.TNaming_REPLACE: 4>, None), 'TNaming_SELECTED': (<TNaming_Evolution.TNaming_SELECTED: 5>, None)}
+    __members__: dict # value = {'TNaming_PRIMITIVE': <TNaming_Evolution.TNaming_PRIMITIVE: 0>, 'TNaming_GENERATED': <TNaming_Evolution.TNaming_GENERATED: 1>, 'TNaming_MODIFY': <TNaming_Evolution.TNaming_MODIFY: 2>, 'TNaming_DELETE': <TNaming_Evolution.TNaming_DELETE: 3>, 'TNaming_REPLACE': <TNaming_Evolution.TNaming_REPLACE: 4>, 'TNaming_SELECTED': <TNaming_Evolution.TNaming_SELECTED: 5>}
     pass
 class TNaming_Identifier():
     """
@@ -563,9 +676,9 @@ class TNaming_Identifier():
         None
         """
     @overload
-    def __init__(self,Lab : OCP.TDF.TDF_Label,S : OCP.TopoDS.TopoDS_Shape,Context : OCP.TopoDS.TopoDS_Shape,Geom : bool) -> None: ...
-    @overload
     def __init__(self,Lab : OCP.TDF.TDF_Label,S : OCP.TopoDS.TopoDS_Shape,ContextNS : TNaming_NamedShape,Geom : bool) -> None: ...
+    @overload
+    def __init__(self,Lab : OCP.TDF.TDF_Label,S : OCP.TopoDS.TopoDS_Shape,Context : OCP.TopoDS.TopoDS_Shape,Geom : bool) -> None: ...
     pass
 class TNaming_Iterator():
     """
@@ -600,9 +713,9 @@ class TNaming_Iterator():
     @overload
     def __init__(self,aLabel : OCP.TDF.TDF_Label,aTrans : int) -> None: ...
     @overload
-    def __init__(self,anAtt : TNaming_NamedShape) -> None: ...
-    @overload
     def __init__(self,aLabel : OCP.TDF.TDF_Label) -> None: ...
+    @overload
+    def __init__(self,anAtt : TNaming_NamedShape) -> None: ...
     pass
 class TNaming_IteratorOnShapesSet():
     """
@@ -633,9 +746,9 @@ class TNaming_IteratorOnShapesSet():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : TNaming_ShapesSet) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TNaming_ListOfIndexedDataMapOfShapeListOfShape(OCP.NCollection.NCollection_BaseList):
     """
@@ -646,7 +759,7 @@ class TNaming_ListOfIndexedDataMapOfShapeListOfShape(OCP.NCollection.NCollection
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape,theIter : Any) -> None: 
+    def Append(self,theOther : TNaming_ListOfIndexedDataMapOfShapeListOfShape) -> None: 
         """
         Append one item at the end
 
@@ -657,7 +770,7 @@ class TNaming_ListOfIndexedDataMapOfShapeListOfShape(OCP.NCollection.NCollection
     @overload
     def Append(self,theItem : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape) -> OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape: ...
     @overload
-    def Append(self,theOther : TNaming_ListOfIndexedDataMapOfShapeListOfShape) -> None: ...
+    def Append(self,theItem : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape,theIter : Any) -> None: ...
     def Assign(self,theOther : TNaming_ListOfIndexedDataMapOfShapeListOfShape) -> TNaming_ListOfIndexedDataMapOfShapeListOfShape: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -735,7 +848,7 @@ class TNaming_ListOfIndexedDataMapOfShapeListOfShape(OCP.NCollection.NCollection
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TNaming_ListOfIndexedDataMapOfShapeListOfShape) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TNaming_ListOfMapOfShape(OCP.NCollection.NCollection_BaseList):
     """
@@ -746,7 +859,7 @@ class TNaming_ListOfMapOfShape(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TopTools.TopTools_MapOfShape) -> OCP.TopTools.TopTools_MapOfShape: 
+    def Append(self,theOther : TNaming_ListOfMapOfShape) -> None: 
         """
         Append one item at the end
 
@@ -755,9 +868,9 @@ class TNaming_ListOfMapOfShape(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : TNaming_ListOfMapOfShape) -> None: ...
-    @overload
     def Append(self,theItem : OCP.TopTools.TopTools_MapOfShape,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : OCP.TopTools.TopTools_MapOfShape) -> OCP.TopTools.TopTools_MapOfShape: ...
     def Assign(self,theOther : TNaming_ListOfMapOfShape) -> TNaming_ListOfMapOfShape: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -832,10 +945,10 @@ class TNaming_ListOfMapOfShape(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : TNaming_ListOfMapOfShape) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TNaming_ListOfNamedShape(OCP.NCollection.NCollection_BaseList):
     """
@@ -846,7 +959,7 @@ class TNaming_ListOfNamedShape(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TNaming_NamedShape,theIter : Any) -> None: 
+    def Append(self,theItem : TNaming_NamedShape) -> TNaming_NamedShape: 
         """
         Append one item at the end
 
@@ -855,7 +968,7 @@ class TNaming_ListOfNamedShape(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : TNaming_NamedShape) -> TNaming_NamedShape: ...
+    def Append(self,theItem : TNaming_NamedShape,theIter : Any) -> None: ...
     @overload
     def Append(self,theOther : TNaming_ListOfNamedShape) -> None: ...
     def Assign(self,theOther : TNaming_ListOfNamedShape) -> TNaming_ListOfNamedShape: 
@@ -877,14 +990,14 @@ class TNaming_ListOfNamedShape(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : TNaming_NamedShape,theIter : Any) -> TNaming_NamedShape: 
+    def InsertAfter(self,theOther : TNaming_ListOfNamedShape,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : TNaming_ListOfNamedShape,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : TNaming_NamedShape,theIter : Any) -> TNaming_NamedShape: ...
     @overload
     def InsertBefore(self,theOther : TNaming_ListOfNamedShape,theIter : Any) -> None: 
         """
@@ -905,14 +1018,14 @@ class TNaming_ListOfNamedShape(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : TNaming_NamedShape) -> TNaming_NamedShape: 
+    def Prepend(self,theOther : TNaming_ListOfNamedShape) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : TNaming_ListOfNamedShape) -> None: ...
+    def Prepend(self,theItem : TNaming_NamedShape) -> TNaming_NamedShape: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -930,12 +1043,12 @@ class TNaming_ListOfNamedShape(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : TNaming_ListOfNamedShape) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TNaming_ListOfNamedShape) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class TNaming_Localizer():
     """
@@ -1016,14 +1129,14 @@ class TNaming_MapOfNamedShape(OCP.NCollection.NCollection_BaseMap):
     @overload
     def Clear(self,doReleaseMemory : bool=True) -> None: ...
     @overload
-    def Contains(self,K : TNaming_NamedShape) -> bool: 
+    def Contains(self,theOther : TNaming_MapOfNamedShape) -> bool: 
         """
         Contains
 
         Returns true if this map contains ALL keys of another map.
         """
     @overload
-    def Contains(self,theOther : TNaming_MapOfNamedShape) -> bool: ...
+    def Contains(self,K : TNaming_NamedShape) -> bool: ...
     def Differ(self,theOther : TNaming_MapOfNamedShape) -> bool: 
         """
         Apply to this Map the symmetric difference (aka exclusive disjunction, boolean XOR) operation with another (given) Map. The result contains the values that are contained only in this or the operand map, but not in both. This algorithm is similar to method Difference(). Returns True if contents of this map is changed.
@@ -1076,7 +1189,7 @@ class TNaming_MapOfNamedShape(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1099,9 +1212,126 @@ class TNaming_MapOfNamedShape(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theOther : TNaming_MapOfNamedShape) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    pass
+class TNaming_MapOfShape(OCP.NCollection.NCollection_BaseMap):
+    """
+    Purpose: Single hashed Map. This Map is used to store and retrieve keys in linear time.
+    """
+    def Add(self,K : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
+        Add
+        """
+    def Added(self,K : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+        """
+        Added: add a new key if not yet in the map, and return reference to either newly added or previously existing object
+        """
+    def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
+        """
+        Returns attached allocator
+        """
+    def Assign(self,theOther : TNaming_MapOfShape) -> TNaming_MapOfShape: 
+        """
+        Assign. This method does not change the internal allocator.
+        """
+    @overload
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+        """
+        Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
+
+        Clear data and reset allocator
+        """
+    @overload
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    @overload
+    def Contains(self,K : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
+        Contains
+
+        Returns true if this map contains ALL keys of another map.
+        """
+    @overload
+    def Contains(self,theOther : TNaming_MapOfShape) -> bool: ...
+    def Differ(self,theOther : TNaming_MapOfShape) -> bool: 
+        """
+        Apply to this Map the symmetric difference (aka exclusive disjunction, boolean XOR) operation with another (given) Map. The result contains the values that are contained only in this or the operand map, but not in both. This algorithm is similar to method Difference(). Returns True if contents of this map is changed.
+        """
+    def Difference(self,theLeft : TNaming_MapOfShape,theRight : TNaming_MapOfShape) -> None: 
+        """
+        Sets this Map to be the result of symmetric difference (aka exclusive disjunction, boolean XOR) operation between two given Maps. The new Map contains the values that are contained only in the first or the second operand maps but not in both. All previous content of this Map is cleared. This map (result of the boolean operation) can also be used as one of operands.
+        """
+    def Exchange(self,theOther : TNaming_MapOfShape) -> None: 
+        """
+        Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
+        """
+    def Extent(self) -> int: 
+        """
+        Extent
+        """
+    def HasIntersection(self,theMap : TNaming_MapOfShape) -> bool: 
+        """
+        Returns true if this and theMap have common elements.
+        """
+    def Intersect(self,theOther : TNaming_MapOfShape) -> bool: 
+        """
+        Apply to this Map the intersection operation (aka multiplication, common, boolean AND) with another (given) Map. The result contains only the values that are contained in both this and the given maps. This algorithm is similar to method Intersection(). Returns True if contents of this map is changed.
+        """
+    def Intersection(self,theLeft : TNaming_MapOfShape,theRight : TNaming_MapOfShape) -> None: 
+        """
+        Sets this Map to be the result of intersection (aka multiplication, common, boolean AND) operation between two given Maps. The new Map contains only the values that are contained in both map operands. All previous content of this Map is cleared. This same map (result of the boolean operation) can also be used as one of operands.
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        IsEmpty
+        """
+    def IsEqual(self,theOther : TNaming_MapOfShape) -> bool: 
+        """
+        Returns true if two maps contains exactly the same keys
+        """
+    def NbBuckets(self) -> int: 
+        """
+        NbBuckets
+        """
+    def ReSize(self,N : int) -> None: 
+        """
+        ReSize
+        """
+    def Remove(self,K : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
+        Remove
+        """
+    def Size(self) -> int: 
+        """
+        Size
+        """
+    def Statistics(self,S : io.BytesIO) -> None: 
+        """
+        Statistics
+        """
+    def Subtract(self,theOther : TNaming_MapOfShape) -> bool: 
+        """
+        Apply to this Map the subtraction (aka set-theoretic difference, relative complement, exclude, cut, boolean NOT) operation with another (given) Map. The result contains only the values that were previously contained in this map and not contained in this map. This algorithm is similar to method Subtract() with two operands. Returns True if contents of this map is changed.
+        """
+    def Subtraction(self,theLeft : TNaming_MapOfShape,theRight : TNaming_MapOfShape) -> None: 
+        """
+        Sets this Map to be the result of subtraction (aka set-theoretic difference, relative complement, exclude, cut, boolean NOT) operation between two given Maps. The new Map contains only the values that are contained in the first map operands and not contained in the second one. All previous content of this Map is cleared.
+        """
+    def Union(self,theLeft : TNaming_MapOfShape,theRight : TNaming_MapOfShape) -> None: 
+        """
+        Sets this Map to be the result of union (aka addition, fuse, merge, boolean OR) operation between two given Maps The new Map contains the values that are contained either in the first map or in the second map or in both. All previous content of this Map is cleared. This map (result of the boolean operation) can also be passed as one of operands.
+        """
+    def Unite(self,theOther : TNaming_MapOfShape) -> bool: 
+        """
+        Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
+        """
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : TNaming_MapOfNamedShape) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TNaming_MapOfShape) -> None: ...
     pass
 class TNaming_Name():
     """
@@ -1124,6 +1354,10 @@ class TNaming_Name():
         """
     @overload
     def ContextLabel(self) -> OCP.TDF.TDF_Label: ...
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     @overload
     def Index(self) -> int: 
         """
@@ -1134,14 +1368,14 @@ class TNaming_Name():
     @overload
     def Index(self,I : int) -> None: ...
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
+    def Orientation(self,theOrientation : OCP.TopAbs.TopAbs_Orientation) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Orientation(self,theOrientation : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
     def Paste(self,into : TNaming_Name,RT : OCP.TDF.TDF_RelocationTable) -> None: 
         """
         None
@@ -1169,14 +1403,14 @@ class TNaming_Name():
         None
         """
     @overload
-    def StopNamedShape(self) -> TNaming_NamedShape: 
+    def StopNamedShape(self,arg1 : TNaming_NamedShape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def StopNamedShape(self,arg1 : TNaming_NamedShape) -> None: ...
+    def StopNamedShape(self) -> TNaming_NamedShape: ...
     @overload
     def Type(self) -> TNaming_NameType: 
         """
@@ -1218,30 +1452,38 @@ class TNaming_NameType():
 
       TNaming_SHELLIN
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    TNaming_CONSTSHAPE: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_CONSTSHAPE
-    TNaming_FILTERBYNEIGHBOURGS: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_FILTERBYNEIGHBOURGS
-    TNaming_GENERATION: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_GENERATION
-    TNaming_IDENTITY: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_IDENTITY
-    TNaming_INTERSECTION: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_INTERSECTION
-    TNaming_MODIFUNTIL: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_MODIFUNTIL
-    TNaming_ORIENTATION: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_ORIENTATION
-    TNaming_SHELLIN: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_SHELLIN
-    TNaming_SUBSTRACTION: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_SUBSTRACTION
-    TNaming_UNION: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_UNION
-    TNaming_UNKNOWN: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_UNKNOWN
-    TNaming_WIREIN: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_WIREIN
-    __entries: dict # value = {'TNaming_UNKNOWN': (TNaming_NameType.TNaming_UNKNOWN, None), 'TNaming_IDENTITY': (TNaming_NameType.TNaming_IDENTITY, None), 'TNaming_MODIFUNTIL': (TNaming_NameType.TNaming_MODIFUNTIL, None), 'TNaming_GENERATION': (TNaming_NameType.TNaming_GENERATION, None), 'TNaming_INTERSECTION': (TNaming_NameType.TNaming_INTERSECTION, None), 'TNaming_UNION': (TNaming_NameType.TNaming_UNION, None), 'TNaming_SUBSTRACTION': (TNaming_NameType.TNaming_SUBSTRACTION, None), 'TNaming_CONSTSHAPE': (TNaming_NameType.TNaming_CONSTSHAPE, None), 'TNaming_FILTERBYNEIGHBOURGS': (TNaming_NameType.TNaming_FILTERBYNEIGHBOURGS, None), 'TNaming_ORIENTATION': (TNaming_NameType.TNaming_ORIENTATION, None), 'TNaming_WIREIN': (TNaming_NameType.TNaming_WIREIN, None), 'TNaming_SHELLIN': (TNaming_NameType.TNaming_SHELLIN, None)}
-    __members__: dict # value = {'TNaming_UNKNOWN': TNaming_NameType.TNaming_UNKNOWN, 'TNaming_IDENTITY': TNaming_NameType.TNaming_IDENTITY, 'TNaming_MODIFUNTIL': TNaming_NameType.TNaming_MODIFUNTIL, 'TNaming_GENERATION': TNaming_NameType.TNaming_GENERATION, 'TNaming_INTERSECTION': TNaming_NameType.TNaming_INTERSECTION, 'TNaming_UNION': TNaming_NameType.TNaming_UNION, 'TNaming_SUBSTRACTION': TNaming_NameType.TNaming_SUBSTRACTION, 'TNaming_CONSTSHAPE': TNaming_NameType.TNaming_CONSTSHAPE, 'TNaming_FILTERBYNEIGHBOURGS': TNaming_NameType.TNaming_FILTERBYNEIGHBOURGS, 'TNaming_ORIENTATION': TNaming_NameType.TNaming_ORIENTATION, 'TNaming_WIREIN': TNaming_NameType.TNaming_WIREIN, 'TNaming_SHELLIN': TNaming_NameType.TNaming_SHELLIN}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TNaming_CONSTSHAPE: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_CONSTSHAPE: 7>
+    TNaming_FILTERBYNEIGHBOURGS: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_FILTERBYNEIGHBOURGS: 8>
+    TNaming_GENERATION: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_GENERATION: 3>
+    TNaming_IDENTITY: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_IDENTITY: 1>
+    TNaming_INTERSECTION: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_INTERSECTION: 4>
+    TNaming_MODIFUNTIL: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_MODIFUNTIL: 2>
+    TNaming_ORIENTATION: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_ORIENTATION: 9>
+    TNaming_SHELLIN: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_SHELLIN: 11>
+    TNaming_SUBSTRACTION: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_SUBSTRACTION: 6>
+    TNaming_UNION: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_UNION: 5>
+    TNaming_UNKNOWN: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_UNKNOWN: 0>
+    TNaming_WIREIN: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_WIREIN: 10>
+    __entries: dict # value = {'TNaming_UNKNOWN': (<TNaming_NameType.TNaming_UNKNOWN: 0>, None), 'TNaming_IDENTITY': (<TNaming_NameType.TNaming_IDENTITY: 1>, None), 'TNaming_MODIFUNTIL': (<TNaming_NameType.TNaming_MODIFUNTIL: 2>, None), 'TNaming_GENERATION': (<TNaming_NameType.TNaming_GENERATION: 3>, None), 'TNaming_INTERSECTION': (<TNaming_NameType.TNaming_INTERSECTION: 4>, None), 'TNaming_UNION': (<TNaming_NameType.TNaming_UNION: 5>, None), 'TNaming_SUBSTRACTION': (<TNaming_NameType.TNaming_SUBSTRACTION: 6>, None), 'TNaming_CONSTSHAPE': (<TNaming_NameType.TNaming_CONSTSHAPE: 7>, None), 'TNaming_FILTERBYNEIGHBOURGS': (<TNaming_NameType.TNaming_FILTERBYNEIGHBOURGS: 8>, None), 'TNaming_ORIENTATION': (<TNaming_NameType.TNaming_ORIENTATION: 9>, None), 'TNaming_WIREIN': (<TNaming_NameType.TNaming_WIREIN: 10>, None), 'TNaming_SHELLIN': (<TNaming_NameType.TNaming_SHELLIN: 11>, None)}
+    __members__: dict # value = {'TNaming_UNKNOWN': <TNaming_NameType.TNaming_UNKNOWN: 0>, 'TNaming_IDENTITY': <TNaming_NameType.TNaming_IDENTITY: 1>, 'TNaming_MODIFUNTIL': <TNaming_NameType.TNaming_MODIFUNTIL: 2>, 'TNaming_GENERATION': <TNaming_NameType.TNaming_GENERATION: 3>, 'TNaming_INTERSECTION': <TNaming_NameType.TNaming_INTERSECTION: 4>, 'TNaming_UNION': <TNaming_NameType.TNaming_UNION: 5>, 'TNaming_SUBSTRACTION': <TNaming_NameType.TNaming_SUBSTRACTION: 6>, 'TNaming_CONSTSHAPE': <TNaming_NameType.TNaming_CONSTSHAPE: 7>, 'TNaming_FILTERBYNEIGHBOURGS': <TNaming_NameType.TNaming_FILTERBYNEIGHBOURGS: 8>, 'TNaming_ORIENTATION': <TNaming_NameType.TNaming_ORIENTATION: 9>, 'TNaming_WIREIN': <TNaming_NameType.TNaming_WIREIN: 10>, 'TNaming_SHELLIN': <TNaming_NameType.TNaming_SHELLIN: 11>}
     pass
 class TNaming_NamedShape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
@@ -1312,14 +1554,14 @@ class TNaming_NamedShape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1328,9 +1570,13 @@ class TNaming_NamedShape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the attribute on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1342,7 +1588,7 @@ class TNaming_NamedShape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
 
         Returns the Evolution of the attribute.
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -1465,14 +1711,14 @@ class TNaming_NamedShape(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
     @overload
     def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @overload
-    def SetVersion(self,version : int) -> None: 
+    def SetVersion(self,v : int) -> None: 
         """
         Set the Version of the attribute.
 
         Set the Version of the attribute.
         """
     @overload
-    def SetVersion(self,v : int) -> None: ...
+    def SetVersion(self,version : int) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1589,14 +1835,14 @@ class TNaming_Naming(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         Makes a DeltaOnRemoval on <me> because <me> has disappeared from the DS.
@@ -1605,15 +1851,19 @@ class TNaming_Naming(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
         Makes an AttributeDelta because <me> has been resumed.
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         None
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         None
         """
@@ -1829,13 +2079,13 @@ class TNaming_NewShapeIterator():
         Warning! Can be a Null Shape if a descendant is deleted.
         """
     @overload
-    def __init__(self,anIterator : TNaming_NewShapeIterator) -> None: ...
+    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,access : OCP.TDF.TDF_Label) -> None: ...
     @overload
-    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,Transaction : int,access : OCP.TDF.TDF_Label) -> None: ...
+    def __init__(self,anIterator : TNaming_NewShapeIterator) -> None: ...
     @overload
     def __init__(self,anIterator : TNaming_Iterator) -> None: ...
     @overload
-    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,access : OCP.TDF.TDF_Label) -> None: ...
+    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,Transaction : int,access : OCP.TDF.TDF_Label) -> None: ...
     pass
 class TNaming_OldShapeIterator():
     """
@@ -1868,18 +2118,22 @@ class TNaming_OldShapeIterator():
         None
         """
     @overload
-    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,access : OCP.TDF.TDF_Label) -> None: ...
+    def __init__(self,anIterator : TNaming_OldShapeIterator) -> None: ...
     @overload
     def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,Transaction : int,access : OCP.TDF.TDF_Label) -> None: ...
     @overload
-    def __init__(self,anIterator : TNaming_OldShapeIterator) -> None: ...
-    @overload
     def __init__(self,anIterator : TNaming_Iterator) -> None: ...
+    @overload
+    def __init__(self,aShape : OCP.TopoDS.TopoDS_Shape,access : OCP.TDF.TDF_Label) -> None: ...
     pass
 class TNaming_RefShape():
     """
     None
     """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def Label(self) -> OCP.TDF.TDF_Label: 
         """
         None
@@ -1889,7 +2143,7 @@ class TNaming_RefShape():
         None
         """
     @overload
-    def Shape(self,S : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
@@ -1900,11 +2154,11 @@ class TNaming_RefShape():
         None
         """
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
-    @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Shape(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     pass
 class TNaming_SameShapeIterator():
     """
@@ -1967,14 +2221,14 @@ class TNaming_Scope():
         None
         """
     @overload
-    def WithValid(self,mode : bool) -> None: 
+    def WithValid(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def WithValid(self) -> bool: ...
+    def WithValid(self,mode : bool) -> None: ...
     @overload
     def __init__(self,valid : OCP.TDF.TDF_LabelMap) -> None: ...
     @overload
@@ -2019,7 +2273,7 @@ class TNaming_ShapesSet():
     None
     """
     @overload
-    def Add(self,Shapes : TNaming_ShapesSet) -> None: 
+    def Add(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Adds the Shape <S>
 
@@ -2028,7 +2282,7 @@ class TNaming_ShapesSet():
         Adds the Shape <S>
         """
     @overload
-    def Add(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: ...
+    def Add(self,Shapes : TNaming_ShapesSet) -> None: ...
     def ChangeMap(self) -> OCP.TopTools.TopTools_MapOfShape: 
         """
         None
@@ -2081,9 +2335,9 @@ class TNaming_ShapesSet():
     @overload
     def Remove(self,Shapes : TNaming_ShapesSet) -> None: ...
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,Type : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,Type : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE) -> None: ...
     pass
 class TNaming_Tool():
     """
@@ -2107,7 +2361,7 @@ class TNaming_Tool():
     def CurrentNamedShape_s(NS : TNaming_NamedShape) -> TNaming_NamedShape: ...
     @staticmethod
     @overload
-    def CurrentShape_s(NS : TNaming_NamedShape,Updated : OCP.TDF.TDF_LabelMap) -> OCP.TopoDS.TopoDS_Shape: 
+    def CurrentShape_s(NS : TNaming_NamedShape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the last Modification of <NS>. Returns the shape CurrentShape contained in the named shape attribute NS. CurrentShape is the current state of the entities if they have been modified in other attributes of the same data structure. Each call to this function creates a new compound.
 
@@ -2115,7 +2369,7 @@ class TNaming_Tool():
         """
     @staticmethod
     @overload
-    def CurrentShape_s(NS : TNaming_NamedShape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def CurrentShape_s(NS : TNaming_NamedShape,Updated : OCP.TDF.TDF_LabelMap) -> OCP.TopoDS.TopoDS_Shape: ...
     @staticmethod
     def FindShape_s(Valid : OCP.TDF.TDF_LabelMap,Forbiden : OCP.TDF.TDF_LabelMap,Arg : TNaming_NamedShape,S : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
@@ -2282,14 +2536,14 @@ class TNaming_Translator():
         None
         """
     @overload
-    def Copied(self,aShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def Copied(self) -> OCP.TopTools.TopTools_DataMapOfShapeShape: 
         """
         returns copied shape
 
         returns DataMap of results; (shape <-> copied shape)
         """
     @overload
-    def Copied(self) -> OCP.TopTools.TopTools_DataMapOfShapeShape: ...
+    def Copied(self,aShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     def DumpMap(self,isWrite : bool=False) -> None: 
         """
         None
@@ -2369,14 +2623,14 @@ class TNaming_UsedShapes(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Makes an AttributeDelta because <me> has been forgotten.
         """
     @overload
-    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: 
+    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: 
         """
         Makes a DeltaOnModification between <me> and <anOldAttribute.
 
         Applies a DeltaOnModification to <me>.
         """
     @overload
-    def DeltaOnModification(self,aDelta : OCP.TDF.TDF_DeltaOnModification) -> None: ...
+    def DeltaOnModification(self,anOldAttribute : OCP.TDF.TDF_Attribute) -> OCP.TDF.TDF_DeltaOnModification: ...
     def DeltaOnRemoval(self) -> OCP.TDF.TDF_DeltaOnRemoval: 
         """
         this method returns a null handle (no delta).
@@ -2389,15 +2643,19 @@ class TNaming_UsedShapes(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
         None
         """
-    def Dump(self,anOS : Any) -> Any: 
+    def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the attribute on <aStream>.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ExtendedDump(self,anOS : Any,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
+    def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
         """
@@ -2542,21 +2800,21 @@ class TNaming_UsedShapes(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         None
         """
     pass
-TNaming_CONSTSHAPE: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_CONSTSHAPE
-TNaming_DELETE: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_DELETE
-TNaming_FILTERBYNEIGHBOURGS: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_FILTERBYNEIGHBOURGS
-TNaming_GENERATED: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_GENERATED
-TNaming_GENERATION: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_GENERATION
-TNaming_IDENTITY: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_IDENTITY
-TNaming_INTERSECTION: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_INTERSECTION
-TNaming_MODIFUNTIL: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_MODIFUNTIL
-TNaming_MODIFY: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_MODIFY
-TNaming_ORIENTATION: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_ORIENTATION
-TNaming_PRIMITIVE: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_PRIMITIVE
-TNaming_REPLACE: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_REPLACE
-TNaming_SELECTED: OCP.TNaming.TNaming_Evolution # value = TNaming_Evolution.TNaming_SELECTED
-TNaming_SHELLIN: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_SHELLIN
-TNaming_SUBSTRACTION: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_SUBSTRACTION
-TNaming_UNION: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_UNION
-TNaming_UNKNOWN: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_UNKNOWN
-TNaming_WIREIN: OCP.TNaming.TNaming_NameType # value = TNaming_NameType.TNaming_WIREIN
+TNaming_CONSTSHAPE: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_CONSTSHAPE: 7>
+TNaming_DELETE: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_DELETE: 3>
+TNaming_FILTERBYNEIGHBOURGS: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_FILTERBYNEIGHBOURGS: 8>
+TNaming_GENERATED: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_GENERATED: 1>
+TNaming_GENERATION: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_GENERATION: 3>
+TNaming_IDENTITY: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_IDENTITY: 1>
+TNaming_INTERSECTION: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_INTERSECTION: 4>
+TNaming_MODIFUNTIL: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_MODIFUNTIL: 2>
+TNaming_MODIFY: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_MODIFY: 2>
+TNaming_ORIENTATION: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_ORIENTATION: 9>
+TNaming_PRIMITIVE: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_PRIMITIVE: 0>
+TNaming_REPLACE: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_REPLACE: 4>
+TNaming_SELECTED: OCP.TNaming.TNaming_Evolution # value = <TNaming_Evolution.TNaming_SELECTED: 5>
+TNaming_SHELLIN: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_SHELLIN: 11>
+TNaming_SUBSTRACTION: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_SUBSTRACTION: 6>
+TNaming_UNION: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_UNION: 5>
+TNaming_UNKNOWN: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_UNKNOWN: 0>
+TNaming_WIREIN: OCP.TNaming.TNaming_NameType # value = <TNaming_NameType.TNaming_WIREIN: 10>

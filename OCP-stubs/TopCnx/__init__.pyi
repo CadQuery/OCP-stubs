@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
 import OCP.gp
+import OCP.TopAbs
 __all__  = [
 "TopCnx_EdgeFaceTransition"
 ]
@@ -22,14 +22,14 @@ class TopCnx_EdgeFaceTransition():
         Returns the current cumulated BoundaryTransition.
         """
     @overload
-    def Reset(self,Tgt : OCP.gp.gp_Dir) -> None: 
+    def Reset(self,Tgt : OCP.gp.gp_Dir,Norm : OCP.gp.gp_Dir,Curv : float) -> None: 
         """
         Initialize the algorithm with the local description of the edge.
 
         Initialize the algorithm with a linear Edge.
         """
     @overload
-    def Reset(self,Tgt : OCP.gp.gp_Dir,Norm : OCP.gp.gp_Dir,Curv : float) -> None: ...
+    def Reset(self,Tgt : OCP.gp.gp_Dir) -> None: ...
     def Transition(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the current cumulated transition.

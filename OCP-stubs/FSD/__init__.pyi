@@ -4,10 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.TCollection
-import OCP.Storage
 import OCP.TColStd
+import OCP.TCollection
+import io
+import OCP.NCollection
+import OCP.Storage
+import OCP.Standard
 __all__  = [
 "FSD_Base64Decoder",
 "FSD_BinaryFile",
@@ -26,10 +28,7 @@ class FSD_Base64Decoder():
         """
     def __init__(self) -> None: ...
     pass
-class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
-    """
-    None
-    """
+class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver, OCP.Standard.Standard_Transient):
     def BeginReadCommentSection(self) -> OCP.Storage.Storage_Error: 
         """
         None
@@ -63,14 +62,14 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @overload
-    def BeginWriteCommentSection(self) -> OCP.Storage.Storage_Error: 
+    def BeginWriteCommentSection(self,theOStream : io.BytesIO) -> OCP.Storage.Storage_Error: 
         """
         None
 
         None
         """
     @overload
-    def BeginWriteCommentSection(self,theOStream : Any) -> OCP.Storage.Storage_Error: ...
+    def BeginWriteCommentSection(self) -> OCP.Storage.Storage_Error: ...
     def BeginWriteDataSection(self) -> OCP.Storage.Storage_Error: 
         """
         None
@@ -103,7 +102,19 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         """
         None
         """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
     def Destroy(self) -> None: 
+        """
+        None
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
@@ -140,7 +151,7 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @overload
-    def EndWriteCommentSection(self,theOStream : Any) -> OCP.Storage.Storage_Error: 
+    def EndWriteCommentSection(self,theOStream : io.BytesIO) -> OCP.Storage.Storage_Error: 
         """
         None
 
@@ -153,14 +164,14 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @overload
-    def EndWriteInfoSection(self,theOStream : Any) -> OCP.Storage.Storage_Error: 
+    def EndWriteInfoSection(self) -> OCP.Storage.Storage_Error: 
         """
         None
 
         None
         """
     @overload
-    def EndWriteInfoSection(self) -> OCP.Storage.Storage_Error: ...
+    def EndWriteInfoSection(self,theOStream : io.BytesIO) -> OCP.Storage.Storage_Error: ...
     def EndWriteObjectData(self) -> None: 
         """
         None
@@ -198,7 +209,7 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def GetInteger_s(theIStream : Any) -> Tuple[int]: 
+    def GetInteger_s(theIStream : io.BytesIO) -> Tuple[int]: 
         """
         None
         """
@@ -206,18 +217,26 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         """
         None
         """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
     def GetReference(self,aValue : int) -> OCP.Storage.Storage_BaseDriver: 
         """
         None
         """
     @staticmethod
-    def GetReference_s(theIStream : Any) -> Tuple[int]: 
+    def GetReference_s(theIStream : io.BytesIO) -> Tuple[int]: 
         """
         None
         """
     def GetShortReal(self,aValue : float) -> OCP.Storage.Storage_BaseDriver: 
         """
         None
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
         """
     @staticmethod
     def InverseExtChar_s(theValue : str) -> str: 
@@ -258,6 +277,24 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         """
         None
         """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
     @staticmethod
     def MagicNumber_s() -> str: 
         """
@@ -266,8 +303,6 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
     def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
-
-        None
         """
     def Open(self,aName : OCP.TCollection.TCollection_AsciiString,aMode : OCP.Storage.Storage_OpenMode) -> OCP.Storage.Storage_Error: 
         """
@@ -275,8 +310,6 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         """
     def OpenMode(self) -> OCP.Storage.Storage_OpenMode: 
         """
-        None
-
         None
         """
     def PutBoolean(self,aValue : bool) -> OCP.Storage.Storage_BaseDriver: 
@@ -296,7 +329,7 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def PutInteger_s(theOStream : Any,aValue : int,theOnlyCount : bool=False) -> int: 
+    def PutInteger_s(theOStream : io.BytesIO,aValue : int,theOnlyCount : bool=False) -> int: 
         """
         None
         """
@@ -317,26 +350,26 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def ReadComment_s(theIStream : Any,userComments : OCP.TColStd.TColStd_SequenceOfExtendedString) -> None: 
+    def ReadComment_s(theIStream : io.BytesIO,userComments : OCP.TColStd.TColStd_SequenceOfExtendedString) -> None: 
         """
         None
         """
-    def ReadCompleteInfo(self,theIStream : Any,theData : OCP.Storage.Storage_Data) -> Any: 
-        """
-        None
-        """
-    @staticmethod
-    def ReadExtendedString_s(theIStream : Any,buffer : OCP.TCollection.TCollection_ExtendedString) -> None: 
+    def ReadCompleteInfo(self,theIStream : io.BytesIO,theData : OCP.Storage.Storage_Data) -> Any: 
         """
         None
         """
     @staticmethod
-    def ReadHeaderData_s(theIStream : Any,theHeaderData : OCP.Storage.Storage_HeaderData) -> None: 
+    def ReadExtendedString_s(theIStream : io.BytesIO,buffer : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
         """
     @staticmethod
-    def ReadHeader_s(theIStream : Any,theFileHeader : FSD_FileHeader) -> None: 
+    def ReadHeaderData_s(theIStream : io.BytesIO,theHeaderData : OCP.Storage.Storage_HeaderData) -> None: 
+        """
+        None
+        """
+    @staticmethod
+    def ReadHeader_s(theIStream : io.BytesIO,theFileHeader : FSD_FileHeader) -> None: 
         """
         None
         """
@@ -345,7 +378,7 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def ReadMagicNumber_s(theIStream : Any) -> OCP.TCollection.TCollection_AsciiString: 
+    def ReadMagicNumber_s(theIStream : io.BytesIO) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
         """
@@ -358,7 +391,7 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def ReadReferenceType_s(theIStream : Any) -> Tuple[int, int]: 
+    def ReadReferenceType_s(theIStream : io.BytesIO) -> Tuple[int, int]: 
         """
         None
         """
@@ -367,12 +400,12 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def ReadRoot_s(theIStream : Any,rootName : OCP.TCollection.TCollection_AsciiString,aType : OCP.TCollection.TCollection_AsciiString) -> Tuple[int]: 
+    def ReadRoot_s(theIStream : io.BytesIO,rootName : OCP.TCollection.TCollection_AsciiString,aType : OCP.TCollection.TCollection_AsciiString) -> Tuple[int]: 
         """
         None
         """
     @staticmethod
-    def ReadString_s(theIStream : Any,buffer : OCP.TCollection.TCollection_AsciiString) -> None: 
+    def ReadString_s(theIStream : io.BytesIO,buffer : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         None
         """
@@ -381,7 +414,7 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def ReadTypeInformations_s(theIStream : Any,typeName : OCP.TCollection.TCollection_AsciiString) -> Tuple[int]: 
+    def ReadTypeInformations_s(theIStream : io.BytesIO,typeName : OCP.TCollection.TCollection_AsciiString) -> Tuple[int]: 
         """
         None
         """
@@ -390,7 +423,7 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def RefSectionSize_s(theIStream : Any) -> int: 
+    def RefSectionSize_s(theIStream : io.BytesIO) -> int: 
         """
         None
         """
@@ -399,7 +432,7 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def RootSectionSize_s(theIStream : Any) -> int: 
+    def RootSectionSize_s(theIStream : io.BytesIO) -> int: 
         """
         None
         """
@@ -423,12 +456,16 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         """
         return position in the file. Return -1 upon error.
         """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
     def TypeSectionSize(self) -> int: 
         """
         None
         """
     @staticmethod
-    def TypeSectionSize_s(theIStream : Any) -> int: 
+    def TypeSectionSize_s(theIStream : io.BytesIO) -> int: 
         """
         None
         """
@@ -437,12 +474,12 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def WriteComment_s(theOStream : Any,theComments : OCP.TColStd.TColStd_SequenceOfExtendedString,theOnlyCount : bool=False) -> int: 
+    def WriteComment_s(theOStream : io.BytesIO,theComments : OCP.TColStd.TColStd_SequenceOfExtendedString,theOnlyCount : bool=False) -> int: 
         """
         None
         """
     @staticmethod
-    def WriteHeader_s(theOStream : Any,theHeader : FSD_FileHeader,theOnlyCount : bool=False) -> int: 
+    def WriteHeader_s(theOStream : io.BytesIO,theHeader : FSD_FileHeader,theOnlyCount : bool=False) -> int: 
         """
         None
         """
@@ -451,7 +488,7 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def WriteInfo_s(theOStream : Any,nbObj : int,dbVersion : OCP.TCollection.TCollection_AsciiString,date : OCP.TCollection.TCollection_AsciiString,schemaName : OCP.TCollection.TCollection_AsciiString,schemaVersion : OCP.TCollection.TCollection_AsciiString,appName : OCP.TCollection.TCollection_ExtendedString,appVersion : OCP.TCollection.TCollection_AsciiString,objectType : OCP.TCollection.TCollection_ExtendedString,userInfo : OCP.TColStd.TColStd_SequenceOfAsciiString,theOnlyCount : bool=False) -> int: 
+    def WriteInfo_s(theOStream : io.BytesIO,nbObj : int,dbVersion : OCP.TCollection.TCollection_AsciiString,date : OCP.TCollection.TCollection_AsciiString,schemaName : OCP.TCollection.TCollection_AsciiString,schemaVersion : OCP.TCollection.TCollection_AsciiString,appName : OCP.TCollection.TCollection_ExtendedString,appVersion : OCP.TCollection.TCollection_AsciiString,objectType : OCP.TCollection.TCollection_ExtendedString,userInfo : OCP.TColStd.TColStd_SequenceOfAsciiString,theOnlyCount : bool=False) -> int: 
         """
         None
         """
@@ -472,10 +509,20 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver):
         None
         """
     def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
-class FSD_File(OCP.Storage.Storage_BaseDriver):
+class FSD_File(OCP.Storage.Storage_BaseDriver, OCP.Standard.Standard_Transient):
     """
-    A general driver which defines as a file, the physical container for data to be stored or retrieved.
+    A general driver which defines as a file, the physical container for data to be stored or retrieved.A general driver which defines as a file, the physical container for data to be stored or retrieved.
     """
     def BeginReadCommentSection(self) -> OCP.Storage.Storage_Error: 
         """
@@ -545,7 +592,19 @@ class FSD_File(OCP.Storage.Storage_BaseDriver):
         """
         Closes the file driven by this driver. This file was opened by the last call to the function Open. The function returns Storage_VSOk if the closure is correctly done, or any other value of the Storage_Error enumeration which specifies the problem encountered.
         """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
     def Destroy(self) -> None: 
+        """
+        None
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
@@ -633,6 +692,10 @@ class FSD_File(OCP.Storage.Storage_BaseDriver):
         """
         None
         """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
     def GetReference(self,aValue : int) -> OCP.Storage.Storage_BaseDriver: 
         """
         None
@@ -640,6 +703,10 @@ class FSD_File(OCP.Storage.Storage_BaseDriver):
     def GetShortReal(self,aValue : float) -> OCP.Storage.Storage_BaseDriver: 
         """
         None
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
         """
     def IsEnd(self) -> bool: 
         """
@@ -650,6 +717,24 @@ class FSD_File(OCP.Storage.Storage_BaseDriver):
         """
         None
         """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
     @staticmethod
     def MagicNumber_s() -> str: 
         """
@@ -657,8 +742,6 @@ class FSD_File(OCP.Storage.Storage_BaseDriver):
         """
     def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
-        None
-
         None
         """
     def Open(self,aName : OCP.TCollection.TCollection_AsciiString,aMode : OCP.Storage.Storage_OpenMode) -> OCP.Storage.Storage_Error: 
@@ -668,8 +751,6 @@ class FSD_File(OCP.Storage.Storage_BaseDriver):
     def OpenMode(self) -> OCP.Storage.Storage_OpenMode: 
         """
         None
-
-        None
         """
     def PutBoolean(self,aValue : bool) -> OCP.Storage.Storage_BaseDriver: 
         """
@@ -703,7 +784,7 @@ class FSD_File(OCP.Storage.Storage_BaseDriver):
         """
         None
         """
-    def ReadCompleteInfo(self,theIStream : Any,theData : OCP.Storage.Storage_Data) -> Any: 
+    def ReadCompleteInfo(self,theIStream : io.BytesIO,theData : OCP.Storage.Storage_Data) -> Any: 
         """
         None
         """
@@ -712,7 +793,7 @@ class FSD_File(OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def ReadMagicNumber_s(theIStream : Any) -> OCP.TCollection.TCollection_AsciiString: 
+    def ReadMagicNumber_s(theIStream : io.BytesIO) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
         """
@@ -760,6 +841,10 @@ class FSD_File(OCP.Storage.Storage_BaseDriver):
         """
         return position in the file. Return -1 upon error.
         """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
     def TypeSectionSize(self) -> int: 
         """
         None
@@ -789,11 +874,18 @@ class FSD_File(OCP.Storage.Storage_BaseDriver):
         None
         """
     def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
-class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver):
-    """
-    None
-    """
+class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver, OCP.Standard.Standard_Transient):
     def BeginReadCommentSection(self) -> OCP.Storage.Storage_Error: 
         """
         None
@@ -862,7 +954,19 @@ class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver):
         """
         Closes the file driven by this driver. This file was opened by the last call to the function Open. The function returns Storage_VSOk if the closure is correctly done, or any other value of the Storage_Error enumeration which specifies the problem encountered.
         """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
     def Destroy(self) -> None: 
+        """
+        None
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
@@ -950,6 +1054,10 @@ class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver):
         """
         None
         """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
     def GetReference(self,aValue : int) -> OCP.Storage.Storage_BaseDriver: 
         """
         None
@@ -957,6 +1065,10 @@ class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver):
     def GetShortReal(self,aValue : float) -> OCP.Storage.Storage_BaseDriver: 
         """
         None
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
         """
     def IsEnd(self) -> bool: 
         """
@@ -967,6 +1079,24 @@ class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver):
         """
         None
         """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
     @staticmethod
     def MagicNumber_s() -> str: 
         """
@@ -975,8 +1105,6 @@ class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver):
     def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
-
-        None
         """
     def Open(self,aName : OCP.TCollection.TCollection_AsciiString,aMode : OCP.Storage.Storage_OpenMode) -> OCP.Storage.Storage_Error: 
         """
@@ -984,8 +1112,6 @@ class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver):
         """
     def OpenMode(self) -> OCP.Storage.Storage_OpenMode: 
         """
-        None
-
         None
         """
     def PutBoolean(self,aValue : bool) -> OCP.Storage.Storage_BaseDriver: 
@@ -1020,7 +1146,7 @@ class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver):
         """
         None
         """
-    def ReadCompleteInfo(self,theIStream : Any,theData : OCP.Storage.Storage_Data) -> Any: 
+    def ReadCompleteInfo(self,theIStream : io.BytesIO,theData : OCP.Storage.Storage_Data) -> Any: 
         """
         None
         """
@@ -1029,7 +1155,7 @@ class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver):
         None
         """
     @staticmethod
-    def ReadMagicNumber_s(theIStream : Any) -> OCP.TCollection.TCollection_AsciiString: 
+    def ReadMagicNumber_s(theIStream : io.BytesIO) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
         """
@@ -1077,6 +1203,10 @@ class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver):
         """
         return position in the file. Return -1 upon error.
         """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
     def TypeSectionSize(self) -> int: 
         """
         None
@@ -1106,6 +1236,16 @@ class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver):
         None
         """
     def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class FSD_FileHeader():
     """

@@ -4,25 +4,29 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopAbs
-import OCP.TCollection
-import OCP.TopoDS
-import OCP.TDocStd
-import OCP.TPrsStd
-import OCP.NCollection
-import OCP.PrsMgr
-import OCP.gp
 import OCP.TDF
-import OCP.TColStd
-import OCP.SelectMgr
+import OCP.Prs3d
+import OCP.NCollection
 import OCP.Bnd
+import OCP.TopoDS
+import OCP.PrsMgr
+import OCP.V3d
+import OCP.TPrsStd
+import OCP.Standard
+import OCP.SelectMgr
+import OCP.TopAbs
 import OCP.Quantity
+import OCP.TDocStd
+import OCP.XCAFDoc
+import OCP.TColStd
+import OCP.TCollection
+import io
+import OCP.OSD
+import OCP.gp
+import OCP.AIS
+import OCP.Image
 import OCP.Graphic3d
 import OCP.Aspect
-import OCP.Prs3d
-import OCP.Standard
-import OCP.Geom
-import OCP.AIS
 import OCP.TopLoc
 __all__  = [
 "XCAFPrs",
@@ -34,6 +38,7 @@ __all__  = [
 "XCAFPrs_Driver",
 "XCAFPrs_IndexedDataMapOfShapeStyle",
 "XCAFPrs_Style",
+"XCAFPrs_Texture",
 "XCAFPrs_DocumentExplorerFlags_NoStyle",
 "XCAFPrs_DocumentExplorerFlags_None",
 "XCAFPrs_DocumentExplorerFlags_OnlyLeafNodes"
@@ -135,7 +140,7 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         """
         Returns the Color attributes of the shape accordingly to the current facing model;
         """
-    def CombinedParentTransformation(self) -> OCP.Geom.Geom_Transformation: 
+    def CombinedParentTransformation(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return combined parent transformation.
         """
@@ -146,10 +151,6 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
     def CurrentFacingModel(self) -> OCP.Aspect.Aspect_TypeOfFacingModel: 
         """
         Returns the current facing model which is in effect.
-        """
-    def CurrentSelection(self) -> OCP.SelectMgr.SelectMgr_Selection: 
-        """
-        Returns the current selection in this framework.
         """
     def CustomAspects(self,theShape : OCP.TopoDS.TopoDS_Shape) -> OCP.AIS.AIS_ColoredDrawer: 
         """
@@ -179,7 +180,7 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         """
         Returns the display mode setting of the Interactive Object. The range of supported display mode indexes should be specified within object definition and filtered by AccepDisplayMode().
         """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -307,10 +308,6 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         """
         Increments the reference counter of this object
         """
-    def Init(self) -> None: 
-        """
-        Begins the iteration scanning for sensitive primitives.
-        """
     def InteractiveContext(self) -> OCP.AIS.AIS_InteractiveContext: 
         """
         Returns the context pointer to the interactive context.
@@ -357,21 +354,13 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         """
         Return the local transformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
-    def LocalTransformationGeom(self) -> OCP.Geom.Geom_Transformation: 
+    def LocalTransformationGeom(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return the local transformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     def Material(self) -> OCP.Graphic3d.Graphic3d_NameOfMaterial: 
         """
         Returns the NameOfMaterial attributes of the shape accordingly to the current facing model;
-        """
-    def More(self) -> bool: 
-        """
-        Continues the iteration scanning for sensitive primitives.
-        """
-    def Next(self) -> None: 
-        """
-        Continues the iteration scanning for sensitive primitives.
         """
     def OwnDeviationAngle(self,anAngle : float,aPreviousAngle : float) -> bool: 
         """
@@ -380,14 +369,6 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
     def OwnDeviationCoefficient(self,aCoefficient : float,aPreviousCoefficient : float) -> bool: 
         """
         Returns true and the values of the deviation coefficient aCoefficient and the previous deviation coefficient aPreviousCoefficient. If these values are not already set, false is returned.
-        """
-    def OwnHLRDeviationAngle(self,anAngle : float,aPreviousAngle : float) -> bool: 
-        """
-        Returns true and the values of the HLR deviation angle anAngle and of the previous HLR deviation angle aPreviousAngle. If these values are not already set, false is returned.
-        """
-    def OwnHLRDeviationCoefficient(self,aCoefficient : float,aPreviousCoefficient : float) -> bool: 
-        """
-        Returns true and the values of the HLR deviation coefficient aCoefficient and the previous HLR deviation coefficient aPreviousCoefficient. If these values are not already set, false is returned.
         """
     def Parent(self) -> OCP.PrsMgr.PrsMgr_PresentableObject: 
         """
@@ -404,6 +385,10 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
     def Presentations(self) -> OCP.PrsMgr.PrsMgr_Presentations: 
         """
         Return presentations.
+        """
+    def ProcessDragging(self,theCtx : OCP.AIS.AIS_InteractiveContext,theView : OCP.V3d.V3d_View,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theDragFrom : OCP.Graphic3d.Graphic3d_Vec2i,theDragTo : OCP.Graphic3d.Graphic3d_Vec2i,theAction : OCP.AIS.AIS_DragAction) -> bool: 
+        """
+        Drag object in the viewer.
         """
     @overload
     def RecomputePrimitives(self,theMode : int) -> None: 
@@ -514,10 +499,6 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         """
         Initializes the dynamic hilight drawing tool.
         """
-    def SetHLRAngleAndDeviation(self,anAngle : float) -> None: 
-        """
-        this compute a new Angle and Deviation from the value anAngle for HLR and set the values stored in myDrawer for with these that become local to the shape
-        """
     def SetHilightAttributes(self,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
         Initializes the hilight drawing tool theDrawer.
@@ -546,7 +527,7 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.Geom.Geom_Transformation) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,theMaterial : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aspect. This method assigns the new default material without overriding XDE styles. Re-computation of existing presentation is not required after calling this method.
@@ -573,24 +554,6 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         """
     @overload
     def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: ...
-    @overload
-    def SetOwnHLRDeviationAngle(self) -> bool: 
-        """
-        Sets a local value for HLR deviation angle for this specific shape.
-
-        sets myOwnHLRDeviationAngle field in Prs3d_Drawer & recomputes presentation
-        """
-    @overload
-    def SetOwnHLRDeviationAngle(self,anAngle : float) -> None: ...
-    @overload
-    def SetOwnHLRDeviationCoefficient(self,aCoefficient : float) -> None: 
-        """
-        Sets a local value for HLR deviation coefficient for this specific shape.
-
-        sets myOwnHLRDeviationCoefficient field in Prs3d_Drawer & recomputes presentation
-        """
-    @overload
-    def SetOwnHLRDeviationCoefficient(self) -> bool: ...
     def SetOwner(self,theApplicativeEntity : OCP.Standard.Standard_Transient) -> None: 
         """
         Allows you to attribute the owner theApplicativeEntity to an Interactive Object. This can be a shape for a set of sub-shapes or a sub-shape for sub-shapes which it is composed of. The owner takes the form of a transient.
@@ -706,7 +669,7 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         """
         Return the transformation taking into account transformation of parent object(s). Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
-    def TransformationGeom(self) -> OCP.Geom.Geom_Transformation: 
+    def TransformationGeom(self) -> OCP.TopLoc.TopLoc_Datum3D: 
         """
         Return the transformation taking into account transformation of parent object(s). Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
@@ -788,7 +751,7 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         """
     def __init__(self,theLabel : OCP.TDF.TDF_Label) -> None: ...
     @staticmethod
-    def computeHlrPresentation_s(theProjector : OCP.Prs3d.Prs3d_Projector,thePrs : OCP.Graphic3d.Graphic3d_Structure,theShape : OCP.TopoDS.TopoDS_Shape,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
+    def computeHlrPresentation_s(theProjector : OCP.Graphic3d.Graphic3d_Camera,thePrs : OCP.Graphic3d.Graphic3d_Structure,theShape : OCP.TopoDS.TopoDS_Shape,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
         Compute HLR presentation for specified shape.
         """
@@ -832,14 +795,14 @@ class XCAFPrs_DataMapOfStyleShape(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : XCAFPrs_DataMapOfStyleShape) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -881,7 +844,7 @@ class XCAFPrs_DataMapOfStyleShape(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -895,7 +858,7 @@ class XCAFPrs_DataMapOfStyleShape(OCP.NCollection.NCollection_BaseMap):
     def __init__(self,theOther : XCAFPrs_DataMapOfStyleShape) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class XCAFPrs_DocumentExplorer():
     """
@@ -905,15 +868,19 @@ class XCAFPrs_DocumentExplorer():
         """
         Return current position.
         """
+    def ColorTool(self) -> OCP.XCAFDoc.XCAFDoc_ColorTool: 
+        """
+        Return color tool.
+        """
     @overload
-    def Current(self) -> XCAFPrs_DocumentNode: 
+    def Current(self,theDepth : int) -> XCAFPrs_DocumentNode: 
         """
         Return current position within specified assembly depth.
 
         Return current position.
         """
     @overload
-    def Current(self,theDepth : int) -> XCAFPrs_DocumentNode: ...
+    def Current(self) -> XCAFPrs_DocumentNode: ...
     def CurrentDepth(self) -> int: 
         """
         Return depth of the current node in hierarchy, starting from 0. Zero means Root label.
@@ -956,12 +923,16 @@ class XCAFPrs_DocumentExplorer():
         """
         Go to the next node.
         """
-    @overload
-    def __init__(self,theDocument : OCP.TDocStd.TDocStd_Document,theRoots : OCP.TDF.TDF_LabelSequence,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
+    def VisMaterialTool(self) -> OCP.XCAFDoc.XCAFDoc_VisMaterialTool: 
+        """
+        Return material tool.
+        """
     @overload
     def __init__(self,theDocument : OCP.TDocStd.TDocStd_Document,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theDocument : OCP.TDocStd.TDocStd_Document,theRoots : OCP.TDF.TDF_LabelSequence,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
     pass
 class XCAFPrs_DocumentIdIterator():
     """
@@ -987,6 +958,16 @@ class XCAFPrs_DocumentNode():
     """
     Structure defining document node.
     """
+    @staticmethod
+    def HashCode_s(theNode : XCAFPrs_DocumentNode,theN : int) -> int: 
+        """
+        Return hash code based on node string identifier.
+        """
+    @staticmethod
+    def IsEqual_s(theNode1 : XCAFPrs_DocumentNode,theNode2 : XCAFPrs_DocumentNode) -> bool: 
+        """
+        Return TRUE if two document nodes has the same string identifier.
+        """
     def __init__(self) -> None: ...
     @property
     def ChildIter(self) -> OCP.TDF.TDF_ChildIterator:
@@ -1174,14 +1155,14 @@ class XCAFPrs_IndexedDataMapOfShapeStyle(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> XCAFPrs_Style: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : XCAFPrs_Style) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : XCAFPrs_Style) -> bool: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> XCAFPrs_Style: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         FindIndex
@@ -1222,7 +1203,7 @@ class XCAFPrs_IndexedDataMapOfShapeStyle(OCP.NCollection.NCollection_BaseMap):
         """
         Size
         """
-    def Statistics(self,S : Any) -> None: 
+    def Statistics(self,S : io.BytesIO) -> None: 
         """
         Statistics
         """
@@ -1235,18 +1216,18 @@ class XCAFPrs_IndexedDataMapOfShapeStyle(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self,theOther : XCAFPrs_IndexedDataMapOfShapeStyle) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : XCAFPrs_IndexedDataMapOfShapeStyle) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class XCAFPrs_Style():
     """
     Represents a set of styling settings applicable to a (sub)shape
     """
-    def DumpJson(self,theOStream : Any,theDepth : int=-1) -> None: 
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
@@ -1266,6 +1247,10 @@ class XCAFPrs_Style():
     def HashCode_s(theStyle : XCAFPrs_Style,theUpperBound : int) -> int: 
         """
         Computes a hash code for the given set of styling settings, in the range [1, theUpperBound]
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        Return TRUE if style is empty - does not override any properties.
         """
     def IsEqual(self,theOther : XCAFPrs_Style) -> bool: 
         """
@@ -1288,6 +1273,10 @@ class XCAFPrs_Style():
         """
         Manage visibility.
         """
+    def Material(self) -> OCP.XCAFDoc.XCAFDoc_VisMaterial: 
+        """
+        Return material.
+        """
     def SetColorCurv(self,col : OCP.Quantity.Quantity_Color) -> None: 
         """
         Set curve color.
@@ -1301,6 +1290,10 @@ class XCAFPrs_Style():
         """
     @overload
     def SetColorSurf(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetMaterial(self,theMaterial : OCP.XCAFDoc.XCAFDoc_VisMaterial) -> None: 
+        """
+        Set material.
+        """
     def SetVisibility(self,theVisibility : bool) -> None: 
         """
         Assign visibility.
@@ -1314,6 +1307,188 @@ class XCAFPrs_Style():
         Manage surface color setting
         """
     def __init__(self) -> None: ...
+    pass
+class XCAFPrs_Texture(OCP.Graphic3d.Graphic3d_Texture2Dmanual, OCP.Graphic3d.Graphic3d_Texture2D, OCP.Graphic3d.Graphic3d_TextureMap, OCP.Graphic3d.Graphic3d_TextureRoot, OCP.Standard.Standard_Transient):
+    """
+    Texture holder.
+    """
+    def AnisoFilter(self) -> OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy: 
+        """
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DisableModulate(self) -> None: 
+        """
+        disable texture modulate mode. the image is directly decal on the surface.
+        """
+    def DisableRepeat(self) -> None: 
+        """
+        use this methods if you want to disable texture repetition on your objects.
+        """
+    def DisableSmooth(self) -> None: 
+        """
+        disable texture smoothing
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def EnableModulate(self) -> None: 
+        """
+        enable texture modulate mode. the image is modulate with the shading of the surface.
+        """
+    def EnableRepeat(self) -> None: 
+        """
+        use this methods if you want to enable texture repetition on your objects.
+        """
+    def EnableSmooth(self) -> None: 
+        """
+        enable texture smoothing
+        """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        Image reader.
+        """
+    def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        This ID will be used to manage resource in graphic driver.
+        """
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
+        """
+        Image reader.
+        """
+    def GetImageSource(self) -> OCP.Image.Image_Texture: 
+        """
+        Return image source.
+        """
+    def GetParams(self) -> OCP.Graphic3d.Graphic3d_TextureParams: 
+        """
+        Returns low-level texture parameters
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasMipMaps(self) -> bool: 
+        """
+        Return true if mip-maps should be used.
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
+        """
+    def IsDone(self) -> bool: 
+        """
+        Checks if a texture class is valid or not.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsModulate(self) -> bool: 
+        """
+        Returns TRUE if the texture is modulate.
+        """
+    def IsRepeat(self) -> bool: 
+        """
+        Returns TRUE if the texture repeat is enable.
+        """
+    def IsSmoothed(self) -> bool: 
+        """
+        Returns TRUE if the texture is smoothed.
+        """
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
+        """
+    def Name(self) -> OCP.Graphic3d.Graphic3d_NameOfTexture2D: 
+        """
+        Returns the name of the predefined textures or NOT_2D_UNKNOWN when the name is given as a filename.
+        """
+    @staticmethod
+    def NumberOfTextures_s() -> int: 
+        """
+        Returns the number of predefined textures.
+        """
+    def Path(self) -> OCP.OSD.OSD_Path: 
+        """
+        Returns the full path of the defined texture. It could be empty path if GetImage() is overridden to load image not from file.
+        """
+    def Revision(self) -> int: 
+        """
+        Return image revision.
+        """
+    def SetAnisoFilter(self,theLevel : OCP.Graphic3d.Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
+    def SetImage(self,thePixMap : OCP.Image.Image_PixMap) -> None: 
+        """
+        Assign new image to the texture. Note that this method does not invalidate already uploaded resources - consider calling ::UpdateRevision() if needed.
+        """
+    def SetMipMaps(self,theToUse : bool) -> None: 
+        """
+        Set if mip-maps should be used (generated if needed). Note that this method should be called before loading / using the texture.
+        """
+    @staticmethod
+    def TextureName_s(theRank : int) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Returns the name of the predefined texture of rank <aRank>
+        """
+    @staticmethod
+    def TexturesFolder_s() -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        The path to textures determined from CSF_MDTVTexturesDirectory or CASROOT environment variables.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Type(self) -> OCP.Graphic3d.Graphic3d_TypeOfTexture: 
+        """
+        Returns the texture type.
+        """
+    def UpdateRevision(self) -> None: 
+        """
+        Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
+        """
+    def __init__(self,theImageSource : OCP.Image.Image_Texture,theUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 XCAFPrs_DocumentExplorerFlags_NoStyle = 2
 XCAFPrs_DocumentExplorerFlags_None = 0

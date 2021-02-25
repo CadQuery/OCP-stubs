@@ -4,10 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import io
 import OCP.GeomAbs
+import OCP.Geom
 import OCP.GeomLProp
 import OCP.Geom2d
-import OCP.Geom
 __all__  = [
 "LocalAnalysis",
 "LocalAnalysis_CurveContinuity",
@@ -25,7 +26,7 @@ class LocalAnalysis():
     """
     @staticmethod
     @overload
-    def Dump_s(curvconti : LocalAnalysis_CurveContinuity,o : Any) -> None: 
+    def Dump_s(surfconti : LocalAnalysis_SurfaceContinuity,o : io.BytesIO) -> None: 
         """
         This class compute s and gives tools to check the local continuity between two points situated on 2 curves)
 
@@ -33,7 +34,7 @@ class LocalAnalysis():
         """
     @staticmethod
     @overload
-    def Dump_s(surfconti : LocalAnalysis_SurfaceContinuity,o : Any) -> None: ...
+    def Dump_s(curvconti : LocalAnalysis_CurveContinuity,o : io.BytesIO) -> None: ...
     def __init__(self) -> None: ...
     pass
 class LocalAnalysis_CurveContinuity():
@@ -122,23 +123,31 @@ class LocalAnalysis_StatusErrorType():
 
       LocalAnalysis_CurvatureNotDefined
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    LocalAnalysis_CurvatureNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = LocalAnalysis_StatusErrorType.LocalAnalysis_CurvatureNotDefined
-    LocalAnalysis_NormalNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = LocalAnalysis_StatusErrorType.LocalAnalysis_NormalNotDefined
-    LocalAnalysis_NullFirstDerivative: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = LocalAnalysis_StatusErrorType.LocalAnalysis_NullFirstDerivative
-    LocalAnalysis_NullSecondDerivative: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = LocalAnalysis_StatusErrorType.LocalAnalysis_NullSecondDerivative
-    LocalAnalysis_TangentNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = LocalAnalysis_StatusErrorType.LocalAnalysis_TangentNotDefined
-    __entries: dict # value = {'LocalAnalysis_NullFirstDerivative': (LocalAnalysis_StatusErrorType.LocalAnalysis_NullFirstDerivative, None), 'LocalAnalysis_NullSecondDerivative': (LocalAnalysis_StatusErrorType.LocalAnalysis_NullSecondDerivative, None), 'LocalAnalysis_TangentNotDefined': (LocalAnalysis_StatusErrorType.LocalAnalysis_TangentNotDefined, None), 'LocalAnalysis_NormalNotDefined': (LocalAnalysis_StatusErrorType.LocalAnalysis_NormalNotDefined, None), 'LocalAnalysis_CurvatureNotDefined': (LocalAnalysis_StatusErrorType.LocalAnalysis_CurvatureNotDefined, None)}
-    __members__: dict # value = {'LocalAnalysis_NullFirstDerivative': LocalAnalysis_StatusErrorType.LocalAnalysis_NullFirstDerivative, 'LocalAnalysis_NullSecondDerivative': LocalAnalysis_StatusErrorType.LocalAnalysis_NullSecondDerivative, 'LocalAnalysis_TangentNotDefined': LocalAnalysis_StatusErrorType.LocalAnalysis_TangentNotDefined, 'LocalAnalysis_NormalNotDefined': LocalAnalysis_StatusErrorType.LocalAnalysis_NormalNotDefined, 'LocalAnalysis_CurvatureNotDefined': LocalAnalysis_StatusErrorType.LocalAnalysis_CurvatureNotDefined}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    LocalAnalysis_CurvatureNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = <LocalAnalysis_StatusErrorType.LocalAnalysis_CurvatureNotDefined: 4>
+    LocalAnalysis_NormalNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = <LocalAnalysis_StatusErrorType.LocalAnalysis_NormalNotDefined: 3>
+    LocalAnalysis_NullFirstDerivative: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = <LocalAnalysis_StatusErrorType.LocalAnalysis_NullFirstDerivative: 0>
+    LocalAnalysis_NullSecondDerivative: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = <LocalAnalysis_StatusErrorType.LocalAnalysis_NullSecondDerivative: 1>
+    LocalAnalysis_TangentNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = <LocalAnalysis_StatusErrorType.LocalAnalysis_TangentNotDefined: 2>
+    __entries: dict # value = {'LocalAnalysis_NullFirstDerivative': (<LocalAnalysis_StatusErrorType.LocalAnalysis_NullFirstDerivative: 0>, None), 'LocalAnalysis_NullSecondDerivative': (<LocalAnalysis_StatusErrorType.LocalAnalysis_NullSecondDerivative: 1>, None), 'LocalAnalysis_TangentNotDefined': (<LocalAnalysis_StatusErrorType.LocalAnalysis_TangentNotDefined: 2>, None), 'LocalAnalysis_NormalNotDefined': (<LocalAnalysis_StatusErrorType.LocalAnalysis_NormalNotDefined: 3>, None), 'LocalAnalysis_CurvatureNotDefined': (<LocalAnalysis_StatusErrorType.LocalAnalysis_CurvatureNotDefined: 4>, None)}
+    __members__: dict # value = {'LocalAnalysis_NullFirstDerivative': <LocalAnalysis_StatusErrorType.LocalAnalysis_NullFirstDerivative: 0>, 'LocalAnalysis_NullSecondDerivative': <LocalAnalysis_StatusErrorType.LocalAnalysis_NullSecondDerivative: 1>, 'LocalAnalysis_TangentNotDefined': <LocalAnalysis_StatusErrorType.LocalAnalysis_TangentNotDefined: 2>, 'LocalAnalysis_NormalNotDefined': <LocalAnalysis_StatusErrorType.LocalAnalysis_NormalNotDefined: 3>, 'LocalAnalysis_CurvatureNotDefined': <LocalAnalysis_StatusErrorType.LocalAnalysis_CurvatureNotDefined: 4>}
     pass
 class LocalAnalysis_SurfaceContinuity():
     """
@@ -231,8 +240,8 @@ class LocalAnalysis_SurfaceContinuity():
     @overload
     def __init__(self,Surf1 : OCP.Geom.Geom_Surface,u1 : float,v1 : float,Surf2 : OCP.Geom.Geom_Surface,u2 : float,v2 : float,Order : OCP.GeomAbs.GeomAbs_Shape,EpsNul : float=0.001,EpsC0 : float=0.001,EpsC1 : float=0.001,EpsC2 : float=0.001,EpsG1 : float=0.001,Percent : float=0.01,Maxlen : float=10000.0) -> None: ...
     pass
-LocalAnalysis_CurvatureNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = LocalAnalysis_StatusErrorType.LocalAnalysis_CurvatureNotDefined
-LocalAnalysis_NormalNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = LocalAnalysis_StatusErrorType.LocalAnalysis_NormalNotDefined
-LocalAnalysis_NullFirstDerivative: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = LocalAnalysis_StatusErrorType.LocalAnalysis_NullFirstDerivative
-LocalAnalysis_NullSecondDerivative: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = LocalAnalysis_StatusErrorType.LocalAnalysis_NullSecondDerivative
-LocalAnalysis_TangentNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = LocalAnalysis_StatusErrorType.LocalAnalysis_TangentNotDefined
+LocalAnalysis_CurvatureNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = <LocalAnalysis_StatusErrorType.LocalAnalysis_CurvatureNotDefined: 4>
+LocalAnalysis_NormalNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = <LocalAnalysis_StatusErrorType.LocalAnalysis_NormalNotDefined: 3>
+LocalAnalysis_NullFirstDerivative: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = <LocalAnalysis_StatusErrorType.LocalAnalysis_NullFirstDerivative: 0>
+LocalAnalysis_NullSecondDerivative: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = <LocalAnalysis_StatusErrorType.LocalAnalysis_NullSecondDerivative: 1>
+LocalAnalysis_TangentNotDefined: OCP.LocalAnalysis.LocalAnalysis_StatusErrorType # value = <LocalAnalysis_StatusErrorType.LocalAnalysis_TangentNotDefined: 2>

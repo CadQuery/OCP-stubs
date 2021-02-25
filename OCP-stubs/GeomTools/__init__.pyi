@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Standard
-import OCP.Message
-import OCP.Geom2d
 import OCP.Geom
+import OCP.Geom2d
+import OCP.Standard
+import io
 __all__  = [
 "GeomTools",
 "GeomTools_Curve2dSet",
@@ -21,7 +21,7 @@ class GeomTools():
     """
     @staticmethod
     @overload
-    def Dump_s(C : OCP.Geom.Geom_Curve,OS : Any) -> None: 
+    def Dump_s(S : OCP.Geom.Geom_Surface,OS : io.BytesIO) -> None: 
         """
         A set of Curves from Geom2d. Dumps the surface on the stream.
 
@@ -31,12 +31,12 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Dump_s(S : OCP.Geom.Geom_Surface,OS : Any) -> None: ...
+    def Dump_s(C : OCP.Geom2d.Geom2d_Curve,OS : io.BytesIO) -> None: ...
     @staticmethod
     @overload
-    def Dump_s(C : OCP.Geom2d.Geom2d_Curve,OS : Any) -> None: ...
+    def Dump_s(C : OCP.Geom.Geom_Curve,OS : io.BytesIO) -> None: ...
     @staticmethod
-    def GetReal_s(IS : Any) -> Tuple[float]: 
+    def GetReal_s(IS : io.BytesIO) -> Tuple[float]: 
         """
         Reads the Standard_Real value from the stream. Zero is read in case of error
         """
@@ -47,7 +47,7 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Read_s(S : OCP.Geom.Geom_Surface,IS : Any) -> None: 
+    def Read_s(C : OCP.Geom2d.Geom2d_Curve,IS : io.BytesIO) -> None: 
         """
         Reads the surface from the stream.
 
@@ -57,10 +57,10 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Read_s(C : OCP.Geom2d.Geom2d_Curve,IS : Any) -> None: ...
+    def Read_s(C : OCP.Geom.Geom_Curve,IS : io.BytesIO) -> None: ...
     @staticmethod
     @overload
-    def Read_s(C : OCP.Geom.Geom_Curve,IS : Any) -> None: ...
+    def Read_s(S : OCP.Geom.Geom_Surface,IS : io.BytesIO) -> None: ...
     @staticmethod
     def SetUndefinedTypeHandler_s(aHandler : GeomTools_UndefinedTypeHandler) -> None: 
         """
@@ -68,7 +68,7 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Write_s(C : OCP.Geom.Geom_Curve,OS : Any) -> None: 
+    def Write_s(C : OCP.Geom.Geom_Curve,OS : io.BytesIO) -> None: 
         """
         Writes the surface on the stream.
 
@@ -78,10 +78,10 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Write_s(S : OCP.Geom.Geom_Surface,OS : Any) -> None: ...
+    def Write_s(S : OCP.Geom.Geom_Surface,OS : io.BytesIO) -> None: ...
     @staticmethod
     @overload
-    def Write_s(C : OCP.Geom2d.Geom2d_Curve,OS : Any) -> None: ...
+    def Write_s(C : OCP.Geom2d.Geom2d_Curve,OS : io.BytesIO) -> None: ...
     def __init__(self) -> None: ...
     pass
 class GeomTools_Curve2dSet():
@@ -100,37 +100,29 @@ class GeomTools_Curve2dSet():
         """
         Returns the Curve of index <I>.
         """
-    def Dump(self,OS : Any) -> None: 
+    def Dump(self,OS : io.BytesIO) -> None: 
         """
         Dumps the content of me on the stream <OS>.
-        """
-    def GetProgress(self) -> OCP.Message.Message_ProgressIndicator: 
-        """
-        None
         """
     def Index(self,C : OCP.Geom2d.Geom2d_Curve) -> int: 
         """
         Returns the index of <L>.
         """
     @staticmethod
-    def PrintCurve2d_s(C : OCP.Geom2d.Geom2d_Curve,OS : Any,compact : bool=False) -> None: 
+    def PrintCurve2d_s(C : OCP.Geom2d.Geom2d_Curve,OS : io.BytesIO,compact : bool=False) -> None: 
         """
         Dumps the curve on the stream, if compact is True use the compact format that can be read back.
         """
-    def Read(self,IS : Any) -> None: 
+    def Read(self,IS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the content of me from the stream <IS>. me is first cleared.
         """
     @staticmethod
-    def ReadCurve2d_s(IS : Any) -> OCP.Geom2d.Geom2d_Curve: 
+    def ReadCurve2d_s(IS : io.BytesIO) -> OCP.Geom2d.Geom2d_Curve: 
         """
         Reads the curve from the stream. The curve is assumed to have been written with the Print method (compact = True).
         """
-    def SetProgress(self,PR : OCP.Message.Message_ProgressIndicator) -> None: 
-        """
-        None
-        """
-    def Write(self,OS : Any) -> None: 
+    def Write(self,OS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the content of me on the stream <OS> in a format that can be read back by Read.
         """
@@ -152,37 +144,29 @@ class GeomTools_CurveSet():
         """
         Returns the Curve of index <I>.
         """
-    def Dump(self,OS : Any) -> None: 
+    def Dump(self,OS : io.BytesIO) -> None: 
         """
         Dumps the content of me on the stream <OS>.
-        """
-    def GetProgress(self) -> OCP.Message.Message_ProgressIndicator: 
-        """
-        None
         """
     def Index(self,C : OCP.Geom.Geom_Curve) -> int: 
         """
         Returns the index of <L>.
         """
     @staticmethod
-    def PrintCurve_s(C : OCP.Geom.Geom_Curve,OS : Any,compact : bool=False) -> None: 
+    def PrintCurve_s(C : OCP.Geom.Geom_Curve,OS : io.BytesIO,compact : bool=False) -> None: 
         """
         Dumps the curve on the stream, if compact is True use the compact format that can be read back.
         """
-    def Read(self,IS : Any) -> None: 
+    def Read(self,IS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the content of me from the stream <IS>. me is first cleared.
         """
     @staticmethod
-    def ReadCurve_s(IS : Any) -> OCP.Geom.Geom_Curve: 
+    def ReadCurve_s(IS : io.BytesIO) -> OCP.Geom.Geom_Curve: 
         """
         Reads the curve from the stream. The curve is assumed to have been written with the Print method (compact = True).
         """
-    def SetProgress(self,PR : OCP.Message.Message_ProgressIndicator) -> None: 
-        """
-        None
-        """
-    def Write(self,OS : Any) -> None: 
+    def Write(self,OS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the content of me on the stream <OS> in a format that can be read back by Read.
         """
@@ -200,41 +184,33 @@ class GeomTools_SurfaceSet():
         """
         Clears the content of the set.
         """
-    def Dump(self,OS : Any) -> None: 
+    def Dump(self,OS : io.BytesIO) -> None: 
         """
         Dumps the content of me on the stream <OS>.
-        """
-    def GetProgress(self) -> OCP.Message.Message_ProgressIndicator: 
-        """
-        None
         """
     def Index(self,S : OCP.Geom.Geom_Surface) -> int: 
         """
         Returns the index of <L>.
         """
     @staticmethod
-    def PrintSurface_s(S : OCP.Geom.Geom_Surface,OS : Any,compact : bool=False) -> None: 
+    def PrintSurface_s(S : OCP.Geom.Geom_Surface,OS : io.BytesIO,compact : bool=False) -> None: 
         """
         Dumps the surface on the stream, if compact is True use the compact format that can be read back.
         """
-    def Read(self,IS : Any) -> None: 
+    def Read(self,IS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the content of me from the stream <IS>. me is first cleared.
         """
     @staticmethod
-    def ReadSurface_s(IS : Any) -> OCP.Geom.Geom_Surface: 
+    def ReadSurface_s(IS : io.BytesIO) -> OCP.Geom.Geom_Surface: 
         """
         Reads the surface from the stream. The surface is assumed to have been written with the Print method (compact = True).
-        """
-    def SetProgress(self,PR : OCP.Message.Message_ProgressIndicator) -> None: 
-        """
-        None
         """
     def Surface(self,I : int) -> OCP.Geom.Geom_Surface: 
         """
         Returns the Surface of index <I>.
         """
-    def Write(self,OS : Any) -> None: 
+    def Write(self,OS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the content of me on the stream <OS> in a format that can be read back by Read.
         """
@@ -279,27 +255,27 @@ class GeomTools_UndefinedTypeHandler(OCP.Standard.Standard_Transient):
         """
     @overload
     def IsKind(self,theTypeName : str) -> bool: ...
-    def PrintCurve(self,C : OCP.Geom.Geom_Curve,OS : Any,compact : bool=False) -> None: 
+    def PrintCurve(self,C : OCP.Geom.Geom_Curve,OS : io.BytesIO,compact : bool=False) -> None: 
         """
         None
         """
-    def PrintCurve2d(self,C : OCP.Geom2d.Geom2d_Curve,OS : Any,compact : bool=False) -> None: 
+    def PrintCurve2d(self,C : OCP.Geom2d.Geom2d_Curve,OS : io.BytesIO,compact : bool=False) -> None: 
         """
         None
         """
-    def PrintSurface(self,S : OCP.Geom.Geom_Surface,OS : Any,compact : bool=False) -> None: 
+    def PrintSurface(self,S : OCP.Geom.Geom_Surface,OS : io.BytesIO,compact : bool=False) -> None: 
         """
         None
         """
-    def ReadCurve(self,ctype : int,IS : Any,C : OCP.Geom.Geom_Curve) -> Any: 
+    def ReadCurve(self,ctype : int,IS : io.BytesIO,C : OCP.Geom.Geom_Curve) -> io.BytesIO: 
         """
         None
         """
-    def ReadCurve2d(self,ctype : int,IS : Any,C : OCP.Geom2d.Geom2d_Curve) -> Any: 
+    def ReadCurve2d(self,ctype : int,IS : io.BytesIO,C : OCP.Geom2d.Geom2d_Curve) -> io.BytesIO: 
         """
         None
         """
-    def ReadSurface(self,ctype : int,IS : Any,S : OCP.Geom.Geom_Surface) -> Any: 
+    def ReadSurface(self,ctype : int,IS : io.BytesIO,S : OCP.Geom.Geom_Surface) -> io.BytesIO: 
         """
         None
         """

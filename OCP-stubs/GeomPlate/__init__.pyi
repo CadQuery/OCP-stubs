@@ -4,21 +4,22 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Geom2d
-import OCP.Law
-import OCP.Plate
-import OCP.TColgp
-import OCP.Adaptor3d
-import OCP.TColGeom2d
 import OCP.NCollection
+import OCP.TColGeom2d
+import OCP.Law
+import OCP.TColgp
+import OCP.Geom
+import OCP.AdvApp2Var
+import OCP.Standard
+import OCP.Adaptor3d
+import OCP.Plate
+import OCP.TColStd
+import io
 import OCP.Adaptor2d
 import OCP.gp
-import OCP.TColStd
-import OCP.AdvApp2Var
 import OCP.GeomAbs
-import OCP.Standard
-import OCP.Geom
 import OCP.GeomLProp
+import OCP.Geom2d
 __all__  = [
 "GeomPlate_Aij",
 "GeomPlate_Array1OfHCurve",
@@ -44,9 +45,9 @@ class GeomPlate_Aij():
     A structure containing indexes of two normals and its cross product
     """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,anInd1 : int,anInd2 : int,aVec : OCP.gp.gp_Vec) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class GeomPlate_Array1OfHCurve():
     """
@@ -125,14 +126,14 @@ class GeomPlate_Array1OfHCurve():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : GeomPlate_Array1OfHCurve) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theBegin : OCP.Adaptor3d.Adaptor3d_HCurve,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class GeomPlate_Array1OfSequenceOfReal():
     """
@@ -211,14 +212,14 @@ class GeomPlate_Array1OfSequenceOfReal():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.TColStd.TColStd_SequenceOfReal,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : GeomPlate_Array1OfSequenceOfReal) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : OCP.TColStd.TColStd_SequenceOfReal,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class GeomPlate_BuildAveragePlane():
     """
@@ -293,23 +294,23 @@ class GeomPlate_BuildPlateSurface():
     @overload
     def G0Error(self) -> float: ...
     @overload
-    def G1Error(self,Index : int) -> float: 
+    def G1Error(self) -> float: 
         """
         Returns the max angle betwen the result and the constraints
 
         Returns the max angle between the result and the constraint Index
         """
     @overload
-    def G1Error(self) -> float: ...
+    def G1Error(self,Index : int) -> float: ...
     @overload
-    def G2Error(self,Index : int) -> float: 
+    def G2Error(self) -> float: 
         """
         Returns the max difference of curvature betwen the result and the constraints
 
         Returns the max difference of curvature between the result and the constraint Index
         """
     @overload
-    def G2Error(self) -> float: ...
+    def G2Error(self,Index : int) -> float: ...
     def Init(self) -> None: 
         """
         Resets all constraints
@@ -326,7 +327,7 @@ class GeomPlate_BuildPlateSurface():
         """
         Returns the order of the curves in the array returned by Curves2d. Computation changes this order. Consequently, this method returns the order of the curves prior to computation.
         """
-    def Perform(self,aProgress : OCP.Message.Message_ProgressIndicator=None) -> None: 
+    def Perform(self,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Calls the algorithm and computes the plate surface using the loaded constraints. If no initial surface is given, the algorithm automatically computes one. Exceptions Standard_RangeError if the value of the constraint is null or if plate is not done.
         """
@@ -351,11 +352,11 @@ class GeomPlate_BuildPlateSurface():
         Returns the result of the computation. This surface can then be used by GeomPlate_MakeApprox for converting the resulting surface into a BSpline.
         """
     @overload
-    def __init__(self,Degree : int=3,NbPtsOnCur : int=10,NbIter : int=3,Tol2d : float=1e-05,Tol3d : float=0.0001,TolAng : float=0.01,TolCurv : float=0.1,Anisotropie : bool=False) -> None: ...
-    @overload
     def __init__(self,NPoints : OCP.TColStd.TColStd_HArray1OfInteger,TabCurve : GeomPlate_HArray1OfHCurve,Tang : OCP.TColStd.TColStd_HArray1OfInteger,Degree : int,NbIter : int=3,Tol2d : float=1e-05,Tol3d : float=0.0001,TolAng : float=0.01,TolCurv : float=0.1,Anisotropie : bool=False) -> None: ...
     @overload
     def __init__(self,Surf : OCP.Geom.Geom_Surface,Degree : int=3,NbPtsOnCur : int=10,NbIter : int=3,Tol2d : float=1e-05,Tol3d : float=0.0001,TolAng : float=0.01,TolCurv : float=0.1,Anisotropie : bool=False) -> None: ...
+    @overload
+    def __init__(self,Degree : int=3,NbPtsOnCur : int=10,NbIter : int=3,Tol2d : float=1e-05,Tol3d : float=0.0001,TolAng : float=0.01,TolCurv : float=0.1,Anisotropie : bool=False) -> None: ...
     pass
 class GeomPlate_CurveConstraint(OCP.Standard.Standard_Transient):
     """
@@ -492,9 +493,9 @@ class GeomPlate_CurveConstraint(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,Boundary : OCP.Adaptor3d.Adaptor3d_HCurve,Order : int,NPt : int=10,TolDist : float=0.0001,TolAng : float=0.01,TolCurv : float=0.1) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Boundary : OCP.Adaptor3d.Adaptor3d_HCurve,Order : int,NPt : int=10,TolDist : float=0.0001,TolAng : float=0.01,TolCurv : float=0.1) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -630,14 +631,14 @@ class GeomPlate_HArray1OfHCurve(GeomPlate_Array1OfHCurve, OCP.Standard.Standard_
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : GeomPlate_Array1OfHCurve) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -775,12 +776,12 @@ class GeomPlate_HArray1OfSequenceOfReal(GeomPlate_Array1OfSequenceOfReal, OCP.St
     @overload
     def __init__(self,theOther : GeomPlate_Array1OfSequenceOfReal) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -801,14 +802,14 @@ class GeomPlate_SequenceOfCurveConstraint(OCP.NCollection.NCollection_BaseSequen
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : GeomPlate_CurveConstraint) -> None: 
+    def Append(self,theSeq : GeomPlate_SequenceOfCurveConstraint) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : GeomPlate_SequenceOfCurveConstraint) -> None: ...
+    def Append(self,theItem : GeomPlate_CurveConstraint) -> None: ...
     def Assign(self,theOther : GeomPlate_SequenceOfCurveConstraint) -> GeomPlate_SequenceOfCurveConstraint: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -838,23 +839,23 @@ class GeomPlate_SequenceOfCurveConstraint(OCP.NCollection.NCollection_BaseSequen
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : GeomPlate_SequenceOfCurveConstraint) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : GeomPlate_CurveConstraint) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : GeomPlate_CurveConstraint) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : GeomPlate_SequenceOfCurveConstraint) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : GeomPlate_CurveConstraint) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : GeomPlate_SequenceOfCurveConstraint) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : GeomPlate_SequenceOfCurveConstraint) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : GeomPlate_CurveConstraint) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -914,12 +915,12 @@ class GeomPlate_SequenceOfCurveConstraint(OCP.NCollection.NCollection_BaseSequen
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : GeomPlate_SequenceOfCurveConstraint) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : GeomPlate_SequenceOfCurveConstraint) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1048,12 +1049,12 @@ class GeomPlate_SequenceOfPointConstraint(OCP.NCollection.NCollection_BaseSequen
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : GeomPlate_SequenceOfPointConstraint) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1263,14 +1264,14 @@ class GeomPlate_SequenceOfAij(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : GeomPlate_Aij) -> None: 
+    def Append(self,theSeq : GeomPlate_SequenceOfAij) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : GeomPlate_SequenceOfAij) -> None: ...
+    def Append(self,theItem : GeomPlate_Aij) -> None: ...
     def Assign(self,theOther : GeomPlate_SequenceOfAij) -> GeomPlate_SequenceOfAij: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1309,14 +1310,14 @@ class GeomPlate_SequenceOfAij(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : GeomPlate_Aij) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : GeomPlate_SequenceOfAij) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : GeomPlate_Aij) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : GeomPlate_Aij) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : GeomPlate_SequenceOfAij) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1376,12 +1377,12 @@ class GeomPlate_SequenceOfAij(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : GeomPlate_SequenceOfAij) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1455,23 +1456,23 @@ class GeomPlate_HSequenceOfCurveConstraint(GeomPlate_SequenceOfCurveConstraint, 
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : GeomPlate_SequenceOfCurveConstraint) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : GeomPlate_CurveConstraint) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : GeomPlate_CurveConstraint) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : GeomPlate_SequenceOfCurveConstraint) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : GeomPlate_CurveConstraint) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : GeomPlate_SequenceOfCurveConstraint) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : GeomPlate_SequenceOfCurveConstraint) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : GeomPlate_CurveConstraint) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1557,10 +1558,10 @@ class GeomPlate_HSequenceOfCurveConstraint(GeomPlate_SequenceOfCurveConstraint, 
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : GeomPlate_SequenceOfCurveConstraint) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : GeomPlate_SequenceOfCurveConstraint) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1746,10 +1747,10 @@ class GeomPlate_HSequenceOfPointConstraint(GeomPlate_SequenceOfPointConstraint, 
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : GeomPlate_SequenceOfPointConstraint) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1818,6 +1819,10 @@ class GeomPlate_Surface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry, OCP.Stand
         """
         Memory deallocator for transient classes
         """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1873,7 +1878,7 @@ class GeomPlate_Surface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry, OCP.Stand
         Is the parametrization of a surface periodic in the direction U ? It is possible only if the surface is closed in this parametric direction and if the following relation is satisfied : for each parameter V the distance between the point P (U, V) and the point P (U + T, V) is lower or equal to Resolution from package gp. T is the parametric period and must be a constant.
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
+    def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -1882,9 +1887,9 @@ class GeomPlate_Surface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry, OCP.Stand
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirrored(self,P : OCP.gp.gp_Pnt) -> OCP.Geom.Geom_Geometry: 
         """
@@ -1943,23 +1948,23 @@ class GeomPlate_Surface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry, OCP.Stand
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the tanslation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> OCP.Geom.Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> OCP.Geom.Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> OCP.Geom.Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> OCP.Geom.Geom_Geometry: ...
     def UIso(self,U : float) -> OCP.Geom.Geom_Curve: 
         """
         Computes the U isoparametric curve.

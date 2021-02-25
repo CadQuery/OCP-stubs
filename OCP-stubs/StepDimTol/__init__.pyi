@@ -5,12 +5,12 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
-import OCP.StepRepr
 import OCP.StepBasic
+import OCP.StepRepr
+import OCP.Interface
 import OCP.StepShape
 import OCP.Standard
 import OCP.StepData
-import OCP.Interface
 __all__  = [
 "StepDimTol_GeometricTolerance",
 "StepDimTol_AreaUnitType",
@@ -180,14 +180,14 @@ class StepDimTol_GeometricTolerance(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -227,14 +227,14 @@ class StepDimTol_GeometricTolerance(OCP.Standard.Standard_Transient):
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -267,21 +267,29 @@ class StepDimTol_AreaUnitType():
 
       StepDimTol_Square
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepDimTol_Circular: OCP.StepDimTol.StepDimTol_AreaUnitType # value = StepDimTol_AreaUnitType.StepDimTol_Circular
-    StepDimTol_Rectangular: OCP.StepDimTol.StepDimTol_AreaUnitType # value = StepDimTol_AreaUnitType.StepDimTol_Rectangular
-    StepDimTol_Square: OCP.StepDimTol.StepDimTol_AreaUnitType # value = StepDimTol_AreaUnitType.StepDimTol_Square
-    __entries: dict # value = {'StepDimTol_Circular': (StepDimTol_AreaUnitType.StepDimTol_Circular, None), 'StepDimTol_Rectangular': (StepDimTol_AreaUnitType.StepDimTol_Rectangular, None), 'StepDimTol_Square': (StepDimTol_AreaUnitType.StepDimTol_Square, None)}
-    __members__: dict # value = {'StepDimTol_Circular': StepDimTol_AreaUnitType.StepDimTol_Circular, 'StepDimTol_Rectangular': StepDimTol_AreaUnitType.StepDimTol_Rectangular, 'StepDimTol_Square': StepDimTol_AreaUnitType.StepDimTol_Square}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepDimTol_Circular: OCP.StepDimTol.StepDimTol_AreaUnitType # value = <StepDimTol_AreaUnitType.StepDimTol_Circular: 0>
+    StepDimTol_Rectangular: OCP.StepDimTol.StepDimTol_AreaUnitType # value = <StepDimTol_AreaUnitType.StepDimTol_Rectangular: 1>
+    StepDimTol_Square: OCP.StepDimTol.StepDimTol_AreaUnitType # value = <StepDimTol_AreaUnitType.StepDimTol_Square: 2>
+    __entries: dict # value = {'StepDimTol_Circular': (<StepDimTol_AreaUnitType.StepDimTol_Circular: 0>, None), 'StepDimTol_Rectangular': (<StepDimTol_AreaUnitType.StepDimTol_Rectangular: 1>, None), 'StepDimTol_Square': (<StepDimTol_AreaUnitType.StepDimTol_Square: 2>, None)}
+    __members__: dict # value = {'StepDimTol_Circular': <StepDimTol_AreaUnitType.StepDimTol_Circular: 0>, 'StepDimTol_Rectangular': <StepDimTol_AreaUnitType.StepDimTol_Rectangular: 1>, 'StepDimTol_Square': <StepDimTol_AreaUnitType.StepDimTol_Square: 2>}
     pass
 class StepDimTol_Array1OfDatumReference():
     """
@@ -360,14 +368,14 @@ class StepDimTol_Array1OfDatumReference():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepDimTol_DatumReference,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepDimTol_Array1OfDatumReference) -> None: ...
+    def __init__(self,theBegin : StepDimTol_DatumReference,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theOther : StepDimTol_Array1OfDatumReference) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfDatumReferenceCompartment():
     """
@@ -446,14 +454,14 @@ class StepDimTol_Array1OfDatumReferenceCompartment():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceCompartment) -> None: ...
     @overload
     def __init__(self,theBegin : StepDimTol_DatumReferenceCompartment,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceCompartment) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfDatumReferenceElement():
     """
@@ -532,14 +540,14 @@ class StepDimTol_Array1OfDatumReferenceElement():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceElement) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceElement) -> None: ...
+    @overload
     def __init__(self,theBegin : StepDimTol_DatumReferenceElement,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfDatumReferenceModifier():
     """
@@ -618,14 +626,14 @@ class StepDimTol_Array1OfDatumReferenceModifier():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepDimTol_DatumReferenceModifier,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theBegin : StepDimTol_DatumReferenceModifier,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceModifier) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfDatumSystemOrReference():
     """
@@ -706,12 +714,12 @@ class StepDimTol_Array1OfDatumSystemOrReference():
     @overload
     def __init__(self,theOther : StepDimTol_Array1OfDatumSystemOrReference) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : StepDimTol_DatumSystemOrReference,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfGeometricToleranceModifier():
     """
@@ -790,14 +798,14 @@ class StepDimTol_Array1OfGeometricToleranceModifier():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : StepDimTol_GeometricToleranceModifier,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepDimTol_Array1OfGeometricToleranceModifier) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfToleranceZoneTarget():
     """
@@ -876,14 +884,14 @@ class StepDimTol_Array1OfToleranceZoneTarget():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepDimTol_ToleranceZoneTarget,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepDimTol_Array1OfToleranceZoneTarget) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theBegin : StepDimTol_ToleranceZoneTarget,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_GeometricToleranceWithDatumReference(StepDimTol_GeometricTolerance, OCP.Standard.Standard_Transient):
     """
@@ -978,14 +986,14 @@ class StepDimTol_GeometricToleranceWithDatumReference(StepDimTol_GeometricTolera
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1099,14 +1107,14 @@ class StepDimTol_CoaxialityTolerance(StepDimTol_GeometricToleranceWithDatumRefer
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1322,14 +1330,14 @@ class StepDimTol_ConcentricityTolerance(StepDimTol_GeometricToleranceWithDatumRe
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1379,14 +1387,14 @@ class StepDimTol_CylindricityTolerance(StepDimTol_GeometricTolerance, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -1426,14 +1434,14 @@ class StepDimTol_CylindricityTolerance(StepDimTol_GeometricTolerance, OCP.Standa
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -2216,22 +2224,30 @@ class StepDimTol_DatumReferenceModifierType():
 
       StepDimTol_Spherical
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepDimTol_CircularOrCylindrical: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = StepDimTol_DatumReferenceModifierType.StepDimTol_CircularOrCylindrical
-    StepDimTol_Distance: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = StepDimTol_DatumReferenceModifierType.StepDimTol_Distance
-    StepDimTol_Projected: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = StepDimTol_DatumReferenceModifierType.StepDimTol_Projected
-    StepDimTol_Spherical: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = StepDimTol_DatumReferenceModifierType.StepDimTol_Spherical
-    __entries: dict # value = {'StepDimTol_CircularOrCylindrical': (StepDimTol_DatumReferenceModifierType.StepDimTol_CircularOrCylindrical, None), 'StepDimTol_Distance': (StepDimTol_DatumReferenceModifierType.StepDimTol_Distance, None), 'StepDimTol_Projected': (StepDimTol_DatumReferenceModifierType.StepDimTol_Projected, None), 'StepDimTol_Spherical': (StepDimTol_DatumReferenceModifierType.StepDimTol_Spherical, None)}
-    __members__: dict # value = {'StepDimTol_CircularOrCylindrical': StepDimTol_DatumReferenceModifierType.StepDimTol_CircularOrCylindrical, 'StepDimTol_Distance': StepDimTol_DatumReferenceModifierType.StepDimTol_Distance, 'StepDimTol_Projected': StepDimTol_DatumReferenceModifierType.StepDimTol_Projected, 'StepDimTol_Spherical': StepDimTol_DatumReferenceModifierType.StepDimTol_Spherical}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepDimTol_CircularOrCylindrical: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = <StepDimTol_DatumReferenceModifierType.StepDimTol_CircularOrCylindrical: 0>
+    StepDimTol_Distance: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = <StepDimTol_DatumReferenceModifierType.StepDimTol_Distance: 1>
+    StepDimTol_Projected: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = <StepDimTol_DatumReferenceModifierType.StepDimTol_Projected: 2>
+    StepDimTol_Spherical: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = <StepDimTol_DatumReferenceModifierType.StepDimTol_Spherical: 3>
+    __entries: dict # value = {'StepDimTol_CircularOrCylindrical': (<StepDimTol_DatumReferenceModifierType.StepDimTol_CircularOrCylindrical: 0>, None), 'StepDimTol_Distance': (<StepDimTol_DatumReferenceModifierType.StepDimTol_Distance: 1>, None), 'StepDimTol_Projected': (<StepDimTol_DatumReferenceModifierType.StepDimTol_Projected: 2>, None), 'StepDimTol_Spherical': (<StepDimTol_DatumReferenceModifierType.StepDimTol_Spherical: 3>, None)}
+    __members__: dict # value = {'StepDimTol_CircularOrCylindrical': <StepDimTol_DatumReferenceModifierType.StepDimTol_CircularOrCylindrical: 0>, 'StepDimTol_Distance': <StepDimTol_DatumReferenceModifierType.StepDimTol_Distance: 1>, 'StepDimTol_Projected': <StepDimTol_DatumReferenceModifierType.StepDimTol_Projected: 2>, 'StepDimTol_Spherical': <StepDimTol_DatumReferenceModifierType.StepDimTol_Spherical: 3>}
     pass
 class StepDimTol_DatumReferenceModifierWithValue(OCP.Standard.Standard_Transient):
     """
@@ -2320,14 +2336,14 @@ class StepDimTol_DatumSystem(OCP.StepRepr.StepRepr_ShapeAspect, OCP.Standard.Sta
         Returns field Constituents
         """
     @overload
-    def ConstituentsValue(self,num : int,theItem : StepDimTol_DatumReferenceCompartment) -> None: 
+    def ConstituentsValue(self,num : int) -> StepDimTol_DatumReferenceCompartment: 
         """
         Returns Constituents with the given number
 
         Sets Constituents with given number
         """
     @overload
-    def ConstituentsValue(self,num : int) -> StepDimTol_DatumReferenceCompartment: ...
+    def ConstituentsValue(self,num : int,theItem : StepDimTol_DatumReferenceCompartment) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2667,14 +2683,14 @@ class StepDimTol_FlatnessTolerance(StepDimTol_GeometricTolerance, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -2714,14 +2730,14 @@ class StepDimTol_FlatnessTolerance(StepDimTol_GeometricTolerance, OCP.Standard.S
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -2958,14 +2974,14 @@ class StepDimTol_GeoTolAndGeoTolWthDatRef(StepDimTol_GeometricTolerance, OCP.Sta
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3083,14 +3099,14 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndGeoTolWthMod(StepDimTol_GeometricTol
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3216,14 +3232,14 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndGeoTolWthMaxTol(StepDimTol_GeoTolAnd
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3341,14 +3357,14 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndModGeoTolAndPosTol(StepDimTol_Geomet
         None
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3462,14 +3478,14 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndUneqDisGeoTol(StepDimTol_GeoTolAndGe
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def SetUnequallyDisposedGeometricTolerance(self,theUDGT : StepDimTol_UnequallyDisposedGeometricTolerance) -> None: 
         """
         None
@@ -3528,14 +3544,14 @@ class StepDimTol_GeoTolAndGeoTolWthMod(StepDimTol_GeometricTolerance, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theGTWM : StepDimTol_GeometricToleranceWithModifiers,theType : StepDimTol_GeometricToleranceType) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,aTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,aGTWM : StepDimTol_GeometricToleranceWithModifiers,theType : StepDimTol_GeometricToleranceType) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,aTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,aGTWM : StepDimTol_GeometricToleranceWithModifiers,theType : StepDimTol_GeometricToleranceType) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theGTWM : StepDimTol_GeometricToleranceWithModifiers,theType : StepDimTol_GeometricToleranceType) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -3583,14 +3599,14 @@ class StepDimTol_GeoTolAndGeoTolWthMod(StepDimTol_GeometricTolerance, OCP.Standa
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3708,14 +3724,14 @@ class StepDimTol_GeoTolAndGeoTolWthMaxTol(StepDimTol_GeoTolAndGeoTolWthMod, Step
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3829,14 +3845,14 @@ class StepDimTol_AngularityTolerance(StepDimTol_GeometricToleranceWithDatumRefer
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3893,33 +3909,41 @@ class StepDimTol_GeometricToleranceModifier():
 
       StepDimTol_GTMTangentPlane
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepDimTol_GTMAnyCrossSection: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMAnyCrossSection
-    StepDimTol_GTMCommonZone: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMCommonZone
-    StepDimTol_GTMEachRadialElement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMEachRadialElement
-    StepDimTol_GTMFreeState: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMFreeState
-    StepDimTol_GTMLeastMaterialRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLeastMaterialRequirement
-    StepDimTol_GTMLineElement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLineElement
-    StepDimTol_GTMMajorDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMajorDiameter
-    StepDimTol_GTMMaximumMaterialRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMaximumMaterialRequirement
-    StepDimTol_GTMMinorDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMinorDiameter
-    StepDimTol_GTMNotConvex: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMNotConvex
-    StepDimTol_GTMPitchDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMPitchDiameter
-    StepDimTol_GTMReciprocityRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMReciprocityRequirement
-    StepDimTol_GTMSeparateRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMSeparateRequirement
-    StepDimTol_GTMStatisticalTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMStatisticalTolerance
-    StepDimTol_GTMTangentPlane: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMTangentPlane
-    __entries: dict # value = {'StepDimTol_GTMAnyCrossSection': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMAnyCrossSection, None), 'StepDimTol_GTMCommonZone': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMCommonZone, None), 'StepDimTol_GTMEachRadialElement': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMEachRadialElement, None), 'StepDimTol_GTMFreeState': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMFreeState, None), 'StepDimTol_GTMLeastMaterialRequirement': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLeastMaterialRequirement, None), 'StepDimTol_GTMLineElement': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLineElement, None), 'StepDimTol_GTMMajorDiameter': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMajorDiameter, None), 'StepDimTol_GTMMaximumMaterialRequirement': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMaximumMaterialRequirement, None), 'StepDimTol_GTMMinorDiameter': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMinorDiameter, None), 'StepDimTol_GTMNotConvex': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMNotConvex, None), 'StepDimTol_GTMPitchDiameter': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMPitchDiameter, None), 'StepDimTol_GTMReciprocityRequirement': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMReciprocityRequirement, None), 'StepDimTol_GTMSeparateRequirement': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMSeparateRequirement, None), 'StepDimTol_GTMStatisticalTolerance': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMStatisticalTolerance, None), 'StepDimTol_GTMTangentPlane': (StepDimTol_GeometricToleranceModifier.StepDimTol_GTMTangentPlane, None)}
-    __members__: dict # value = {'StepDimTol_GTMAnyCrossSection': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMAnyCrossSection, 'StepDimTol_GTMCommonZone': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMCommonZone, 'StepDimTol_GTMEachRadialElement': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMEachRadialElement, 'StepDimTol_GTMFreeState': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMFreeState, 'StepDimTol_GTMLeastMaterialRequirement': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLeastMaterialRequirement, 'StepDimTol_GTMLineElement': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLineElement, 'StepDimTol_GTMMajorDiameter': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMajorDiameter, 'StepDimTol_GTMMaximumMaterialRequirement': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMaximumMaterialRequirement, 'StepDimTol_GTMMinorDiameter': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMinorDiameter, 'StepDimTol_GTMNotConvex': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMNotConvex, 'StepDimTol_GTMPitchDiameter': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMPitchDiameter, 'StepDimTol_GTMReciprocityRequirement': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMReciprocityRequirement, 'StepDimTol_GTMSeparateRequirement': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMSeparateRequirement, 'StepDimTol_GTMStatisticalTolerance': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMStatisticalTolerance, 'StepDimTol_GTMTangentPlane': StepDimTol_GeometricToleranceModifier.StepDimTol_GTMTangentPlane}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepDimTol_GTMAnyCrossSection: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMAnyCrossSection: 0>
+    StepDimTol_GTMCommonZone: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMCommonZone: 1>
+    StepDimTol_GTMEachRadialElement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMEachRadialElement: 2>
+    StepDimTol_GTMFreeState: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMFreeState: 3>
+    StepDimTol_GTMLeastMaterialRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLeastMaterialRequirement: 4>
+    StepDimTol_GTMLineElement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLineElement: 5>
+    StepDimTol_GTMMajorDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMajorDiameter: 6>
+    StepDimTol_GTMMaximumMaterialRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMaximumMaterialRequirement: 7>
+    StepDimTol_GTMMinorDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMinorDiameter: 8>
+    StepDimTol_GTMNotConvex: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMNotConvex: 9>
+    StepDimTol_GTMPitchDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMPitchDiameter: 10>
+    StepDimTol_GTMReciprocityRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMReciprocityRequirement: 11>
+    StepDimTol_GTMSeparateRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMSeparateRequirement: 12>
+    StepDimTol_GTMStatisticalTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMStatisticalTolerance: 13>
+    StepDimTol_GTMTangentPlane: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMTangentPlane: 14>
+    __entries: dict # value = {'StepDimTol_GTMAnyCrossSection': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMAnyCrossSection: 0>, None), 'StepDimTol_GTMCommonZone': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMCommonZone: 1>, None), 'StepDimTol_GTMEachRadialElement': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMEachRadialElement: 2>, None), 'StepDimTol_GTMFreeState': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMFreeState: 3>, None), 'StepDimTol_GTMLeastMaterialRequirement': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLeastMaterialRequirement: 4>, None), 'StepDimTol_GTMLineElement': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLineElement: 5>, None), 'StepDimTol_GTMMajorDiameter': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMajorDiameter: 6>, None), 'StepDimTol_GTMMaximumMaterialRequirement': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMaximumMaterialRequirement: 7>, None), 'StepDimTol_GTMMinorDiameter': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMinorDiameter: 8>, None), 'StepDimTol_GTMNotConvex': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMNotConvex: 9>, None), 'StepDimTol_GTMPitchDiameter': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMPitchDiameter: 10>, None), 'StepDimTol_GTMReciprocityRequirement': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMReciprocityRequirement: 11>, None), 'StepDimTol_GTMSeparateRequirement': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMSeparateRequirement: 12>, None), 'StepDimTol_GTMStatisticalTolerance': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMStatisticalTolerance: 13>, None), 'StepDimTol_GTMTangentPlane': (<StepDimTol_GeometricToleranceModifier.StepDimTol_GTMTangentPlane: 14>, None)}
+    __members__: dict # value = {'StepDimTol_GTMAnyCrossSection': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMAnyCrossSection: 0>, 'StepDimTol_GTMCommonZone': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMCommonZone: 1>, 'StepDimTol_GTMEachRadialElement': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMEachRadialElement: 2>, 'StepDimTol_GTMFreeState': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMFreeState: 3>, 'StepDimTol_GTMLeastMaterialRequirement': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLeastMaterialRequirement: 4>, 'StepDimTol_GTMLineElement': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLineElement: 5>, 'StepDimTol_GTMMajorDiameter': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMajorDiameter: 6>, 'StepDimTol_GTMMaximumMaterialRequirement': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMaximumMaterialRequirement: 7>, 'StepDimTol_GTMMinorDiameter': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMinorDiameter: 8>, 'StepDimTol_GTMNotConvex': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMNotConvex: 9>, 'StepDimTol_GTMPitchDiameter': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMPitchDiameter: 10>, 'StepDimTol_GTMReciprocityRequirement': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMReciprocityRequirement: 11>, 'StepDimTol_GTMSeparateRequirement': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMSeparateRequirement: 12>, 'StepDimTol_GTMStatisticalTolerance': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMStatisticalTolerance: 13>, 'StepDimTol_GTMTangentPlane': <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMTangentPlane: 14>}
     pass
 class StepDimTol_GeometricToleranceRelationship(OCP.Standard.Standard_Transient):
     """
@@ -4169,33 +4193,41 @@ class StepDimTol_GeometricToleranceType():
 
       StepDimTol_GTTTotalRunoutTolerance
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepDimTol_GTTAngularityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTAngularityTolerance
-    StepDimTol_GTTCircularRunoutTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTCircularRunoutTolerance
-    StepDimTol_GTTCoaxialityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTCoaxialityTolerance
-    StepDimTol_GTTConcentricityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTConcentricityTolerance
-    StepDimTol_GTTCylindricityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTCylindricityTolerance
-    StepDimTol_GTTFlatnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTFlatnessTolerance
-    StepDimTol_GTTLineProfileTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTLineProfileTolerance
-    StepDimTol_GTTParallelismTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTParallelismTolerance
-    StepDimTol_GTTPerpendicularityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTPerpendicularityTolerance
-    StepDimTol_GTTPositionTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTPositionTolerance
-    StepDimTol_GTTRoundnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTRoundnessTolerance
-    StepDimTol_GTTStraightnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTStraightnessTolerance
-    StepDimTol_GTTSurfaceProfileTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTSurfaceProfileTolerance
-    StepDimTol_GTTSymmetryTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTSymmetryTolerance
-    StepDimTol_GTTTotalRunoutTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTTotalRunoutTolerance
-    __entries: dict # value = {'StepDimTol_GTTAngularityTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTAngularityTolerance, None), 'StepDimTol_GTTCircularRunoutTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTCircularRunoutTolerance, None), 'StepDimTol_GTTCoaxialityTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTCoaxialityTolerance, None), 'StepDimTol_GTTConcentricityTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTConcentricityTolerance, None), 'StepDimTol_GTTCylindricityTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTCylindricityTolerance, None), 'StepDimTol_GTTFlatnessTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTFlatnessTolerance, None), 'StepDimTol_GTTLineProfileTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTLineProfileTolerance, None), 'StepDimTol_GTTParallelismTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTParallelismTolerance, None), 'StepDimTol_GTTPerpendicularityTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTPerpendicularityTolerance, None), 'StepDimTol_GTTPositionTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTPositionTolerance, None), 'StepDimTol_GTTRoundnessTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTRoundnessTolerance, None), 'StepDimTol_GTTStraightnessTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTStraightnessTolerance, None), 'StepDimTol_GTTSurfaceProfileTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTSurfaceProfileTolerance, None), 'StepDimTol_GTTSymmetryTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTSymmetryTolerance, None), 'StepDimTol_GTTTotalRunoutTolerance': (StepDimTol_GeometricToleranceType.StepDimTol_GTTTotalRunoutTolerance, None)}
-    __members__: dict # value = {'StepDimTol_GTTAngularityTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTAngularityTolerance, 'StepDimTol_GTTCircularRunoutTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTCircularRunoutTolerance, 'StepDimTol_GTTCoaxialityTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTCoaxialityTolerance, 'StepDimTol_GTTConcentricityTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTConcentricityTolerance, 'StepDimTol_GTTCylindricityTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTCylindricityTolerance, 'StepDimTol_GTTFlatnessTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTFlatnessTolerance, 'StepDimTol_GTTLineProfileTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTLineProfileTolerance, 'StepDimTol_GTTParallelismTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTParallelismTolerance, 'StepDimTol_GTTPerpendicularityTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTPerpendicularityTolerance, 'StepDimTol_GTTPositionTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTPositionTolerance, 'StepDimTol_GTTRoundnessTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTRoundnessTolerance, 'StepDimTol_GTTStraightnessTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTStraightnessTolerance, 'StepDimTol_GTTSurfaceProfileTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTSurfaceProfileTolerance, 'StepDimTol_GTTSymmetryTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTSymmetryTolerance, 'StepDimTol_GTTTotalRunoutTolerance': StepDimTol_GeometricToleranceType.StepDimTol_GTTTotalRunoutTolerance}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepDimTol_GTTAngularityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTAngularityTolerance: 0>
+    StepDimTol_GTTCircularRunoutTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTCircularRunoutTolerance: 1>
+    StepDimTol_GTTCoaxialityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTCoaxialityTolerance: 2>
+    StepDimTol_GTTConcentricityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTConcentricityTolerance: 3>
+    StepDimTol_GTTCylindricityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTCylindricityTolerance: 4>
+    StepDimTol_GTTFlatnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTFlatnessTolerance: 5>
+    StepDimTol_GTTLineProfileTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTLineProfileTolerance: 6>
+    StepDimTol_GTTParallelismTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTParallelismTolerance: 7>
+    StepDimTol_GTTPerpendicularityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTPerpendicularityTolerance: 8>
+    StepDimTol_GTTPositionTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTPositionTolerance: 9>
+    StepDimTol_GTTRoundnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTRoundnessTolerance: 10>
+    StepDimTol_GTTStraightnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTStraightnessTolerance: 11>
+    StepDimTol_GTTSurfaceProfileTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTSurfaceProfileTolerance: 12>
+    StepDimTol_GTTSymmetryTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTSymmetryTolerance: 13>
+    StepDimTol_GTTTotalRunoutTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTTotalRunoutTolerance: 14>
+    __entries: dict # value = {'StepDimTol_GTTAngularityTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTAngularityTolerance: 0>, None), 'StepDimTol_GTTCircularRunoutTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTCircularRunoutTolerance: 1>, None), 'StepDimTol_GTTCoaxialityTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTCoaxialityTolerance: 2>, None), 'StepDimTol_GTTConcentricityTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTConcentricityTolerance: 3>, None), 'StepDimTol_GTTCylindricityTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTCylindricityTolerance: 4>, None), 'StepDimTol_GTTFlatnessTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTFlatnessTolerance: 5>, None), 'StepDimTol_GTTLineProfileTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTLineProfileTolerance: 6>, None), 'StepDimTol_GTTParallelismTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTParallelismTolerance: 7>, None), 'StepDimTol_GTTPerpendicularityTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTPerpendicularityTolerance: 8>, None), 'StepDimTol_GTTPositionTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTPositionTolerance: 9>, None), 'StepDimTol_GTTRoundnessTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTRoundnessTolerance: 10>, None), 'StepDimTol_GTTStraightnessTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTStraightnessTolerance: 11>, None), 'StepDimTol_GTTSurfaceProfileTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTSurfaceProfileTolerance: 12>, None), 'StepDimTol_GTTSymmetryTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTSymmetryTolerance: 13>, None), 'StepDimTol_GTTTotalRunoutTolerance': (<StepDimTol_GeometricToleranceType.StepDimTol_GTTTotalRunoutTolerance: 14>, None)}
+    __members__: dict # value = {'StepDimTol_GTTAngularityTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTAngularityTolerance: 0>, 'StepDimTol_GTTCircularRunoutTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTCircularRunoutTolerance: 1>, 'StepDimTol_GTTCoaxialityTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTCoaxialityTolerance: 2>, 'StepDimTol_GTTConcentricityTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTConcentricityTolerance: 3>, 'StepDimTol_GTTCylindricityTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTCylindricityTolerance: 4>, 'StepDimTol_GTTFlatnessTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTFlatnessTolerance: 5>, 'StepDimTol_GTTLineProfileTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTLineProfileTolerance: 6>, 'StepDimTol_GTTParallelismTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTParallelismTolerance: 7>, 'StepDimTol_GTTPerpendicularityTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTPerpendicularityTolerance: 8>, 'StepDimTol_GTTPositionTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTPositionTolerance: 9>, 'StepDimTol_GTTRoundnessTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTRoundnessTolerance: 10>, 'StepDimTol_GTTStraightnessTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTStraightnessTolerance: 11>, 'StepDimTol_GTTSurfaceProfileTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTSurfaceProfileTolerance: 12>, 'StepDimTol_GTTSymmetryTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTSymmetryTolerance: 13>, 'StepDimTol_GTTTotalRunoutTolerance': <StepDimTol_GeometricToleranceType.StepDimTol_GTTTotalRunoutTolerance: 14>}
     pass
 class StepDimTol_CircularRunoutTolerance(StepDimTol_GeometricToleranceWithDatumReference, StepDimTol_GeometricTolerance, OCP.Standard.Standard_Transient):
     """
@@ -4290,14 +4322,14 @@ class StepDimTol_CircularRunoutTolerance(StepDimTol_GeometricToleranceWithDatumR
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -4347,14 +4379,14 @@ class StepDimTol_GeometricToleranceWithDefinedUnit(StepDimTol_GeometricTolerance
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -4394,14 +4426,14 @@ class StepDimTol_GeometricToleranceWithDefinedUnit(StepDimTol_GeometricTolerance
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def SetUnitSize(self,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: 
         """
         Set field UnitSize
@@ -4521,14 +4553,14 @@ class StepDimTol_GeometricToleranceWithDefinedAreaUnit(StepDimTol_GeometricToler
         Set field SecondUnitSize
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def SetUnitSize(self,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: 
         """
         Set field UnitSize
@@ -4648,14 +4680,14 @@ class StepDimTol_GeometricToleranceWithModifiers(StepDimTol_GeometricTolerance, 
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -4775,14 +4807,14 @@ class StepDimTol_GeometricToleranceWithMaximumTolerance(StepDimTol_GeometricTole
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -4927,14 +4959,14 @@ class StepDimTol_HArray1OfDatumReference(StepDimTol_Array1OfDatumReference, OCP.
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumReference) -> None: ...
-    @overload
     def __init__(self,theOther : StepDimTol_Array1OfDatumReference) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumReference) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5070,14 +5102,14 @@ class StepDimTol_HArray1OfDatumReferenceCompartment(StepDimTol_Array1OfDatumRefe
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumReferenceCompartment) -> None: ...
     @overload
     def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceCompartment) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumReferenceCompartment) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5215,12 +5247,12 @@ class StepDimTol_HArray1OfDatumReferenceElement(StepDimTol_Array1OfDatumReferenc
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceElement) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumReferenceElement) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceElement) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5363,7 +5395,7 @@ class StepDimTol_HArray1OfDatumReferenceModifier(StepDimTol_Array1OfDatumReferen
     def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceModifier) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5506,7 +5538,7 @@ class StepDimTol_HArray1OfDatumSystemOrReference(StepDimTol_Array1OfDatumSystemO
     def __init__(self,theOther : StepDimTol_Array1OfDatumSystemOrReference) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumSystemOrReference) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5642,14 +5674,14 @@ class StepDimTol_HArray1OfGeometricToleranceModifier(StepDimTol_Array1OfGeometri
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_GeometricToleranceModifier) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepDimTol_Array1OfGeometricToleranceModifier) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5785,14 +5817,14 @@ class StepDimTol_HArray1OfToleranceZoneTarget(StepDimTol_Array1OfToleranceZoneTa
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_ToleranceZoneTarget) -> None: ...
     @overload
     def __init__(self,theOther : StepDimTol_Array1OfToleranceZoneTarget) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_ToleranceZoneTarget) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5816,21 +5848,29 @@ class StepDimTol_LimitCondition():
 
       StepDimTol_RegardlessOfFeatureSize
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepDimTol_LeastMaterialCondition: OCP.StepDimTol.StepDimTol_LimitCondition # value = StepDimTol_LimitCondition.StepDimTol_LeastMaterialCondition
-    StepDimTol_MaximumMaterialCondition: OCP.StepDimTol.StepDimTol_LimitCondition # value = StepDimTol_LimitCondition.StepDimTol_MaximumMaterialCondition
-    StepDimTol_RegardlessOfFeatureSize: OCP.StepDimTol.StepDimTol_LimitCondition # value = StepDimTol_LimitCondition.StepDimTol_RegardlessOfFeatureSize
-    __entries: dict # value = {'StepDimTol_MaximumMaterialCondition': (StepDimTol_LimitCondition.StepDimTol_MaximumMaterialCondition, None), 'StepDimTol_LeastMaterialCondition': (StepDimTol_LimitCondition.StepDimTol_LeastMaterialCondition, None), 'StepDimTol_RegardlessOfFeatureSize': (StepDimTol_LimitCondition.StepDimTol_RegardlessOfFeatureSize, None)}
-    __members__: dict # value = {'StepDimTol_MaximumMaterialCondition': StepDimTol_LimitCondition.StepDimTol_MaximumMaterialCondition, 'StepDimTol_LeastMaterialCondition': StepDimTol_LimitCondition.StepDimTol_LeastMaterialCondition, 'StepDimTol_RegardlessOfFeatureSize': StepDimTol_LimitCondition.StepDimTol_RegardlessOfFeatureSize}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepDimTol_LeastMaterialCondition: OCP.StepDimTol.StepDimTol_LimitCondition # value = <StepDimTol_LimitCondition.StepDimTol_LeastMaterialCondition: 1>
+    StepDimTol_MaximumMaterialCondition: OCP.StepDimTol.StepDimTol_LimitCondition # value = <StepDimTol_LimitCondition.StepDimTol_MaximumMaterialCondition: 0>
+    StepDimTol_RegardlessOfFeatureSize: OCP.StepDimTol.StepDimTol_LimitCondition # value = <StepDimTol_LimitCondition.StepDimTol_RegardlessOfFeatureSize: 2>
+    __entries: dict # value = {'StepDimTol_MaximumMaterialCondition': (<StepDimTol_LimitCondition.StepDimTol_MaximumMaterialCondition: 0>, None), 'StepDimTol_LeastMaterialCondition': (<StepDimTol_LimitCondition.StepDimTol_LeastMaterialCondition: 1>, None), 'StepDimTol_RegardlessOfFeatureSize': (<StepDimTol_LimitCondition.StepDimTol_RegardlessOfFeatureSize: 2>, None)}
+    __members__: dict # value = {'StepDimTol_MaximumMaterialCondition': <StepDimTol_LimitCondition.StepDimTol_MaximumMaterialCondition: 0>, 'StepDimTol_LeastMaterialCondition': <StepDimTol_LimitCondition.StepDimTol_LeastMaterialCondition: 1>, 'StepDimTol_RegardlessOfFeatureSize': <StepDimTol_LimitCondition.StepDimTol_RegardlessOfFeatureSize: 2>}
     pass
 class StepDimTol_LineProfileTolerance(StepDimTol_GeometricTolerance, OCP.Standard.Standard_Transient):
     """
@@ -5861,14 +5901,14 @@ class StepDimTol_LineProfileTolerance(StepDimTol_GeometricTolerance, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -5908,14 +5948,14 @@ class StepDimTol_LineProfileTolerance(StepDimTol_GeometricTolerance, OCP.Standar
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -5965,14 +6005,14 @@ class StepDimTol_ModifiedGeometricTolerance(StepDimTol_GeometricTolerance, OCP.S
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,theModifier : StepDimTol_LimitCondition) -> None: 
+    def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theModifier : StepDimTol_LimitCondition) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theModifier : StepDimTol_LimitCondition) -> None: ...
+    def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,theModifier : StepDimTol_LimitCondition) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6020,14 +6060,14 @@ class StepDimTol_ModifiedGeometricTolerance(StepDimTol_GeometricTolerance, OCP.S
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6231,14 +6271,14 @@ class StepDimTol_ParallelismTolerance(StepDimTol_GeometricToleranceWithDatumRefe
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6352,14 +6392,14 @@ class StepDimTol_PerpendicularityTolerance(StepDimTol_GeometricToleranceWithDatu
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6511,14 +6551,14 @@ class StepDimTol_PositionTolerance(StepDimTol_GeometricTolerance, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6558,14 +6598,14 @@ class StepDimTol_PositionTolerance(StepDimTol_GeometricTolerance, OCP.Standard.S
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6721,14 +6761,14 @@ class StepDimTol_RoundnessTolerance(StepDimTol_GeometricTolerance, OCP.Standard.
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -6768,14 +6808,14 @@ class StepDimTol_RoundnessTolerance(StepDimTol_GeometricTolerance, OCP.Standard.
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -7124,40 +7164,48 @@ class StepDimTol_SimpleDatumReferenceModifier():
 
       StepDimTol_SDRMTranslation
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    StepDimTol_SDRMAnyCrossSection: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyCrossSection
-    StepDimTol_SDRMAnyLongitudinalSection: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyLongitudinalSection
-    StepDimTol_SDRMBasic: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMBasic
-    StepDimTol_SDRMContactingFeature: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMContactingFeature
-    StepDimTol_SDRMDegreeOfFreedomConstraintU: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintU
-    StepDimTol_SDRMDegreeOfFreedomConstraintV: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintV
-    StepDimTol_SDRMDegreeOfFreedomConstraintW: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintW
-    StepDimTol_SDRMDegreeOfFreedomConstraintX: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintX
-    StepDimTol_SDRMDegreeOfFreedomConstraintY: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintY
-    StepDimTol_SDRMDegreeOfFreedomConstraintZ: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintZ
-    StepDimTol_SDRMDistanceVariable: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDistanceVariable
-    StepDimTol_SDRMFreeState: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMFreeState
-    StepDimTol_SDRMLeastMaterialRequirement: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLeastMaterialRequirement
-    StepDimTol_SDRMLine: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLine
-    StepDimTol_SDRMMajorDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMajorDiameter
-    StepDimTol_SDRMMaximumMaterialRequirement: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMaximumMaterialRequirement
-    StepDimTol_SDRMMinorDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMinorDiameter
-    StepDimTol_SDRMOrientation: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMOrientation
-    StepDimTol_SDRMPitchDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPitchDiameter
-    StepDimTol_SDRMPlane: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPlane
-    StepDimTol_SDRMPoint: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPoint
-    StepDimTol_SDRMTranslation: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMTranslation
-    __entries: dict # value = {'StepDimTol_SDRMAnyCrossSection': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyCrossSection, None), 'StepDimTol_SDRMAnyLongitudinalSection': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyLongitudinalSection, None), 'StepDimTol_SDRMBasic': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMBasic, None), 'StepDimTol_SDRMContactingFeature': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMContactingFeature, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintU': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintU, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintV': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintV, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintW': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintW, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintX': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintX, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintY': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintY, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintZ': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintZ, None), 'StepDimTol_SDRMDistanceVariable': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDistanceVariable, None), 'StepDimTol_SDRMFreeState': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMFreeState, None), 'StepDimTol_SDRMLeastMaterialRequirement': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLeastMaterialRequirement, None), 'StepDimTol_SDRMLine': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLine, None), 'StepDimTol_SDRMMajorDiameter': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMajorDiameter, None), 'StepDimTol_SDRMMaximumMaterialRequirement': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMaximumMaterialRequirement, None), 'StepDimTol_SDRMMinorDiameter': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMinorDiameter, None), 'StepDimTol_SDRMOrientation': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMOrientation, None), 'StepDimTol_SDRMPitchDiameter': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPitchDiameter, None), 'StepDimTol_SDRMPlane': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPlane, None), 'StepDimTol_SDRMPoint': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPoint, None), 'StepDimTol_SDRMTranslation': (StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMTranslation, None)}
-    __members__: dict # value = {'StepDimTol_SDRMAnyCrossSection': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyCrossSection, 'StepDimTol_SDRMAnyLongitudinalSection': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyLongitudinalSection, 'StepDimTol_SDRMBasic': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMBasic, 'StepDimTol_SDRMContactingFeature': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMContactingFeature, 'StepDimTol_SDRMDegreeOfFreedomConstraintU': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintU, 'StepDimTol_SDRMDegreeOfFreedomConstraintV': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintV, 'StepDimTol_SDRMDegreeOfFreedomConstraintW': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintW, 'StepDimTol_SDRMDegreeOfFreedomConstraintX': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintX, 'StepDimTol_SDRMDegreeOfFreedomConstraintY': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintY, 'StepDimTol_SDRMDegreeOfFreedomConstraintZ': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintZ, 'StepDimTol_SDRMDistanceVariable': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDistanceVariable, 'StepDimTol_SDRMFreeState': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMFreeState, 'StepDimTol_SDRMLeastMaterialRequirement': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLeastMaterialRequirement, 'StepDimTol_SDRMLine': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLine, 'StepDimTol_SDRMMajorDiameter': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMajorDiameter, 'StepDimTol_SDRMMaximumMaterialRequirement': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMaximumMaterialRequirement, 'StepDimTol_SDRMMinorDiameter': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMinorDiameter, 'StepDimTol_SDRMOrientation': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMOrientation, 'StepDimTol_SDRMPitchDiameter': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPitchDiameter, 'StepDimTol_SDRMPlane': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPlane, 'StepDimTol_SDRMPoint': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPoint, 'StepDimTol_SDRMTranslation': StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMTranslation}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    StepDimTol_SDRMAnyCrossSection: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyCrossSection: 0>
+    StepDimTol_SDRMAnyLongitudinalSection: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyLongitudinalSection: 1>
+    StepDimTol_SDRMBasic: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMBasic: 2>
+    StepDimTol_SDRMContactingFeature: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMContactingFeature: 3>
+    StepDimTol_SDRMDegreeOfFreedomConstraintU: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintU: 4>
+    StepDimTol_SDRMDegreeOfFreedomConstraintV: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintV: 5>
+    StepDimTol_SDRMDegreeOfFreedomConstraintW: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintW: 6>
+    StepDimTol_SDRMDegreeOfFreedomConstraintX: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintX: 7>
+    StepDimTol_SDRMDegreeOfFreedomConstraintY: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintY: 8>
+    StepDimTol_SDRMDegreeOfFreedomConstraintZ: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintZ: 9>
+    StepDimTol_SDRMDistanceVariable: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDistanceVariable: 10>
+    StepDimTol_SDRMFreeState: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMFreeState: 11>
+    StepDimTol_SDRMLeastMaterialRequirement: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLeastMaterialRequirement: 12>
+    StepDimTol_SDRMLine: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLine: 13>
+    StepDimTol_SDRMMajorDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMajorDiameter: 14>
+    StepDimTol_SDRMMaximumMaterialRequirement: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMaximumMaterialRequirement: 15>
+    StepDimTol_SDRMMinorDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMinorDiameter: 16>
+    StepDimTol_SDRMOrientation: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMOrientation: 17>
+    StepDimTol_SDRMPitchDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPitchDiameter: 18>
+    StepDimTol_SDRMPlane: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPlane: 19>
+    StepDimTol_SDRMPoint: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPoint: 20>
+    StepDimTol_SDRMTranslation: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMTranslation: 21>
+    __entries: dict # value = {'StepDimTol_SDRMAnyCrossSection': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyCrossSection: 0>, None), 'StepDimTol_SDRMAnyLongitudinalSection': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyLongitudinalSection: 1>, None), 'StepDimTol_SDRMBasic': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMBasic: 2>, None), 'StepDimTol_SDRMContactingFeature': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMContactingFeature: 3>, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintU': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintU: 4>, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintV': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintV: 5>, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintW': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintW: 6>, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintX': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintX: 7>, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintY': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintY: 8>, None), 'StepDimTol_SDRMDegreeOfFreedomConstraintZ': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintZ: 9>, None), 'StepDimTol_SDRMDistanceVariable': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDistanceVariable: 10>, None), 'StepDimTol_SDRMFreeState': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMFreeState: 11>, None), 'StepDimTol_SDRMLeastMaterialRequirement': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLeastMaterialRequirement: 12>, None), 'StepDimTol_SDRMLine': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLine: 13>, None), 'StepDimTol_SDRMMajorDiameter': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMajorDiameter: 14>, None), 'StepDimTol_SDRMMaximumMaterialRequirement': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMaximumMaterialRequirement: 15>, None), 'StepDimTol_SDRMMinorDiameter': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMinorDiameter: 16>, None), 'StepDimTol_SDRMOrientation': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMOrientation: 17>, None), 'StepDimTol_SDRMPitchDiameter': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPitchDiameter: 18>, None), 'StepDimTol_SDRMPlane': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPlane: 19>, None), 'StepDimTol_SDRMPoint': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPoint: 20>, None), 'StepDimTol_SDRMTranslation': (<StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMTranslation: 21>, None)}
+    __members__: dict # value = {'StepDimTol_SDRMAnyCrossSection': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyCrossSection: 0>, 'StepDimTol_SDRMAnyLongitudinalSection': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyLongitudinalSection: 1>, 'StepDimTol_SDRMBasic': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMBasic: 2>, 'StepDimTol_SDRMContactingFeature': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMContactingFeature: 3>, 'StepDimTol_SDRMDegreeOfFreedomConstraintU': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintU: 4>, 'StepDimTol_SDRMDegreeOfFreedomConstraintV': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintV: 5>, 'StepDimTol_SDRMDegreeOfFreedomConstraintW': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintW: 6>, 'StepDimTol_SDRMDegreeOfFreedomConstraintX': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintX: 7>, 'StepDimTol_SDRMDegreeOfFreedomConstraintY': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintY: 8>, 'StepDimTol_SDRMDegreeOfFreedomConstraintZ': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintZ: 9>, 'StepDimTol_SDRMDistanceVariable': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDistanceVariable: 10>, 'StepDimTol_SDRMFreeState': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMFreeState: 11>, 'StepDimTol_SDRMLeastMaterialRequirement': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLeastMaterialRequirement: 12>, 'StepDimTol_SDRMLine': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLine: 13>, 'StepDimTol_SDRMMajorDiameter': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMajorDiameter: 14>, 'StepDimTol_SDRMMaximumMaterialRequirement': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMaximumMaterialRequirement: 15>, 'StepDimTol_SDRMMinorDiameter': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMinorDiameter: 16>, 'StepDimTol_SDRMOrientation': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMOrientation: 17>, 'StepDimTol_SDRMPitchDiameter': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPitchDiameter: 18>, 'StepDimTol_SDRMPlane': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPlane: 19>, 'StepDimTol_SDRMPoint': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPoint: 20>, 'StepDimTol_SDRMTranslation': <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMTranslation: 21>}
     pass
 class StepDimTol_SimpleDatumReferenceModifierMember(OCP.StepData.StepData_SelectInt, OCP.StepData.StepData_SelectMember, OCP.Standard.Standard_Transient):
     """
@@ -7346,14 +7394,14 @@ class StepDimTol_StraightnessTolerance(StepDimTol_GeometricTolerance, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7393,14 +7441,14 @@ class StepDimTol_StraightnessTolerance(StepDimTol_GeometricTolerance, OCP.Standa
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -7450,14 +7498,14 @@ class StepDimTol_SurfaceProfileTolerance(StepDimTol_GeometricTolerance, OCP.Stan
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     @overload
     def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
@@ -7497,14 +7545,14 @@ class StepDimTol_SurfaceProfileTolerance(StepDimTol_GeometricTolerance, OCP.Stan
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -7618,14 +7666,14 @@ class StepDimTol_SymmetryTolerance(StepDimTol_GeometricToleranceWithDatumReferen
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -8139,14 +8187,14 @@ class StepDimTol_TotalRunoutTolerance(StepDimTol_GeometricToleranceWithDatumRefe
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -8246,14 +8294,14 @@ class StepDimTol_UnequallyDisposedGeometricTolerance(StepDimTol_GeometricToleran
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -8274,65 +8322,65 @@ class StepDimTol_UnequallyDisposedGeometricTolerance(StepDimTol_GeometricToleran
         None
         """
     pass
-StepDimTol_Circular: OCP.StepDimTol.StepDimTol_AreaUnitType # value = StepDimTol_AreaUnitType.StepDimTol_Circular
-StepDimTol_CircularOrCylindrical: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = StepDimTol_DatumReferenceModifierType.StepDimTol_CircularOrCylindrical
-StepDimTol_Distance: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = StepDimTol_DatumReferenceModifierType.StepDimTol_Distance
-StepDimTol_GTMAnyCrossSection: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMAnyCrossSection
-StepDimTol_GTMCommonZone: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMCommonZone
-StepDimTol_GTMEachRadialElement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMEachRadialElement
-StepDimTol_GTMFreeState: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMFreeState
-StepDimTol_GTMLeastMaterialRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLeastMaterialRequirement
-StepDimTol_GTMLineElement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLineElement
-StepDimTol_GTMMajorDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMajorDiameter
-StepDimTol_GTMMaximumMaterialRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMaximumMaterialRequirement
-StepDimTol_GTMMinorDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMinorDiameter
-StepDimTol_GTMNotConvex: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMNotConvex
-StepDimTol_GTMPitchDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMPitchDiameter
-StepDimTol_GTMReciprocityRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMReciprocityRequirement
-StepDimTol_GTMSeparateRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMSeparateRequirement
-StepDimTol_GTMStatisticalTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMStatisticalTolerance
-StepDimTol_GTMTangentPlane: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = StepDimTol_GeometricToleranceModifier.StepDimTol_GTMTangentPlane
-StepDimTol_GTTAngularityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTAngularityTolerance
-StepDimTol_GTTCircularRunoutTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTCircularRunoutTolerance
-StepDimTol_GTTCoaxialityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTCoaxialityTolerance
-StepDimTol_GTTConcentricityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTConcentricityTolerance
-StepDimTol_GTTCylindricityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTCylindricityTolerance
-StepDimTol_GTTFlatnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTFlatnessTolerance
-StepDimTol_GTTLineProfileTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTLineProfileTolerance
-StepDimTol_GTTParallelismTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTParallelismTolerance
-StepDimTol_GTTPerpendicularityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTPerpendicularityTolerance
-StepDimTol_GTTPositionTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTPositionTolerance
-StepDimTol_GTTRoundnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTRoundnessTolerance
-StepDimTol_GTTStraightnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTStraightnessTolerance
-StepDimTol_GTTSurfaceProfileTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTSurfaceProfileTolerance
-StepDimTol_GTTSymmetryTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTSymmetryTolerance
-StepDimTol_GTTTotalRunoutTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = StepDimTol_GeometricToleranceType.StepDimTol_GTTTotalRunoutTolerance
-StepDimTol_LeastMaterialCondition: OCP.StepDimTol.StepDimTol_LimitCondition # value = StepDimTol_LimitCondition.StepDimTol_LeastMaterialCondition
-StepDimTol_MaximumMaterialCondition: OCP.StepDimTol.StepDimTol_LimitCondition # value = StepDimTol_LimitCondition.StepDimTol_MaximumMaterialCondition
-StepDimTol_Projected: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = StepDimTol_DatumReferenceModifierType.StepDimTol_Projected
-StepDimTol_Rectangular: OCP.StepDimTol.StepDimTol_AreaUnitType # value = StepDimTol_AreaUnitType.StepDimTol_Rectangular
-StepDimTol_RegardlessOfFeatureSize: OCP.StepDimTol.StepDimTol_LimitCondition # value = StepDimTol_LimitCondition.StepDimTol_RegardlessOfFeatureSize
-StepDimTol_SDRMAnyCrossSection: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyCrossSection
-StepDimTol_SDRMAnyLongitudinalSection: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyLongitudinalSection
-StepDimTol_SDRMBasic: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMBasic
-StepDimTol_SDRMContactingFeature: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMContactingFeature
-StepDimTol_SDRMDegreeOfFreedomConstraintU: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintU
-StepDimTol_SDRMDegreeOfFreedomConstraintV: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintV
-StepDimTol_SDRMDegreeOfFreedomConstraintW: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintW
-StepDimTol_SDRMDegreeOfFreedomConstraintX: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintX
-StepDimTol_SDRMDegreeOfFreedomConstraintY: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintY
-StepDimTol_SDRMDegreeOfFreedomConstraintZ: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintZ
-StepDimTol_SDRMDistanceVariable: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDistanceVariable
-StepDimTol_SDRMFreeState: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMFreeState
-StepDimTol_SDRMLeastMaterialRequirement: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLeastMaterialRequirement
-StepDimTol_SDRMLine: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLine
-StepDimTol_SDRMMajorDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMajorDiameter
-StepDimTol_SDRMMaximumMaterialRequirement: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMaximumMaterialRequirement
-StepDimTol_SDRMMinorDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMinorDiameter
-StepDimTol_SDRMOrientation: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMOrientation
-StepDimTol_SDRMPitchDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPitchDiameter
-StepDimTol_SDRMPlane: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPlane
-StepDimTol_SDRMPoint: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPoint
-StepDimTol_SDRMTranslation: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMTranslation
-StepDimTol_Spherical: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = StepDimTol_DatumReferenceModifierType.StepDimTol_Spherical
-StepDimTol_Square: OCP.StepDimTol.StepDimTol_AreaUnitType # value = StepDimTol_AreaUnitType.StepDimTol_Square
+StepDimTol_Circular: OCP.StepDimTol.StepDimTol_AreaUnitType # value = <StepDimTol_AreaUnitType.StepDimTol_Circular: 0>
+StepDimTol_CircularOrCylindrical: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = <StepDimTol_DatumReferenceModifierType.StepDimTol_CircularOrCylindrical: 0>
+StepDimTol_Distance: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = <StepDimTol_DatumReferenceModifierType.StepDimTol_Distance: 1>
+StepDimTol_GTMAnyCrossSection: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMAnyCrossSection: 0>
+StepDimTol_GTMCommonZone: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMCommonZone: 1>
+StepDimTol_GTMEachRadialElement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMEachRadialElement: 2>
+StepDimTol_GTMFreeState: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMFreeState: 3>
+StepDimTol_GTMLeastMaterialRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLeastMaterialRequirement: 4>
+StepDimTol_GTMLineElement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMLineElement: 5>
+StepDimTol_GTMMajorDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMajorDiameter: 6>
+StepDimTol_GTMMaximumMaterialRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMaximumMaterialRequirement: 7>
+StepDimTol_GTMMinorDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMMinorDiameter: 8>
+StepDimTol_GTMNotConvex: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMNotConvex: 9>
+StepDimTol_GTMPitchDiameter: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMPitchDiameter: 10>
+StepDimTol_GTMReciprocityRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMReciprocityRequirement: 11>
+StepDimTol_GTMSeparateRequirement: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMSeparateRequirement: 12>
+StepDimTol_GTMStatisticalTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMStatisticalTolerance: 13>
+StepDimTol_GTMTangentPlane: OCP.StepDimTol.StepDimTol_GeometricToleranceModifier # value = <StepDimTol_GeometricToleranceModifier.StepDimTol_GTMTangentPlane: 14>
+StepDimTol_GTTAngularityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTAngularityTolerance: 0>
+StepDimTol_GTTCircularRunoutTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTCircularRunoutTolerance: 1>
+StepDimTol_GTTCoaxialityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTCoaxialityTolerance: 2>
+StepDimTol_GTTConcentricityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTConcentricityTolerance: 3>
+StepDimTol_GTTCylindricityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTCylindricityTolerance: 4>
+StepDimTol_GTTFlatnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTFlatnessTolerance: 5>
+StepDimTol_GTTLineProfileTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTLineProfileTolerance: 6>
+StepDimTol_GTTParallelismTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTParallelismTolerance: 7>
+StepDimTol_GTTPerpendicularityTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTPerpendicularityTolerance: 8>
+StepDimTol_GTTPositionTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTPositionTolerance: 9>
+StepDimTol_GTTRoundnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTRoundnessTolerance: 10>
+StepDimTol_GTTStraightnessTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTStraightnessTolerance: 11>
+StepDimTol_GTTSurfaceProfileTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTSurfaceProfileTolerance: 12>
+StepDimTol_GTTSymmetryTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTSymmetryTolerance: 13>
+StepDimTol_GTTTotalRunoutTolerance: OCP.StepDimTol.StepDimTol_GeometricToleranceType # value = <StepDimTol_GeometricToleranceType.StepDimTol_GTTTotalRunoutTolerance: 14>
+StepDimTol_LeastMaterialCondition: OCP.StepDimTol.StepDimTol_LimitCondition # value = <StepDimTol_LimitCondition.StepDimTol_LeastMaterialCondition: 1>
+StepDimTol_MaximumMaterialCondition: OCP.StepDimTol.StepDimTol_LimitCondition # value = <StepDimTol_LimitCondition.StepDimTol_MaximumMaterialCondition: 0>
+StepDimTol_Projected: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = <StepDimTol_DatumReferenceModifierType.StepDimTol_Projected: 2>
+StepDimTol_Rectangular: OCP.StepDimTol.StepDimTol_AreaUnitType # value = <StepDimTol_AreaUnitType.StepDimTol_Rectangular: 1>
+StepDimTol_RegardlessOfFeatureSize: OCP.StepDimTol.StepDimTol_LimitCondition # value = <StepDimTol_LimitCondition.StepDimTol_RegardlessOfFeatureSize: 2>
+StepDimTol_SDRMAnyCrossSection: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyCrossSection: 0>
+StepDimTol_SDRMAnyLongitudinalSection: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMAnyLongitudinalSection: 1>
+StepDimTol_SDRMBasic: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMBasic: 2>
+StepDimTol_SDRMContactingFeature: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMContactingFeature: 3>
+StepDimTol_SDRMDegreeOfFreedomConstraintU: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintU: 4>
+StepDimTol_SDRMDegreeOfFreedomConstraintV: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintV: 5>
+StepDimTol_SDRMDegreeOfFreedomConstraintW: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintW: 6>
+StepDimTol_SDRMDegreeOfFreedomConstraintX: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintX: 7>
+StepDimTol_SDRMDegreeOfFreedomConstraintY: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintY: 8>
+StepDimTol_SDRMDegreeOfFreedomConstraintZ: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDegreeOfFreedomConstraintZ: 9>
+StepDimTol_SDRMDistanceVariable: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMDistanceVariable: 10>
+StepDimTol_SDRMFreeState: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMFreeState: 11>
+StepDimTol_SDRMLeastMaterialRequirement: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLeastMaterialRequirement: 12>
+StepDimTol_SDRMLine: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMLine: 13>
+StepDimTol_SDRMMajorDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMajorDiameter: 14>
+StepDimTol_SDRMMaximumMaterialRequirement: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMaximumMaterialRequirement: 15>
+StepDimTol_SDRMMinorDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMMinorDiameter: 16>
+StepDimTol_SDRMOrientation: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMOrientation: 17>
+StepDimTol_SDRMPitchDiameter: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPitchDiameter: 18>
+StepDimTol_SDRMPlane: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPlane: 19>
+StepDimTol_SDRMPoint: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMPoint: 20>
+StepDimTol_SDRMTranslation: OCP.StepDimTol.StepDimTol_SimpleDatumReferenceModifier # value = <StepDimTol_SimpleDatumReferenceModifier.StepDimTol_SDRMTranslation: 21>
+StepDimTol_Spherical: OCP.StepDimTol.StepDimTol_DatumReferenceModifierType # value = <StepDimTol_DatumReferenceModifierType.StepDimTol_Spherical: 3>
+StepDimTol_Square: OCP.StepDimTol.StepDimTol_AreaUnitType # value = <StepDimTol_AreaUnitType.StepDimTol_Square: 2>

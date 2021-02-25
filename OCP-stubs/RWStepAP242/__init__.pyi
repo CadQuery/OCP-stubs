@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepData
-import OCP.StepAP242
 import OCP.Interface
+import OCP.StepAP242
+import OCP.StepData
 __all__  = [
 "RWStepAP242_RWDraughtingModelItemAssociation",
 "RWStepAP242_RWGeometricItemSpecificUsage",

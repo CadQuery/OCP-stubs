@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import OCP.TColStd
+import OCP.TCollection
+import io
 import OCP.IGESData
-import OCP.IGESBasic
-import OCP.Message
-import OCP.Standard
-import OCP.Interface
 import OCP.gp
+import OCP.Interface
+import OCP.Standard
+import OCP.IGESBasic
 __all__  = [
 "IGESGraph",
 "IGESGraph_Array1OfColor",
@@ -146,14 +146,14 @@ class IGESGraph_Array1OfColor():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : IGESGraph_Color,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : IGESGraph_Array1OfColor) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : IGESGraph_Array1OfColor) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self,theBegin : IGESGraph_Color,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESGraph_Array1OfTextDisplayTemplate():
     """
@@ -232,14 +232,14 @@ class IGESGraph_Array1OfTextDisplayTemplate():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBegin : IGESGraph_TextDisplayTemplate,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : IGESGraph_Array1OfTextDisplayTemplate) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : IGESGraph_Array1OfTextDisplayTemplate) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : IGESGraph_TextDisplayTemplate,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESGraph_Array1OfTextFontDef():
     """
@@ -318,14 +318,14 @@ class IGESGraph_Array1OfTextFontDef():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : IGESGraph_Array1OfTextFontDef) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : IGESGraph_TextFontDef,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : IGESGraph_Array1OfTextFontDef) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class IGESGraph_Color(OCP.IGESData.IGESData_ColorEntity, OCP.IGESData.IGESData_IGESEntity, OCP.Standard.Standard_Transient):
     """
@@ -1946,14 +1946,14 @@ class IGESGraph_HArray1OfColor(IGESGraph_Array1OfColor, OCP.Standard.Standard_Tr
         Constant value access
         """
     @overload
-    def __init__(self,theOther : IGESGraph_Array1OfColor) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESGraph_Color) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESGraph_Color) -> None: ...
-    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : IGESGraph_Array1OfColor) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2089,14 +2089,14 @@ class IGESGraph_HArray1OfTextDisplayTemplate(IGESGraph_Array1OfTextDisplayTempla
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESGraph_TextDisplayTemplate) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : IGESGraph_Array1OfTextDisplayTemplate) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESGraph_TextDisplayTemplate) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2232,14 +2232,14 @@ class IGESGraph_HArray1OfTextFontDef(IGESGraph_Array1OfTextFontDef, OCP.Standard
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : IGESGraph_Array1OfTextFontDef) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : IGESGraph_TextFontDef) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : IGESGraph_Array1OfTextFontDef) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4846,7 +4846,7 @@ class IGESGraph_SpecificModule(OCP.IGESData.IGESData_SpecificModule, OCP.Standar
         """
         Performs non-ambiguous Corrections on Entities which support them (DrawingSize,DrawingUnits,HighLight,IntercharacterSpacing, LineFontPredefined,NominalSize,Pick,UniformRectGrid)
         """
-    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,CN : int,ent : OCP.IGESData.IGESData_IGESEntity,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Specific Dump (own parameters) for IGESGraph
         """
@@ -5626,7 +5626,7 @@ class IGESGraph_ToolColor():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGraph_Color,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_Color,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5660,7 +5660,7 @@ class IGESGraph_ToolDefinitionLevel():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGraph_DefinitionLevel,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_DefinitionLevel,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5698,7 +5698,7 @@ class IGESGraph_ToolDrawingSize():
         """
         Sets automatic unambiguous Correction on a DrawingSize (NbPropertyValues forced to 2)
         """
-    def OwnDump(self,ent : IGESGraph_DrawingSize,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_DrawingSize,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5736,7 +5736,7 @@ class IGESGraph_ToolDrawingUnits():
         """
         Sets automatic unambiguous Correction on a DrawingUnits (NbPropertyValues forced to 2)
         """
-    def OwnDump(self,ent : IGESGraph_DrawingUnits,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_DrawingUnits,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5774,7 +5774,7 @@ class IGESGraph_ToolHighLight():
         """
         Sets automatic unambiguous Correction on a HighLight (NbPropertyValues forced to 1)
         """
-    def OwnDump(self,ent : IGESGraph_HighLight,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_HighLight,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5812,7 +5812,7 @@ class IGESGraph_ToolIntercharacterSpacing():
         """
         Sets automatic unambiguous Correction on a IntercharacterSpacing (NbPropertyValues forced to 1)
         """
-    def OwnDump(self,ent : IGESGraph_IntercharacterSpacing,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_IntercharacterSpacing,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5846,7 +5846,7 @@ class IGESGraph_ToolLineFontDefPattern():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGraph_LineFontDefPattern,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_LineFontDefPattern,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5880,7 +5880,7 @@ class IGESGraph_ToolLineFontDefTemplate():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGraph_LineFontDefTemplate,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_LineFontDefTemplate,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5918,7 +5918,7 @@ class IGESGraph_ToolLineFontPredefined():
         """
         Sets automatic unambiguous Correction on a LineFontPredefined (NbPropertyValues forced to 1)
         """
-    def OwnDump(self,ent : IGESGraph_LineFontPredefined,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_LineFontPredefined,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5956,7 +5956,7 @@ class IGESGraph_ToolNominalSize():
         """
         Sets automatic unambiguous Correction on a NominalSize (NbPropertyValues forced to 2 or 3 according HasStandardName)
         """
-    def OwnDump(self,ent : IGESGraph_NominalSize,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_NominalSize,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -5994,7 +5994,7 @@ class IGESGraph_ToolPick():
         """
         Sets automatic unambiguous Correction on a Pick (NbPropertyValues forced to 1)
         """
-    def OwnDump(self,ent : IGESGraph_Pick,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_Pick,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -6028,7 +6028,7 @@ class IGESGraph_ToolTextDisplayTemplate():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGraph_TextDisplayTemplate,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_TextDisplayTemplate,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -6062,7 +6062,7 @@ class IGESGraph_ToolTextFontDef():
         """
         Copies Specific Parameters
         """
-    def OwnDump(self,ent : IGESGraph_TextFontDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_TextFontDef,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """
@@ -6100,7 +6100,7 @@ class IGESGraph_ToolUniformRectGrid():
         """
         Sets automatic unambiguous Correction on a UniformRectGrid (NbPropertyValues forced to 9)
         """
-    def OwnDump(self,ent : IGESGraph_UniformRectGrid,dumper : OCP.IGESData.IGESData_IGESDumper,S : OCP.Message.Message_Messenger,own : int) -> None: 
+    def OwnDump(self,ent : IGESGraph_UniformRectGrid,dumper : OCP.IGESData.IGESData_IGESDumper,S : io.BytesIO,own : int) -> None: 
         """
         Dump of Specific Parameters
         """

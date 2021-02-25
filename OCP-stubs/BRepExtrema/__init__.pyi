@@ -4,14 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.SelectMgr
-import OCP.Bnd
-import OCP.Graphic3d
 import OCP.Extrema
-import OCP.Standard
-import OCP.TopoDS
+import io
 import OCP.NCollection
+import OCP.SelectMgr
 import OCP.gp
+import OCP.TopoDS
+import OCP.Bnd
+import BRepExtrema_ElementFilter
+import OCP.Standard
 __all__  = [
 "BRepExtrema_DistShapeShape",
 "BRepExtrema_DistanceSS",
@@ -39,7 +40,7 @@ class BRepExtrema_DistShapeShape():
     """
     This class provides tools to compute minimum distance between two Shapes (Compound,CompSolid, Solid, Shell, Face, Wire, Edge, Vertex).
     """
-    def Dump(self,o : Any) -> None: 
+    def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints on the stream o information on the current state of the object.
         """
@@ -124,11 +125,11 @@ class BRepExtrema_DistShapeShape():
         Returns the value of the minimum distance.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,Shape1 : OCP.TopoDS.TopoDS_Shape,Shape2 : OCP.TopoDS.TopoDS_Shape,F : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     @overload
     def __init__(self,Shape1 : OCP.TopoDS.TopoDS_Shape,Shape2 : OCP.TopoDS.TopoDS_Shape,theDeflection : float,F : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     @overload
-    def __init__(self,Shape1 : OCP.TopoDS.TopoDS_Shape,Shape2 : OCP.TopoDS.TopoDS_Shape,F : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class BRepExtrema_DistanceSS():
     """
@@ -167,11 +168,50 @@ class BRepExtrema_ElementFilter():
     """
     Filtering tool used to detect if two given mesh elements should be tested for overlapping/intersection or not.
     """
-    def PreCheckElements(self,arg1 : int,arg2 : int) -> Any: 
+    class FilterResult_e():
+        """
+        Result of filtering function.
+
+        Members:
+
+          NoCheck
+
+          Overlap
+
+          DoCheck
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        DoCheck: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.DoCheck: 2>
+        NoCheck: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.NoCheck: 0>
+        Overlap: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.Overlap: 1>
+        __entries: dict # value = {'NoCheck': (<FilterResult_e.NoCheck: 0>, None), 'Overlap': (<FilterResult_e.Overlap: 1>, None), 'DoCheck': (<FilterResult_e.DoCheck: 2>, None)}
+        __members__: dict # value = {'NoCheck': <FilterResult_e.NoCheck: 0>, 'Overlap': <FilterResult_e.Overlap: 1>, 'DoCheck': <FilterResult_e.DoCheck: 2>}
+        pass
+    def PreCheckElements(self,arg1 : int,arg2 : int) -> BRepExtrema_ElementFilter.FilterResult_e: 
         """
         Checks if two mesh elements should be tested for overlapping/intersection (used for detection correct/incorrect cases of shared edges and vertices).
         """
     def __init__(self) -> None: ...
+    DoCheck: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.DoCheck: 2>
+    NoCheck: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.NoCheck: 0>
+    Overlap: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.Overlap: 1>
     pass
 class BRepExtrema_ExtCC():
     """
@@ -222,9 +262,9 @@ class BRepExtrema_ExtCC():
         if the edges is a trimmed curve, dist11 is a square distance between the point on E1 of parameter FirstParameter and the point of parameter FirstParameter on E2.
         """
     @overload
-    def __init__(self,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge) -> None: ...
     pass
 class BRepExtrema_ExtCF():
     """
@@ -410,9 +450,9 @@ class BRepExtrema_ExtPF():
         Returns the value of the <N>th extremum square distance.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,TheVertex : OCP.TopoDS.TopoDS_Vertex,TheFace : OCP.TopoDS.TopoDS_Face,TheFlag : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,TheAlgo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepExtrema_OverlapTool():
     """
@@ -474,6 +514,8 @@ class BRepExtrema_SelfIntersection(BRepExtrema_ElementFilter):
     """
     Tool class for detection of self-sections in the given shape. This class is based on BRepExtrema_OverlapTool and thus uses shape tessellation to detect incorrect mesh fragments (pairs of overlapped triangles belonging to different faces). Thus, a result depends critically on the quality of mesh generator (e.g., BREP mesh is not always a good choice, because it can contain gaps between adjacent face triangulations, which may not share vertices on common edge; thus false overlap can be detected). As a result, this tool can be used for relatively fast approximated test which provides sub-set of potentially overlapped faces.
     """
+    class FilterResult_e():
+        pass
     def ElementSet(self) -> BRepExtrema_TriangleSet: 
         """
         Returns set of all the face triangles of the shape.
@@ -498,7 +540,7 @@ class BRepExtrema_SelfIntersection(BRepExtrema_ElementFilter):
         """
         Performs detection of self-intersections.
         """
-    def PreCheckElements(self,arg1 : int,arg2 : int) -> Any: 
+    def PreCheckElements(self,arg1 : int,arg2 : int) -> BRepExtrema_ElementFilter.FilterResult_e: 
         """
         Checks if two mesh elements should be tested for overlapping/intersection (used for detection correct/incorrect cases of shared edges and vertices).
         """
@@ -514,6 +556,9 @@ class BRepExtrema_SelfIntersection(BRepExtrema_ElementFilter):
     def __init__(self,theTolerance : float=0.0) -> None: ...
     @overload
     def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape,theTolerance : float=0.0) -> None: ...
+    DoCheck: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.DoCheck: 2>
+    NoCheck: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.NoCheck: 0>
+    Overlap: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.Overlap: 1>
     pass
 class BRepExtrema_SeqOfSolution(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -524,14 +569,14 @@ class BRepExtrema_SeqOfSolution(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : BRepExtrema_SeqOfSolution) -> None: 
+    def Append(self,theItem : BRepExtrema_SolutionElem) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : BRepExtrema_SolutionElem) -> None: ...
+    def Append(self,theSeq : BRepExtrema_SeqOfSolution) -> None: ...
     def Assign(self,theOther : BRepExtrema_SeqOfSolution) -> BRepExtrema_SeqOfSolution: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -604,14 +649,14 @@ class BRepExtrema_SeqOfSolution(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : BRepExtrema_SolutionElem) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -637,12 +682,12 @@ class BRepExtrema_SeqOfSolution(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : BRepExtrema_SeqOfSolution) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def __iter__(self) -> iterator: ...
+    @overload
+    def __init__(self,theOther : BRepExtrema_SeqOfSolution) -> None: ...
+    def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -726,7 +771,7 @@ class BRepExtrema_ShapeList(OCP.NCollection.NCollection_BaseVector):
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : BRepExtrema_ShapeList) -> None: ...
-    def __iter__(self) -> iterator: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class BRepExtrema_ShapeProximity():
     """
@@ -822,13 +867,13 @@ class BRepExtrema_SolutionElem():
         Returns the vertex if the solution is a Vertex.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theFace : OCP.TopoDS.TopoDS_Face,theU : float,theV : float) -> None: ...
     @overload
-    def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theEdge : OCP.TopoDS.TopoDS_Edge,theParam : float) -> None: ...
-    @overload
     def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theEdge : OCP.TopoDS.TopoDS_Edge,theParam : float) -> None: ...
     pass
 class BRepExtrema_SupportType():
     """
@@ -842,27 +887,35 @@ class BRepExtrema_SupportType():
 
       BRepExtrema_IsInFace
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    BRepExtrema_IsInFace: OCP.BRepExtrema.BRepExtrema_SupportType # value = BRepExtrema_SupportType.BRepExtrema_IsInFace
-    BRepExtrema_IsOnEdge: OCP.BRepExtrema.BRepExtrema_SupportType # value = BRepExtrema_SupportType.BRepExtrema_IsOnEdge
-    BRepExtrema_IsVertex: OCP.BRepExtrema.BRepExtrema_SupportType # value = BRepExtrema_SupportType.BRepExtrema_IsVertex
-    __entries: dict # value = {'BRepExtrema_IsVertex': (BRepExtrema_SupportType.BRepExtrema_IsVertex, None), 'BRepExtrema_IsOnEdge': (BRepExtrema_SupportType.BRepExtrema_IsOnEdge, None), 'BRepExtrema_IsInFace': (BRepExtrema_SupportType.BRepExtrema_IsInFace, None)}
-    __members__: dict # value = {'BRepExtrema_IsVertex': BRepExtrema_SupportType.BRepExtrema_IsVertex, 'BRepExtrema_IsOnEdge': BRepExtrema_SupportType.BRepExtrema_IsOnEdge, 'BRepExtrema_IsInFace': BRepExtrema_SupportType.BRepExtrema_IsInFace}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    BRepExtrema_IsInFace: OCP.BRepExtrema.BRepExtrema_SupportType # value = <BRepExtrema_SupportType.BRepExtrema_IsInFace: 2>
+    BRepExtrema_IsOnEdge: OCP.BRepExtrema.BRepExtrema_SupportType # value = <BRepExtrema_SupportType.BRepExtrema_IsOnEdge: 1>
+    BRepExtrema_IsVertex: OCP.BRepExtrema.BRepExtrema_SupportType # value = <BRepExtrema_SupportType.BRepExtrema_IsVertex: 0>
+    __entries: dict # value = {'BRepExtrema_IsVertex': (<BRepExtrema_SupportType.BRepExtrema_IsVertex: 0>, None), 'BRepExtrema_IsOnEdge': (<BRepExtrema_SupportType.BRepExtrema_IsOnEdge: 1>, None), 'BRepExtrema_IsInFace': (<BRepExtrema_SupportType.BRepExtrema_IsInFace: 2>, None)}
+    __members__: dict # value = {'BRepExtrema_IsVertex': <BRepExtrema_SupportType.BRepExtrema_IsVertex: 0>, 'BRepExtrema_IsOnEdge': <BRepExtrema_SupportType.BRepExtrema_IsOnEdge: 1>, 'BRepExtrema_IsInFace': <BRepExtrema_SupportType.BRepExtrema_IsInFace: 2>}
     pass
 class BRepExtrema_TriangleSet():
     """
     Triangle set corresponding to specific face.Triangle set corresponding to specific face.
     """
-    def Box(self,theIndex : int) -> OCP.Graphic3d.Graphic3d_BndBox3d: 
+    def Box(self,theIndex : int) -> Any: 
         """
         Returns AABB of the given triangle.
         """
@@ -924,6 +977,6 @@ class BRepExtrema_UnCompatibleShape(Exception, BaseException):
     __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'BRepExtrema_UnCompatibleShape' objects>
     args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
     pass
-BRepExtrema_IsInFace: OCP.BRepExtrema.BRepExtrema_SupportType # value = BRepExtrema_SupportType.BRepExtrema_IsInFace
-BRepExtrema_IsOnEdge: OCP.BRepExtrema.BRepExtrema_SupportType # value = BRepExtrema_SupportType.BRepExtrema_IsOnEdge
-BRepExtrema_IsVertex: OCP.BRepExtrema.BRepExtrema_SupportType # value = BRepExtrema_SupportType.BRepExtrema_IsVertex
+BRepExtrema_IsInFace: OCP.BRepExtrema.BRepExtrema_SupportType # value = <BRepExtrema_SupportType.BRepExtrema_IsInFace: 2>
+BRepExtrema_IsOnEdge: OCP.BRepExtrema.BRepExtrema_SupportType # value = <BRepExtrema_SupportType.BRepExtrema_IsOnEdge: 1>
+BRepExtrema_IsVertex: OCP.BRepExtrema.BRepExtrema_SupportType # value = <BRepExtrema_SupportType.BRepExtrema_IsVertex: 0>

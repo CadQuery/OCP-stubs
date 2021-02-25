@@ -6,6 +6,7 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
 import OCP.TCollection
+import io
 import OCP.Storage
 import OCP.Standard
 __all__  = [
@@ -198,7 +199,7 @@ class BinObjMgt_Persistent():
         """
         Put C array of float, theLength is the number of elements
         """
-    def Read(self,theIS : Any) -> Any: 
+    def Read(self,theIS : io.BytesIO) -> io.BytesIO: 
         """
         Retrieves <me> from the stream. inline Standard_IStream& operator>> (Standard_IStream&, BinObjMgt_Persistent&) is also available
         """
@@ -215,14 +216,14 @@ class BinObjMgt_Persistent():
         Sets the current position for get/put. Resets an error state depending on the validity of thePos. Returns the new state (value of IsOK())
         """
     @overload
-    def SetTypeId(self,theTypeId : int) -> None: 
+    def SetTypeId(self,theId : int) -> None: 
         """
         Sets the Id of the type of the object
 
         Sets the Id of the type of the object
         """
     @overload
-    def SetTypeId(self,theId : int) -> None: ...
+    def SetTypeId(self,theTypeId : int) -> None: ...
     def Truncate(self) -> None: 
         """
         Truncates the buffer by current position, i.e. updates mySize
@@ -235,7 +236,7 @@ class BinObjMgt_Persistent():
 
         Returns the Id of the type of the object
         """
-    def Write(self,theOS : Any) -> Any: 
+    def Write(self,theOS : io.BytesIO) -> io.BytesIO: 
         """
         Stores <me> to the stream. inline Standard_OStream& operator<< (Standard_OStream&, BinObjMgt_Persistent&) is also available
         """

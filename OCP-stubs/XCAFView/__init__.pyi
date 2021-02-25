@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.gp
 import OCP.Standard
 import OCP.TCollection
-import OCP.gp
 __all__  = [
 "XCAFView_Object",
 "XCAFView_ProjectionType",
@@ -193,9 +193,9 @@ class XCAFView_Object(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self,theObj : XCAFView_Object) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theObj : XCAFView_Object) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -219,22 +219,30 @@ class XCAFView_ProjectionType():
 
       XCAFView_ProjectionType_Central
     """
-    def __index__(self) -> int: ...
-    def __init__(self,arg0 : int) -> None: ...
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
     @property
-    def name(self) -> str:
+    def name(self) -> None:
         """
-        (self: handle) -> str
-
-        :type: str
+        :type: None
         """
-    XCAFView_ProjectionType_Central: OCP.XCAFView.XCAFView_ProjectionType # value = XCAFView_ProjectionType.XCAFView_ProjectionType_Central
-    XCAFView_ProjectionType_NoCamera: OCP.XCAFView.XCAFView_ProjectionType # value = XCAFView_ProjectionType.XCAFView_ProjectionType_NoCamera
-    XCAFView_ProjectionType_Parallel: OCP.XCAFView.XCAFView_ProjectionType # value = XCAFView_ProjectionType.XCAFView_ProjectionType_Parallel
-    __entries: dict # value = {'XCAFView_ProjectionType_NoCamera': (XCAFView_ProjectionType.XCAFView_ProjectionType_NoCamera, None), 'XCAFView_ProjectionType_Parallel': (XCAFView_ProjectionType.XCAFView_ProjectionType_Parallel, None), 'XCAFView_ProjectionType_Central': (XCAFView_ProjectionType.XCAFView_ProjectionType_Central, None)}
-    __members__: dict # value = {'XCAFView_ProjectionType_NoCamera': XCAFView_ProjectionType.XCAFView_ProjectionType_NoCamera, 'XCAFView_ProjectionType_Parallel': XCAFView_ProjectionType.XCAFView_ProjectionType_Parallel, 'XCAFView_ProjectionType_Central': XCAFView_ProjectionType.XCAFView_ProjectionType_Central}
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFView_ProjectionType_Central: OCP.XCAFView.XCAFView_ProjectionType # value = <XCAFView_ProjectionType.XCAFView_ProjectionType_Central: 2>
+    XCAFView_ProjectionType_NoCamera: OCP.XCAFView.XCAFView_ProjectionType # value = <XCAFView_ProjectionType.XCAFView_ProjectionType_NoCamera: 0>
+    XCAFView_ProjectionType_Parallel: OCP.XCAFView.XCAFView_ProjectionType # value = <XCAFView_ProjectionType.XCAFView_ProjectionType_Parallel: 1>
+    __entries: dict # value = {'XCAFView_ProjectionType_NoCamera': (<XCAFView_ProjectionType.XCAFView_ProjectionType_NoCamera: 0>, None), 'XCAFView_ProjectionType_Parallel': (<XCAFView_ProjectionType.XCAFView_ProjectionType_Parallel: 1>, None), 'XCAFView_ProjectionType_Central': (<XCAFView_ProjectionType.XCAFView_ProjectionType_Central: 2>, None)}
+    __members__: dict # value = {'XCAFView_ProjectionType_NoCamera': <XCAFView_ProjectionType.XCAFView_ProjectionType_NoCamera: 0>, 'XCAFView_ProjectionType_Parallel': <XCAFView_ProjectionType.XCAFView_ProjectionType_Parallel: 1>, 'XCAFView_ProjectionType_Central': <XCAFView_ProjectionType.XCAFView_ProjectionType_Central: 2>}
     pass
-XCAFView_ProjectionType_Central: OCP.XCAFView.XCAFView_ProjectionType # value = XCAFView_ProjectionType.XCAFView_ProjectionType_Central
-XCAFView_ProjectionType_NoCamera: OCP.XCAFView.XCAFView_ProjectionType # value = XCAFView_ProjectionType.XCAFView_ProjectionType_NoCamera
-XCAFView_ProjectionType_Parallel: OCP.XCAFView.XCAFView_ProjectionType # value = XCAFView_ProjectionType.XCAFView_ProjectionType_Parallel
+XCAFView_ProjectionType_Central: OCP.XCAFView.XCAFView_ProjectionType # value = <XCAFView_ProjectionType.XCAFView_ProjectionType_Central: 2>
+XCAFView_ProjectionType_NoCamera: OCP.XCAFView.XCAFView_ProjectionType # value = <XCAFView_ProjectionType.XCAFView_ProjectionType_NoCamera: 0>
+XCAFView_ProjectionType_Parallel: OCP.XCAFView.XCAFView_ProjectionType # value = <XCAFView_ProjectionType.XCAFView_ProjectionType_Parallel: 1>

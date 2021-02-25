@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.AppParCurves
 import OCP.TColgp
+import OCP.AppParCurves
 __all__  = [
 "AppCont_Function",
 "AppCont_LeastSquare",
